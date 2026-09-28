@@ -135,6 +135,9 @@ async function runDiagnostic(){
   'Teste microfone: '+(rep.micTest||'não executado')+(rep.micError?' • '+rep.micError.name+' • '+rep.micError.message:''),
   'Permissão câmera: '+rep.camPermission,
   'Teste câmera: '+(rep.camTest||'não executado')+(rep.camError?' • '+rep.camError.name+' • '+rep.camError.message:''),
+  'Tracks locais: áudio='+(ls?.getAudioTracks().length||0)+' • vídeo='+(ls?.getVideoTracks().length||0),
+  'Peers WebRTC: '+peers.size,
+  ...[...peers.entries()].map(([id,pc])=>'Peer '+id.slice(0,8)+': connection='+pc.connectionState+' • ice='+pc.iceConnectionState+' • signaling='+pc.signalingState),
   'Conclusão: '+rep.conclusion
  ];
  LAST_DIAG=lines.join('\n');
