@@ -37,7 +37,9 @@ body{margin:0;background:radial-gradient(circle at 85% -10%,#124a76,#06182b 45%,
   <div class="diaggrid">
     <div class="diagitem"><span>Navegador / sistema</span><b id="dBrowser">—</b></div>
     <div class="diagitem"><span>Contexto seguro</span><b id="dSecure">—</b></div>
-    <div class="diagitem"><span>MediaDevices / getUserMedia</span><b id="dMedia">—</b></div>
+    <div class="diagitem"><span>MediaDevices</span><b id="dMediaDevices">—</b></div>
+    <div class="diagitem"><span>getUserMedia</span><b id="dGetUserMedia">—</b></div>
+    <div class="diagitem"><span>getDisplayMedia / compartilhar tela</span><b id="dDisplayMedia">—</b></div>
     <div class="diagitem"><span>Permissions API</span><b id="dPermApi">—</b></div>
     <div class="diagitem"><span>Microfone</span><b id="dMic">não testado</b></div>
     <div class="diagitem"><span>Câmera</span><b id="dCam">não testada</b></div>
@@ -62,9 +64,24 @@ let ch=null,ls=null,ss=null,joined=false;
 const peers=new Map(),queues=new Map(),q=s=>document.querySelector(s);
 function status(t,kind=''){q('#st').textContent=t;q('#st').className='status'+(kind?' '+kind:'')}
 function setPerm(id,text,ok){const el=q(id);el.textContent=text;el.className=ok===true?'oktxt':ok===false?'badtxt':''}
-function buttons(on){['#mic','#cam','#share','#leave'].forEach(x=>q(x).disabled=!on);q('#join').disabled=on}
+const HAS_MEDIA_DEVICES=!!navigator.mediaDevices;
+const HAS_GET_USER_MEDIA=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+const HAS_DISPLAY_MEDIA=!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia);
+function setShareAvailability(on=joined){
+ const b=q('#share');
+ if(!HAS_DISPLAY_MEDIA){
+   b.disabled=true;
+   b.textContent='🖥️ Compartilhar indisponível';
+   b.title='Compartilhamento de tela não disponível neste navegador/dispositivo.';
+   return;
+ }
+ b.disabled=!on;
+ b.textContent=ss?'🖥️ Compartilhando':'🖥️ Compartilhar';
+ b.title='Compartilhar a tela';
+}
+function buttons(on){['#mic','#cam','#leave'].forEach(x=>q(x).disabled=!on);q('#join').disabled=on;setShareAvailability(on)}
 let LAST_DIAG='';
-function diag(){q('#diag').innerHTML='<b>Contexto seguro:</b> '+(window.isSecureContext?'SIM':'NÃO')+' • <b>MediaDevices:</b> '+(navigator.mediaDevices?'SIM':'NÃO')+' • <b>Origem:</b> '+location.origin}
+function diag(){q('#diag').innerHTML='<b>Contexto seguro:</b> '+(window.isSecureContext?'SIM':'NÃO')+' • <b>MediaDevices:</b> '+(HAS_MEDIA_DEVICES?'SIM':'NÃO')+' • <b>getUserMedia:</b> '+(HAS_GET_USER_MEDIA?'SIM':'NÃO')+' • <b>getDisplayMedia:</b> '+(HAS_DISPLAY_MEDIA?'SIM':'NÃO')+' • <b>Origem:</b> '+location.origin}
 diag();
 function detectBrowser(){
  const ua=navigator.userAgent||'';
@@ -81,7 +98,7 @@ function conclusion(rep){
  if(!rep.secure)return 'Contexto inseguro: o navegador não permite câmera/microfone nesta origem.';
  if(!rep.mediaDevices||!rep.getUserMedia)return 'Navegador incompatível: getUserMedia não está disponível.';
  const errs=[rep.micError,rep.camError].filter(Boolean);
- if(!errs.length)return 'Central Call está correta. Microfone e câmera foram autorizados neste aparelho.';
+ if(!errs.length)return rep.displayMedia?'Central Call está correta. Microfone, câmera e compartilhamento de tela estão disponíveis neste navegador.':'Microfone e câmera estão autorizados. Compartilhamento de tela não é suportado neste navegador/dispositivo.';
  if(errs.some(x=>x.name==='NotReadableError'))return 'Outro aplicativo ou processo pode estar usando câmera/microfone neste aparelho.';
  if(errs.some(x=>x.name==='SecurityError'))return 'O navegador aplicou um bloqueio de segurança às permissões.';
  if(errs.some(x=>x.name==='NotAllowedError')){
@@ -97,7 +114,9 @@ async function runDiagnostic(){
  const rep={time:new Date().toISOString(),origin:location.origin,ua:navigator.userAgent||'',browser:detectBrowser(),secure:!!window.isSecureContext,mediaDevices:!!navigator.mediaDevices,getUserMedia:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),displayMedia:!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia),permissionsApi:!!(navigator.permissions&&navigator.permissions.query)};
  setD('#dBrowser',rep.browser);
  setD('#dSecure',rep.secure?'✅ SIM':'❌ NÃO',rep.secure);
- setD('#dMedia',(rep.mediaDevices&&rep.getUserMedia)?'✅ disponível':'❌ indisponível',rep.mediaDevices&&rep.getUserMedia);
+ setD('#dMediaDevices',rep.mediaDevices?'✅ disponível':'❌ indisponível',rep.mediaDevices);
+ setD('#dGetUserMedia',rep.getUserMedia?'✅ disponível':'❌ indisponível',rep.getUserMedia);
+ setD('#dDisplayMedia',rep.displayMedia?'✅ disponível':'⚠️ não suportado',rep.displayMedia?true:false);
  setD('#dPermApi',rep.permissionsApi?'✅ disponível':'⚠️ indisponível',rep.permissionsApi?true:undefined);
  rep.micPermission=await permissionState('microphone'); rep.camPermission=await permissionState('camera');
  setD('#dMic','permissão: '+rep.micPermission,rep.micPermission==='granted'?true:rep.micPermission==='denied'?false:undefined);
@@ -168,10 +187,53 @@ q('#copyDiag').addEventListener('click',copyDiagnostic);
 q('#leave').onclick=end;
 q('#mic').onclick=()=>{let t=ls?.getAudioTracks()[0];if(t){t.enabled=!t.enabled;q('#mic').textContent=t.enabled?'🎙️ Microfone':'🔇 Sem áudio'}};
 q('#cam').onclick=()=>{let t=ls?.getVideoTracks()[0];if(t){t.enabled=!t.enabled;q('#cam').textContent=t.enabled?'📷 Câmera':'🚫 Sem vídeo'}};
-q('#share').onclick=async()=>{if(!ls||!navigator.mediaDevices.getDisplayMedia)return;try{ss=await navigator.mediaDevices.getDisplayMedia({video:true});let st=ss.getVideoTracks()[0];for(const pc of peers.values()){let s=pc.getSenders().find(x=>x.track&&x.track.kind==='video');if(s)await s.replaceTrack(st)}q('#lv').srcObject=ss;st.onended=async()=>{let cam=ls?.getVideoTracks()[0];for(const pc of peers.values()){let s=pc.getSenders().find(x=>x.track&&x.track.kind==='video');if(s&&cam)await s.replaceTrack(cam)}q('#lv').srcObject=ls;ss=null}}catch{}};
+async function stopShare(){
+ if(!ss)return;
+ const cam=ls?.getVideoTracks()[0]||null;
+ for(const pc of peers.values()){
+   const sender=pc.getSenders().find(x=>x.track&&x.track.kind==='video');
+   if(sender&&cam)await sender.replaceTrack(cam);
+ }
+ ss.getTracks().forEach(t=>{try{t.stop()}catch{}});
+ ss=null;
+ q('#lv').srcObject=ls;
+ setShareAvailability(joined);
+ if(joined)status('Ao vivo • compartilhamento encerrado','live');
+}
+q('#share').onclick=async()=>{
+ if(!joined||!ls)return;
+ if(!HAS_DISPLAY_MEDIA){
+   status('Compartilhamento de tela não disponível neste navegador móvel','bad');
+   q('#diagResult').textContent='Compartilhamento de tela não disponível neste navegador/dispositivo. Câmera e microfone continuam funcionando normalmente.';
+   q('#diagResult').className='diagresult warn';
+   return;
+ }
+ try{
+   ss=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false});
+   const st=ss.getVideoTracks()[0];
+   if(!st)throw new Error('Nenhuma faixa de tela foi retornada.');
+   for(const pc of peers.values()){
+     const sender=pc.getSenders().find(x=>x.track&&x.track.kind==='video');
+     if(sender)await sender.replaceTrack(st);
+   }
+   q('#lv').srcObject=ss;
+   setShareAvailability(joined);
+   status('Ao vivo • compartilhando tela','live');
+   st.onended=()=>{stopShare().catch(console.warn)};
+ }catch(e){
+   ss?.getTracks().forEach(t=>{try{t.stop()}catch{}});
+   ss=null;
+   q('#lv').srcObject=ls;
+   setShareAvailability(joined);
+   const n=e&&e.name||'';
+   status(n==='NotAllowedError'?'Compartilhamento cancelado ou bloqueado':'Falha ao iniciar compartilhamento','bad');
+   console.warn('SCREEN_SHARE_ERROR',e);
+ }
+};
 q('#fb').onclick=()=>window.open(MEET,'_blank','noopener');
 window.addEventListener('beforeunload',()=>{if(joined)send('leave')});
 Promise.all([permissionState('microphone'),permissionState('camera')]).then(([m,c])=>{if(m!=='indisponível')setPerm('#pMic',m==='granted'?'já autorizado':m,m==='granted'?true:m==='denied'?false:undefined);if(c!=='indisponível')setPerm('#pCam',c==='granted'?'já autorizada':c,c==='granted'?true:c==='denied'?false:undefined)});
+setShareAvailability(false);
 })();
 </script>
 </body>
