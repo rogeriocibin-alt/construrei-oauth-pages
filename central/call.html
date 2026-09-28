@@ -30,7 +30,7 @@ body{margin:0;background:radial-gradient(circle at 85% -10%,#124a76,#06182b 45%,
 <button id="share" class="btn" disabled>🖥️ Compartilhar</button>
 <button id="leave" class="btn bad" disabled>Encerrar</button>
 </div>
-<div class="note">A sala abre mesmo sem câmera ou microfone. O microfone é tentado após “Entrar”; a câmera só é solicitada ao tocar em “Câmera”.</div>
+<div class="note">Ao tocar em “Entrar”, a sala tenta ativar microfone e câmera automaticamente. Se algum deles falhar, a chamada continua com o que estiver disponível.</div>
 <div id="diag" class="diag"></div>
 <div class="actions assist">
 <button id="continueNoMedia" class="btn">Continuar sem câmera/microfone</button>
@@ -154,13 +154,24 @@ async function attachLocalTrack(track){
  if(!track)return null;
  const stream=ensureLocalStream();
  const old=stream.getTracks().find(x=>x.kind===track.kind);
- if(old&&old!==track){old.stop();stream.removeTrack(old)}
+ if(old&&old!==track){
+   try{stream.removeTrack(old)}catch{}
+   try{old.stop()}catch{}
+ }
  if(!stream.getTracks().includes(track))stream.addTrack(track);
- q('#lv').srcObject=stream;
+ const lv=q('#lv');
+ if(lv){
+   lv.srcObject=stream;
+   lv.muted=true;
+   try{await lv.play()}catch{}
+ }
  for(const [id,pc] of peers){
    const sender=senderForKind(pc,track.kind);
    if(sender)await sender.replaceTrack(track);
-   else{pc.addTrack(track,stream);if(pc.signalingState==='stable')await offer(id,'Participante')}
+   else pc.addTrack(track,stream);
+   if(pc.signalingState==='stable'){
+     try{await offer(id,'Participante')}catch(e){console.warn('RENEGOTIATION_FAIL',e)}
+   }
  }
  return track;
 }
@@ -176,13 +187,19 @@ async function requestAudio(){
 }
 async function requestVideo(){
  if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia))throw Object.assign(new Error('getUserMedia indisponível'),{name:'NotSupportedError'});
- const current=ls?.getVideoTracks()[0];if(current)return current;
+ const current=ls?.getVideoTracks()[0];
+ if(current){
+   const lv=q('#lv');
+   if(lv){lv.srcObject=ls;lv.muted=true;try{await lv.play()}catch{}}
+   return current;
+ }
  setPerm('#pCam','solicitando…');
  const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:'user'}});
  const t=s.getVideoTracks()[0]||null;
  if(t)await attachLocalTrack(t);
  s.getTracks().filter(x=>x!==t).forEach(x=>x.stop());
- setPerm('#pCam',t?'autorizada':'sem faixa de vídeo',!!t);return t;
+ setPerm('#pCam',t?'autorizada':'sem faixa de vídeo',!!t);
+ return t;
 }
 function errLabel(e){
  const n=e&&e.name||'';
@@ -208,7 +225,19 @@ function peer(id,name){
  if(at)a.sender.replaceTrack(at).catch(()=>{});
  if(vt)vtx.sender.replaceTrack(vt).catch(()=>{});
  pc.onicecandidate=e=>{if(e.candidate)send('candidate',{to:id,candidate:e.candidate.toJSON?e.candidate.toJSON():e.candidate})};
- pc.ontrack=e=>{let t=tile(id,name),v=t.querySelector('video');const stream=e.streams&&e.streams[0];if(stream&&v.srcObject!==stream)v.srcObject=stream;else if(!stream){let ms=v.srcObject instanceof MediaStream?v.srcObject:new MediaStream();if(!ms.getTracks().includes(e.track))ms.addTrack(e.track);v.srcObject=ms}};
+ pc.ontrack=async e=>{
+   const t=tile(id,name),v=t.querySelector('video');
+   const stream=e.streams&&e.streams[0];
+   if(stream){
+     if(v.srcObject!==stream)v.srcObject=stream;
+   }else{
+     const ms=v.srcObject instanceof MediaStream?v.srcObject:new MediaStream();
+     if(!ms.getTracks().includes(e.track))ms.addTrack(e.track);
+     v.srcObject=ms;
+   }
+   v.autoplay=true;v.playsInline=true;
+   try{await v.play()}catch(err){console.warn('REMOTE_VIDEO_PLAY_BLOCKED',err)}
+ };
  pc.onconnectionstatechange=()=>{let t=tile(id,name),d=t.querySelector('.dot'),s=pc.connectionState;d.classList.toggle('ok',s==='connected');if(['failed','closed'].includes(s))rm(id)};
  return pc
 }
@@ -232,8 +261,25 @@ async function connectRoom(skipMedia=false){
     });
  }catch(e){joining=false;buttons(false);q('#join').disabled=false;q('#continueNoMedia').disabled=false;status('Não foi possível conectar a sala','bad');return}
  if(skipMedia){setPerm('#pMic','não solicitado');setPerm('#pCam','não solicitada');return}
- if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){setPerm('#pMic','indisponível neste navegador',false);return}
- try{await requestAudio()}catch(e){setPerm('#pMic',errLabel(e),false)}
+ if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){
+   setPerm('#pMic','indisponível neste navegador',false);
+   setPerm('#pCam','indisponível neste navegador',false);
+   return
+ }
+ let audioOk=false,videoOk=false;
+ try{audioOk=!!(await requestAudio())}catch(e){setPerm('#pMic',errLabel(e),false)}
+ try{videoOk=!!(await requestVideo())}catch(e){setPerm('#pCam',errLabel(e),false)}
+ const lv=q('#lv');
+ if(lv&&ls){
+   lv.srcObject=ls;lv.muted=true;
+   try{await lv.play()}catch{}
+ }
+ if(audioOk)q('#mic').textContent='🎙️ Microfone';
+ if(videoOk)q('#cam').textContent='📷 Câmera';
+ if(audioOk&&videoOk)status('Ao vivo • câmera e microfone ativos','live');
+ else if(audioOk)status('Ao vivo • áudio ativo • câmera indisponível','live');
+ else if(videoOk)status('Ao vivo • câmera ativa • microfone indisponível','live');
+ else status('Ao vivo • conectado sem câmera/microfone','live')
 }
 async function start(){return connectRoom(false)}
 async function end(){try{await send('leave')}catch{}for(const id of [...peers.keys()])rm(id);if(ch){try{await ch.untrack()}catch{}try{await S.removeChannel(ch)}catch{}ch=null}ss?.getTracks().forEach(t=>t.stop());ls?.getTracks().forEach(t=>t.stop());ss=ls=null;q('#lv').srcObject=null;joined=joining=false;buttons(false);q('#join').disabled=false;q('#continueNoMedia').disabled=false;q('#mic').textContent='🎙️ Microfone';q('#cam').textContent='📷 Câmera';setPerm('#pMic','não solicitado');setPerm('#pCam','não solicitada');status('Reunião encerrada')}
