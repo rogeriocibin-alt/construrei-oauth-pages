@@ -1,0 +1,86 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CONSTRU-REI • Apresentação Viva</title>
+<style>
+:root{--bg:#06101d;--bg2:#0b1d31;--card:#10283f;--line:#25435e;--text:#f7fbff;--mut:#9bb0c3;--gold:#d8ac3e;--ok:#4bd394;--warn:#f0c45a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 85% 0,#173e61 0,#081523 42%,#050c15 100%);color:var(--text);font-family:Inter,system-ui,Segoe UI,Arial,sans-serif}
+.wrap{max-width:1200px;margin:auto;padding:18px}.top{position:sticky;top:0;z-index:9;display:flex;gap:10px;align-items:center;padding:10px 14px;background:#071421e8;backdrop-filter:blur(12px);border-bottom:1px solid #ffffff12}
+.brand{font-weight:900;letter-spacing:.08em}.live{margin-left:auto;font-size:12px;color:#bfe8d2}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:6px;box-shadow:0 0 16px #4bd394}
+.hero{padding:58px 8px 38px}.eyebrow{font-size:12px;font-weight:900;letter-spacing:.16em;color:#d6bc75}.hero h1{font-size:clamp(34px,7vw,76px);line-height:.95;margin:10px 0 14px}.hero p{max-width:720px;color:#b8c7d5;font-size:clamp(16px,2.2vw,22px)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}.kpi,.panel{background:linear-gradient(180deg,#102b45,#0a1d31);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 38px #0004}.kpi{padding:16px}.kpi b{display:block;font-size:clamp(22px,3vw,34px)}.kpi span{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.section{padding:36px 0}.section h2{font-size:28px;margin:0 0 6px}.sub{color:var(--mut);margin:0 0 16px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.panel{padding:18px}.statusnum{font-size:34px;font-weight:900}.statuslabel{color:#a9bdcf;margin-top:4px}.money{font-size:30px;font-weight:900}.gold{color:#efd178}.good{color:#aef0cc}.row{display:flex;gap:12px;justify-content:space-between;border-top:1px solid #ffffff10;padding:10px 0}.rows .row:first-child{border-top:0}.badge{display:inline-flex;gap:6px;align-items:center;border:1px solid #2f654e;background:#0c2b20;border-radius:999px;padding:6px 10px;color:#b8f3d5;font-size:12px;font-weight:800}
+.chart{height:180px;display:flex;align-items:flex-end;gap:6px;padding-top:14px}.bar{flex:1;min-width:8px;background:linear-gradient(180deg,#e0ba55,#7f6727);border-radius:7px 7px 2px 2px;position:relative}.bar span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:9px;color:#8fa5b8}.clients{display:flex;gap:8px;flex-wrap:wrap}.client{padding:10px 13px;border:1px solid #2b4963;border-radius:999px;background:#0c2034;color:#d5e2ec;font-weight:750}
+.footer{padding:32px 0 50px;color:#7f96aa;font-size:12px;text-align:center}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(3,1fr)}.grid4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.wrap{padding:10px}.hero{padding:36px 4px 24px}.kpis{grid-template-columns:repeat(2,1fr)}.grid4{grid-template-columns:1fr}.top{padding:9px 10px}.kpi{padding:13px}.section{padding:26px 0}.chart{height:145px}}
+</style></head><body>
+<div class="top"><div class="brand">CONSTRU-REI</div><div id="live" class="live"><span class="dot"></span>Dados vivos</div></div>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">APRESENTAÇÃO VIVA • 2026</div><h1>Operação integrada<br>em tempo real.</h1><p>Uma visão executiva, leve e atualizada da operação da CONSTRU-REI — sem números paralelos, sem planilha disfarçada e sem recarregar a página inteira.</p></section>
+<section class="kpis">
+<div class="kpi"><b id="kWorks">—</b><span>Obras 2026</span></div>
+<div class="kpi"><b id="kGross">—</b><span>Volume financeiro</span></div>
+<div class="kpi"><b id="kProg">—</b><span>Em andamento</span></div>
+<div class="kpi"><b id="kPay">—</b><span>Ag. pagamento</span></div>
+<div class="kpi"><b id="kSet">—</b><span>Ag. acerto</span></div>
+<div class="kpi"><b id="kRet">—</b><span>Retornos</span></div>
+</section>
+
+<section class="section"><h2>Operação agora</h2><p class="sub">Leitura rápida da esteira operacional.</p><div class="grid4">
+<div class="panel"><div class="statusnum" id="oProg">—</div><div class="statuslabel">Em andamento</div></div>
+<div class="panel"><div class="statusnum" id="oPay">—</div><div class="statuslabel">Aguardando pagamento</div></div>
+<div class="panel"><div class="statusnum" id="oSet">—</div><div class="statuslabel">Aguardando acerto</div></div>
+<div class="panel"><div class="statusnum" id="oRet">—</div><div class="statuslabel">Retornos</div></div>
+</div></section>
+
+<section class="section"><h2>Financeiro resumido</h2><p class="sub">Somente leitura das fontes canônicas existentes.</p><div class="grid4">
+<div class="panel"><div class="money" id="fGross">—</div><div class="statuslabel">Volume financeiro</div></div>
+<div class="panel"><div class="money" id="fCosts">—</div><div class="statuslabel">Custos</div></div>
+<div class="panel"><div class="money good" id="fProfit">—</div><div class="statuslabel">Lucro</div></div>
+<div class="panel"><div class="money gold" id="fMargin">—</div><div class="statuslabel">Margem</div></div>
+</div></section>
+
+<section class="section"><h2>Acerto Vivo</h2><p class="sub">Mesma lógica já canonizada no Dashboard e no Trello.</p><div class="panel">
+<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div class="money" id="aProfit">—</div><div id="aBadge" class="badge">verificando…</div></div>
+<div class="rows">
+<div class="row"><span>Obras</span><b id="aCases">—</b></div>
+<div class="row"><span>Base</span><b id="aBase">—</b></div>
+<div class="row"><span>Custos</span><b id="aCosts">—</b></div>
+<div class="row"><span>Margem</span><b id="aMargin">—</b></div>
+<div class="row"><span>Capital de Giro</span><b id="aCapital">—</b></div>
+<div class="row"><span>Diferença</span><b id="aDiff">—</b></div>
+</div></div></section>
+
+<section class="section"><h2>Desempenho mensal</h2><p class="sub">Uma leitura simples, sem biblioteca pesada.</p><div class="panel"><div id="chart" class="chart"></div></div></section>
+
+<section class="section"><h2>Clientes e parceiros</h2><p class="sub">Relacionamentos ativos que sustentam a operação.</p><div id="clients" class="clients"></div></section>
+
+<section class="section"><h2>Obras em destaque</h2><p class="sub">Amostra viva das principais obras em aberto.</p><div id="works" class="panel rows"></div></section>
+
+<div class="footer">CONSTRU-REI • Dados vivos • Atualização automática a cada 60 segundos • <span id="updated">—</span></div>
+</main>
+<script>
+const API=location.pathname+'?api=data';
+const brl=c=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:2}).format((Number(c)||0)/100);
+const pct=n=>(Number(n)||0).toFixed(2).replace('.',',')+'%';
+const q=id=>document.getElementById(id);
+function render(d){
+ const o=d.overview||{},a=d.acertos||{};
+ q('kWorks').textContent=o.total_works||0;q('kGross').textContent=brl(o.gross_cents);q('kProg').textContent=o.in_progress||0;q('kPay').textContent=o.awaiting_payment||0;q('kSet').textContent=o.awaiting_settlement||0;q('kRet').textContent=o.returns||0;
+ q('oProg').textContent=o.in_progress||0;q('oPay').textContent=o.awaiting_payment||0;q('oSet').textContent=o.awaiting_settlement||0;q('oRet').textContent=o.returns||0;
+ q('fGross').textContent=brl(o.gross_cents);q('fCosts').textContent=brl(o.cost_cents);q('fProfit').textContent=brl(o.profit_cents);q('fMargin').textContent=pct(o.margin_pct);
+ q('aProfit').textContent=brl(a.profit_cents);q('aCases').textContent=a.cases||0;q('aBase').textContent=brl(a.base_cents);q('aCosts').textContent=brl(a.cost_cents);q('aMargin').textContent=pct(a.margin_pct);q('aCapital').textContent=brl(a.capital_cents);q('aDiff').textContent=brl(a.difference_cents);
+ q('aBadge').textContent=Number(a.difference_cents||0)===0?'✅ CONFERIDO • Diferença R$ 0,00':'⚠️ DIVERGENTE';
+ const ms=Array.isArray(d.months)?d.months:[],vals=ms.map(x=>Number(x.gross_cents??x.gross??0)),max=Math.max(1,...vals);q('chart').innerHTML=ms.map((x,i)=>'<div class="bar" style="height:'+Math.max(6,(vals[i]/max*100))+'%"><span>'+(x.month??i+1)+'</span></div>').join('');
+ q('clients').innerHTML=(d.clients||[]).map(x=>'<div class="client">'+x+'</div>').join('');
+ q('works').innerHTML=(d.active||[]).slice(0,8).map(x=>'<div class="row"><span>'+(x.case||'—')+' • '+(x.title||x.customer||'Obra')+'</span><b>'+(x.status||'')+'</b></div>').join('')||'<div class="row"><span>Sem obras abertas para exibir.</span></div>';
+ q('updated').textContent='Última atualização '+new Date(d.generated_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+ q('live').innerHTML='<span class="dot"></span>Dados vivos';
+ try{localStorage.setItem('crPresentationPremiumLastGood',JSON.stringify(d))}catch{}
+}
+async function refresh(){
+ q('live').textContent='atualizando…';
+ try{const r=await fetch(API+'&t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;render(await r.json())}
+ catch{let d=null;try{d=JSON.parse(localStorage.getItem('crPresentationPremiumLastGood')||'null')}catch{}if(d){render(d);q('live').textContent='último dado válido'}else q('live').textContent='dados indisponíveis'}
+}
+refresh();setInterval(refresh,60000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()});
+</script></body></html>
