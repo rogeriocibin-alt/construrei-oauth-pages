@@ -59,7 +59,7 @@
 <div class="footer">CONSTRU-REI • Dados vivos • Atualização automática a cada 60 segundos • <span id="updated">—</span></div>
 </main>
 <script>
-const API=location.pathname+'?api=data';
+const API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-presentation-viva-premium-v1?api=data';
 const brl=c=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:2}).format((Number(c)||0)/100);
 const pct=n=>(Number(n)||0).toFixed(2).replace('.',',')+'%';
 const q=id=>document.getElementById(id);
