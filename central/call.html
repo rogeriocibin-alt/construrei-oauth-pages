@@ -13,7 +13,7 @@ body{margin:0;background:radial-gradient(circle at 85% -10%,#124a76,#06182b 45%,
 .stage{background:linear-gradient(180deg,#082d53,#061d36);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 20px 60px #0005}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;min-height:55vh;align-content:center}.tile{position:relative;background:#010b13;border:1px solid #284d69;border-radius:16px;overflow:hidden;aspect-ratio:16/10;min-height:190px}.tile video{width:100%;height:100%;object-fit:cover}.label{position:absolute;left:9px;bottom:9px;background:#06192acc;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.dot{position:absolute;right:9px;top:9px;width:9px;height:9px;border-radius:50%;background:#d8a91f}.dot.ok{background:var(--ok)}
 .actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:12px}.btn{border:1px solid #345b78;background:#0a3c6d;color:#fff;border-radius:12px;padding:10px 12px;font-weight:850}.btn.gold{background:linear-gradient(90deg,#bd8b11,#e4be4c);color:#211500;border-color:#e9ca72}.btn.bad{background:#7b2731}.btn:disabled{opacity:.45}
-.note{text-align:center;color:#9fb4c6;font-size:11px;margin-top:10px}.fallback{margin-top:12px;border:1px solid #725d28;background:#2d281b;border-radius:13px;padding:10px;color:#e9d9a7;text-align:center}.diag{margin-top:10px;border:1px solid #294f6c;border-radius:12px;padding:10px;background:#061a2e;color:#bfd0dd;font-size:11px}.diag b{color:#fff}.perm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}.perm div{border:1px solid #315873;border-radius:10px;padding:8px;background:#071d31}.oktxt{color:#aef0cc}.badtxt{color:#ffb6bd}
+.note{text-align:center;color:#9fb4c6;font-size:11px;margin-top:10px}.assist{margin-top:8px}.helpbox{margin:8px auto 0;max-width:760px;border:1px solid #315873;border-radius:12px;padding:10px;background:#071d31;color:#c7d9e7;font-size:11px;line-height:1.45}.fallback{margin-top:12px;border:1px solid #725d28;background:#2d281b;border-radius:13px;padding:10px;color:#e9d9a7;text-align:center}.diag{margin-top:10px;border:1px solid #294f6c;border-radius:12px;padding:10px;background:#061a2e;color:#bfd0dd;font-size:11px}.diag b{color:#fff}.perm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}.perm div{border:1px solid #315873;border-radius:10px;padding:8px;background:#071d31}.oktxt{color:#aef0cc}.badtxt{color:#ffb6bd}details.diagpanel>summary{cursor:pointer;font-weight:850;color:#fff}details.diagpanel[open]>summary{margin-bottom:10px}
 .diagpanel{margin-top:12px;border:1px solid #315873;border-radius:14px;padding:12px;background:#06182b}.diaghead{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.diaghead h3{margin:0;margin-right:auto}.diaggrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}.diagitem{border:1px solid #294f6c;border-radius:10px;padding:8px;background:#071d31}.diagitem span{display:block;color:#9fb4c6;font-size:10px}.diagitem b{display:block;margin-top:2px;word-break:break-word}.diagresult{margin-top:10px;border:1px solid #294f6c;border-radius:10px;padding:10px;background:#041626;white-space:pre-wrap;word-break:break-word}.diagresult.good{border-color:#24704e;color:#bff3d7}.diagresult.warn{border-color:#806a2b;color:#f5e0a9}.diagresult.bad{border-color:#7b2731;color:#ffc4ca}@media(max-width:650px){body{padding:8px}.grid{grid-template-columns:1fr;min-height:62vh}.tile{min-height:210px}.head{align-items:flex-start}.head h1{font-size:18px}.status{font-size:11px;max-width:46%;text-align:center}.perm,.diaggrid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -30,9 +30,16 @@ body{margin:0;background:radial-gradient(circle at 85% -10%,#124a76,#06182b 45%,
 <button id="share" class="btn" disabled>🖥️ Compartilhar</button>
 <button id="leave" class="btn bad" disabled>Encerrar</button>
 </div>
-<div class="note">As permissões são pedidas somente após tocar em Entrar, uma por vez.</div>
+<div class="note">A sala abre mesmo sem câmera ou microfone. O microfone é tentado após “Entrar”; a câmera só é solicitada ao tocar em “Câmera”.</div>
 <div id="diag" class="diag"></div>
-<div class="diagpanel">
+<div class="actions assist">
+<button id="continueNoMedia" class="btn">Continuar sem câmera/microfone</button>
+<button id="retryPerm" class="btn">Verificar novamente</button>
+<button id="helpPerm" class="btn">Como liberar</button>
+</div>
+<div id="helpBox" class="helpbox" hidden>Chrome: toque no ícone ao lado do endereço → Permissões/Configurações do site → permita Microfone e Câmera. Android: Configurações → Apps → Chrome → Permissões. Mesmo sem liberar, a Sala Principal deve continuar acessível.</div>
+<details class="diagpanel">
+  <summary>Diagnóstico técnico do aparelho</summary>
   <div class="diaghead"><h3>Diagnóstico do aparelho</h3><button id="runDiag" class="btn">Executar diagnóstico do aparelho</button><button id="copyDiag" class="btn" disabled>Copiar diagnóstico</button></div>
   <div class="diaggrid">
     <div class="diagitem"><span>Navegador / sistema</span><b id="dBrowser">—</b></div>
@@ -43,7 +50,7 @@ body{margin:0;background:radial-gradient(circle at 85% -10%,#124a76,#06182b 45%,
     <div class="diagitem"><span>Câmera</span><b id="dCam">não testada</b></div>
   </div>
   <div id="diagResult" class="diagresult">Toque em “Executar diagnóstico do aparelho”. Nenhum teste de câmera/microfone será feito antes desse toque.</div>
-</div>
+</details>
 </section>
 <div class="fallback">Google Meet fica apenas como contingência. <button id="fb" class="btn">Abrir Meet de contingência</button></div>
 </main>
@@ -58,11 +65,18 @@ const S=window.supabase.createClient(U,K,{auth:{persistSession:false}});
 const ROOM='central-call-main-v3';
 const ID=crypto.randomUUID();
 const CFG={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}]};
-let ch=null,ls=null,ss=null,joined=false;
+let ch=null,ls=null,ss=null,joined=false,joining=false;
 const peers=new Map(),queues=new Map(),q=s=>document.querySelector(s);
 function status(t,kind=''){q('#st').textContent=t;q('#st').className='status'+(kind?' '+kind:'')}
 function setPerm(id,text,ok){const el=q(id);el.textContent=text;el.className=ok===true?'oktxt':ok===false?'badtxt':''}
-function buttons(on){['#mic','#cam','#share','#leave'].forEach(x=>q(x).disabled=!on);q('#join').disabled=on}
+function buttons(on){
+ q('#mic').disabled=!on;
+ q('#cam').disabled=!on;
+ q('#share').disabled=!on||!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia);
+ q('#leave').disabled=!on;
+ q('#join').disabled=on;
+ q('#continueNoMedia').disabled=on;
+}
 let LAST_DIAG='';
 function diag(){q('#diag').innerHTML='<b>Contexto seguro:</b> '+(window.isSecureContext?'SIM':'NÃO')+' • <b>MediaDevices:</b> '+(navigator.mediaDevices?'SIM':'NÃO')+' • <b>Origem:</b> '+location.origin}
 diag();
@@ -78,19 +92,17 @@ function diagClass(el,state){el.className='';if(state===true)el.classList.add('o
 function setD(id,text,state){const el=q(id);el.textContent=text;diagClass(el,state)}
 function errorInfo(e){return {name:(e&&e.name)||'Erro',message:(e&&e.message)||'',label:errLabel(e)}}
 function conclusion(rep){
- if(!rep.secure)return 'Contexto inseguro: o navegador não permite câmera/microfone nesta origem.';
- if(!rep.mediaDevices||!rep.getUserMedia)return 'Navegador incompatível: getUserMedia não está disponível.';
+ if(!rep.secure)return 'Contexto inseguro para mídia. A sala pode abrir, mas câmera/microfone não ficam disponíveis nesta origem.';
+ if(!rep.mediaDevices||!rep.getUserMedia)return 'getUserMedia não está disponível neste navegador. A sala continua acessível sem áudio/vídeo.';
  const errs=[rep.micError,rep.camError].filter(Boolean);
- if(!errs.length)return 'Central Call está correta. Microfone e câmera foram autorizados neste aparelho.';
- if(errs.some(x=>x.name==='NotReadableError'))return 'Outro aplicativo ou processo pode estar usando câmera/microfone neste aparelho.';
- if(errs.some(x=>x.name==='SecurityError'))return 'O navegador aplicou um bloqueio de segurança às permissões.';
- if(errs.some(x=>x.name==='NotAllowedError')){
-   if(/overlay|sobrepos|draw over|appear on top|another app|outro app/i.test(errs.map(x=>x.message).join(' ')))return 'O Android bloqueou a solicitação por possível sobreposição de outro aplicativo.';
-   if(rep.micPermission==='denied'||rep.camPermission==='denied')return 'Chrome/Android está com câmera ou microfone bloqueado nas permissões do site/aplicativo.';
-   return 'O navegador ou o Android recusou a permissão. A Central está acessível, mas a autorização do aparelho foi bloqueada.';
- }
- if(errs.some(x=>x.name==='NotFoundError'))return 'O navegador não encontrou câmera ou microfone disponível.';
- return 'O aparelho retornou um erro de mídia. Use o relatório copiado para identificar o código exato.';
+ if(!errs.length)return 'Microfone e câmera foram autorizados neste aparelho.';
+ if(errs.some(x=>x.name==='NotReadableError'))return 'A mídia existe, mas o navegador não conseguiu utilizá-la agora; outro aplicativo ou processo pode estar ocupando o dispositivo.';
+ if(errs.some(x=>x.name==='SecurityError'))return 'O navegador aplicou uma restrição de segurança à mídia nesta página.';
+ if(errs.some(x=>x.name==='NotAllowedError'))return 'Esta página não recebeu autorização para usar câmera e/ou microfone. Isso não bloqueia a entrada na sala.';
+ if(errs.some(x=>x.name==='NotFoundError'))return 'O navegador não encontrou câmera ou microfone disponível. Isso não bloqueia a entrada na sala.';
+ if(errs.some(x=>x.name==='OverconstrainedError'))return 'A configuração solicitada não é compatível com o dispositivo. A sala continua acessível.';
+ if(errs.some(x=>x.name==='AbortError'))return 'A solicitação de mídia foi interrompida. A sala continua acessível.';
+ return 'O aparelho retornou um erro de mídia. A sala continua acessível; use o diagnóstico para identificar o código exato.';
 }
 async function runDiagnostic(){
  const btn=q('#runDiag'),copy=q('#copyDiag'),out=q('#diagResult');btn.disabled=true;copy.disabled=true;out.className='diagresult warn';out.textContent='Executando diagnóstico…';
@@ -127,51 +139,149 @@ async function runDiagnostic(){
  ];
  LAST_DIAG=lines.join('\n');
  out.textContent=rep.conclusion+'\n\n'+LAST_DIAG;
- out.className='diagresult '+((rep.micTest==='OK'&&rep.camTest==='OK')?'good':(rep.micError||rep.camError)?'bad':'warn');
+ const errs=[rep.micError,rep.camError].filter(Boolean);
+ const permissionOnly=errs.length&&errs.every(x=>x.name==='NotAllowedError');
+ out.className='diagresult '+((rep.micTest==='OK'&&rep.camTest==='OK')?'good':permissionOnly?'warn':errs.length?'bad':'warn');
  copy.disabled=false;btn.disabled=false;
 }
 async function copyDiagnostic(){if(!LAST_DIAG)return;try{await navigator.clipboard.writeText(LAST_DIAG);status('Diagnóstico copiado','live')}catch(e){prompt('Copie o diagnóstico:',LAST_DIAG)}}
+function ensureLocalStream(){if(!ls){ls=new MediaStream();q('#lv').srcObject=ls}return ls}
+function senderForKind(pc,kind){
+ const tr=pc.getTransceivers?pc.getTransceivers().find(x=>x.receiver&&x.receiver.track&&x.receiver.track.kind===kind):null;
+ return (tr&&tr.sender)||pc.getSenders().find(x=>x.track&&x.track.kind===kind)||null;
+}
+async function attachLocalTrack(track){
+ if(!track)return null;
+ const stream=ensureLocalStream();
+ const old=stream.getTracks().find(x=>x.kind===track.kind);
+ if(old&&old!==track){old.stop();stream.removeTrack(old)}
+ if(!stream.getTracks().includes(track))stream.addTrack(track);
+ q('#lv').srcObject=stream;
+ for(const [id,pc] of peers){
+   const sender=senderForKind(pc,track.kind);
+   if(sender)await sender.replaceTrack(track);
+   else{pc.addTrack(track,stream);if(pc.signalingState==='stable')await offer(id,'Participante')}
+ }
+ return track;
+}
 async function requestAudio(){
+ if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia))throw Object.assign(new Error('getUserMedia indisponível'),{name:'NotSupportedError'});
+ const current=ls?.getAudioTracks()[0];if(current)return current;
  setPerm('#pMic','solicitando…');
  const s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:false});
- setPerm('#pMic','autorizado',true);return s.getAudioTracks()[0]||null;
+ const t=s.getAudioTracks()[0]||null;
+ if(t)await attachLocalTrack(t);
+ s.getTracks().filter(x=>x!==t).forEach(x=>x.stop());
+ setPerm('#pMic',t?'autorizado':'sem faixa de áudio',!!t);return t;
 }
 async function requestVideo(){
+ if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia))throw Object.assign(new Error('getUserMedia indisponível'),{name:'NotSupportedError'});
+ const current=ls?.getVideoTracks()[0];if(current)return current;
  setPerm('#pCam','solicitando…');
  const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:'user'}});
- setPerm('#pCam','autorizada',true);return s.getVideoTracks()[0]||null;
+ const t=s.getVideoTracks()[0]||null;
+ if(t)await attachLocalTrack(t);
+ s.getTracks().filter(x=>x!==t).forEach(x=>x.stop());
+ setPerm('#pCam',t?'autorizada':'sem faixa de vídeo',!!t);return t;
 }
-function errLabel(e){const n=e&&e.name||''; if(n==='NotAllowedError')return 'permissão bloqueada/negada pelo navegador ou sistema'; if(n==='NotFoundError')return 'dispositivo não encontrado'; if(n==='NotReadableError')return 'câmera/microfone em uso por outro app'; if(n==='SecurityError')return 'bloqueio de segurança do navegador'; return (e&&e.message)||n||'erro desconhecido'}
+function errLabel(e){
+ const n=e&&e.name||'';
+ if(n==='NotAllowedError')return 'esta página não recebeu autorização';
+ if(n==='NotFoundError')return 'dispositivo não encontrado';
+ if(n==='NotReadableError')return 'dispositivo indisponível ou em uso';
+ if(n==='OverconstrainedError')return 'configuração incompatível com o dispositivo';
+ if(n==='AbortError')return 'solicitação interrompida';
+ if(n==='SecurityError')return 'restrição de segurança do navegador';
+ if(n==='NotSupportedError')return 'recurso não suportado neste navegador';
+ return (e&&e.message)||n||'erro desconhecido'
+}
 function send(kind,data={}){return ch?ch.send({type:'broadcast',event:'rtc',payload:{kind,from:ID,name:'Participante',...data}}):Promise.resolve()}
 function tile(id,name){let t=document.getElementById('p-'+id);if(t)return t;t=document.createElement('div');t.id='p-'+id;t.className='tile';t.innerHTML='<video autoplay playsinline></video><span class="label"></span><i class="dot"></i>';t.querySelector('.label').textContent=name||'Participante';q('#grid').appendChild(t);return t}
 function rm(id){let p=peers.get(id);if(p){try{p.close()}catch{}peers.delete(id)}document.getElementById('p-'+id)?.remove();queues.delete(id)}
 function queue(id,c){if(!queues.has(id))queues.set(id,[]);queues.get(id).push(c)}
 async function flush(id,pc){for(const c of queues.get(id)||[]){try{await pc.addIceCandidate(c)}catch{}}queues.delete(id)}
-function peer(id,name){let pc=peers.get(id);if(pc)return pc;pc=new RTCPeerConnection(CFG);peers.set(id,pc);if(ls)ls.getTracks().forEach(t=>pc.addTrack(t,ls));pc.onicecandidate=e=>{if(e.candidate)send('candidate',{to:id,candidate:e.candidate.toJSON?e.candidate.toJSON():e.candidate})};pc.ontrack=e=>{let t=tile(id,name),v=t.querySelector('video');if(v.srcObject!==e.streams[0])v.srcObject=e.streams[0]};pc.onconnectionstatechange=()=>{let t=tile(id,name),d=t.querySelector('.dot'),s=pc.connectionState;d.classList.toggle('ok',s==='connected');if(['failed','closed'].includes(s))rm(id)};return pc}
+function peer(id,name){
+ let pc=peers.get(id);if(pc)return pc;
+ pc=new RTCPeerConnection(CFG);peers.set(id,pc);
+ const a=pc.addTransceiver('audio',{direction:'sendrecv'}),vtx=pc.addTransceiver('video',{direction:'sendrecv'});
+ const at=ls?.getAudioTracks()[0],vt=ls?.getVideoTracks()[0];
+ if(at)a.sender.replaceTrack(at).catch(()=>{});
+ if(vt)vtx.sender.replaceTrack(vt).catch(()=>{});
+ pc.onicecandidate=e=>{if(e.candidate)send('candidate',{to:id,candidate:e.candidate.toJSON?e.candidate.toJSON():e.candidate})};
+ pc.ontrack=e=>{let t=tile(id,name),v=t.querySelector('video');const stream=e.streams&&e.streams[0];if(stream&&v.srcObject!==stream)v.srcObject=stream;else if(!stream){let ms=v.srcObject instanceof MediaStream?v.srcObject:new MediaStream();if(!ms.getTracks().includes(e.track))ms.addTrack(e.track);v.srcObject=ms}};
+ pc.onconnectionstatechange=()=>{let t=tile(id,name),d=t.querySelector('.dot'),s=pc.connectionState;d.classList.toggle('ok',s==='connected');if(['failed','closed'].includes(s))rm(id)};
+ return pc
+}
 async function offer(id,name){let pc=peer(id,name);if(pc.signalingState!=='stable')return;let o=await pc.createOffer();await pc.setLocalDescription(o);await send('offer',{to:id,sdp:pc.localDescription})}
 async function handle(p){if(!p||p.from===ID||(p.to&&p.to!==ID))return;let id=p.from,n=p.name||'Participante';try{if(p.kind==='hello'){await send('welcome',{to:id});if(ID<id)await offer(id,n)}else if(p.kind==='welcome'){if(ID<id)await offer(id,n)}else if(p.kind==='offer'){let pc=peer(id,n);await pc.setRemoteDescription(p.sdp);await flush(id,pc);let a=await pc.createAnswer();await pc.setLocalDescription(a);await send('answer',{to:id,sdp:pc.localDescription})}else if(p.kind==='answer'){let pc=peer(id,n);await pc.setRemoteDescription(p.sdp);await flush(id,pc)}else if(p.kind==='candidate'){let pc=peer(id,n);if(pc.remoteDescription)await pc.addIceCandidate(p.candidate);else queue(id,p.candidate)}else if(p.kind==='leave')rm(id)}catch(e){console.warn(e)}}
-async function start(){
- if(joined)return;
- if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){status('Navegador incompatível ou contexto inseguro','bad');return}
- q('#join').disabled=true; status('Solicitando microfone…');
- let audio=null,video=null;
- try{audio=await requestAudio()}catch(e){setPerm('#pMic',errLabel(e),false);status('Microfone bloqueado pelo sistema','bad');q('#join').disabled=false;return}
- status('Solicitando câmera…');
- try{video=await requestVideo()}catch(e){setPerm('#pCam',errLabel(e),false);status('Câmera bloqueada; entrando só com áudio','bad')}
- ls=new MediaStream(); if(audio)ls.addTrack(audio); if(video)ls.addTrack(video); q('#lv').srcObject=ls;
- ch=S.channel(ROOM,{config:{broadcast:{self:false},presence:{key:ID}}}).on('broadcast',{event:'rtc'},({payload})=>handle(payload)).on('presence',{event:'sync'},()=>status('Ao vivo • '+Object.keys(ch.presenceState()).length+' participante(s)','live')).subscribe(async s=>{if(s==='SUBSCRIBED'){joined=true;buttons(true);status('Ao vivo • conectando equipe','live');await ch.track({joined_at:new Date().toISOString()});await send('hello')}});
+async function connectRoom(skipMedia=false){
+ if(joined||joining)return;
+ if(typeof RTCPeerConnection==='undefined'){status('Sala indisponível neste navegador','bad');return}
+ joining=true;buttons(false);q('#join').disabled=true;q('#continueNoMedia').disabled=true;ensureLocalStream();status('Conectando sala…');
+ try{
+   ch=S.channel(ROOM,{config:{broadcast:{self:false},presence:{key:ID}}})
+    .on('broadcast',{event:'rtc'},({payload})=>handle(payload))
+    .on('presence',{event:'sync'},()=>{if(joined)status('Ao vivo • '+Object.keys(ch.presenceState()).length+' participante(s)','live')})
+    .subscribe(async s=>{
+      if(s==='SUBSCRIBED'){
+        joined=true;joining=false;buttons(true);status('Ao vivo • conectando equipe','live');
+        await ch.track({joined_at:new Date().toISOString()});await send('hello');
+      }else if((s==='CHANNEL_ERROR'||s==='TIMED_OUT'||s==='CLOSED')&&!joined){
+        joining=false;buttons(false);q('#join').disabled=false;q('#continueNoMedia').disabled=false;status('Não foi possível conectar a sala','bad')
+      }
+    });
+ }catch(e){joining=false;buttons(false);q('#join').disabled=false;q('#continueNoMedia').disabled=false;status('Não foi possível conectar a sala','bad');return}
+ if(skipMedia){setPerm('#pMic','não solicitado');setPerm('#pCam','não solicitada');return}
+ if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){setPerm('#pMic','indisponível neste navegador',false);return}
+ try{await requestAudio()}catch(e){setPerm('#pMic',errLabel(e),false)}
 }
-async function end(){try{await send('leave')}catch{}for(const id of [...peers.keys()])rm(id);if(ch){try{await ch.untrack()}catch{}try{await S.removeChannel(ch)}catch{}ch=null}ss?.getTracks().forEach(t=>t.stop());ls?.getTracks().forEach(t=>t.stop());ss=ls=null;q('#lv').srcObject=null;joined=false;buttons(false);setPerm('#pMic','não solicitado');setPerm('#pCam','não solicitada');status('Reunião encerrada')}
+async function start(){return connectRoom(false)}
+async function end(){try{await send('leave')}catch{}for(const id of [...peers.keys()])rm(id);if(ch){try{await ch.untrack()}catch{}try{await S.removeChannel(ch)}catch{}ch=null}ss?.getTracks().forEach(t=>t.stop());ls?.getTracks().forEach(t=>t.stop());ss=ls=null;q('#lv').srcObject=null;joined=joining=false;buttons(false);q('#join').disabled=false;q('#continueNoMedia').disabled=false;q('#mic').textContent='🎙️ Microfone';q('#cam').textContent='📷 Câmera';setPerm('#pMic','não solicitado');setPerm('#pCam','não solicitada');status('Reunião encerrada')}
+async function refreshPermissionUI(){
+ const [m,c]=await Promise.all([permissionState('microphone'),permissionState('camera')]);
+ if(m!=='indisponível'&&!ls?.getAudioTracks()[0])setPerm('#pMic',m==='granted'?'autorizado — toque para ativar':m==='denied'?'não autorizado nesta origem':m,m==='granted'?true:m==='denied'?false:undefined);
+ if(c!=='indisponível'&&!ls?.getVideoTracks()[0])setPerm('#pCam',c==='granted'?'autorizada — toque para ativar':c==='denied'?'não autorizada nesta origem':c,c==='granted'?true:c==='denied'?false:undefined);
+ return {m,c}
+}
+async function watchPermission(name,id,grantedText,deniedText){
+ try{
+  if(!(navigator.permissions&&navigator.permissions.query))return;
+  const p=await navigator.permissions.query({name});
+  const apply=()=>{if((name==='microphone'&&!ls?.getAudioTracks()[0])||(name==='camera'&&!ls?.getVideoTracks()[0]))setPerm(id,p.state==='granted'?grantedText:p.state==='denied'?deniedText:p.state,p.state==='granted'?true:p.state==='denied'?false:undefined)};
+  p.onchange=apply;apply()
+ }catch{}
+}
 q('#join').addEventListener('click',start,{passive:true});
+q('#continueNoMedia').addEventListener('click',()=>connectRoom(true));
+q('#retryPerm').addEventListener('click',async()=>{await refreshPermissionUI();status(joined?'Sala conectada • permissões verificadas':'Permissões verificadas',joined?'live':'')});
+q('#helpPerm').addEventListener('click',()=>{const b=q('#helpBox');b.hidden=!b.hidden});
 q('#runDiag').addEventListener('click',runDiagnostic);
 q('#copyDiag').addEventListener('click',copyDiagnostic);
 q('#leave').onclick=end;
-q('#mic').onclick=()=>{let t=ls?.getAudioTracks()[0];if(t){t.enabled=!t.enabled;q('#mic').textContent=t.enabled?'🎙️ Microfone':'🔇 Sem áudio'}};
-q('#cam').onclick=()=>{let t=ls?.getVideoTracks()[0];if(t){t.enabled=!t.enabled;q('#cam').textContent=t.enabled?'📷 Câmera':'🚫 Sem vídeo'}};
-q('#share').onclick=async()=>{if(!ls||!navigator.mediaDevices.getDisplayMedia)return;try{ss=await navigator.mediaDevices.getDisplayMedia({video:true});let st=ss.getVideoTracks()[0];for(const pc of peers.values()){let s=pc.getSenders().find(x=>x.track&&x.track.kind==='video');if(s)await s.replaceTrack(st)}q('#lv').srcObject=ss;st.onended=async()=>{let cam=ls?.getVideoTracks()[0];for(const pc of peers.values()){let s=pc.getSenders().find(x=>x.track&&x.track.kind==='video');if(s&&cam)await s.replaceTrack(cam)}q('#lv').srcObject=ls;ss=null}}catch{}};
+q('#mic').onclick=async()=>{
+ let t=ls?.getAudioTracks()[0];
+ if(!t){try{t=await requestAudio();if(t)q('#mic').textContent='🎙️ Microfone'}catch(e){setPerm('#pMic',errLabel(e),false)}return}
+ t.enabled=!t.enabled;q('#mic').textContent=t.enabled?'🎙️ Microfone':'🔇 Sem áudio'
+};
+q('#cam').onclick=async()=>{
+ let t=ls?.getVideoTracks()[0];
+ if(!t){try{t=await requestVideo();if(t)q('#cam').textContent='📷 Câmera'}catch(e){setPerm('#pCam',errLabel(e),false)}return}
+ t.enabled=!t.enabled;q('#cam').textContent=t.enabled?'📷 Câmera':'🚫 Sem vídeo'
+};
+q('#share').onclick=async()=>{
+ if(!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia))return;
+ try{
+  ss=await navigator.mediaDevices.getDisplayMedia({video:true});let st=ss.getVideoTracks()[0];
+  for(const pc of peers.values()){let s=senderForKind(pc,'video');if(s)await s.replaceTrack(st)}
+  q('#lv').srcObject=ss;
+  st.onended=async()=>{let cam=ls?.getVideoTracks()[0]||null;for(const pc of peers.values()){let s=senderForKind(pc,'video');if(s)await s.replaceTrack(cam)}q('#lv').srcObject=ls;ss=null}
+ }catch{}
+};
 q('#fb').onclick=()=>window.open(MEET,'_blank','noopener');
 window.addEventListener('beforeunload',()=>{if(joined)send('leave')});
-Promise.all([permissionState('microphone'),permissionState('camera')]).then(([m,c])=>{if(m!=='indisponível')setPerm('#pMic',m==='granted'?'já autorizado':m,m==='granted'?true:m==='denied'?false:undefined);if(c!=='indisponível')setPerm('#pCam',c==='granted'?'já autorizada':c,c==='granted'?true:c==='denied'?false:undefined)});
+refreshPermissionUI();
+watchPermission('microphone','#pMic','autorizado — toque para ativar','não autorizado nesta origem');
+watchPermission('camera','#pCam','autorizada — toque para ativar','não autorizada nesta origem');
 })();
 </script>
 </body>
