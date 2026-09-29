@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CONSTRU-REI • Central Candidate Light</title>
+<style>
+:root{--navy:#062347;--navy2:#0b4f91;--gold:#cfa33c;--bg:#071423;--panel:#0c2033;--line:#1d3b55;--text:#f4f8fb;--mut:#9db1c2;--ok:#4fd08d}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#04101f,#071a30);color:var(--text);font:14px/1.45 Inter,system-ui,Segoe UI,Arial}
+.wrap{max-width:1500px;margin:auto;padding:18px}.top{display:flex;align-items:center;gap:14px;padding:14px 0 20px;border-bottom:1px solid var(--line)}
+.logo{width:58px;height:58px;border-radius:50%;background:white;padding:4px;object-fit:contain}.brand h1{margin:0;font-size:21px}.brand p{margin:3px 0 0;color:var(--mut)}
+.live{margin-left:auto;border:1px solid #2a684c;color:#a9efc8;padding:6px 10px;border-radius:999px;font-size:11px}.hero{margin-top:18px;padding:22px;border:1px solid #31526d;border-radius:18px;background:linear-gradient(120deg,#092541,#0b4f91 68%,#594511)}
+.hero h2{margin:0 0 6px;font-size:28px}.hero p{margin:0;color:#d4e0e9;max-width:900px}.grid{display:grid;gap:12px}.kpis{grid-template-columns:repeat(5,1fr);margin-top:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px}.lab{font-size:10px;text-transform:uppercase;color:#7f9ab0}.val{font-size:25px;font-weight:800;margin-top:2px}
+.section{margin-top:22px}.section h3{margin:0 0 10px}.actions{grid-template-columns:repeat(4,1fr)}.btn{display:flex;align-items:center;justify-content:center;min-height:50px;padding:10px;border-radius:11px;border:1px solid #33546d;background:#102b42;color:#fff;text-decoration:none;font-weight:700}
+.btn:hover{background:#153852}.btn.gold{background:linear-gradient(90deg,#b78924,#d8b354);color:#1c1505}.flows{grid-template-columns:repeat(5,1fr)}
+.flow{min-height:120px;cursor:pointer}.flow b{font-size:16px}.flow small{display:block;color:var(--mut);margin-top:5px}.status{margin-top:10px;font-size:10px;color:#a8efc6}.foot{padding:20px 0 5px;color:#627d92;font-size:10px}
+.notice{display:none;margin-top:12px;padding:10px;border:1px solid #6a5325;border-radius:10px;color:#ffe4a3;background:#2a210c}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.actions,.flows{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.wrap{padding:12px}.hero h2{font-size:23px}.kpis,.actions,.flows{grid-template-columns:1fr}.live{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+<img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app" alt="CONSTRU-REI">
+<div class="brand"><h1>CONSTRU-REI • Central</h1><p>Candidate Light • shell mínimo • módulos sob demanda</p></div>
+<div class="live" id="live">● conectando</div>
+</header>
+
+<section class="hero">
+<div style="font-size:10px;color:#dfbc64;font-weight:800;letter-spacing:1px">CENTRAL OPERACIONAL</div>
+<h2>Centro de Controle CONSTRU-REI</h2>
+<p>Carregamento inicial leve. Dados essenciais na home; ferramentas e módulos completos abrem somente quando necessários.</p>
+<div id="notice" class="notice"></div>
+</section>
+
+<div id="kpis" class="grid kpis">
+<div class="card"><div class="lab">Saúde</div><div class="val">...</div></div>
+<div class="card"><div class="lab">Progresso</div><div class="val">...</div></div>
+<div class="card"><div class="lab">Itens ativos</div><div class="val">...</div></div>
+<div class="card"><div class="lab">Pendências</div><div class="val">...</div></div>
+<div class="card"><div class="lab">Documentos</div><div class="val">...</div></div>
+</div>
+
+<section class="section">
+<h3>Acesso rápido</h3>
+<div id="actions" class="grid actions"></div>
+</section>
+
+<section class="section">
+<h3>Fluxos F00–F09</h3>
+<div id="flows" class="grid flows"></div>
+</section>
+
+<div class="foot">CR-LIGHT-CANDIDATE-20260929 • produção não alterada</div>
+</div>
+
+<script>
+const CORE='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes';
+const E=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function k(l,v){return '<div class="card"><div class="lab">'+E(l)+'</div><div class="val">'+E(v??'—')+'</div></div>'}
+function a(t,u,g=false){if(!u)return'';return '<a class="btn '+(g?'gold':'')+'" href="'+E(u)+'" target="_blank" rel="noopener">'+E(t)+'</a>'}
+async function load(){
+ const t0=performance.now();
+ try{
+  const r=await fetch(CORE+'?api=public-summary&t='+Date.now(),{cache:'no-store'});
+  if(!r.ok)throw Error('HTTP '+r.status);
+  const d=await r.json(),m=d.metrics||{},l=d.links||{};
+  document.getElementById('live').textContent='● ONLINE';
+  document.getElementById('kpis').innerHTML=
+   k('Saúde',d.status||'OK')+
+   k('Progresso',m.overall!=null?m.overall+'%':'—')+
+   k('Itens ativos',m.tracker_active)+
+   k('Pendências',m.pending_app)+
+   k('Documentos',m.documents);
+  document.getElementById('actions').innerHTML=
+   a('Dashboard Diretoria',l.director_dashboard||l.director_command,true)+
+   a('Novo Chamado / F00',l.f00||l.novo_chamado)+
+   a('Documentação',l.documentation||l.docs)+
+   a('Apresentação',l.presentation||d.presentation?.url)+
+   a('Google Meet',d.meeting?.join_url||l.meeting)+
+   a('Rogério • Admin',l.admin)+
+   a('Éder • Técnico',l.technical)+
+   a('Checklist',l.checklist);
+  const fs=Array.isArray(d.flows)?d.flows:[];
+  document.getElementById('flows').innerHTML=fs.map(f=>'<a class="card flow" href="'+E(f.url||f.href||'#')+'" target="_blank" rel="noopener"><b>'+E(f.code||'')+'</b><small>'+E(f.title||f.purpose||'')+'</small><div class="status">'+E(f.implementation_status||'')+'</div></a>').join('');
+  document.querySelector('.foot').textContent+=' • '+Math.round(performance.now()-t0)+' ms shell/data';
+ }catch(err){
+  document.getElementById('live').textContent='● indisponível';
+  const n=document.getElementById('notice');n.style.display='block';n.textContent='Falha ao carregar dados essenciais: '+err.message;
+ }
+}
+load();
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')load()});
+</script>
+</body>
+</html>
