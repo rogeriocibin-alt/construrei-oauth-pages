@@ -138,3 +138,162 @@ html,body{background:var(--crh-bg)!important;color:var(--crh-text)!important;fon
   #dashboard .cr-panel-head{align-items:flex-start;flex-wrap:wrap}.cr-panel-sub{width:100%;padding-left:39px}.cr-panel-action{margin-left:auto!important}
   .cr-health-grid{grid-template-columns:1fr 1fr!important}
 }
+
+
+/* =========================================================
+   PHASE 3 — VISUAL EQUALIZATION 2026-09-30
+   Fine visual calibration only. No functional behavior here.
+   ========================================================= */
+:root{
+  --crh-side:252px;
+  --crh-top:58px;
+  --crh-bg:#eaf6fc;
+  --crh-panel:#f5fbff;
+  --crh-line:#c9e0ef;
+  --crh-shadow:0 4px 14px rgba(18,69,112,.075);
+  --crh-shadow-2:0 14px 34px rgba(5,42,91,.16);
+}
+.content{padding:10px 12px 12px!important}
+
+/* Sidebar equalization */
+.side{padding:12px 10px!important}
+.side .brand{padding:6px 9px 15px!important;gap:11px!important}
+.side .brand img{width:66px!important;height:66px!important}
+.side .brand strong{font-size:16px!important;line-height:1.08!important}
+.side .brand small{font-size:8.5px!important;line-height:1.38!important}
+.side .grp{margin:13px 0!important}
+.side .gt{font-size:9px!important;padding:0 10px 5px!important}
+.side .nav{min-height:38px!important;padding:8px 10px!important;font-size:12px!important;gap:10px!important}
+.side .nav i{width:18px!important;height:18px!important;flex-basis:18px!important}
+.cr-side-footer{min-height:44px;padding:9px 9px!important;font-size:10px!important}
+
+/* Topbar equalization */
+.top{height:58px!important;padding:0 18px!important;gap:11px!important}
+.top .menu,.cr-top-back,.cr-icon-btn{width:40px;height:40px;border-radius:11px}
+.cr-ref-title{min-width:265px}
+.cr-ref-title #crumb{font-size:18px!important}
+.cr-ref-title small{font-size:9px!important;margin-top:4px}
+.cr-top-search{width:min(430px,36vw);height:36px;padding:0 11px;border-radius:11px;box-shadow:0 2px 8px rgba(22,79,126,.04)}
+.cr-top-search input{font-size:10.5px!important}
+.cr-icon-btn{font-size:18px}
+.cr-avatar{width:38px;height:38px;font-size:17px}
+.cr-profile-copy b{font-size:14px!important}
+.cr-profile-copy small{font-size:8.5px!important}
+
+/* Panels */
+#dashboard .cr-home-panel{margin-top:8px;background:linear-gradient(180deg,#fbfeff 0%,#edf7fc 100%);border-color:#c9e0ef;border-radius:11px;box-shadow:0 3px 10px rgba(15,68,112,.055)}
+#dashboard .cr-panel-head{min-height:39px;padding:5px 8px 5px 7px;gap:9px}
+#dashboard .cr-panel-title h2{font-size:16px!important}
+#dashboard .cr-panel-icon{width:31px;height:31px;border-radius:8px;font-size:16px}
+#dashboard .cr-panel-meta,#dashboard .cr-panel-sub{font-size:9px}
+#dashboard .cr-panel-action{font-size:9.5px;padding:7px 13px;border-radius:8px;box-shadow:0 3px 8px rgba(8,99,219,.14)}
+
+/* Hero — richer architecture-like composition */
+#dashboard>.cr-home-hero{min-height:122px!important;grid-template-columns:minmax(0,60.5%) minmax(360px,39.5%)!important;border-radius:10px!important;background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important}
+.cr-hero-main{padding:13px 18px 12px 20px}
+.cr-hero-main .ey{font-size:8.5px!important;letter-spacing:.13em!important}
+.cr-hero-main h1{font-size:23px!important;line-height:1.06!important;margin:5px 0 9px!important}
+.cr-hero-actions{gap:7px!important}
+.cr-hero-actions .btn{min-height:35px!important;padding:6px 14px!important;font-size:9.5px!important;border-radius:8px!important}
+.cr-hero-visual{min-height:122px;background:
+  linear-gradient(90deg,rgba(3,28,70,.18),rgba(3,28,70,.02)),
+  radial-gradient(circle at 70% 5%,rgba(255,196,30,.15),transparent 30%),
+  linear-gradient(180deg,#0e315d 0%,#082647 100%)}
+.cr-hero-visual:before{background:
+  linear-gradient(96deg,rgba(4,38,91,.72) 0%,rgba(5,43,87,.20) 34%,rgba(2,22,48,.02) 72%),
+  linear-gradient(180deg,rgba(255,255,255,.03),rgba(0,0,0,.15))}
+.cr-hero-visual:after{content:"";position:absolute;right:-3%;bottom:-1px;width:82%;height:63%;z-index:1;background:
+  linear-gradient(90deg,transparent 0 8%,rgba(255,187,47,.08) 8% 9%,transparent 9% 17%,rgba(255,187,47,.07) 17% 18%,transparent 18%),
+  repeating-linear-gradient(90deg,rgba(141,190,227,.12) 0 1px,transparent 1px 22px),
+  repeating-linear-gradient(0deg,rgba(141,190,227,.10) 0 1px,transparent 1px 15px);
+  clip-path:polygon(0 52%,10% 42%,10% 100%,21% 100%,21% 22%,39% 22%,39% 100%,49% 100%,49% 7%,67% 7%,67% 100%,77% 100%,77% 30%,92% 30%,92% 100%,100% 100%,100% 100%,0 100%);
+  background-color:rgba(6,29,55,.72);
+  border-top:1px solid rgba(142,194,231,.13);
+  box-shadow:inset 0 18px 26px rgba(0,0,0,.12)}
+.cr-skyline{opacity:.38;right:9%;height:92%;width:70%}
+.cr-skyline i{background:linear-gradient(180deg,rgba(38,86,126,.5),rgba(2,18,39,.82));border-color:rgba(141,190,227,.17)}
+.cr-hero-slogan{left:6%;top:18px;font:italic 17px/1.02 "Segoe Script","Bradley Hand",Georgia,cursive;transform:rotate(-9deg);letter-spacing:.01em;text-shadow:0 2px 5px rgba(0,0,0,.38)}
+#crHeroLogo{right:17px;top:10px;width:72px;height:72px;padding:3px;border:2px solid rgba(255,198,40,.65);box-shadow:0 5px 16px rgba(0,0,0,.24),0 0 0 3px rgba(255,255,255,.10)}
+.cr-hero-welcome{right:9px;bottom:7px;min-width:245px;padding:6px 11px 6px 38px;border-radius:8px}
+.cr-hero-welcome:before{left:11px;top:8px;font-size:17px}
+.cr-hero-welcome b{font-size:9.5px!important}
+.cr-hero-welcome small{font-size:8px!important}
+
+/* KPI cards */
+#dashboard .cr-kpi-grid{gap:6px;padding:0 7px 7px}
+.cr-op-card{min-height:112px;padding:9px 8px 7px;border-radius:9px;background:linear-gradient(180deg,#fff 0%,#f8fcff 100%);box-shadow:0 4px 11px rgba(14,62,108,.065)}
+.cr-op-card:after{content:"";position:absolute;inset:auto 0 0 0;height:30%;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 3%,white));pointer-events:none}
+.cr-op-top{gap:8px}
+.cr-op-icon{width:34px;height:34px;flex-basis:34px;font-size:15px;box-shadow:0 4px 11px color-mix(in srgb,var(--accent) 24%,transparent)}
+.cr-op-label{font-size:9.5px;line-height:1.1}
+.cr-op-value{font-size:27px;margin:5px 0 4px}
+.cr-op-detail{font-size:7.5px;line-height:1.15;min-height:18px}
+.cr-op-status{position:relative;z-index:1;font-size:7.6px;padding:4px 5px}
+
+/* Quick access */
+#dashboard .cr-quick-grid{gap:6px;padding:0 7px 7px}
+.cr-quick-card,#crDirectorDashCard{min-height:100px!important;padding:12px 31px 10px 55px!important;border-radius:10px!important;background:linear-gradient(180deg,#fff,#f8fcff)!important;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+.cr-quick-card:hover,#crDirectorDashCard:hover{transform:translateY(-1px);border-color:#a9d2ef!important;box-shadow:0 7px 16px rgba(17,76,126,.10)!important}
+.cr-quick-icon,#crDirectorDashCard:before{left:10px;top:13px;width:36px;height:36px;font-size:15px}
+.cr-quick-card h3,#crDirectorDashCard h3{font-size:10.2px!important;line-height:1.14!important;margin:2px 0 5px!important}
+.cr-quick-card p,#crDirectorDashCard p{font-size:7.8px!important;line-height:1.28!important}
+.cr-quick-arrow{right:8px;bottom:8px;width:25px;height:25px}
+
+/* Flow */
+#dashboard .cr-flow-grid{gap:5px;padding:0 7px 7px}
+.cr-flow-card{min-height:173px;padding:10px 8px 8px;border-radius:9px;background:linear-gradient(180deg,#fff,#f8fcff)}
+.cr-flow-code{font-size:8.7px}
+.cr-flow-card h3{font-size:9.1px;line-height:1.14;min-height:34px;margin:3px 0 5px}
+.cr-flow-active{font-size:8.3px;margin-bottom:6px}
+.cr-flow-active b{font-size:23px}
+.cr-flow-state{font-size:7.4px;line-height:1.22;margin:2px 0}
+.cr-flow-state .dot{width:7px;height:7px}
+.cr-flow-actions{grid-template-columns:1fr 30px;gap:4px}
+.cr-flow-actions .btn{min-height:30px!important;font-size:8.5px!important}
+
+/* Bottom zone */
+.cr-bottom-grid{grid-template-columns:minmax(0,59%) minmax(0,41%);gap:8px}
+.cr-bottom-grid>.cr-home-panel{margin-top:8px!important}
+#dashboard .cr-pending-grid{gap:6px;padding:0 7px 7px}
+.cr-pending-card{min-height:140px;padding:10px 9px 8px;grid-template-columns:38px 1fr;grid-template-rows:auto 30px;column-gap:9px}
+.cr-pending-icon{width:36px;height:36px;font-size:18px}
+.cr-pending-copy h3{font-size:9.5px}
+.cr-pending-total{font-size:25px;margin:3px 0}
+.cr-pending-lines{font-size:7.1px;gap:2px}
+.cr-mini-bars{height:24px;gap:3px}
+.cr-mini-bars i{background:linear-gradient(180deg,#66b8ff 0%,#0a75f2 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.cr-pending-card>.btn{min-height:29px!important;font-size:8.5px!important}
+#dashboard .cr-health-grid{gap:6px;padding:0 7px 7px}
+.cr-health-card{min-height:66px;padding:8px 9px;border-radius:9px;background:linear-gradient(180deg,#fff,#f8fcff)}
+.cr-health-label{font-size:7.5px}
+.cr-health-value{font-size:12.8px;margin:4px 0 2px}
+.cr-health-sub{font-size:7px;line-height:1.18}
+
+/* Keep executive density on common desktop widths */
+@media(max-width:1450px) and (min-width:1181px){
+  #dashboard .cr-kpi-grid{grid-template-columns:repeat(8,minmax(0,1fr))}
+  #dashboard .cr-quick-grid{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .cr-bottom-grid{grid-template-columns:minmax(0,59%) minmax(0,41%)}
+}
+@media(max-width:1180px) and (min-width:981px){
+  #dashboard .cr-kpi-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #dashboard .cr-quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .cr-bottom-grid{grid-template-columns:1fr}
+}
+@media(max-width:980px){
+  .side{width:min(84vw,320px)!important}
+  .side .brand img{width:62px!important;height:62px!important}
+  .side .nav{min-height:44px!important;font-size:14px!important}
+  .top{height:58px!important}
+  .cr-ref-title #crumb{font-size:16.5px!important}
+  .cr-op-card{min-height:162px}
+  .cr-quick-card,#crDirectorDashCard{min-height:118px!important}
+  .cr-flow-card{min-height:180px}
+}
+@media(max-width:600px){
+  .content{padding:10px 10px 82px!important}
+  #dashboard>.cr-home-hero{border-radius:12px!important}
+  .cr-hero-main h1{font-size:20px!important}
+  .cr-hero-actions .btn{min-height:42px!important;font-size:10px!important}
+  #dashboard .cr-panel-title h2{font-size:15px!important}
+}
