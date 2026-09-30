@@ -1,0 +1,200 @@
+/* CONSTRU-REI — Equalização Visual V4
+   Fonte canônica: Dashboard Gerencial V4 homologado.
+   Camada exclusivamente visual; não altera lógica, rotas ou dados. */
+:root{
+  --crv4-navy:#061525;
+  --crv4-navy-2:#10345e;
+  --crv4-navy-3:#0a2542;
+  --crv4-panel:#0b2746;
+  --crv4-panel-2:#081d34;
+  --crv4-panel-3:#061a2f;
+  --crv4-blue:#0d5f9e;
+  --crv4-blue-2:#3a83bb;
+  --crv4-gold:#c99d32;
+  --crv4-gold-light:#e1c365;
+  --crv4-line:#244968;
+  --crv4-line-strong:#315979;
+  --crv4-text:#f5f7fa;
+  --crv4-muted:#a9b8c9;
+  --crv4-muted-2:#8199ae;
+  --crv4-ok:#28b979;
+  --crv4-bad:#d95b64;
+  --crv4-shadow:0 12px 34px rgba(0,0,0,.22);
+}
+html,body{
+  background:radial-gradient(circle at 72% 0,#0d3b67 0,#07182b 38%,#061525 78%)!important;
+  color:var(--crv4-text)!important;
+}
+body{color:var(--crv4-text)!important}
+body,button,input,select,textarea{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif!important}
+header,.top,.topbar,.cr-shellbar{
+  background:linear-gradient(135deg,rgba(6,21,37,.98),rgba(13,49,85,.98))!important;
+  border-color:var(--crv4-line)!important;
+  color:#fff!important;
+}
+.main,.content,.wrap,.deck{background:transparent!important}
+.side,.drawer{
+  background:linear-gradient(180deg,#061525,#08213c 52%,#061525)!important;
+  border-color:var(--crv4-line)!important;
+}
+.hero,.cr-hero,.r6hero{
+  background:linear-gradient(135deg,#0a2542,#10518a 62%,rgba(125,90,24,.24))!important;
+  border-color:rgba(201,157,50,.44)!important;
+  color:#fff!important;
+  box-shadow:var(--crv4-shadow)!important;
+}
+.hero h1,.hero h2,.cr-hero h1,.cr-hero h2,
+.card h1,.card h2,.card h3,.panel h1,.panel h2,.panel h3,
+.section h1,.section h2,.section h3,.page>h1,.title-block h2{
+  color:#fff!important;
+}
+.hero p,.cr-hero p,.sub,.mut,.muted,.hint,.headText small,.brand small,.slide-top,.slide-foot{
+  color:var(--crv4-muted)!important;
+}
+.ey,.eyebrow,.tag,.gt,.r6eyebrow,.periodtitle{
+  color:var(--crv4-gold-light)!important;
+}
+.card,.panel,.box,.c,.cr-section,.detailBox,details,
+.opening,.phase2,.phase3,.personForm,.personCard,.question,
+.summaryBox,.attachBox,.fieldCard,.systemResult,.routeCard,
+.r7mastercard,.r7supportcard,.r7smartcard,.opkpi,.provcard,
+.r8commandbar,.r8result,.r8costsummary,.r8resultmetric,.r8costitem{
+  background:linear-gradient(155deg,var(--crv4-panel),var(--crv4-panel-2))!important;
+  border-color:var(--crv4-line)!important;
+  color:var(--crv4-text)!important;
+  box-shadow:var(--crv4-shadow)!important;
+}
+.card:hover,.panel:hover,.personCard:hover,.provcard:hover{
+  border-color:rgba(201,157,50,.45)!important;
+}
+input,select,textarea,.input,.in,
+.cr-field input,.cr-field select,.cr-field textarea,
+.filters input,.filters select{
+  background:var(--crv4-panel-2)!important;
+  color:#fff!important;
+  border-color:var(--crv4-line-strong)!important;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--crv4-blue-2)!important;
+  box-shadow:0 0 0 3px rgba(58,131,187,.14)!important;
+}
+input::placeholder,textarea::placeholder{color:#7891a7!important}
+button,.btn,.tool,.secondary,.copyBtn,.miniBtn,.attachBtn,.statusChoice,
+.r8quick button,.r6drawerhead button{
+  background:var(--crv4-navy-3)!important;
+  color:#dce8f2!important;
+  border-color:var(--crv4-line-strong)!important;
+  box-shadow:none!important;
+}
+button:hover,.btn:hover,.tool:hover,.secondary:hover,.miniBtn:hover,.attachBtn:hover{
+  border-color:var(--crv4-blue-2)!important;
+  filter:brightness(1.08);
+}
+.primary,.btn.primary,.finalBtn,.copySystem,.trellobtn,
+button.primary,.btn.gold,.gold,.tool.gold{
+  background:linear-gradient(180deg,#1268a8,var(--crv4-blue))!important;
+  color:#fff!important;
+  border-color:var(--crv4-blue-2)!important;
+}
+.nav.on,.tab.on,.chip.on,.yearbtn.on,.month.on,.step.on,.statusChoice.active{
+  background:linear-gradient(180deg,#d2a43a,#ad7e16)!important;
+  color:#07182b!important;
+  border-color:var(--crv4-gold-light)!important;
+  box-shadow:none!important;
+}
+.nav.on *,.tab.on *,.chip.on *,.yearbtn.on *,.month.on *,.step.on *,.statusChoice.active *{
+  color:#07182b!important;
+}
+.nav,.tab,.chip,.yearbtn,.month,.step{
+  background:var(--crv4-navy-3)!important;
+  color:#b9cada!important;
+  border-color:var(--crv4-line)!important;
+}
+.nav:hover,.tab:hover,.chip:hover,.yearbtn:hover,.month:hover,.step:hover{
+  background:#0d3155!important;
+  color:#fff!important;
+}
+.badge,.pill,.filtertag,.personPill,.phase2Badge,.phase3Badge,.tag{
+  background:rgba(201,157,50,.10)!important;
+  border-color:rgba(201,157,50,.40)!important;
+  color:var(--crv4-gold-light)!important;
+}
+.caseRibbon,.label,.routeCard h4{
+  background:var(--crv4-navy-2)!important;
+  color:#fff!important;
+}
+table,.tablewrap{background:var(--crv4-panel-2)!important;border-color:var(--crv4-line)!important}
+th,.table th{background:#0c2b4b!important;color:var(--crv4-muted)!important;border-color:var(--crv4-line)!important}
+td,.table td{color:#e8eef4!important;border-color:#183d5d!important}
+.progress{background:#031529!important}.progress span{background:linear-gradient(90deg,var(--crv4-blue),var(--crv4-gold))!important}
+.workspace,.workspaceBar,.diag,.diagpanel,.diagitem,.diagresult,.stage{
+  background:linear-gradient(155deg,var(--crv4-panel),var(--crv4-panel-2))!important;
+  border-color:var(--crv4-line)!important;
+  color:var(--crv4-text)!important;
+}
+.tile{background:#020a12!important;border-color:var(--crv4-line-strong)!important}
+.cr-kv .v,.opvals div,.personCardHead,.personMsg,.clientMsg,.collectQuestion,.evidenceItem,
+.openingIntro,.phase2Intro,.caseProblem,.outcome,.state,.r7alert{
+  background:var(--crv4-panel-3)!important;
+  border-color:var(--crv4-line)!important;
+  color:#d2dce5!important;
+}
+.cr-kv b,.label,.fieldCard .topline b,.collectQuestion .txt,.personCardHead small,
+.opvals small,.r7masterlabel,.r7mastersub,.r8resultmetric span,.r8costitem span{
+  color:var(--crv4-muted)!important;
+}
+.openingIntro b,.phase2Intro b,.caseProblem b,.collectQuestion .n,.personCardHead b,
+.missingBlock h3,.returnBox h3,.routeCard h4{
+  color:var(--crv4-gold-light)!important;
+}
+.slide{
+  background:radial-gradient(circle at 72% 0,#0d3b67 0,#07182b 42%,#061525 82%)!important;
+}
+.slide:nth-child(even){background:radial-gradient(circle at 18% 0,#0d3155 0,#07182b 45%,#061525 82%)!important}
+.slide-inner{
+  background:linear-gradient(145deg,#0b2746,#081d34)!important;
+  border-color:var(--crv4-line)!important;
+  color:#fff!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.30)!important;
+}
+.slide-inner:before{background:linear-gradient(90deg,var(--crv4-gold),var(--crv4-gold-light),var(--crv4-blue))!important}
+.text,.metric,.callout{
+  background:var(--crv4-panel-3)!important;
+  border-color:var(--crv4-line)!important;
+  color:#e8eef4!important;
+}
+.label{background:#0d3155!important;color:#fff!important}
+.callout{border-color:rgba(201,157,50,.48)!important;color:#e4cf91!important}
+.page-progress a{background:#315979!important}.page-progress a.active{background:var(--crv4-gold)!important}
+.mobile-nav,.cr-mobile-dock{
+  background:rgba(6,21,37,.97)!important;
+  border-color:rgba(201,157,50,.34)!important;
+}
+.good,.ok,.outcome.good,.fieldCard.good{
+  background:rgba(40,185,121,.10)!important;
+  border-color:rgba(40,185,121,.40)!important;
+  color:#9ee0be!important;
+}
+.warn,.alert,.outcome.warn,.fieldCard.missing,.openingRule,.periodnote{
+  background:rgba(201,157,50,.10)!important;
+  border-color:rgba(201,157,50,.40)!important;
+  color:#e4cf91!important;
+}
+.danger,.btn.danger,.bad,.alert.red,.outcome.bad{
+  background:rgba(217,91,100,.14)!important;
+  border-color:rgba(217,91,100,.48)!important;
+  color:#ffb2b7!important;
+}
+.brandWords b,.headText b{color:#fff!important}.brandWords b em{color:var(--crv4-gold-light)!important}
+.brandWords small{color:var(--crv4-muted)!important}
+.houses{color:var(--crv4-blue-2)!important}
+header .logo,.brand img{box-shadow:0 0 0 1px rgba(201,157,50,.35),0 8px 22px rgba(0,0,0,.24)!important}
+a{transition:color .15s ease,border-color .15s ease,background .15s ease}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--crv4-gold-light)!important;
+  outline-offset:2px!important;
+}
+@media(max-width:700px){
+  .hero,.cr-hero{border-radius:18px!important}
+  .card,.panel,.cr-section,.slide-inner{box-shadow:0 9px 24px rgba(0,0,0,.20)!important}
+}
