@@ -106,11 +106,11 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 <div class="grp"><div class="gt">Equipe & Conhecimento</div><button class="nav" data-page="meeting"><i></i>Google Meet</button><button class="nav" data-page="presentation"><i></i>Apresentação Institucional</button><button class="nav" data-page="academy"><i></i>CONSTRU-REI Academy</button><button class="nav" data-page="history"><i></i>Histórico / Snapshots</button><button class="nav" data-page="health"><i></i>Saúde do Sistema</button></div>
 <div class="grp"><div class="gt">Acesso Técnico</div><button class="nav" data-page="technical"><i></i>Éder — Admin Técnico</button><button class="nav" data-page="admin"><i></i>Rogério — Diretor</button></div><div class="footer cr-side-footer"><span>⚙ Tema</span><span class="cr-theme-dot">☀</span><small>v2.5.0</small></div></aside><main class="main"><header class="top cr-ref-top">
   <button class="btn menu cr-top-menu" onclick="toggleSide()" aria-label="Abrir menu">☰</button>
-  <button class="cr-top-back" type="button" onclick="history.length>1?history.back():go('dashboard')" aria-label="Voltar">←</button>
+  <button id="crTopBack" class="cr-top-back" type="button" onclick="if(typeof window.crCanonicalBack===\'function\')window.crCanonicalBack();else if(typeof window.go===\'function\')window.go(\'dashboard\')" aria-label="Voltar">←</button>
   <div class="cr-ref-title"><b id="crumb">Dashboard Executivo</b><small>Visão completa • Controle total • Central CONSTRU-REI</small></div>
-  <div class="cr-top-search"><span>⌕</span><input aria-label="Pesquisar na Central" placeholder="Pesquisar módulos, fluxos, documentos..."><kbd>⌘ K</kbd></div>
+  <div class="cr-top-search" title="Pesquisa global ainda não disponível"><span>⌕</span><input aria-label="Pesquisar na Central" placeholder="Pesquisar módulos, fluxos, documentos..." disabled><kbd>⌘ K</kbd></div>
   <div class="cr-top-actions">
-    <button class="cr-icon-btn" type="button" aria-label="Notificações">🔔</button>
+    <button class="cr-icon-btn" type="button" aria-label="Notificações indisponíveis" title="Notificações ainda não disponíveis" disabled>🔔</button>
     <div class="cr-profile"><span class="cr-avatar">R</span><span class="cr-profile-copy"><b>Rogério</b><small>Diretor</small></span><span class="cr-chevron">⌄</span></div>
     <span id="release" class="pill cr-tech-pill">V100-R12.8</span><span id="live" class="pill live cr-tech-pill">CONECTANDO</span>
   </div>
@@ -140,7 +140,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
     <div class="cr-panel-head">
       <div class="cr-panel-title"><span class="cr-panel-icon">▥</span><h2>HOJE NA OPERAÇÃO</h2></div>
       <div class="cr-panel-meta"><span class="cr-live-dot"></span><span>Dados atualizados automaticamente</span><span id="crHomeUpdated" class="cr-update-chip">Atualizando…</span></div>
-      <button class="cr-panel-action" type="button" data-action="go" data-page-target="status">Ver detalhes da operação →</button>
+      <button class="cr-panel-action" type="button" data-action="go" data-page-target="flows">Ver detalhes da operação →</button>
     </div>
     <div id="kpis" class="cr-kpi-grid"></div>
   </section>
@@ -213,7 +213,7 @@ function go(id){if(id==='docs'){window.location.assign('https://yspuaamokjbrosyt
 function toggleSide(){var s=qs('#side');if(s)s.classList.toggle('open')}
 function current(){var x=qs('.page.on');return x?x.id:'dashboard'}
 async function copyLink(t){if(!t)return;try{await navigator.clipboard.writeText(t);alert('Link copiado.')}catch(e){prompt('Copie o link:',t)}}
-function openResource(title,url,from){if(!url){alert('Link ainda não registrado.');return}if(from==='app'||title==='APP CONSTRU-REI'){window.location.assign(url);return}if(from==='meeting'){window.open(url,'_blank','noopener');return}PREV=from||current();WORKURL=url;var t=qs('#workspaceTitle'),f=qs('#workspaceFrame'),a=qs('#workspaceExternal');if(t)t.textContent=title||'Workspace';if(f){if(from==='meeting'){f.setAttribute('allow','clipboard-read; clipboard-write; camera; microphone; display-capture; fullscreen');f.setAttribute('allowfullscreen','')}else{f.setAttribute('allow','clipboard-read; clipboard-write');f.removeAttribute('allowfullscreen')}f.src=url}if(a){a.href=url;a.rel='noopener'}go('workspace')}
+function openResource(title,url,from){if(!url){alert('Link ainda não registrado.');return}if(from==='app'||from==='dashboard'||from==='flows'||from==='homolog'||title==='APP CONSTRU-REI'||/^F\\d\\d/.test(String(title||''))){window.location.assign(url);return}if(from==='meeting'){window.open(url,'_blank','noopener,noreferrer');return}PREV=from||current();WORKURL=url;var t=qs('#workspaceTitle'),f=qs('#workspaceFrame'),a=qs('#workspaceExternal');if(t)t.textContent=title||'Workspace';if(f){if(from==='meeting'){f.setAttribute('allow','clipboard-read; clipboard-write; camera; microphone; display-capture; fullscreen');f.setAttribute('allowfullscreen','')}else{f.setAttribute('allow','clipboard-read; clipboard-write');f.removeAttribute('allowfullscreen')}f.src=url}if(a){a.href=url;a.rel='noopener'}go('workspace')}
 function backWorkspace(){var f=qs('#workspaceFrame');if(f)f.src='about:blank';go(PREV||'dashboard')}
 function detail(title,html){var b=qs('#detailBody'),d=qs('#detail');if(b)b.innerHTML='<h2>'+esc(title)+'</h2>'+html;if(d)d.classList.add('on')}
 function closeDetail(){var d=qs('#detail');if(d)d.classList.remove('on')}
@@ -257,14 +257,20 @@ setHtml('#kpis',
  homeKpi('◉','F01 pendentes','—','Contagem operacional não fornecida','Aguardando resposta','blue')+
  homeKpi('▥','Orçamentos','—','Contagem operacional não fornecida','Envio / aprovação','orange')+
  homeKpi('!','Alertas operacionais',m.gaps_blocking==null?'—':m.gaps_blocking,'Gaps críticos disponíveis na fonte técnica','Verificar agora','red'));
-var appAction='<a class="cr-quick-hit" href="'+esc(DATA.links&&DATA.links.app||'')+'" aria-label="Abrir APP"></a>';
-var flowAction='<button class="cr-quick-hit" data-action="go" data-page-target="flows" aria-label="Abrir F00 a F01"></button>';
+var links=DATA.links||{};
+var appAction='<a class="cr-quick-hit" href="'+esc(links.app||'')+'" aria-label="Abrir APP"></a>';
+var f00Action='<a class="cr-quick-hit" href="'+esc(links.f00||links.novo_chamado||'')+'" aria-label="Abrir F00"></a>';
+var checklistAction=links.checklist?'<a class="cr-quick-hit" href="'+esc(links.checklist)+'" target="_blank" rel="noopener noreferrer" aria-label="Abrir Checklist"></a>':'<button class="cr-quick-hit" type="button" disabled aria-label="Checklist indisponível"></button>';
+var meetUrl=(DATA.meeting&&DATA.meeting.join_url)||links.meeting||links.meet||'';
+var meetAction=meetUrl?'<a class="cr-quick-hit" href="'+esc(meetUrl)+'" target="_blank" rel="noopener noreferrer" aria-label="Abrir Google Meet"></a>':'<button class="cr-quick-hit" type="button" disabled aria-label="Google Meet indisponível"></button>';
+var presentationUrl=(DATA.presentation&&(DATA.presentation.url||DATA.presentation.join_url))||links.presentation||'';
+var presentationAction=presentationUrl?'<a class="cr-quick-hit" href="'+esc(presentationUrl)+'" aria-label="Abrir Apresentação"></a>':'<button class="cr-quick-hit" type="button" data-action="go" data-page-target="presentation" aria-label="Abrir Apresentação"></button>';
 setHtml('#quick',
  homeQuick('◆','APP CONSTRU-REI','Operação principal.',appAction)+
- homeQuick('▤','F00 → F01','Captação e Qualificação.',flowAction)+
- homeQuick('✓','Checklist de Campo','Fotos, evidências e execução.','<button class="cr-quick-hit" data-action="go" data-page-target="checklist" aria-label="Abrir Checklist"></button>')+
- homeQuick('●','Google Meet','Sala comum da equipe.','<button class="cr-quick-hit" data-action="go" data-page-target="meeting" aria-label="Abrir Google Meet"></button>')+
- homeQuick('▰','Apresentação','Material institucional.','<button class="cr-quick-hit" data-action="go" data-page-target="presentation" aria-label="Abrir Apresentação"></button>')+
+ homeQuick('▤','F00 → F01','Captação e Qualificação.',f00Action)+
+ homeQuick('✓','Checklist de Campo','Fotos, evidências e execução.',checklistAction)+
+ homeQuick('●','Google Meet','Sala comum da equipe.',meetAction)+
+ homeQuick('▰','Apresentação','Material institucional.',presentationAction)+
  homeQuick('◆','CONSTRU-REI Academy','Treinamento e conhecimento.','<button class="cr-quick-hit" data-action="go" data-page-target="academy" aria-label="Abrir Academy"></button>'));
 setHtml('#flowHome',(DATA.flows||[]).map(function(f){return homeFlow(f,'dashboard')}).join(''));setHtml('#flowFull',(DATA.flows||[]).map(function(f){return flowCard(f,'flows')}).join(''));
 var b=BOARD.summary||{},bb=BOARD.boards||{};setHtml('#boardSummary',
@@ -284,7 +290,7 @@ var checklist=DATA.links&&DATA.links.checklist||'';setHtml('#checkCard','<div cl
 setHtml('#homologList',(DATA.flows||[]).map(function(f){return '<div class="card item"><b>'+esc(f.code)+' • '+esc(f.title)+'</b><p class="mut">'+esc(f.implementation_status)+'</p><div class="actions"><button class="btn primary" data-action="resource" data-title="'+esc(f.code)+'" data-url="'+esc(f.url)+'" data-origin="homolog">Abrir aqui</button><button class="btn" data-action="copy" data-url="'+esc(f.url)+'">Copiar para teste externo</button></div></div>'}).join(''));
 setHtml('#contextCards',(DATA.contexts||[]).map(function(c){return '<div class="card"><div class="tag">CONTEXTO IA</div><h3>'+esc(c.context_id)+'</h3><p>'+esc(c.title)+'</p><p class="mut">'+esc(c.purpose)+'</p></div>'}).join(''));
 if(DATA.meeting){setHtml('#meetCard','<div class="tag">SALA DA EQUIPE • ACESSO LIVRE</div><h2>'+esc(DATA.meeting.title)+'</h2><p class="mut">'+esc(DATA.meeting.provider)+'</p><p class="notice good">Sem login da Diretoria/Técnico. Acesso liberado para Rogério, Éder, Gabrielly e Fabrício.</p><div class="actions"><button class="btn gold" data-action="resource" data-title="Google Meet" data-url="'+esc(DATA.meeting.join_url)+'" data-origin="meeting">Abrir aqui</button><button class="btn" data-action="copy" data-url="'+esc(DATA.meeting.join_url)+'">Copiar link</button></div>')}
-var p=DATA.links&&DATA.links.presentation||'';setHtml('#presentationCard',p?'<div class="tag">INSTITUCIONAL</div><h2>Apresentação CONSTRU-REI</h2><p class="mut">Material institucional e estratégico.</p><div class="actions"><button class="btn primary" data-action="resource" data-title="Apresentação Institucional" data-url="'+esc(p)+'" data-origin="presentation">Abrir aqui</button><button class="btn" data-action="copy" data-url="'+esc(p)+'">Copiar link</button></div>':'<div class="notice">Apresentação ainda sem URL corrente.</div>');
+var p=(DATA.presentation&&(DATA.presentation.url||DATA.presentation.join_url))||(DATA.links&&DATA.links.presentation)||'';setHtml('#presentationCard',p?'<div class="tag">INSTITUCIONAL</div><h2>Apresentação CONSTRU-REI</h2><p class="mut">Material institucional e estratégico.</p><div class="actions"><button class="btn primary" data-action="resource" data-title="Apresentação Institucional" data-url="'+esc(p)+'" data-origin="presentation">Abrir aqui</button><button class="btn" data-action="copy" data-url="'+esc(p)+'">Copiar link</button></div>':'<div class="notice">Apresentação ainda sem URL corrente.</div>');
 var acad=(DEV.docs||[]).filter(function(x){return /ACADEM/i.test([x.title,x.category,x.summary].join(' '))});setHtml('#academyCards',acad.length?acad.map(function(x){return '<div class="card"><div class="tag">ACADEMY</div><h3>'+esc(x.title)+'</h3><p class="mut">'+esc(x.summary||x.category||'')+'</p><button class="btn" data-action="detail" data-detail-title="'+esc(x.code)+'" data-detail-html="'+esc('<p><b>Status:</b> '+esc(x.status||'')+'</p><p><b>Versão:</b> '+esc(x.version_label||'')+'</p><p>'+esc(x.summary||'')+'</p>')+'">Ver ficha</button></div>'}).join(''):'<div class="card"><h3>Academy preparada</h3><p class="mut">Pronta para vídeos, manuais, trilhas por setor e materiais de treinamento.</p></div>');
 setHtml('#healthCards',kpi('Central','ONLINE','V100-R12.8')+kpi('API','ONLINE','Supabase')+kpi('Tracker',BOARD.summary&&BOARD.summary.all&&BOARD.summary.all.total||0,'itens')+kpi('Documentos',(m.documents||0)+'%','catálogo')+kpi('Segurança',(m.security||0)+'%','técnico')+kpi('Gaps críticos',m.gaps_blocking||0,'bloqueiam 100%'));renderDev()}
 
@@ -323,7 +329,7 @@ boot();setInterval(function(){boot()},60000);
 <script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><div hidden data-cr-auth-resilient="CR-AUTH-RESILIENT-V2-20260913"></div>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><div hidden data-cr-shell-route-lock="CR-R128-SHELL-CANONICAL-ROUTES-20260913-R10"></div><script src="https://pagey.site/scripts/banner.js?subdomain=stream-cliff-plume&tier=free" defer></script>
-<script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><script id="crDirectorDashboardMenuV1">(function(){'use strict';if(window.__crDirectorDashboardMenuV1)return;window.__crDirectorDashboardMenuV1=true;var URL="https://cotton-blossom-quill.pagey.site/";function openDash(){window.location.assign(URL)}function install(){var side=document.getElementById("side");if(side&&!document.getElementById("crDirectorDashNavGroup")){var g=document.createElement("div");g.className="grp";g.id="crDirectorDashNavGroup";g.innerHTML="<div class=\"gt\">Diretoria</div><button id=\"crDirectorDashNav\" class=\"nav\"><i></i>Dashboard Gerencial V4</button>";var brand=side.querySelector(".brand");if(brand)brand.insertAdjacentElement("afterend",g);else side.insertBefore(g,side.firstChild);g.querySelector("#crDirectorDashNav").onclick=openDash;}var hero=document.querySelector("#dashboard .hero .actions");if(hero&&!document.getElementById("crDirectorDashHero")){var b=document.createElement("button");b.id="crDirectorDashHero";b.className="btn gold";b.textContent="Dashboard Gerencial V4";b.onclick=openDash;hero.insertBefore(b,hero.firstChild);}var quick=document.getElementById("quick");if(quick&&!document.getElementById("crDirectorDashCard")){var c=document.createElement("div");c.id="crDirectorDashCard";c.className="card";c.style.borderLeft="4px solid var(--cr-gold-500,#cfa33c)";c.innerHTML="<div class=\"tag\">DIRETORIA</div><h3>Dashboard Gerencial V4</h3><p class=\"mut\">KPIs, histórico, custos, operação e conciliação Trello × GestãoClick.</p><button id=\"crDirectorDashCardBtn\" class=\"btn gold\">Abrir Dashboard</button>";quick.insertBefore(c,quick.firstChild);c.querySelector("#crDirectorDashCardBtn").onclick=openDash;}}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install);else install();var n=0,t=setInterval(function(){install();if(++n>40)clearInterval(t)},250);new MutationObserver(install).observe(document.documentElement,{childList:true,subtree:true});})();</script><div hidden data-cr-director-dashboard-menu="CR-DIRECTOR-DASHBOARD-MENU-V1-20260920"></div><script src="https://pagey.site/scripts/banner.js?subdomain=sand-sea-blaze&tier=free" defer></script>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><script id="crDirectorDashboardMenuV1">(function(){'use strict';if(window.__crDirectorDashboardMenuV1)return;window.__crDirectorDashboardMenuV1=true;var URL="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/dashboard/?rev=dashboard-v14-protected-20260929-2258";function openDash(){window.location.assign(URL)}function install(){var side=document.getElementById("side");if(side&&!document.getElementById("crDirectorDashNavGroup")){var g=document.createElement("div");g.className="grp";g.id="crDirectorDashNavGroup";g.innerHTML="<div class=\"gt\">Diretoria</div><button id=\"crDirectorDashNav\" class=\"nav\"><i></i>Dashboard Gerencial V4</button>";var brand=side.querySelector(".brand");if(brand)brand.insertAdjacentElement("afterend",g);else side.insertBefore(g,side.firstChild);g.querySelector("#crDirectorDashNav").onclick=openDash;}var hero=document.querySelector("#dashboard .hero .actions");if(hero&&!document.getElementById("crDirectorDashHero")){var b=document.createElement("button");b.id="crDirectorDashHero";b.className="btn gold";b.textContent="Dashboard Gerencial V4";b.onclick=openDash;hero.insertBefore(b,hero.firstChild);}var quick=document.getElementById("quick");if(quick&&!document.getElementById("crDirectorDashCard")){var c=document.createElement("div");c.id="crDirectorDashCard";c.className="card";c.style.borderLeft="4px solid var(--cr-gold-500,#cfa33c)";c.innerHTML="<div class=\"tag\">DIRETORIA</div><h3>Dashboard Gerencial V4</h3><p class=\"mut\">KPIs, histórico, custos, operação e conciliação Trello × GestãoClick.</p><button id=\"crDirectorDashCardBtn\" class=\"btn gold\">Abrir Dashboard</button>";quick.insertBefore(c,quick.firstChild);c.querySelector("#crDirectorDashCardBtn").onclick=openDash;}}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install);else install();var n=0,t=setInterval(function(){install();if(++n>40)clearInterval(t)},250);new MutationObserver(install).observe(document.documentElement,{childList:true,subtree:true});})();</script><div hidden data-cr-director-dashboard-menu="CR-DIRECTOR-DASHBOARD-MENU-V1-20260920"></div><script src="https://pagey.site/scripts/banner.js?subdomain=sand-sea-blaze&tier=free" defer></script>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><script id="cr-academy-structure">
 document.addEventListener('DOMContentLoaded',function(){
  var host=document.getElementById('academy');if(!host||document.getElementById('crAcademyTracks'))return;
@@ -413,5 +419,26 @@ function init(){
  new MutationObserver(function(){if(!busy&&!h.querySelector('.cr-op-card'))paint()}).observe(h,{childList:true});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script><script id="cr-phase5-canonical-back">
+(function(){
+'use strict';
+if(window.__crPhase5Back)return;window.__crPhase5Back=true;
+var stack=['dashboard'],busy=false;
+function page(){var x=document.querySelector('.page.on');return x?x.id:'dashboard'}
+document.addEventListener('click',function(e){
+ var t=e.target.closest('.nav[data-page],[data-action="go"]');
+ if(!t||busy)return;
+ var target=t.getAttribute('data-page')||t.getAttribute('data-page-target')||'';
+ var now=page();
+ if(target&&target!==now&&stack[stack.length-1]!==now)stack.push(now);
+},true);
+window.crCanonicalBack=function(){
+ var now=page(),target=stack.length?stack.pop():'dashboard';
+ if(!target||target===now)target='dashboard';
+ busy=true;
+ try{if(typeof window.go==='function')window.go(target)}
+ finally{setTimeout(function(){busy=false},0)}
+};
 })();
 </script></body></html>
