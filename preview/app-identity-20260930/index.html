@@ -387,7 +387,275 @@ details{overflow:hidden!important}summary{color:#0b4f91!important;background:#f8
   .slotBudget,.slotClient,.slotProblem{max-width:100%!important;overflow-wrap:anywhere!important}
   .multiDeskTop,.multiActions,.queueControls,.caseTools,.serviceAdd{max-width:100%!important;min-width:0!important}
 }
-</style><meta name="robots" content="noindex,nofollow"><meta name="cr-preview-source" content="app-identity-candidate-final-20260930"></head>
+</style><style id="cr-ui-canonical-v1">
+/* =========================================================
+   CR UI CANONICAL V1 — 2026-09-30
+   HOME CANÔNICA -> APP CANDIDATE
+   Visual only. No logic, routes, handlers, APIs or data changes.
+   ========================================================= */
+:root{
+  --crui-navy:#031b46;
+  --crui-navy-2:#05265f;
+  --crui-blue:#0877f9;
+  --crui-blue-dark:#075bd8;
+  --crui-gold:#ffc514;
+  --crui-gold-dark:#dca900;
+  --crui-green:#0da867;
+  --crui-red:#d94a57;
+  --crui-bg:#eaf6fc;
+  --crui-surface:#ffffff;
+  --crui-surface-soft:#f5fbff;
+  --crui-line:#c9e0ef;
+  --crui-text:#102f55;
+  --crui-muted:#6d8299;
+  --crui-focus:0 0 0 3px rgba(8,119,249,.16);
+  --crui-shadow:0 4px 12px rgba(14,62,108,.08);
+  --crui-shadow-strong:0 12px 28px rgba(5,42,91,.14);
+  --crui-radius:10px;
+  --crui-radius-lg:14px;
+  --crui-control-h:40px;
+  --crui-control-h-sm:34px;
+}
+
+/* Desktop scale — use the available canvas */
+.wrap{
+  width:min(1540px,calc(100vw - 28px))!important;
+  max-width:1540px!important;
+  margin:0 auto!important;
+  padding:10px 0 46px!important;
+}
+.cloudBar{
+  width:min(1540px,calc(100vw - 28px))!important;
+  max-width:1540px!important;
+  margin:10px auto 0!important;
+}
+.multiDesk{
+  width:100%!important;
+  max-width:none!important;
+}
+.workflowBody{
+  width:min(1220px,100%)!important;
+  max-width:1220px!important;
+  margin:0 auto!important;
+}
+.clientSlots{
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr))!important;
+  align-items:stretch!important;
+}
+.clientSlot{
+  min-height:128px!important;
+}
+.hero{
+  width:100%!important;
+}
+
+/* Canonical button foundation */
+button,.primary,.secondary,.gold,.danger,.finalBtn,.copyBtn,.attachBtn,.miniBtn,.retryUpload,
+.cloudControls button,.peopleToolbar button,.collectActions button,.phase2Toolbar button,.commActions button,
+.personActions button,.personActions759 button,.crContactRow761 button,.handoffBox button,
+.cr-btn{
+  min-height:var(--crui-control-h)!important;
+  border-radius:var(--crui-radius)!important;
+  font-weight:800!important;
+  letter-spacing:0!important;
+  transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease,border-color .14s ease,filter .14s ease!important;
+  outline:none!important;
+}
+button:hover:not(:disabled),.primary:hover:not(:disabled),.secondary:hover:not(:disabled),
+.gold:hover:not(:disabled),.danger:hover:not(:disabled),.finalBtn:hover:not(:disabled),
+.copyBtn:hover:not(:disabled),.attachBtn:hover:not(:disabled),.miniBtn:hover:not(:disabled),
+.cr-btn:hover:not(:disabled){
+  transform:translateY(-1px)!important;
+}
+button:active:not(:disabled),.cr-btn:active:not(:disabled){
+  transform:translateY(0)!important;
+}
+button:focus-visible,.primary:focus-visible,.secondary:focus-visible,.gold:focus-visible,.danger:focus-visible,
+.finalBtn:focus-visible,.copyBtn:focus-visible,.attachBtn:focus-visible,.miniBtn:focus-visible,
+input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible,.cr-btn:focus-visible{
+  box-shadow:var(--crui-focus)!important;
+}
+
+/* Primary — blue */
+.primary,.copySystem,.cr-btn-primary{
+  background:linear-gradient(180deg,#1688ff 0%,var(--crui-blue-dark) 100%)!important;
+  border:1px solid #096ada!important;
+  color:#fff!important;
+  box-shadow:0 4px 10px rgba(7,91,216,.16)!important;
+}
+.primary:hover:not(:disabled),.copySystem:hover:not(:disabled),.cr-btn-primary:hover:not(:disabled){
+  filter:brightness(1.03)!important;
+  box-shadow:0 7px 14px rgba(7,91,216,.18)!important;
+}
+
+/* Secondary — white / ice */
+.secondary,.copyBtn,.attachBtn,.miniBtn,.cloudControls button,.cr-btn-secondary{
+  background:#fff!important;
+  border:1px solid #b8d4e7!important;
+  color:#15527f!important;
+  box-shadow:0 2px 6px rgba(15,68,112,.05)!important;
+}
+.secondary:hover:not(:disabled),.copyBtn:hover:not(:disabled),.attachBtn:hover:not(:disabled),
+.miniBtn:hover:not(:disabled),.cloudControls button:hover:not(:disabled),.cr-btn-secondary:hover:not(:disabled){
+  background:#eef8ff!important;
+  border-color:#8fc4e8!important;
+}
+
+/* Gold CTA — canonical highlight */
+.gold,.secondary.gold,.btn.gold,
+.multiActions .primary:first-of-type,
+.peopleToolbar .primary,
+.cr-btn-gold{
+  background:linear-gradient(180deg,#ffd733 0%,var(--crui-gold) 100%)!important;
+  border:1px solid var(--crui-gold-dark)!important;
+  color:#26355d!important;
+  box-shadow:0 4px 10px rgba(206,158,0,.15)!important;
+}
+.gold:hover:not(:disabled),.secondary.gold:hover:not(:disabled),.btn.gold:hover:not(:disabled),
+.cr-btn-gold:hover:not(:disabled){
+  filter:brightness(1.02)!important;
+}
+
+/* Success */
+.finalBtn,.cr-btn-success{
+  background:linear-gradient(180deg,#18b875 0%,var(--crui-green) 100%)!important;
+  border:1px solid #0b945b!important;
+  color:#fff!important;
+  box-shadow:0 4px 10px rgba(13,168,103,.16)!important;
+}
+
+/* Destructive */
+.danger,.secondary.danger,.x,.cr-btn-danger{
+  background:#fff3f4!important;
+  border:1px solid #e9bfc4!important;
+  color:#a73844!important;
+  box-shadow:none!important;
+}
+.danger:hover:not(:disabled),.secondary.danger:hover:not(:disabled),.x:hover:not(:disabled),.cr-btn-danger:hover:not(:disabled){
+  background:#ffe9eb!important;
+  border-color:#dfa2aa!important;
+}
+
+/* Compact/icon buttons */
+.miniBtn,.retryUpload,.x,.cr-btn-sm{
+  min-height:var(--crui-control-h-sm)!important;
+  padding:6px 9px!important;
+  font-size:12px!important;
+}
+.x,.cr-btn-icon{
+  width:36px!important;
+  min-width:36px!important;
+  height:36px!important;
+  min-height:36px!important;
+  padding:0!important;
+  display:inline-grid!important;
+  place-items:center!important;
+}
+
+/* Disabled state */
+button:disabled,.primary:disabled,.secondary:disabled,.gold:disabled,.danger:disabled,
+.finalBtn:disabled,.copyBtn:disabled,.attachBtn:disabled,.miniBtn:disabled,.cr-btn:disabled{
+  opacity:.48!important;
+  cursor:not-allowed!important;
+  transform:none!important;
+  box-shadow:none!important;
+  filter:saturate(.75)!important;
+}
+
+/* Links */
+a{
+  color:#0a69c7!important;
+  text-underline-offset:2px!important;
+}
+a:hover{color:#064f9d!important}
+.fileRow a.cloudOpen{
+  color:#0a69c7!important;
+  font-weight:800!important;
+}
+
+/* Inputs/selects — same product language */
+input,select,textarea,.cloudControls select{
+  min-height:var(--crui-control-h)!important;
+  border-radius:var(--crui-radius)!important;
+  border:1px solid #bfd9e9!important;
+  background:#fff!important;
+  color:var(--crui-text)!important;
+  box-shadow:inset 0 1px 0 rgba(8,63,110,.02)!important;
+}
+textarea{min-height:150px!important}
+input:hover,select:hover,textarea:hover{border-color:#a7cce4!important}
+input:focus,select:focus,textarea:focus{
+  border-color:#62afe4!important;
+  box-shadow:var(--crui-focus)!important;
+}
+
+/* Action hierarchy */
+.multiActions{
+  display:grid!important;
+  grid-template-columns:auto auto minmax(220px,1fr)!important;
+  gap:8px!important;
+  align-items:center!important;
+}
+.multiActions .primary,.multiActions .secondary{
+  width:auto!important;
+  min-width:180px!important;
+  margin:0!important;
+}
+.multiActions .danger,.multiActions .secondary.danger{
+  justify-self:end!important;
+}
+.handoffBox .primary{min-width:230px!important}
+.peopleToolbar{gap:8px!important}
+.peopleToolbar button{min-width:190px!important}
+
+/* Larger desktop layout for operational forms */
+@media(min-width:1200px){
+  .topGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .advGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .commSetup{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .caseTools{grid-template-columns:minmax(0,1.5fr) minmax(240px,.5fr)!important}
+  .queueControls{grid-template-columns:minmax(220px,.6fr) minmax(0,1.4fr)!important}
+  .serviceAdd{grid-template-columns:190px minmax(0,1fr) auto!important}
+  .attachBtns{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .collectActions,.commActions,.footerActions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+/* Tablet */
+@media(max-width:1199px){
+  .wrap,.cloudBar{width:min(1180px,calc(100vw - 24px))!important}
+  .workflowBody{width:min(980px,100%)!important}
+  .clientSlots{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))!important}
+  .multiActions{grid-template-columns:1fr 1fr!important}
+  .activeCaseBanner{grid-column:1/-1!important}
+}
+
+/* Mobile */
+@media(max-width:700px){
+  .wrap,.cloudBar{
+    width:100%!important;
+    max-width:100%!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
+  }
+  .cloudBar{margin:7px 0 0!important}
+  .workflowBody{width:100%!important;max-width:100%!important}
+  .clientSlots{display:flex!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;gap:8px!important}
+  .clientSlots::-webkit-scrollbar{display:none!important}
+  .clientSlots{scrollbar-width:none!important}
+  .clientSlot{flex:0 0 84%!important;max-width:84%!important;scroll-snap-align:start!important}
+  .multiActions{grid-template-columns:1fr!important}
+  .multiActions .primary,.multiActions .secondary,.multiActions .danger,
+  .peopleToolbar button,.handoffBox .primary,.collectActions button,.commActions button,.footerActions button{
+    width:100%!important;min-width:0!important;
+  }
+  button,.primary,.secondary,.gold,.danger,.finalBtn,.copyBtn,.attachBtn,.miniBtn,
+  .cloudControls button,.cr-btn{min-height:44px!important}
+  .x,.cr-btn-icon{min-height:40px!important;height:40px!important;width:40px!important;min-width:40px!important}
+  .topGrid,.advGrid,.commSetup,.caseTools,.queueControls,.serviceAdd,.attachBtns,.collectActions,.commActions,.footerActions{
+    grid-template-columns:1fr!important;
+  }
+}
+</style><meta name="robots" content="noindex,nofollow"><meta name="cr-preview-source" content="app-canonical-controls-scale-20260930"></head>
 <body>
 <header><div class="head">
   <div class="brandMark" aria-label="CONSTRU-REI"><img class="crLogo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&rev=app-identity-canonical-20260930" alt="CONSTRU-REI"></div>
