@@ -113,3 +113,44 @@ A V2 só pode ser considerada pronta se:
 
 ## COMANDO DE RETOMADA
 CR ASSERTIVO — retome exatamente do CHECKPOINT_IDENTITY_V2_20260930 no branch cr-identity-reference-v2-20260930. Não recomece, não promova e não altere lógica. Continue somente a transformação visual estrutural baseada na imagem de referência aprovada por Rogério, preserve integralmente IDs, handlers, rotas, APIs, automações, auth e dados. Finalize primeiro a home da Central em candidate, valide anti-regressão e só depois propague a mesma identidade para APP, Dashboard, Apresentação e F00–F09. Aguarde validação visual antes de promover ao main.
+
+
+## ATUALIZAÇÃO DE RETOMADA — 30/09/2026
+Status: CANDIDATE VISUAL V2 PROPAGADO • NÃO PROMOVIDO
+
+Último commit de implementação antes deste checkpoint: ee741f29e5c66763b08575520138531d8d586735
+
+### HOME CENTRAL — CONCLUÍDA ESTRUTURALMENTE NO CANDIDATE
+- central/index.html recebeu a composição estrutural V2 da referência aprovada.
+- Inseridos cabeçalhos executivos para KPIs, acessos essenciais, esteira F00→F09 e pendências vivas.
+- Hero, menu, topo, cards, botões, KPIs, esteira e pendências usam a camada CR REFERENCE V2.
+- Preservados IDs, handlers, links, scripts, fetches, botões e âncoras funcionais.
+- A HOME passou nos gates estáticos de antirregressão.
+
+### PROPAGAÇÃO VISUAL CONECTADA
+As superfícies abaixo apontam para o Design System do próprio branch candidate, sem depender do CSS publicado no main:
+- APP: central-runtime/app/index.html
+- Dashboard: central-runtime/dashboard/index.html
+- Apresentação: central/presentation.html
+- F00–F09: central-runtime/f00/index.html até central-runtime/f09/index.html
+
+Arquivo canônico:
+- central-runtime/ui/cr-product-design-20260930.css
+
+### GATES PASSADOS
+- CSS V2 contém regras específicas para HOME, APP, Dashboard, Apresentação e shell F00–F09.
+- DOM esperado encontrado em todas essas superfícies.
+- F00–F09 continuam carregando cr-shell.js.
+- Em todas as alterações de referência visual foram preservados scripts, IDs, onclicks, fetches, botões e âncoras.
+- Comparação com main: branch somente à frente; main não foi promovido nem alterado por esta etapa.
+
+### VALIDAÇÃO VISUAL
+A validação automática por navegador remoto ficou indisponível porque o Opera Browser Connector estava desconectado.
+Isso NÃO autoriza promoção. O candidate permanece isolado aguardando captura/validação visual humana antes de merge/promote.
+
+### PRÓXIMO PASSO EXATO
+1. Abrir/renderizar o branch candidate em navegador conectado.
+2. Conferir screenshot desktop e mobile da HOME primeiro.
+3. Se a HOME estiver visualmente fiel à referência, conferir APP, Dashboard, Apresentação e F00–F09.
+4. Corrigir somente CSS/composição visual se necessário, sem tocar em lógica.
+5. NÃO promover ao main até aprovação visual explícita de Rogério.
