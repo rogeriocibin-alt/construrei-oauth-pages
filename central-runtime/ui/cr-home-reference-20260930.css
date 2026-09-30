@@ -434,3 +434,15 @@ html,body{background:var(--crh-bg)!important;color:var(--crh-text)!important;fon
   #dashboard .cr-flow-grid .cr-flow-card{flex-basis:82vw!important;min-width:82vw!important;max-width:82vw!important}
   #dashboard .cr-pending-grid .cr-pending-card{flex-basis:88vw!important;min-width:88vw!important;max-width:88vw!important}
 }
+
+
+/* Phase 4 mobile clipping correction found during matrix validation */
+@media(max-width:600px){
+  #dashboard>.cr-home-hero{width:100%!important;max-width:100%!important;overflow:hidden!important}
+  .cr-hero-main{min-width:0!important;max-width:100%!important;overflow:hidden!important}
+  .cr-hero-main h1{max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important}
+  .cr-hero-actions{width:100%!important;max-width:100%!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .cr-hero-actions .btn{width:100%!important;min-width:0!important;max-width:100%!important}
+  #dashboard .cr-operation-panel .cr-panel-action,
+  #dashboard .cr-flow-panel .cr-panel-action{margin-left:39px!important;margin-right:auto!important;max-width:calc(100% - 47px)!important}
+}
