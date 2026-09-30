@@ -300,3 +300,137 @@ html,body{background:var(--crh-bg)!important;color:var(--crh-text)!important;fon
   .cr-hero-actions .btn{min-height:42px!important;font-size:10px!important}
   #dashboard .cr-panel-title h2{font-size:15px!important}
 }
+
+
+/* =========================================================
+   PHASE 4 — RESPONSIVE HOMOLOGATION 2026-09-30
+   Final responsive/density polish only. No functional behavior.
+   ========================================================= */
+
+/* Sidebar: keep brand/footer visible while menu body scrolls */
+.side{scrollbar-gutter:stable;overscroll-behavior:contain}
+.side .brand{position:sticky;top:-12px;z-index:6;background:linear-gradient(180deg,#05245a 0%,#05245a 82%,rgba(5,36,90,.96) 100%);box-shadow:0 5px 12px rgba(2,21,53,.10)}
+.cr-side-footer{position:sticky;bottom:-12px;z-index:6;background:linear-gradient(180deg,rgba(2,21,53,.94),#021535 30%,#021535 100%);box-shadow:0 -5px 12px rgba(2,21,53,.10)}
+
+/* Desktop density: preserve readability while reclaiming vertical space */
+#dashboard>.cr-home-hero{min-height:116px!important}
+.cr-hero-visual{min-height:116px}
+#dashboard .cr-home-panel{margin-top:7px}
+#dashboard .cr-panel-head{min-height:36px;padding-top:4px;padding-bottom:4px}
+.cr-op-card{min-height:108px}
+.cr-quick-card,#crDirectorDashCard{min-height:96px!important}
+.cr-flow-card{min-height:166px}
+.cr-pending-card{min-height:134px}
+.cr-health-card{min-height:62px}
+.cr-bottom-grid>.cr-home-panel{margin-top:7px!important}
+
+/* Desktop flow readability bump without changing the 10-card architecture */
+.cr-flow-code{font-size:9px}
+.cr-flow-card h3{font-size:9.45px;line-height:1.16}
+.cr-flow-active{font-size:8.55px}
+.cr-flow-active b{font-size:24px}
+.cr-flow-state{font-size:7.75px}
+.cr-flow-state .dot{width:7px;height:7px}
+
+/* Hero final depth refinement */
+.cr-hero-slogan{left:7%;top:17px}
+#crHeroLogo{right:16px;top:9px}
+.cr-hero-welcome{right:8px;bottom:6px}
+.cr-hero-visual:after{filter:drop-shadow(0 -3px 7px rgba(0,0,0,.14))}
+
+/* Horizontal collections: keep touch scrolling but hide visual scrollbars */
+#dashboard .cr-kpi-grid,
+#dashboard .cr-quick-grid,
+#dashboard .cr-flow-grid,
+#dashboard .cr-pending-grid{
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+#dashboard .cr-kpi-grid::-webkit-scrollbar,
+#dashboard .cr-quick-grid::-webkit-scrollbar,
+#dashboard .cr-flow-grid::-webkit-scrollbar,
+#dashboard .cr-pending-grid::-webkit-scrollbar{display:none;width:0;height:0}
+
+/* Tablet/mobile layout refinements */
+@media(max-width:980px){
+  .side .brand{top:0}
+  .cr-side-footer{bottom:0}
+  #dashboard>.cr-home-hero{min-height:auto!important}
+  .cr-hero-visual{min-height:82px}
+  #dashboard .cr-kpi-grid,
+  #dashboard .cr-quick-grid,
+  #dashboard .cr-flow-grid,
+  #dashboard .cr-pending-grid{
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    scroll-padding-inline:8px;
+  }
+}
+
+/* Phone homologation */
+@media(max-width:600px){
+  .content{padding:8px 9px 78px!important}
+  .top{padding:0 9px!important}
+  .top .menu{width:42px!important;height:42px!important}
+  .cr-ref-title #crumb{font-size:16px!important}
+  
+  /* Hero: 10–15% less vertical footprint, same 2-column action pattern */
+  #dashboard>.cr-home-hero{border-radius:12px!important}
+  .cr-hero-main{padding:10px 12px 11px!important}
+  .cr-hero-main .ey{font-size:7.4px!important;line-height:1.28!important;letter-spacing:.11em!important}
+  .cr-hero-main h1{font-size:18.5px!important;line-height:1.08!important;margin:3px 0 7px!important}
+  .cr-hero-actions{gap:5px!important}
+  .cr-hero-actions .btn{min-height:44px!important;padding:6px 8px!important;font-size:9.5px!important}
+  .cr-hero-visual{display:none!important}
+
+  /* Section headers: title first, actions below/right where present */
+  #dashboard .cr-panel-head{min-height:0;align-items:center!important;gap:6px!important;padding:7px 8px!important}
+  #dashboard .cr-panel-title{flex:1 1 auto;min-width:0}
+  #dashboard .cr-panel-title h2{font-size:14.5px!important;line-height:1.1!important;white-space:normal}
+  #dashboard .cr-panel-icon{width:30px;height:30px;flex:0 0 30px}
+  #dashboard .cr-panel-sub{order:2;flex:1 1 100%;width:100%;padding-left:39px!important;font-size:8.2px!important;line-height:1.25}
+  #dashboard .cr-panel-action{order:3;margin-left:auto!important;max-width:78%;white-space:normal;text-align:center;line-height:1.15;padding:7px 10px;font-size:8.8px}
+  #dashboard .cr-operation-panel .cr-panel-title,
+  #dashboard .cr-flow-panel .cr-panel-title{flex-basis:100%}
+  
+  /* One dominant card + visible hint of the next */
+  #dashboard .cr-kpi-grid{gap:8px!important;padding:0 8px 8px!important}
+  #dashboard .cr-kpi-grid .cr-op-card{flex:0 0 84vw!important;min-width:84vw!important;max-width:84vw!important;min-height:154px!important;scroll-snap-align:start}
+  #dashboard .cr-quick-grid{gap:8px!important;padding:0 8px 8px!important}
+  #dashboard .cr-quick-grid .cr-quick-card,
+  #dashboard .cr-quick-grid #crDirectorDashCard{flex:0 0 86vw!important;min-width:86vw!important;max-width:86vw!important;min-height:118px!important;scroll-snap-align:start}
+  #dashboard .cr-flow-grid{gap:8px!important;padding:0 8px 8px!important}
+  #dashboard .cr-flow-grid .cr-flow-card{flex:0 0 78vw!important;min-width:78vw!important;max-width:78vw!important;min-height:176px!important;scroll-snap-align:start}
+  #dashboard .cr-pending-grid{gap:8px!important;padding:0 8px 8px!important}
+  #dashboard .cr-pending-grid .cr-pending-card{flex:0 0 86vw!important;min-width:86vw!important;max-width:86vw!important;min-height:142px!important;scroll-snap-align:start}
+
+  /* Card legibility on phone */
+  .cr-op-icon{width:36px;height:36px;flex-basis:36px}
+  .cr-op-label{font-size:10px}
+  .cr-op-value{font-size:28px}
+  .cr-op-detail{font-size:7.8px}
+  .cr-op-status{font-size:8px}
+  .cr-quick-card h3,#crDirectorDashCard h3{font-size:10.8px!important}
+  .cr-quick-card p,#crDirectorDashCard p{font-size:8.2px!important}
+  .cr-flow-code{font-size:9.2px}
+  .cr-flow-card h3{font-size:10px;min-height:30px}
+  .cr-flow-state{font-size:8px}
+  .cr-pending-copy h3{font-size:10px}
+  .cr-pending-total{font-size:26px}
+  .cr-pending-lines{font-size:7.4px}
+
+  /* Health: 2 columns when viable */
+  #dashboard .cr-health-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;padding:0 8px 8px!important}
+  .cr-health-card{min-height:72px;padding:9px}
+  .cr-health-value{font-size:12px;white-space:normal}
+  .cr-health-sub{font-size:7.2px}
+}
+
+@media(max-width:380px){
+  #dashboard .cr-health-grid{grid-template-columns:1fr!important}
+  #dashboard .cr-kpi-grid .cr-op-card{flex-basis:86vw!important;min-width:86vw!important;max-width:86vw!important}
+  #dashboard .cr-quick-grid .cr-quick-card,
+  #dashboard .cr-quick-grid #crDirectorDashCard{flex-basis:88vw!important;min-width:88vw!important;max-width:88vw!important}
+  #dashboard .cr-flow-grid .cr-flow-card{flex-basis:82vw!important;min-width:82vw!important;max-width:82vw!important}
+  #dashboard .cr-pending-grid .cr-pending-card{flex-basis:88vw!important;min-width:88vw!important;max-width:88vw!important}
+}
