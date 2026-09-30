@@ -236,7 +236,129 @@ a{color:#88c9f4}
  .multiDesk,.card{border-radius:16px!important}
 }
 </style>
-<meta name="construrei-build" content="triagem-v7.6.6-cloud-recovery-20260930-r1"></head>
+<meta name="construrei-build" content="triagem-v7.6.6-cloud-recovery-20260930-r1"><style id="cr-app-home-canonical-v2">
+/* CONSTRU-REI APP — identidade derivada da HOME canônica congelada 2026-09-30
+   Camada estritamente visual. Não altera lógica, handlers, APIs, autosave ou dados. */
+:root{
+  --crh-navy:#031b46;--crh-navy-2:#05265f;--crh-blue:#0877f9;--crh-blue-2:#075bd8;
+  --crh-gold:#ffc514;--crh-bg:#eaf6fc;--crh-panel:#f6fbff;--crh-card:#fff;
+  --crh-line:#c9e0ef;--crh-ink:#07165b;--crh-text:#17315d;--crh-muted:#6d8299;
+  --crh-ok:#0daf67;--crh-warn:#f2a500;--crh-bad:#ee2147;--crh-purple:#8b36d6;
+  --crh-shadow:0 5px 14px rgba(13,63,111,.08);--crh-shadow-2:0 14px 34px rgba(5,42,91,.14);
+  --crh-radius:12px;
+  --navy:var(--crh-navy-2);--blue:var(--crh-blue);--gold:#c59a00;--ink:var(--crh-text);
+  --muted:var(--crh-muted);--line:var(--crh-line);--soft:#eef7fc;--white:#fff;
+  --green:#168a62;--red:#b84949;--amber:#9c7300;--shadow:var(--crh-shadow)
+}
+html,body{background:var(--crh-bg)!important;color:var(--crh-text)!important}
+body{
+  background:
+    radial-gradient(circle at 88% -12%,rgba(8,119,249,.10),transparent 26%),
+    linear-gradient(180deg,#edf8fd 0%,#eaf6fc 60%,#e4f1f8 100%)!important;
+  background-attachment:fixed!important;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important
+}
+header{background:rgba(248,253,255,.98)!important;border-bottom:1px solid var(--crh-line)!important;box-shadow:0 5px 18px rgba(15,61,105,.08)!important;color:var(--crh-ink)!important}
+.head{min-height:60px!important;padding:7px 12px!important}
+.brandMark{min-width:64px!important}
+.brandMark img.crLogo{width:52px!important;height:52px!important;max-width:52px!important;border-radius:50%!important;background:#fff!important;padding:2px!important;box-shadow:0 0 0 1px rgba(255,197,20,.55),0 5px 14px rgba(5,42,91,.13)!important}
+.headText b{color:var(--crh-ink)!important;font-size:15px!important}.headText small{color:#315c8a!important}
+.wrap{max-width:1500px!important;padding:10px 12px 44px!important;background:transparent!important}
+
+.hero,.multiDesk,.card,.opening,.phase2,.phase3,.personForm,.personCard,.commCard,details{
+  background:linear-gradient(180deg,#fff 0%,#f8fcff 100%)!important;
+  border:1px solid var(--crh-line)!important;color:var(--crh-text)!important;
+  box-shadow:var(--crh-shadow)!important;border-radius:14px!important
+}
+.hero{
+  background:linear-gradient(118deg,#031b46 0%,#06367e 68%,#075bd8 100%)!important;
+  border-color:rgba(255,197,20,.34)!important;box-shadow:var(--crh-shadow-2)!important;
+  color:#fff!important;padding:16px 18px!important
+}
+.hero h1{color:#fff!important;font-size:27px!important}.hero p{color:#dceafa!important}.hero:after{display:none!important}
+.multiDeskTop h2,.card h2,.personForm h3,.personCardHead b,.commHead b,.phase2Head h2,.phase3Head h2,
+.openingIntro b,.phase2Intro b,.evidenceItem b,.serviceItem b,.activeCaseBanner b{color:var(--crh-ink)!important}
+.multiDeskTop p,.sub,.headText small,.activeCaseBanner,.slotProblem,.commFoot,.cloudCaption,.personCardHead small,.commHead small{color:var(--crh-muted)!important}
+
+.cloudBar{background:#f9fdff!important;border:1px solid var(--crh-line)!important;color:var(--crh-text)!important;box-shadow:var(--crh-shadow)!important;border-radius:12px!important}
+.cloudStatus{color:#315c8a!important}.cloudControls label{color:var(--crh-muted)!important}
+.cloudControls select,.cloudControls button,.caseTools input,.caseTools select,.queueControls input,.queueControls select,
+.serviceAdd input,.serviceAdd select,input,select,textarea{
+  background:#fff!important;border:1px solid #c6ddec!important;color:var(--crh-text)!important;border-radius:10px!important
+}
+input::placeholder,textarea::placeholder{color:#8aa0b4!important;opacity:1!important}
+input:focus,select:focus,textarea:focus{border-color:#6bb6f0!important;box-shadow:0 0 0 3px rgba(8,119,249,.10)!important}
+
+.multiStat,.slotState,.personPill,.serviceCount,.uploadState{background:#edf6ff!important;border:1px solid #d5e7f3!important;color:#45698c!important}
+.multiStat b,.slotBudget{color:var(--crh-ink)!important}
+.clientSlot{background:#fff!important;border:1px solid var(--crh-line)!important;color:var(--crh-text)!important;box-shadow:0 3px 9px rgba(14,62,108,.05)!important}
+.clientSlot:hover{background:#f7fbff!important;border-color:#9ecbec!important}
+.clientSlot.active{background:linear-gradient(180deg,#eef7ff,#f7fbff)!important;border:2px solid var(--crh-blue)!important;box-shadow:0 0 0 3px rgba(8,119,249,.07)!important}
+.clientSlot.finalized{background:#f1fbf6!important;border-color:#8fd0b1!important}
+.clientSlot.active .slotState{background:#e3f1ff!important;color:#0a62c5!important;border-color:#a8d1f0!important}
+.clientSlot.finalized .slotState{background:#def4e8!important;color:#16805a!important;border-color:#adddc5!important}
+.slotIndex,.slotClient{color:#31506f!important}.slotProgress{background:#dceaf3!important}.slotProgress i{background:linear-gradient(90deg,var(--crh-blue-2),var(--crh-blue))!important}
+
+.steps{gap:6px!important}.step{background:#fff!important;border:1px solid var(--crh-line)!important;color:#7890a5!important;border-radius:10px!important}
+.step.on{background:#eaf4ff!important;border-color:#9fcbee!important;color:#0b4f9f!important;box-shadow:inset 0 -2px 0 var(--crh-blue)!important}
+.step.done{background:#edf9f3!important;border-color:#a8d9c0!important;color:#16805a!important}
+.caseRibbon{background:linear-gradient(90deg,#06367e,#0877f9)!important;border:0!important;box-shadow:0 4px 11px rgba(8,119,249,.18)!important}
+
+.fieldCard,.collectQuestion,.evidenceItem,.clientMsg,.personMsg,.outcome,.cloudActivityItem,.serviceItem,
+.crContactRow761,.crMediaCard761,.completionHint,.openingIntro,.phase2Intro,.queueControls,.wizyPrep{
+  background:#f8fcff!important;border:1px solid var(--crh-line)!important;color:#355875!important
+}
+.fieldCard .topline b,.collectQuestion .txt,.evidenceItem,.serviceItem b,.completionHint,.openingIntro,.phase2Intro{color:#294f6f!important}
+.fieldCard.good,.completionHint.ok,.handoffBox{background:#effaf5!important;border-color:#b8dfca!important;color:#216c50!important}
+.fieldCard.missing,.openingRule,.privacyRule,.outcome.warn,.completionHint.warn,.cloudWarn{background:#fff8e6!important;border-color:#e8d397!important;color:#765916!important}
+.openingRule b,.privacyRule b,.handoffBox b{color:#6d5200!important}
+
+.personCardHead,.commHead{background:#f0f7fc!important;border-color:var(--crh-line)!important;color:var(--crh-ink)!important}
+.personMsg,.commText,.clientMsg{background:#fbfdff!important;border-color:#dbe8f1!important;color:#294f6f!important}
+.personPill{background:#eaf4ff!important;color:#2f6692!important}
+.emptyPeople{background:#fbfdff!important;border-color:#bfd4e3!important;color:var(--crh-muted)!important}
+.caseProblem{background:#edf7ff!important;border-color:#a9cde6!important}.caseProblem b{color:#0c4d95!important}.caseProblem span{color:#294f6f!important}.caseProblem small{color:#6d8299!important}
+
+.phase2{border-color:#e2c973!important;background:linear-gradient(180deg,#fff,#fffdf5)!important}
+.phase2Badge{background:#fff3c4!important;border-color:#e3cf82!important;color:#705800!important}
+.phase3{border-color:#b9d3e7!important;background:linear-gradient(180deg,#fff,#f8fcff)!important}
+.phase3Badge{background:#e8f3fb!important;border-color:#b9d3e7!important;color:#0b4f91!important}
+.collectQuestion .n{background:#eaf3fb!important;color:#0b4f91!important}
+.privacyTag{background:#e9f6ef!important;color:#27765a!important}.privacyTag.restricted{background:#fff1f1!important;color:#923838!important}
+
+.primary,.copySystem{background:linear-gradient(180deg,#1688ff,#075bd8)!important;color:#fff!important;border:1px solid #0b6fe6!important;box-shadow:0 4px 9px rgba(7,91,216,.14)!important}
+.secondary,.attachBtn,.miniBtn,.copyBtn,.cloudControls button{background:#fff!important;border:1px solid #bcd7ea!important;color:#1f537f!important;box-shadow:none!important}
+.secondary:hover,.attachBtn:hover,.miniBtn:hover,.copyBtn:hover,.cloudControls button:hover{background:#edf7ff!important}
+.gold,.secondary.gold,.btn.gold{background:linear-gradient(180deg,#ffd52c,#ffc400)!important;border-color:#e2ad00!important;color:#27335a!important}
+.danger,.secondary.danger{background:#fff3f3!important;border-color:#e8bcbc!important;color:#a63d40!important}
+.finalBtn{background:linear-gradient(180deg,#19b572,#0d9b60)!important;color:#fff!important;box-shadow:0 4px 10px rgba(13,155,96,.16)!important}
+.retryUpload{background:#fff8e6!important;border-color:#e5c878!important;color:#795d16!important}
+
+.cloudTeam{background:#f7fbfe!important;border-color:var(--crh-line)!important;color:#45698c!important}.cloudTeam summary{color:#0c5ea8!important}
+.cloudActivityItem{background:#fff!important}.fileRow{background:#fff!important;border-color:var(--crh-line)!important;color:#355875!important}
+.fileRow a.cloudOpen{color:#0b6ed8!important}.fileRow .cloudTag{background:#e7f7ee!important;color:#24704e!important}
+.involvedPersistent759{background:rgba(248,253,255,.97)!important;border-color:#c7ddeb!important;box-shadow:0 4px 12px rgba(15,61,105,.08)!important}
+.involvedPersistentMain759 b{color:#1d4c73!important}.involvedPersistentMain759 span{color:#678097!important}
+.crGate761{background:#fff8e7!important;border-color:#ead39a!important;color:#745817!important}.crGate761.ok{background:#eef9f3!important;border-color:#b8ddc6!important;color:#256545!important}
+
+details{overflow:hidden!important}summary{color:#0b4f91!important;background:#f8fcff!important}.adv{border-color:var(--crh-line)!important}
+.routeCard,.summaryBox{background:#f7fbfe!important;border:1px solid var(--crh-line)!important;color:#355875!important}
+.systemResult{border-color:#a7d7bf!important;background:#fbfffd!important}.systemResultHead{background:#eaf8f1!important;color:#165b45!important}
+
+.toast{background:#073565!important;color:#fff!important;box-shadow:0 7px 20px rgba(0,0,0,.18)!important}
+
+@media(max-width:700px){
+  body{background:#edf7fc!important}
+  .head{min-height:58px!important;padding:6px 9px!important}
+  .brandMark img.crLogo{width:46px!important;height:46px!important;max-width:46px!important}
+  .wrap{padding:8px 8px 36px!important}
+  .hero{padding:13px!important;border-radius:12px!important}.hero h1{font-size:22px!important}
+  .multiDesk,.card,.opening,.phase2,.phase3{border-radius:12px!important}
+  .clientSlot{flex:0 0 84%!important}
+  .primary,.finalBtn{min-height:44px!important}
+  .secondary,.attachBtn,.miniBtn,.copyBtn,.cloudControls button{min-height:42px!important}
+}
+</style></head>
 <body>
 <header><div class="head">
   <div class="brandMark" aria-label="CONSTRU-REI"><img class="crLogo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&rev=app-identity-canonical-20260930" alt="CONSTRU-REI"></div>
