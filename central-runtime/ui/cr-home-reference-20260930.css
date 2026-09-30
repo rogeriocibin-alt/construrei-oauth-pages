@@ -286,6 +286,9 @@ html,body{background:var(--crh-bg)!important;color:var(--crh-text)!important;fon
   .side .nav{min-height:44px!important;font-size:14px!important}
   .top{height:58px!important}
   .cr-ref-title #crumb{font-size:16.5px!important}
+  #dashboard>.cr-home-hero{grid-template-columns:1fr!important}
+  .cr-hero-main{width:100%;min-width:0}
+  .cr-hero-visual{min-height:88px}
   .cr-op-card{min-height:162px}
   .cr-quick-card,#crDirectorDashCard{min-height:118px!important}
   .cr-flow-card{min-height:180px}
