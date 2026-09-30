@@ -275,4 +275,67 @@ window.crRenderTechnicalRecovery=renderTech;window.crRefreshCentralKpis=refreshK
 
 
 
-</body></html>
+
+<style id="cr-v2-menu-recovery-local">
+.cr-v2-doc-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 4px;padding:10px;border:1px solid rgba(207,163,60,.25);border-radius:14px;background:rgba(7,31,55,.46)}
+.cr-v2-doc-tabs .btn{font-size:11px;padding:8px 10px}
+.cr-v2-unified-note{margin-top:10px}
+@media(max-width:700px){.cr-v2-doc-tabs{display:grid;grid-template-columns:1fr 1fr}.cr-v2-doc-tabs .btn{width:100%}}
+</style>
+<script id="cr-v2-menu-recovery-local-js">
+(function(){
+'use strict';
+var MARK="CR-CENTRAL-V2-MENU-RECOVERY-LOCAL-20260929";
+function norm(s){return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function groups(){return Array.from(document.querySelectorAll('#side .grp'))}
+function byTitle(t){t=norm(t);return groups().find(function(g){var x=g.querySelector('.gt');return x&&norm(x.textContent)===t})}
+function nav(page,label){var b=document.createElement('button');b.className='nav';b.setAttribute('data-page',page);b.innerHTML='<i></i>'+label;return b}
+function installMenu(){
+ var base=byTitle('base tecnica');
+ if(base&&!base.dataset.crV2Unified){
+   base.dataset.crV2Unified='1';
+   base.innerHTML='<div class="gt">Base Técnica</div>';
+   base.appendChild(nav('docs','Documentações'));
+ }
+ var gov=byTitle('governanca');
+ if(gov){gov.dataset.crV2Consolidated='1';gov.style.display='none'}
+ var team=byTitle('equipe & conhecimento');
+ if(team){
+   var hist=team.querySelector('[data-page="history"]');
+   if(hist)hist.style.display='none';
+ }
+}
+function installHub(){
+ var host=document.getElementById('docs');if(!host)return;
+ if(!document.getElementById('crV2UnifiedTabs')){
+   var tabs=document.createElement('div');tabs.id='crV2UnifiedTabs';tabs.className='cr-v2-doc-tabs';
+   var items=[
+    ['htmls','HTMLs'],['acervo','Acervo'],['os','Central OS'],['apis','API / Schema'],
+    ['grc','GRC'],['sst','SST'],['security','Segurança'],['audit','Auditorias'],
+    ['releases','Releases'],['gaps','Gaps'],['history','Snapshots']
+   ];
+   tabs.innerHTML=items.map(function(x){return '<button class="btn" data-action="go" data-page-target="'+x[0]+'">'+x[1]+'</button>'}).join('');
+   var notice=host.querySelector('.notice');
+   if(notice)notice.insertAdjacentElement('afterend',tabs);else host.prepend(tabs);
+   var n=document.createElement('div');n.className='notice cr-v2-unified-note';n.innerHTML='<b>Base Técnica unificada.</b> Os módulos técnicos permanecem disponíveis aqui, sem poluir a navegação principal.';
+   tabs.insertAdjacentElement('afterend',n);
+ }
+}
+function normalizeDashboardCard(){
+ var card=document.getElementById('crDocsDashCard');if(!card)return;
+ var tag=card.querySelector('.tag');if(tag)tag.textContent='BASE TÉCNICA';
+ var h=card.querySelector('h3');if(h)h.textContent='Base Técnica Unificada';
+ var p=card.querySelector('p');if(p)p.textContent='Documentação, Acervo, Central OS, APIs, governança e histórico em um único hub.';
+ var acts=card.querySelector('.actions');
+ if(acts)acts.innerHTML='<button class="btn gold" data-action="go" data-page-target="docs">Abrir Documentações</button>';
+}
+function openQuery(){
+ var op=(new URL(location.href)).searchParams.get('open')||'';
+ if(op==='docs'&&typeof window.localShow==='function')window.localShow('docs');
+}
+function install(){installMenu();installHub();normalizeDashboardCard();openQuery();document.documentElement.setAttribute('data-cr-v2-menu',MARK)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+var n=0,t=setInterval(function(){n++;installMenu();installHub();normalizeDashboardCard();if(n>40)clearInterval(t)},250);
+})();
+</script>
+<div hidden data-cr-v2-menu-recovery="CR-CENTRAL-V2-MENU-RECOVERY-LOCAL-20260929"></div></body></html>
