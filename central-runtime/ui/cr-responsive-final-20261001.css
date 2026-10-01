@@ -759,3 +759,216 @@ img,svg{max-width:100%}
     box-shadow:0 2px 5px rgba(7,91,216,.16)!important;
   }
 }
+
+
+/* FINAL NOTEBOOK FIT + MOBILE ACCESS BUTTONS V3 */
+/* Notebook: sidebar must fit the viewport at 100% zoom without vertical scrolling,
+   while operational buttons remain comfortably legible. */
+@media (min-width:1280px) and (max-width:1599px){
+  .side{
+    height:100vh!important;
+    max-height:100vh!important;
+    overflow-y:hidden!important;
+    display:flex!important;
+    flex-direction:column!important;
+    box-sizing:border-box!important;
+    padding:6px 6px 4px!important;
+  }
+  .side .brand{
+    flex:0 0 auto!important;
+    padding:3px 5px 6px!important;
+    gap:6px!important;
+  }
+  .side .brand img{width:44px!important;height:44px!important}
+  .side .brand strong{font-size:12px!important;line-height:1.05!important}
+  .side .brand small{font-size:6.3px!important;line-height:1.12!important}
+  .side .grp{
+    flex:0 0 auto!important;
+    margin:4px 0!important;
+  }
+  .side .gt{
+    font-size:7.2px!important;
+    line-height:1!important;
+    padding:0 7px 2px!important;
+    margin:0!important;
+  }
+  .side .nav{
+    min-height:25px!important;
+    height:25px!important;
+    padding:3px 7px!important;
+    font-size:9.6px!important;
+    line-height:1!important;
+    gap:6px!important;
+    border-radius:6px!important;
+  }
+  .side .nav i{
+    width:13px!important;height:13px!important;flex:0 0 13px!important;
+  }
+  .cr-side-footer{
+    margin-top:auto!important;
+    position:static!important;
+    min-height:28px!important;
+    height:28px!important;
+    padding:4px 6px!important;
+    font-size:7.4px!important;
+    flex:0 0 28px!important;
+  }
+
+  /* Restore button readability after the density pass. */
+  #dashboard .cr-panel-action{
+    min-height:30px!important;
+    padding:5px 10px!important;
+    font-size:8.8px!important;
+    font-weight:850!important;
+  }
+  .cr-flow-actions .btn{
+    min-height:31px!important;
+    padding:4px 7px!important;
+    font-size:9.1px!important;
+    font-weight:850!important;
+  }
+  .cr-pending-card>.btn{
+    min-height:30px!important;
+    padding:4px 7px!important;
+    font-size:8.8px!important;
+    font-weight:850!important;
+  }
+  .cr-quick-arrow{
+    width:27px!important;height:27px!important;
+    font-size:12px!important;
+  }
+}
+
+/* Mobile access buttons: same product language as desktop Central, not generic rectangles. */
+@media (max-width:767px){
+  #dashboard .cr-hero-actions{
+    gap:9px!important;
+  }
+
+  #dashboard .cr-hero-actions .btn{
+    position:relative!important;
+    min-height:56px!important;
+    padding:10px 44px 10px 16px!important;
+    border-radius:14px!important;
+    text-align:left!important;
+    justify-content:flex-start!important;
+    font-size:12px!important;
+    font-weight:900!important;
+    letter-spacing:-.01em!important;
+    overflow:hidden!important;
+    isolation:isolate!important;
+  }
+
+  #dashboard .cr-hero-actions .btn.primary{
+    background:
+      radial-gradient(circle at 14% 18%,rgba(255,255,255,.24),rgba(255,255,255,0) 28%),
+      linear-gradient(180deg,#2595ff 0%,#0877f9 48%,#075bd8 100%)!important;
+    border:1px solid #0a6ee6!important;
+    box-shadow:
+      0 7px 16px rgba(7,91,216,.24),
+      inset 0 1px 0 rgba(255,255,255,.34),
+      inset 0 -1px 0 rgba(3,27,70,.16)!important;
+  }
+
+  #dashboard .cr-hero-actions .btn.primary:before{
+    content:""!important;
+    position:absolute!important;
+    inset:0 auto 0 0!important;
+    width:5px!important;
+    background:linear-gradient(180deg,#69b7ff,#0b69e7)!important;
+    box-shadow:1px 0 0 rgba(255,255,255,.18)!important;
+  }
+
+  #dashboard .cr-hero-actions .btn.primary:after{
+    content:"→"!important;
+    position:absolute!important;
+    right:12px!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    width:25px!important;
+    height:25px!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:50%!important;
+    background:rgba(255,255,255,.15)!important;
+    border:1px solid rgba(255,255,255,.36)!important;
+    color:#fff!important;
+    font-size:14px!important;
+    font-weight:900!important;
+    line-height:1!important;
+  }
+
+  #dashboard .cr-hero-actions #crDirectorDashHero{
+    min-height:60px!important;
+    padding:11px 46px 11px 17px!important;
+    background:
+      radial-gradient(circle at 13% 18%,rgba(255,255,255,.38),rgba(255,255,255,0) 28%),
+      linear-gradient(180deg,#ffdc3d 0%,#ffc914 47%,#f4b900 100%)!important;
+    color:#102454!important;
+    border:1px solid #dca600!important;
+    box-shadow:
+      0 7px 16px rgba(226,173,0,.25),
+      inset 0 1px 0 rgba(255,255,255,.50),
+      inset 0 -1px 0 rgba(150,106,0,.12)!important;
+  }
+
+  #dashboard .cr-hero-actions #crDirectorDashHero:before{
+    content:""!important;
+    position:absolute!important;
+    inset:0 auto 0 0!important;
+    width:5px!important;
+    background:#e2ad00!important;
+  }
+
+  #dashboard .cr-hero-actions #crDirectorDashHero:after{
+    content:"→"!important;
+    position:absolute!important;
+    right:12px!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    width:26px!important;height:26px!important;
+    display:grid!important;place-items:center!important;
+    border-radius:50%!important;
+    background:rgba(21,39,94,.08)!important;
+    border:1px solid rgba(21,39,94,.18)!important;
+    color:#15275e!important;
+    font-size:14px!important;
+    font-weight:900!important;
+  }
+
+  #dashboard .cr-hero-actions .btn:active{
+    transform:translateY(1px)!important;
+    filter:saturate(.98) brightness(.98)!important;
+  }
+
+  /* Section actions should read as crafted Central controls as well. */
+  #dashboard .cr-panel-action{
+    position:relative!important;
+    padding:9px 36px 9px 12px!important;
+    border-radius:11px!important;
+    font-size:10.5px!important;
+    font-weight:850!important;
+    background:linear-gradient(180deg,#1688ff,#075bd8)!important;
+    box-shadow:0 5px 12px rgba(7,91,216,.20),inset 0 1px 0 rgba(255,255,255,.25)!important;
+  }
+  #dashboard .cr-panel-action:after{
+    content:"→"!important;
+    position:absolute!important;
+    right:10px!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    width:20px!important;height:20px!important;
+    display:grid!important;place-items:center!important;
+    border-radius:50%!important;
+    background:rgba(255,255,255,.14)!important;
+    border:1px solid rgba(255,255,255,.30)!important;
+    font-size:11px!important;
+  }
+
+  /* The dock remains crisp and uses the same blue/gold language. */
+  .cr-mobile-dock button{
+    font-size:10px!important;
+    font-weight:850!important;
+    letter-spacing:0!important;
+  }
+}
