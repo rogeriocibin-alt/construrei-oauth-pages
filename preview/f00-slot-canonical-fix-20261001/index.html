@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta name="cr-ui-shell" content="CR-UI-SHELL-V1-PROMOTION-READY-F00-20260922"><meta name="cr-flow-code" content="F00"><link rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-shell.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CONSTRU-REI • F00</title>
+<style>
+:root{--bg:#061524;--card:#0b2237;--card2:#071b2d;--line:#294d68;--gold:#d6a51b;--gold2:#f1cb62;--mut:#a9bdcc;--ok:#4fd39a;--warn:#f0bd4b;--bad:#ff727a;--blue:#5db4ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% 0,#0d3a64 0,#07192b 38%,#061524 78%);color:#fff;font:14px Inter,Arial,sans-serif}
+.wrap{max-width:1180px;margin:auto;padding:14px}.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.eyebrow{font-size:10px;letter-spacing:.12em;color:var(--gold2);font-weight:900}.head h1{margin:3px 0;font-size:23px}.mut{color:var(--mut)}.small{font-size:11px}
+.btn{border:1px solid #3b6380;background:#0c3a61;color:#fff;border-radius:11px;padding:10px 13px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.btn.gold{background:linear-gradient(180deg,#e0b640,#b98210);color:#1d1400;border-color:#f0ce70}.btn.ok{background:#1d6a50}.btn.ghost{background:#071b2d}.btn:disabled{opacity:.42;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:13px 0}.stat{background:linear-gradient(155deg,#0c2b4b,#081d34);border:1px solid var(--line);border-radius:15px;padding:12px;cursor:pointer}.stat.on{border-color:var(--gold2);box-shadow:inset 0 2px 0 var(--gold)}.stat b{display:block;font-size:25px}.stat span{font-size:10px;color:var(--mut);font-weight:800}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:10px}.card{background:linear-gradient(160deg,#0b2746,#081d34);border:1px solid var(--line);border-radius:15px;padding:12px}.input,textarea{width:100%;background:#061929;border:1px solid #31536d;color:#fff;border-radius:10px;padding:11px;font:inherit}.label{font-size:11px;color:var(--mut);font-weight:800;margin:8px 0 5px}.list{max-height:72vh;overflow:auto}.case{border:1px solid #31536d;border-radius:12px;padding:10px;margin:8px 0;background:#071b2d;cursor:pointer}.case:hover{border-color:#6992ac}.caseTop{display:flex;justify-content:space-between;gap:8px}.caseNo{font-weight:900;font-size:16px}.status{font-size:9px;border:1px solid #4a6c83;border-radius:999px;padding:4px 7px;height:max-content}.pending{color:var(--warn);font-size:10px;font-weight:800;margin-top:7px}.updated{font-size:10px;color:var(--mut);margin-top:4px}.capture{max-width:760px;margin:0 auto}.capture h2{font-size:22px;margin:5px 0}.number{font-size:20px;font-weight:900;letter-spacing:.04em}.drop{margin-top:9px;border:1px dashed #557b94;border-radius:13px;padding:11px;background:#071b2d}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.box{border:1px solid #31536d;background:#071b2d;border-radius:12px;padding:11px;margin-top:9px}.identified{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.fact{background:#061929;border:1px solid #22445f;border-radius:10px;padding:9px}.compactList{margin-top:8px}.compactRow{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid #1e4058}.compactRow:first-child{border-top:0}.compactCode{min-width:58px;color:#f1cb62;font-weight:900;font-size:10px}.compactMain{flex:1}.compactMain b{display:block}.compactMeta{color:#a9bdcc;font-size:10px;margin-top:2px}.typeBadge{display:inline-block;margin-left:6px;border:1px solid #406782;border-radius:999px;padding:3px 7px;font-size:9px;color:#b9d4e6}.fact b{display:block;color:var(--ok);font-size:10px;margin-bottom:4px}.fact span{white-space:pre-wrap}.missing{border-color:#755e28;background:#241f12}.missing h3{color:var(--warn);margin:0 0 8px}.missingItem{padding:7px 0;border-top:1px solid #463d23}.missingItem:first-of-type{border-top:0}.countBadge{display:inline-block;background:#493b13;color:#ffd86a;border:1px solid #7e6621;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:900}.okline{color:var(--ok);font-weight:900}.hidden{display:none!important}.caseHeader{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.caseHeader h2{margin:0}.files{margin-top:7px}.evidenceGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:9px}.thumb{position:relative;min-height:118px;background:#061929;border:1px solid #274b65;border-radius:11px;overflow:hidden;cursor:pointer}.thumb:hover{border-color:#6e9ab5}.thumbMedia{width:100%;height:88px;display:flex;align-items:center;justify-content:center;background:#03111e;overflow:hidden}.thumbMedia img,.thumbMedia video,.thumbMedia iframe{width:100%;height:100%;object-fit:cover;border:0}.thumbIcon{font-size:27px}.thumbName{font-size:9px;color:#c2d4df;padding:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.previewModal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px}.previewCard{position:relative;width:min(980px,96vw);height:min(780px,90vh);background:#061524;border:1px solid #446b85;border-radius:14px;padding:10px;display:flex;flex-direction:column}.previewHead{display:flex;gap:8px;align-items:center;margin-bottom:8px}.previewHead b{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.previewBody{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#020b12;border-radius:10px;overflow:hidden}.previewBody img,.previewBody video,.previewBody iframe{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;border:0}.previewBody audio{width:min(600px,90%)}.editGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}details summary{cursor:pointer;font-weight:800;color:#b9d4e6}pre{font:inherit;white-space:pre-wrap;margin:8px 0}.empty{text-align:center;color:var(--mut);padding:25px 10px}
+@media(max-width:790px){.wrap{padding:10px}.evidenceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.thumb{min-height:108px}.thumbMedia{height:80px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.list{max-height:36vh}.identified,.editGrid{grid-template-columns:1fr}.btn{min-height:44px}.caseHeader{display:block}.caseHeader .toolbar{margin-top:8px}}
+</style>
+<link rel="stylesheet" data-cr-design-system="CR-PRODUCT-DESIGN-20260930" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-product-design-20260930.css"><meta name="cr-f00-canonical-pilot" content="20261001"><link rel="stylesheet" href="./cr-flow-canonical-20261001.css"><meta name="cr-slot-canonical" content="F00-SLOT-CANONICAL-PREVIEW-20261001"></head>
+<body>
+<main class="wrap">
+  <div class="head">
+    <div>
+      <div class="eyebrow">CONSTRU-REI • APP</div>
+      <h1>F00 — Captador Inteligente de Chamados</h1>
+      <div class="mut small">A Gabi joga a informação. O F00 organiza e aponta só o que falta.</div>
+    </div>
+    <div style="margin-left:auto"><button id="newBtn" class="btn gold">+ Novo chamado</button></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat" data-filter="COLLECT"><b id="kCollect">0</b><span>EM COLETA</span></div>
+    <div class="stat" data-filter="WAIT"><b id="kWait">0</b><span>AGUARDANDO RESPOSTA</span></div>
+    <div class="stat" data-filter="READY"><b id="kReady">0</b><span>PRONTOS PARA F01</span></div>
+    <div class="stat" data-filter="ALL"><b id="kAll">0</b><span>HISTÓRICO / TOTAL</span></div>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <div class="mut small" style="margin-bottom:7px">Fila inicial: somente o que ainda depende da Gabrielly.</div><input id="search" class="input" placeholder="Buscar nº, cliente, endereço, contato ou telefone">
+      <div id="list" class="list"><div class="empty">Carregando…</div></div>
+    </section>
+
+    <section class="card">
+      <div id="capture" class="capture">
+        <div class="eyebrow">NOVO CHAMADO</div>
+        <h2>Jogue aqui o que você recebeu.</h2>
+        <p class="mut">Sem organizar, sem preencher formulário. Digite o número que veio do GestãoClick, cole a mensagem e anexe o que tiver.</p>
+
+        <div class="label">NÚMERO DO ORÇAMENTO / CHAMADO</div>
+        <input id="caseNumber" class="input number" placeholder="Ex.: 731-26" inputmode="text" autocomplete="off">
+
+        <div class="label">CHAMADO BRUTO / NOVA INFORMAÇÃO</div>
+        <textarea id="raw" rows="10" placeholder="Cole aqui toda a mensagem do WhatsApp, observações, contatos, endereço, explicações... Não precisa organizar nada."></textarea>
+
+        <div class="drop">
+          <b>Fotos, vídeos e arquivos</b>
+          <div class="mut small">Pode selecionar vários de uma vez.</div>
+          <input id="newFiles" class="input files" type="file" multiple accept="image/*,video/*,application/pdf,audio/*">
+          <div id="selectedFiles" class="mut small"></div>
+        </div>
+
+        <div class="toolbar">
+          <button id="processNew" class="btn gold">PROCESSAR CHAMADO</button>
+          <button id="clearNew" class="btn ghost">Limpar</button>
+        </div>
+        <div id="newMsg" class="box hidden"></div>
+      </div>
+
+      <div id="caseView" class="hidden">
+        <div class="caseHeader">
+          <div>
+            <div class="eyebrow">CHAMADO</div>
+            <h2 id="viewNo"></h2>
+            <div id="viewTitle" class="mut"></div>
+          </div>
+          <div>
+            <span id="viewStatus" class="status"></span>
+            <span id="viewPending" class="countBadge"></span>
+          </div>
+        </div>
+
+        <div class="box">
+          <b>DADOS IDENTIFICADOS</b><span id="caseType" class="typeBadge"></span>
+          <div id="identified" class="identified"></div>
+        </div>
+
+        <div id="itemsBox" class="box hidden">
+          <b>ASSUNTOS IDENTIFICADOS — <span id="itemCount">0</span></b>
+          <div id="items" class="compactList"></div>
+        </div>
+
+        <div id="involvedBox" class="box hidden">
+          <b>ENVOLVIDOS — <span id="involvedCount">0</span></b>
+          <div id="involved" class="compactList"></div>
+        </div>
+
+        <div id="missingBox" class="box missing">
+          <h3>INFORMAÇÕES PENDENTES</h3>
+          <div id="missing"></div>
+        </div>
+
+        <div id="moreBox" class="box">
+          <b>+ ADICIONAR NOVA INFORMAÇÃO</b>
+          <div class="mut small">Cole apenas o que chegou agora. O F00 incorpora ao mesmo chamado.</div>
+          <textarea id="moreRaw" rows="6" style="margin-top:8px" placeholder="Ex.: Telefone da moradora: (41)..."></textarea>
+          <input id="moreFiles" class="input files" type="file" multiple accept="image/*,video/*,application/pdf,audio/*">
+          <div class="toolbar">
+            <button id="reprocess" class="btn gold">ADICIONAR E REPROCESSAR</button>
+            <button id="waiting" class="btn ghost">Marcar aguardando resposta</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <b>ARQUIVOS DO CHAMADO</b>
+          <div id="fileList" class="mut small"></div>
+        </div>
+
+        <div class="box">
+          <b>MENSAGEM DE COLETA</b>
+          <pre id="message"></pre>
+          <button id="copyWait" class="btn gold">COPIAR + MARCAR AGUARDANDO RESPOSTA</button>
+        </div>
+
+        <div class="box">
+          <b>GESTÃOCLICK — BLOCO PRONTO</b>
+          <pre id="gc"></pre>
+          <button class="btn copy" data-copy="gc">Copiar dados</button>
+        </div>
+
+        <div class="box">
+          <b>F00 → F01</b>
+          <div id="gateText" style="margin:7px 0"></div>
+          <button id="release" class="btn ok">Liberar para F01</button>
+          <a id="f01" class="btn hidden" target="_blank">Abrir F01</a>
+        </div>
+
+        <details class="box">
+          <summary>Editar informações extraídas — usar somente se necessário</summary>
+          <div class="editGrid" style="margin-top:9px">
+            <div><div class="label">Cliente / imobiliária</div><input id="eClient" class="input"></div>
+            <div><div class="label">Endereço</div><input id="eAddress" class="input"></div>
+            <div><div class="label">Contato</div><input id="eContact" class="input"></div>
+            <div><div class="label">Telefone</div><input id="ePhone" class="input"></div>
+            <div style="grid-column:1/-1"><div class="label">Problema</div><textarea id="eProblem" rows="3"></textarea></div>
+            <div><div class="label">Pagamento / autorização</div><input id="ePayment" class="input"></div>
+            <div><div class="label">Disponibilidade</div><input id="eAvailability" class="input"></div>
+            <div><div class="label">Acesso</div><input id="eAccess" class="input"></div>
+            <div style="grid-column:1/-1"><button id="saveEdit" class="btn">Salvar correção manual</button></div>
+          </div>
+        </details>
+
+        <div class="box">
+          <b>LINHA DO TEMPO</b>
+          <div id="timeline" class="mut small" style="margin-top:7px"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+<div id="previewModal" class="previewModal hidden" role="dialog" aria-modal="true">
+  <div class="previewCard">
+    <div class="previewHead"><b id="previewName">Arquivo</b><a id="previewOpen" class="btn ghost" target="_blank">Abrir arquivo</a><button id="previewClose" class="btn">Fechar</button></div>
+    <div id="previewBody" class="previewBody"></div>
+  </div>
+</div>
+
+<script>
+const API="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-f00-intake";
+let rows=[],current=null,filter="ACTIVE";
+const $=id=>document.getElementById(id);
+
+async function api(name,payload={}){
+  const r=await fetch(API+"?api="+encodeURIComponent(name),{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok){const err=new Error(d.error||"Falha");err.data=d;err.status=r.status;throw err}
+  return d;
+}
+function esc(v){return String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function normalizeNo(v){return String(v||"").replace(/\s/g,"")}
+function pendingCount(x){return Array.isArray(x.missing_fields)?x.missing_fields.length:0}
+function inFilter(x){
+  if(filter==="ALL")return true;
+  if(filter==="ACTIVE")return x.status==="EM_COLETA"||x.status==="INCOMPLETO"||x.status==="PRONTO_F01";
+  if(filter==="COLLECT")return x.status==="EM_COLETA"||x.status==="INCOMPLETO";
+  if(filter==="WAIT")return x.status==="AGUARDANDO_RESPOSTA";
+  if(filter==="READY")return x.status==="PRONTO_F01";
+  return true;
+}
+function formatDate(v){try{return new Date(v).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}catch{return""}}
+
+async function load(){
+  try{rows=(await api("list")).cases||[];render()}
+  catch(e){$("list").innerHTML='<div class="empty">'+esc(e.message)+'</div>'}
+}
+function render(){
+  $("kCollect").textContent=rows.filter(x=>x.status==="EM_COLETA"||x.status==="INCOMPLETO").length;
+  $("kWait").textContent=rows.filter(x=>x.status==="AGUARDANDO_RESPOSTA").length;
+  $("kReady").textContent=rows.filter(x=>x.status==="PRONTO_F01").length;
+  $("kAll").textContent=rows.length;
+
+  const q=($("search").value||"").toLowerCase();
+  const data=rows.filter(inFilter).filter(x=>JSON.stringify(x).toLowerCase().includes(q));
+  const host=$("list");host.innerHTML="";
+  if(!data.length){host.innerHTML='<div class="empty">Nenhum chamado nesta visão.</div>';return}
+  data.forEach(x=>{
+    const d=document.createElement("div");d.className="case";
+    const pc=pendingCount(x);
+    d.innerHTML='<div class="caseTop"><div class="caseNo">'+esc(x.case_number)+'</div><span class="status">'+esc(x.status)+'</span></div>'+
+      '<div style="font-weight:800;margin-top:5px">'+esc(x.client||"Cliente a identificar")+'</div>'+
+      '<div class="mut small">'+esc(x.address||x.title||x.problem||"Aguardando organização")+'</div>'+
+      '<div class="pending">'+(pc===0?"✓ 0 pendências":pc+" pendência"+(pc===1?"":"s"))+'</div>'+
+      '<div class="updated">Atualizado '+esc(formatDate(x.updated_at))+'</div>';
+    d.onclick=()=>openCase(x.id);host.appendChild(d);
+  });
+}
+function showCapture(){
+  current=null;$("caseView").classList.add("hidden");$("capture").classList.remove("hidden");
+  $("caseNumber").value="";$("raw").value="";$("newFiles").value="";$("selectedFiles").textContent="";$("newMsg").classList.add("hidden");
+}
+async function uploadFiles(caseId,fileList){
+  for(const file of fileList){
+    const fd=new FormData();fd.append("file",file);
+    const r=await fetch(API+"?api=upload&id="+encodeURIComponent(caseId),{method:"POST",body:fd});
+    const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||"Falha ao enviar "+file.name);
+  }
+}
+async function processNew(){
+  const no=normalizeNo($("caseNumber").value),raw=$("raw").value.trim(),fs=[...$("newFiles").files];
+  $("newMsg").classList.remove("hidden");$("newMsg").textContent="Processando e organizando…";
+  if(!/^\d{1,5}-\d{2}$/.test(no)){$("newMsg").innerHTML='<span class="warn">Digite o número no formato 731-26.</span>';return}
+  if(!raw){$("newMsg").innerHTML='<span class="warn">Cole o chamado bruto antes de processar.</span>';return}
+  try{
+    const d=await api("create",{case_number:no,data:{raw}});
+    if(fs.length)await uploadFiles(d.case.id,fs);
+    await load();await openCase(d.case.id);
+  }catch(e){
+    if(e.data&&e.data.code==="DUPLICATE_CASE"&&e.data.existing){
+      $("newMsg").innerHTML='<span class="warn">Este chamado já existe no F00.</span> <button id="openDup" class="btn">Abrir '+esc(no)+'</button>';
+      $("openDup").onclick=()=>openCase(e.data.existing.id);
+    }else $("newMsg").innerHTML='<span class="warn">'+esc(e.message)+'</span>';
+  }
+}
+function fact(label,value){
+  if(!value)return"";
+  return '<div class="fact"><b>✓ '+esc(label)+'</b><span>'+esc(value)+'</span></div>';
+}
+function renderItems(arr){
+  const items=Array.isArray(arr)?arr:[];
+  $("itemCount").textContent=items.length;
+  $("itemsBox").classList.toggle("hidden",!items.length);
+  const visible=items.slice(0,8);
+  let html=visible.map(x=>'<div class="compactRow"><div class="compactCode">'+esc(x.id||"ITEM")+'</div><div class="compactMain"><b>'+esc(x.subject||"Item identificado")+'</b><div class="compactMeta">'+esc(x.environment||"")+(x.confidence?' • '+esc(x.confidence):'')+'</div></div></div>').join("");
+  if(items.length>8)html+='<details><summary>Ver todos os '+items.length+' itens</summary>'+items.slice(8).map(x=>'<div class="compactRow"><div class="compactCode">'+esc(x.id||"ITEM")+'</div><div class="compactMain"><b>'+esc(x.subject||"Item identificado")+'</b><div class="compactMeta">'+esc(x.environment||"")+'</div></div></div>').join("")+'</details>';
+  $("items").innerHTML=html;
+}
+function renderInvolved(arr){
+  const a=Array.isArray(arr)?arr:[];
+  $("involvedCount").textContent=a.length;
+  $("involvedBox").classList.toggle("hidden",!a.length);
+  $("involved").innerHTML=a.slice(0,12).map(x=>'<div class="compactRow"><div class="compactCode">'+esc(x.unit?("UN "+x.unit):(x.type==="pessoa"?"PESSOA":"ENV"))+'</div><div class="compactMain"><b>'+esc(x.name||x.role||"Envolvido")+'</b><div class="compactMeta">'+esc([x.role,x.phone].filter(Boolean).join(" • "))+'</div></div></div>').join("");
+}
+
+function fileKind(f){
+  const t=(f.content_type||"").toLowerCase(),n=(f.filename||"").toLowerCase();
+  if(t.startsWith("image/")||/\.(jpg|jpeg|png|webp|gif|heic)$/i.test(n))return"image";
+  if(t==="application/pdf"||/\.pdf$/i.test(n))return"pdf";
+  if(t.startsWith("video/")||/\.(mp4|mov|webm|m4v)$/i.test(n))return"video";
+  if(t.startsWith("audio/")||/\.(mp3|m4a|wav|ogg)$/i.test(n))return"audio";
+  return"document";
+}
+function thumbHtml(f){
+  const k=fileKind(f),u=esc(f.signed_url||""),name=esc(f.filename||"arquivo");
+  let media="";
+  if(k==="image")media='<img loading="lazy" src="'+u+'" alt="'+name+'">';
+  else if(k==="pdf")media='<iframe loading="lazy" src="'+u+'#page=1&toolbar=0&navpanes=0&scrollbar=0" title="'+name+'"></iframe>';
+  else if(k==="video")media='<video muted playsinline preload="metadata" src="'+u+'#t=0.1"></video>';
+  else if(k==="audio")media='<div class="thumbIcon">🎵</div>';
+  else media='<div class="thumbIcon">📄</div>';
+  return '<div class="thumb" data-file-id="'+esc(f.id||"")+'"><div class="thumbMedia">'+media+'</div><div class="thumbName">'+name+'</div></div>';
+}
+function renderFiles(files){
+  const a=Array.isArray(files)?files:[];
+  window.__f00Files={};a.forEach(f=>window.__f00Files[String(f.id||"")]=f);
+  $("fileList").className="";
+  $("fileList").innerHTML=a.length?'<div class="evidenceGrid">'+a.map(thumbHtml).join("")+'</div>':'<div class="mut small">Nenhum arquivo recebido.</div>';
+  document.querySelectorAll(".thumb[data-file-id]").forEach(el=>el.onclick=()=>openPreview(window.__f00Files[el.dataset.fileId]));
+}
+function openPreview(f){
+  if(!f)return;const k=fileKind(f),u=f.signed_url||"";
+  $("previewName").textContent=f.filename||"Arquivo";$("previewOpen").href=u||"#";
+  let html="";
+  if(k==="image")html='<img src="'+esc(u)+'" alt="'+esc(f.filename||"imagem")+'">';
+  else if(k==="pdf")html='<iframe src="'+esc(u)+'#page=1" title="'+esc(f.filename||"PDF")+'"></iframe>';
+  else if(k==="video")html='<video controls autoplay playsinline src="'+esc(u)+'"></video>';
+  else if(k==="audio")html='<audio controls autoplay src="'+esc(u)+'"></audio>';
+  else html='<div style="text-align:center"><div style="font-size:52px">📄</div><p class="mut">Visualização interna não disponível para este formato.</p></div>';
+  $("previewBody").innerHTML=html;$("previewModal").classList.remove("hidden");
+}
+function closePreview(){$("previewModal").classList.add("hidden");$("previewBody").innerHTML=""}
+
+function fillEdit(c){
+  $("eClient").value=c.client||"";$("eAddress").value=c.address||"";$("eContact").value=c.contact_name||"";$("ePhone").value=c.contact_phone||"";
+  $("eProblem").value=c.problem||"";$("ePayment").value=c.payment||"";$("eAvailability").value=c.availability||"";$("eAccess").value=c.access_note||"";
+}
+async function openCase(id){
+  try{
+    const d=await api("get",{id});current=d.case;
+    $("capture").classList.add("hidden");$("caseView").classList.remove("hidden");
+    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=d.case.title||d.case.problem||"Chamado em organização";$("viewStatus").textContent=d.case.status;
+    $("viewPending").textContent=d.missing.length+" pendência"+(d.missing.length===1?"":"s");
+
+    const identified=[
+      fact("Cliente / origem",d.case.client),
+      fact("Endereço",d.case.address),
+      fact("Contato",d.case.contact_name),
+      fact("Telefone",d.case.contact_phone),
+      fact("Problema identificado",d.case.problem),
+      fact("Pagamento / autorização",d.case.payment),
+      fact("Disponibilidade",d.case.availability),
+      fact("Acesso",d.case.access_note),
+      fact("Evidências",(d.files||[]).length?((d.files||[]).length+" arquivo(s) recebido(s)"):"")
+    ].join("");
+    $("identified").innerHTML=identified||'<div class="mut">Ainda não foi possível identificar dados estruturados.</div>';
+    const st=d.case.structured||{};
+    $("caseType").textContent=st.case_type||"";
+    $("caseType").classList.toggle("hidden",!st.case_type);
+    renderItems(st.items||[]);
+    renderInvolved(st.involved||[]);
+
+    if(d.missing.length){
+      $("missingBox").classList.remove("hidden");
+      $("missing").innerHTML=d.missing.map(x=>'<div class="missingItem">⚠ '+esc(x)+'</div>').join("");
+      $("gateText").innerHTML='<span class="warn">Ainda faltam '+d.missing.length+' informação(ões) para liberar.</span>';
+    }else{
+      $("missingBox").classList.add("hidden");
+      $("gateText").innerHTML='<span class="okline">✓ Sem pendências críticas. Pronto para F01.</span>';
+    }
+    renderFiles(d.files||[]);
+    $("message").textContent=d.message||"Nenhuma mensagem necessária.";
+    $("gc").textContent=d.gestaoclick||"";
+    $("release").disabled=!d.ready||d.case.released_f01;$("release").textContent=d.case.released_f01?"NO F01":"Liberar para F01";
+    $("moreBox").classList.toggle("hidden",!!d.case.released_f01);
+    $("f01").href=d.f01_url||"#";$("f01").classList.toggle("hidden",!d.case.released_f01);
+    $("timeline").innerHTML=(d.events||[]).map(x=>"• "+esc(formatDate(x.created_at))+" — "+esc(x.event_text)).join("<br>")||"Sem eventos.";
+    $("moreRaw").value="";$("moreFiles").value="";fillEdit(d.case);
+  }catch(e){alert(e.message)}
+}
+async function reprocess(){
+  if(!current)return;
+  const raw=$("moreRaw").value.trim(),fs=[...$("moreFiles").files];
+  if(!raw&&!fs.length){alert("Cole uma nova informação ou selecione um arquivo.");return}
+  try{
+    if(raw)await api("update",{id:current.id,data:{raw}});
+    if(fs.length)await uploadFiles(current.id,fs);
+    await load();await openCase(current.id);
+  }catch(e){alert(e.message)}
+}
+async function markWaiting(){
+  if(!current)return;
+  try{await api("wait",{id:current.id});filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();alert("Chamado movido para AGUARDANDO RESPOSTA. Ele saiu da fila ativa, mas continua no histórico.")}catch(e){alert(e.message)}
+}
+async function copyAndWait(){
+  if(!current)return;
+  const txt=$("message").textContent||"";
+  if(!txt.trim()){alert("Não há mensagem de coleta para copiar.");return}
+  try{
+    await navigator.clipboard.writeText(txt);
+  }catch{
+    alert("O navegador não permitiu copiar a mensagem. O status não foi alterado.");
+    return;
+  }
+  try{
+    await api("wait",{id:current.id});
+    filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();
+    alert("Mensagem copiada. Chamado agora está AGUARDANDO RESPOSTA.");
+  }catch(e){alert("A mensagem foi copiada, mas o status não foi alterado: "+e.message)}
+}
+async function saveEdit(){
+  if(!current)return;
+  try{
+    await api("update",{id:current.id,data:{
+      raw:"",
+      client:$("eClient").value,address:$("eAddress").value,contact:$("eContact").value,phone:$("ePhone").value,
+      problem:$("eProblem").value,payment:$("ePayment").value,availability:$("eAvailability").value,access:$("eAccess").value
+    }});
+    await load();await openCase(current.id);
+  }catch(e){alert(e.message)}
+}
+async function releaseF01(){
+  if(!current||!confirm("Liberar este chamado para o F01?\n\nApós a confirmação do F01, ele sairá da fila ativa do F00."))return;
+  try{
+    await api("release",{id:current.id});
+    filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();
+    alert("Transferência confirmada. O chamado saiu da fila ativa do F00 e agora está no F01.");
+  }catch(e){alert(e.message)}
+}
+async function copyFrom(id){try{await navigator.clipboard.writeText($(id).textContent||"")}catch{}}
+
+$("newBtn").onclick=showCapture;$("clearNew").onclick=showCapture;$("processNew").onclick=processNew;$("reprocess").onclick=reprocess;$("waiting").onclick=markWaiting;$("saveEdit").onclick=saveEdit;$("release").onclick=releaseF01;$("copyWait").onclick=copyAndWait;$("previewClose").onclick=closePreview;$("previewModal").onclick=e=>{if(e.target===$("previewModal"))closePreview()};
+$("search").oninput=render;$("newFiles").onchange=()=>{$("selectedFiles").textContent=[...$("newFiles").files].map(f=>f.name).join(" • ")};
+document.querySelectorAll(".stat").forEach(s=>s.onclick=()=>{filter=s.dataset.filter;document.querySelectorAll(".stat").forEach(x=>x.classList.toggle("on",x===s));render()});
+document.querySelectorAll(".copy").forEach(b=>b.onclick=()=>copyFrom(b.dataset.copy));
+load();
+</script>
+<script defer src="./cr-shell-slot-canonical-20261001.js"></script></body>
+</html>
