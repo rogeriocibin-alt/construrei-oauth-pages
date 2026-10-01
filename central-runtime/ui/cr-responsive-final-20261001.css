@@ -589,3 +589,173 @@ img,svg{max-width:100%}
   #dashboard .cr-hero-actions #crDirectorDashHero{grid-column:auto!important}
   #dashboard .cr-panel-action{max-width:200px!important}
 }
+
+
+/* NOTEBOOK DENSITY FINAL + MOBILE BUTTON DESIGN SYSTEM */
+/* Notebook target: 100% browser zoom with nearly full HOME visible. */
+@media (min-width:1280px) and (max-width:1599px){
+  :root{--crh-top:50px!important;--crh-side:214px!important}
+
+  .top{height:50px!important;min-height:50px!important;padding:0 10px!important}
+  .top .menu,.cr-top-back,.cr-icon-btn{width:34px!important;height:34px!important;border-radius:9px!important}
+  .cr-ref-title{min-width:205px!important}
+  .cr-ref-title #crumb{font-size:15px!important;line-height:1!important}
+  .cr-ref-title small{font-size:7.2px!important;margin-top:1px!important}
+  .cr-top-search{height:31px!important;width:min(370px,30vw)!important}
+  .cr-avatar{width:32px!important;height:32px!important;font-size:14px!important}
+  .cr-profile-copy b{font-size:11.5px!important}
+  .cr-profile-copy small{font-size:7px!important}
+
+  .side{padding:7px 6px!important}
+  .side .brand{padding:4px 5px 8px!important;gap:7px!important}
+  .side .brand img{width:48px!important;height:48px!important}
+  .side .brand strong{font-size:12.5px!important}
+  .side .brand small{font-size:6.8px!important;line-height:1.25!important}
+  .side .grp{margin:7px 0!important}
+  .side .gt{font-size:7.4px!important;padding:0 7px 3px!important}
+  .side .nav{min-height:30px!important;padding:5px 7px!important;font-size:9.8px!important;gap:7px!important}
+  .side .nav i{width:14px!important;height:14px!important;flex-basis:14px!important}
+  .cr-side-footer{min-height:34px!important;padding:6px!important;font-size:8px!important}
+
+  .content{padding:6px 7px 8px!important}
+  #dashboard>.cr-home-hero{
+    min-height:90px!important;
+    max-height:90px!important;
+    grid-template-columns:minmax(0,70%) minmax(245px,30%)!important;
+  }
+  .cr-hero-main{padding:7px 13px 7px 15px!important}
+  .cr-hero-main .ey{font-size:6.8px!important;line-height:1.15!important}
+  .cr-hero-main h1{font-size:18px!important;line-height:1.04!important;margin:3px 0 5px!important}
+  .cr-hero-actions{gap:4px!important;margin-top:3px!important}
+  .cr-hero-actions .btn{min-height:27px!important;padding:4px 9px!important;font-size:7.8px!important;border-radius:8px!important}
+  .cr-hero-visual{min-height:90px!important;height:90px!important}
+  .cr-hero-slogan{font-size:9.5px!important;top:10px!important}
+  #crHeroLogo{width:40px!important;height:40px!important;top:8px!important}
+  .cr-hero-welcome{width:156px!important;bottom:5px!important;padding:4px 6px 4px 25px!important}
+  .cr-hero-welcome b{font-size:6.8px!important}
+  .cr-hero-welcome small{font-size:5.9px!important}
+
+  #dashboard .cr-home-panel{margin-top:4px!important}
+  #dashboard .cr-panel-head{min-height:28px!important;padding:2px 6px!important}
+  #dashboard .cr-panel-icon{width:24px!important;height:24px!important;flex:0 0 24px!important;font-size:12px!important}
+  #dashboard .cr-panel-title h2{font-size:12.5px!important;line-height:1!important}
+  #dashboard .cr-panel-sub,#dashboard .cr-panel-meta{font-size:6.8px!important}
+  #dashboard .cr-panel-action{min-height:27px!important;padding:4px 8px!important;font-size:7.2px!important;border-radius:8px!important}
+
+  .cr-kpi-grid{gap:5px!important;padding:0 5px 5px!important}
+  .cr-op-card{min-height:86px!important;height:86px!important;padding:6px!important}
+  .cr-op-icon{width:30px!important;height:30px!important;font-size:13px!important}
+  .cr-op-label{font-size:7.8px!important;line-height:1.05!important}
+  .cr-op-value{font-size:19px!important;line-height:1!important;margin:2px 0!important}
+  .cr-op-detail{font-size:6.2px!important;line-height:1.15!important;min-height:14px!important}
+  .cr-op-status{font-size:6.2px!important;padding:3px 4px!important;margin-top:3px!important}
+
+  .cr-quick-grid{gap:5px!important;padding:0 5px 5px!important}
+  .cr-quick-card,#crDirectorDashCard{min-height:70px!important;height:70px!important;padding:7px 26px 7px 44px!important}
+  .cr-quick-icon,#crDirectorDashCard:before{width:30px!important;height:30px!important;left:8px!important;top:9px!important;font-size:13px!important}
+  .cr-quick-card h3,#crDirectorDashCard h3{font-size:8px!important;line-height:1.05!important;margin:0 0 2px!important}
+  .cr-quick-card p,#crDirectorDashCard p{font-size:6.2px!important;line-height:1.2!important}
+  .cr-quick-arrow{width:24px!important;height:24px!important;right:6px!important;bottom:6px!important}
+
+  .cr-flow-grid{gap:4px!important;padding:0 5px 5px!important}
+  .cr-flow-card{min-height:118px!important;height:118px!important;padding:6px!important}
+  .cr-flow-code{font-size:6.8px!important}
+  .cr-flow-card h3{font-size:7.7px!important;line-height:1.05!important;min-height:24px!important;margin:2px 0 3px!important}
+  .cr-flow-active{font-size:6.5px!important;margin:2px 0!important}
+  .cr-flow-active b{font-size:16px!important}
+  .cr-flow-state{font-size:5.9px!important;line-height:1.08!important;margin:2px 0!important}
+  .cr-flow-actions{grid-template-columns:1fr 30px!important;gap:3px!important;margin-top:3px!important}
+  .cr-flow-actions .btn{min-height:27px!important;padding:3px 4px!important;font-size:6.8px!important;border-radius:7px!important}
+
+  .cr-bottom-grid{grid-template-columns:minmax(0,64%) minmax(0,36%)!important;gap:4px!important}
+  .cr-pending-grid{gap:5px!important;padding:0 5px 5px!important}
+  .cr-pending-card{min-height:100px!important;height:100px!important;padding:7px!important}
+  .cr-pending-icon{width:30px!important;height:30px!important;font-size:13px!important}
+  .cr-pending-copy h3{font-size:8px!important}
+  .cr-pending-total{font-size:21px!important;margin:2px 0!important}
+  .cr-pending-lines{font-size:6.1px!important;gap:1px!important}
+  .cr-mini-bars{height:20px!important}
+  .cr-pending-card>.btn{min-height:25px!important;padding:3px 5px!important;font-size:6.8px!important}
+
+  .cr-health-grid{gap:4px!important;padding:0 5px 5px!important}
+  .cr-health-card{min-height:44px!important;height:44px!important;padding:5px!important}
+  .cr-health-label{font-size:6px!important}
+  .cr-health-value{font-size:10.5px!important;line-height:1!important}
+  .cr-health-sub{font-size:5.7px!important;line-height:1.05!important}
+}
+
+/* Mobile buttons must inherit the exact Central design language instead of generic blue blocks. */
+@media (max-width:767px){
+  #dashboard .cr-hero-actions .btn.primary,
+  #dashboard .cr-panel-action,
+  #dashboard .cr-flow-actions .btn,
+  #dashboard .cr-pending-card>.btn{
+    background:linear-gradient(180deg,#1688ff 0%,#0877f9 46%,#075bd8 100%)!important;
+    color:#fff!important;
+    border:1px solid #0b6fe6!important;
+    border-radius:10px!important;
+    box-shadow:0 4px 9px rgba(7,91,216,.18),inset 0 1px 0 rgba(255,255,255,.20)!important;
+    font-weight:850!important;
+    text-shadow:0 1px 0 rgba(3,27,70,.15)!important;
+  }
+  #dashboard .cr-hero-actions .btn.primary:active,
+  #dashboard .cr-panel-action:active,
+  #dashboard .cr-flow-actions .btn:active,
+  #dashboard .cr-pending-card>.btn:active{
+    background:linear-gradient(180deg,#0877f9,#075bd8)!important;
+    box-shadow:0 2px 5px rgba(7,91,216,.18),inset 0 1px 2px rgba(3,27,70,.12)!important;
+    transform:translateY(1px)!important;
+  }
+  #dashboard .cr-hero-actions .btn.primary:focus-visible,
+  #dashboard .cr-panel-action:focus-visible,
+  #dashboard .cr-flow-actions .btn:focus-visible,
+  #dashboard .cr-pending-card>.btn:focus-visible{
+    outline:none!important;
+    box-shadow:0 4px 9px rgba(7,91,216,.18),0 0 0 3px rgba(8,119,249,.16)!important;
+  }
+
+  #dashboard .cr-hero-actions #crDirectorDashHero{
+    background:linear-gradient(180deg,#ffd52c 0%,#ffc400 100%)!important;
+    color:#15275e!important;
+    border:1px solid #e2ad00!important;
+    box-shadow:0 4px 9px rgba(226,173,0,.20),inset 0 1px 0 rgba(255,255,255,.32)!important;
+    text-shadow:none!important;
+  }
+  #dashboard .cr-hero-actions #crDirectorDashHero:active{
+    background:linear-gradient(180deg,#ffc914,#efb900)!important;
+    box-shadow:0 2px 5px rgba(226,173,0,.18)!important;
+  }
+
+  #dashboard .cr-panel-action{
+    min-height:44px!important;
+    padding:8px 12px!important;
+  }
+
+  .cr-mobile-dock{
+    background:#031b46!important;
+    border:1px solid rgba(255,196,0,.25)!important;
+    box-shadow:0 12px 30px rgba(2,21,53,.34)!important;
+    border-radius:15px!important;
+    padding:6px!important;
+    gap:6px!important;
+  }
+  .cr-mobile-dock button{
+    min-height:46px!important;
+    border-radius:10px!important;
+    border:1px solid #0b6fe6!important;
+    background:linear-gradient(180deg,#1688ff,#075bd8)!important;
+    color:#fff!important;
+    box-shadow:0 4px 9px rgba(7,91,216,.16)!important;
+    font-weight:800!important;
+  }
+  .cr-mobile-dock button:nth-child(2){
+    background:linear-gradient(180deg,#ffd52c,#ffc400)!important;
+    color:#15275e!important;
+    border-color:#e2ad00!important;
+    box-shadow:0 4px 9px rgba(226,173,0,.18)!important;
+  }
+  .cr-mobile-dock button:active{
+    transform:translateY(1px)!important;
+    box-shadow:0 2px 5px rgba(7,91,216,.16)!important;
+  }
+}
