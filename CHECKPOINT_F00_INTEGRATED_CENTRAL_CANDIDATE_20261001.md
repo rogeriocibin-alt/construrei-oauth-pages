@@ -138,3 +138,25 @@ Não procurar outra versão.
 Não reconstruir o F00.
 Não alterar a Central canônica.
 Evoluir somente deste checkpoint candidato após validação.
+
+
+## Correção de entrega HTML mobile
+
+Incidente visual detectado por validação humana:
+- navegador Android exibiu o HTML bruto da Central candidata como texto;
+- causa provável: interação entre normalização de MIME no gateway e `X-Content-Type-Options: nosniff`.
+
+Correção aplicada sem tocar na Central canônica:
+- `cr-central-f00-integration-candidate-20261001` → version 2
+  - hash: `3eb1beba3dc6688c0ba96c55ffdf85e482c76f4e94f4704f42965b0b0c0a6960`
+- `cr-f00-central-integration-ui-candidate-20261001` → version 2
+  - hash: `90e5425686015a05b8f201d1bd497a9eb5ac633a1fa93620fbe026907e485160`
+
+A entrega agora usa:
+- `Blob` com tipo `text/html;charset=UTF-8`;
+- header explícito `Content-Type: text/html; charset=UTF-8`;
+- `Content-Disposition: inline`;
+- cache desativado;
+- remoção de `nosniff` nesta camada candidata.
+
+Os URLs candidatos permanecem os mesmos.
