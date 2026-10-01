@@ -163,18 +163,6 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-  const brand=document.querySelector(".cr-brand");
-  if(brand && !brand.querySelector(".cr-f00-shell-logo")){
-    const img=document.createElement("img");
-    img.className="cr-f00-shell-logo";
-    img.src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&rev=app-identity-canonical-20260930";
-    img.alt="CONSTRU-REI APP";
-    brand.prepend(img);
-  }
-});
-</script>
-<script>
 const API="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-f00-intake";
 let rows=[],current=null,filter="ACTIVE";
 const $=id=>document.getElementById(id);
