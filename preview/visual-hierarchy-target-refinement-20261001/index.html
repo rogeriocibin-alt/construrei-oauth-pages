@@ -2617,31 +2617,60 @@ window.crRenderTechnicalRecovery=renderTech;window.crRefreshCentralKpis=refreshK
 (function(){
 'use strict';
 if(window.__CR_HOME_STRUCTURAL_LOCK)return;window.__CR_HOME_STRUCTURAL_LOCK=true;
-var busy=false,lastGap='—';
+var EXEC='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-executivo-summary-candidate-20261001';
+var CORE='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=public-summary';
+var busy=false,lastData=null,lastGap='—',timer=null;
 function e(v){return String(v==null?'—':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
-function card(icon,label,value,detail,status,tone){return '<div class="cr-op-card '+tone+'"><div class="cr-op-top"><span class="cr-op-icon">'+e(icon)+'</span><span class="cr-op-label">'+e(label)+'</span></div><div class="cr-op-value">'+e(value)+'</div><div class="cr-op-detail">'+e(detail)+'</div><div class="cr-op-status">'+e(status)+'</div></div>'}
+function brl(v){return typeof v==='number'?v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}):'—'}
+function val(x){return x&&x.status==='ok'&&x.value!=null?x.value:'—'}
+function detail(x,amountLabel){
+ if(!x)return 'Dado não carregado';
+ if(x.status==='ok'){
+   if(x.amount!=null)return brl(Number(x.amount))+' '+amountLabel;
+   return x.note||'Fonte operacional validada';
+ }
+ return x.note||'Não disponível nesta etapa';
+}
+function card(icon,label,value,detailText,status,tone){
+ return '<div class="cr-op-card '+tone+'"><div class="cr-op-top"><span class="cr-op-icon">'+e(icon)+'</span><span class="cr-op-label">'+e(label)+'</span></div><div class="cr-op-value">'+e(value)+'</div><div class="cr-op-detail">'+e(detailText)+'</div><div class="cr-op-status">'+e(status)+'</div></div>'
+}
 function paint(){
  var h=document.getElementById('kpis');if(!h||busy)return;
+ var o=lastData&&lastData.operacao?lastData.operacao:{};
  busy=true;
  h.innerHTML=
-  card('🔧','Serviços em andamento','—','Fonte operacional ainda não mapeada','Em execução','blue')+
-  card('▣','Aguardando pagamento','—','Fonte financeira ainda não mapeada','Serviços concluídos','green')+
-  card('◷','Aguardando acerto','—','Fonte financeira ainda não mapeada','Medições / ajustes','amber')+
-  card('▦','Visitas do dia','—','Agenda operacional não disponível nesta API','Agendamentos','purple')+
-  card('▤','F00 pendentes','—','Contagem operacional não fornecida','Aguardando tratamento','red')+
-  card('◉','F01 pendentes','—','Contagem operacional não fornecida','Aguardando resposta','blue')+
-  card('▥','Orçamentos','—','Contagem operacional não fornecida','Envio / aprovação','orange')+
+  card('🔧','Serviços em andamento',val(o.servicos_em_andamento),detail(o.servicos_em_andamento,'em execução'),'Em execução','blue')+
+  card('▣','Aguardando pagamento',val(o.aguardando_pagamento),detail(o.aguardando_pagamento,'em aberto'),'Serviços concluídos','green')+
+  card('◷','Aguardando acerto',val(o.aguardando_acerto),detail(o.aguardando_acerto,'base considerada'),'Medições / ajustes','amber')+
+  card('▦','Visitas do dia',val(o.visitas_hoje),detail(o.visitas_hoje,''),'Agendamentos','purple')+
+  card('▤','F00 pendentes',val(o.f00_pendentes),detail(o.f00_pendentes,''),'Aguardando tratamento','red')+
+  card('◉','F01 pendentes',val(o.f01_pendentes),detail(o.f01_pendentes,''),'Aguardando resposta','blue')+
+  card('▥','Orçamentos',val(o.orcamentos),detail(o.orcamentos,''),'Envio / aprovação','orange')+
   card('!','Alertas operacionais',lastGap,'Gaps críticos disponíveis na fonte técnica','Verificar agora','red');
+ var up=document.getElementById('crHomeUpdated');
+ if(up)up.textContent='Última atualização: '+new Date().toLocaleString('pt-BR');
  busy=false;
 }
-async function metric(){
- try{var r=await fetch('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=public-summary&t='+Date.now(),{cache:'no-store'}),d=await r.json();if(r.ok&&d.metrics&&d.metrics.gaps_blocking!=null)lastGap=d.metrics.gaps_blocking}catch(_){}
+async function refresh(){
+ try{
+  var rs=await Promise.allSettled([
+   fetch(EXEC+'?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),
+   fetch(CORE+'&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()})
+  ]);
+  if(rs[0].status==='fulfilled'&&rs[0].value&&rs[0].value.ok)lastData=rs[0].value;
+  if(rs[1].status==='fulfilled'&&rs[1].value&&rs[1].value.metrics&&rs[1].value.metrics.gaps_blocking!=null)lastGap=rs[1].value.metrics.gaps_blocking;
+ }catch(_){}
  paint();
 }
 function init(){
  var h=document.getElementById('kpis');if(!h)return;
- paint();metric();
- new MutationObserver(function(){if(!busy&&!h.querySelector('.cr-op-card'))paint()}).observe(h,{childList:true});
+ refresh();
+ new MutationObserver(function(){
+  if(busy)return;
+  clearTimeout(timer);
+  timer=setTimeout(paint,60);
+ }).observe(h,{childList:true,subtree:false});
+ setInterval(refresh,30000);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
