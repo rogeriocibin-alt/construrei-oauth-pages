@@ -1302,3 +1302,25 @@ body[data-cr-route-env="candidate"] .cr-flowlink.current{outline:1px solid rgba(
   .cr-journey-btn.next{justify-self:stretch!important}
   .cr-journey-spacer{display:none!important}
 }
+
+
+/* Canonical shell logo — real IMG, single source of truth */
+.cr-brand:before{content:none!important;display:none!important}
+.cr-brand-logo{
+  display:block!important;
+  width:32px!important;
+  height:32px!important;
+  flex:0 0 32px!important;
+  margin-right:8px!important;
+  object-fit:contain!important;
+  border-radius:50%!important;
+  background:#fff!important;
+  padding:1px!important;
+  box-shadow:0 0 0 1px rgba(255,197,20,.44),0 5px 14px rgba(0,0,0,.18)!important;
+}
+@media (min-width:1280px) and (max-width:1599px){
+  .cr-brand-logo{width:28px!important;height:28px!important;flex-basis:28px!important}
+}
+@media(max-width:600px){
+  .cr-brand-logo{width:27px!important;height:27px!important;flex-basis:27px!important;margin-right:6px!important}
+}
