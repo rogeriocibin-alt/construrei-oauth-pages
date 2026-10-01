@@ -21,6 +21,10 @@ if [[ "$actual_blob" != "$EXPECTED_BLOB" ]]; then
   exit 1
 fi
 
+tmp_file="$(mktemp)"
+trap 'rm -f "$tmp_file"' EXIT
+git show "${EXPECTED_COMMIT}:${APPROVED_FILE}" > "$tmp_file"
+
 required_markers=(
   'id="side"'
   'crAppCanonicalNav'
@@ -49,7 +53,7 @@ required_markers=(
 )
 
 for marker in "${required_markers[@]}"; do
-  if ! git show "${EXPECTED_COMMIT}:${APPROVED_FILE}" | grep -Fq -- "$marker"; then
+  if ! grep -Fq -- "$marker" "$tmp_file"; then
     echo "ERROR: canonical marker missing: $marker"
     exit 1
   fi
