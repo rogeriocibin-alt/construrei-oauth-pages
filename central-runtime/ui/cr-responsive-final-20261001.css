@@ -1380,3 +1380,206 @@ img,svg{max-width:100%}
     letter-spacing:-.01em!important;
   }
 }
+
+
+/* HOME OPERATIONAL REGION REFINEMENT V7
+   Scope: Hoje na Operação / Acessos Rápidos / F00–F09 / Pendências / Saúde Técnica.
+   Fixed outer heights preserved; gain comes from internal redistribution. */
+@media (min-width:1280px) and (max-width:1599px){
+
+  /* Section headers: stronger hierarchy, same header height. */
+  #dashboard .cr-panel-title h2{
+    font-size:13.8px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    color:#06185f!important;
+  }
+  #dashboard .cr-panel-sub,
+  #dashboard .cr-panel-meta{
+    font-size:7.3px!important;
+    line-height:1.05!important;
+    color:#355f88!important;
+  }
+
+  /* HOJE NA OPERAÇÃO — spend space on information, not padding. */
+  .cr-op-card{
+    padding:5px 6px 4px!important;
+  }
+  .cr-op-top{
+    gap:5px!important;
+    min-height:31px!important;
+  }
+  .cr-op-icon{
+    width:31px!important;
+    height:31px!important;
+    flex:0 0 31px!important;
+    font-size:13.5px!important;
+  }
+  .cr-op-label{
+    font-size:10px!important;
+    line-height:1.02!important;
+    font-weight:900!important;
+  }
+  .cr-op-value{
+    font-size:26px!important;
+    line-height:.95!important;
+    margin:2px 0!important;
+  }
+  .cr-op-detail{
+    font-size:8px!important;
+    line-height:1.08!important;
+    min-height:14px!important;
+    color:#335f88!important;
+  }
+  .cr-op-status{
+    font-size:8.1px!important;
+    line-height:1!important;
+    padding:3px 4px!important;
+    margin-top:2px!important;
+    font-weight:850!important;
+  }
+
+  /* ACESSOS RÁPIDOS — use horizontal whitespace for bigger text. */
+  .cr-quick-card,#crDirectorDashCard{
+    padding:7px 22px 7px 39px!important;
+  }
+  .cr-quick-icon,#crDirectorDashCard:before{
+    width:31px!important;
+    height:31px!important;
+    left:5px!important;
+    top:8px!important;
+    font-size:13.5px!important;
+  }
+  .cr-quick-card h3,#crDirectorDashCard h3{
+    font-size:10.1px!important;
+    line-height:1.02!important;
+    margin:0 0 2px!important;
+    font-weight:900!important;
+  }
+  .cr-quick-card p,#crDirectorDashCard p{
+    font-size:7.9px!important;
+    line-height:1.12!important;
+    color:#315f8a!important;
+  }
+  .cr-quick-arrow{
+    width:29px!important;
+    height:29px!important;
+    right:4px!important;
+    bottom:5px!important;
+  }
+
+  /* F00–F09 — larger content inside the same fixed card height. */
+  .cr-flow-card{
+    padding:5px 5px 4px!important;
+  }
+  .cr-flow-code{
+    font-size:8.6px!important;
+    line-height:1!important;
+  }
+  .cr-flow-card h3{
+    font-size:9.7px!important;
+    line-height:1.02!important;
+    min-height:23px!important;
+    margin:1px 0!important;
+    font-weight:900!important;
+  }
+  .cr-flow-active{
+    font-size:7.9px!important;
+    line-height:1!important;
+    margin:1px 0!important;
+  }
+  .cr-flow-active b{
+    font-size:18px!important;
+  }
+  .cr-flow-state{
+    font-size:7.4px!important;
+    line-height:1.02!important;
+    margin:1px 0!important;
+    color:#355f88!important;
+  }
+  .cr-flow-actions{
+    grid-template-columns:minmax(0,1fr) 32px!important;
+    gap:3px!important;
+    margin-top:1px!important;
+  }
+  .cr-flow-actions .btn{
+    min-height:34px!important;
+    height:34px!important;
+    font-size:11.4px!important;
+    line-height:1!important;
+    padding:3px 5px!important;
+    font-weight:900!important;
+  }
+  .cr-flow-actions button:not(.btn){
+    width:32px!important;
+    min-width:32px!important;
+    height:34px!important;
+    min-height:34px!important;
+  }
+
+  /* PENDÊNCIAS — stronger numbers/status, same card height. */
+  .cr-pending-card{
+    padding:6px 7px 5px!important;
+    grid-template-columns:32px 1fr!important;
+    column-gap:6px!important;
+  }
+  .cr-pending-icon{
+    width:31px!important;
+    height:31px!important;
+    font-size:14px!important;
+  }
+  .cr-pending-copy h3{
+    font-size:10.3px!important;
+    line-height:1!important;
+  }
+  .cr-pending-total{
+    font-size:25px!important;
+    line-height:.95!important;
+    margin:1px 0!important;
+  }
+  .cr-pending-lines{
+    font-size:7.6px!important;
+    line-height:1.02!important;
+    gap:1px!important;
+    color:#315f87!important;
+  }
+  .cr-mini-bars{
+    height:19px!important;
+    margin-top:-2px!important;
+  }
+  .cr-pending-card>.btn{
+    min-height:33px!important;
+    height:33px!important;
+    font-size:11px!important;
+    padding:3px 6px!important;
+    font-weight:900!important;
+  }
+
+  /* SAÚDE TÉCNICA — fewer pale micro-labels, more readable status. */
+  .cr-health-card{
+    padding:4px 6px!important;
+  }
+  .cr-health-label{
+    font-size:7.3px!important;
+    line-height:1!important;
+    color:#28557f!important;
+  }
+  .cr-health-value{
+    font-size:12.3px!important;
+    line-height:1!important;
+    margin:2px 0 1px!important;
+    font-weight:900!important;
+  }
+  .cr-health-sub{
+    font-size:6.9px!important;
+    line-height:1.02!important;
+    color:#42698d!important;
+  }
+
+  /* Action buttons remain within existing heights but read larger. */
+  #dashboard .cr-panel-action{
+    font-size:11.1px!important;
+    line-height:1!important;
+    padding:4px 10px!important;
+  }
+}
