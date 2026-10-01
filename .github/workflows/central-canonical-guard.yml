@@ -1,0 +1,39 @@
+name: Central Canonical Guard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'production/central-homologada-20261001/index.html'
+      - 'central-canonical/current/**'
+  pull_request:
+    paths:
+      - 'production/central-homologada-20261001/index.html'
+      - 'central-canonical/current/**'
+
+permissions:
+  contents: read
+
+jobs:
+  protect-central-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify homologated HTML is byte-identical
+        shell: bash
+        run: |
+          actual="$(git hash-object production/central-homologada-20261001/index.html)"
+          expected="b90367bed503245a5bea9b4db4f15b46622ab6b2"
+          test "$actual" = "$expected" || {
+            echo "ERROR: homologated Central baseline was modified."
+            echo "Expected $expected, got $actual"
+            exit 1
+          }
+      - name: Reject legacy production routing
+        shell: bash
+        run: |
+          if grep -Eqi 'checkpoint-v270|central-recovery|preview/central-approved-router-candidate-20261001' central-canonical/current/centro-operacoes/index.ts; then
+            echo "ERROR: legacy Central reference reintroduced into canonical production router."
+            exit 1
+          fi
+          grep -q 'FORWARD_ONLY_NO_LEGACY_FALLBACK' central-canonical/current/centro-operacoes/index.ts
