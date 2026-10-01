@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="cr-flow-code" content="F01">
+<meta name="cr-build" content="CR-F01-CANONICAL-HOMOLOGATED-20261001">
+<title>CONSTRU-REI • F01</title>
+<link rel="stylesheet" href="../ui/cr-shell.css">
+<link rel="stylesheet" data-cr-design-system="CR-PRODUCT-DESIGN-20260930" href="../ui/cr-product-design-20260930.css">
+<link rel="stylesheet" data-cr-flow-canonical="20261001" href="../ui/cr-flow-canonical-20261001.css">
+<style>
+:root{--bg:#eef4fb;--paper:#fff;--navy:#102a43;--blue:#0d5fa8;--blue2:#0b4e88;--line:#d8e3ef;--mut:#5d7186;--gold:#d9a916;--ok:#1d7a56;--warn:#a46b00;--danger:#9b3434;--shadow:0 8px 24px rgba(16,42,67,.08)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#14283d;font:14px/1.45 Arial,sans-serif}
+main{max-width:1440px;margin:auto;padding:14px 18px 24px}
+
+
+.top{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}.top h1{font-size:24px;margin:0}.top .sub{color:var(--mut);margin-top:2px}
+.stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:12px 0}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:var(--shadow);cursor:pointer}
+.stat b{display:block;font-size:20px;color:var(--navy)}.stat span{font-size:10px;font-weight:900;letter-spacing:.06em;color:var(--mut)}
+.stat.on{outline:2px solid #4a86bb}
+.workspace{display:grid;grid-template-columns:minmax(280px,340px) minmax(0,1fr);gap:12px}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.queue{padding:12px;max-height:calc(100vh - 260px);overflow:auto}.queue-head{position:sticky;top:-12px;background:#fff;padding:0 0 9px;z-index:2}
+.input,textarea,select{width:100%;border:1px solid #c6d4e3;border-radius:9px;background:#fff;color:#14283d;padding:9px 10px;font:inherit}
+textarea{min-height:78px;resize:vertical}.case{padding:10px;border:1px solid #d6e2ee;border-radius:10px;margin:8px 0;cursor:pointer;background:#fbfdff}
+.case:hover,.case.active{border-color:#5b91bd;background:#f2f8fd}.case .no{font-weight:900;color:var(--navy)}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between}.small{font-size:11px}.mut{color:var(--mut)}
+.tag{display:inline-flex;align-items:center;border:1px solid #c6d7e6;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:900;white-space:nowrap}
+.detail{padding:14px}.empty{padding:70px 20px;text-align:center;color:var(--mut)}
+.hidden{display:none!important}.casehead{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:11px;margin-bottom:11px}
+.casehead h2{margin:0;font-size:21px}.casehead .badge{background:#edf5fc;border:1px solid #bfd4e7;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:900}
+.summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0}.mini{border:1px solid var(--line);border-radius:10px;padding:9px;background:#fbfdff;min-height:74px}.mini label,.field label{display:block;font-size:9px;font-weight:900;letter-spacing:.08em;color:#71869a;margin-bottom:4px}.mini b{display:block;color:var(--navy)}
+.sections{display:grid;grid-template-columns:1.15fr .85fr;gap:10px}.stack{display:grid;gap:10px}
+.box{border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff}.box h3{font-size:14px;margin:0 0 9px;color:var(--navy)}.box h3 span{font-weight:400;color:var(--mut);font-size:11px}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.field.full{grid-column:1/-1}
+.people{display:flex;flex-wrap:wrap;gap:6px}.person{border:1px solid #cbdbe8;background:#f7fbfe;border-radius:999px;padding:5px 8px;font-size:11px}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.btn{border:1px solid #2f6f9f;background:#0d5fa8;color:#fff;border-radius:9px;padding:9px 11px;font-weight:800;cursor:pointer;text-decoration:none}.btn.secondary{background:#fff;color:#0b4e88}.btn.gold{background:var(--gold);border-color:#bd8f09;color:#2c2300}.btn.ok{background:var(--ok);border-color:#176448}.btn.danger{background:var(--danger);border-color:#7f2929}.btn:disabled{opacity:.45;cursor:not-allowed}
+.timeline{max-height:280px;overflow:auto}.event{border-left:3px solid #c5d9e9;padding:0 0 9px 9px;margin:0 0 8px}.event b{font-size:11px}.event .meta{font-size:10px;color:var(--mut)}
+.gate{background:#f7fbff}.gate.ready{border-color:#85c7aa;background:#f2fbf6}.gate.warn{border-color:#e1c578;background:#fffaf0}.gate ul{margin:7px 0 0;padding-left:18px}.route-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px}
+.notice{font-size:11px;color:#775d11;background:#fff7d9;border:1px solid #efd785;border-radius:8px;padding:7px 8px}
+pre{white-space:pre-wrap;font:12px/1.45 Arial,sans-serif;margin:0;max-height:260px;overflow:auto;background:#f7fafc;border-radius:8px;padding:9px}
+.toast{position:fixed;right:16px;bottom:16px;z-index:50;background:#102a43;color:#fff;padding:10px 12px;border-radius:10px;box-shadow:var(--shadow);max-width:360px}
+@media(max-width:1050px){.summary-grid{grid-template-columns:repeat(2,1fr)}.sections{grid-template-columns:1fr}}
+@media(max-width:760px){main{padding:10px}.stats{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.queue{max-height:36vh}.summary-grid,.formgrid,.route-buttons{grid-template-columns:1fr}.top h1{font-size:20px}.field.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <div>
+      <div class="small mut" style="font-weight:900;letter-spacing:.12em">CONSTRU-REI • OPERAÇÃO REAL</div>
+      <h1>F01 — Atendimento & Qualificação</h1>
+      <div class="sub">Descobrir com quem falar, organizar a coleta, resolver pendências e deixar o chamado pronto para F02.</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat on" data-filter="ALL"><b id="sAll">0</b><span>TODOS</span></div>
+    <div class="stat" data-filter="EM CONTATO"><b id="sContact">0</b><span>EM CONTATO</span></div>
+    <div class="stat" data-filter="AGUARDANDO RESPOSTA"><b id="sWait">0</b><span>AGUARDANDO</span></div>
+    <div class="stat" data-filter="AGENDANDO"><b id="sSchedule">0</b><span>AGENDANDO</span></div>
+    <div class="stat" data-filter="PRONTO PARA F02"><b id="sReady">0</b><span>PRONTOS F02</span></div>
+  </div>
+
+  <div class="workspace">
+    <section class="panel queue">
+      <div class="queue-head">
+        <input id="q" class="input" placeholder="Buscar nº, cliente, endereço ou contato">
+      </div>
+      <div id="list"><div class="empty">Carregando fila F01…</div></div>
+    </section>
+
+    <section class="panel detail">
+      <div id="empty" class="empty"><b>Selecione um chamado</b><div>O F00 já coletou. Aqui você organiza as conversas e decide o próximo passo.</div></div>
+      <div id="view" class="hidden">
+        <div class="casehead">
+          <div><div class="small mut">CHAMADO</div><h2 id="caseNo">—</h2><div id="clientLine" class="mut"></div></div>
+          <div id="statusBadge" class="badge">—</div>
+        </div>
+
+        <div class="summary-grid">
+          <div class="mini"><label>CONTATO PRINCIPAL</label><b id="sumContact">—</b><span id="sumPhone" class="small mut"></span></div>
+          <div class="mini"><label>RESPONSÁVEL PAGAMENTO</label><b id="sumPayment">—</b></div>
+          <div class="mini"><label>DISPONIBILIDADE</label><b id="sumAvailability">—</b></div>
+          <div class="mini"><label>PRÓXIMA AÇÃO</label><b id="sumNext">—</b></div>
+        </div>
+
+        <div class="sections">
+          <div class="stack">
+            <div class="box">
+              <h3>Resumo do chamado <span>• herdado do F00</span></h3>
+              <div id="address" class="small"></div>
+              <div id="problem" style="margin-top:5px"></div>
+              <div class="small mut" style="margin-top:8px">Pessoas envolvidas</div>
+              <div id="people" class="people" style="margin-top:5px"></div>
+            </div>
+
+            <div class="box">
+              <h3>Registrar contato <span>• histórico operacional</span></h3>
+              <div class="formgrid">
+                <div class="field"><label>PESSOA</label><input id="logPerson" class="input"></div>
+                <div class="field"><label>PAPEL</label><input id="logRole" class="input" placeholder="inquilino, proprietário, síndico…"></div>
+                <div class="field"><label>CANAL</label><select id="logChannel" class="input"><option>WhatsApp</option><option>Ligação</option><option>E-mail</option><option>Presencial</option><option>Imobiliária</option><option>Síndico</option><option>Outro</option></select></div>
+                <div class="field"><label>STATUS APÓS CONTATO</label><select id="logStatus" class="input"><option>EM CONTATO</option><option>AGUARDANDO RESPOSTA</option><option>AGENDANDO</option><option>INFORMAÇÃO INCOMPLETA</option><option>PRONTO PARA F02</option></select></div>
+                <div class="field full"><label>RESULTADO / RESPOSTA</label><textarea id="logResult"></textarea></div>
+                <div class="field full"><label>INFORMAÇÃO OBTIDA</label><textarea id="logInfo"></textarea></div>
+                <div class="field"><label>PENDÊNCIA</label><textarea id="logPending"></textarea></div>
+                <div class="field"><label>PRÓXIMA AÇÃO</label><textarea id="logNext"></textarea></div>
+              </div>
+              <div class="toolbar"><button id="saveContact" class="btn">Registrar contato</button></div>
+            </div>
+
+            <div class="box">
+              <h3>Qualificação operacional <span>• simples e objetiva</span></h3>
+              <div class="formgrid">
+                <div class="field"><label>STATUS</label><select id="qualStatus" class="input"><option>EM CONTATO</option><option>AGUARDANDO RESPOSTA</option><option>AGENDANDO</option><option>INFORMAÇÃO INCOMPLETA</option><option>PRONTO PARA F02</option></select></div>
+                <div class="field"><label>COM QUEM FALAR AGORA</label><input id="whoContact" class="input"></div>
+                <div class="field"><label>PAPEL DO CONTATO</label><input id="contactRole" class="input"></div>
+                <div class="field"><label>RESPONSÁVEL PAGAMENTO</label><input id="paymentResponsible" class="input"></div>
+                <div class="field"><label>DISPONIBILIDADE</label><input id="availability" class="input"></div>
+                <div class="field"><label>PRÓXIMA AÇÃO</label><input id="nextAction" class="input"></div>
+                <div class="field full"><label>INFORMAÇÕES AINDA NECESSÁRIAS</label><textarea id="missingInfo"></textarea></div>
+              </div>
+              <div class="toolbar"><button id="saveQual" class="btn ok">Salvar qualificação</button></div>
+            </div>
+
+            <div class="box">
+              <h3>Pré-orçamentação <span>• preparação para F02, sem fechar preço</span></h3>
+              <div class="formgrid">
+                <div class="field"><label>PROVÁVEL TIPO DE SERVIÇO</label><input id="serviceType" class="input"></div>
+                <div class="field"><label>NECESSITA VISTORIA?</label><select id="needsVisit" class="input"><option value="false">Não definido / não</option><option value="true">Sim</option></select></div>
+                <div class="field"><label>ESPECIALISTA / PRESTADOR</label><input id="specialist" class="input"></div>
+                <div class="field"><label>RISCO / URGÊNCIA</label><input id="riskUrgency" class="input" placeholder="normal, urgente, acesso crítico…"></div>
+                <div class="field full"><label>POSSÍVEL MATERIAL</label><textarea id="possibleMaterial"></textarea></div>
+                <div class="field full"><label>OBSERVAÇÃO TÉCNICA</label><textarea id="technicalNote"></textarea></div>
+              </div>
+              <div class="toolbar"><button id="savePre" class="btn secondary">Salvar preparação</button></div>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div id="gate" class="box gate">
+              <h3>Gate F01 → F02</h3>
+              <div id="gateText" class="small"></div>
+              <ul id="gateList" class="small"></ul>
+              <div class="route-buttons">
+                <button id="routeDirect" class="btn gold">PRONTO → F02</button>
+                <button id="routeVisit" class="btn">VISITA / VISTORIA</button>
+                <button id="routeComplement" class="btn secondary">COMPLEMENTAR F00</button>
+                <button id="routeEscalate" class="btn danger">ESCALONAR</button>
+              </div>
+              <div class="notice" style="margin-top:8px">Mudanças de fase usam o fluxo oficial e ficam registradas no histórico.</div>
+            </div>
+
+            <div class="box">
+              <h3>Histórico <span>• operação oficial</span></h3>
+              <div id="timeline" class="timeline"><div class="mut">Sem eventos.</div></div>
+            </div>
+
+            <div class="box">
+              <h3>Pacote para visita</h3>
+              <pre id="visitText">—</pre>
+              <div class="toolbar"><button id="copyVisit" class="btn secondary">Copiar</button></div>
+              <div class="field" style="margin-top:8px"><label>RETORNO TÉCNICO</label><textarea id="visitReturn"></textarea></div>
+              <div class="toolbar"><button id="saveVisitReturn" class="btn">Registrar retorno técnico</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+<div id="toast" class="toast hidden"></div>
+<script>
+const API="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-f01-canonical-runtime";
+let rows=[],cur=null,filter="ALL";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+function toast(t){$("toast").textContent=t;$("toast").classList.remove("hidden");setTimeout(()=>$("toast").classList.add("hidden"),2600)}
+async function api(name,body={}){const r=await fetch(API+"?api="+encodeURIComponent(name),{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(d.error||"Falha");e.data=d;throw e}return d}
+function normStatus(x){return String(x||"EM CONTATO").toUpperCase().replaceAll("_"," ")}
+function count(st){return rows.filter(x=>normStatus(x.queue_status)===st).length}
+function updateStats(){$("sAll").textContent=rows.length;$("sContact").textContent=count("EM CONTATO");$("sWait").textContent=count("AGUARDANDO RESPOSTA");$("sSchedule").textContent=count("AGENDANDO");$("sReady").textContent=count("PRONTO PARA F02")}
+function render(){
+ const q=$("q").value.trim().toLowerCase();
+ const a=rows.filter(x=>{
+   const hit=!q||JSON.stringify([x.case_number,x.client,x.address,x.case_summary,x.contact,x.payment,x.next_action]).toLowerCase().includes(q);
+   const fs=filter==="ALL"||normStatus(x.queue_status)===filter;
+   return hit&&fs;
+ });
+ $("list").innerHTML=a.length?a.map(x=>'<div class="case '+(cur&&cur.handoff?.token===x.token?'active':'')+'" data-token="'+esc(x.token)+'"><div class="row"><span class="no">'+esc(x.case_number)+'</span><span class="tag">'+esc(normStatus(x.queue_status))+'</span></div><div>'+esc(x.client||"Cliente")+'</div><div class="small mut">'+esc(x.address||x.case_summary||"")+'</div><div class="small mut" style="margin-top:4px">'+esc(x.next_action?"Próxima: "+x.next_action:"")+'</div></div>').join(""):'<div class="empty">Nenhum chamado neste filtro.</div>';
+ document.querySelectorAll(".case").forEach(e=>e.onclick=()=>openCase(e.dataset.token));
+ updateStats();
+}
+async function load(){const d=await api("list");rows=d.cases||[];render();if(cur){const hit=rows.find(x=>x.token===cur.handoff?.token);if(hit)await openCase(hit.token)}}
+function fields(s){
+ $("qualStatus").value=["EM CONTATO","AGUARDANDO RESPOSTA","AGENDANDO","INFORMAÇÃO INCOMPLETA","PRONTO PARA F02"].includes(normStatus(s.status))?normStatus(s.status):"EM CONTATO";
+ $("whoContact").value=s.who_to_contact||s.contact?.name||"";
+ $("contactRole").value=s.primary_contact_role||s.contact?.role||"";
+ $("paymentResponsible").value=s.payment_responsible||s.payment||"";
+ $("availability").value=s.availability||"";
+ $("nextAction").value=s.next_action||"";
+ $("missingInfo").value=s.missing_information||"";
+ $("serviceType").value=s.service_type||s.case_type||"";
+ $("needsVisit").value=s.needs_visit?"true":"false";
+ $("specialist").value=s.specialist||"";
+ $("possibleMaterial").value=s.possible_material||"";
+ $("technicalNote").value=s.technical_note||s.technical_return?.text||"";
+ $("riskUrgency").value=s.risk_urgency||"";
+ $("logPerson").value=s.who_to_contact||s.contact?.name||"";
+ $("logRole").value=s.primary_contact_role||s.contact?.role||"";
+ $("logNext").value=s.next_action||"";
+}
+function gate(s){
+ const miss=[];
+ if(!(s.contact?.name||s.who_to_contact))miss.push("Definir com quem falar / contato principal.");
+ if(!String(s.address||"").trim())miss.push("Confirmar endereço.");
+ if(!String(s.case_summary||"").trim())miss.push("Confirmar problema / escopo.");
+ if(!String(s.payment_responsible||s.payment||"").trim())miss.push("Confirmar responsável pelo pagamento.");
+ if(!String(s.availability||"").trim())miss.push("Confirmar disponibilidade.");
+ if(String(s.missing_information||"").trim())miss.push("Resolver informações pendentes: "+s.missing_information);
+ const ready=!miss.length||normStatus(s.status)==="PRONTO PARA F02";
+ $("gate").classList.toggle("ready",ready);$("gate").classList.toggle("warn",!ready);
+ $("gateText").innerHTML=ready?'<b>Sem pendências críticas visíveis.</b> Pode ser marcado como pronto para F02.':'<b>Ainda há pontos a resolver.</b> O avanço continua disponível de forma controlada.';
+ $("gateList").innerHTML=miss.map(x=>"<li>"+esc(x)+"</li>").join("");
+}
+function timeline(events){
+ $("timeline").innerHTML=events.length?events.map(e=>{
+   const p=e.payload||{};let detail="";
+   if(e.event_type==="F01_CONTACT_LOGGED")detail=[p.person,p.channel,p.result,p.information,p.pending?"Pendência: "+p.pending:"",p.next_action?"Próxima: "+p.next_action:""].filter(Boolean).join(" • ");
+   else if(e.event_type==="F01_QUALIFICATION_SAVED")detail=[p.status,p.next_action].filter(Boolean).join(" • ");
+   else if(e.event_type==="F01_PREBUDGET_UPDATED")detail=[p.service_type,p.needs_visit?"Vistoria necessária":""].filter(Boolean).join(" • ");
+   else if(e.event_type==="F01_GATE_FORCED")detail="Avanço manual para F02 com pendências registradas";
+   else detail=e.event_type.replaceAll("_"," ");
+   return '<div class="event"><b>'+esc(detail||e.event_type)+'</b><div class="meta">'+esc(new Date(e.created_at).toLocaleString("pt-BR"))+' • '+esc(e.actor||"Equipe")+'</div></div>';
+ }).join(""):'<div class="mut">Sem eventos.</div>';
+}
+async function openCase(token){
+ try{
+  const d=await api("get",{token});cur=d;const s=d.merged_state||d.handoff?.state||{};
+  $("empty").classList.add("hidden");$("view").classList.remove("hidden");
+  $("caseNo").textContent=d.handoff.case_number||"—";$("clientLine").textContent=s.client||"";
+  $("statusBadge").textContent=normStatus(s.status||s.queue_status||d.handoff.status);
+  $("sumContact").textContent=s.who_to_contact||s.contact?.name||"A confirmar";$("sumPhone").textContent=s.contact?.phone||"";
+  $("sumPayment").textContent=s.payment_responsible||s.payment||"A confirmar";
+  $("sumAvailability").textContent=s.availability||"A confirmar";$("sumNext").textContent=s.next_action||"Definir próxima ação";
+  $("address").textContent=s.address||"Endereço não informado";$("problem").textContent=s.case_summary||s.problem||"Escopo não informado";
+  const inv=Array.isArray(s.involved)?s.involved:[];
+  $("people").innerHTML=inv.length?inv.map(x=>'<span class="person">'+esc([x.name,x.role,x.unit?"Un. "+x.unit:"",x.phone].filter(Boolean).join(" • "))+'</span>').join(""):'<span class="mut small">Nenhum envolvido adicional estruturado.</span>';
+  fields(s);gate(s);timeline(d.events||[]);$("visitText").textContent=d.visit_package||"";
+  render();
+ }catch(e){toast(e.message)}
+}
+async function saveQual(){
+ if(!cur)return;const body={token:cur.handoff.token,actor:"Gabrielly",expected_revision:cur.handoff.revision,status:$("qualStatus").value,who_to_contact:$("whoContact").value,primary_contact_role:$("contactRole").value,payment_responsible:$("paymentResponsible").value,availability:$("availability").value,next_action:$("nextAction").value,missing_information:$("missingInfo").value};
+ try{await api("save-qualification",body);toast("Qualificação salva.");await load()}catch(e){toast(e.message)}
+}
+async function savePre(){
+ if(!cur)return;const body={token:cur.handoff.token,actor:"Gabrielly",expected_revision:cur.handoff.revision,service_type:$("serviceType").value,needs_visit:$("needsVisit").value==="true",specialist:$("specialist").value,possible_material:$("possibleMaterial").value,technical_note:$("technicalNote").value,risk_urgency:$("riskUrgency").value};
+ try{await api("save-prebudget",body);toast("Pré-orçamentação salva.");await load()}catch(e){toast(e.message)}
+}
+async function logContact(){
+ if(!cur)return;const body={token:cur.handoff.token,actor:"Gabrielly",expected_revision:cur.handoff.revision,mutation_id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),person:$("logPerson").value,role:$("logRole").value,channel:$("logChannel").value,status:$("logStatus").value,result:$("logResult").value,information:$("logInfo").value,pending:$("logPending").value,next_action:$("logNext").value};
+ if(!body.person&&!body.result&&!body.information)return toast("Informe a pessoa ou o resultado do contato.");
+ try{await api("log-contact",body);$("logResult").value="";$("logInfo").value="";$("logPending").value="";toast("Contato registrado.");await load()}catch(e){toast(e.message)}
+}
+async function route(decision){
+ if(!cur)return;
+ try{
+   let d;
+   try{d=await api("route",{token:cur.handoff.token,decision,actor:"Gabrielly"})}
+   catch(e){
+     if(e.data&&e.data.gate_required){
+       const pend=(e.data.missing||[]).join(", ");
+       if(!confirm("Ainda existem pendências para F02: "+pend+"\n\nAvançar mesmo assim e registrar a decisão?"))return;
+       d=await api("route",{token:cur.handoff.token,decision,actor:"Gabrielly",force:true,reason:"Avanço manual confirmado no F01 canônico."});
+     }else throw e;
+   }
+   toast("Fluxo atualizado: "+(d.handoff?.to_flow||d.to_flow||decision));
+   if(["DIRECT_BUDGET","COMPLEMENT_F00"].includes(decision)){cur=null;$("view").classList.add("hidden");$("empty").classList.remove("hidden")}
+   await load();
+ }catch(e){toast(e.message)}
+}
+$("q").oninput=render;
+document.querySelectorAll(".stat").forEach(s=>s.onclick=()=>{filter=s.dataset.filter;document.querySelectorAll(".stat").forEach(x=>x.classList.toggle("on",x===s));render()});
+$("saveQual").onclick=saveQual;$("savePre").onclick=savePre;$("saveContact").onclick=logContact;
+$("routeDirect").onclick=()=>route("DIRECT_BUDGET");$("routeVisit").onclick=()=>route("VISIT");$("routeComplement").onclick=()=>route("COMPLEMENT_F00");$("routeEscalate").onclick=()=>route("ESCALATE");
+$("copyVisit").onclick=async()=>{try{await navigator.clipboard.writeText($("visitText").textContent||"");toast("Pacote copiado.")}catch{toast("Não foi possível copiar.")}};
+$("saveVisitReturn").onclick=async()=>{if(!cur)return;const t=$("visitReturn").value.trim();if(!t)return toast("Informe o retorno técnico.");try{await api("visit-return",{token:cur.handoff.token,technical_return:t,actor:"Gabrielly"});$("visitReturn").value="";toast("Retorno técnico registrado.");await load()}catch(e){toast(e.message)}};
+load();
+</script>
+<script defer src="../ui/cr-shell-slot-canonical-20261001.js"></script>
+</body>
+</html>
