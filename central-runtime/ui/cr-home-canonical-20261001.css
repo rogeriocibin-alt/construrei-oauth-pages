@@ -1,0 +1,291 @@
+/* CONSTRU-REI HOME CANONICAL CSS — 2026-10-01
+   Extracted from homologated commit 74dd6462.
+   Scope: final anti-clipping + typography layers only.
+   No visual changes intended. */
+
+/* FINAL ZERO-CLIPPING LAYER
+   Base visual: 1fbf21bc
+   Scope: remove clipping/truncation only. No redesign, no functional changes. */
+
+/* 1) Operational text: allow natural wrapping and growth */
+#dashboard .cr-op-label,
+#dashboard .cr-op-detail,
+#dashboard .cr-op-status,
+#dashboard .cr-quick-card h3,
+#dashboard .cr-quick-card p,
+#dashboard #crDirectorDashCard h3,
+#dashboard #crDirectorDashCard p,
+#dashboard .cr-flow-card h3,
+#dashboard .cr-flow-state,
+#dashboard .cr-pending-copy h3,
+#dashboard .cr-pending-lines,
+#dashboard .cr-health-label,
+#dashboard .cr-health-value,
+#dashboard .cr-health-sub,
+.side .nav{
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  max-height:none!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+  overflow-wrap:break-word!important;
+  word-break:normal!important;
+}
+
+/* 2) Containers may grow vertically if content needs more room */
+#dashboard .cr-op-card,
+#dashboard .cr-quick-card,
+#dashboard #crDirectorDashCard,
+#dashboard .cr-flow-card,
+#dashboard .cr-pending-card,
+#dashboard .cr-health-card{
+  height:auto!important;
+  max-height:none!important;
+}
+
+/* Preserve original visual minimums */
+#dashboard .cr-op-card{min-height:106px!important}
+#dashboard .cr-quick-card,
+#dashboard #crDirectorDashCard{min-height:92px!important}
+#dashboard .cr-flow-card{min-height:154px!important}
+#dashboard .cr-pending-card{min-height:130px!important}
+#dashboard .cr-health-card{min-height:58px!important}
+
+/* 3) F00-F09: remove inherited nowrap/ellipsis and fixed clipping */
+#dashboard .cr-flow-card h3{
+  min-height:28px!important;
+  height:auto!important;
+}
+#dashboard .cr-flow-state{
+  height:auto!important;
+  min-height:0!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+
+/* 4) Health values: explicitly neutralize ellipsis */
+#dashboard .cr-health-value{
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  height:auto!important;
+}
+
+/* 5) Quick-access text may wrap without shrinking */
+#dashboard .cr-quick-card h3,
+#dashboard #crDirectorDashCard h3,
+#dashboard .cr-quick-card p,
+#dashboard #crDirectorDashCard p{
+  height:auto!important;
+  min-height:0!important;
+}
+
+/* 6) Sidebar labels may wrap if needed; keep current geometry */
+.side .nav{
+  height:auto!important;
+  min-height:0!important;
+}
+
+/* 7) Buttons: don't crop labels */
+#dashboard .cr-panel-action,
+#dashboard .cr-flow-actions .btn,
+#dashboard .cr-pending-card>.btn{
+  height:auto!important;
+  max-height:none!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+
+/* 8) Mobile top title: permit two-line wrap instead of ellipsis */
+@media(max-width:980px){
+  .cr-ref-title #crumb{
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    max-height:none!important;
+    line-height:1.1!important;
+  }
+}
+
+/* 9) Mobile cards: grow vertically; keep horizontal collections as baseline */
+@media(max-width:700px){
+  #dashboard .cr-op-card,
+  #dashboard .cr-quick-card,
+  #dashboard #crDirectorDashCard,
+  #dashboard .cr-flow-card,
+  #dashboard .cr-pending-card,
+  #dashboard .cr-health-card{
+    height:auto!important;
+    max-height:none!important;
+  }
+
+  #dashboard .cr-hero-main h1,
+  #dashboard .cr-hero-main .ey{
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    max-height:none!important;
+    overflow-wrap:break-word!important;
+    word-break:normal!important;
+  }
+
+  #dashboard .cr-hero-actions .btn,
+  #dashboard .cr-panel-action{
+    white-space:normal!important;
+    height:auto!important;
+    max-height:none!important;
+  }
+}
+
+
+
+/* Typography-only legibility pass.
+   No layout/grid/card/button/logic changes. */
+
+/* Today in operation */
+#dashboard .cr-op-label{
+  font-size:11px!important;
+  line-height:1.12!important;
+  font-weight:800!important;
+  color:#08175b!important;
+}
+#dashboard .cr-op-detail{
+  font-size:8.4px!important;
+  line-height:1.2!important;
+  color:#446a90!important;
+  font-weight:500!important;
+}
+#dashboard .cr-op-status{
+  font-size:8.5px!important;
+  line-height:1.12!important;
+  font-weight:800!important;
+}
+
+/* Quick access */
+#dashboard .cr-quick-card h3,
+#dashboard #crDirectorDashCard h3{
+  font-size:10.5px!important;
+  line-height:1.12!important;
+  font-weight:800!important;
+  color:#07165b!important;
+  letter-spacing:0!important;
+}
+#dashboard .cr-quick-card p,
+#dashboard #crDirectorDashCard p{
+  font-size:8.4px!important;
+  line-height:1.22!important;
+  color:#42688e!important;
+  font-weight:500!important;
+}
+
+/* F00-F09 */
+#dashboard .cr-flow-code{
+  font-size:8.8px!important;
+  line-height:1.05!important;
+  font-weight:900!important;
+}
+#dashboard .cr-flow-card h3{
+  font-size:9.2px!important;
+  line-height:1.13!important;
+  font-weight:800!important;
+  color:#08175b!important;
+  letter-spacing:0!important;
+}
+#dashboard .cr-flow-active{
+  font-size:8.2px!important;
+  line-height:1.1!important;
+  color:#315b83!important;
+  font-weight:600!important;
+}
+#dashboard .cr-flow-state{
+  font-size:7.8px!important;
+  line-height:1.16!important;
+  color:#42688e!important;
+  font-weight:500!important;
+}
+
+/* Live pending */
+#dashboard .cr-pending-copy h3{
+  font-size:10px!important;
+  line-height:1.1!important;
+  font-weight:800!important;
+}
+#dashboard .cr-pending-total{
+  font-size:24px!important;
+  line-height:1!important;
+  font-weight:900!important;
+}
+#dashboard .cr-pending-lines{
+  font-size:7.6px!important;
+  line-height:1.18!important;
+  color:#42688e!important;
+  font-weight:500!important;
+}
+
+/* Technical health */
+#dashboard .cr-health-label{
+  font-size:7.8px!important;
+  line-height:1.1!important;
+  color:#315b83!important;
+  font-weight:600!important;
+}
+#dashboard .cr-health-value{
+  font-size:12.8px!important;
+  line-height:1.08!important;
+  font-weight:900!important;
+  letter-spacing:0!important;
+}
+#dashboard .cr-health-sub{
+  font-size:7.4px!important;
+  line-height:1.14!important;
+  color:#4b6f92!important;
+  font-weight:500!important;
+}
+
+/* Section helper text */
+#dashboard .cr-panel-meta,
+#dashboard .cr-panel-sub{
+  color:#315f8c!important;
+  font-weight:500!important;
+}
+
+/* Keep compact desktop variants readable without changing geometry */
+@media (min-width:1181px) and (max-width:1450px){
+  #dashboard .cr-op-label{font-size:10px!important}
+  #dashboard .cr-op-detail{font-size:7.8px!important}
+  #dashboard .cr-op-status{font-size:8px!important}
+
+  #dashboard .cr-quick-card h3,
+  #dashboard #crDirectorDashCard h3{font-size:9.8px!important}
+  #dashboard .cr-quick-card p,
+  #dashboard #crDirectorDashCard p{font-size:7.8px!important}
+
+  #dashboard .cr-flow-code{font-size:8.2px!important}
+  #dashboard .cr-flow-card h3{font-size:8.7px!important}
+  #dashboard .cr-flow-active{font-size:7.8px!important}
+  #dashboard .cr-flow-state{font-size:7.3px!important}
+
+  #dashboard .cr-pending-copy h3{font-size:9.4px!important}
+  #dashboard .cr-pending-lines{font-size:7.1px!important}
+
+  #dashboard .cr-health-label{font-size:7.2px!important}
+  #dashboard .cr-health-value{font-size:11.8px!important}
+  #dashboard .cr-health-sub{font-size:6.9px!important}
+}
+
+/* Mobile: preserve the baseline mobile sizing; only improve contrast/weight. */
+@media(max-width:700px){
+  #dashboard .cr-op-detail,
+  #dashboard .cr-quick-card p,
+  #dashboard #crDirectorDashCard p,
+  #dashboard .cr-flow-state,
+  #dashboard .cr-pending-lines,
+  #dashboard .cr-health-sub{
+    color:#3f6388!important;
+    font-weight:500!important;
+  }
+}
+
