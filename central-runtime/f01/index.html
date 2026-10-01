@@ -15,8 +15,8 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:#14283d;font:14px/1.45 Arial,sans-serif}
 main{max-width:1440px;margin:auto;padding:14px 18px 24px}
-.candidate{display:flex;gap:10px;align-items:center;justify-content:space-between;background:#fff8dc;border:1px solid #ead17a;border-radius:12px;padding:9px 12px;margin:0 0 12px}
-.candidate b{color:#705300}.candidate span{color:#7d6a2f;font-size:12px}
+
+
 .top{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}.top h1{font-size:24px;margin:0}.top .sub{color:var(--mut);margin-top:2px}
 .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:12px 0}
 .stat{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:var(--shadow);cursor:pointer}
@@ -39,13 +39,13 @@ textarea{min-height:78px;resize:vertical}.case{padding:10px;border:1px solid #d6
 .formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.field.full{grid-column:1/-1}
 .people{display:flex;flex-wrap:wrap;gap:6px}.person{border:1px solid #cbdbe8;background:#f7fbfe;border-radius:999px;padding:5px 8px;font-size:11px}
 .toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.btn{border:1px solid #2f6f9f;background:#0d5fa8;color:#fff;border-radius:9px;padding:9px 11px;font-weight:800;cursor:pointer;text-decoration:none}.btn.secondary{background:#fff;color:#0b4e88}.btn.gold{background:var(--gold);border-color:#bd8f09;color:#2c2300}.btn.ok{background:var(--ok);border-color:#176448}.btn.danger{background:var(--danger);border-color:#7f2929}.btn:disabled{opacity:.45;cursor:not-allowed}
-.timeline{max-height:280px;overflow:auto}.event{border-left:3px solid #c5d9e9;padding:0 0 9px 9px;margin:0 0 8px}.event.candidate-event{border-left-color:#d9a916}.event b{font-size:11px}.event .meta{font-size:10px;color:var(--mut)}
+.timeline{max-height:280px;overflow:auto}.event{border-left:3px solid #c5d9e9;padding:0 0 9px 9px;margin:0 0 8px}.event b{font-size:11px}.event .meta{font-size:10px;color:var(--mut)}
 .gate{background:#f7fbff}.gate.ready{border-color:#85c7aa;background:#f2fbf6}.gate.warn{border-color:#e1c578;background:#fffaf0}.gate ul{margin:7px 0 0;padding-left:18px}.route-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px}
 .notice{font-size:11px;color:#775d11;background:#fff7d9;border:1px solid #efd785;border-radius:8px;padding:7px 8px}
 pre{white-space:pre-wrap;font:12px/1.45 Arial,sans-serif;margin:0;max-height:260px;overflow:auto;background:#f7fafc;border-radius:8px;padding:9px}
 .toast{position:fixed;right:16px;bottom:16px;z-index:50;background:#102a43;color:#fff;padding:10px 12px;border-radius:10px;box-shadow:var(--shadow);max-width:360px}
 @media(max-width:1050px){.summary-grid{grid-template-columns:repeat(2,1fr)}.sections{grid-template-columns:1fr}}
-@media(max-width:760px){main{padding:10px}.stats{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.queue{max-height:36vh}.summary-grid,.formgrid,.route-buttons{grid-template-columns:1fr}.top h1{font-size:20px}.candidate{align-items:flex-start;flex-direction:column}.field.full{grid-column:auto}}
+@media(max-width:760px){main{padding:10px}.stats{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.queue{max-height:36vh}.summary-grid,.formgrid,.route-buttons{grid-template-columns:1fr}.top h1{font-size:20px}.field.full{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -230,13 +230,13 @@ function gate(s){
 }
 function timeline(events){
  $("timeline").innerHTML=events.length?events.map(e=>{
-   const p=e.payload||{},isCand=e.source==="CANDIDATO";
-   let detail="";
-   if(e.event_type==="F01_CANDIDATE_CONTACT")detail=[p.person,p.channel,p.result,p.information,p.pending?"Pendência: "+p.pending:"",p.next_action?"Próxima: "+p.next_action:""].filter(Boolean).join(" • ");
-   else if(e.event_type==="F01_CANDIDATE_QUALIFICATION_SAVED")detail=[p.status,p.next_action].filter(Boolean).join(" • ");
-   else if(e.event_type==="F01_CANDIDATE_ROUTE_SIMULATED")detail=[p.label,"Destino simulado: "+p.to_flow].filter(Boolean).join(" • ");
+   const p=e.payload||{};let detail="";
+   if(e.event_type==="F01_CONTACT_LOGGED")detail=[p.person,p.channel,p.result,p.information,p.pending?"Pendência: "+p.pending:"",p.next_action?"Próxima: "+p.next_action:""].filter(Boolean).join(" • ");
+   else if(e.event_type==="F01_QUALIFICATION_SAVED")detail=[p.status,p.next_action].filter(Boolean).join(" • ");
+   else if(e.event_type==="F01_PREBUDGET_UPDATED")detail=[p.service_type,p.needs_visit?"Vistoria necessária":""].filter(Boolean).join(" • ");
+   else if(e.event_type==="F01_GATE_FORCED")detail="Avanço manual para F02 com pendências registradas";
    else detail=e.event_type.replaceAll("_"," ");
-   return '<div class="event '+(isCand?'candidate-event':'')+'"><b>'+esc(detail||e.event_type)+'</b><div class="meta">'+esc(new Date(e.created_at).toLocaleString("pt-BR"))+' • '+esc(e.actor||"Equipe")+' • '+esc(e.source||"")+'</div></div>';
+   return '<div class="event"><b>'+esc(detail||e.event_type)+'</b><div class="meta">'+esc(new Date(e.created_at).toLocaleString("pt-BR"))+' • '+esc(e.actor||"Equipe")+'</div></div>';
  }).join(""):'<div class="mut">Sem eventos.</div>';
 }
 async function openCase(token){
