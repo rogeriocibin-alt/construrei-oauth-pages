@@ -1,0 +1,17 @@
+{
+  "product": "Central CONSTRU-REI",
+  "status": "HOMOLOGADA_LOCKED_FORWARD_ONLY",
+  "homologated_at": "2026-10-01",
+  "approved_commit": "92ef8f27d71ac176abc6452df165a048c4405d60",
+  "approved_html_blob": "b90367bed503245a5bea9b4db4f15b46622ab6b2",
+  "frozen_branch": "central-homologada-20261001",
+  "production_snapshot": "production/central-homologada-20261001/index.html",
+  "official_endpoint": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes",
+  "official_router_version": 274,
+  "canonical_runtime": "centro-operacoes-runtime-canonico-20261001",
+  "disaster_recovery_snapshot": "centro-operacoes-baseline-homologada-20261001",
+  "evolution_source": "central-canonical/current",
+  "policy": "FORWARD_ONLY_NO_LEGACY_FALLBACK",
+  "legacy_search_allowed": false,
+  "overwrite_baseline_allowed": false
+}
