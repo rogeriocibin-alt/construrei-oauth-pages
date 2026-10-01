@@ -1,0 +1,55 @@
+{
+  "mode": "candidate_verified_snapshot",
+  "snapshot_verified_on": "2026-10-01",
+  "source_note": "Valores conferidos em fontes operacionais; este arquivo valida a integração visual sem publicar nova infraestrutura.",
+  "operacao": {
+    "servicos_em_andamento": {
+      "value": 11,
+      "amount": 35459.73,
+      "status": "ok",
+      "source": "Trello: GESTÃO DE OBRAS 2026 / EM ANDAMENTO"
+    },
+    "aguardando_pagamento": {
+      "value": 8,
+      "amount": 6754.7,
+      "status": "ok",
+      "source": "Trello: GESTÃO DE OBRAS 2026 / AG. PAGAMENTO"
+    },
+    "aguardando_acerto": {
+      "value": 12,
+      "amount": 37418.48,
+      "status": "ok",
+      "source": "Trello: GESTÃO DE OBRAS 2026 / AG. ACERTO"
+    },
+    "visitas_hoje": {
+      "value": null,
+      "status": "not_available",
+      "source": "cr_work_agenda_v1",
+      "note": "Completude da agenda ainda não homologada"
+    },
+    "f00_pendentes": {
+      "value": 4,
+      "status": "ok",
+      "source": "Supabase: cr_f00_cases",
+      "note": "AGUARDANDO_RESPOSTA + EM_COLETA"
+    },
+    "f01_pendentes": {
+      "value": 5,
+      "status": "ok",
+      "source": "Supabase: cr_f01_cases_v2",
+      "note": "em_atendimento"
+    },
+    "orcamentos": {
+      "value": null,
+      "status": "not_available",
+      "source": "canonical source pending",
+      "note": "Fonte operacional vigente ainda não homologada"
+    },
+    "alertas_operacionais": {
+      "value": null,
+      "status": "not_available",
+      "source": "GRC pending rule",
+      "note": "Regra final de severidade ainda não homologada"
+    }
+  }
+}
