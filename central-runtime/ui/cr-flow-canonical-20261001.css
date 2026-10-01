@@ -1235,3 +1235,70 @@ body[data-cr-flow="F03"] .cols{
   .cr-section{padding:9px!important}
   .cr-actions .btn{flex:1 1 100%!important}
 }
+
+
+/* =========================================================
+   CANONICAL JOURNEY NAVIGATION — PREVIEW/CANDIDATE
+   ========================================================= */
+.cr-brand-home{text-decoration:none!important}
+.cr-brand-home:hover{opacity:.96!important}
+.cr-journey-nav{
+  width:min(1680px,calc(100% - 24px))!important;
+  margin:0 auto 18px!important;
+  display:grid!important;
+  grid-template-columns:1fr auto 1fr!important;
+  align-items:center!important;
+  gap:8px!important;
+}
+.cr-journey-btn{
+  min-height:36px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:8px 12px!important;
+  border-radius:9px!important;
+  border:1px solid #c8ddea!important;
+  background:#fff!important;
+  color:#0d4fa8!important;
+  text-decoration:none!important;
+  font-size:9.5px!important;
+  font-weight:850!important;
+  box-shadow:0 3px 10px rgba(13,63,111,.06)!important;
+}
+.cr-journey-btn.prev{justify-self:start!important}
+.cr-journey-btn.next{
+  justify-self:end!important;
+  background:linear-gradient(180deg,#1688ff,#075bd8)!important;
+  border-color:#075bd8!important;
+  color:#fff!important;
+}
+.cr-journey-btn.central{
+  background:#f7fbfe!important;
+  color:#17315d!important;
+}
+.cr-journey-btn:hover{transform:translateY(-1px)!important}
+.cr-journey-spacer{display:block!important}
+
+/* Candidate previews must never expose legacy "F0X atual" jump-outs. */
+body[data-cr-route-env="candidate"] .head a[href*="/central-runtime/f0"],
+body[data-cr-route-env="candidate"] .head a[href*="central-atendimento?mode=f0"]{
+  display:none!important;
+}
+
+/* Ensure all flow pages share the same shell/hero rhythm. */
+body[data-cr-route-env="candidate"] .cr-shellbar{isolation:isolate!important}
+body[data-cr-route-env="candidate"] .cr-flownav{scroll-behavior:smooth!important}
+body[data-cr-route-env="candidate"] .cr-flowlink.current{outline:1px solid rgba(255,197,20,.32)!important}
+
+@media(max-width:600px){
+  .cr-journey-nav{
+    width:calc(100% - 16px)!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:7px!important;
+  }
+  .cr-journey-btn{min-height:42px!important;font-size:9px!important;padding:8px 9px!important}
+  .cr-journey-btn.central{grid-column:1/-1!important;grid-row:2!important}
+  .cr-journey-btn.prev{justify-self:stretch!important}
+  .cr-journey-btn.next{justify-self:stretch!important}
+  .cr-journey-spacer{display:none!important}
+}
