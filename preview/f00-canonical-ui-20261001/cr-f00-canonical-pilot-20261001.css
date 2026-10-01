@@ -971,25 +971,28 @@ details.box[open]{border-color:#bfd7e8!important}
 }
 
 
-/* Desktop-safe shell logo: real IMG overlay, pseudo-element disabled */
-.cr-brand:before{background:#fff!important}
-.cr-f00-shell-logo{
-  position:fixed!important;
-  top:9px!important;
-  left:max(14px,calc((100vw - 1680px)/2 + 14px))!important;
-  z-index:1001!important;
+}
+
+
+/* Shell logo compatibility fix: render official APP logo as replaced content */
+.cr-brand:before{
+  content:url("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&rev=app-identity-canonical-20260930")!important;
+  display:block!important;
   width:32px!important;
   height:32px!important;
-  object-fit:contain!important;
+  flex:0 0 32px!important;
+  margin-right:8px!important;
+  overflow:hidden!important;
   border-radius:50%!important;
   background:#fff!important;
-  padding:1px!important;
+  padding:0!important;
+  line-height:0!important;
   box-shadow:0 0 0 1px rgba(255,197,20,.44),0 5px 14px rgba(0,0,0,.18)!important;
-  pointer-events:none!important;
 }
+.cr-brand:before img{width:100%!important;height:100%!important}
 @media (min-width:1280px) and (max-width:1599px){
-  .cr-f00-shell-logo{top:8px!important;left:max(10px,calc((100vw - 1680px)/2 + 10px))!important;width:28px!important;height:28px!important}
+  .cr-brand:before{width:28px!important;height:28px!important;flex-basis:28px!important}
 }
 @media(max-width:600px){
-  .cr-f00-shell-logo{top:8px!important;left:10px!important;width:27px!important;height:27px!important}
+  .cr-brand:before{width:27px!important;height:27px!important;flex-basis:27px!important;margin-right:6px!important}
 }
