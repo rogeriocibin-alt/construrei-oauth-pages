@@ -1,7 +1,7 @@
 {
   "mode": "candidate_verified_snapshot",
   "snapshot_verified_on": "2026-10-01",
-  "source_note": "Valores conferidos em fontes operacionais; este arquivo valida a integração visual sem publicar nova infraestrutura.",
+  "source_note": "Fallback do candidate após reconciliação live. F01 passou a usar o runtime canônico atual (cr_flow_handoffs); cr_f01_cases_v2 foi identificado como legado sem atualização recente.",
   "operacao": {
     "servicos_em_andamento": {
       "value": 11,
@@ -34,10 +34,10 @@
       "note": "AGUARDANDO_RESPOSTA + EM_COLETA"
     },
     "f01_pendentes": {
-      "value": 5,
+      "value": 4,
       "status": "ok",
-      "source": "Supabase: cr_f01_cases_v2",
-      "note": "em_atendimento"
+      "source": "Supabase: cr_flow_handoffs via runtime F01",
+      "note": "Casos ativos no runtime canônico atual"
     },
     "orcamentos": {
       "value": null,
