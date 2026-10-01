@@ -1,0 +1,23 @@
+name: Central Canonical Guard
+
+on:
+  push:
+    branches:
+      - cr-central-next-20261001
+  pull_request:
+    branches:
+      - cr-central-next-20261001
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-freeze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify immutable canonical reference
+        run: bash scripts/verify-central-canonical.sh
