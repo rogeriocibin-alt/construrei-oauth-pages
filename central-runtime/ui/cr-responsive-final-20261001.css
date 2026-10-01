@@ -1583,3 +1583,184 @@ img,svg{max-width:100%}
     padding:4px 10px!important;
   }
 }
+
+
+/* VISUAL TARGET HIERARCHY REFINEMENT V8
+   Goal: match the approved target's hierarchy and clarity without growing the HOME footprint. */
+@media (min-width:1280px) and (max-width:1599px){
+
+  /* Section header emphasis: stronger, cleaner, same height. */
+  #dashboard .cr-panel-icon{
+    width:25px!important;
+    height:25px!important;
+    flex:0 0 25px!important;
+    font-size:12.5px!important;
+    border-radius:7px!important;
+    box-shadow:0 2px 5px rgba(5,45,110,.12)!important;
+  }
+  #dashboard .cr-panel-title h2{
+    font-size:14.2px!important;
+    line-height:1!important;
+    letter-spacing:-.015em!important;
+  }
+
+  /* KPI cards: make the number feel primary, like the target reference. */
+  .cr-op-card{
+    display:grid!important;
+    grid-template-rows:auto 1fr auto!important;
+    align-content:stretch!important;
+    background:#fff!important;
+    border-radius:9px!important;
+    box-shadow:0 3px 8px rgba(10,63,116,.07)!important;
+  }
+  .cr-op-top{
+    align-items:center!important;
+    min-height:30px!important;
+  }
+  .cr-op-label{
+    max-width:calc(100% - 35px)!important;
+  }
+  .cr-op-value{
+    align-self:center!important;
+    font-size:27px!important;
+    line-height:.92!important;
+    margin:0!important;
+    font-weight:900!important;
+    color:#06165d!important;
+  }
+  .cr-op-detail{
+    align-self:end!important;
+  }
+  .cr-op-status{
+    border-radius:6px!important;
+  }
+
+  /* Quick Access: stronger module identity and fuller card composition. */
+  .cr-quick-card,#crDirectorDashCard{
+    display:grid!important;
+    grid-template-columns:31px minmax(0,1fr) 27px!important;
+    grid-template-rows:auto 1fr!important;
+    align-items:start!important;
+    column-gap:7px!important;
+    padding:7px 6px!important;
+  }
+  .cr-quick-icon,#crDirectorDashCard:before{
+    position:static!important;
+    grid-row:1 / 3!important;
+    grid-column:1!important;
+    align-self:center!important;
+    width:31px!important;
+    height:31px!important;
+    font-size:13.5px!important;
+  }
+  .cr-quick-card h3,#crDirectorDashCard h3{
+    grid-column:2!important;
+    grid-row:1!important;
+    align-self:end!important;
+    font-size:10.3px!important;
+    line-height:1.02!important;
+  }
+  .cr-quick-card p,#crDirectorDashCard p{
+    grid-column:2!important;
+    grid-row:2!important;
+    align-self:start!important;
+    font-size:8px!important;
+    line-height:1.1!important;
+    max-width:100%!important;
+  }
+  .cr-quick-arrow{
+    position:static!important;
+    grid-column:3!important;
+    grid-row:1 / 3!important;
+    align-self:center!important;
+    justify-self:end!important;
+    width:27px!important;
+    height:27px!important;
+  }
+
+  /* F00–F09: stronger code/title/active hierarchy, without taller cards. */
+  .cr-flow-card{
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:flex-start!important;
+  }
+  .cr-flow-code{
+    font-size:8.8px!important;
+    color:#075bd8!important;
+    margin-bottom:1px!important;
+  }
+  .cr-flow-card h3{
+    font-size:9.9px!important;
+    line-height:1.01!important;
+    min-height:24px!important;
+  }
+  .cr-flow-active{
+    display:flex!important;
+    align-items:baseline!important;
+    gap:3px!important;
+    font-size:8px!important;
+    margin-top:1px!important;
+  }
+  .cr-flow-active b{
+    font-size:18.6px!important;
+    line-height:.95!important;
+  }
+  .cr-flow-state{
+    font-size:7.5px!important;
+    line-height:1.02!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .cr-flow-actions{
+    margin-top:auto!important;
+  }
+  .cr-flow-actions .btn{
+    background:linear-gradient(180deg,#1688ff,#075bd8)!important;
+    color:#fff!important;
+    box-shadow:0 3px 7px rgba(7,91,216,.15)!important;
+    border:1px solid #0b6fe6!important;
+  }
+
+  /* Pending cards: make total + colored states easier to scan in 1–2 seconds. */
+  .cr-pending-card{
+    align-items:start!important;
+  }
+  .cr-pending-copy h3{
+    font-size:10.5px!important;
+    color:#07165b!important;
+  }
+  .cr-pending-total{
+    font-size:25.5px!important;
+    color:#07165b!important;
+  }
+  .cr-pending-lines{
+    color:#315f87!important;
+  }
+  .cr-pending-lines i{
+    width:7px!important;
+    height:7px!important;
+  }
+
+  /* Health: compact but clearer status emphasis, closer to reference target. */
+  .cr-health-card{
+    border-radius:7px!important;
+    background:#fff!important;
+  }
+  .cr-health-value{
+    font-size:12.6px!important;
+  }
+  .cr-health-card.ok .cr-health-value{
+    color:#0a9c59!important;
+  }
+
+  /* Make key action buttons visually closer to target without increasing height. */
+  #dashboard .cr-panel-action,
+  .cr-pending-card>.btn{
+    background:linear-gradient(180deg,#1688ff,#075bd8)!important;
+    color:#fff!important;
+    border:1px solid #0b6fe6!important;
+    box-shadow:0 3px 7px rgba(7,91,216,.16)!important;
+    border-radius:9px!important;
+  }
+}
