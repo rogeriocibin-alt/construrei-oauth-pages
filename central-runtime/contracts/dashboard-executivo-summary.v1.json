@@ -1,0 +1,98 @@
+{
+  "version": "2026-10-01",
+  "endpoint": "dashboard-executivo-summary",
+  "mode": "read_only",
+  "semantics": {
+    "unavailable": "not_available",
+    "zero": "valid_zero_only_when_source_confirms_zero"
+  },
+  "schema": {
+    "updated_at": "iso8601",
+    "operacao": {
+      "servicos_em_andamento": {
+        "value": "integer|null",
+        "amount": "number|null",
+        "status": "ok|not_available|error",
+        "source": "string"
+      },
+      "aguardando_pagamento": {
+        "value": "integer|null",
+        "amount": "number|null",
+        "status": "ok|not_available|error",
+        "source": "string"
+      },
+      "aguardando_acerto": {
+        "value": "integer|null",
+        "amount": "number|null",
+        "status": "ok|not_available|error",
+        "source": "string"
+      },
+      "visitas_hoje": {
+        "value": "integer|null",
+        "status": "ok|not_available|error",
+        "source": "string"
+      },
+      "f00_pendentes": {
+        "value": "integer|null",
+        "status": "ok|not_available|error",
+        "source": "string"
+      },
+      "f01_pendentes": {
+        "value": "integer|null",
+        "status": "ok|not_available|error",
+        "source": "string"
+      },
+      "orcamentos": {
+        "value": "integer|null",
+        "status": "ok|not_available|error",
+        "source": "string"
+      },
+      "alertas_operacionais": {
+        "value": "integer|null",
+        "status": "ok|not_available|error",
+        "source": "string"
+      }
+    },
+    "pendencias": {
+      "app": {
+        "value": "integer|null",
+        "status": "ok|not_available|error"
+      },
+      "wizy": {
+        "value": "integer|null",
+        "status": "ok|not_available|error"
+      },
+      "eder": {
+        "value": "integer|null",
+        "status": "ok|not_available|error"
+      }
+    },
+    "saude": {
+      "sistema": {
+        "value": "string|null",
+        "status": "ok|not_available|error"
+      },
+      "apis": {
+        "value": "string|null",
+        "status": "ok|not_available|error"
+      },
+      "integracoes": {
+        "value": "string|null",
+        "status": "ok|not_available|error"
+      },
+      "banco": {
+        "value": "string|null",
+        "status": "ok|not_available|error"
+      },
+      "tempo_resposta": {
+        "value": "number|null",
+        "unit": "ms",
+        "status": "ok|not_available|error"
+      },
+      "ambiente": {
+        "value": "string|null",
+        "status": "ok|not_available|error"
+      }
+    }
+  }
+}
