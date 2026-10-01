@@ -4,7 +4,7 @@
 - Branch: cr-central-global-link-audit-20261001
 - Base: cr-home-canonical-frozen-20260930
 - Candidate head at close: a65807cc4cdb2941057f5775601291c7eb29f2a6
-- APP candidate: cr-app-audited-central-alignment-20260930 @ 6f2671059eecf5b08282385e78f2c6f86e1421a5
+- APP candidate: cr-app-audited-central-alignment-20260930 @ 519ecad5f2f3d6cf64713571e9f08da5a2826d07
 - Central preview: https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-global-link-audit-20261001/
 - APP preview: https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/app-audited-central-alignment-20260930/
 - Production: untouched.
@@ -54,7 +54,8 @@ This differs from the newly recognized/harmonized APP candidate. It was intentio
 ## Smoke
 - Central preview rendered successfully.
 - Academy hash-route opened Academy directly.
-- APP preview rendered successfully.
+- APP preview rendered successfully; hierarchy final confirmed visually: primeira prioridade azul primário, fechamento branco secundário.
+- APP preview main commit: bd56730962f02f12c02c1ee8462907a1a01fddc7 • GitHub Pages SUCCESS.
 - F00–F09 network routes all resolved successfully.
 
 ## Gate
