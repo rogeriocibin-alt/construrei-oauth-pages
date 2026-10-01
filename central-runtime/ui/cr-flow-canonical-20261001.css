@@ -926,8 +926,6 @@ details.box[open]{border-color:#bfd7e8!important}
 }
 
 
-}
-
 
 /* Shell logo compatibility fix: render official APP logo as replaced content */
 .cr-brand:before{
@@ -954,9 +952,6 @@ details.box[open]{border-color:#bfd7e8!important}
 
 /* Single-logo canonical rule */
 .head>div:first-child{padding-left:0!important;min-height:0!important}
-.cr-f00-app-logo,.cr-f00-shell-logo{display:none!important}
-
-
 /* =========================================================
    SHARED FLOW COMPATIBILITY — F01–F09
    Derived from F00 approved matrix. Visual only.
