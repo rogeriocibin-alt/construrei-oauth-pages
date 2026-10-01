@@ -1211,3 +1211,172 @@ img,svg{max-width:100%}
   .cr-hero-welcome b{font-size:8.7px!important}
   .cr-hero-welcome small{font-size:6.9px!important}
 }
+
+
+/* NOTEBOOK MICROTYPOGRAPHY FINAL V6 */
+@media (min-width:1280px) and (max-width:1599px){
+  /* Improve readability without increasing component heights. */
+  .side .nav{
+    font-size:10.7px!important;
+    font-weight:760!important;
+    letter-spacing:0!important;
+  }
+  .side .gt{
+    font-size:7.8px!important;
+    font-weight:900!important;
+    letter-spacing:.01em!important;
+  }
+
+  .cr-op-label{
+    font-size:9.4px!important;
+    line-height:1.04!important;
+    font-weight:900!important;
+    letter-spacing:-.01em!important;
+    color:#07165b!important;
+  }
+  .cr-op-value{
+    font-size:25.8px!important;
+    line-height:.98!important;
+    margin:3px 0!important;
+  }
+  .cr-op-detail{
+    font-size:7.6px!important;
+    line-height:1.12!important;
+    color:#3f668d!important;
+    min-height:15px!important;
+  }
+  .cr-op-status{
+    font-size:7.7px!important;
+    line-height:1.05!important;
+    font-weight:800!important;
+    margin-top:3px!important;
+    padding:3px 4px!important;
+  }
+
+  .cr-quick-card,#crDirectorDashCard{
+    padding-left:42px!important;
+    padding-right:24px!important;
+  }
+  .cr-quick-card h3,#crDirectorDashCard h3{
+    font-size:9.4px!important;
+    line-height:1.04!important;
+    font-weight:900!important;
+    letter-spacing:-.01em!important;
+    margin:0 0 2px!important;
+  }
+  .cr-quick-card p,#crDirectorDashCard p{
+    font-size:7.4px!important;
+    line-height:1.16!important;
+    color:#42698f!important;
+    margin:0!important;
+  }
+  .cr-quick-icon,#crDirectorDashCard:before{
+    left:7px!important;
+  }
+  .cr-quick-arrow{
+    right:5px!important;
+  }
+
+  .cr-flow-code{
+    font-size:8.1px!important;
+    line-height:1!important;
+    font-weight:900!important;
+  }
+  .cr-flow-card h3{
+    font-size:9.1px!important;
+    line-height:1.04!important;
+    font-weight:900!important;
+    letter-spacing:-.01em!important;
+    min-height:24px!important;
+    margin:1px 0 2px!important;
+  }
+  .cr-flow-active{
+    font-size:7.5px!important;
+    line-height:1.05!important;
+    margin:1px 0 2px!important;
+    color:#355f88!important;
+  }
+  .cr-flow-active b{
+    font-size:17.5px!important;
+  }
+  .cr-flow-state{
+    font-size:7px!important;
+    line-height:1.06!important;
+    margin:1px 0!important;
+    color:#456b90!important;
+  }
+  .cr-flow-actions{
+    margin-top:2px!important;
+  }
+  .cr-flow-actions .btn{
+    font-size:10.9px!important;
+    font-weight:900!important;
+    letter-spacing:0!important;
+    padding-top:3px!important;
+    padding-bottom:3px!important;
+  }
+
+  .cr-pending-copy h3{
+    font-size:9.7px!important;
+    line-height:1.02!important;
+    font-weight:900!important;
+  }
+  .cr-pending-total{
+    font-size:23.8px!important;
+    line-height:.98!important;
+    margin:2px 0!important;
+  }
+  .cr-pending-lines{
+    font-size:7.2px!important;
+    line-height:1.05!important;
+    gap:1px!important;
+    color:#3d648a!important;
+  }
+  .cr-pending-card>.btn{
+    font-size:10.4px!important;
+    font-weight:900!important;
+    padding-top:3px!important;
+    padding-bottom:3px!important;
+  }
+  .cr-mini-bars{
+    margin-top:-1px!important;
+  }
+
+  .cr-health-label{
+    font-size:6.9px!important;
+    line-height:1!important;
+    color:#2f5a84!important;
+  }
+  .cr-health-value{
+    font-size:11.7px!important;
+    line-height:1!important;
+    margin:2px 0 1px!important;
+    letter-spacing:-.01em!important;
+  }
+  .cr-health-sub{
+    font-size:6.5px!important;
+    line-height:1.05!important;
+    color:#4f7395!important;
+  }
+
+  .cr-hero-actions .btn{
+    font-size:10.5px!important;
+    font-weight:900!important;
+    padding-top:4px!important;
+    padding-bottom:4px!important;
+  }
+  #dashboard .cr-panel-action{
+    font-size:10.6px!important;
+    font-weight:900!important;
+    padding-top:4px!important;
+    padding-bottom:4px!important;
+  }
+
+  /* Slightly stronger section headings with no height growth. */
+  #dashboard .cr-panel-title h2{
+    font-size:13.2px!important;
+    line-height:1!important;
+    font-weight:900!important;
+    letter-spacing:-.01em!important;
+  }
+}
