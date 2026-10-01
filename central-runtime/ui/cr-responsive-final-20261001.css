@@ -972,3 +972,75 @@ img,svg{max-width:100%}
     letter-spacing:0!important;
   }
 }
+
+
+/* NOTEBOOK BUTTONS + SIDEBAR FINE TUNE V4 */
+@media (min-width:1280px) and (max-width:1599px){
+  :root{--crh-side:228px!important}
+
+  /* Slightly stronger sidebar presence, without reintroducing vertical scroll. */
+  .side{width:228px!important;min-width:228px!important;max-width:228px!important}
+  .side .brand img{width:46px!important;height:46px!important}
+  .side .brand strong{font-size:12.8px!important}
+  .side .brand small{font-size:6.6px!important}
+  .side .nav{font-size:10.2px!important;padding-left:8px!important;padding-right:8px!important}
+  .side .gt{font-size:7.5px!important}
+
+  /* Hero access buttons: larger and easier to read at 100% browser zoom. */
+  .cr-hero-actions .btn{
+    min-height:33px!important;
+    height:33px!important;
+    padding:5px 12px!important;
+    font-size:9.7px!important;
+    line-height:1!important;
+    font-weight:850!important;
+    border-radius:9px!important;
+  }
+
+  /* Section-level primary actions. */
+  #dashboard .cr-panel-action{
+    min-height:34px!important;
+    height:34px!important;
+    padding:6px 12px!important;
+    font-size:10px!important;
+    line-height:1!important;
+    border-radius:9px!important;
+  }
+
+  /* F00–F09 actions need to remain clearly readable. */
+  .cr-flow-actions{
+    grid-template-columns:1fr 34px!important;
+    gap:4px!important;
+  }
+  .cr-flow-actions .btn{
+    min-height:34px!important;
+    height:34px!important;
+    padding:5px 8px!important;
+    font-size:10px!important;
+    line-height:1!important;
+    border-radius:8px!important;
+  }
+  .cr-flow-actions button:not(.btn){
+    min-height:34px!important;
+    height:34px!important;
+    min-width:34px!important;
+    width:34px!important;
+  }
+
+  /* Pending actions. */
+  .cr-pending-card>.btn{
+    min-height:33px!important;
+    height:33px!important;
+    padding:5px 9px!important;
+    font-size:9.6px!important;
+    line-height:1!important;
+    border-radius:8px!important;
+  }
+
+  /* Quick-access affordances. */
+  .cr-quick-arrow{
+    width:30px!important;
+    height:30px!important;
+    font-size:13px!important;
+  }
+}
