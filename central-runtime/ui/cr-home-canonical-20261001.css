@@ -1,3 +1,15 @@
+:root{
+  --cr-home-text-primary:var(--cr-home-text-primary);
+  --cr-home-text-secondary:var(--cr-home-text-secondary);
+  --cr-home-text-muted:var(--cr-home-text-muted);
+  --cr-home-blue:#075bd8;
+  --cr-home-green:#0a9c59;
+  --cr-home-space-1:4px;
+  --cr-home-space-2:8px;
+  --cr-home-radius-sm:6px;
+  --cr-home-radius-md:9px;
+  --cr-home-btn-min-h:28px;
+}
 /* CONSTRU-REI HOME CANONICAL CSS — 2026-10-01
    Extracted from homologated commit 74dd6462.
    Scope: final anti-clipping + typography layers only.
@@ -150,7 +162,7 @@
   font-size:11px!important;
   line-height:1.12!important;
   font-weight:800!important;
-  color:#08175b!important;
+  color:var(--cr-home-text-primary)!important;
 }
 #dashboard .cr-op-detail{
   font-size:8.4px!important;
@@ -177,7 +189,7 @@
 #dashboard #crDirectorDashCard p{
   font-size:8.4px!important;
   line-height:1.22!important;
-  color:#42688e!important;
+  color:var(--cr-home-text-secondary)!important;
   font-weight:500!important;
 }
 
@@ -191,19 +203,19 @@
   font-size:9.2px!important;
   line-height:1.13!important;
   font-weight:800!important;
-  color:#08175b!important;
+  color:var(--cr-home-text-primary)!important;
   letter-spacing:0!important;
 }
 #dashboard .cr-flow-active{
   font-size:8.2px!important;
   line-height:1.1!important;
-  color:#315b83!important;
+  color:var(--cr-home-text-muted)!important;
   font-weight:600!important;
 }
 #dashboard .cr-flow-state{
   font-size:7.8px!important;
   line-height:1.16!important;
-  color:#42688e!important;
+  color:var(--cr-home-text-secondary)!important;
   font-weight:500!important;
 }
 
@@ -221,7 +233,7 @@
 #dashboard .cr-pending-lines{
   font-size:7.6px!important;
   line-height:1.18!important;
-  color:#42688e!important;
+  color:var(--cr-home-text-secondary)!important;
   font-weight:500!important;
 }
 
@@ -229,7 +241,7 @@
 #dashboard .cr-health-label{
   font-size:7.8px!important;
   line-height:1.1!important;
-  color:#315b83!important;
+  color:var(--cr-home-text-muted)!important;
   font-weight:600!important;
 }
 #dashboard .cr-health-value{
