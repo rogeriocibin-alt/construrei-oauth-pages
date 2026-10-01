@@ -824,18 +824,6 @@ details.box[open]{border-color:#bfd7e8!important}
    Visual-only refinement. No functional selectors/IDs changed.
    ========================================================= */
 
-/* Official APP logo in upper shell */
-.cr-brand:before{
-  content:""!important;
-  width:32px!important;
-  height:32px!important;
-  flex:0 0 32px!important;
-  margin-right:8px!important;
-  border-radius:50%!important;
-  background:#fff url("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&rev=app-identity-canonical-20260930") center/contain no-repeat!important;
-  box-shadow:0 0 0 1px rgba(255,197,20,.44),0 5px 14px rgba(0,0,0,.18)!important;
-}
-
 /* Flow becomes a connected operational track instead of loose buttons */
 .cr-flownav{position:relative!important;gap:8px!important}
 .cr-flowlink{
