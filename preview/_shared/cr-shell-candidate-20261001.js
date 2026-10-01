@@ -41,7 +41,7 @@
 
  const bar=document.createElement("div");
  bar.className="cr-shellbar";
- bar.innerHTML='<div class="cr-shelltop"><a class="cr-brand cr-brand-home" href="'+central+'" aria-label="Voltar à Central"><span class="constru">CONSTRU</span><span class="rei">REI</span></a><div class="cr-phase"><b>'+code+' — '+title+'</b><span>'+mission+'</span></div></div><nav class="cr-flownav" aria-label="Fluxos F00 a F09">'+links+'</nav><div class="cr-shell-note">Um chamado • um número • uma fase responsável por vez</div>';
+ bar.innerHTML='<div class="cr-shelltop"><a class="cr-brand cr-brand-home" href="'+central+'" aria-label="Voltar à Central"><img class="cr-brand-logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&rev=app-identity-canonical-20260930" alt="CONSTRU-REI"><span class="constru">CONSTRU</span><span class="rei">REI</span></a><div class="cr-phase"><b>'+code+' — '+title+'</b><span>'+mission+'</span></div></div><nav class="cr-flownav" aria-label="Fluxos F00 a F09">'+links+'</nav><div class="cr-shell-note">Um chamado • um número • uma fase responsável por vez</div>';
  document.body.prepend(bar);
 
  // Keep all visible flow links inside the candidate universe.
