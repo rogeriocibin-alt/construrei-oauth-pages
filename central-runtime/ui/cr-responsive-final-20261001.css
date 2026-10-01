@@ -2031,3 +2031,43 @@ img,svg{max-width:100%}
     flex:0 0 118px!important;
   }
 }
+
+
+/* MOBILE ZERO-CUTS SAFETY V9 */
+@media (max-width:767px){
+  html,body,.layout,.content,#dashboard{
+    max-width:100%!important;
+    overflow-x:hidden!important;
+  }
+  #dashboard>.cr-home-hero,
+  #dashboard>.cr-home-hero>.cr-hero-main{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+  #dashboard .cr-hero-main h1{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    overflow-wrap:anywhere!important;
+    word-break:normal!important;
+  }
+  .cr-mobile-dock{
+    left:8px!important;
+    right:8px!important;
+    width:auto!important;
+    max-width:calc(100vw - 16px)!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    box-sizing:border-box!important;
+  }
+  .cr-mobile-dock button{
+    width:100%!important;
+    min-width:0!important;
+    box-sizing:border-box!important;
+  }
+}
