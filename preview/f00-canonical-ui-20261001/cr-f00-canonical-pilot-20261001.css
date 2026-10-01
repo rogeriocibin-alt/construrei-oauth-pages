@@ -817,3 +817,26 @@ details.box[open]{border-color:#bfd7e8!important}
   .caseHeader>div:last-child{margin-top:8px!important}
   .capture h2{font-size:20px!important}
 }
+
+
+/* Canonical APP logo in F00 hero */
+.head>div:first-child{padding-left:66px!important;min-height:56px!important}
+.cr-f00-app-logo{
+  position:absolute!important;
+  left:0!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  width:54px!important;
+  height:54px!important;
+  max-width:54px!important;
+  object-fit:contain!important;
+  display:block!important;
+  border-radius:50%!important;
+  background:#fff!important;
+  padding:2px!important;
+  box-shadow:0 0 0 1px rgba(255,197,20,.42),0 7px 20px rgba(0,0,0,.20)!important;
+}
+@media(max-width:600px){
+  .head>div:first-child{padding-left:56px!important;min-height:48px!important}
+  .cr-f00-app-logo{width:46px!important;height:46px!important;max-width:46px!important}
+}
