@@ -1044,3 +1044,170 @@ img,svg{max-width:100%}
     font-size:13px!important;
   }
 }
+
+
+/* NOTEBOOK DENSITY + DATE USABILITY FINAL V5 */
+@media (min-width:1280px) and (max-width:1599px){
+  /* Use the available width/height intelligently instead of shrinking typography. */
+  .content{padding:6px 7px 7px!important}
+  #dashboard .cr-home-panel{margin-top:4px!important}
+
+  /* Hero gets a few pixels back so date/logo/slogan can breathe. */
+  #dashboard>.cr-home-hero{
+    min-height:100px!important;
+    height:100px!important;
+    max-height:100px!important;
+    grid-template-columns:minmax(0,70%) minmax(280px,30%)!important;
+  }
+  .cr-hero-main{padding:8px 14px 7px 16px!important}
+  .cr-hero-main .ey{font-size:7.3px!important}
+  .cr-hero-main h1{font-size:18.5px!important;line-height:1.04!important;margin:3px 0 6px!important}
+  .cr-hero-visual{
+    min-height:100px!important;
+    height:100px!important;
+    overflow:hidden!important;
+  }
+
+  /* Restore a deliberate, stable right-side composition. */
+  .cr-hero-slogan{
+    left:7%!important;
+    top:12px!important;
+    font-size:10.5px!important;
+    line-height:1.05!important;
+  }
+  #crHeroLogo{
+    width:44px!important;
+    height:44px!important;
+    right:10px!important;
+    top:8px!important;
+  }
+  .cr-hero-welcome{
+    right:60px!important;
+    bottom:7px!important;
+    width:205px!important;
+    min-width:205px!important;
+    max-width:205px!important;
+    min-height:36px!important;
+    padding:5px 9px 5px 31px!important;
+    transform:none!important;
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    align-content:center!important;
+    gap:1px!important;
+    box-sizing:border-box!important;
+    border-radius:8px!important;
+  }
+  .cr-hero-welcome:before{
+    left:9px!important;
+    top:50%!important;
+    transform:translateY(-50%)!important;
+    font-size:15px!important;
+  }
+  .cr-hero-welcome b{
+    font-size:9.4px!important;
+    line-height:1.12!important;
+    white-space:normal!important;
+    overflow-wrap:normal!important;
+  }
+  .cr-hero-welcome small{
+    font-size:7.4px!important;
+    line-height:1.1!important;
+    white-space:normal!important;
+  }
+
+  /* Keep action controls easy to see. */
+  .cr-hero-actions .btn{
+    min-height:34px!important;
+    height:34px!important;
+    font-size:9.9px!important;
+  }
+  #dashboard .cr-panel-action{
+    min-height:34px!important;
+    height:34px!important;
+    font-size:10px!important;
+  }
+
+  /* Reclaim vertical space from containers, not from text. */
+  #dashboard .cr-panel-head{min-height:27px!important;padding:2px 6px!important}
+  #dashboard .cr-kpi-grid{padding-bottom:4px!important}
+  #dashboard .cr-quick-grid{padding-bottom:4px!important}
+  #dashboard .cr-flow-grid{padding-bottom:4px!important}
+  #dashboard .cr-pending-grid{padding-bottom:4px!important}
+  #dashboard .cr-health-grid{padding-bottom:4px!important}
+  .cr-bottom-grid{gap:5px!important}
+
+  /* Quick Access: ~10% more readable internal typography. */
+  .cr-quick-card,#crDirectorDashCard{
+    min-height:72px!important;
+    height:72px!important;
+  }
+  .cr-quick-card h3,#crDirectorDashCard h3{
+    font-size:8.8px!important;
+    line-height:1.08!important;
+    margin-bottom:3px!important;
+  }
+  .cr-quick-card p,#crDirectorDashCard p{
+    font-size:6.9px!important;
+    line-height:1.23!important;
+  }
+
+  /* F00–F09: recover readability without growing the section materially. */
+  .cr-flow-card{
+    min-height:120px!important;
+    height:120px!important;
+    padding:6px!important;
+  }
+  .cr-flow-code{font-size:7.5px!important}
+  .cr-flow-card h3{
+    font-size:8.4px!important;
+    line-height:1.08!important;
+    min-height:25px!important;
+    margin:2px 0 3px!important;
+  }
+  .cr-flow-active{font-size:7px!important;line-height:1.1!important}
+  .cr-flow-active b{font-size:17px!important}
+  .cr-flow-state{
+    font-size:6.5px!important;
+    line-height:1.12!important;
+    margin:2px 0!important;
+  }
+  .cr-flow-actions .btn{
+    min-height:34px!important;
+    height:34px!important;
+    font-size:10px!important;
+  }
+
+  /* Pending/health use width efficiently, avoiding dead vertical space. */
+  .cr-pending-card{
+    min-height:102px!important;
+    height:102px!important;
+  }
+  .cr-health-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:4px!important;
+  }
+  .cr-health-card{
+    min-height:46px!important;
+    height:46px!important;
+  }
+  .cr-health-label{font-size:6.4px!important}
+  .cr-health-value{font-size:11px!important}
+  .cr-health-sub{font-size:6px!important}
+}
+
+/* Extra protection for the tighter 1280–1399 notebook range. */
+@media (min-width:1280px) and (max-width:1399px){
+  #dashboard>.cr-home-hero{
+    grid-template-columns:minmax(0,72%) minmax(250px,28%)!important;
+  }
+  .cr-hero-slogan{font-size:9.6px!important;left:5%!important}
+  #crHeroLogo{width:40px!important;height:40px!important;right:8px!important}
+  .cr-hero-welcome{
+    right:52px!important;
+    width:184px!important;
+    min-width:184px!important;
+    max-width:184px!important;
+  }
+  .cr-hero-welcome b{font-size:8.7px!important}
+  .cr-hero-welcome small{font-size:6.9px!important}
+}
