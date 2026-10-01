@@ -1764,3 +1764,270 @@ img,svg{max-width:100%}
     border-radius:9px!important;
   }
 }
+
+
+/* FINAL ZERO-CUTS ORGANIZATION PASS V9
+   Final operational-region cleanup: no relevant text cuts, no new footprint growth. */
+@media (min-width:1280px) and (max-width:1599px){
+
+  /* General text wrapping policy inside operational cards. */
+  .cr-op-label,
+  .cr-op-detail,
+  .cr-op-status,
+  .cr-quick-card h3,
+  .cr-quick-card p,
+  #crDirectorDashCard h3,
+  #crDirectorDashCard p,
+  .cr-flow-card h3,
+  .cr-flow-state,
+  .cr-pending-copy h3,
+  .cr-pending-lines,
+  .cr-health-label,
+  .cr-health-value,
+  .cr-health-sub{
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    overflow-wrap:break-word!important;
+    word-break:normal!important;
+  }
+
+  /* KPI: fit all four layers fully inside existing card height. */
+  .cr-op-card{
+    grid-template-rows:29px 23px 15px 17px!important;
+    row-gap:0!important;
+    padding:4px 6px 3px!important;
+    overflow:hidden!important;
+  }
+  .cr-op-top{
+    min-height:29px!important;
+    height:29px!important;
+    gap:5px!important;
+    overflow:visible!important;
+  }
+  .cr-op-label{
+    font-size:9.8px!important;
+    line-height:1.02!important;
+    max-width:none!important;
+    align-self:center!important;
+  }
+  .cr-op-value{
+    align-self:center!important;
+    justify-self:center!important;
+    font-size:26px!important;
+    line-height:.9!important;
+    margin:0!important;
+  }
+  .cr-op-detail{
+    align-self:center!important;
+    font-size:7.8px!important;
+    line-height:1.02!important;
+    min-height:0!important;
+    max-height:15px!important;
+    overflow:hidden!important;
+    text-align:center!important;
+  }
+  .cr-op-status{
+    align-self:end!important;
+    min-height:16px!important;
+    height:16px!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    font-size:7.8px!important;
+    line-height:1!important;
+    padding:2px 4px!important;
+    margin:0!important;
+    overflow:hidden!important;
+  }
+
+  /* Quick access: two clean text rows, never clipped by the action column. */
+  .cr-quick-card,#crDirectorDashCard{
+    grid-template-columns:31px minmax(0,1fr) 28px!important;
+    grid-template-rows:minmax(22px,auto) minmax(22px,1fr)!important;
+    column-gap:7px!important;
+    row-gap:1px!important;
+    padding:7px 6px!important;
+    overflow:hidden!important;
+  }
+  .cr-quick-card h3,#crDirectorDashCard h3{
+    align-self:start!important;
+    font-size:10px!important;
+    line-height:1.03!important;
+    margin:0!important;
+    max-height:22px!important;
+    overflow:hidden!important;
+  }
+  .cr-quick-card p,#crDirectorDashCard p{
+    align-self:start!important;
+    font-size:7.8px!important;
+    line-height:1.08!important;
+    margin:0!important;
+    max-height:26px!important;
+    overflow:hidden!important;
+  }
+
+  /* F00–F09: remove ellipsis and allocate exact rows for content + actions. */
+  .cr-flow-card{
+    display:grid!important;
+    grid-template-rows:9px 26px 15px 14px 14px 34px!important;
+    row-gap:1px!important;
+    padding:4px 5px!important;
+    overflow:hidden!important;
+  }
+  .cr-flow-code{
+    font-size:8.4px!important;
+    line-height:1!important;
+    margin:0!important;
+    align-self:start!important;
+  }
+  .cr-flow-card h3{
+    font-size:9.3px!important;
+    line-height:1.03!important;
+    min-height:0!important;
+    max-height:26px!important;
+    margin:0!important;
+    overflow:hidden!important;
+    align-self:start!important;
+  }
+  .cr-flow-active{
+    font-size:7.8px!important;
+    line-height:1!important;
+    margin:0!important;
+    align-self:center!important;
+  }
+  .cr-flow-active b{
+    font-size:17.5px!important;
+    line-height:1!important;
+  }
+  .cr-flow-state{
+    display:flex!important;
+    align-items:center!important;
+    gap:3px!important;
+    min-height:14px!important;
+    height:14px!important;
+    max-height:14px!important;
+    font-size:7.1px!important;
+    line-height:1!important;
+    margin:0!important;
+    overflow:hidden!important;
+  }
+  .cr-flow-state .dot{
+    flex:0 0 auto!important;
+  }
+  .cr-flow-actions{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) 32px!important;
+    gap:3px!important;
+    margin:0!important;
+    align-self:end!important;
+  }
+  .cr-flow-actions .btn{
+    min-height:34px!important;
+    height:34px!important;
+    font-size:11.2px!important;
+    line-height:1!important;
+  }
+
+  /* Pending: exact composition so graph/button do not get visually cut. */
+  .cr-pending-card{
+    display:grid!important;
+    grid-template-columns:31px minmax(0,1fr)!important;
+    grid-template-rows:64px 17px 21px!important;
+    column-gap:6px!important;
+    row-gap:0!important;
+    padding:5px 7px 4px!important;
+    overflow:hidden!important;
+  }
+  .cr-pending-icon{
+    grid-column:1!important;
+    grid-row:1!important;
+    align-self:start!important;
+  }
+  .cr-pending-copy{
+    grid-column:2!important;
+    grid-row:1!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+  .cr-pending-copy h3{
+    font-size:10.1px!important;
+    line-height:1!important;
+    margin:0!important;
+  }
+  .cr-pending-total{
+    font-size:24px!important;
+    line-height:.96!important;
+    margin:1px 0!important;
+  }
+  .cr-pending-lines{
+    font-size:7.3px!important;
+    line-height:1.02!important;
+    gap:1px!important;
+    overflow:hidden!important;
+  }
+  .cr-mini-bars{
+    grid-column:1 / 3!important;
+    grid-row:2!important;
+    height:17px!important;
+    margin:0!important;
+    align-self:end!important;
+  }
+  .cr-pending-card>.btn{
+    grid-column:1 / 3!important;
+    grid-row:3!important;
+    align-self:end!important;
+    min-height:21px!important;
+    height:21px!important;
+    font-size:9.5px!important;
+    line-height:1!important;
+    padding:2px 5px!important;
+    margin:0!important;
+  }
+
+  /* Health: allow status labels to wrap cleanly instead of clipping. */
+  .cr-health-card{
+    display:grid!important;
+    grid-template-rows:10px 14px 12px!important;
+    align-content:center!important;
+    row-gap:1px!important;
+    padding:4px 5px!important;
+    overflow:hidden!important;
+  }
+  .cr-health-label{
+    font-size:7px!important;
+    line-height:1!important;
+    overflow:hidden!important;
+  }
+  .cr-health-value{
+    font-size:11.7px!important;
+    line-height:1!important;
+    margin:0!important;
+    overflow:hidden!important;
+  }
+  .cr-health-sub{
+    font-size:6.5px!important;
+    line-height:1!important;
+    overflow:hidden!important;
+  }
+
+  /* Buttons: high readability, fixed footprint. */
+  #dashboard .cr-panel-action{
+    font-size:10.8px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+  }
+}
+
+/* On the tightest notebook range, preserve full ten-card usability by using internal flow scrolling only. */
+@media (min-width:1280px) and (max-width:1365px){
+  #dashboard .cr-flow-grid{
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scroll-snap-type:x proximity!important;
+  }
+  #dashboard .cr-flow-grid .cr-flow-card{
+    min-width:118px!important;
+    flex:0 0 118px!important;
+  }
+}
