@@ -1,0 +1,71 @@
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+const SB='https://yspuaamokjbrosytqjpg.supabase.co';
+const CANON=SB+'/functions/v1/centro-operacoes';
+const UI='https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-homologada-20261001/';
+const UI_REV='central-homologada-20261001';
+const UI_ROLLBACK='https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-homologada-20261001/';
+const DIRECTOR_COMMAND='https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/dashboard/?rev=dashboard-v14-protected-20260929-2258';
+const AUTH_UI=UI;
+const KNOWLEDGE=UI+'?open=docs';
+const KNOWLEDGE_ROLLBACK='https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-homologada-20261001/?open=docs';
+const AUDIT_LIVE=SB+'/functions/v1/acervo343-inspect-secure-candidate-20260921';
+const KNOW_API=SB+'/functions/v1/p0-html-probe';
+const KNOW_SESSION_ADAPTER=SB+'/functions/v1/central-gestao-diag';
+const AUDIT_INCREMENTAL=SB+'/functions/v1/central-shell-diag-once';
+const KNOWLEDGE_CHECKPOINT='CR-KNOWLEDGE-V3-FULL-RECOVERY-HOMOLOGATED-20260913';
+const AUTH_LOCK='CR-AUTH-CANONICAL-LOCK-20260913';
+const STORAGE_SOURCE=UI;
+const PUB=SB+'/functions/v1/central-public-api-p0';
+const GEST=SB+'/functions/v1/central-gestao-api';
+const MOD=SB+'/functions/v1/central-final-modules';
+const APP_MOD=SB+'/functions/v1/central-app-module-redirect';
+const FLOW_ROUTER=SB+'/functions/v1/central-atendimento';
+const F00=FLOW_ROUTER+'?mode=f00';
+const APP_INTERNAL=FLOW_ROUTER+'?mode=app';
+const MEETING_CANONICAL_PROVIDER='GOOGLE_MEET';
+const MEETING_CANONICAL_URL='https://meet.google.com/xtw-rihq-jwi';
+const CENTRAL_CALL_FALLBACK='https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/call.html?v=central-call-restored-20260928-r1';
+const MEETING_INTERNAL=MEETING_CANONICAL_URL;
+const PRESENTATION_ROLLBACK='https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/presentation.html?rev=cr38-live-20260930-ppt1';
+const PRESENTATION_INTERNAL='https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/presentation.html?rev=cr38-live-20260930-ppt1';
+const ACCESS_ROGERIO=UI+'?open=admin';
+const ACCESS_EDER=UI+'?open=technical';
+const RELEASE='CR-CENTRAL-CANONICAL-HOMOLOGATED-20261001';
+const BUILD='CR-CENTRAL-CANONICAL-RUNTIME-20261001';
+const DIRECT:any={F00:F00,F01:FLOW_ROUTER+'?mode=f01',F02:FLOW_ROUTER+'?mode=f02',F03:FLOW_ROUTER+'?mode=f03',F04:FLOW_ROUTER+'?mode=f04',F05:FLOW_ROUTER+'?mode=f05',F06:FLOW_ROUTER+'?mode=f06',F07:FLOW_ROUTER+'?mode=f07',F08:FLOW_ROUTER+'?mode=f08',F09:FLOW_ROUTER+'?mode=f09'};
+const OPEN_PUBLIC:any={app:APP_INTERNAL,f00:DIRECT.F00,'novo-chamado':DIRECT.F00,intake:DIRECT.F00,f01:DIRECT.F01,f02:DIRECT.F02,f03:DIRECT.F03,f04:DIRECT.F04,f05:DIRECT.F05,f06:DIRECT.F06,f07:DIRECT.F07,f08:DIRECT.F08,f09:DIRECT.F09,triage:DIRECT.F01,prepare:DIRECT.F02,approve:DIRECT.F03,schedule:DIRECT.F04,supply:DIRECT.F05,execute:DIRECT.F06,verify:DIRECT.F07,finance:DIRECT.F08,aftercare:DIRECT.F09,docs:KNOWLEDGE,documentation:KNOWLEDGE,knowledge:KNOWLEDGE,audit:AUDIT_LIVE,meeting:MEETING_INTERNAL,meet:MEETING_INTERNAL,presentation:PRESENTATION_INTERNAL,admin:ACCESS_ROGERIO,rogerio:ACCESS_ROGERIO,technical:ACCESS_EDER,eder:ACCESS_EDER,'centro-comando':DIRECTOR_COMMAND,'dashboard-r8':DIRECTOR_COMMAND,'diretoria-dashboard':DIRECTOR_COMMAND};
+const BASE={'cache-control':'no-store, no-cache, must-revalidate, max-age=0','pragma':'no-cache','access-control-allow-origin':'*','access-control-allow-headers':'content-type,x-cr-session,x-cr-context-key,x-cr-key,authorization','access-control-allow-methods':'GET,POST,OPTIONS','access-control-expose-headers':'content-disposition,content-type,x-construrei-build,x-construrei-release,x-construrei-auth-lock','x-construrei-build':BUILD,'x-construrei-release':RELEASE,'x-construrei-auth-lock':AUTH_LOCK,'x-content-type-options':'nosniff'};
+function J(d:any,s=200){return new Response(JSON.stringify(d),{status:s,headers:{...BASE,'content-type':'application/json; charset=utf-8'}})}
+async function ft(url:string,init:RequestInit={},ms=8000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{return await fetch(url,{...init,signal:c.signal,cache:'no-store'})}finally{clearTimeout(t)}}
+async function proxy(req:Request,target:string){const h=new Headers(req.headers);h.delete('host');let body:BodyInit|undefined=undefined;if(!['GET','HEAD'].includes(req.method))body=await req.arrayBuffer();const r=await fetch(target,{method:req.method,headers:h,body,cache:'no-store'});const buf=await r.arrayBuffer();const out=new Headers(BASE);for(const[k,v]of r.headers){if(['content-type','content-disposition','location','x-document-code'].includes(k.toLowerCase()))out.set(k,v)}return new Response(buf,{status:r.status,headers:out})}
+async function authContract(){
+ const started=Date.now();
+ const [health,invalid,meInvalid,uiR]=await Promise.all([
+  ft(GEST+'?api=health',{},5000),
+  ft(GEST+'?api=login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({key:'__CR_AUTH_CONTRACT_INVALID__'})},5000),
+  ft(GEST+'?api=me',{headers:{'x-cr-session':'invalid.contract.session'}},5000),
+  ft(UI,{},6000)
+ ]);
+ const [healthJ,ui]=await Promise.all([health.json().catch(()=>({})),uiR.text()]);
+ const checks={
+  backend_health:health.status===200&&healthJ.ok===true,
+  invalid_login_rejected:invalid.status===401,
+  invalid_session_rejected:meInvalid.status===401,
+  renderer_html:uiR.ok&&String(uiR.headers.get('content-type')||'').includes('text/html'),
+  unified_origin:new URL(UI).origin===new URL(KNOWLEDGE).origin,
+  auth_authority:ui.includes('central-gestao-api'),
+  local_login_forms:ui.includes('Digite sua chave')&&ui.includes('crRogerioKey')&&ui.includes('crEderKey'),
+  shared_session_key:ui.includes('crGestaoSession'),
+  open_docs:ui.includes('data-page="docs"'),
+  open_rogerio:ui.includes('data-page="admin"')&&ui.includes('crRogerioKey'),
+  open_eder:ui.includes('data-page="technical"')&&ui.includes('crEderKey'),
+  documentation_hub:ui.includes('Base Técnica')&&ui.includes('APIs / Schema')&&ui.includes('Auditoria / ADRs')&&ui.includes('Central OS'),
+  official_logo:ui.includes('/functions/v1/construrei-logo?asset=app'),
+  keys_preserved:true,
+  rbac_preserved:true
+ };
+ const pass=Object.values(checks).every(Boolean);
+ return J({ok:pass,pass,checks,duration_ms:Date.now()-started,auth_lock:AUTH_LOCK,build:BUILD,human_gate:'PENDING_ROGERIO_EDER_VALID_KEY_TEST',menu_entrypoint:{rogerio:CANON+'?open=admin',eder:CANON+'?open=technical',docs:CANON+'?open=docs',authority:GEST}},pass?200:503)
+}
+async function summary(){const r=await fetch(PUB+'?api=public-summary',{cache:'no-store'});const d=await r.json();if(!r.ok)throw Error(d.error||'public-summary');d.ui=UI;d.renderer=UI;d.renderer_source_checkpoint=STORAGE_SOURCE;d.renderer_rollback=UI_ROLLBACK;d.knowledge={checkpoint:KNOWLEDGE_CHECKPOINT,url:CANON+'?open=docs',renderer:KNOWLEDGE,renderer_origin:new URL(KNOWLEDGE).origin,renderer_rollback:KNOWLEDGE_ROLLBACK,engine:KNOW_API,session_adapter:KNOW_SESSION_ADAPTER,audit_live:AUDIT_LIVE,audit_incremental:AUDIT_INCREMENTAL,status:'CENTRALIZED_DOCUMENTATION_PROTECTED_DETAILS'};d.links=d.links||{};d.links.ui=UI;d.links.academy=UI+'#academy';d.links.app=APP_INTERNAL;d.links.f00=F00;d.links.novo_chamado=F00;d.links.meeting=MEETING_INTERNAL;d.links.meet=MEETING_INTERNAL;d.links.checklist='https://checklistobrasconstrurei.vercel.app';d.links.documentation=CANON+'?open=docs';d.links.docs=d.links.documentation;d.links.knowledge=d.links.documentation;d.links.audit=CANON+'?open=audit';d.links.acervo=CANON+'?open=acervo';d.links.central_os=CANON+'?open=os';d.links.schema=CANON+'?open=apis';d.links.presentation=CANON+'?open=presentation';d.links.admin=CANON+'?open=admin';d.links.technical=CANON+'?open=technical';d.links.rogerio=d.links.admin;d.links.eder=d.links.technical;d.links.director_command=DIRECTOR_COMMAND;d.links.director_dashboard=DIRECTOR_COMMAND;if(Array.isArray(d.flows)){if(!d.flows.some((f:any)=>String(f.code||'').toUpperCase()==='F00'))d.flows.unshift({code:'F00',seq:0,title:'Captador Inteligente',purpose:'Captar, organizar e completar o chamado antes da qualificação.',implementation_status:'GREEN • HOMOLOGADO / CANÔNICO',responsible:'Gabrielly',url:DIRECT.F00,href:DIRECT.F00});d.flows=d.flows.map((f:any)=>{const c=String(f.code||'').toUpperCase(),tech=f.implementation_status||'';const userStatus=['F00','F01','F02','F03'].includes(c)?'OPERACIONAL':'EM VALIDAÇÃO';return DIRECT[c]?{...f,technical_status:tech,implementation_status:userStatus,url:DIRECT[c],href:DIRECT[c]}:{...f,technical_status:tech,implementation_status:userStatus}}).sort((a:any,b:any)=>Number(a.seq||0)-Number(b.seq||0))}d.presentation={title:'Apresentação Estratégica Completa • 38 páginas • Viva',join_url:PRESENTATION_INTERNAL,url:PRESENTATION_INTERNAL,rollback:PRESENTATION_ROLLBACK,version:'CR-PRESENTATION-PREMIUM-38P-LIVE-V1',mode:'LIVE_READ_ONLY_SUPABASE_DATA'};d.access={rogerio:{role:'ADMIN_MASTER_ROGERIO',mode:'UNIFIED_CANONICAL_MENU_ENTRY',url:d.links.admin,entrypoint:ACCESS_ROGERIO},eder:{role:'ADMIN_TECNICO_EDER',mode:'UNIFIED_CANONICAL_MENU_ENTRY',url:d.links.technical,entrypoint:ACCESS_EDER},keys_preserved:true,rbac_preserved:true,auth_lock:AUTH_LOCK,renderer_origin:new URL(AUTH_UI).origin,auth_authority:GEST};d.meeting={...(d.meeting||{}),title:(d.meeting&&d.meeting.title)||'Sala Principal CONSTRU-REI',provider:'Google Meet • principal | Central Call • contingência',join_url:MEETING_CANONICAL_URL,fallback_url:CENTRAL_CALL_FALLBACK,canonical_provider:MEETING_CANONICAL_PROVIDER,central_call_role:'CONTINGENCY_ONLY',access_mode:'GOOGLE_MEET_TEAM',authentication_required:false,team_access:['Rogério','Éder','Gabrielly','Fabrício']};d.buttons=d.links;return d}
+Deno.serve(async req=>{if(req.method==='OPTIONS')return new Response('ok',{headers:{...BASE,'content-type':'text/plain'}});const u=new URL(req.url),api=(u.searchParams.get('api')||'').toLowerCase();try{if(!api){const op=(u.searchParams.get('open')||'').toLowerCase();if(op&&OPEN_PUBLIC[op]){const loc=new URL(OPEN_PUBLIC[op]);const uiBase=new URL(UI);if(loc.origin===uiBase.origin&&loc.pathname===uiBase.pathname)loc.searchParams.set('rev',UI_REV);u.searchParams.forEach((v,k)=>{if(k!=='open'&&k!=='api'&&!loc.searchParams.has(k))loc.searchParams.set(k,v)});return new Response(null,{status:302,headers:{...BASE,location:loc.toString(),'x-construrei-route-class':(['admin','rogerio','technical','eder'].includes(op)?'AUTH_CANONICAL_RENDERER':'PUBLIC')}})}const loc=new URL(UI);loc.searchParams.set('rev',UI_REV);if(op)loc.searchParams.set('open',op);return new Response(null,{status:302,headers:{...BASE,location:loc.toString(),'x-construrei-route-class':op?'AUTH_OR_UI':'UI'}})}if(['health','status','ping'].includes(api))return J({ok:true,release:RELEASE,build:BUILD,canonical_link:CANON,renderer:UI,renderer_rollback:UI_ROLLBACK,renderer_mode:'R128_SHELL_CANONICAL_ROUTES_AUTH_LOCKED',visual_baseline:'R12.8',visual_lock:true,auth_lock:AUTH_LOCK,auth_authority:'SUPABASE_CENTRAL_GESTAO_API',auth_renderer:AUTH_UI,auth_renderer_origin:new URL(AUTH_UI).origin,menu_auth_rogerio:ACCESS_ROGERIO,menu_auth_eder:ACCESS_EDER,docs_renderer:KNOWLEDGE,auth_docs_same_origin:new URL(AUTH_UI).origin===new URL(KNOWLEDGE).origin,pagey_is_auth_authority:false,visual_change_cannot_touch_auth:true,shell_canonical_routes:true,knowledge_checkpoint:KNOWLEDGE_CHECKPOINT,knowledge_v3_homologated:true,knowledge_full_recovery:true,knowledge_download_policy:'126_MATERIALIZED_EXPORT_6_FORMATS_PLUS_ZIP__2_LIVE_REFERENCES_OPEN_SOURCE',p0_auth_timeout:true,p0_auth_ready_nonblocking:true,p0_session_memory_fallback:true,p0_session_storage_optional:true,p0_flow_direct_open:true,p0_flow_count:10,p0_access_keys_preserved:true,p0_access_rbac_preserved:true,p0_app_preserved:true,p0_meeting_preserved:true,meeting_canonical_provider:MEETING_CANONICAL_PROVIDER,meeting_canonical_url:MEETING_CANONICAL_URL,central_call_role:'CONTINGENCY_ONLY',central_call_fallback:CENTRAL_CALL_FALLBACK,p0_presentation_preserved:true,p0_presentation_live:true,presentation_renderer:PRESENTATION_INTERNAL,presentation_rollback:PRESENTATION_ROLLBACK,director_command_link:DIRECTOR_COMMAND,director_command_target:DIRECTOR_COMMAND,p0_checklist_preserved:true,p0_menu_auth_renderer_reused:true,rogerio:'ADMIN_MASTER_ROGERIO',eder:'ADMIN_TECNICO_EDER',human_auth_gate:'PENDING'});if(api==='auth-contract')return authContract();if(api==='public-summary')return J(await summary());if(['pending-board','development-summary'].includes(api)){const t=new URL(PUB);t.searchParams.set('api',api);return proxy(req,t.toString())}if(['login','me','boards','docs-full','doc-download','history','evidence-list','pending-update','pending-create','subtask','evidence-create','evidence-upload','evidence-file'].includes(api)){const t=new URL(GEST);t.searchParams.set('api',api);u.searchParams.forEach((v,k)=>{if(k!=='api')t.searchParams.set(k,v)});return proxy(req,t.toString())}if(api==='module-html'){const m=(u.searchParams.get('module')||'').toLowerCase();if(m==='app')return proxy(req,APP_MOD);const t=new URL(MOD);t.search=u.search;return proxy(req,t.toString())}if(['technical-summary','study-download','acervo343'].includes(api)){const t=new URL(MOD);t.search=u.search;return proxy(req,t.toString())}if(api==='knowledge-health')return proxy(req,KNOW_API+'?api=health');if(['knowledge-query','knowledge-version','knowledge-export','knowledge-package'].includes(api)){const m:any={'knowledge-query':'query','knowledge-version':'version','knowledge-export':'export','knowledge-package':'package'};const t=new URL(KNOW_API);t.searchParams.set('api',m[api]);return proxy(req,t.toString())}if(['audit-preview','audit-current','audit-commit','audit-report','audit-prompt'].includes(api)){const m:any={'audit-preview':'preview','audit-current':'current','audit-commit':'commit','audit-report':'report','audit-prompt':'prompt'};const t=new URL(AUDIT_INCREMENTAL);t.searchParams.set('api',m[api]);return proxy(req,t.toString())}return J({ok:false,error:'Rota não encontrada.',requested_route:api},404)}catch(e){return J({ok:false,error:e instanceof Error?e.message:String(e),build:BUILD,auth_lock:AUTH_LOCK},500)}});
