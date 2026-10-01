@@ -39,3 +39,13 @@ Auditoria global executada sobre HOME/Central, APP, Dashboard V4, F00–F09, Che
 
 ## Gate
 A auditoria de rotas está pronta para homologação, mas a promoção do APP e da Central deve ocorrer somente com autorização explícita de Rogério.
+
+
+## Complemento final
+- Dashboard V4: todos os `target="_blank"` passaram a usar `rel="noopener noreferrer"`.
+- Dashboard V4: links Trello sem URL real deixaram de gerar `href="#"`; agora mostram estado indisponível.
+- F00, F01, F02 e F03: links externos com `target="_blank"` foram endurecidos com `rel="noopener noreferrer"`.
+- F04–F09: nenhum `href="#"`, `javascript:void(0)` ou `target="_blank"` sem rel foi encontrado.
+- Academy: smoke test real no preview confirmou abertura direta do módulo via `#academy`.
+- HOME Central: smoke test real no preview confirmou carregamento com dados públicos.
+- APP: hierarquia visual final de hero foi aplicada no candidate; snapshot histórico continua intacto.
