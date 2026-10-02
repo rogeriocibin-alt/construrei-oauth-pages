@@ -1,80 +1,184 @@
 /* CONSTRU-REI — remaining modules canonical palette — 2026-10-02
-Scope ONLY: #os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst */
+Scope: documentation + remaining technical modules + protected Éder/Rogério panels + modal/workspace canonicalization */
 :root{
 --crrm-navy:#031b46;--crrm-navy2:#05265f;--crrm-blue:#0877f9;--crrm-blue2:#075bd8;--crrm-blueTop:#1688ff;
 --crrm-gold:#ffc514;--crrm-bg:#eef8fd;--crrm-panel:#f9fdff;--crrm-card:#fff;--crrm-line:#d5e7f2;
 --crrm-ink:#07165b;--crrm-text:#17315d;--crrm-muted:#6d8299;--crrm-ok:#0daf67;--crrm-warn:#f2a500;--crrm-bad:#ee2147;
 --crrm-shadow:0 5px 14px rgba(13,63,111,.08);--crrm-shadow2:0 16px 42px rgba(6,40,86,.14)
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin){
  color:var(--crrm-text)!important;min-width:0!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst).page>h1{
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin).page>h1{
  position:relative!important;display:flex!important;align-items:center!important;min-height:62px!important;
  margin:0 0 12px!important;padding:13px 18px 13px 22px!important;border-radius:11px!important;
  background:linear-gradient(112deg,var(--crrm-navy) 0%,#07357f 58%,#04235c 100%)!important;
  border:1px solid rgba(255,197,20,.34)!important;box-shadow:var(--crrm-shadow2)!important;color:#fff!important;
  font-size:clamp(21px,2vw,28px)!important;line-height:1.1!important;text-shadow:none!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst).page>h1:before{
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin).page>h1:before{
  content:""!important;position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:5px!important;background:var(--crrm-gold)!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) :is(.card,.kpi,.cr-tech-stat,.cr-doc-card,.item){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) :is(.card,.kpi,.cr-tech-stat,.cr-doc-card,.item){
  background:linear-gradient(180deg,#fff,#f9fcfe)!important;color:var(--crrm-text)!important;border:1px solid var(--crrm-line)!important;
  border-radius:11px!important;box-shadow:var(--crrm-shadow)!important;text-shadow:none!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) :is(.kpi .val,.cr-tech-stat b,.boardnum,.money){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) :is(.kpi .val,.cr-tech-stat b,.boardnum,.money){
  color:var(--crrm-ink)!important;opacity:1!important;text-shadow:none!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) :is(.kpi .lab,.cr-tech-stat span,.mut,.cr-doc-meta,.state){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) :is(.kpi .lab,.cr-tech-stat span,.mut,.cr-doc-meta,.state){
  color:var(--crrm-muted)!important;opacity:1!important;text-shadow:none!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) :is(h2,h3,h4,.itemtitle,.code){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) :is(h2,h3,h4,.itemtitle,.code){
  color:var(--crrm-ink)!important;text-shadow:none!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) .tag{
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) .tag{
  color:var(--crrm-blue2)!important;font-weight:900!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) :is(.cr-module-intro,.notice){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) :is(.cr-module-intro,.notice){
  background:var(--crrm-panel)!important;color:var(--crrm-text)!important;border:1px solid var(--crrm-line)!important;
  border-left:4px solid var(--crrm-blue)!important;border-radius:10px!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) :is(.tablewrap,.cr-tech-table){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) :is(.tablewrap,.cr-tech-table){
  background:#fff!important;color:var(--crrm-text)!important;border:1px solid var(--crrm-line)!important;border-radius:11px!important;
  box-shadow:var(--crrm-shadow)!important;overflow:auto!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) table{background:#fff!important;color:var(--crrm-text)!important}
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) th{
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) table{background:#fff!important;color:var(--crrm-text)!important}
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) th{
  background:#edf7fc!important;color:var(--crrm-ink)!important;border-color:var(--crrm-line)!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) td{
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) td{
  background:#fff!important;color:var(--crrm-text)!important;border-color:var(--crrm-line)!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) :is(.input,input,select,textarea){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) :is(.input,input,select,textarea){
  background:#fff!important;color:var(--crrm-text)!important;border:1px solid var(--crrm-line)!important;border-radius:8px!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) .btn{
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) .btn{
  min-height:38px!important;padding:8px 13px!important;border-radius:8px!important;border:1px solid var(--crrm-line)!important;
  background:#fff!important;color:var(--crrm-blue2)!important;box-shadow:0 2px 6px rgba(18,69,112,.055)!important;font-weight:800!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) .btn.primary{
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) .btn.primary{
  background:linear-gradient(180deg,var(--crrm-blueTop),var(--crrm-blue2))!important;color:#fff!important;border-color:#0b6fe6!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) .btn.gold{
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) .btn.gold{
  background:linear-gradient(180deg,#ffd84d,var(--crrm-gold))!important;color:var(--crrm-navy)!important;border-color:#e6ac00!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) :is(.badge,.pill,.state){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) :is(.badge,.pill,.state){
  background:#edf7fc!important;color:var(--crrm-blue2)!important;border-color:var(--crrm-line)!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) .badge.p0{background:#fff1f4!important;color:#b71735!important;border-color:#ffc4cf!important}
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) .cr-secure-note{
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) .badge.p0{background:#fff1f4!important;color:#b71735!important;border-color:#ffc4cf!important}
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) .cr-secure-note{
  background:#fff8df!important;color:#624d00!important;border:1px solid #f1d471!important;border-left:4px solid var(--crrm-gold)!important
 }
-:is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) :is(.content,pre,.workspaceBar){
+:is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) :is(.content,pre,.workspaceBar){
  background:var(--crrm-panel)!important;color:var(--crrm-text)!important;border-color:var(--crrm-line)!important
 }
 @media(max-width:560px){
- :is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst).page>h1{min-height:56px!important;padding:12px 13px 12px 17px!important;font-size:20px!important}
- :is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) .devgrid{grid-template-columns:1fr!important}
- :is(#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst) .two{grid-template-columns:1fr!important}
+ :is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin).page>h1{min-height:56px!important;padding:12px 13px 12px 17px!important;font-size:20px!important}
+ :is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) .devgrid{grid-template-columns:1fr!important}
+ :is(#docs,#os,#grc,#audit,#releases,#gaps,#history,#htmls,#acervo,#apis,#security,#sst,#technical,#admin) .two{grid-template-columns:1fr!important}
+}
+
+
+/* FINAL INTERNAL CANONICALIZATION — 2026-10-02
+   Visual-only. No auth, routing, handlers, API, storage or business logic changes. */
+:is(#docs,#technical,#admin) :is(label,p,span,small,.crp1-title,.crp1-next,.crp1-count,.crp1-sub){
+  color:var(--crrm-text)!important;text-shadow:none!important
+}
+:is(#docs,#technical,#admin) :is(h1,h2,h3,h4,strong,b,.crp1-title){
+  color:var(--crrm-ink)!important;text-shadow:none!important
+}
+:is(#technical,#admin) :is(.crp1-badge,.crp1-count){
+  background:#edf7fc!important;color:var(--crrm-blue2)!important;border-color:var(--crrm-line)!important
+}
+:is(#technical,#admin) .crp1-badge.p0{
+  background:#fff1f4!important;color:#b71735!important;border-color:#ffc4cf!important
+}
+:is(#technical,#admin) .crp1-code{
+  color:var(--crrm-blue2)!important
+}
+:is(#technical,#admin) .crp1-warn{
+  color:#8a5d00!important
+}
+:is(#technical,#admin) .crp1-event{
+  background:#f8fcff!important;color:var(--crrm-text)!important;border-left-color:var(--crrm-blue)!important
+}
+:is(#technical,#admin) .crp1-ev{
+  background:#fff!important;color:var(--crrm-text)!important;border-color:var(--crrm-line)!important
+}
+:is(#technical,#admin) .crp1-tabs{
+  scrollbar-color:#b6d7ed transparent
+}
+:is(#technical,#admin) .crp1-tabs .btn.gold{
+  background:linear-gradient(180deg,#ffd84d,var(--crrm-gold))!important;color:var(--crrm-navy)!important;border-color:#e6ac00!important
+}
+
+/* Canonical modal / drawer */
+.detail{
+  background:rgba(3,27,70,.50)!important;backdrop-filter:blur(8px)!important
+}
+.detailBox{
+  background:linear-gradient(180deg,#ffffff,#f4faff)!important;color:var(--crrm-text)!important;
+  border:1px solid var(--crrm-line)!important;border-top:4px solid var(--crrm-blue)!important;
+  box-shadow:0 24px 70px rgba(6,40,86,.24)!important
+}
+.detailBox :is(h1,h2,h3,h4,strong,b,label){
+  color:var(--crrm-ink)!important;text-shadow:none!important
+}
+.detailBox :is(p,span,small,.mut,.crp1-count,.crp1-next,.crp1-sub){
+  color:var(--crrm-text)!important;opacity:1!important;text-shadow:none!important
+}
+.detailBox :is(.input,input,select,textarea){
+  width:100%!important;max-width:100%!important;background:#fff!important;color:var(--crrm-text)!important;
+  border:1px solid #bfd9ea!important;border-radius:9px!important;box-shadow:0 1px 4px rgba(18,69,112,.045)!important
+}
+.detailBox :is(.card,.crp1-event,.crp1-ev){
+  background:#fff!important;color:var(--crrm-text)!important;border-color:var(--crrm-line)!important;box-shadow:var(--crrm-shadow)!important
+}
+.detailBox .btn{
+  min-height:38px!important;padding:8px 13px!important;border-radius:8px!important;background:#fff!important;
+  color:var(--crrm-blue2)!important;border:1px solid var(--crrm-line)!important;box-shadow:0 2px 6px rgba(18,69,112,.055)!important
+}
+.detailBox .btn.primary{
+  background:linear-gradient(180deg,var(--crrm-blueTop),var(--crrm-blue2))!important;color:#fff!important;border-color:#0b6fe6!important
+}
+.detailBox>.btn[onclick="closeDetail()"]{
+  position:sticky!important;top:0!important;float:right!important;z-index:3!important;margin:0 0 10px 10px!important
+}
+.detailBox .crp1-drawer>.btn[onclick="closeDetail()"]{
+  display:none!important
+}
+
+/* Workspace canonical surface */
+#workspace{
+  color:var(--crrm-text)!important
+}
+#workspace .workspace{
+  background:#fff!important;border:1px solid var(--crrm-line)!important;border-radius:12px!important;
+  box-shadow:var(--crrm-shadow2)!important
+}
+#workspace .workspaceBar{
+  background:linear-gradient(180deg,#ffffff,#edf7fc)!important;color:var(--crrm-ink)!important;
+  border-bottom:1px solid var(--crrm-line)!important
+}
+#workspace .workspaceBar b{
+  color:var(--crrm-ink)!important
+}
+#workspace .workspaceBar .btn{
+  min-height:38px!important;padding:8px 12px!important;border-radius:8px!important;background:#fff!important;
+  color:var(--crrm-blue2)!important;border:1px solid var(--crrm-line)!important;box-shadow:0 2px 6px rgba(18,69,112,.055)!important
+}
+#workspace>.notice{
+  background:var(--crrm-panel)!important;color:var(--crrm-text)!important;border:1px solid var(--crrm-line)!important;
+  border-left:4px solid var(--crrm-blue)!important
+}
+
+@media(max-width:760px){
+  :is(#technical,#admin) .crp1-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  :is(#technical,#admin) .crp1-tools{grid-template-columns:1fr!important}
+  :is(#technical,#admin) .crp1-tools .search{grid-column:auto!important}
+  .detail{padding:8px 8px 88px!important;align-items:flex-start!important;overflow:auto!important}
+  .detailBox{width:100%!important;max-height:calc(100dvh - 102px)!important;padding:14px!important;border-radius:14px!important}
+  #workspace .workspaceBar{flex-wrap:wrap!important;align-items:center!important}
+  #workspace .workspaceBar b{width:100%!important;order:-1!important;margin:0!important}
 }
