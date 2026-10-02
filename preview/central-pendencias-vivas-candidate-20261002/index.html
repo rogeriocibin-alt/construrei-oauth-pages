@@ -2834,16 +2834,19 @@ async function crLoadExecSnapshot(){try{var r=await fetch('./dashboard-executivo
 function render(){var m=DATA.metrics||{};setText('#release','V100-R12.8');setText('#live','LIVE • '+new Date(DATA.generated_at).toLocaleTimeString('pt-BR'));
 var logo=qs('.brand img'),heroLogo=qs('#crHeroLogo');if(logo&&heroLogo&&!heroLogo.getAttribute('src'))heroLogo.setAttribute('src',logo.getAttribute('src')||'');
 var dt=new Date(DATA.generated_at||Date.now()),dateEl=qs('#crHeroDate');if(dateEl)dateEl.textContent=dt.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});var up=qs('#crHomeUpdated');if(up)up.textContent='Última atualização: '+dt.toLocaleString('pt-BR');
-var exS=crExecMetric('servicos_em_andamento'),exP=crExecMetric('aguardando_pagamento'),exA=crExecMetric('aguardando_acerto'),exV=crExecMetric('visitas_hoje'),exF0=crExecMetric('f00_pendentes'),exF1=crExecMetric('f01_pendentes'),exO=crExecMetric('orcamentos'),exAl=crExecMetric('alertas_operacionais');
+var exS=crExecMetric('servicos_em_andamento'),exP=crExecMetric('aguardando_pagamento'),exV=crExecMetric('visitas_hoje'),exO=crExecMetric('orcamentos');
+var crPS=window.__CR_PENDING_SUMMARY||{},crPM=crPS.metrics||{},crSources=crPS.sources||[];
+function crSource(code){return crSources.find(function(x){return x.source_code===code})||{status:'NAO_INTEGRADO'}}
+var crAgenda=crSource('AGENDA');
 setHtml('#kpis',
  homeKpi('🔧','Serviços em andamento',crMetricVal(exS),crMetricDetail(exS,exS&&exS.amount!=null?crFmtBRL(exS.amount)+' em execução':'Fonte operacional validada'),'Em execução','blue')+
- homeKpi('▣','Aguardando pagamento',crMetricVal(exP),crMetricDetail(exP,exP&&exP.amount!=null?crFmtBRL(exP.amount)+' em aberto':'Fonte operacional validada'),'Serviços concluídos','green')+
- homeKpi('◷','Aguardando acerto',crMetricVal(exA),crMetricDetail(exA,exA&&exA.amount!=null?crFmtBRL(exA.amount)+' base considerada':'Fonte operacional validada'),'Medições / ajustes','amber')+
- homeKpi('▦','Visitas do dia',crMetricVal(exV),crMetricDetail(exV),'Agendamentos','purple')+
- homeKpi('▤','F00 pendentes',crMetricVal(exF0),crMetricDetail(exF0),'Aguardando tratamento','red')+
- homeKpi('◉','F01 pendentes',crMetricVal(exF1),crMetricDetail(exF1),'Aguardando resposta','blue')+
+ homeKpi('▣','Aguardando pagamento',crMetricVal(exP),crMetricDetail(exP,exP&&exP.amount!=null?crFmtBRL(exP.amount)+' em aberto':'Fonte operacional validada'),'Financeiro','green')+
+ homeKpi('▦','Visitas',crMetricVal(exV),crMetricDetail(exV),'Agenda','purple')+
  homeKpi('▥','Orçamentos',crMetricVal(exO),crMetricDetail(exO),'Envio / aprovação','orange')+
- homeKpi('!','Alertas operacionais',crMetricVal(exAl),crMetricDetail(exAl),'Verificar agora','red'));
+ homeKpi('◷','Agenda de amanhã',crAgenda.status==='OK'?(crPM.tomorrow||0):'—',crAgenda.status==='OK'?'Fonte Agenda conectada':'FONTE AINDA NÃO INTEGRADA',crAgenda.status||'NAO_INTEGRADO','amber')+
+ homeKpi('↶','Pendências de ontem',crPM.overdue==null?'—':crPM.overdue,'Banco Mestre candidato','Atrasadas / vencidas','red')+
+ homeKpi('●','Pendências vivas',crPM.total_live==null?'—':crPM.total_live,'Banco Mestre candidato','Gestão viva','blue')+
+ homeKpi('!','Bloqueadas',crPM.blocked==null?'—':crPM.blocked,'Impedimentos registrados','Exceções','red'));
 var links=DATA.links||{};
 var appAction='<a class="cr-quick-hit" href="'+esc(links.app||'')+'" aria-label="Abrir APP"></a>';
 var f00Action='<a class="cr-quick-hit" href="'+esc(links.f00||links.novo_chamado||'')+'" aria-label="Abrir F00"></a>';
@@ -3222,12 +3225,12 @@ function ensureLayer(){
 }
 async function refresh(){
  var rs=await Promise.allSettled([
-  fetch(EXEC+'&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),
+  fetch(EXEC+'?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),
   fetch(API+'?api=summary&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),
   fetch(API+'?api=technical-health&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()})
  ]);
  var ex=rs[0].status==='fulfilled'?rs[0].value:{},sm=rs[1].status==='fulfilled'?rs[1].value:{metrics:{},sources:[]},th=rs[2].status==='fulfilled'?rs[2].value:null;
- var o=ex&&ex.operacao?ex.operacao:{},m=sm.metrics||{},agenda=src(sm,'AGENDA'),gc=src(sm,'GESTAOCLICK');
+ window.__CR_PENDING_SUMMARY=sm; var o=ex&&ex.operacao?ex.operacao:{},m=sm.metrics||{},agenda=src(sm,'AGENDA'),gc=src(sm,'GESTAOCLICK');
  var k=document.getElementById('kpis');
  if(k)k.innerHTML=
   opCard('🔧','Serviços em andamento',mv(o.servicos_em_andamento),md(o.servicos_em_andamento,'em execução'),'Em execução','blue')+
@@ -3252,7 +3255,7 @@ function paintHealth(d){
  (d.components||[]).map(function(x){return '<div class="cr-health-line"><b>'+e(x.component)+'</b><span>'+e(x.status)+'</span><span>'+(x.latency_ms==null?'—':e(x.latency_ms)+' ms')+'</span></div>'}).join('')+
  '<div class="pv2-sub" style="margin-top:8px">Build '+e(d.build)+' · verificado '+e(new Date(d.checked_at).toLocaleString('pt-BR'))+'</div>';
 }
-function init(){refresh();setInterval(refresh,30000)}
+function init(){refresh();setTimeout(refresh,1200);setInterval(refresh,30000)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script></body></html>
