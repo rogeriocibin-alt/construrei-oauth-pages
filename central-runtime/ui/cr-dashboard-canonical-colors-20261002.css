@@ -1,0 +1,78 @@
+/* CONSTRU-REI — Dashboard Gerencial canonical palette — 2026-10-02
+Visual override only. No data, logic, auth, events, API or calculations. */
+:root{
+ --n:#031b46!important;--n2:#05265f!important;--g:#ffc514!important;--gs:#fff1a8!important;
+ --bg:#eef8fd!important;--m:#6d8299!important;--l:#d5e7f2!important;--ok:#0daf67!important;--warn:#f2a500!important;--bad:#ee2147!important
+}
+html,body{background:#eef8fd!important;color:#17315d!important}
+body{background:#eef8fd!important}
+.top{
+ background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important;
+ border-bottom:1px solid rgba(255,197,20,.34)!important;box-shadow:0 8px 24px rgba(6,40,86,.16)!important;color:#fff!important
+}
+.main{color:#17315d!important}
+.r6hero{
+ background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important;
+ border:1px solid rgba(255,197,20,.34)!important;box-shadow:0 14px 34px rgba(5,42,91,.16)!important;color:#fff!important
+}
+.r6eyebrow{color:#ffc514!important}
+.panel,.kpi,.person,.op,.provcard,.r6metric{
+ background:#fff!important;color:#17315d!important;border-color:#d5e7f2!important;box-shadow:0 5px 14px rgba(13,63,111,.08)!important
+}
+.panel h3,.periodtitle,.opdetail summary,.provname,.money,.v{color:#07165b!important}
+.lab,.muted,.small,.hint,.foot{color:#6d8299!important}
+.tab,.chip,.month,.yearbtn{
+ background:#fff!important;color:#075bd8!important;border-color:#d5e7f2!important;box-shadow:none!important
+}
+.tab.on,.chip.on,.yearbtn.on{
+ background:linear-gradient(180deg,#1688ff,#075bd8)!important;color:#fff!important;border-color:#0b6fe6!important;
+ box-shadow:inset 0 -2px 0 #ffc514!important
+}
+.month.on{
+ background:linear-gradient(180deg,#ffd84d,#ffc514)!important;color:#031b46!important;border-color:#e6ac00!important
+}
+.filters input,.filters select,.box input{
+ background:#fff!important;color:#17315d!important;border-color:#d5e7f2!important
+}
+.tablewrap{background:#fff!important;border-color:#d5e7f2!important;box-shadow:0 5px 14px rgba(13,63,111,.08)!important}
+.table{background:#fff!important;color:#17315d!important}
+.table th{background:#edf7fc!important;color:#07165b!important;border-color:#d5e7f2!important}
+.table td{background:#fff!important;color:#17315d!important;border-color:#d5e7f2!important}
+.pill,.filtertag{
+ background:#edf7fc!important;color:#075bd8!important;border-color:#d5e7f2!important
+}
+.periodnote,.state.warn{
+ background:#fff8df!important;color:#624d00!important;border-color:#f1d471!important
+}
+.state,.opempty{
+ background:#f9fdff!important;color:#6d8299!important;border-color:#d5e7f2!important
+}
+.trellobtn,.box button{
+ background:linear-gradient(180deg,#1688ff,#075bd8)!important;color:#fff!important;border:1px solid #0b6fe6!important
+}
+.login{
+ background:linear-gradient(135deg,#031b46,#05265f)!important
+}
+.box{
+ background:#fff!important;color:#17315d!important;border:1px solid #d5e7f2!important;box-shadow:0 16px 42px rgba(6,40,86,.18)!important
+}
+.bar{
+ background:linear-gradient(180deg,#1688ff,#075bd8)!important;border-color:#0b6fe6!important;box-shadow:none!important
+}
+.bv{color:#07165b!important}
+.btip{
+ background:#031b46f2!important;border-color:rgba(255,197,20,.42)!important;box-shadow:0 10px 28px rgba(0,0,0,.22)!important
+}
+.btip b{color:#ffc514!important}.btip span{color:#fff!important}.btip small{color:#c9d8e6!important}
+.r6drawer{background:rgba(3,27,70,.42)!important}
+.r6drawerpanel{background:#eef8fd!important;color:#17315d!important;border-color:#d5e7f2!important}
+.r6drawerhead{background:linear-gradient(112deg,#031b46,#07357f)!important;color:#fff!important;border-color:rgba(255,197,20,.34)!important}
+.r6drawerhead button{
+ background:#fff!important;color:#075bd8!important;border:1px solid #d5e7f2!important
+}
+.opvals div{background:#f5fbff!important;color:#17315d!important}
+a{color:#075bd8}
+@media(max-width:700px){
+ .main{background:#eef8fd!important}
+ .panel,.kpi,.op,.provcard{box-shadow:0 3px 10px rgba(13,63,111,.07)!important}
+}
