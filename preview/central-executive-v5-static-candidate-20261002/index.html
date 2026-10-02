@@ -3537,7 +3537,7 @@ body.cr-homolog-view .side .nav.on{
 if(window.__CR_EXECUTIVE_STATIC_V5)return;window.__CR_EXECUTIVE_STATIC_V5=true;
 var API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v5-candidate-20261002';
 var PEND='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-vivas-candidate-20261002';
-var D=null,PITEMS=[],PHISTORY=false,QFILTER='';
+var D=null,PITEMS=[],PHISTORY=false,QFILTER='',PAINTING=false;
 function q(id){return document.getElementById(id)}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
 function sess(){try{return sessionStorage.getItem('crGestaoSession')||localStorage.getItem('crGestaoSession')||''}catch(_){return''}}
@@ -3605,9 +3605,10 @@ function paintHealth(){
   hcard('Ambiente','Candidata isolada','Produção não alterada','neutral');
 }
 function paint(){
- if(!D)return;paintKpis();paintAgenda();paintQuotes(QFILTER);paintPendingSummary();paintHealth();
+ if(!D||PAINTING)return;PAINTING=true;paintKpis();paintAgenda();paintQuotes(QFILTER);paintPendingSummary();paintHealth();
  var st=q('crV5State');if(st){st.className='cr-v5-state ok';st.textContent='CANDIDATA V5 • dados reais'}
  var up=q('crHomeUpdated');if(up)up.textContent='Última atualização: '+new Date(D.checked_at||Date.now()).toLocaleString('pt-BR');
+ setTimeout(function(){PAINTING=false},0);
 }
 async function refresh(){
  var st=q('crV5State'),s=sess();if(!s){if(st){st.className='cr-v5-state warn';st.textContent='CANDIDATA • autenticação necessária'}return}
@@ -3658,6 +3659,7 @@ document.addEventListener('click',function(e){
  b=e.target.closest('[data-v5-pevent]');if(b){pevent(b.getAttribute('data-v5-pid'),b.getAttribute('data-v5-pevent'));return}
 },true);
 function init(){
+ ['kpis','boardSummary','homeHealth'].forEach(function(id){var el=q(id);if(!el)return;new MutationObserver(function(){if(D&&!PAINTING)setTimeout(paint,0)}).observe(el,{childList:true,subtree:false})});
  q('crV5AgendaOpen').onclick=function(){q('crV5AgendaDetails').hidden=!q('crV5AgendaDetails').hidden};
  q('crV5QuotesOpen').onclick=function(){q('crV5QuoteDetails').hidden=!q('crV5QuoteDetails').hidden};
  q('crV5PendingClose').onclick=function(){q('crV5Pending').hidden=true};q('crV5CaseClose').onclick=function(){q('crV5Case').hidden=true};
