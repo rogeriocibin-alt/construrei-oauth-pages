@@ -2831,6 +2831,7 @@ setHtml('#adrList',(o.adrs||[]).map(function(x){return '<div class="card item"><
 setHtml('#releaseTable',table(['Release','Módulo','Versão','Stage','Atual'],h.map(function(x){return '<tr><td>'+esc(x.code)+'</td><td>'+esc(x.module)+'</td><td>'+esc(x.version_label||'')+'</td><td>'+esc(x.stage||'')+'</td><td>'+(x.is_current?'SIM':'—')+'</td></tr>'})));
 setHtml('#gapTable',table(['Gap','Área','Título','Severidade','Status'],gp.map(function(x){return '<tr><td>'+esc(x.gap_code)+'</td><td>'+esc(x.area)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.severity)+'</td><td>'+esc(x.status)+'</td></tr>'})));
 setHtml('#historyTable',table(['Snapshot','Data'],((DEV.history&&DEV.history.snapshots)||[]).map(function(x){return '<tr><td>'+esc(x.label)+'</td><td>'+esc(new Date(x.created_at).toLocaleString('pt-BR'))+'</td></tr>'})))}
+window.addEventListener('cr-executive-loaded',function(){if(DATA&&DATA.generated_at)render()});
 function crExecMetric(key){return DASH_EXEC&&DASH_EXEC.operacao?DASH_EXEC.operacao[key]:null}
 function crFmtBRL(v){return typeof v==='number'?v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}):'—'}
 function crMetricVal(x){return x&&x.status==='ok'&&x.value!=null?x.value:'—'}
@@ -3251,11 +3252,11 @@ function paint(){
  }
 }
 async function load(){
- var s=session();if(busy)return;if(!s){window.__CR_EXECUTIVE_READONLY=null;lastSession=s;paint();return}
+ var s=session();if(busy)return;if(!s){window.__CR_EXECUTIVE_READONLY=null;lastSession=s;window.dispatchEvent(new Event('cr-executive-loaded'));paint();return}
  busy=true;lastSession=s;
  try{var r=await fetch(API+'?t='+Date.now(),{headers:{'x-cr-session':s},cache:'no-store',signal:AbortSignal.timeout(12000)});var d=await r.json();if(!r.ok||!d.ok)throw Error('indisponível');if(session()===s)window.__CR_EXECUTIVE_READONLY=d}
  catch(_){window.__CR_EXECUTIVE_READONLY=null}
- finally{busy=false;paint()}
+ finally{busy=false;window.dispatchEvent(new Event('cr-executive-loaded'));paint()}
 }
 function init(){var b=document.getElementById('crAgendaDetailButtonV4');if(b)b.onclick=function(){var n=document.getElementById('crAgendaDetailsV4');if(n)n.hidden=!n.hidden};load();setInterval(load,30000);setInterval(function(){if(session()!==lastSession){window.__CR_EXECUTIVE_READONLY=null;paint();load()}},1000)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
