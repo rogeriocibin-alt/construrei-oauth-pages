@@ -3207,4 +3207,23 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #crTechHealthLive .cr-health-line{display:grid;grid-template-columns:1.5fr .8fr .8fr;gap:8px;padding:7px 0;border-bottom:1px solid #e4edf6;font-size:11px}
 @media(max-width:800px){#crExecutiveLayerV3{grid-template-columns:1fr}#crExecutiveLayerV3 .cr-mini-grid{grid-template-columns:1fr 1fr}}
 </style>
-</body></html>
+<script id="cr-technical-health-v3">
+(function(){
+'use strict';
+var U='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-vivas-candidate-20261002?api=technical-health';
+function e(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
+async function load(){
+ try{
+  var r=await fetch(U+'&t='+Date.now(),{cache:'no-store'}),d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||('HTTP '+r.status));
+  var p=document.getElementById('health');if(!p)return;
+  var b=document.getElementById('crTechHealthLive');
+  if(!b){b=document.createElement('div');b.id='crTechHealthLive';b.className='card';b.style.marginBottom='14px';p.insertBefore(b,p.firstChild)}
+  b.innerHTML='<div class="tag">TELEMETRIA REAL · CANDIDATA</div><h2 style="margin:6px 0">Saúde Técnica</h2><p class="mut">Sem OK artificial: cada componente vem de checagem real ou declara explicitamente não integração.</p>'+
+   (d.components||[]).map(function(x){return '<div class="cr-health-line"><b>'+e(x.component)+'</b><span>'+e(x.status)+'</span><span>'+(x.latency_ms==null?'—':e(x.latency_ms)+' ms')+'</span></div>'}).join('')+
+   '<div class="mut" style="margin-top:8px">Build '+e(d.build||'')+' · verificado '+e(new Date(d.checked_at).toLocaleString('pt-BR'))+'</div>';
+ }catch(_){}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
+setInterval(load,30000);
+})();
+</script></body></html>
