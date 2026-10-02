@@ -6,10 +6,20 @@ on:
     paths:
       - 'production/central-homologada-20261001/index.html'
       - 'central-canonical/current/**'
+      - 'central-canonical/VISUAL_IDENTITY_CANONICAL_20261002.md'
+      - 'central-runtime/**/*.html'
+      - 'central-runtime/ui/**'
+      - 'central/presentation.html'
+      - '.github/workflows/central-canonical-guard.yml'
   pull_request:
     paths:
       - 'production/central-homologada-20261001/index.html'
       - 'central-canonical/current/**'
+      - 'central-canonical/VISUAL_IDENTITY_CANONICAL_20261002.md'
+      - 'central-runtime/**/*.html'
+      - 'central-runtime/ui/**'
+      - 'central/presentation.html'
+      - '.github/workflows/central-canonical-guard.yml'
 
 permissions:
   contents: read
@@ -37,3 +47,39 @@ jobs:
             exit 1
           fi
           grep -q 'FORWARD_ONLY_NO_LEGACY_FALLBACK' central-canonical/current/centro-operacoes/index.ts
+
+  protect-visual-identity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify canonical product design system is unchanged
+        shell: bash
+        run: |
+          actual="$(git hash-object central-runtime/ui/cr-product-design-20260930.css)"
+          expected="15826e21af6cddd1e36ecdd85e9d7dce529f0dcb"
+          test "$actual" = "$expected" || {
+            echo "ERROR: canonical visual identity stylesheet changed without re-homologation."
+            echo "Expected $expected, got $actual"
+            exit 1
+          }
+      - name: Require canonical design system in runtime pages
+        shell: bash
+        run: |
+          failed=0
+          while IFS= read -r -d '' file; do
+            case "$file" in
+              central-runtime/f01/index.html) continue ;;
+            esac
+            if ! grep -q 'cr-product-design-20260930.css' "$file"; then
+              echo "ERROR: runtime page does not load the canonical design system: $file"
+              failed=1
+            fi
+          done < <(find central-runtime -type f -name '*.html' -print0)
+          test "$failed" -eq 0
+      - name: Require canonical design system in institutional presentation
+        shell: bash
+        run: |
+          grep -q 'cr-product-design-20260930.css' central/presentation.html || {
+            echo "ERROR: institutional presentation bypasses the canonical design system."
+            exit 1
+          }
