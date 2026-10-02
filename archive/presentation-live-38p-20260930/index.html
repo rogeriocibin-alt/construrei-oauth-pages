@@ -1,0 +1,816 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#061b30"><title>CONSTRU-REI — Apresentação Viva • 38 páginas</title>
+<style>
+:root{--navy:#061b30;--blue:#0b4676;--blue2:#0f6da2;--gold:#d8a90a;--paper:#f5f7fa;--ink:#102437;--mut:#718394;--line:#dfe6eb;--card:#fff;--shadow:0 22px 70px rgba(2,21,37,.16)}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-snap-type:y proximity}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#dfe8f0;color:var(--ink)}a{color:inherit;text-decoration:none}.topbar{position:fixed;top:0;left:0;right:0;height:64px;z-index:100;background:rgba(6,27,48,.94);backdrop-filter:blur(14px);color:#fff;display:flex;align-items:center;padding:0 18px;border-bottom:1px solid #ffffff18}.brand{display:flex;align-items:center;gap:10px;font-weight:900}.brand img{width:38px;height:38px;object-fit:contain;background:white;border-radius:9px;padding:3px}.brand small{display:block;font-weight:500;color:#a9bfd1;font-size:9px}.chapter-nav{display:flex;gap:5px;margin-left:24px}.chapter-nav a{font-size:10px;font-weight:800;color:#bed0df;padding:7px 9px;border-radius:8px}.chapter-nav a:hover{background:#ffffff12;color:#fff}.tools{margin-left:auto;display:flex;gap:7px}button,.tool{border:1px solid #ffffff25;background:#ffffff10;color:#fff;border-radius:9px;padding:8px 10px;font-size:10px;font-weight:800;cursor:pointer}.tool.gold{background:var(--gold);border-color:var(--gold);color:#17283a}.drawer{position:fixed;left:0;top:64px;bottom:0;width:315px;background:#071e34;color:#fff;z-index:90;padding:12px;overflow:auto;transform:translateX(-100%);transition:.22s}.drawer.open{transform:translateX(0)}.drawer a{display:flex;gap:10px;padding:9px;border-radius:9px;color:#b9ccda;align-items:flex-start}.drawer a:hover,.drawer a.active{background:#ffffff10;color:#fff}.drawer a span{font-size:9px;color:#e2b83e;font-weight:900;min-width:24px}.drawer a b{font-size:10px;line-height:1.35}.deck{padding-top:64px}.slide{min-height:calc(100vh - 64px);scroll-snap-align:start;padding:28px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eaf0f5,#f7f9fb)}.slide:nth-child(even){background:linear-gradient(135deg,#f7f9fb,#e8eef4)}.slide-inner{width:min(1420px,100%);min-height:min(790px,calc(100vh - 108px));background:var(--paper);border-radius:26px;padding:30px 36px 26px;box-shadow:var(--shadow);position:relative;overflow:hidden;border:1px solid #ffffff}.slide-inner:before{content:"";position:absolute;left:0;right:0;top:0;height:7px;background:linear-gradient(90deg,var(--gold),#f0cb53,var(--blue2))}.slide-top,.slide-foot{display:flex;align-items:center;justify-content:space-between;color:var(--mut);font-size:9px;font-weight:800;letter-spacing:.04em}.title-block{max-width:1120px;margin:44px 0 24px}.eyebrow{color:#b28600;font-size:10px;letter-spacing:.13em;font-weight:1000}h2{font-size:clamp(30px,4vw,58px);line-height:1.02;margin:9px 0 0;letter-spacing:-.035em;color:#092640}.content-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 18px;align-content:start}.text,.label,.metric,.callout{border-radius:13px;padding:12px 14px}.text{background:#fff;border:1px solid var(--line);font-size:clamp(13px,1.25vw,18px);line-height:1.46}.label{background:#0a3559;color:#fff;font-size:12px;font-weight:1000;letter-spacing:.06em;text-transform:uppercase}.metric{background:linear-gradient(135deg,#0a3559,#0b5f91);color:#fff;font-size:clamp(22px,3vw,42px);font-weight:1000;letter-spacing:-.03em}.callout{grid-column:1/-1;background:#fff5d5;border:1px solid #ead38b;color:#614800;font-weight:900;font-size:14px;line-height:1.45}.slide-foot{position:absolute;left:36px;right:36px;bottom:20px;padding-top:10px;border-top:1px solid var(--line)}.chapter{background:radial-gradient(circle at 75% 20%,#16699e 0,#082945 48%,#041321 100%)}.chapter .slide-inner,.statement .slide-inner{background:linear-gradient(140deg,#061b30,#0b416c);color:#fff;border-color:#184e75}.chapter .slide-inner:after,.statement .slide-inner:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;right:-120px;bottom:-180px;background:#d8a90a18;border:1px solid #d8a90a26}.chapter h2,.statement h2{color:#fff;font-size:clamp(44px,7vw,92px);max-width:1000px}.chapter .eyebrow,.statement .eyebrow{color:#e0b83d}.chapter .text,.chapter .label,.chapter .metric,.chapter .callout,.statement .text,.statement .label,.statement .metric,.statement .callout{background:#ffffff0b;border:1px solid #ffffff18;color:#dce9f2}.chapter .slide-top,.chapter .slide-foot,.statement .slide-top,.statement .slide-foot{color:#a9bfd0;border-color:#ffffff18}.statement .content-grid{grid-template-columns:1fr}.statement .text{font-size:clamp(18px,2.2vw,32px);max-width:980px}.statement .metric{max-width:520px}.page-progress{position:fixed;right:10px;top:50%;transform:translateY(-50%);z-index:80;display:grid;gap:5px}.page-progress a{width:7px;height:7px;border-radius:50%;background:#68869d88;border:1px solid #fff8}.page-progress a.active{height:18px;border-radius:8px;background:var(--gold)}.mobile-nav{display:none}@media(max-width:900px){.chapter-nav{display:none}.topbar{height:58px;padding:0 10px}.brand b{font-size:12px}.brand small{font-size:8px}.tools .hide-mob{display:none}.deck{padding-top:58px;padding-bottom:66px}.slide{padding:10px;min-height:auto;align-items:flex-start}.slide-inner{min-height:calc(100vh - 88px);border-radius:17px;padding:20px 18px 54px}.title-block{margin:28px 0 16px}h2{font-size:clamp(28px,9vw,45px)}.content-grid{grid-template-columns:1fr;gap:7px}.callout{grid-column:auto}.text{font-size:14px;padding:10px 11px}.metric{font-size:27px;padding:11px}.label{padding:9px 11px}.slide-foot{left:18px;right:18px;bottom:15px;font-size:7px}.slide-foot span:last-child{display:none}.page-progress{display:none}.mobile-nav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;background:#061b30;color:#fff;z-index:110;padding:5px calc(5px + env(safe-area-inset-right)) calc(5px + env(safe-area-inset-bottom)) calc(5px + env(safe-area-inset-left));border-top:1px solid #ffffff20}.mobile-nav a,.mobile-nav button{font-size:8px;text-align:center;background:none;border:0;padding:7px 2px;color:#c8d7e2}.mobile-nav span{display:block;color:#e0b83d;font-size:15px;margin-bottom:1px}.drawer{top:58px;width:min(88vw,340px)}}@media print{.topbar,.drawer,.page-progress,.mobile-nav{display:none!important}.deck{padding:0}.slide{page-break-after:always;min-height:100vh;padding:0;background:#fff!important}.slide-inner{box-shadow:none;border-radius:0;min-height:100vh;width:100%;border:0}}
+</style><link rel="stylesheet" data-cr-design-system="CR-PRODUCT-DESIGN-20260930" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-product-design-20260930.css"><meta name="cr-presentation-ui-canonical" content="20261001-r1"><link id="cr-presentation-ui-canonical-css" rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-presentation-canonical-20261001.css?v=20261001-r1"></head><body>
+<header class="topbar"><a class="brand" href="#p1"><img src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app" alt="CONSTRU-REI"><div><b>CONSTRU-REI</b><small>APRESENTAÇÃO VIVA • 38 PÁGINAS</small></div></a><nav class="chapter-nav"><a href="#p1">Visão</a><a href="#p3">História</a><a href="#p9">Evidências</a><a href="#p14">Produto</a><a href="#p32">Próximos passos</a></nav><div class="tools"><button onclick="toggleDrawer()">☰ Índice</button><button id="cr38RefreshBtn" onclick="window.cr38Refresh&&window.cr38Refresh()">↻ Atualizar</button><button class="hide-mob" onclick="window.print()">Imprimir / PDF</button><button id="crPpt" type="button">PowerPoint</button><a class="tool gold" href="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes">Voltar à Central</a></div></header>
+<aside class="drawer" id="drawer"><div style="padding:8px 10px 12px;color:#e0b83d;font-size:10px;font-weight:1000">HISTÓRIA COMPLETA • 38 PÁGINAS • VIVA</div><a href="#p1" data-page="1"><span>01</span><b>Da operação ao sistema operacional inteligente</b></a><a href="#p2" data-page="2"><span>02</span><b>Esta não é uma apresentação sobre um aplicativo.</b></a><a href="#p3" data-page="3"><span>03</span><b>De onde viemos</b></a><a href="#p4" data-page="4"><span>04</span><b>CONSTRU-REI: experiência de rua antes da tecnologia</b></a><a href="#p5" data-page="5"><span>05</span><b>Quando a operação ganha escala, improviso vira custo</b></a><a href="#p6" data-page="6"><span>06</span><b>O ecossistema operacional atual é amplo</b></a><a href="#p7" data-page="7"><span>07</span><b>Como a demanda atravessa a empresa hoje</b></a><a href="#p8" data-page="8"><span>08</span><b>Necessidades levantadas: o que realmente estava doendo</b></a><a href="#p9" data-page="9"><span>09</span><b>O projeto nasceu da evidência</b></a><a href="#p10" data-page="10"><span>10</span><b>Antes de codificar mais, nós documentamos e auditamos</b></a><a href="#p11" data-page="11"><span>11</span><b>Evolução do projeto: da validação prática à governança</b></a><a href="#p12" data-page="12"><span>12</span><b>Decisões que foram congeladas para proteger o projeto</b></a><a href="#p13" data-page="13"><span>13</span><b>Da complexidade para o controle</b></a><a href="#p14" data-page="14"><span>14</span><b>O APP CONSTRU-REI</b></a><a href="#p15" data-page="15"><span>15</span><b>Arquitetura oficial: cinco camadas, uma operação</b></a><a href="#p16" data-page="16"><span>16</span><b>APP CONSTRU-REI: a porta visual da operação</b></a><a href="#p17" data-page="17"><span>17</span><b>Central de Controle: o cockpit do projeto inteiro</b></a><a href="#p18" data-page="18"><span>18</span><b>F01 → F09: uma jornada única, do primeiro contato à garantia</b></a><a href="#p19" data-page="19"><span>19</span><b>F01 • TRIAGEM — o gate atual</b></a><a href="#p20" data-page="20"><span>20</span><b>F02 • PREPARAR — transformar contexto em orçamento</b></a><a href="#p21" data-page="21"><span>21</span><b>F03 → F05: decisão, programação e suprimento</b></a><a href="#p22" data-page="22"><span>22</span><b>F06 → F09: execução, qualidade, resultado e relacionamento</b></a><a href="#p23" data-page="23"><span>23</span><b>Um atendimento, uma história — sem recadastro</b></a><a href="#p24" data-page="24"><span>24</span><b>Modo Guiado: uma ação por vez</b></a><a href="#p25" data-page="25"><span>25</span><b>H0 → H5: maturidade real, não impressão de qualidade</b></a><a href="#p26" data-page="26"><span>26</span><b>G0 → G8: gates de qualidade antes de pedir teste humano</b></a><a href="#p27" data-page="27"><span>27</span><b>Gemini: IA assistiva dentro de um processo humano</b></a><a href="#p28" data-page="28"><span>28</span><b>Wizy Flow: inteligência de relacionamento sem capturar o núcleo</b></a><a href="#p29" data-page="29"><span>29</span><b>Continuidade operacional: integração ajuda; o core não pode parar</b></a><a href="#p30" data-page="30"><span>30</span><b>Responsabilidade visível: decisão no lugar certo</b></a><a href="#p31" data-page="31"><span>31</span><b>Platform Studio: desenvolvimento com memória e controle</b></a><a href="#p32" data-page="32"><span>32</span><b>Onde estamos agora</b></a><a href="#p33" data-page="33"><span>33</span><b>Situação atual do projeto — 30/08/2026</b></a><a href="#p34" data-page="34"><span>34</span><b>A organização mudou de patamar</b></a><a href="#p35" data-page="35"><span>35</span><b>Próximos 90 dias: menos funções novas, mais prova operacional</b></a><a href="#p36" data-page="36"><span>36</span><b>Onde podemos chegar</b></a><a href="#p37" data-page="37"><span>37</span><b>O pacto da equipe: tecnologia não substitui responsabilidade</b></a><a href="#p38" data-page="38"><span>38</span><b>Processo orienta. Tecnologia sustenta. Pessoa confere. Equipe evolui.</b></a></aside>
+<div class="page-progress"><a href="#p1" data-dot="1" title="Página 1"></a><a href="#p2" data-dot="2" title="Página 2"></a><a href="#p3" data-dot="3" title="Página 3"></a><a href="#p4" data-dot="4" title="Página 4"></a><a href="#p5" data-dot="5" title="Página 5"></a><a href="#p6" data-dot="6" title="Página 6"></a><a href="#p7" data-dot="7" title="Página 7"></a><a href="#p8" data-dot="8" title="Página 8"></a><a href="#p9" data-dot="9" title="Página 9"></a><a href="#p10" data-dot="10" title="Página 10"></a><a href="#p11" data-dot="11" title="Página 11"></a><a href="#p12" data-dot="12" title="Página 12"></a><a href="#p13" data-dot="13" title="Página 13"></a><a href="#p14" data-dot="14" title="Página 14"></a><a href="#p15" data-dot="15" title="Página 15"></a><a href="#p16" data-dot="16" title="Página 16"></a><a href="#p17" data-dot="17" title="Página 17"></a><a href="#p18" data-dot="18" title="Página 18"></a><a href="#p19" data-dot="19" title="Página 19"></a><a href="#p20" data-dot="20" title="Página 20"></a><a href="#p21" data-dot="21" title="Página 21"></a><a href="#p22" data-dot="22" title="Página 22"></a><a href="#p23" data-dot="23" title="Página 23"></a><a href="#p24" data-dot="24" title="Página 24"></a><a href="#p25" data-dot="25" title="Página 25"></a><a href="#p26" data-dot="26" title="Página 26"></a><a href="#p27" data-dot="27" title="Página 27"></a><a href="#p28" data-dot="28" title="Página 28"></a><a href="#p29" data-dot="29" title="Página 29"></a><a href="#p30" data-dot="30" title="Página 30"></a><a href="#p31" data-dot="31" title="Página 31"></a><a href="#p32" data-dot="32" title="Página 32"></a><a href="#p33" data-dot="33" title="Página 33"></a><a href="#p34" data-dot="34" title="Página 34"></a><a href="#p35" data-dot="35" title="Página 35"></a><a href="#p36" data-dot="36" title="Página 36"></a><a href="#p37" data-dot="37" title="Página 37"></a><a href="#p38" data-dot="38" title="Página 38"></a></div>
+<main class="deck"><section class="slide statement" id="p1" data-page="1">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">01 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Da operação ao sistema operacional inteligente</h2></div>
+        <div class="content-grid"><div class="label">DA OPERAÇÃO</div>
+<div class="text">Central de Controle • Wizy Flow • IA • Próximo nível</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p2" data-page="2">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">02 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Esta não é uma apresentação sobre um aplicativo.</h2></div>
+        <div class="content-grid"><div class="text">É sobre transformar conhecimento operacional em processo, processo em dados e</div>
+<div class="text">dados em capacidade de crescer sem perder controle.</div>
+<div class="label">OPERAÇÃO</div>
+<div class="text">O que já sabemos fazer na rua.</div>
+<div class="label">PROCESSO</div>
+<div class="text">Como cada demanda atravessa a</div>
+<div class="text">empresa.</div>
+<div class="label">DADOS</div>
+<div class="text">O que precisa permanecer íntegro</div>
+<div class="text">e rastreável.</div>
+<div class="label">INTELIGÊNCIA</div>
+<div class="text">Como tecnologia reduz esforço</div>
+<div class="text">sem substituir decisão humana.</div>
+<div class="text">Nosso objetivo: uma operação que sabe o que fazer agora, quem é responsável, até quando, com quais evidências e qual é o</div>
+<div class="text">impacto.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide chapter" id="p3" data-page="3">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">03 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>De onde viemos</h2></div>
+        <div class="content-grid"><div class="text">daquilo que a equipe vive todos os dias.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p4" data-page="4">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">04 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>CONSTRU-REI: experiência de rua antes da tecnologia</h2></div>
+        <div class="content-grid"><div class="text">+8 anos</div>
+<div class="text">Curitiba e Região</div>
+<div class="text">Metropolitana</div>
+<div class="text">manutenção, reparos e reformas</div>
+<div class="text">Multitécnica</div>
+<div class="text">Hidráulica • elétrica •</div>
+<div class="text">pintura • telhados</div>
+<div class="text">vistorias, drywall, infiltrações e mais</div>
+<div class="label">B2B + B2C</div>
+<div class="text">Imobiliárias • condomínios •</div>
+<div class="text">particulares</div>
+<div class="text">relacionamentos recorrentes</div>
+<div class="text">PONTO ÚNICO DE CONTATO Centralizar demandas e assumir a coordenação do começo ao fim.</div>
+<div class="text">QUALIDADE TÉCNICA Diagnóstico, execução, evidência e retorno como parte do serviço.</div>
+<div class="text">REDE OPERACIONAL Equipe própria, especialistas e terceiros coordenados por disciplina.</div>
+<div class="text">A base do projeto digital é essa: preservar a força operacional e retirar atrito, perda de informação e dependência de memória.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p5" data-page="5">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">05 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Quando a operação ganha escala, improviso vira custo</h2></div>
+        <div class="content-grid"><div class="text">R$ 774 mil</div>
+<div class="text">Receita finalizada em 2025</div>
+<div class="text">base gerencial completa 2025</div>
+<div class="metric">155</div>
+<div class="text">Obras finalizadas em 2026</div>
+<div class="text">Jan-Jun / ticket médio R$ 1.740</div>
+<div class="text">R$ 74,4 mil</div>
+<div class="text">Pipeline aberto em 2026</div>
+<div class="text">19 obras abertas no corte</div>
+<div class="metric">30</div>
+<div class="text">Pendências de alta prioridade</div>
+<div class="text">qualidade de dados exigindo rotina</div>
+<div class="metric">1</div>
+<div class="text">Mais clientes</div>
+<div class="text">mais variações de regra</div>
+<div class="metric">2</div>
+<div class="text">Mais obras</div>
+<div class="text">mais handoffs</div>
+<div class="metric">3</div>
+<div class="text">Mais terceiros</div>
+<div class="text">mais controle e evidência</div>
+<div class="metric">4</div>
+<div class="text">Mais canais</div>
+<div class="text">mais risco de informação</div>
+<div class="text">paralela</div>
+<div class="metric">5</div>
+<div class="text">Mais dados</div>
+<div class="text">mais necessidade de fonte única</div>
+<div class="callout">Conclusão: o desafio deixou de ser apenas “executar bem o serviço”. Passou a ser também controlar a jornada, o dado, o responsável, o</div>
+<div class="text">prazo e a evidência.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p6" data-page="6">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">06 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>O ecossistema operacional atual é amplo</h2></div>
+        <div class="content-grid"><div class="label">CONSTRU-REI</div>
+<div class="label">OPERAÇÃO</div>
+<div class="text">WhatsApp</div>
+<div class="text">entrada e</div>
+<div class="text">comunicação</div>
+<div class="text">Atendimento</div>
+<div class="text">triagem e coleta</div>
+<div class="text">Técnica</div>
+<div class="text">diagnóstico e parecer</div>
+<div class="text">Programação</div>
+<div class="text">agenda e mobilização</div>
+<div class="text">Campo</div>
+<div class="text">execução e evidências</div>
+<div class="text">Financeiro</div>
+<div class="text">custo, cobrança e</div>
+<div class="text">margem</div>
+<div class="text">Terceiros</div>
+<div class="text">escala e</div>
+<div class="text">especialidades</div>
+<div class="text">Clientes</div>
+<div class="text">imobiliárias,</div>
+<div class="text">condomínios e</div>
+<div class="text">particulares</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p7" data-page="7">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">07 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Como a demanda atravessa a empresa hoje</h2></div>
+        <div class="content-grid"><div class="label">1 RECEBER</div>
+<div class="text">WhatsApp / cliente</div>
+<div class="label">2 NUMERAR</div>
+<div class="text">GestãoClick</div>
+<div class="label">3 TRIAR</div>
+<div class="text">dados + evidências</div>
+<div class="label">4 DIAGNOSTICAR</div>
+<div class="text">técnica / visita</div>
+<div class="label">5 ORÇAR</div>
+<div class="text">escopo + preço</div>
+<div class="label">6 APROVAR</div>
+<div class="text">cliente / OS</div>
+<div class="label">7 PROGRAMAR</div>
+<div class="text">agenda + recursos</div>
+<div class="label">8 EXECUTAR</div>
+<div class="text">campo + fotos</div>
+<div class="label">9 FECHAR</div>
+<div class="text">financeiro + garantia</div>
+<div class="text">A operação antiga depende de transições humanas entre ferramentas. O APP nasce para transformar essas transições em</div>
+<div class="text">handoffs.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p8" data-page="8">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">08 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Necessidades levantadas: o que realmente estava doendo</h2></div>
+        <div class="content-grid"><div class="text">Informação espalhada</div>
+<div class="text">WhatsApp, mensagens, prints, PDFs, vídeos e</div>
+<div class="text">conversas paralelas.</div>
+<div class="text">Retrabalho e redigitação</div>
+<div class="text">Mesmos dados reaparecendo em triagem,</div>
+<div class="text">campo, orçamento e retorno.</div>
+<div class="text">Handoffs frágeis</div>
+<div class="text">Mudança de pessoa ou etapa podia perder</div>
+<div class="text">contexto, regra ou evidência.</div>
+<div class="text">Dependência de memória</div>
+<div class="text">Operação exigindo que cada pessoa lembrasse</div>
+<div class="text">“como fazemos”.</div>
+<div class="text">Versões e links paralelos</div>
+<div class="text">Checkpoints e protótipos convivendo sem uma</div>
+<div class="text">fonte única de estado.</div>
+<div class="text">Segurança e produção</div>
+<div class="text">Necessidade de separar protótipo,</div>
+<div class="text">homologação, piloto e H5 real.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide chapter" id="p9" data-page="9">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">09 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>O projeto nasceu da evidência</h2></div>
+        <div class="content-grid"><div class="text">O projeto nasceu da</div>
+<div class="text">criamos uma forma disciplinada de evoluir.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p10" data-page="10">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">10 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Antes de codificar mais, nós documentamos e auditamos</h2></div>
+        <div class="content-grid"><div class="text">Proposta de parceria</div>
+<div class="text">identidade e modelo de serviço</div>
+<div class="text">Relatório gerencial</div>
+<div class="text">escala, custos, carteira e riscos</div>
+<div class="text">Treinamento de triagem</div>
+<div class="text">processo real de atendimento</div>
+<div class="text">Plano Mestre PWA</div>
+<div class="text">produto, tecnologia e</div>
+<div class="text">implantação</div>
+<div class="text">Guia Mestre 0 100→</div>
+<div class="text">gates, evidências e</div>
+<div class="text">homologação</div>
+<div class="text">Parecer estratégico</div>
+<div class="text">APP interno primeiro; SaaS</div>
+<div class="text">depois</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p11" data-page="11">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">11 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Evolução do projeto: da validação prática à governança</h2></div>
+        <div class="content-grid"><div class="text">Cada etapa resolveu um risco diferente — sem jogar fora o que já havia sido aprendido.</div>
+<div class="metric">1</div>
+<div class="text">HTMLs +</div>
+<div class="text">checklists</div>
+<div class="text">validar linguagem e</div>
+<div class="text">fluxo</div>
+<div class="metric">2</div>
+<div class="text">Triagem</div>
+<div class="text">Inteligente</div>
+<div class="text">organizar entrada</div>
+<div class="text">real</div>
+<div class="metric">3</div>
+<div class="text">Plano Mestre</div>
+<div class="label">PWA</div>
+<div class="text">definir destino do</div>
+<div class="text">produto</div>
+<div class="metric">4</div>
+<div class="text">Auditoria 0 100→</div>
+<div class="text">separar prova de tela</div>
+<div class="text">de prova técnica</div>
+<div class="metric">5</div>
+<div class="text">APP + Wizy</div>
+<div class="text">definir ownership e</div>
+<div class="text">integração</div>
+<div class="metric">6</div>
+<div class="text">Central / Cockpit</div>
+<div class="text">ver o projeto inteiro</div>
+<div class="metric">7</div>
+<div class="text">Platform Studio</div>
+<div class="text">governar</div>
+<div class="text">desenvolvimento e</div>
+<div class="text">relatórios</div>
+<div class="metric">8</div>
+<div class="label">V4.7.19</div>
+<div class="text">gates sequenciais +</div>
+<div class="text">estado canônico</div>
+<div class="metric">9</div>
+<div class="text">Industrialização</div>
+<div class="label">PROJECT_STATE +</div>
+<div class="text">releases + ADRs</div>
+<div class="callout">Resultado: o projeto deixa de ser “uma sequência de protótipos” e passa a funcionar como um produto governado, versionado e</div>
+<div class="text">retomável.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p12" data-page="12">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">12 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Decisões que foram congeladas para proteger o projeto</h2></div>
+        <div class="content-grid"><div class="text">1 APP = verdade operacional</div>
+<div class="text">A equipe trabalha no APP; o dado operacional não depende do Wizy.</div>
+<div class="text">2 Supabase = memória compartilhada</div>
+<div class="text">Dados, histórico, handoffs, eventos, arquivos e rastreabilidade.</div>
+<div class="text">3 Wizy = CRM e comunicação</div>
+<div class="text">Follow-up e automação em bastidor , sem bloquear a operação.</div>
+<div class="text">4 IA = assistência, não autoridade</div>
+<div class="text">Classifica, resume e sugere; humano confere e valida.</div>
+<div class="text">5 Um gate por vez</div>
+<div class="text">F01 precisa ser aceito antes de F02; e assim sucessivamente.</div>
+<div class="text">6 Segurança antes do H5</div>
+<div class="text">Autenticação, RBAC, auditoria, segredos e acesso inválido são</div>
+<div class="text">obrigatórios.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide statement" id="p13" data-page="13">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">13 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Da complexidade para o controle</h2></div>
+        <div class="content-grid"><div class="label">DA COMPLEXIDADE</div>
+<div class="text">memória • mais contexto • mais evidência • mais</div>
+<div class="text">continuidade</div>
+<div class="text">PROCESSO  DADO  AÇÃO  EVIDÊNCIA  HISTÓRICO→ → → →</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide chapter" id="p14" data-page="14">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">14 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>O APP CONSTRU-REI</h2></div>
+        <div class="content-grid"><div class="text">claros, dados compartilhados e evolução</div>
+<div class="text">controlada.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p15" data-page="15">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">15 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Arquitetura oficial: cinco camadas, uma operação</h2></div>
+        <div class="content-grid"><div class="text">1 • APP CONSTRU-REI interface + núcleo operacional</div>
+<div class="text">2 • SUPABASE dados + histórico + handoff + arquivos</div>
+<div class="text">3 • WIZY FLOW CRM + comunicação + follow-up + automação</div>
+<div class="text">4 • GEMINI classificação + resumo + sugestão + orientação</div>
+<div class="text">5 • CENTRAL / PLATFORM STUDIO governança + QA + release + desenvolvimento</div>
+<div class="callout">REGRA DE RESILIÊNCIA: falha externa entra em retry/fila; não pode parar triagem, OS, programação, campo, evidência, custo ou encerramento.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p16" data-page="16">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">16 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>APP CONSTRU-REI: a porta visual da operação</h2></div>
+        <div class="content-grid"><div class="text">O APP não tenta virar “mais um ERP”. Ele responde o que precisa acontecer agora.</div>
+<div class="text">“O que precisa acontecer agora, quem é responsável, até</div>
+<div class="text">quando, com quais evidências e qual é o impacto</div>
+<div class="text">operacional/financeiro?”</div>
+<div class="text">Uma única porta visual para a equipe Um único atendimento por demanda</div>
+<div class="text">Informação capturada uma vez e reutilizada Responsável, prazo e próxima ação explícitos</div>
+<div class="text">Campo, fotos, documentos e checklist ligados</div>
+<div class="text">ao caso Gestão e financeiro alimentados pelo fluxo</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p17" data-page="17">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">17 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Central de Controle: o cockpit do projeto inteiro</h2></div>
+        <div class="content-grid"><div class="label">CENTRAL MESTRE / COCKPIT</div>
+<div class="text">Visão de estado</div>
+<div class="text">o que está ativo, em validação ou</div>
+<div class="text">bloqueado</div>
+<div class="text">Links estáveis</div>
+<div class="text">um endereço oficial por produto/fluxo</div>
+<div class="text">Documentação</div>
+<div class="text">HTMLs, checkpoints, auditorias, pareceres</div>
+<div class="text">Inteligência do projeto</div>
+<div class="text">impactos, relatórios executivos e próximos</div>
+<div class="text">passos</div>
+<div class="text">Central V4.7.19 • arquitetura congelada</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p18" data-page="18">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">18 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>F01 → F09: uma jornada única, do primeiro contato à garantia</h2></div>
+        <div class="content-grid"><div class="text">Nove fluxos independentes para homologação, unidos por dados, handoff e identidade.</div>
+<div class="label">ESTEIRA OPERACIONAL COMPLETA</div>
+<div class="text">TRIAGEM  PREPARAR  APROVAR  PROGRAMAR  SUPRIR  EXECUTAR  CONFERIR  FATURAR  GARANTIR→ → → → → → → →</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p19" data-page="19">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">19 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>F01 • TRIAGEM — o gate atual</h2></div>
+        <div class="content-grid"><div class="text">Atendimento &amp; Qualificação: capturar uma vez, conferir , completar e entregar contexto íntegro.</div>
+<div class="label">MODO GUIADO • F01 TRIAGEM</div>
+<div class="text">1 Receber</div>
+<div class="text">mensagem, áudio, print, PDF, vídeo</div>
+<div class="text">2 Organizar</div>
+<div class="text">solicitante, imóvel, acesso, pagador , problema</div>
+<div class="text">3 Conferir</div>
+<div class="text">lacunas, urgência, evidências e coerência</div>
+<div class="text">4 Encaminhar</div>
+<div class="text">handoff pronto para o próximo fluxo</div>
+<div class="callout">STATUS: EM VALIDAÇÃO OPERACIONAL • GATE ATUAL</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p20" data-page="20">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">20 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>F02 • PREPARAR — transformar contexto em orçamento</h2></div>
+        <div class="content-grid"><div class="text">Cotação &amp; Orçamento: custos, preço, prazo, validade, ressalvas, margem e proposta sem redigitação.</div>
+<div class="text">1 Entrada</div>
+<div class="text">handoff do F01</div>
+<div class="text">2 Cotação</div>
+<div class="text">mão de obra • materiais • terceiros</div>
+<div class="text">3 Preço</div>
+<div class="text">custo + venda + ajuste comercial</div>
+<div class="text">4 Conferência</div>
+<div class="text">prazo • garantia • ressalvas • margem</div>
+<div class="text">5 Saída</div>
+<div class="text">proposta pronta para aprovação</div>
+<div class="text">O que este fluxo precisa garantir</div>
+<div class="text">mesmo número / caso do atendimento</div>
+<div class="text">itens e quantidades rastreáveis</div>
+<div class="text">margem calculada e alerta comercial</div>
+<div class="text">resumo pronto para cliente / gestor</div>
+<div class="text">gate bloqueado enquanto critérios mínimos não forem conferidos</div>
+<div class="text">CRIADO • AGUARDA HOMOLOGAÇÃO DO F01</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p21" data-page="21">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">21 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>F03 → F05: decisão, programação e suprimento</h2></div>
+        <div class="content-grid"><div class="text">Da aprovação do cliente até a operação estar pronta para ir a campo.</div>
+<div class="label">F03 • APROVAR</div>
+<div class="text">Proposta  decisão  OS→ →</div>
+<div class="text">Cliente aprova/rejeita; alçadas, condições e</div>
+<div class="text">criação da ordem de serviço.</div>
+<div class="label">AGUARDA GATE ANTERIOR</div>
+<div class="label">F04 • PROGRAMAR</div>
+<div class="text">Agenda  equipe  mobilização→ →</div>
+<div class="text">Data, responsáveis, acesso, janela,</div>
+<div class="text">dependências e comunicação.</div>
+<div class="label">AGUARDA GATE ANTERIOR</div>
+<div class="label">F05 • SUPRIR</div>
+<div class="text">Materiais  terceiros  logística→ →</div>
+<div class="text">O que precisa estar disponível antes da</div>
+<div class="text">execução começar .</div>
+<div class="label">AGUARDA GATE ANTERIOR</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p22" data-page="22">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">22 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>F06 → F09: execução, qualidade, resultado e relacionamento</h2></div>
+        <div class="content-grid"><div class="text">O trabalho só termina quando existe evidência, aceite, fechamento e pós-venda.</div>
+<div class="label">F06 • EXECUTAR</div>
+<div class="text">campo + evidências</div>
+<div class="text">checklist</div>
+<div class="text">fotos antes/depois</div>
+<div class="text">pendências</div>
+<div class="label">F07 • CONFERIR</div>
+<div class="text">qualidade + aceite</div>
+<div class="text">teste</div>
+<div class="text">documentos</div>
+<div class="text">aceite</div>
+<div class="label">F08 • FATURAR</div>
+<div class="text">NF + cobrança + resultado</div>
+<div class="text">custos</div>
+<div class="text">margem</div>
+<div class="text">recebimento</div>
+<div class="label">F09 • GARANTIR</div>
+<div class="text">pós-venda + garantia</div>
+<div class="text">retorno</div>
+<div class="text">garantia</div>
+<div class="text">histórico</div>
+<div class="text">A jornada completa transforma o serviço em histórico: quem pediu  o que foi decidido  o que foi executado  qual evidência prova  como fechou  como voltou.→ → → → →</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p23" data-page="23">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">23 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Um atendimento, uma história — sem recadastro</h2></div>
+        <div class="content-grid"><div class="text">O handoff é o “fio” que costura os nove fluxos.</div>
+<div class="text">MESMO ATENDIMENTO ATRAVESSA TODA A JORNADA</div>
+<div class="text">case_id handoff_token flow_code event_type occurred_at ator/origem idempotency_key</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p24" data-page="24">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">24 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Modo Guiado: uma ação por vez</h2></div>
+        <div class="content-grid"><div class="text">O processo deixa de depender de treinamento longo e memória perfeita.</div>
+<div class="text">FAÇA ISSO AGORA  FIZ ISSO  NÃO ENTENDI→ →</div>
+<div class="text">Ação explícita</div>
+<div class="text">a tela mostra o próximo passo útil</div>
+<div class="text">Progresso visível</div>
+<div class="text">a pessoa sabe onde está e o que falta</div>
+<div class="text">Ajuda contextual</div>
+<div class="text">“não entendi” explica sem sair do fluxo</div>
+<div class="text">Recomeço seguro</div>
+<div class="text">voltar/recomeçar sem destruir o caso</div>
+<div class="text">Homologação assistida</div>
+<div class="text">ideal para testar com quem executa de</div>
+<div class="text">verdade</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p25" data-page="25">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">25 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>H0 → H5: maturidade real, não impressão de qualidade</h2></div>
+        <div class="content-grid"><div class="text">Produção só existe depois de especificação, desenvolvimento, homologação e piloto.</div>
+<div class="label">ESCADA OFICIAL DE HOMOLOGAÇÃO</div>
+<div class="text">H0 • Especificado H1 • Protótipo H2 • Desenvolvimento H3 • Homologação H4 • Piloto controlado H5 • Produção</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p26" data-page="26">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">26 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>G0 → G8: gates de qualidade antes de pedir teste humano</h2></div>
+        <div class="content-grid"><div class="text">O usuário não deve ser usado como testador de erro técnico detectável automaticamente.</div>
+<div class="label">G0 Estado canônico</div>
+<div class="text">base, decisões e versão correta</div>
+<div class="label">G1 Estrutura</div>
+<div class="text">HTML, JS, assets e build</div>
+<div class="label">G2 Funcionalidade</div>
+<div class="text">navegação, botões e regras</div>
+<div class="label">G3 Dados &amp; sync</div>
+<div class="text">persistência, conflito e reconexão</div>
+<div class="label">G4 Arquivos</div>
+<div class="text">upload, leitura e retry</div>
+<div class="label">G5 UX operacional</div>
+<div class="text">clareza, estabilidade e mensagens</div>
+<div class="label">G6 Segurança</div>
+<div class="text">credencial, acesso e segredos</div>
+<div class="label">G7 Publicação &amp; rollback</div>
+<div class="text">candidata, link oficial e fallback</div>
+<div class="label">G8 Homologação humana</div>
+<div class="text">3–5 testes de negócio de maior valor</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p27" data-page="27">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">27 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Gemini: IA assistiva dentro de um processo humano</h2></div>
+        <div class="content-grid"><div class="label">MENSAGEM  GEMINI  APP  PESSOA→ → →</div>
+<div class="label">IA FAZ BEM</div>
+<div class="text">interpretar mensagens e áudios</div>
+<div class="text">identificar lacunas e sugerir perguntas</div>
+<div class="text">resumir e estruturar histórico</div>
+<div class="text">revisar coerência e simplificar instruções</div>
+<div class="text">preparar rascunhos de resposta</div>
+<div class="label">TRAVAS HUMANAS</div>
+<div class="text">não aprovar preço sozinho</div>
+<div class="text">não prometer prazo crítico</div>
+<div class="text">não alterar estado operacional sem política</div>
+<div class="text">não homologar fluxo</div>
+<div class="text">não substituir conferência humana</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p28" data-page="28">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">28 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Wizy Flow: inteligência de relacionamento sem capturar o núcleo</h2></div>
+        <div class="content-grid"><div class="label">APP CONSTRU-REI</div>
+<div class="text">verdade operacional</div>
+<div class="text">fluxos • estados • evidências</div>
+<div class="label">CONTRATO DE INTEGRAÇÃO</div>
+<div class="text">case_id • handoff_token • flow_code</div>
+<div class="text">event_type • timestamp •</div>
+<div class="text">idempotência</div>
+<div class="label">WIZY FLOW</div>
+<div class="text">CRM • canais • follow-up</div>
+<div class="text">automação • cadência •</div>
+<div class="text">relacionamento</div>
+<div class="callout">REGRA: falha do Wizy entra em fila/retry e nunca bloqueia F01 F09.→</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p29" data-page="29">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">29 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Continuidade operacional: integração ajuda; o core não pode parar</h2></div>
+        <div class="content-grid"><div class="text">Resiliência é parte do produto, não um detalhe de infraestrutura.</div>
+<div class="text">CORE OPERACIONAL CONTINUA FUNCIONANDO</div>
+<div class="text">Wizy indisponível</div>
+<div class="text">APP mantém o trabalho e reprocessa depois</div>
+<div class="text">Rede instável</div>
+<div class="text">estado local preservado e reconexão</div>
+<div class="text">previsível</div>
+<div class="text">Falha de API</div>
+<div class="text">retry limitado + alerta + idempotência</div>
+<div class="text">Nova versão quebrada</div>
+<div class="text">link oficial mantém fallback anterior</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p30" data-page="30">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">30 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Responsabilidade visível: decisão no lugar certo</h2></div>
+        <div class="content-grid"><div class="label">PAPÉIS E FRONTEIRAS</div>
+<div class="text">Gabrielly</div>
+<div class="text">Atendimento</div>
+<div class="text">receber • triar • comunicar • completar</div>
+<div class="text">Rogério</div>
+<div class="text">Gestão / Comercial</div>
+<div class="text">priorizar • aprovar • decidir exceções</div>
+<div class="text">Fabrício</div>
+<div class="text">Operações / Campo</div>
+<div class="text">programar • mobilizar • executar • fechar</div>
+<div class="text">Éder</div>
+<div class="text">Técnica / Qualidade</div>
+<div class="text">analisar • especificar • conferir • melhorar</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p31" data-page="31">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">31 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Platform Studio: desenvolvimento com memória e controle</h2></div>
+        <div class="content-grid"><div class="text">Cofre de artefatos</div>
+<div class="text">HTMLs, documentos, builds e</div>
+<div class="text">referências</div>
+<div class="text">Inteligência do projeto</div>
+<div class="text">impactos, marcos, decisões,</div>
+<div class="text">riscos e potencial</div>
+<div class="text">QA &amp; releases</div>
+<div class="text">candidata, testes, regressão,</div>
+<div class="text">rollback e promoção</div>
+<div class="text">Acesso privado</div>
+<div class="text">Owner / Developer / Admin /</div>
+<div class="text">Operação / Convidado</div>
+<div class="text">A evolução passa a deixar trilha: decisão  candidata  teste  evidência  release  rollback  próximo passo.→ → → → → →</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide chapter" id="p32" data-page="32">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">32 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Onde estamos agora</h2></div>
+        <div class="content-grid"><div class="text">agora é provar, congelar e liberar um fluxo</div>
+<div class="text">por vez.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p33" data-page="33">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">33 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Situação atual do projeto — 30/08/2026</h2></div>
+        <div class="content-grid"><div class="text">Estado canônico: Central V4.7.19, F01 como gate atual e homologação sequencial obrigatória.</div>
+<div class="label">V4.7.19</div>
+<div class="text">Central Mestre</div>
+<div class="text">build master-vision-sequential-gates</div>
+<div class="label">F01</div>
+<div class="label">EM VALIDAÇÃO OPERACIONAL</div>
+<div class="text">gate atual</div>
+<div class="label">F02</div>
+<div class="label">CRIADO • AGUARDA F01</div>
+<div class="text">próximo gate</div>
+<div class="label">F03 F09→</div>
+<div class="label">CRIADOS • BLOQUEADOS</div>
+<div class="text">aguardam sequência</div>
+<div class="label">F01 EM VALIDAÇÃO • F02 É O PRÓXIMO</div>
+<div class="text">Bloqueadores antes de avançar</div>
+<div class="text">homologação real/assistida do F01</div>
+<div class="text">registro formal G0 G8 do F01→</div>
+<div class="text">autenticação + RBAC + auditoria antes do H5</div>
+<div class="text">captura versionada do fonte runtime dos fluxos</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p34" data-page="34">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">34 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>A organização mudou de patamar</h2></div>
+        <div class="content-grid"><div class="text">A Biblioteca deixou de misturar “história do projeto” com “estado atual do projeto”.</div>
+<div class="label">RAIZ CANÔNICA</div>
+<div class="label">00_GOVERNANCA</div>
+<div class="label">01_PRODUTO</div>
+<div class="label">02_ARQUITETURA</div>
+<div class="label">03_FLUXOS / F01 F09→</div>
+<div class="label">04_INTEGRACOES / WIZY_FLOW</div>
+<div class="label">05_DADOS_SUPABASE</div>
+<div class="label">06_QA_RELEASES</div>
+<div class="label">07_PLATFORM_STUDIO</div>
+<div class="label">08_IDENTIDADE</div>
+<div class="label">09_APRESENTACOES</div>
+<div class="label">90_ARQUIVO_HISTORICO</div>
+<div class="label">99_SNAPSHOTS_ROLLBACK</div>
+<div class="text">PROJECT_STATE.md fonte única de estado</div>
+<div class="text">RELEASE_REGISTRY versão + build + link + rollback</div>
+<div class="text">ADRs decisões arquiteturais congeladas</div>
+<div class="text">Pacote padrão F01 F09→ README • SPEC • FLOW • STATE • TESTS •</div>
+<div class="label">CHANGELOG • ACCEPTANCE • RELEASE</div>
+<div class="text">Nova avaliação interna: estrutura/organização  9,6 / 10≈</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p35" data-page="35">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">35 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Próximos 90 dias: menos funções novas, mais prova operacional</h2></div>
+        <div class="content-grid"><div class="text">O caminho de menor risco é terminar a esteira com evidência real e releases congelados.</div>
+<div class="metric">1</div>
+<div class="text">AGORA F01 Homologar em operação real Gabrielly + gestão corrigir somente F01, testar , rollback, aceite</div>
+<div class="metric">2</div>
+<div class="text">DEPOIS F02 Liberar orçamento Rogério + Éder handoff + margem + proposta + gate</div>
+<div class="metric">3</div>
+<div class="text">SEQUÊNCIA F03 F05→ Aprovar, programar, suprir Gestão + operações decisão + agenda + materiais/terceiros</div>
+<div class="metric">4</div>
+<div class="text">FECHAMENTO F06 F09→ Executar até garantia Campo + financeiro evidência + qualidade + faturamento + pós</div>
+<div class="metric">5</div>
+<div class="text">ANTES DO H5 Segurança Autenticação e RBAC Owner/Developer auditoria, segredos, acessos e observabilidade</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide statement" id="p36" data-page="36">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">36 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Onde podemos chegar</h2></div>
+        <div class="content-grid"><div class="text">pode sustentar uma operação muito maior —</div>
+<div class="text">sem antecipar complexidade que ainda não</div>
+<div class="text">precisamos.</div>
+<div class="text">dashboards de</div>
+<div class="text">desempenho e SLA</div>
+<div class="text">automação de follow-up</div>
+<div class="text">e relacionamento</div>
+<div class="text">multiempresa / tenant</div>
+<div class="text">quando fizer sentido</div>
+<div class="text">onboarding e</div>
+<div class="text">implantação assistida</div>
+<div class="text">APP como ativo</div>
+<div class="text">operacional e futuro</div>
+<div class="text">produto</div>
+<div class="text">Academy como</div>
+<div class="text">patrimônio de</div>
+<div class="text">conhecimento</div>
+<div class="text">A visão é grande. A execução continua pequena, sequencial e comprovável.</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide" id="p37" data-page="37">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">37 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>O pacto da equipe: tecnologia não substitui responsabilidade</h2></div>
+        <div class="content-grid"><div class="label">ATENDIMENTO</div>
+<div class="text">não encaminhar chamado solto; completar</div>
+<div class="text">contexto</div>
+<div class="label">CAMPO</div>
+<div class="text">registrar evidência e pendência no mesmo caso</div>
+<div class="label">TÉCNICA</div>
+<div class="text">transformar dúvida em regra e critério</div>
+<div class="text">verificável</div>
+<div class="label">GESTÃO</div>
+<div class="text">decidir exceções, preço, prioridade e alçada</div>
+<div class="label">TODOS</div>
+<div class="text">não criar controles paralelos quando o fluxo</div>
+<div class="text">oficial existir</div>
+<div class="label">PROJETO</div>
+<div class="text">melhorar um fluxo por vez; congelar antes de</div>
+<div class="text">avançar</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section><section class="slide statement" id="p38" data-page="38">
+      <div class="slide-inner">
+        <div class="slide-top"><span class="page-no">38 / 38</span><span class="brand-mini">APP CONSTRU-REI × Wizy Flow</span></div>
+        <div class="title-block"><div class="eyebrow">APRESENTAÇÃO ESTRATÉGICA E OPERACIONAL • 2026</div><h2>Processo orienta. Tecnologia sustenta. Pessoa confere. Equipe evolui.</h2></div>
+        <div class="content-grid"><div class="label">CONSTRU-REI</div>
+<div class="text">Processo orienta.</div>
+<div class="text">melhor , com memória, evidência, clareza e</div>
+<div class="text">continuidade. APP CONSTRU-REI + Wizy Flow • 2026</div></div>
+        <div class="slide-foot"><span>CONSTRU-REI • Construtora, Reparos e Reformas</span><span>História • Processo • Dados • Inteligência</span></div>
+      </div>
+    </section></main>
+<nav class="mobile-nav"><button onclick="toggleDrawer()"><span>☰</span>Índice</button><a href="#p1"><span>⌂</span>Início</a><a href="#p17"><span>◉</span>Central</a><a href="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes"><span>↩</span>Voltar</a></nav>
+<script>
+function toggleDrawer(){document.getElementById('drawer').classList.toggle('open')}
+const sections=[...document.querySelectorAll('.slide')]; const links=[...document.querySelectorAll('.drawer a[data-page]')]; const dots=[...document.querySelectorAll('[data-dot]')];
+const obs=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){const p=e.target.dataset.page;links.forEach(a=>a.classList.toggle('active',a.dataset.page===p));dots.forEach(a=>a.classList.toggle('active',a.dataset.dot===p));}},{threshold:.45});sections.forEach(s=>obs.observe(s));
+document.querySelectorAll('.drawer a').forEach(a=>a.addEventListener('click',()=>document.getElementById('drawer').classList.remove('open')));
+document.addEventListener('keydown',e=>{const cur=sections.findIndex(s=>Math.abs(s.getBoundingClientRect().top-64)<window.innerHeight*.45);if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();sections[Math.min(sections.length-1,cur+1)]?.scrollIntoView()}if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();sections[Math.max(0,cur-1)]?.scrollIntoView()}});
+</script>
+<style id="cr38-live-style">
+.cr38-livebar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:16px 0 0}
+.cr38-k{background:#fff;border:1px solid #d8e2ea;border-radius:12px;padding:10px 11px;min-width:0}
+.cr38-k b{display:block;color:#08233d;font-size:16px;line-height:1.1}.cr38-k span{display:block;color:#718394;font-size:8px;text-transform:uppercase;font-weight:900;letter-spacing:.06em;margin-top:4px}
+.cr38-livebox{margin-top:10px;border-radius:12px;padding:12px 14px;background:#08233d;color:#eef7ff;border:1px solid #244766;font-size:10px;line-height:1.5}
+.cr38-livebox strong{color:#f2cd6c}.cr38-live-status{display:inline-flex;align-items:center;gap:5px;font-size:8px;font-weight:900;color:#9edbb9}
+.cr38-dot{width:7px;height:7px;border-radius:50%;background:#2ecf82;box-shadow:0 0 12px #2ecf82}
+@media(max-width:760px){.cr38-livebar{grid-template-columns:repeat(2,1fr)}.cr38-k b{font-size:14px}}
+@media print{.cr38-live-status,#cr38RefreshBtn{display:none!important}}
+</style>
+<script id="cr38-live-script">
+(()=>{if(window.__CR38LIVE)return;window.__CR38LIVE=true;
+const API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-presentation-viva-premium-v1?api=data';
+const brl=c=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format((Number(c)||0)/100);
+const pct=n=>(Number(n)||0).toFixed(2).replace('.',',')+'%';
+const esc=s=>String(s??'—').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function putLive(d){
+ const o=d.overview||{},a=d.acertos||{};
+ const p1=document.querySelector('#p1 .slide-inner')||document.querySelector('#p1');
+ if(p1){
+   let box=document.getElementById('cr38LiveBar');if(!box){box=document.createElement('div');box.id='cr38LiveBar';box.className='cr38-livebar';const foot=p1.querySelector('.slide-foot');foot?p1.insertBefore(box,foot):p1.appendChild(box)}
+   const vals=[['Obras 2026',o.total_works||0],['Volume',brl(o.gross_cents)],['Em andamento',o.in_progress||0],['Ag. pagamento',o.awaiting_payment||0],['Ag. acerto',a.cases||0],['Margem',pct(o.margin_pct)]];
+   box.innerHTML=vals.map(x=>'<div class="cr38-k"><b>'+esc(x[1])+'</b><span>'+esc(x[0])+'</span></div>').join('');
+ }
+ const p32=document.querySelector('#p32 .content-grid')||document.querySelector('#p32 .slide-inner')||document.querySelector('#p32');
+ if(p32){let n=document.getElementById('cr38Now');if(!n){n=document.createElement('div');n.id='cr38Now';n.className='cr38-livebox';p32.appendChild(n)}n.innerHTML='<strong>OPERAÇÃO VIVA AGORA</strong><br>Em andamento: '+esc(o.in_progress||0)+' • Aguardando pagamento: '+esc(o.awaiting_payment||0)+' • Aguardando acerto: '+esc(a.cases||0)+' • Retornos: '+esc(o.returns||0)+'<br>Volume financeiro 2026: '+esc(brl(o.gross_cents))+' • Lucro: '+esc(brl(o.profit_cents))+' • Margem: '+esc(pct(o.margin_pct));}
+ const p33=document.querySelector('#p33 .content-grid')||document.querySelector('#p33 .slide-inner')||document.querySelector('#p33');
+ if(p33){let n=document.getElementById('cr38Acerto');if(!n){n=document.createElement('div');n.id='cr38Acerto';n.className='cr38-livebox';p33.appendChild(n)}n.innerHTML='<strong>ACERTO VIVO CANÔNICO</strong><br>Obras: '+esc(a.cases||0)+' • Base: '+esc(brl(a.base_cents))+' • Custos: '+esc(brl(a.cost_cents))+' • Lucro: '+esc(brl(a.profit_cents))+' • Margem: '+esc(pct(a.margin_pct))+' • Capital de Giro: '+esc(brl(a.capital_cents))+'<br>'+(Number(a.difference_cents||0)===0?'✅ Conferido • Diferença R$ 0,00':'⚠️ Divergência detectada');}
+ let s=document.getElementById('cr38LiveStatus');if(!s){s=document.createElement('span');s.id='cr38LiveStatus';s.className='cr38-live-status';s.innerHTML='<span class="cr38-dot"></span><span></span>';const top=document.querySelector('.topbar .tools')||document.querySelector('.topbar');if(top)top.prepend(s)}
+ if(s){const z=s.querySelector('span:last-child');if(z)z.textContent='DADOS VIVOS • '+new Date(d.generated_at||Date.now()).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}
+ try{localStorage.setItem('cr38LastGood',JSON.stringify(d))}catch{}
+}
+async function refresh(){
+ try{const r=await fetch(API+'&t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);putLive(await r.json())}
+ catch{try{const d=JSON.parse(localStorage.getItem('cr38LastGood')||'null');if(d)putLive(d)}catch{}}
+}
+window.cr38Refresh=refresh;
+function init(){refresh();setInterval(refresh,60000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()})}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();
+})();
+</script>
+<div hidden data-cr-presentation="CR-PRESENTATION-LIVE-38P-V2-REFINED"></div>
+<div hidden data-cr-presentation-recovery="CR-PRESENTATION-38P-RECOVERED-20260929"></div>
+<style id="cr-ppt-export-style">
+.cr-busy{cursor:progress}.cr-busy #crPpt{opacity:.65;pointer-events:none}
+@media print{#crPpt{display:none!important}}
+</style>
+<script id="cr-ppt-export-script">
+(()=>{if(window.__CR_PPT_EXPORT__)return;window.__CR_PPT_EXPORT__=true;
+function load(src,global){return new Promise((ok,no)=>{if(global&&window[global])return ok(window[global]);const x=document.createElement('script');x.src=src;x.onload=()=>ok(global?window[global]:true);x.onerror=no;document.head.appendChild(x)})}
+async function exportPpt(){
+ const b=document.getElementById('crPpt');
+ try{
+  if(b){b.disabled=true;b.textContent='Gerando…'}
+  document.body.classList.add('cr-busy');
+  await load('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js','html2canvas');
+  await load('https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js','PptxGenJS');
+  const nodes=[...document.querySelectorAll('section.slide')];
+  if(nodes.length!==38)throw new Error('APRESENTACAO_38P_NAO_CONFIRMADA');
+  const ppt=new window.PptxGenJS();
+  ppt.layout='LAYOUT_WIDE';ppt.author='CONSTRU-REI';ppt.company='CONSTRU-REI';
+  ppt.subject='Apresentação Estratégica e Operacional';ppt.title='CONSTRU-REI — Apresentação Viva';
+  for(let i=0;i<nodes.length;i++){
+   if(b)b.textContent='PPT '+(i+1)+'/'+nodes.length;
+   const canvas=await window.html2canvas(nodes[i],{scale:1,useCORS:true,allowTaint:false,backgroundColor:'#e9eff4',logging:false,windowWidth:1440,windowHeight:900});
+   const slide=ppt.addSlide();
+   slide.addImage({data:canvas.toDataURL('image/jpeg',0.84),x:0,y:0,w:13.333,h:7.5});
+  }
+  await ppt.writeFile({fileName:'CONSTRU-REI_Apresentacao_Viva_'+new Date().toISOString().slice(0,10)+'.pptx'});
+ }catch(e){
+  console.error(e);
+  alert('Não foi possível gerar o PowerPoint neste dispositivo. A apresentação permanece normal.');
+ }finally{
+  document.body.classList.remove('cr-busy');
+  if(b){b.disabled=false;b.textContent='PowerPoint'}
+ }
+}
+function init(){document.getElementById('crPpt')?.addEventListener('click',exportPpt)}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();
+})();
+</script>
+<div hidden data-cr-ppt-export="CR-PRESENTATION-PPTX-HISTORICAL-RECOVERY-20260930"></div>
+</body></html>
