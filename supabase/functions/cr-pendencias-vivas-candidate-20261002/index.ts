@@ -9,7 +9,13 @@ try{
 }catch{}
 if(!SRK) SRK=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
 
-const BUILD="CR-PENDENCIAS-VIVAS-V2-CANDIDATE-20261002";
+const BUILD="CR-PENDENCIAS-VIVAS-V3-AGENT-ACCESS-CANDIDATE-20261002";
+const BASELINE="92ef8f27d71ac176abc6452df165a048c4405d60";
+const MASTER="cr_pending_master_candidate_20261002";
+const EVENTS="cr_pending_events_candidate_20261002";
+const ACCESS="cr_agent_access_candidate_20261002";
+const SOURCES="cr_pending_sources_candidate_20261002";
+
 const BASE={
   "cache-control":"no-store, no-cache, must-revalidate, max-age=0",
   "pragma":"no-cache",
@@ -18,15 +24,17 @@ const BASE={
   "access-control-allow-methods":"GET,POST,OPTIONS",
   "content-type":"application/json; charset=utf-8",
   "x-construrei-build":BUILD,
-  "x-construrei-candidate":"true"
+  "x-construrei-candidate":"true",
+  "x-construrei-baseline":BASELINE
+};
+const VALID_KINDS=new Set(["FOUND","STARTED","BLOCKED","DEFERRED","COMPLETED","HOMOLOGATED","REOPENED"]);
+const TERMINAL=new Set(["CONCLUIDO"]);
+const PERM:any={
+  FOUND:"CREATE",STARTED:"UPDATE",BLOCKED:"BLOCK",DEFERRED:"DEFER",
+  COMPLETED:"COMPLETE_PROPOSE",REOPENED:"UPDATE"
 };
 
-const OPEN=new Set(["Não iniciado","Aguardando","Em andamento","Bloqueado","Em validação"]);
-const DONE=new Set(["Concluído","Cancelado"]);
-const VALID_KINDS=new Set(["FOUND","STARTED","BLOCKED","DEFERRED","COMPLETED","HOMOLOGATED","REOPENED"]);
-const AGENTS=new Set(["Bio","Bio Gestor","CR Assertivo","Sistema"]);
-
-function J(data:any,status=200){return new Response(JSON.stringify(data),{status,headers:BASE})}
+function J(data:any,status=200,extra:Record<string,string>={}){return new Response(JSON.stringify(data),{status,headers:{...BASE,...extra}})}
 function T(v:any,n=4000){return String(v??"").replace(/[<>]/g,"").slice(0,n)}
 function norm(s:any){return T(s,500).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g," ").trim()}
 function tokens(s:any){return new Set(norm(s).split(" ").filter(x=>x.length>2))}
@@ -35,19 +43,24 @@ function sim(a:any,b:any){
   let i=0; for(const x of A)if(B.has(x))i++;
   return i/(A.size+B.size-i);
 }
+function uuid(v:any){
+  const s=T(v,80);
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s)?s:null;
+}
+function tomorrowISO(){
+  const d=new Date(Date.now()-3*60*60*1000); d.setUTCDate(d.getUTCDate()+1);
+  return d.toISOString().slice(0,10);
+}
 function publicStatus(x:any){
-  const s=String(x.status||"");
-  if(s==="Não iniciado")return "PENDENTE";
-  if(s==="Em andamento")return "EM ANDAMENTO";
-  if(s==="Bloqueado")return "BLOQUEADA";
-  if(s==="Em validação")return "EXECUÇÃO CONCLUÍDA • AGUARDANDO HOMOLOGAÇÃO";
-  if(s==="Concluído")return "CONCLUÍDA";
-  if(s==="Cancelado")return "HISTÓRICO";
-  if(s==="Aguardando"){
-    const d=x.due_date?new Date(String(x.due_date)+"T23:59:59-03:00"):null;
-    return d&&d.getTime()>Date.now()?"ADIADA / AMANHÃ":"PENDENTE";
-  }
-  return s.toUpperCase()||"PENDENTE";
+  if(x.confirmation_state==="REQUER_HUMANO")return "EXECUÇÃO CONCLUÍDA • AGUARDANDO HOMOLOGAÇÃO";
+  if(x.status==="ABERTO")return "PENDENTE";
+  if(x.status==="EM_ANDAMENTO")return "EM ANDAMENTO";
+  if(x.status==="BLOQUEADO")return "BLOQUEADA";
+  if(x.status==="AGUARDANDO_TERCEIRO")return "AGUARDANDO TERCEIRO";
+  if(x.status==="AGENDADO")return "AGENDADO";
+  if(x.status==="AMANHA")return "ADIADA / AMANHÃ";
+  if(x.status==="CONCLUIDO")return "CONCLUÍDA";
+  return T(x.status,80);
 }
 async function db(path:string,init:RequestInit={}){
   if(!SRK)throw Error("Secret key indisponível");
@@ -59,7 +72,7 @@ async function db(path:string,init:RequestInit={}){
     }
   });
   const txt=await r.text();
-  if(!r.ok)throw Error("DB "+r.status+": "+txt.slice(0,400));
+  if(!r.ok)throw Error("DB "+r.status+": "+txt.slice(0,500));
   return txt?JSON.parse(txt):[];
 }
 async function who(req:Request){
@@ -71,221 +84,259 @@ async function who(req:Request){
   const d=await r.json().catch(()=>({}));
   return r.ok?d:null;
 }
-async function audit(itemId:string,actor:string,action:string,oldData:any,newData:any){
-  return db("cc_changes",{method:"POST",body:JSON.stringify({
-    item_id:itemId,editor:actor,action,old_data:oldData||null,new_data:newData||null
-  })});
+async function agent(code:string){
+  if(!code)return null;
+  const rows=await db(ACCESS+"?agent_code=eq."+encodeURIComponent(code)+"&active=eq.true&select=*&limit=1");
+  return rows?.[0]||null;
 }
-async function evidence(item:any,actor:string,kind:string,b:any,auth:any){
-  const title=T(b?.evidence?.title||b?.evidence_title||("Evento "+kind+" • "+item.id),300);
-  const desc=T(b?.evidence?.description||b?.description||b?.note||"",4000)||null;
-  const url=T(b?.evidence?.external_url||b?.external_url||"",1200)||null;
-  const actorHuman=!AGENTS.has(actor);
-  const row={
-    item_id:item.id,
-    scope:"PENDENCIA_VIVA_V2_CANDIDATE",
-    evidence_type:T(b?.evidence?.type||"EVENT",40),
-    title,description:desc,external_url:url,
-    actor_kind:actorHuman?"HUMAN":"AGENT",
-    actor_name:actor,
-    actor_role:actorHuman?String(auth?.role||"HUMAN"):"AGENT_AUTOMATION",
-    created_by_client_id:null,
-    data_classification:"EVIDENCIA_OPERACIONAL_RESTRITA",
-    review_status:kind==="HOMOLOGATED"?"HOMOLOGADO":"REGISTRADO_PARA_REVISAO",
-    append_only_locked:true,
-    metadata:{
-      source:BUILD,kind,
-      idempotency_key:T(b?.idempotency_key,200),
-      commit:T(b?.commit,120),
-      branch:T(b?.branch,180),
-      module:T(b?.module||b?.area,100),
-      source_ref:T(b?.source_ref,500)
-    }
-  };
-  const rows=await db("cr_operational_evidence",{method:"POST",body:JSON.stringify(row)});
-  await db("cc_items?id=eq."+encodeURIComponent(item.id),{method:"PATCH",body:JSON.stringify({
-    last_evidence_at:new Date().toISOString(),updated_by:actor,updated_at:new Date().toISOString()
-  })}).catch(()=>{});
-  return rows?.[0]||row;
-}
-async function already(idem:string){
+function can(a:any,p:string){return !!a&&Array.isArray(a.permissions)&&a.permissions.includes(p)}
+function writeRole(role:string){return ["ADMIN_MASTER_ROGERIO","ADMIN_TECNICO_EDER"].includes(role)}
+async function priorEvent(idem:string){
   if(!idem)return null;
-  const rows=await db("cc_changes?action=in.(agent_event,agent_event_deduplicated)&select=id,item_id,new_data,created_at&order=created_at.desc&limit=1000");
-  return rows.find((x:any)=>String(x?.new_data?.idempotency_key||"")===idem)||null;
+  const rows=await db(EVENTS+"?idempotency_key=eq."+encodeURIComponent(idem)+"&select=event_id,pending_id,event_kind,after_data,created_at&limit=1");
+  return rows?.[0]||null;
 }
-async function findDup(title:string,area:string){
-  const rows=await db("cc_items?select=id,title,area,status,priority,owner,operational_owner,updated_at&order=updated_at.desc&limit=500");
-  const open=rows.filter((x:any)=>OPEN.has(String(x.status||"")) && (!area||String(x.area||"")===area));
+async function getItem(id:string){
+  const rows=await db(MASTER+"?pending_id=eq."+encodeURIComponent(id)+"&select=*&limit=1");
+  return rows?.[0]||null;
+}
+async function findDup(title:string,category:string,responsible:string){
+  const rows=await db(MASTER+"?status=neq.CONCLUIDO&select=*&order=updated_at.desc&limit=500");
   let best:any=null,score=0;
-  for(const x of open){
+  for(const x of rows){
+    if(category&&x.category!==category)continue;
+    if(responsible&&x.responsible&&x.responsible!==responsible)continue;
     const s=norm(x.title)===norm(title)?1:sim(x.title,title);
     if(s>score){score=s;best=x}
   }
   return score>=0.66?{item:best,score}:null;
 }
-async function readBoard(req:Request,u:URL){
+async function appendEvent(args:any){
+  const row={
+    pending_id:args.pending_id,event_kind:args.event_kind,
+    actor_kind:args.actor_kind,actor_code:args.actor_code,actor_name:args.actor_name,
+    actor_role:args.actor_role||"",correlation_id:args.correlation_id,
+    idempotency_key:args.idempotency_key||null,source_ref:args.source_ref||null,
+    before_data:args.before_data||{},after_data:args.after_data||{},
+    human_gate:!!args.human_gate,metadata:args.metadata||{}
+  };
+  const rows=await db(EVENTS,{method:"POST",body:JSON.stringify(row)});
+  return rows?.[0]||row;
+}
+async function sourceRows(){
+  return db(SOURCES+"?select=*&order=source_code.asc");
+}
+async function board(req:Request,u:URL){
   const auth=await who(req); if(!auth)return J({ok:false,error:"Autenticação necessária."},401);
-  const showHistory=u.searchParams.get("history")==="1";
-  const items=await db("cc_items?select=*&order=sequence_order.asc,sort_order.asc,updated_at.desc&limit=500");
-  const changes=await db("cc_changes?select=id,item_id,editor,action,new_data,created_at&order=created_at.desc&limit=1000");
-  const ev=await db("cr_operational_evidence?select=evidence_id,item_id,title,evidence_type,actor_name,actor_role,review_status,external_url,metadata,created_at&order=created_at.desc&limit=2000");
-  const evCount:any={}; for(const e of ev)evCount[e.item_id]=(evCount[e.item_id]||0)+1;
-  const active=items.filter((x:any)=>showHistory||!DONE.has(String(x.status||""))).map((x:any)=>({
-    ...x,public_status:publicStatus(x),evidence_count:evCount[x.id]||0,
-    last_change:changes.find((c:any)=>c.item_id===x.id)||null
-  }));
-  const count=(s:string)=>active.filter((x:any)=>x.public_status===s).length;
-  return J({ok:true,build:BUILD,mode:"ISOLATED_CANDIDATE",profile:auth.profile,role:auth.role,
+  const history=u.searchParams.get("history")==="1";
+  const qs=history?"":"&status=neq.CONCLUIDO";
+  const items=await db(MASTER+"?select=*&order=priority.asc,updated_at.desc&limit=500"+qs);
+  const ids=items.map((x:any)=>x.pending_id);
+  const events=ids.length?await db(EVENTS+"?pending_id=in.("+ids.join(",")+")&select=event_id,pending_id,event_kind,actor_kind,actor_code,actor_name,actor_role,correlation_id,idempotency_key,source_ref,human_gate,metadata,created_at&order=created_at.desc&limit=2000"):[];
+  const enriched=items.map((x:any)=>({...x,public_status:publicStatus(x),last_event:events.find((e:any)=>e.pending_id===x.pending_id)||null}));
+  return J({ok:true,build:BUILD,baseline:BASELINE,mode:"ISOLATED_CANDIDATE",profile:auth.profile,role:auth.role,items:enriched});
+}
+async function summary(){
+  const items=await db(MASTER+"?select=pending_id,status,priority,due_at,confirmation_state,blocked,completed_at,updated_at&limit=1000");
+  const sources=await sourceRows();
+  const active=items.filter((x:any)=>!TERMINAL.has(x.status));
+  const pub=(s:string)=>active.filter((x:any)=>publicStatus(x)===s).length;
+  const today=new Date(Date.now()-3*60*60*1000).toISOString().slice(0,10);
+  const tomorrow=tomorrowISO();
+  return J({ok:true,build:BUILD,baseline:BASELINE,mode:"ISOLATED_CANDIDATE",
     metrics:{
-      pending:count("PENDENTE"),
-      in_progress:count("EM ANDAMENTO"),
-      blocked:count("BLOQUEADA"),
-      deferred:count("ADIADA / AMANHÃ"),
-      awaiting_homologation:count("EXECUÇÃO CONCLUÍDA • AGUARDANDO HOMOLOGAÇÃO"),
-      completed_today:items.filter((x:any)=>String(x.status)==="Concluído"&&String(x.updated_at||"").slice(0,10)===new Date().toISOString().slice(0,10)).length,
-      overdue:active.filter((x:any)=>x.due_date&&new Date(x.due_date+"T23:59:59-03:00").getTime()<Date.now()).length
+      total_live:active.length,
+      pending:pub("PENDENTE"),
+      in_progress:pub("EM ANDAMENTO"),
+      blocked:pub("BLOQUEADA"),
+      waiting_third_party:pub("AGUARDANDO TERCEIRO"),
+      tomorrow:active.filter((x:any)=>String(x.due_at||"").slice(0,10)===tomorrow||x.status==="AMANHA").length,
+      overdue:active.filter((x:any)=>x.due_at&&String(x.due_at).slice(0,10)<today).length,
+      awaiting_homologation:active.filter((x:any)=>x.confirmation_state==="REQUER_HUMANO").length,
+      completed_today:items.filter((x:any)=>x.status==="CONCLUIDO"&&String(x.completed_at||"").slice(0,10)===today).length
     },
-    items:active
+    sources:sources.map((x:any)=>({source_code:x.source_code,source_name:x.source_name,mode:x.mode,status:x.status,last_checked_at:x.last_checked_at}))
+  });
+}
+async function technicalHealth(){
+  const started=performance.now();
+  let dbState="OK",dbLatency=0;
+  try{
+    const t=performance.now(); await db(MASTER+"?select=pending_id&limit=1"); dbLatency=Math.round(performance.now()-t);
+  }catch(_){dbState="INDISPONIVEL"}
+  let prod:any={status:"INDISPONIVEL",latency_ms:null,baseline:null};
+  try{
+    const t=performance.now(),r=await fetch(SB+"/functions/v1/centro-operacoes?api=health",{cache:"no-store"});
+    prod={status:r.ok?"OK":"ATENCAO",latency_ms:Math.round(performance.now()-t),baseline:r.headers.get("x-construrei-baseline")||null};
+  }catch(_){}
+  const sources=await sourceRows();
+  const external=sources.filter((x:any)=>["GESTAOCLICK","TRELLO","AGENDA"].includes(x.source_code))
+    .map((x:any)=>({component:x.source_name,status:x.status,mode:x.mode,last_checked_at:x.last_checked_at}));
+  return J({ok:true,build:BUILD,baseline:BASELINE,mode:"REAL_CHECKS_NO_FAKE_OK",checked_at:new Date().toISOString(),
+    components:[
+      {component:"API Pendências Vivas candidata",status:"OK",latency_ms:Math.round(performance.now()-started),version:BUILD},
+      {component:"Banco Mestre candidata",status:dbState,latency_ms:dbLatency,environment:"CANDIDATE"},
+      {component:"Central canônica",...prod,environment:"PRODUCTION_READ_ONLY"},
+      ...external
+    ]
   });
 }
 async function handleEvent(req:Request){
   const auth=await who(req); if(!auth)return J({ok:false,error:"Autenticação necessária."},401);
+  const role=T(auth.role,100);
+  if(!writeRole(role))return J({ok:false,error:"Perfil sem permissão de escrita nesta candidata."},403);
+
   const b=await req.json().catch(()=>({}));
-  const kind=T(b.kind,40).toUpperCase(); if(!VALID_KINDS.has(kind))return J({ok:false,error:"Evento inválido."},400);
-  const idem=T(b.idempotency_key,200); if(!idem)return J({ok:false,error:"idempotency_key é obrigatória."},400);
-  const prior=await already(idem); if(prior)return J({ok:true,idempotent:true,reused:true,item_id:prior.item_id,change_id:prior.id,build:BUILD});
-  const actor=T(b.actor||auth.profile||"Sistema",100);
-  let item:any=null,dedup:any=null;
-  if(kind==="FOUND"&&!b.item_id){
+  const kind=T(b.kind,40).toUpperCase();
+  if(!VALID_KINDS.has(kind))return J({ok:false,error:"Evento inválido."},400);
+  const idem=T(b.idempotency_key,200);
+  if(!idem)return J({ok:false,error:"idempotency_key é obrigatória."},400);
+  const oldPrior=await priorEvent(idem);
+  if(oldPrior)return J({ok:true,idempotent:true,reused:true,pending_id:oldPrior.pending_id,event_id:oldPrior.event_id,build:BUILD});
+
+  const agentCode=T(b.agent_code,80).toUpperCase();
+  const ag=agentCode?await agent(agentCode):null;
+  if(agentCode&&!ag)return J({ok:false,error:"Agente inexistente ou inativo."},403);
+  if(ag&&ag.write_mode!=="HUMAN_SESSION_DELEGATED")return J({ok:false,error:"Agente configurado como somente leitura."},403);
+  if(kind==="HOMOLOGATED"){
+    if(role!=="ADMIN_MASTER_ROGERIO")return J({ok:false,error:"Homologação exige Diretoria."},403);
+    if(agentCode)return J({ok:false,error:"Homologação não pode ser executada por agente."},403);
+  }else if(ag&&!can(ag,PERM[kind]))return J({ok:false,error:"Agente sem permissão para "+kind+"."},403);
+
+  const actorKind=ag?"AGENT":"HUMAN";
+  const actorCode=ag?ag.agent_code:role;
+  const actorName=ag?ag.display_name:T(auth.profile||role,160);
+  const actorRole=ag?"DELEGATED_BY_"+role:role;
+  const correlationId=uuid(b.correlation_id)||crypto.randomUUID();
+  const sourceRef=T(b.source_ref,500)||null;
+  const metadata={
+    build:BUILD,baseline:BASELINE,
+    human_initiator:{profile:T(auth.profile,160),role},
+    agent:ag?{code:ag.agent_code,authority_level:ag.authority_level,write_mode:ag.write_mode}:null,
+    source_system:T(b.source_system||"MANUAL",100),
+    commit:T(b.commit,120)||null,branch:T(b.branch,180)||null,module:T(b.module||b.category,100)||null
+  };
+
+  let item:any=null;
+  if(kind==="FOUND"&&!b.pending_id){
     const title=T(b.title,300); if(!title)return J({ok:false,error:"title é obrigatório para FOUND."},400);
-    const area=T(b.area||"CENTRAL",80);
-    dedup=await findDup(title,area);
-    if(dedup){
-      item=dedup.item;
-      await audit(item.id,actor,"agent_event_deduplicated",null,{
-        idempotency_key:idem,kind,source_title:title,merged_into:item.id,similarity:dedup.score,build:BUILD
-      });
-      const ev=await evidence(item,actor,kind,{...b,note:"Evento semelhante condensado na pendência existente."},auth);
-      return J({ok:true,deduplicated:true,merged_into:item.id,similarity:dedup.score,item,evidence:ev,build:BUILD},200);
+    const sourceSystem=T(b.source_system||"MANUAL",100);
+    if(sourceRef){
+      const same=await db(MASTER+"?source_system=eq."+encodeURIComponent(sourceSystem)+"&source_ref=eq."+encodeURIComponent(sourceRef)+"&select=*&limit=1");
+      if(same?.[0])return J({ok:true,deduplicated:true,reason:"SOURCE_IDENTITY",merged_into:same[0].pending_id,item:{...same[0],public_status:publicStatus(same[0])},build:BUILD});
     }
-    const id="PV2-"+Date.now().toString(36).toUpperCase()+"-"+crypto.randomUUID().slice(0,6).toUpperCase();
+    const category=T(b.category||"OPERACIONAL",80).toUpperCase();
+    const responsible=T(b.responsible||"",180)||null;
+    const dup=await findDup(title,category,responsible||"");
+    if(dup)return J({ok:true,deduplicated:true,reason:"SEMANTIC",merged_into:dup.item.pending_id,similarity:dup.score,item:{...dup.item,public_status:publicStatus(dup.item)},build:BUILD});
+
     const row={
-      id,section:T(b.section||"task",50),item_type:"pendencia_viva",
-      area, title,description:T(b.description),owner:T(b.owner||"",180),
-      operational_owner:T(b.operational_owner||actor,180),priority:T(b.priority||"P1",20),
-      status:"Não iniciado",note:T(b.note),next_step:T(b.next_step||"Triar pendência criada automaticamente.",4000),
-      blocker:"",updated_by:actor,environment:T(b.environment||"CANDIDATE",80),
-      version_label:BUILD,due_date:b.due_date?T(b.due_date,40):null
+      request_id:uuid(b.request_id),budget_code:T(b.budget_code,100)||null,
+      title,description:T(b.description),category,source_system:sourceSystem,source_ref:sourceRef,
+      source_url:T(b.source_url,1200)||null,client_name:T(b.client_name,240)||null,responsible,
+      status:"ABERTO",priority:["P0","P1","P2","P3"].includes(T(b.priority,20))?T(b.priority,20):"P2",
+      blocked:false,block_reason:"",next_action:T(b.next_action||"Triar e definir próxima ação.",4000),
+      next_action_source:T(b.next_action_source||sourceSystem,200),next_action_responsible:T(b.next_action_responsible||responsible||"",180)||null,
+      due_at:b.due_at?T(b.due_at,60):null,confirmation_state:"NAO_REQUERIDA",
+      created_by:actorName,updated_by:actorName,metadata
     };
-    const rows=await db("cc_items",{method:"POST",body:JSON.stringify(row)}); item=rows?.[0]||row;
-  }else{
-    const id=T(b.item_id,120); if(!id)return J({ok:false,error:"item_id é obrigatório."},400);
-    item=(await db("cc_items?id=eq."+encodeURIComponent(id)+"&select=*&limit=1"))?.[0];
-    if(!item)return J({ok:false,error:"Pendência não encontrada."},404);
+    const rows=await db(MASTER,{method:"POST",body:JSON.stringify(row)}); item=rows?.[0]||row;
+    const ev=await appendEvent({pending_id:item.pending_id,event_kind:"FOUND",actor_kind:actorKind,actor_code:actorCode,actor_name:actorName,actor_role:actorRole,correlation_id:correlationId,idempotency_key:idem,source_ref:sourceRef,before_data:{},after_data:item,human_gate:false,metadata});
+    return J({ok:true,build:BUILD,event:"FOUND",item:{...item,public_status:publicStatus(item)},event_record:ev,human_gate:false});
   }
 
-  const old={...item};
-  const patch:any={updated_by:actor,updated_at:new Date().toISOString()};
-  if(kind==="STARTED"){patch.status="Em andamento";patch.blocker="";}
-  if(kind==="BLOCKED"){patch.status="Bloqueado";patch.blocker=T(b.blocker||"Bloqueio identificado pelo agente.",4000)}
-  if(kind==="DEFERRED"){patch.status="Aguardando";if(b.due_date)patch.due_date=T(b.due_date,40);patch.next_step=T(b.next_step||item.next_step||"Retomar na data programada.",4000)}
+  const id=T(b.pending_id,80); if(!uuid(id))return J({ok:false,error:"pending_id válido é obrigatório."},400);
+  item=await getItem(id); if(!item)return J({ok:false,error:"Pendência não encontrada."},404);
+  const before={...item};
+  const now=new Date().toISOString();
+  const patch:any={updated_by:actorName,updated_at:now,last_movement_at:now};
+
+  if(kind==="STARTED"){patch.status="EM_ANDAMENTO";patch.blocked=false;patch.block_reason="";}
+  if(kind==="BLOCKED"){patch.status="BLOQUEADO";patch.blocked=true;patch.block_reason=T(b.block_reason||b.blocker||"Bloqueio identificado.",4000);}
+  if(kind==="DEFERRED"){
+    const date=T(b.due_at||b.due_date,60);
+    const day=date.slice(0,10);
+    patch.status=day===tomorrowISO()?"AMANHA":"AGENDADO";
+    patch.due_at=date||null; patch.blocked=false;
+    if(b.next_action!==undefined)patch.next_action=T(b.next_action,4000);
+  }
   if(kind==="COMPLETED"){
     const needsHuman=b.human_gate!==false||["P0","P1"].includes(String(item.priority||""));
-    patch.status=needsHuman?"Em validação":"Concluído";patch.blocker="";
-    patch.note=T(b.note||item.note,4000);
+    if(needsHuman){patch.status="EM_ANDAMENTO";patch.confirmation_state="REQUER_HUMANO";}
+    else{patch.status="CONCLUIDO";patch.confirmation_state="NAO_REQUERIDA";patch.completed_at=now;}
+    patch.blocked=false;patch.block_reason="";
   }
   if(kind==="HOMOLOGATED"){
-    if(auth.role!=="ADMIN_MASTER_ROGERIO")return J({ok:false,error:"Homologação exige perfil Diretor."},403);
-    patch.status="Concluído";patch.blocker="";patch.approval_ok=true;
+    patch.status="CONCLUIDO";patch.confirmation_state="CONFIRMADA";patch.completed_at=now;patch.blocked=false;patch.block_reason="";
   }
-  if(kind==="REOPENED"){patch.status="Em andamento";patch.blocker=T(b.blocker||"",4000)}
-  if(b.next_step!==undefined)patch.next_step=T(b.next_step,4000);
-  if(b.owner!==undefined)patch.owner=T(b.owner,180);
-  if(b.priority!==undefined)patch.priority=T(b.priority,20);
+  if(kind==="REOPENED"){
+    patch.status="EM_ANDAMENTO";patch.confirmation_state="NAO_REQUERIDA";patch.completed_at=null;patch.blocked=false;patch.block_reason=T(b.block_reason||"",4000);
+  }
+  if(b.next_action!==undefined)patch.next_action=T(b.next_action,4000);
+  if(b.next_action_responsible!==undefined)patch.next_action_responsible=T(b.next_action_responsible,180)||null;
+  if(b.responsible!==undefined)patch.responsible=T(b.responsible,180)||null;
+  if(b.priority!==undefined&&["P0","P1","P2","P3"].includes(T(b.priority,20)))patch.priority=T(b.priority,20);
 
-  if(Object.keys(patch).length>2){
-    const rows=await db("cc_items?id=eq."+encodeURIComponent(item.id),{method:"PATCH",body:JSON.stringify(patch)});
-    item=rows?.[0]||{...item,...patch};
-  }
-  const ev=await evidence(item,actor,kind,b,auth);
-  await audit(item.id,actor,"agent_event",old,{
-    ...item,idempotency_key:idem,kind,build:BUILD,evidence_id:ev?.evidence_id||null
-  });
-  return J({ok:true,build:BUILD,event:kind,item:{...item,public_status:publicStatus(item)},evidence:ev,human_gate:item.status==="Em validação"});
+  const rows=await db(MASTER+"?pending_id=eq."+encodeURIComponent(item.pending_id),{method:"PATCH",body:JSON.stringify(patch)});
+  item=rows?.[0]||{...item,...patch};
+  const humanGate=item.confirmation_state==="REQUER_HUMANO";
+  const ev=await appendEvent({pending_id:item.pending_id,event_kind:kind,actor_kind:actorKind,actor_code:actorCode,actor_name:actorName,actor_role:actorRole,correlation_id:correlationId,idempotency_key:idem,source_ref:sourceRef,before_data:before,after_data:item,human_gate:humanGate,metadata});
+  return J({ok:true,build:BUILD,event:kind,item:{...item,public_status:publicStatus(item)},event_record:ev,human_gate:humanGate});
 }
 function selftest(){
-  type It={id:string,title:string,status:string,priority:string,area:string,due_date?:string,history:any[]};
-  let seq=0;
-  const items:It[]=[];
-  const seen=new Set<string>();
-  const snap=(it:It)=>({...it,history:it.history.map(x=>({...x}))});
-  function emit(kind:string,b:any){
-    const key=String(b.idempotency_key||"");
-    if(seen.has(key)){
-      const it=items.find(x=>x.id===b.item_id)||items[0];
-      return {ok:true,idempotent:true,item:it?snap(it):null};
-    }
-    let it=items.find(x=>x.id===b.item_id);
-    if(kind==="FOUND"&&!it){
-      const dup=items.find(x=>x.area===b.area&&sim(x.title,b.title)>=0.66&&!["Concluído","Cancelado"].includes(x.status));
-      if(dup){
-        dup.history.push({key,kind,dedup:true,source_ref:b.source_ref||null});
-        seen.add(key);
-        return {ok:true,deduplicated:true,merged_into:dup.id,item:snap(dup)};
-      }
-      it={id:"QA-"+(++seq),title:b.title,status:"Não iniciado",priority:b.priority||"P1",area:b.area||"CENTRAL",history:[]};
-      items.push(it);
-    }
-    if(!it)throw Error("item missing");
-    if(kind==="STARTED")it.status="Em andamento";
-    if(kind==="BLOCKED")it.status="Bloqueado";
-    if(kind==="DEFERRED"){it.status="Aguardando";it.due_date=b.due_date}
-    if(kind==="COMPLETED")it.status=(b.human_gate!==false||["P0","P1"].includes(it.priority))?"Em validação":"Concluído";
-    if(kind==="HOMOLOGATED")it.status="Concluído";
-    if(kind==="REOPENED")it.status="Em andamento";
-    it.history.push({key,kind,status:it.status,source_ref:b.source_ref||null});
-    seen.add(key);
-    return {ok:true,item:snap(it)};
-  }
-
-  const a=emit("FOUND",{title:"QA criar pendência manual",area:"CENTRAL",priority:"P2",idempotency_key:"A",source_ref:"manual"});
-  const b=emit("STARTED",{item_id:a.item.id,idempotency_key:"B",source_ref:"agent-run-1"});
-  const c=emit("COMPLETED",{item_id:a.item.id,human_gate:false,idempotency_key:"C",source_ref:"commit:abc"});
-  const d0=emit("FOUND",{title:"QA bloqueio técnico",area:"APP",priority:"P1",idempotency_key:"D0"});
-  const d=emit("BLOCKED",{item_id:d0.item.id,idempotency_key:"D",source_ref:"dependency:api"});
-  const e0=emit("FOUND",{title:"QA atividade amanhã",area:"CENTRAL",priority:"P1",idempotency_key:"E0"});
-  const e=emit("DEFERRED",{item_id:e0.item.id,due_date:"2026-10-03",idempotency_key:"E",source_ref:"agenda:tomorrow"});
-  const f=emit("FOUND",{title:"QA atividade amanha",area:"CENTRAL",priority:"P1",idempotency_key:"F",source_ref:"duplicate-source"});
-  const g0=emit("FOUND",{title:"QA reabrir item concluído",area:"APP",priority:"P2",idempotency_key:"G0",source_ref:"manual"});
-  const g1=emit("COMPLETED",{item_id:g0.item.id,human_gate:false,idempotency_key:"G1",source_ref:"commit:def"});
-  const g=emit("REOPENED",{item_id:g0.item.id,idempotency_key:"G2",source_ref:"bug:reopened"});
-  const h0=emit("FOUND",{title:"QA gate humano",area:"CENTRAL",priority:"P0",idempotency_key:"H0"});
-  const h1=emit("COMPLETED",{item_id:h0.item.id,idempotency_key:"H1",source_ref:"agent:done"});
-  const idemA=emit("STARTED",{item_id:e0.item.id,idempotency_key:"IDEMP",source_ref:"agent:retry"});
-  const idemB=emit("STARTED",{item_id:e0.item.id,idempotency_key:"IDEMP",source_ref:"agent:retry"});
-  const checks={
-    A_create:a.item.status==="Não iniciado",
-    B_auto_started:b.item.status==="Em andamento",
-    C_auto_completed:c.item.status==="Concluído",
-    D_blocked:d.item.status==="Bloqueado",
-    E_deferred:e.item.status==="Aguardando"&&e.item.due_date==="2026-10-03",
-    F_dedup:f.deduplicated===true&&f.merged_into===e0.item.id,
-    G_reopened:g1.item.status==="Concluído"&&g.item.status==="Em andamento",
-    H_history:g.item.history.length===3,
-    I_origin_trace:g.item.history.some(x=>x.source_ref==="commit:def")&&g.item.history.some(x=>x.source_ref==="bug:reopened"),
-    human_gate:h1.item.status==="Em validação",
-    idempotency:idemA.idempotent!==true&&idemB.idempotent===true
+  const agents:any={
+    BIO:{permissions:["READ","CLASSIFY","PROPOSE","CONSOLIDATE"],mode:"HUMAN_SESSION_DELEGATED"},
+    BIO_GESTOR:{permissions:["READ","ANALYZE","PROPOSE"],mode:"READ_ONLY"},
+    CR_ASSERTIVO:{permissions:["READ","CREATE","UPDATE","BLOCK","DEFER","COMPLETE_PROPOSE"],mode:"HUMAN_SESSION_DELEGATED"}
   };
-  return {ok:Object.values(checks).every(Boolean),build:BUILD,checks,synthetic_only:true,production_rows_written:0,synthetic_items:items.map(x=>({id:x.id,title:x.title,status:x.status,events:x.history.length}))};
+  const seen=new Set<string>();
+  const items:any[]=[];
+  function emit(kind:string,b:any){
+    if(seen.has(b.key))return{idempotent:true};
+    const perm=PERM[kind];
+    if(b.agent&&(!agents[b.agent]||agents[b.agent].mode==="READ_ONLY"||!agents[b.agent].permissions.includes(perm)))return{denied:true};
+    seen.add(b.key);
+    if(kind==="FOUND"){const it={id:crypto.randomUUID(),title:b.title,status:"ABERTO",priority:b.priority||"P2",confirmation:"NAO_REQUERIDA",history:[]};it.history.push({kind,source_ref:b.source_ref});items.push(it);return{item:structuredClone(it)}}
+    const it=items.find(x=>x.id===b.id);if(!it)return{missing:true};
+    if(kind==="STARTED")it.status="EM_ANDAMENTO";
+    if(kind==="BLOCKED")it.status="BLOQUEADO";
+    if(kind==="DEFERRED")it.status="AMANHA";
+    if(kind==="COMPLETED"){const gate=b.gate!==false||["P0","P1"].includes(it.priority);if(gate){it.status="EM_ANDAMENTO";it.confirmation="REQUER_HUMANO"}else it.status="CONCLUIDO"}
+    if(kind==="REOPENED"){it.status="EM_ANDAMENTO";it.confirmation="NAO_REQUERIDA"}
+    it.history.push({kind,source_ref:b.source_ref});return{item:structuredClone(it)};
+  }
+  const a=emit("FOUND",{key:"a",agent:"CR_ASSERTIVO",title:"QA base",priority:"P2",source_ref:"qa:1"});
+  const b=emit("STARTED",{key:"b",agent:"CR_ASSERTIVO",id:a.item.id,source_ref:"qa:2"});
+  const c=emit("COMPLETED",{key:"c",agent:"CR_ASSERTIVO",id:a.item.id,gate:false,source_ref:"qa:3"});
+  const p0=emit("FOUND",{key:"p0",agent:"CR_ASSERTIVO",title:"QA gate",priority:"P0"});
+  const gate=emit("COMPLETED",{key:"g",agent:"CR_ASSERTIVO",id:p0.item.id,gate:false});
+  const idem1=emit("REOPENED",{key:"idem",agent:"CR_ASSERTIVO",id:a.item.id});
+  const idem2=emit("REOPENED",{key:"idem",agent:"CR_ASSERTIVO",id:a.item.id});
+  const bioWrite=emit("FOUND",{key:"bio",agent:"BIO",title:"não deve gravar"});
+  const gestorWrite=emit("FOUND",{key:"gestor",agent:"BIO_GESTOR",title:"não deve gravar"});
+  const checks={
+    create:a.item.status==="ABERTO",
+    start:b.item.status==="EM_ANDAMENTO",
+    complete_no_gate:c.item.status==="CONCLUIDO",
+    p0_human_gate:gate.item.confirmation==="REQUER_HUMANO"&&gate.item.status==="EM_ANDAMENTO",
+    idempotency:idem1.idempotent!==true&&idem2.idempotent===true,
+    bio_write_denied:bioWrite.denied===true,
+    bio_gestor_read_only:gestorWrite.denied===true,
+    origin_trace:a.item.history[0].source_ref==="qa:1",
+    no_production_write:true
+  };
+  return {ok:Object.values(checks).every(Boolean),build:BUILD,baseline:BASELINE,checks,synthetic_only:true,production_rows_written:0,candidate_rows_written:0};
 }
 
 Deno.serve(async(req:Request)=>{
   if(req.method==="OPTIONS")return new Response("ok",{headers:{...BASE,"content-type":"text/plain"}});
   const u=new URL(req.url),api=(u.searchParams.get("api")||"health").toLowerCase();
   try{
-    if(api==="health")return J({ok:true,build:BUILD,mode:"ISOLATED_CANDIDATE",writes:"AUTH_REQUIRED",production_router_touched:false});
+    if(api==="health")return J({ok:true,build:BUILD,baseline:BASELINE,mode:"ISOLATED_CANDIDATE",store:[MASTER,EVENTS],agent_bridge:"HUMAN_SESSION_DELEGATED",writes:"AUTH_AND_PERMISSION_REQUIRED",production_router_touched:false});
     if(api==="selftest")return J(selftest());
-    if(api==="board"&&req.method==="GET")return readBoard(req,u);
+    if(api==="summary")return summary();
+    if(api==="technical-health")return technicalHealth();
+    if(api==="board"&&req.method==="GET")return board(req,u);
     if(api==="event"&&req.method==="POST")return handleEvent(req);
     return J({ok:false,error:"Rota não encontrada."},404);
   }catch(e){return J({ok:false,error:e instanceof Error?e.message:String(e),build:BUILD},500)}
