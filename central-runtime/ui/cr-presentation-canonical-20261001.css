@@ -1,0 +1,102 @@
+/* CONSTRU-REI — Apresentação Institucional alinhada à Central homologada
+   2026-10-01 • CSS override somente visual. */
+:root{
+  --navy:#031b46!important;
+  --blue:#075bd8!important;
+  --blue2:#0877f9!important;
+  --gold:#ffc514!important;
+  --paper:#eaf6fc!important;
+  --ink:#07165b!important;
+  --mut:#6d8299!important;
+  --line:#c9e0ef!important;
+  --card:#ffffff!important;
+  --shadow:0 14px 34px rgba(5,42,91,.16)!important;
+}
+body{background:#eaf6fc!important;color:#17315d!important}
+.topbar{
+  min-height:58px!important;height:auto!important;
+  background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important;
+  border-bottom:1px solid rgba(255,197,20,.34)!important;
+  box-shadow:0 6px 18px rgba(5,42,91,.18)!important;
+}
+.brand img{background:#fff!important;border-radius:9px!important}
+.brand small{color:#c7dbed!important}
+.chapter-nav a{color:#d7e8f5!important}
+.chapter-nav a:hover{background:rgba(255,255,255,.12)!important;color:#fff!important}
+button,.tool{
+  border:1px solid rgba(255,255,255,.24)!important;
+  background:rgba(255,255,255,.10)!important;
+  color:#fff!important;
+  border-radius:8px!important;
+  font-weight:800!important;
+  transition:transform .12s ease,background .12s ease,box-shadow .12s ease!important;
+}
+button:hover,.tool:hover{transform:translateY(-1px)!important;background:rgba(255,255,255,.17)!important}
+.tool.gold{
+  background:linear-gradient(180deg,#ffd84d,#ffc514)!important;
+  border-color:#e6ac00!important;
+  color:#031b46!important;
+  box-shadow:0 4px 9px rgba(226,173,0,.20)!important;
+}
+.drawer{background:#f5fbff!important;color:#17315d!important;border-color:#c9e0ef!important}
+.drawer a{color:#17315d!important}
+.drawer a:hover{background:#e6f3fb!important;color:#07165b!important}
+.page-progress{background:#0877f9!important}
+.deck{background:#eaf6fc!important}
+.slide{
+  background:#eaf6fc!important;
+  color:#17315d!important;
+}
+.slide-inner{
+  background:#fff!important;
+  border:1px solid #c9e0ef!important;
+  border-radius:14px!important;
+  box-shadow:0 14px 34px rgba(5,42,91,.16)!important;
+}
+.slide-top{border-bottom-color:#c9e0ef!important}
+.page-no{color:#6d8299!important}
+.brand-mini{color:#075bd8!important}
+.eyebrow{color:#075bd8!important}
+.title-block h1,.title-block h2,.title-block h3{color:#07165b!important}
+.text{color:#17315d!important}
+.label{color:#075bd8!important}
+.metric,.callout,.statement,.cr38-k{
+  background:#f5fbff!important;
+  border:1px solid #c9e0ef!important;
+  border-radius:11px!important;
+  box-shadow:0 4px 14px rgba(18,69,112,.075)!important;
+  color:#17315d!important;
+}
+.metric b,.callout b,.statement b,.cr38-k b{color:#07165b!important}
+.callout{border-left:4px solid #0877f9!important}
+.statement{border-left:4px solid #ffc514!important}
+.chapter{
+  background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important;
+  color:#fff!important;
+  border:1px solid rgba(255,197,20,.34)!important;
+}
+.chapter .eyebrow,.chapter .label{color:#ffc514!important}
+.chapter h1,.chapter h2,.chapter h3,.chapter .text{color:#fff!important}
+.cr38-livebox{
+  background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important;
+  color:#eef7ff!important;
+  border:1px solid rgba(255,197,20,.34)!important;
+  border-radius:11px!important;
+}
+.cr38-dot{background:#0daf67!important;box-shadow:0 0 12px rgba(13,175,103,.55)!important}
+.slide-foot{color:#6d8299!important;border-top-color:#c9e0ef!important}
+.mobile-nav{
+  background:linear-gradient(180deg,#05265f,#031b46)!important;
+  border-top:1px solid rgba(255,197,20,.25)!important;
+  box-shadow:0 -5px 18px rgba(5,42,91,.18)!important;
+}
+.mobile-nav button,.mobile-nav a{color:#fff!important}
+.mobile-nav a:nth-child(2){color:#ffc514!important}
+@media(max-width:900px){
+  .topbar{min-height:54px!important}
+  .slide-inner{border-radius:11px!important}
+}
+@media print{
+  body,.deck,.slide{background:#fff!important}
+  .slide-inner{box-shadow:none!important}
+}
