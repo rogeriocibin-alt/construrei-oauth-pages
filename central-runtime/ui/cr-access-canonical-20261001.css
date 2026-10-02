@@ -346,3 +346,49 @@
   background:#f5fbff!important;color:var(--cr-access-text)!important;border:1px solid var(--cr-access-line)!important;
   border-radius:9px!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;
 }
+
+
+/* CR ACCESS BOARD NORMALIZATION R3 */
+/* Wizy / Éder — boards operacionais */
+#wizy .filters,#eder .filters{margin:0 0 9px!important}
+#wizy .board-items,#eder .board-items{display:grid!important;gap:9px!important}
+#wizy .item,#eder .item{
+  background:#fff!important;color:var(--cr-access-text)!important;border:1px solid var(--cr-access-line)!important;
+  border-radius:11px!important;box-shadow:var(--cr-access-shadow)!important;
+}
+#wizy .itemhead,#eder .itemhead{display:flex!important;gap:10px!important;align-items:flex-start!important}
+#wizy .code,#eder .code{color:var(--cr-access-blue-2)!important;font-weight:900!important;letter-spacing:.055em!important}
+#wizy .itemtitle,#eder .itemtitle{color:var(--cr-access-ink)!important;font-weight:850!important}
+#wizy .itemmeta,#eder .itemmeta{display:flex!important;gap:5px!important;flex-wrap:wrap!important;margin-top:6px!important}
+#wizy .badge,#eder .badge{
+  display:inline-flex!important;align-items:center!important;gap:4px!important;
+  min-height:22px!important;padding:3px 7px!important;border-radius:999px!important;
+  background:#f5fbff!important;border:1px solid var(--cr-access-line)!important;color:var(--cr-access-text)!important;
+}
+#wizy .badge.p0,#eder .badge.p0{background:#fff1f4!important;border-color:#ffc4cf!important;color:#b71735!important}
+#wizy .progress,#eder .progress{
+  height:7px!important;border-radius:999px!important;background:#dfeef7!important;border:0!important;overflow:hidden!important;
+}
+#wizy .progress>span,#eder .progress>span{display:block!important;height:100%!important;background:linear-gradient(90deg,var(--cr-access-blue),var(--cr-access-blue-2))!important}
+
+/* Indicadores comuns */
+#health .lab,#context .lab,#technical .lab,#admin .lab{color:var(--cr-access-muted)!important}
+#health .val,#context .val,#technical .val,#admin .val{color:var(--cr-access-ink)!important}
+#health .dot,#context .dot,#wizy .dot,#eder .dot{box-shadow:none!important}
+#health .dot.ok,#context .dot.ok,#wizy .dot.ok,#eder .dot.ok{background:var(--cr-access-success)!important}
+#health .dot.warn,#context .dot.warn,#wizy .dot.warn,#eder .dot.warn{background:var(--cr-access-warning)!important}
+#health .dot.risk,#context .dot.risk,#wizy .dot.risk,#eder .dot.risk{background:var(--cr-access-danger)!important}
+
+/* Painéis autenticados: mantém a mesma linguagem sem tocar em permissões. */
+#technical #crEderPanel,#admin #crRogerioPanel{min-width:0!important}
+#technical #crEderItems,#admin #crRogerioItems{display:grid!important;gap:9px!important}
+#technical #crEderItems>.card,#admin #crRogerioItems>.card{
+  background:#fff!important;border:1px solid var(--cr-access-line)!important;border-radius:11px!important;
+  box-shadow:var(--cr-access-shadow)!important;color:var(--cr-access-text)!important;
+}
+
+@media(max-width:560px){
+  #wizy .itemhead,#eder .itemhead{gap:7px!important}
+  #wizy .item,#eder .item{padding:11px!important}
+  #wizy .itemmeta,#eder .itemmeta{gap:4px!important}
+}
