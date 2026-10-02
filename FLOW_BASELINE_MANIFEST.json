@@ -9,8 +9,8 @@
   "files": {
     "central_home": {
       "path": "production/central-homologada-20261001/index.html",
-      "sha": "d40a9d65ed3ac13836423dec335cb656d17c49c9",
-      "scope": "LOCKED"
+      "sha": "7a65be2beaafa2da09d372ecd695e6ab30f46d91",
+      "scope": "LOCKED_WITH_HOMOLOGACAO_CANONICAL"
     },
     "shared_css": {
       "path": "production/flow-canonical-20261001/_shared/cr-flow-canonical-20261001.css",
@@ -123,5 +123,16 @@
     "official_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/app-canonical-20261001/",
     "rollback_path": "central-runtime/app/",
     "visual_status": "APPROVED"
+  },
+  "homologacao": {
+    "status": "CANONICAL_APPROVED",
+    "approved_on": "2026-10-01",
+    "production_path": "production/central-homologada-20261001/index.html#homolog",
+    "production_blob": "7a65be2beaafa2da09d372ecd695e6ab30f46d91",
+    "source_candidate": "preview/homologacao-color-match-candidate-20261001/index.html",
+    "source_commit": "a770ca33328b836ecbbd2f8751665a1735cba8a0",
+    "link_registry_count": 38,
+    "visual_identity": "CENTRAL_CANONICAL_COLOR_MATCH",
+    "promotion_scope": "HOMOLOGACAO_ONLY"
   }
 }
