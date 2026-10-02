@@ -213,3 +213,5 @@ Scope: documentation + remaining technical modules + protected Éder/Rogério pa
 #docs .crv2-table table{background:#fff!important;color:var(--crrm-text)!important}
 #docs .crv2-table th{background:#edf7fc!important;color:var(--crrm-ink)!important;border-color:var(--crrm-line)!important}
 #docs .crv2-table td{background:#fff!important;color:var(--crrm-text)!important;border-color:var(--crrm-line)!important}
+
+:is(#technical,#admin) [hidden]{display:none!important}
