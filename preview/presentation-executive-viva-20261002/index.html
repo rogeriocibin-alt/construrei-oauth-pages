@@ -283,16 +283,24 @@ h1,h2{margin:8px 0 0;color:#082a49;letter-spacing:-.045em;line-height:.98}h1{fon
 </div></section>
 
 <section class="slide" id="s17" data-page="17"><div class="inner">
-<div class="topline"><span>17 / 20</span><span>O QUE MUDA PARA A DIRETORIA</span></div>
-<div class="kicker">DE ACOMPANHAR TAREFAS PARA LER O NEGÓCIO</div>
-<h2>Menos caça à informação. Mais capacidade de decisão.</h2>
-<div class="grid4">
-<div class="card"><div class="label">NEGÓCIO</div><h3 style="margin-top:8px">Receita, margem, tíquete e clientes.</h3><p class="muted">A evolução financeira deixa de ser uma memória anual.</p></div>
-<div class="card"><div class="label">OPERAÇÃO</div><h3 style="margin-top:8px">O que está travando agora.</h3><p class="muted">Andamento, pagamento, acerto e retorno em uma leitura única.</p></div>
-<div class="card"><div class="label">QUALIDADE</div><h3 style="margin-top:8px">Dado bom vira confiança.</h3><p class="muted">Cobertura, evidência e divergência aparecem como parte da gestão.</p></div>
-<div class="card"><div class="label">EVOLUÇÃO</div><h3 style="margin-top:8px">O sistema melhora sem apagar o que funcionava.</h3><p class="muted">Checkpoints, identidade canônica e desenvolvimento por gates.</p></div>
+<div class="topline"><span>17 / 20</span><span>RADAR EXECUTIVO</span></div>
+<div class="kicker">MÉTRICAS MACRO DO NEGÓCIO • DADOS VIVOS</div>
+<h2>A diretoria lê crescimento, eficiência, carteira e carga operacional em uma tela.</h2>
+<div class="grid4" style="margin-top:18px">
+<div class="metric"><b id="macroGrossGrowth">—</b><span>receita vs mesmo período</span><small id="macroGrossGrowthNote">comparação anual equivalente</small></div>
+<div class="metric"><b id="macroProfitGrowth">—</b><span>lucro vs mesmo período</span><small>comparação anual equivalente</small></div>
+<div class="metric"><b id="macroTicketGrowth">—</b><span>tíquete vs mesmo período</span><small>comparação anual equivalente</small></div>
+<div class="metric"><b id="macroMonthlyGross">—</b><span>receita média mensal</span><small>meses com dados no período atual</small></div>
+<div class="metric"><b id="macroGrossPerClient">—</b><span>receita por cliente</span><small>faturamento / clientes identificados</small></div>
+<div class="metric"><b id="macroProfitPerWork">—</b><span>lucro por serviço</span><small>lucro / volume de serviços</small></div>
+<div class="metric"><b id="macroOpenTotal">—</b><span>carga operacional aberta</span><small>andamento + pagamento + acerto + retornos</small></div>
+<div class="metric"><b id="macroReturnRate">—</b><span>retornos / serviços do ano</span><small>indicador operacional, não financeiro</small></div>
 </div>
-<div class="foot"><span>GESTÃO</span><span>Informação organizada em decisão</span></div>
+<div class="grid2" style="margin-top:12px">
+<div class="card"><div class="label">LEITURA EXECUTIVA AUTOMÁTICA</div><p id="macroRead" class="muted" style="font-size:13px;line-height:1.5;margin:9px 0 0">Carregando leitura macro…</p></div>
+<div class="card"><div class="label">PERÍODO E CARTEIRA</div><div class="statrow"><span>Período comparável</span><b id="macroPeriod">—</b></div><div class="statrow"><span>Maior cliente • participação nos serviços</span><b id="macroTop1">—</b></div><div class="statrow"><span>Top 5 clientes • participação nos serviços</span><b id="macroTop5">—</b></div><div class="statrow"><span>Atualização automática</span><b id="macroRefresh">—</b></div></div>
+</div>
+<div class="foot"><span>GESTÃO</span><span class="dataStamp">dados vivos</span></div>
 </div></section>
 
 <section class="slide dark" id="s18" data-page="18"><div class="inner">
@@ -342,6 +350,37 @@ const pct=n=>(Number(n)||0).toLocaleString('pt-BR',{minimumFractionDigits:1,maxi
 const num=n=>new Intl.NumberFormat('pt-BR').format(Number(n)||0);
 const esc=s=>String(s??'—').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const compactMoney=c=>{const v=(Number(c)||0)/100,a=Math.abs(v);if(a>=1e6)return 'R$ '+(v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})+' mi';if(a>=1e3)return 'R$ '+(v/1e3).toLocaleString('pt-BR',{maximumFractionDigits:0})+' mil';return brl(c)};
+const signedPct=n=>n==null||!Number.isFinite(Number(n))?'—':(Number(n)>0?'+':'')+pct(Number(n));
+const safeGrowth=(cur,prev)=>prev==null||Number(prev)===0||cur==null?null:Math.round(((Number(cur)-Number(prev))/Math.abs(Number(prev)))*10000)/100;
+function periodTotals(months,cutoff){
+  const out={gross_cents:0,cost_cents:0,profit_cents:0,cases:0};
+  for(const x of (Array.isArray(months)?months:[])){const m=Number(x?.month||0);if(!m||m>cutoff)continue;out.gross_cents+=Number(x?.gross_cents||0);out.cost_cents+=Number(x?.cost_cents||0);out.profit_cents+=Number(x?.profit_cents||0);out.cases+=Number(x?.cases||0)}
+  out.ticket_cents=out.cases?Math.round(out.gross_cents/out.cases):0;return out
+}
+function deriveMacro(d){
+  const y=Number(d.current_year||0),ys=d.years||{},o=d.overview||{},life=d.lifetime||{},cur=ys[String(y)]||{},prev=ys[String(y-1)]||null;
+  const cms=Array.isArray(cur.months)?cur.months:[],active=cms.filter(x=>Number(x?.gross_cents||0)||Number(x?.cost_cents||0)||Number(x?.profit_cents||0)||Number(x?.cases||0));
+  const cutoff=active.length?Math.max(...active.map(x=>Number(x.month||0))):0;
+  const ct=cutoff?periodTotals(cms,cutoff):null,pt=cutoff&&prev?periodTotals(prev.months,cutoff):null;
+  const comparable=!!(ct&&pt&&(Number(pt.gross_cents||0)||Number(pt.cases||0)));
+  const activeMonths=cutoff?active.filter(x=>Number(x.month||0)<=cutoff).length:0;
+  const top=Array.isArray(d.top_clients)?d.top_clients:[],openTotal=Number(o.in_progress||0)+Number(o.awaiting_payment||0)+Number(o.awaiting_settlement||0)+Number(o.returns||0);
+  const mon=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  return{
+    year:y,cutoff,periodLabel:cutoff?('jan–'+mon[Math.max(0,cutoff-1)]+'/'+y):('base '+y),
+    grossGrowth:comparable?safeGrowth(ct.gross_cents,pt.gross_cents):null,
+    profitGrowth:comparable?safeGrowth(ct.profit_cents,pt.profit_cents):null,
+    ticketGrowth:comparable?safeGrowth(ct.ticket_cents,pt.ticket_cents):null,
+    monthlyGross:activeMonths?Math.round(ct.gross_cents/activeMonths):null,
+    grossPerClient:Number(o.clients_count||0)?Math.round(Number(o.gross_cents||0)/Number(o.clients_count)):null,
+    profitPerWork:Number(o.total_works||0)?Math.round(Number(o.profit_cents||0)/Number(o.total_works)):null,
+    openTotal,
+    returnRate:Number(o.total_works||0)?Math.round(Number(o.returns||0)/Number(o.total_works)*10000)/100:null,
+    top1Share:Number(life.works||0)&&top[0]?Math.round(Number(top[0].cases||0)/Number(life.works)*10000)/100:null,
+    top5Share:Number(life.works||0)?Math.round(top.slice(0,5).reduce((a,x)=>a+Number(x?.cases||0),0)/Number(life.works)*10000)/100:null,
+    comparable
+  }
+}
 function statusClass(s){s=String(s||'').toUpperCase();return s.includes('OPERACIONAL')||s.includes('GREEN')||s.includes('HOMOLOG')?'OPERACIONAL':s.includes('VALIDA')||s.includes('AMBER')||s.includes('PREPARAD')?'EM EVOLUÇÃO':'ATIVO'}
 function render(d){
   const y=d.current_year||'', years=d.available_years||[], o=d.overview||{}, life=d.lifetime||{}, dev=d.development||{}, a=d.acertos||{};
@@ -359,6 +398,12 @@ function render(d){
   q('clientGrid').innerHTML=top.slice(0,12).map(x=>'<div class="client"><b>'+esc(x.name)+'</b><span>'+esc(num(x.cases))+' registro(s) na base</span></div>').join('')||'<div class="card">Base de clientes aguardando leitura.</div>';
   q('opProgress').textContent=num(o.in_progress);q('opPay').textContent=num(o.awaiting_payment);q('opSettle').textContent=num(o.awaiting_settlement);q('opReturns').textContent=num(o.returns);
   q('activeWorks').innerHTML=(d.active||[]).slice(0,6).map(x=>'<div class="statrow"><span>'+esc((x.case||'—')+' • '+String(x.title||'Obra').slice(0,70))+'</span><b>'+esc(x.status||'')+'</b></div>').join('')||'<div class="muted">Sem obras abertas para exibir.</div>';
+  const macro=deriveMacro(d);
+  q('macroGrossGrowth').textContent=signedPct(macro.grossGrowth);q('macroProfitGrowth').textContent=signedPct(macro.profitGrowth);q('macroTicketGrowth').textContent=signedPct(macro.ticketGrowth);
+  q('macroMonthlyGross').textContent=macro.monthlyGross==null?'—':compactMoney(macro.monthlyGross);q('macroGrossPerClient').textContent=macro.grossPerClient==null?'—':compactMoney(macro.grossPerClient);q('macroProfitPerWork').textContent=macro.profitPerWork==null?'—':compactMoney(macro.profitPerWork);
+  q('macroOpenTotal').textContent=num(macro.openTotal);q('macroReturnRate').textContent=macro.returnRate==null?'—':pct(macro.returnRate);q('macroPeriod').textContent=macro.periodLabel;q('macroTop1').textContent=macro.top1Share==null?'—':pct(macro.top1Share);q('macroTop5').textContent=macro.top5Share==null?'—':pct(macro.top5Share);
+  q('macroRefresh').textContent=(d.sources?.refresh_seconds?num(d.sources.refresh_seconds)+' s':'automática');q('macroGrossGrowthNote').textContent=macro.comparable?('meses equivalentes • '+macro.periodLabel):'aguardando base mensal comparável';
+  const macroBits=[];if(macro.grossGrowth!=null)macroBits.push('receita '+(macro.grossGrowth>=0?'cresceu ':'recuou ')+pct(Math.abs(macro.grossGrowth))+' contra o mesmo período do ano anterior');if(macro.monthlyGross!=null)macroBits.push('média mensal de '+compactMoney(macro.monthlyGross));if(macro.grossPerClient!=null)macroBits.push('receita média de '+compactMoney(macro.grossPerClient)+' por cliente identificado');macroBits.push(num(macro.openTotal)+' itens na carga operacional aberta');if(macro.returnRate!=null)macroBits.push('retornos equivalem a '+pct(macro.returnRate)+' do volume anual identificado');q('macroRead').textContent=(macroBits.length?macroBits.join(' • '):'Base gerencial ainda sem período comparável suficiente.')+'.';
   const fs=dev.flow_summary||{};q('flowOperational').textContent=num(fs.operational);q('flowValidation').textContent=num(fs.validation);q('flowTotal').textContent='de '+num(fs.total)+' fluxos';q('evidenceCoverage').textContent=pct(dev.evidence_coverage_percent);q('docsCount').textContent=num(dev.docs_count);q('snapshotsCount').textContent=num(dev.snapshots_count);
   q('trackerIndex').textContent=pct(dev.tracker_status_index);q('trackerBar').style.setProperty('--w',Math.max(0,Math.min(100,Number(dev.tracker_status_index||0)))+'%');q('releaseName').textContent=dev.release||'—';q('releaseBuild').textContent=dev.build||'';
   q('flowStatusGrid').innerHTML=(dev.flows||[]).map(f=>'<div class="flow"><b>'+esc((f.code||'')+' • '+(f.title||''))+'</b><span>'+esc(f.status||'')+'</span><em>'+esc(statusClass(f.status))+'</em></div>').join('')||'<div class="card">Status dos fluxos aguardando leitura da Central.</div>';
