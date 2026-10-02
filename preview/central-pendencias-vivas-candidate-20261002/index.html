@@ -2975,68 +2975,7 @@ window.crRenderTechnicalRecovery=renderTech;window.crRefreshCentralKpis=refreshK
 <script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><script src="https://pagey.site/scripts/banner.js?subdomain=wood-jade-crane&tier=free" defer></script>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><script src="https://pagey.site/scripts/banner.js?subdomain=zenith-cotton-cinder&tier=free" defer></script>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><script src="https://pagey.site/scripts/banner.js?subdomain=grove-rush-stone&tier=free" defer></script>
-<script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><script id="cr-home-structural-lock">
-(function(){
-'use strict';
-if(window.__CR_HOME_STRUCTURAL_LOCK)return;window.__CR_HOME_STRUCTURAL_LOCK=true;
-var EXEC='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-executivo-summary-candidate-20261001';
-var CORE='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=public-summary';
-var busy=false,lastData=null,lastGap='—',timer=null;
-function e(v){return String(v==null?'—':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
-function brl(v){return typeof v==='number'?v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}):'—'}
-function val(x){return x&&x.status==='ok'&&x.value!=null?x.value:'—'}
-function detail(x,amountLabel){
- if(!x)return 'Dado não carregado';
- if(x.status==='ok'){
-   if(x.amount!=null)return brl(Number(x.amount))+' '+amountLabel;
-   return x.note||'Fonte operacional validada';
- }
- return x.note||'Não disponível nesta etapa';
-}
-function card(icon,label,value,detailText,status,tone){
- return '<div class="cr-op-card '+tone+'"><div class="cr-op-top"><span class="cr-op-icon">'+e(icon)+'</span><span class="cr-op-label">'+e(label)+'</span></div><div class="cr-op-value">'+e(value)+'</div><div class="cr-op-detail">'+e(detailText)+'</div><div class="cr-op-status">'+e(status)+'</div></div>'
-}
-function paint(){
- var h=document.getElementById('kpis');if(!h||busy)return;
- var o=lastData&&lastData.operacao?lastData.operacao:{};
- busy=true;
- h.innerHTML=
-  card('🔧','Serviços em andamento',val(o.servicos_em_andamento),detail(o.servicos_em_andamento,'em execução'),'Em execução','blue')+
-  card('▣','Aguardando pagamento',val(o.aguardando_pagamento),detail(o.aguardando_pagamento,'em aberto'),'Serviços concluídos','green')+
-  card('◷','Aguardando acerto',val(o.aguardando_acerto),detail(o.aguardando_acerto,'base considerada'),'Medições / ajustes','amber')+
-  card('▦','Visitas do dia',val(o.visitas_hoje),detail(o.visitas_hoje,''),'Agendamentos','purple')+
-  card('▤','F00 pendentes',val(o.f00_pendentes),detail(o.f00_pendentes,''),'Aguardando tratamento','red')+
-  card('◉','F01 pendentes',val(o.f01_pendentes),detail(o.f01_pendentes,''),'Aguardando resposta','blue')+
-  card('▥','Orçamentos',val(o.orcamentos),detail(o.orcamentos,''),'Envio / aprovação','orange')+
-  card('!','Alertas operacionais',lastGap,'Gaps críticos disponíveis na fonte técnica','Verificar agora','red');
- var up=document.getElementById('crHomeUpdated');
- if(up)up.textContent='Última atualização: '+new Date().toLocaleString('pt-BR');
- busy=false;
-}
-async function refresh(){
- try{
-  var rs=await Promise.allSettled([
-   fetch(EXEC+'?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),
-   fetch(CORE+'&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()})
-  ]);
-  if(rs[0].status==='fulfilled'&&rs[0].value&&rs[0].value.ok)lastData=rs[0].value;
-  if(rs[1].status==='fulfilled'&&rs[1].value&&rs[1].value.metrics&&rs[1].value.metrics.gaps_blocking!=null)lastGap=rs[1].value.metrics.gaps_blocking;
- }catch(_){}
- paint();
-}
-function init(){
- var h=document.getElementById('kpis');if(!h)return;
- refresh();
- new MutationObserver(function(){
-  if(busy)return;
-  clearTimeout(timer);
-  timer=setTimeout(paint,60);
- }).observe(h,{childList:true,subtree:false});
- setInterval(refresh,30000);
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})();
-</script><script id="cr-phase5-canonical-back">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="c30e1736-d414-4785-9c45-5976ed708007"></script><script id="cr-phase5-canonical-back">
 (function(){
 'use strict';
 if(window.__crPhase5Back)return;window.__crPhase5Back=true;
@@ -3257,7 +3196,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 <style id="cr-executive-live-v3-style">
 #crExecutiveLayerV3{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
-#crExecutiveLayerV3 .card h3{margin:0 0 6px;color:#0a3767}
+#crExecutiveLayerV3 .card{background:#f8fbff!important;color:#0a3767!important;border:1px solid #dbe7f4!important}\n#crExecutiveLayerV3 .card h3{margin:0 0 6px;color:#0a3767}
 #crExecutiveLayerV3 .cr-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}
 #crExecutiveLayerV3 .cr-mini{border:1px solid #d9e7f5;border-radius:10px;padding:8px;background:#f8fbff}
 #crExecutiveLayerV3 .cr-mini b{display:block;font-size:17px;color:#0a3767}
@@ -3270,9 +3209,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 'use strict';
 if(window.__crExecutiveV3)return;window.__crExecutiveV3=true;
 var API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-vivas-candidate-20261002';
-var EXEC='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=public-summary';
+var EXEC='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-executivo-summary-candidate-20261001';
 function e(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
-function v(x){return x===0?'0':(x==null?'—':x)}
+function v(x){return x===0?'0':(x==null?'—':x)}\nfunction mv(x){return x&&x.status==='ok'&&x.value!=null?x.value:null}\nfunction md(x,label){if(!x)return 'Dado não carregado';if(x.status==='ok'){if(x.amount!=null)return Number(x.amount).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})+' '+label;return x.note||'Fonte operacional validada'}return x.note||'FONTE AINDA NÃO INTEGRADA'}
 function opCard(icon,label,value,detail,status,tone){return '<div class="cr-op-card '+tone+'"><div class="cr-op-top"><span class="cr-op-icon">'+icon+'</span><span class="cr-op-label">'+e(label)+'</span></div><div class="cr-op-value">'+e(v(value))+'</div><div class="cr-op-detail">'+e(detail)+'</div><div class="cr-op-status">'+e(status)+'</div></div>'}
 function src(summary,code){return (summary.sources||[]).find(function(x){return x.source_code===code})||{status:'NAO_INTEGRADO'}}
 function ensureLayer(){
@@ -3291,10 +3230,10 @@ async function refresh(){
  var o=ex&&ex.operacao?ex.operacao:{},m=sm.metrics||{},agenda=src(sm,'AGENDA'),gc=src(sm,'GESTAOCLICK');
  var k=document.getElementById('kpis');
  if(k)k.innerHTML=
-  opCard('🔧','Serviços em andamento',o.servicos_em_andamento,'Leitura real da Central','Em execução','blue')+
-  opCard('▣','Aguardando pagamento',o.aguardando_pagamento,'Leitura real da Central','Financeiro','green')+
-  opCard('▦','Visitas',o.visitas_hoje,'Agendamentos do dia','Agenda','purple')+
-  opCard('▥','Orçamentos',o.orcamentos,'Leitura disponível na Central','Envio / aprovação','orange')+
+  opCard('🔧','Serviços em andamento',mv(o.servicos_em_andamento),md(o.servicos_em_andamento,'em execução'),'Em execução','blue')+
+  opCard('▣','Aguardando pagamento',mv(o.aguardando_pagamento),md(o.aguardando_pagamento,'em aberto'),'Financeiro','green')+
+  opCard('▦','Visitas',mv(o.visitas_hoje),md(o.visitas_hoje,''),'Agenda','purple')+
+  opCard('▥','Orçamentos',mv(o.orcamentos),md(o.orcamentos,''),'Envio / aprovação','orange')+
   opCard('◷','Agenda de amanhã',agenda.status==='OK'?m.tomorrow:null,agenda.status==='OK'?'Fonte Agenda conectada':'FONTE AINDA NÃO INTEGRADA',agenda.status,'amber')+
   opCard('↶','Pendências de ontem',m.overdue,'Banco Mestre candidato','Atrasadas / vencidas','red')+
   opCard('●','Pendências vivas',m.total_live,'Banco Mestre candidato','Gestão viva','blue')+
