@@ -278,3 +278,71 @@
   #pendapp .card,#wizy .card,#eder .card,#context .card,#docs .card,#meeting .card,
   #presentation .card,#academy .card,#health .card,#technical .card,#admin .card{padding-top:11px!important;padding-bottom:11px!important}
 }
+
+
+/* CR ACCESS CUSTOM COMPONENT NORMALIZATION R2 */
+/* Pendências — neutraliza resíduos escuros do board legado. */
+#pendapp .crp1-kpi,#pendapp .crp1-card,#pendapp .crp1-event,#pendapp .crp1-ev,#pendapp .crp1-empty{
+  background:#fff!important;color:var(--cr-access-text)!important;border:1px solid var(--cr-access-line)!important;
+  border-radius:10px!important;box-shadow:var(--cr-access-shadow)!important;
+}
+#pendapp .crp1-event{border-left:3px solid var(--cr-access-blue)!important}
+#pendapp .crp1-code{color:var(--cr-access-blue-2)!important}
+#pendapp .crp1-title,#pendapp .crp1-count{color:var(--cr-access-ink)!important}
+#pendapp .crp1-sub,#pendapp .crp1-next{color:var(--cr-access-text)!important}
+#pendapp .crp1-warn{color:#9a6800!important}
+#pendapp .crp1-badge,#pendapp .badge,#pendapp .pill{
+  background:#f5fbff!important;border:1px solid var(--cr-access-line)!important;color:var(--cr-access-text)!important;
+  border-radius:999px!important;
+}
+#pendapp .crp1-badge.p0{background:#fff1f4!important;border-color:#ffc4cf!important;color:#b71735!important}
+#pendapp .crp1-timeline{scrollbar-color:#aac8dd transparent!important}
+#pendapp .crp1-drawer{color:var(--cr-access-text)!important}
+#pendapp .crp1-pagebar{background:transparent!important}
+#pendapp .crp1-grid2,#pendapp .crp1-grid3{gap:8px!important}
+
+/* KPI/cards gerados dinamicamente nos módulos. */
+#context .kpi,#health .kpi,#technical .kpi,#admin .kpi,
+#context .cr-tech-stat,#health .cr-tech-stat,#technical .cr-tech-stat,#admin .cr-tech-stat{
+  background:linear-gradient(180deg,#fff,#f7fbfe)!important;
+  color:var(--cr-access-text)!important;
+  border:1px solid var(--cr-access-line)!important;
+  border-radius:10px!important;
+  box-shadow:var(--cr-access-shadow)!important;
+}
+#technical .cr-tech-stats,#admin .cr-tech-stats{gap:8px!important}
+#technical .cr-tech-stat b,#admin .cr-tech-stat b{color:var(--cr-access-ink)!important}
+#technical .cr-tech-pill,#admin .cr-tech-pill{
+  background:#edf7fc!important;color:var(--cr-access-blue-2)!important;border:1px solid var(--cr-access-line)!important;
+  border-radius:999px!important;
+}
+
+/* Documentação/acervo quando renderizados dentro dos acessos autorizados. */
+#docs .cr-doc-grid,#technical .cr-doc-grid,#admin .cr-doc-grid{gap:10px!important}
+#docs .cr-doc-card,#technical .cr-doc-card,#admin .cr-doc-card{
+  background:#fff!important;color:var(--cr-access-text)!important;border:1px solid var(--cr-access-line)!important;
+  border-radius:11px!important;box-shadow:var(--cr-access-shadow)!important;
+}
+#docs .cr-doc-meta,#technical .cr-doc-meta,#admin .cr-doc-meta{color:var(--cr-access-muted)!important}
+#docs .cr-doc-actions,#technical .cr-doc-actions,#admin .cr-doc-actions{gap:7px!important}
+#docs .cr-doc-filters,#technical .cr-tech-tools,#admin .cr-tech-tools{gap:8px!important}
+#docs .cr-secure-note,#technical .cr-secure-note,#admin .cr-secure-note{
+  background:#fff8df!important;color:#624d00!important;border:1px solid #f1d471!important;
+  border-left:4px solid var(--cr-access-gold)!important;border-radius:9px!important;
+}
+
+/* Tabelas técnicas recuperadas. */
+#technical .cr-tech-table,#admin .cr-tech-table{
+  background:#fff!important;color:var(--cr-access-text)!important;border:1px solid var(--cr-access-line)!important;
+  border-radius:11px!important;overflow:auto!important;box-shadow:var(--cr-access-shadow)!important;
+}
+#technical .cr-tech-table th,#admin .cr-tech-table th{background:#edf7fc!important;color:var(--cr-access-ink)!important}
+#technical .cr-tech-table td,#admin .cr-tech-table td{border-color:var(--cr-access-line)!important}
+
+/* Conteúdo detalhado: evita bloco preto herdado dentro dos 11 módulos. */
+#pendapp .content,#wizy .content,#eder .content,#context .content,#docs .content,
+#meeting .content,#presentation .content,#academy .content,#health .content,
+#technical .content,#admin .content{
+  background:#f5fbff!important;color:var(--cr-access-text)!important;border:1px solid var(--cr-access-line)!important;
+  border-radius:9px!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;
+}
