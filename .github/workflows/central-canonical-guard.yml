@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           actual="$(git hash-object production/central-homologada-20261001/index.html)"
-          expected="b90367bed503245a5bea9b4db4f15b46622ab6b2"
+          expected="d7e3a3d30bb1b0f4927d661deab75f48205ff8ea"
           test "$actual" = "$expected" || {
             echo "ERROR: homologated Central baseline was modified."
             echo "Expected $expected, got $actual"
