@@ -182,3 +182,34 @@ Scope: documentation + remaining technical modules + protected Éder/Rogério pa
   #workspace .workspaceBar{flex-wrap:wrap!important;align-items:center!important}
   #workspace .workspaceBar b{width:100%!important;order:-1!important;margin:0!important}
 }
+
+
+/* CR-V2 documentation hub — override legacy dark micro-theme */
+#docs .crv2-tabs button{
+  background:#fff!important;color:var(--crrm-blue2)!important;border:1px solid var(--crrm-line)!important;
+  box-shadow:0 2px 6px rgba(18,69,112,.05)!important
+}
+#docs .crv2-tabs button.on{
+  background:linear-gradient(180deg,#ffd84d,var(--crrm-gold))!important;color:var(--crrm-navy)!important;border-color:#e6ac00!important
+}
+#docs :is(.crv2-stat,.crv2-card,.crv2-status>div,.crv2-kpi){
+  background:linear-gradient(180deg,#fff,#f9fcfe)!important;color:var(--crrm-text)!important;
+  border-color:var(--crrm-line)!important;box-shadow:var(--crrm-shadow)!important;text-shadow:none!important
+}
+#docs :is(.crv2-stat b,.crv2-card h3,.crv2-status b,.crv2-kpi .val){
+  color:var(--crrm-ink)!important;opacity:1!important;text-shadow:none!important
+}
+#docs :is(.crv2-stat span,.crv2-card p,.crv2-status span){
+  color:var(--crrm-muted)!important;opacity:1!important;text-shadow:none!important
+}
+#docs .crv2-auth{
+  background:var(--crrm-panel)!important;color:var(--crrm-text)!important;border:1px dashed #98bed8!important;
+  border-left:4px solid var(--crrm-gold)!important;box-shadow:0 3px 10px rgba(18,69,112,.045)!important
+}
+#docs .crv2-table{
+  background:#fff!important;color:var(--crrm-text)!important;border:1px solid var(--crrm-line)!important;
+  box-shadow:var(--crrm-shadow)!important
+}
+#docs .crv2-table table{background:#fff!important;color:var(--crrm-text)!important}
+#docs .crv2-table th{background:#edf7fc!important;color:var(--crrm-ink)!important;border-color:var(--crrm-line)!important}
+#docs .crv2-table td{background:#fff!important;color:var(--crrm-text)!important;border-color:var(--crrm-line)!important}
