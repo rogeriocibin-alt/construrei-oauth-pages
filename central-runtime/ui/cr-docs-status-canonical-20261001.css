@@ -1,0 +1,433 @@
+/* CONSTRU-REI — CORREÇÃO CIRÚRGICA FINAL: DOCUMENTAÇÕES + STATUS
+   2026-10-01
+   Escopo obrigatório: somente #docs e #status.
+   Nenhuma regra abaixo pode atingir outro módulo. */
+
+:root{
+  --crds-navy:#031b46;
+  --crds-navy-2:#05265f;
+  --crds-blue:#0877f9;
+  --crds-blue-2:#075bd8;
+  --crds-blue-top:#1688ff;
+  --crds-gold:#ffc514;
+  --crds-bg:#eaf6fc;
+  --crds-panel:#f5fbff;
+  --crds-card:#ffffff;
+  --crds-line:#c9e0ef;
+  --crds-ink:#07165b;
+  --crds-text:#17315d;
+  --crds-muted:#6d8299;
+  --crds-success:#0daf67;
+  --crds-warning:#f2a500;
+  --crds-danger:#ee2147;
+  --crds-shadow:0 4px 14px rgba(18,69,112,.075);
+  --crds-shadow-2:0 14px 34px rgba(5,42,91,.16);
+}
+
+/* ============================================================
+   1. CABEÇALHOS — somente Documentações e Status
+   ============================================================ */
+#docs.page>h1,
+#status.page>h1{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  min-height:72px!important;
+  margin:0 0 12px!important;
+  padding:16px 20px 16px 24px!important;
+  border:1px solid rgba(255,197,20,.34)!important;
+  border-radius:11px!important;
+  background:linear-gradient(112deg,var(--crds-navy) 0%,#07357f 58%,#04235c 100%)!important;
+  box-shadow:var(--crds-shadow-2)!important;
+  color:#fff!important;
+  text-shadow:none!important;
+  font-size:clamp(22px,2.1vw,30px)!important;
+  font-weight:800!important;
+  line-height:1.08!important;
+  letter-spacing:-.02em!important;
+  overflow:hidden!important;
+}
+#docs.page>h1:before,
+#status.page>h1:before{
+  content:""!important;
+  position:absolute!important;
+  inset:0 auto 0 0!important;
+  width:5px!important;
+  background:var(--crds-gold)!important;
+}
+
+/* ============================================================
+   2. DOCUMENTAÇÕES — remove todos os resíduos dark do módulo
+   ============================================================ */
+#docs{
+  color:var(--crds-text)!important;
+  min-width:0!important;
+}
+
+/* Cards, KPIs, cards de catálogo, cards técnicos e qualquer
+   componente histórico conhecido dentro de #docs. */
+#docs .card,
+#docs .kpi,
+#docs .cr-tech-stat,
+#docs .cr-doc-dash-card,
+#docs .cr-doc-card,
+#docs .crp1-card,
+#docs .item{
+  background:linear-gradient(180deg,#ffffff 0%,#f9fcfe 100%)!important;
+  color:var(--crds-text)!important;
+  border:1px solid var(--crds-line)!important;
+  border-radius:11px!important;
+  box-shadow:var(--crds-shadow)!important;
+}
+
+/* KPIs — números e labels com contraste alto. */
+#docs .kpi .val,
+#docs .cr-tech-stat .val,
+#docs .cr-tech-stat strong,
+#docs .cr-tech-stat b,
+#docs .card.kpi .val{
+  color:var(--crds-ink)!important;
+  text-shadow:none!important;
+  opacity:1!important;
+  font-weight:900!important;
+}
+#docs .kpi .lab,
+#docs .cr-tech-stat .lab,
+#docs .card.kpi .lab{
+  color:var(--crds-muted)!important;
+  opacity:1!important;
+  font-weight:750!important;
+}
+#docs .mut,
+#docs .cr-doc-meta{
+  color:var(--crds-muted)!important;
+  opacity:1!important;
+}
+#docs h2,
+#docs h3,
+#docs h4,
+#docs .itemtitle,
+#docs .cr-doc-card h3{
+  color:var(--crds-ink)!important;
+  text-shadow:none!important;
+}
+
+/* O card antigo possuía !important dark; esta regra é
+   deliberadamente mais específica e carregada depois. */
+#docs .cr-doc-dash-card{
+  border-color:var(--crds-line)!important;
+  background:linear-gradient(180deg,#fff,#f7fbfe)!important;
+}
+#docs .cr-doc-dash-card .tag{
+  color:var(--crds-blue-2)!important;
+}
+
+/* Aviso / introdução */
+#docs .notice,
+#docs .cr-module-intro{
+  background:linear-gradient(180deg,#f7fffb,#f3fcf8)!important;
+  color:var(--crds-text)!important;
+  border:1px solid #bfe7d5!important;
+  border-left:5px solid var(--crds-success)!important;
+  border-radius:10px!important;
+  box-shadow:none!important;
+}
+#docs .notice b,
+#docs .cr-module-intro b{
+  color:var(--crds-ink)!important;
+}
+
+/* Filtros e campos */
+#docs .cr-doc-filters,
+#docs .cr-tech-tools{
+  gap:8px!important;
+}
+#docs .input,
+#docs input,
+#docs select{
+  min-height:40px!important;
+  background:#fff!important;
+  color:var(--crds-text)!important;
+  border:1px solid var(--crds-line)!important;
+  border-radius:8px!important;
+  box-shadow:inset 0 1px 2px rgba(18,69,112,.035)!important;
+}
+#docs .input:focus,
+#docs input:focus,
+#docs select:focus{
+  outline:3px solid rgba(8,119,249,.12)!important;
+  border-color:var(--crds-blue)!important;
+}
+
+/* Botões do módulo */
+#docs .btn{
+  min-height:38px!important;
+  padding:8px 13px!important;
+  border:1px solid var(--crds-line)!important;
+  border-radius:8px!important;
+  background:#fff!important;
+  color:var(--crds-blue-2)!important;
+  box-shadow:0 2px 6px rgba(18,69,112,.055)!important;
+  font-weight:800!important;
+}
+#docs .btn.primary{
+  background:linear-gradient(180deg,var(--crds-blue-top),var(--crds-blue-2))!important;
+  color:#fff!important;
+  border-color:#0b6fe6!important;
+  box-shadow:0 4px 9px rgba(7,91,216,.16)!important;
+}
+#docs .btn.gold{
+  background:linear-gradient(180deg,#ffd84d,var(--crds-gold))!important;
+  color:var(--crds-navy)!important;
+  border-color:#e6ac00!important;
+}
+
+/* Tabs / pills — cobre as variantes históricas possíveis sem
+   sair do escopo #docs. */
+#docs .tabs,
+#docs .cr-doc-tabs,
+#docs .cr-doc-nav,
+#docs [role="tablist"]{
+  display:flex!important;
+  gap:7px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  padding:2px 1px 6px!important;
+  scrollbar-width:thin!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+#docs .tab,
+#docs .cr-doc-tab,
+#docs [role="tab"]{
+  flex:0 0 auto!important;
+  min-height:38px!important;
+  padding:8px 14px!important;
+  border:1px solid var(--crds-line)!important;
+  border-radius:999px!important;
+  background:#fff!important;
+  color:var(--crds-blue-2)!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+  box-shadow:0 2px 6px rgba(18,69,112,.055)!important;
+}
+#docs .tab.active,
+#docs .tab.on,
+#docs .cr-doc-tab.active,
+#docs .cr-doc-tab.on,
+#docs [role="tab"][aria-selected="true"]{
+  background:linear-gradient(180deg,#ffd84d,var(--crds-gold))!important;
+  color:var(--crds-navy)!important;
+  border-color:#e6ac00!important;
+}
+
+/* Tabelas e catálogo */
+#docs .tablewrap,
+#docs .cr-tech-table{
+  background:#fff!important;
+  color:var(--crds-text)!important;
+  border:1px solid var(--crds-line)!important;
+  border-radius:11px!important;
+  box-shadow:var(--crds-shadow)!important;
+  overflow:auto!important;
+}
+#docs table{
+  color:var(--crds-text)!important;
+  background:#fff!important;
+}
+#docs th{
+  background:#edf7fc!important;
+  color:var(--crds-ink)!important;
+  border-color:var(--crds-line)!important;
+}
+#docs td{
+  background:#fff!important;
+  color:var(--crds-text)!important;
+  border-color:var(--crds-line)!important;
+}
+#docs .cr-doc-grid{
+  gap:10px!important;
+}
+#docs .cr-doc-card{
+  padding:12px!important;
+}
+#docs .cr-doc-actions{
+  gap:7px!important;
+}
+#docs .cr-pagebar{
+  background:transparent!important;
+  color:var(--crds-text)!important;
+}
+
+/* Conteúdo detalhado e estados vazios */
+#docs .content,
+#docs pre,
+#docs .empty,
+#docs .cr-empty,
+#docs .cr-secure-note{
+  background:var(--crds-panel)!important;
+  color:var(--crds-text)!important;
+  border:1px solid var(--crds-line)!important;
+  border-radius:9px!important;
+  text-shadow:none!important;
+}
+#docs .cr-secure-note{
+  background:#fff8df!important;
+  color:#624d00!important;
+  border-color:#f1d471!important;
+  border-left:4px solid var(--crds-gold)!important;
+}
+
+/* ============================================================
+   3. STATUS DO DESENVOLVIMENTO — KPIs claros e compactos
+   ============================================================ */
+#status{
+  color:var(--crds-text)!important;
+  min-width:0!important;
+}
+#status #devCards,
+#status .devgrid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+#status .card,
+#status .kpi,
+#status #devCards>.card{
+  min-height:112px!important;
+  padding:15px 16px!important;
+  background:linear-gradient(180deg,#ffffff 0%,#f8fcfe 100%)!important;
+  color:var(--crds-text)!important;
+  border:1px solid var(--crds-line)!important;
+  border-top:4px solid var(--crds-blue)!important;
+  border-radius:11px!important;
+  box-shadow:var(--crds-shadow)!important;
+  text-shadow:none!important;
+}
+#status .kpi .lab,
+#status .card .lab{
+  color:var(--crds-muted)!important;
+  opacity:1!important;
+  font-size:12px!important;
+  font-weight:800!important;
+  letter-spacing:.03em!important;
+  text-transform:uppercase!important;
+}
+#status .kpi .val,
+#status .card .val{
+  margin-top:5px!important;
+  color:var(--crds-ink)!important;
+  opacity:1!important;
+  font-size:34px!important;
+  line-height:1!important;
+  font-weight:900!important;
+  text-shadow:none!important;
+}
+#status .mut,
+#status .kpi .mut,
+#status .card .mut{
+  margin-top:8px!important;
+  color:var(--crds-muted)!important;
+  opacity:1!important;
+  font-size:13px!important;
+}
+#status h2,
+#status h3{
+  color:var(--crds-ink)!important;
+}
+
+/* Qualquer badge/estado que seja gerado depois permanece claro. */
+#status .badge,
+#status .pill,
+#status .state{
+  background:#edf7fc!important;
+  color:var(--crds-blue-2)!important;
+  border:1px solid var(--crds-line)!important;
+  border-radius:999px!important;
+}
+
+/* ============================================================
+   4. MOBILE — somente quando a página ativa for Docs ou Status
+   ============================================================ */
+@media(max-width:900px){
+  #docs.page>h1,
+  #status.page>h1{
+    min-height:62px!important;
+    padding:13px 16px 13px 20px!important;
+    font-size:22px!important;
+  }
+  #status #devCards,
+  #status .devgrid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:560px){
+  #docs.page>h1,
+  #status.page>h1{
+    min-height:56px!important;
+    margin-bottom:9px!important;
+    padding:12px 13px 12px 17px!important;
+    border-radius:10px!important;
+    font-size:20px!important;
+  }
+
+  #status #devCards,
+  #status .devgrid{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+  }
+  #status .card,
+  #status .kpi,
+  #status #devCards>.card{
+    min-height:96px!important;
+    padding:13px 16px!important;
+  }
+  #status .kpi .val,
+  #status .card .val{
+    font-size:31px!important;
+  }
+
+  #docs .cr-doc-filters,
+  #docs .cr-tech-tools{
+    grid-template-columns:1fr!important;
+  }
+  #docs .cr-doc-grid{
+    grid-template-columns:1fr!important;
+  }
+  #docs .actions{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  #docs .actions .btn{
+    width:100%!important;
+    min-height:42px!important;
+  }
+}
+
+/* ============================================================
+   5. DOCK — não redesenha; apenas impede sobreposição nos 2 módulos
+   ============================================================ */
+body:has(#docs.page.on) .content,
+body:has(#status.page.on) .content{
+  padding-bottom:calc(104px + env(safe-area-inset-bottom))!important;
+}
+body:has(#docs.page.on) .cr-mobile-dock,
+body:has(#status.page.on) .cr-mobile-dock{
+  padding-bottom:max(8px,env(safe-area-inset-bottom))!important;
+}
+
+/* Notebook 1366x768: densidade sem cortar conteúdo. */
+@media(min-width:1000px) and (max-height:800px){
+  #docs.page>h1,
+  #status.page>h1{
+    min-height:60px!important;
+    padding-top:12px!important;
+    padding-bottom:12px!important;
+  }
+  #status .card,
+  #status .kpi{
+    min-height:100px!important;
+    padding:12px 14px!important;
+  }
+}
