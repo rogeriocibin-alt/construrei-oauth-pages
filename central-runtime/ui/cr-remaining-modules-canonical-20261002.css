@@ -215,3 +215,52 @@ Scope: documentation + remaining technical modules + protected Éder/Rogério pa
 #docs .crv2-table td{background:#fff!important;color:var(--crrm-text)!important;border-color:var(--crrm-line)!important}
 
 :is(#technical,#admin) [hidden]{display:none!important}
+
+
+/* CHECKLIST DE CAMPO — FINAL CANONICAL VISUAL FIX — 2026-10-02
+   Scope ONLY: #checklist. Visual-only; no routes/events/data/auth changes. */
+#checklist{
+  color:#17315d!important;min-width:0!important
+}
+#checklist.page>h1{
+  position:relative!important;display:flex!important;align-items:center!important;min-height:62px!important;
+  margin:0 0 14px!important;padding:13px 18px 13px 22px!important;border-radius:11px!important;
+  background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important;
+  border:1px solid rgba(255,197,20,.34)!important;box-shadow:0 16px 42px rgba(6,40,86,.14)!important;
+  color:#fff!important;font-size:clamp(21px,2vw,28px)!important;line-height:1.1!important;text-shadow:none!important
+}
+#checklist.page>h1:before{
+  content:""!important;position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:5px!important;
+  background:#ffc514!important;border-radius:11px 0 0 11px!important
+}
+#checklist #checkCard{
+  background:linear-gradient(180deg,#ffffff 0%,#f8fcff 100%)!important;color:#17315d!important;
+  border:1px solid #d5e7f2!important;border-left:4px solid #ffc514!important;border-radius:14px!important;
+  box-shadow:0 8px 24px rgba(13,63,111,.09)!important;padding:20px!important
+}
+#checklist #checkCard .tag{
+  color:#9d6d0b!important;font-weight:900!important;letter-spacing:.12em!important
+}
+#checklist #checkCard h2{
+  color:#07165b!important;opacity:1!important;text-shadow:none!important;margin:12px 0 8px!important;
+  font-size:clamp(20px,2.2vw,30px)!important;line-height:1.12!important
+}
+#checklist #checkCard .actions{
+  margin-top:16px!important;gap:10px!important
+}
+#checklist #checkCard .btn{
+  min-height:44px!important;padding:10px 16px!important;border-radius:10px!important;font-weight:850!important;
+  background:#fff!important;color:#075bd8!important;border:1px solid #bcd9ed!important;
+  box-shadow:0 3px 9px rgba(13,63,111,.07)!important
+}
+#checklist #checkCard .btn.primary{
+  background:linear-gradient(180deg,#1688ff,#075bd8)!important;color:#fff!important;border-color:#0b6fe6!important;
+  box-shadow:0 6px 14px rgba(7,91,216,.18)!important
+}
+#checklist #checkCard .btn:hover{filter:brightness(1.02)!important;transform:translateY(-1px)!important}
+@media(max-width:600px){
+  #checklist.page>h1{min-height:56px!important;padding:12px 13px 12px 17px!important;font-size:21px!important}
+  #checklist #checkCard{padding:16px!important;border-radius:13px!important}
+  #checklist #checkCard .actions{display:grid!important;grid-template-columns:1fr 1fr!important}
+  #checklist #checkCard .btn{width:100%!important;min-width:0!important;padding:10px 8px!important}
+}
