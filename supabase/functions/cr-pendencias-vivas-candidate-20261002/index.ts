@@ -215,15 +215,26 @@ async function handleEvent(req:Request){
 }
 function selftest(){
   type It={id:string,title:string,status:string,priority:string,area:string,due_date?:string,history:any[]};
-  let seq=0;const items:It[]=[];
+  let seq=0;
+  const items:It[]=[];
+  const seen=new Set<string>();
+  const snap=(it:It)=>({...it,history:it.history.map(x=>({...x}))});
   function emit(kind:string,b:any){
-    const key=b.idempotency_key;
-    for(const it of items)if(it.history.some(h=>h.key===key))return {ok:true,idempotent:true,item:it};
+    const key=String(b.idempotency_key||"");
+    if(seen.has(key)){
+      const it=items.find(x=>x.id===b.item_id)||items[0];
+      return {ok:true,idempotent:true,item:it?snap(it):null};
+    }
     let it=items.find(x=>x.id===b.item_id);
     if(kind==="FOUND"&&!it){
-      const dup=items.find(x=>x.area===b.area&&sim(x.title,b.title)>=0.66&&x.status!=="Concluído");
-      if(dup){dup.history.push({key,kind,dedup:true});return{ok:true,deduplicated:true,item:dup}}
-      it={id:"QA-"+(++seq),title:b.title,status:"Não iniciado",priority:b.priority||"P1",area:b.area||"CENTRAL",history:[]};items.push(it);
+      const dup=items.find(x=>x.area===b.area&&sim(x.title,b.title)>=0.66&&!["Concluído","Cancelado"].includes(x.status));
+      if(dup){
+        dup.history.push({key,kind,dedup:true,source_ref:b.source_ref||null});
+        seen.add(key);
+        return {ok:true,deduplicated:true,merged_into:dup.id,item:snap(dup)};
+      }
+      it={id:"QA-"+(++seq),title:b.title,status:"Não iniciado",priority:b.priority||"P1",area:b.area||"CENTRAL",history:[]};
+      items.push(it);
     }
     if(!it)throw Error("item missing");
     if(kind==="STARTED")it.status="Em andamento";
@@ -232,39 +243,40 @@ function selftest(){
     if(kind==="COMPLETED")it.status=(b.human_gate!==false||["P0","P1"].includes(it.priority))?"Em validação":"Concluído";
     if(kind==="HOMOLOGATED")it.status="Concluído";
     if(kind==="REOPENED")it.status="Em andamento";
-    it.history.push({key,kind,status:it.status});
-    return{ok:true,item:it};
+    it.history.push({key,kind,status:it.status,source_ref:b.source_ref||null});
+    seen.add(key);
+    return {ok:true,item:snap(it)};
   }
-  const a=emit("FOUND",{title:"QA criar pendência manual",area:"CENTRAL",priority:"P2",idempotency_key:"A"});
-  const b=emit("STARTED",{item_id:a.item.id,idempotency_key:"B"});
-  const c=emit("COMPLETED",{item_id:a.item.id,human_gate:false,idempotency_key:"C"});
+
+  const a=emit("FOUND",{title:"QA criar pendência manual",area:"CENTRAL",priority:"P2",idempotency_key:"A",source_ref:"manual"});
+  const b=emit("STARTED",{item_id:a.item.id,idempotency_key:"B",source_ref:"agent-run-1"});
+  const c=emit("COMPLETED",{item_id:a.item.id,human_gate:false,idempotency_key:"C",source_ref:"commit:abc"});
   const d0=emit("FOUND",{title:"QA bloqueio técnico",area:"APP",priority:"P1",idempotency_key:"D0"});
-  const d=emit("BLOCKED",{item_id:d0.item.id,idempotency_key:"D"});
+  const d=emit("BLOCKED",{item_id:d0.item.id,idempotency_key:"D",source_ref:"dependency:api"});
   const e0=emit("FOUND",{title:"QA atividade amanhã",area:"CENTRAL",priority:"P1",idempotency_key:"E0"});
-  const e=emit("DEFERRED",{item_id:e0.item.id,due_date:"2026-10-03",idempotency_key:"E"});
-  const f=emit("FOUND",{title:"QA atividade amanha",area:"CENTRAL",priority:"P1",idempotency_key:"F"});
-  const g0=emit("FOUND",{title:"QA reabrir item concluído",area:"APP",priority:"P2",idempotency_key:"G0"});
-  emit("COMPLETED",{item_id:g0.item.id,human_gate:false,idempotency_key:"G1"});
-  const g=emit("REOPENED",{item_id:g0.item.id,idempotency_key:"G2"});
-  const h=g.item.history.length>=3;
-  const i=g.item.id&&g.item.history.some(x=>x.kind==="REOPENED");
-  const idem1=emit("STARTED",{item_id:e0.item.id,idempotency_key:"IDEMP"});
-  const idem2=emit("STARTED",{item_id:e0.item.id,idempotency_key:"IDEMP"});
+  const e=emit("DEFERRED",{item_id:e0.item.id,due_date:"2026-10-03",idempotency_key:"E",source_ref:"agenda:tomorrow"});
+  const f=emit("FOUND",{title:"QA atividade amanha",area:"CENTRAL",priority:"P1",idempotency_key:"F",source_ref:"duplicate-source"});
+  const g0=emit("FOUND",{title:"QA reabrir item concluído",area:"APP",priority:"P2",idempotency_key:"G0",source_ref:"manual"});
+  const g1=emit("COMPLETED",{item_id:g0.item.id,human_gate:false,idempotency_key:"G1",source_ref:"commit:def"});
+  const g=emit("REOPENED",{item_id:g0.item.id,idempotency_key:"G2",source_ref:"bug:reopened"});
+  const h0=emit("FOUND",{title:"QA gate humano",area:"CENTRAL",priority:"P0",idempotency_key:"H0"});
+  const h1=emit("COMPLETED",{item_id:h0.item.id,idempotency_key:"H1",source_ref:"agent:done"});
+  const idemA=emit("STARTED",{item_id:e0.item.id,idempotency_key:"IDEMP",source_ref:"agent:retry"});
+  const idemB=emit("STARTED",{item_id:e0.item.id,idempotency_key:"IDEMP",source_ref:"agent:retry"});
   const checks={
-    A_create:!!a.item.id&&a.item.status==="Concluído",
-    B_auto_started:b.item.history.some(x=>x.kind==="STARTED"),
+    A_create:a.item.status==="Não iniciado",
+    B_auto_started:b.item.status==="Em andamento",
     C_auto_completed:c.item.status==="Concluído",
     D_blocked:d.item.status==="Bloqueado",
-    E_deferred:e.item.status==="Em andamento"||e.item.status==="Aguardando",
-    F_dedup:f.deduplicated===true,
-    G_reopened:g.item.status==="Em andamento",
-    H_history:h,
-    I_origin_trace:i,
-    idempotency:idem2.idempotent===true
+    E_deferred:e.item.status==="Aguardando"&&e.item.due_date==="2026-10-03",
+    F_dedup:f.deduplicated===true&&f.merged_into===e0.item.id,
+    G_reopened:g1.item.status==="Concluído"&&g.item.status==="Em andamento",
+    H_history:g.item.history.length===3,
+    I_origin_trace:g.item.history.some(x=>x.source_ref==="commit:def")&&g.item.history.some(x=>x.source_ref==="bug:reopened"),
+    human_gate:h1.item.status==="Em validação",
+    idempotency:idemA.idempotent!==true&&idemB.idempotent===true
   };
-  // Snapshot the state expected at the moment of each transition, not only final mutable state.
-  checks.A_create=true; checks.E_deferred=true;
-  return {ok:Object.values(checks).every(Boolean),build:BUILD,checks,synthetic_items:items.map(x=>({id:x.id,title:x.title,status:x.status,events:x.history.length}))};
+  return {ok:Object.values(checks).every(Boolean),build:BUILD,checks,synthetic_only:true,production_rows_written:0,synthetic_items:items.map(x=>({id:x.id,title:x.title,status:x.status,events:x.history.length}))};
 }
 
 Deno.serve(async(req:Request)=>{
