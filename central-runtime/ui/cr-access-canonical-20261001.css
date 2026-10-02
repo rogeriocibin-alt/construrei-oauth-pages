@@ -1,0 +1,280 @@
+/* CONSTRU-REI — camada canônica compartilhada para módulos internos
+   2026-10-01 • origem visual: Central homologada • escopo: 11 acessos
+   Somente apresentação. Não altera lógica, rotas, auth, dados ou integrações. */
+:root{
+  --cr-access-navy:#031b46;
+  --cr-access-navy-2:#05265f;
+  --cr-access-blue:#0877f9;
+  --cr-access-blue-2:#075bd8;
+  --cr-access-blue-top:#1688ff;
+  --cr-access-blue-border:#0b6fe6;
+  --cr-access-gold:#ffc514;
+  --cr-access-bg:#eaf6fc;
+  --cr-access-panel:#f5fbff;
+  --cr-access-card:#ffffff;
+  --cr-access-line:#c9e0ef;
+  --cr-access-ink:#07165b;
+  --cr-access-text:#17315d;
+  --cr-access-muted:#6d8299;
+  --cr-access-success:#0daf67;
+  --cr-access-warning:#f2a500;
+  --cr-access-danger:#ee2147;
+  --cr-access-shadow:0 4px 14px rgba(18,69,112,.075);
+  --cr-access-shadow-2:0 14px 34px rgba(5,42,91,.16);
+  --cr-access-radius:11px;
+  --cr-access-radius-sm:8px;
+}
+
+/* Somente os módulos listados no checkpoint global. */
+#pendapp.page,#wizy.page,#eder.page,#context.page,#docs.page,#meeting.page,
+#presentation.page,#academy.page,#health.page,#technical.page,#admin.page{
+  color:var(--cr-access-text)!important;
+  min-width:0!important;
+  width:100%!important;
+}
+
+#pendapp.page>h1,#wizy.page>h1,#eder.page>h1,#context.page>h1,#docs.page>h1,
+#meeting.page>h1,#presentation.page>h1,#academy.page>h1,#health.page>h1,
+#technical.page>h1,#admin.page>h1{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  min-height:72px!important;
+  margin:0 0 12px!important;
+  padding:16px 20px 16px 24px!important;
+  border:1px solid rgba(255,197,20,.34)!important;
+  border-radius:var(--cr-access-radius)!important;
+  background:linear-gradient(112deg,var(--cr-access-navy) 0%,#07357f 58%,#04235c 100%)!important;
+  box-shadow:var(--cr-access-shadow-2)!important;
+  color:#fff!important;
+  font-size:clamp(22px,2.1vw,30px)!important;
+  line-height:1.08!important;
+  letter-spacing:-.02em!important;
+  overflow:hidden!important;
+}
+#pendapp.page>h1:before,#wizy.page>h1:before,#eder.page>h1:before,#context.page>h1:before,#docs.page>h1:before,
+#meeting.page>h1:before,#presentation.page>h1:before,#academy.page>h1:before,#health.page>h1:before,
+#technical.page>h1:before,#admin.page>h1:before{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;top:0!important;bottom:0!important;
+  width:5px!important;
+  background:var(--cr-access-gold)!important;
+}
+
+/* Superfícies */
+#pendapp .card,#wizy .card,#eder .card,#context .card,#docs .card,#meeting .card,
+#presentation .card,#academy .card,#health .card,#technical .card,#admin .card,
+#pendapp .crp1-card,#wizy .crp1-card,#eder .crp1-card,
+#context .devgrid>*,#health .devgrid>*{
+  background:var(--cr-access-card)!important;
+  color:var(--cr-access-text)!important;
+  border:1px solid var(--cr-access-line)!important;
+  border-radius:var(--cr-access-radius)!important;
+  box-shadow:var(--cr-access-shadow)!important;
+}
+
+#pendapp .section,#wizy .section,#eder .section,#context .section,#docs .section,
+#meeting .section,#presentation .section,#academy .section,#health .section,
+#technical .section,#admin .section{
+  min-width:0!important;
+}
+
+#pendapp .notice,#wizy .notice,#eder .notice,#context .notice,#docs .notice,
+#meeting .notice,#presentation .notice,#academy .notice,#health .notice,
+#technical .notice,#admin .notice{
+  background:var(--cr-access-panel)!important;
+  color:var(--cr-access-text)!important;
+  border:1px solid var(--cr-access-line)!important;
+  border-left:4px solid var(--cr-access-blue)!important;
+  border-radius:var(--cr-access-radius-sm)!important;
+  box-shadow:none!important;
+}
+#pendapp .notice.good,#wizy .notice.good,#eder .notice.good,#context .notice.good,#docs .notice.good,
+#meeting .notice.good,#presentation .notice.good,#academy .notice.good,#health .notice.good,
+#technical .notice.good,#admin .notice.good{
+  border-left-color:var(--cr-access-success)!important;
+  background:#f3fcf8!important;
+}
+
+/* Tipografia */
+#pendapp h2,#wizy h2,#eder h2,#context h2,#docs h2,#meeting h2,#presentation h2,
+#academy h2,#health h2,#technical h2,#admin h2,
+#pendapp h3,#wizy h3,#eder h3,#context h3,#docs h3,#meeting h3,#presentation h3,
+#academy h3,#health h3,#technical h3,#admin h3{
+  color:var(--cr-access-ink)!important;
+}
+#pendapp .mut,#wizy .mut,#eder .mut,#context .mut,#docs .mut,#meeting .mut,
+#presentation .mut,#academy .mut,#health .mut,#technical .mut,#admin .mut{
+  color:var(--cr-access-muted)!important;
+}
+#pendapp .tag,#wizy .tag,#eder .tag,#context .tag,#docs .tag,#meeting .tag,
+#presentation .tag,#academy .tag,#health .tag,#technical .tag,#admin .tag{
+  color:var(--cr-access-blue-2)!important;
+  font-weight:900!important;
+  letter-spacing:.055em!important;
+}
+
+/* Botões: mesma família da Central homologada. */
+#pendapp .btn,#wizy .btn,#eder .btn,#context .btn,#docs .btn,#meeting .btn,
+#presentation .btn,#academy .btn,#health .btn,#technical .btn,#admin .btn{
+  min-height:36px!important;
+  padding:8px 13px!important;
+  border-radius:8px!important;
+  border:1px solid var(--cr-access-line)!important;
+  background:#fff!important;
+  color:var(--cr-access-blue-2)!important;
+  font-weight:800!important;
+  line-height:1.15!important;
+  box-shadow:0 2px 6px rgba(18,69,112,.055)!important;
+  transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease,background .12s ease!important;
+}
+#pendapp .btn:hover,#wizy .btn:hover,#eder .btn:hover,#context .btn:hover,#docs .btn:hover,#meeting .btn:hover,
+#presentation .btn:hover,#academy .btn:hover,#health .btn:hover,#technical .btn:hover,#admin .btn:hover{
+  transform:translateY(-1px)!important;
+  border-color:#9cc6e6!important;
+  box-shadow:0 5px 12px rgba(18,69,112,.10)!important;
+}
+#pendapp .btn.primary,#wizy .btn.primary,#eder .btn.primary,#context .btn.primary,#docs .btn.primary,
+#meeting .btn.primary,#presentation .btn.primary,#academy .btn.primary,#health .btn.primary,
+#technical .btn.primary,#admin .btn.primary{
+  background:linear-gradient(180deg,var(--cr-access-blue-top),var(--cr-access-blue-2))!important;
+  border-color:var(--cr-access-blue-border)!important;
+  color:#fff!important;
+  box-shadow:0 4px 9px rgba(7,91,216,.16)!important;
+}
+#pendapp .btn.gold,#wizy .btn.gold,#eder .btn.gold,#context .btn.gold,#docs .btn.gold,#meeting .btn.gold,
+#presentation .btn.gold,#academy .btn.gold,#health .btn.gold,#technical .btn.gold,#admin .btn.gold{
+  background:linear-gradient(180deg,#ffd84d,var(--cr-access-gold))!important;
+  border-color:#e6ac00!important;
+  color:var(--cr-access-navy)!important;
+}
+#pendapp .btn:focus-visible,#wizy .btn:focus-visible,#eder .btn:focus-visible,#context .btn:focus-visible,#docs .btn:focus-visible,
+#meeting .btn:focus-visible,#presentation .btn:focus-visible,#academy .btn:focus-visible,#health .btn:focus-visible,
+#technical .btn:focus-visible,#admin .btn:focus-visible{
+  outline:3px solid rgba(8,119,249,.22)!important;
+  outline-offset:2px!important;
+}
+#pendapp .btn:disabled,#wizy .btn:disabled,#eder .btn:disabled,#context .btn:disabled,#docs .btn:disabled,
+#meeting .btn:disabled,#presentation .btn:disabled,#academy .btn:disabled,#health .btn:disabled,
+#technical .btn:disabled,#admin .btn:disabled{
+  opacity:.5!important;
+  cursor:not-allowed!important;
+  transform:none!important;
+}
+
+/* Inputs e filtros */
+#pendapp .input,#wizy .input,#eder .input,#context .input,#docs .input,#meeting .input,
+#presentation .input,#academy .input,#health .input,#technical .input,#admin .input,
+#pendapp input,#wizy input,#eder input,#context input,#docs input,#meeting input,
+#presentation input,#academy input,#health input,#technical input,#admin input,
+#pendapp select,#wizy select,#eder select,#context select,#docs select,#meeting select,
+#presentation select,#academy select,#health select,#technical select,#admin select{
+  min-height:38px!important;
+  border:1px solid var(--cr-access-line)!important;
+  border-radius:8px!important;
+  background:#fff!important;
+  color:var(--cr-access-text)!important;
+  box-shadow:inset 0 1px 2px rgba(18,69,112,.035)!important;
+}
+#pendapp input:focus,#wizy input:focus,#eder input:focus,#context input:focus,#docs input:focus,#meeting input:focus,
+#presentation input:focus,#academy input:focus,#health input:focus,#technical input:focus,#admin input:focus,
+#pendapp select:focus,#wizy select:focus,#eder select:focus,#context select:focus,#docs select:focus,#meeting select:focus,
+#presentation select:focus,#academy select:focus,#health select:focus,#technical select:focus,#admin select:focus{
+  border-color:var(--cr-access-blue)!important;
+  outline:3px solid rgba(8,119,249,.12)!important;
+  outline-offset:0!important;
+}
+
+/* Grades e tabelas */
+#pendapp .devgrid,#wizy .devgrid,#eder .devgrid,#context .devgrid,#docs .devgrid,
+#meeting .devgrid,#presentation .devgrid,#academy .devgrid,#health .devgrid,
+#technical .devgrid,#admin .devgrid{
+  gap:10px!important;
+}
+#pendapp .tablewrap,#wizy .tablewrap,#eder .tablewrap,#context .tablewrap,#docs .tablewrap,
+#meeting .tablewrap,#presentation .tablewrap,#academy .tablewrap,#health .tablewrap,
+#technical .tablewrap,#admin .tablewrap{
+  border:1px solid var(--cr-access-line)!important;
+  border-radius:var(--cr-access-radius)!important;
+  background:#fff!important;
+  box-shadow:var(--cr-access-shadow)!important;
+  overflow:auto!important;
+}
+#pendapp table,#wizy table,#eder table,#context table,#docs table,#meeting table,
+#presentation table,#academy table,#health table,#technical table,#admin table{
+  color:var(--cr-access-text)!important;
+}
+#pendapp th,#wizy th,#eder th,#context th,#docs th,#meeting th,#presentation th,#academy th,#health th,#technical th,#admin th{
+  background:#edf7fc!important;
+  color:var(--cr-access-ink)!important;
+  border-color:var(--cr-access-line)!important;
+}
+
+/* APP • Pendências */
+#pendapp .crp1{gap:10px!important}
+#pendapp .crp1-kpis{gap:8px!important}
+#pendapp .crp1-kpi{background:linear-gradient(180deg,#fff,#f7fbfe)!important}
+#pendapp .crp1-kpi .val{color:var(--cr-access-ink)!important}
+#pendapp .crp1-tabs{scrollbar-width:thin!important}
+#pendapp .crp1-tools{gap:8px!important}
+
+/* Academy: neutraliza o bloco escuro legado sem remover conteúdo. */
+#academy .hero{
+  background:linear-gradient(112deg,var(--cr-access-navy) 0%,#07357f 58%,#04235c 100%)!important;
+  color:#fff!important;
+  border:1px solid rgba(255,197,20,.34)!important;
+  border-radius:var(--cr-access-radius)!important;
+  box-shadow:var(--cr-access-shadow-2)!important;
+}
+#academy .hero h2,#academy .hero p{color:#fff!important}
+#academy .hero .ey{color:var(--cr-access-gold)!important}
+#academy .crAcademyTrack{
+  background:#fff!important;
+  color:var(--cr-access-text)!important;
+  border:1px solid var(--cr-access-line)!important;
+  border-radius:var(--cr-access-radius)!important;
+  box-shadow:var(--cr-access-shadow)!important;
+}
+#academy .crAcademyTrack b{color:var(--cr-access-blue-2)!important}
+#academy .crAcademyTrack span{color:var(--cr-access-muted)!important}
+
+/* Auth: aparência canônica, sem tocar em RBAC/chaves. */
+#technical .card,#admin .card{
+  max-width:760px!important;
+  background:linear-gradient(180deg,#fff,#f7fbfe)!important;
+}
+#technical label,#admin label{color:var(--cr-access-text)!important;font-weight:800!important}
+
+/* Mobile/notebook */
+@media(max-width:900px){
+  #pendapp.page>h1,#wizy.page>h1,#eder.page>h1,#context.page>h1,#docs.page>h1,
+  #meeting.page>h1,#presentation.page>h1,#academy.page>h1,#health.page>h1,
+  #technical.page>h1,#admin.page>h1{min-height:62px!important;padding:13px 16px 13px 20px!important;font-size:22px!important}
+  #pendapp .crp1-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #pendapp .crp1-tools{grid-template-columns:1fr 1fr!important}
+}
+@media(max-width:560px){
+  #pendapp.page>h1,#wizy.page>h1,#eder.page>h1,#context.page>h1,#docs.page>h1,
+  #meeting.page>h1,#presentation.page>h1,#academy.page>h1,#health.page>h1,
+  #technical.page>h1,#admin.page>h1{min-height:56px!important;margin-bottom:9px!important;padding:12px 13px 12px 17px!important;font-size:20px!important;border-radius:10px!important}
+  #pendapp .actions,#wizy .actions,#eder .actions,#context .actions,#docs .actions,#meeting .actions,
+  #presentation .actions,#academy .actions,#health .actions,#technical .actions,#admin .actions{
+    display:grid!important;grid-template-columns:1fr!important;gap:7px!important
+  }
+  #pendapp .actions .btn,#wizy .actions .btn,#eder .actions .btn,#context .actions .btn,#docs .actions .btn,
+  #meeting .actions .btn,#presentation .actions .btn,#academy .actions .btn,#health .actions .btn,
+  #technical .actions .btn,#admin .actions .btn{width:100%!important;min-height:42px!important}
+  #pendapp .crp1-kpis,#pendapp .crp1-tools{grid-template-columns:1fr!important}
+  #pendapp .crp1-card,#wizy .card,#eder .card,#context .card,#docs .card,#meeting .card,
+  #presentation .card,#academy .card,#health .card,#technical .card,#admin .card{padding:12px!important}
+}
+
+/* 1366x768: densidade operacional sem texto cortado. */
+@media(min-width:1000px) and (max-height:800px){
+  #pendapp.page>h1,#wizy.page>h1,#eder.page>h1,#context.page>h1,#docs.page>h1,
+  #meeting.page>h1,#presentation.page>h1,#academy.page>h1,#health.page>h1,
+  #technical.page>h1,#admin.page>h1{min-height:60px!important;padding-top:12px!important;padding-bottom:12px!important}
+  #pendapp .card,#wizy .card,#eder .card,#context .card,#docs .card,#meeting .card,
+  #presentation .card,#academy .card,#health .card,#technical .card,#admin .card{padding-top:11px!important;padding-bottom:11px!important}
+}
