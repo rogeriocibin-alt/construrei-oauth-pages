@@ -76,3 +76,82 @@ a{color:#075bd8}
  .main{background:#eef8fd!important}
  .panel,.kpi,.op,.provcard{box-shadow:0 3px 10px rgba(13,63,111,.07)!important}
 }
+
+
+/* DASHBOARD V4 — FINAL TOPBAR + PROVIDER MINI-KPI CANONICALIZATION — 2026-10-02
+   Dashboard stylesheet only. Visual-only; no data, calculations, API, filters or events. */
+.top{
+  background:rgba(249,253,255,.98)!important;color:#07165b!important;
+  border-bottom:1px solid #d5e7f2!important;box-shadow:0 5px 18px rgba(15,61,105,.08)!important;
+  backdrop-filter:blur(14px)!important;padding:8px 16px!important
+}
+.topin{
+  min-height:56px!important;gap:11px!important
+}
+.top .logo{
+  width:48px!important;height:48px!important;border:2px solid rgba(255,197,20,.68)!important;
+  box-shadow:0 4px 12px rgba(6,40,86,.12)!important;background:#fff!important
+}
+.topin>div:nth-child(2)>b{
+  color:#07165b!important;font-size:18px!important;line-height:1.05!important;letter-spacing:-.01em!important
+}
+.topin>div:nth-child(2) .small{
+  color:#315c8a!important;opacity:1!important
+}
+.topin>div:nth-child(2) .small[style]{
+  color:#17315d!important
+}
+.topin>.grow+ b{
+  color:#075bd8!important;background:#edf7fc!important;border:1px solid #bcd9ed!important;
+  border-radius:999px!important;padding:6px 9px!important;font-size:10px!important;white-space:nowrap!important
+}
+#live{
+  color:#087a50!important;background:#eafaf2!important;border:1px solid #bfe9d4!important;
+  border-radius:999px!important;padding:6px 9px!important;font-size:10px!important;font-weight:850!important;
+  white-space:nowrap!important;max-width:160px!important;overflow:hidden!important;text-overflow:ellipsis!important
+}
+.provcard{
+  background:linear-gradient(180deg,#fff,#f9fcfe)!important;color:#17315d!important;border:1px solid #d5e7f2!important;
+  box-shadow:0 5px 14px rgba(13,63,111,.08)!important
+}
+.provname{color:#07165b!important}
+.provshare{
+  color:#8a6700!important;background:#fffaf0!important;border:1px solid #ead88f!important
+}
+.provtotal{
+  color:#b88a18!important;text-shadow:none!important
+}
+.provstats{
+  gap:7px!important
+}
+.provstats div{
+  background:linear-gradient(180deg,#f6fbff,#edf7fc)!important;color:#17315d!important;
+  border:1px solid #d5e7f2!important;border-radius:9px!important;padding:8px 9px!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8)!important;min-width:0!important
+}
+.provstats small{
+  display:block!important;color:#6d8299!important;font-size:8px!important;font-weight:750!important;
+  text-transform:none!important;line-height:1.15!important
+}
+.provstats b{
+  display:block!important;color:#07165b!important;font-size:12px!important;line-height:1.2!important;
+  margin-top:4px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+  font-variant-numeric:tabular-nums!important
+}
+@media(max-width:700px){
+  .top{padding:7px 10px!important}
+  .topin{min-height:54px!important;gap:8px!important}
+  .top .logo{width:42px!important;height:42px!important}
+  .topin>div:nth-child(2)>b{font-size:16px!important}
+  .topin>div:nth-child(2) .small{font-size:9px!important}
+  .topin>.grow+ b{font-size:8px!important;padding:5px 7px!important}
+  #live{font-size:8px!important;padding:5px 7px!important;max-width:86px!important}
+  .provstats{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}
+  .provstats div{padding:7px 6px!important}
+  .provstats small{font-size:7px!important}
+  .provstats b{font-size:11px!important}
+}
+@media(max-width:390px){
+  .topin>div:nth-child(2) .small:last-child{display:none!important}
+  .topin>.grow+ b{display:none!important}
+}
