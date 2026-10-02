@@ -1,0 +1,115 @@
+{
+  "schema": "CR_FLOW_BASELINE_MANIFEST_V1",
+  "status": "LOCKED_NO_REGRESSION",
+  "effective_date": "2026-10-01",
+  "baseline_parent_commit": "04106046287da7430967043ca18ce7f3975b296a",
+  "namespace": "production/flow-canonical-20261001/",
+  "entrypoint": "production/flow-canonical-20261001/f00/",
+  "central_url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes",
+  "files": {
+    "central_home": {
+      "path": "production/central-homologada-20261001/index.html",
+      "sha": "d40a9d65ed3ac13836423dec335cb656d17c49c9",
+      "scope": "LOCKED"
+    },
+    "shared_css": {
+      "path": "production/flow-canonical-20261001/_shared/cr-flow-canonical-20261001.css",
+      "sha": "8db504ce0bc4e8871806b12357284e68e0cdcd1e",
+      "scope": "GLOBAL_VISUAL_LOCK"
+    },
+    "shared_shell": {
+      "path": "production/flow-canonical-20261001/_shared/cr-shell-production-20261001.js",
+      "sha": "2e46d31012892138645fc6880add60a9463f1546",
+      "scope": "GLOBAL_VISUAL_LOCK"
+    },
+    "f00": {
+      "path": "production/flow-canonical-20261001/f00/index.html",
+      "sha": "371cd9cf97759691f87c2c5dfb9be446e3487374",
+      "functional_status": "REVALIDATE"
+    },
+    "f01": {
+      "path": "production/flow-canonical-20261001/f01/index.html",
+      "sha": "77e964d3661f4a18ff243683786227aa9f64ae74",
+      "functional_status": "REVALIDATE"
+    },
+    "f02": {
+      "path": "production/flow-canonical-20261001/f02/index.html",
+      "sha": "b3cf6c73f73b92e7c4d9d023010a1ec0a9051ffd",
+      "functional_status": "REVALIDATE"
+    },
+    "f03": {
+      "path": "production/flow-canonical-20261001/f03/index.html",
+      "sha": "a7fbafd6268a9c6499db27ddada5ab59842fd5c0",
+      "functional_status": "REVALIDATE"
+    },
+    "f04": {
+      "path": "production/flow-canonical-20261001/f04/index.html",
+      "sha": "9e2976e0b9336a16995ddd3bbae00b9ed3905cb5",
+      "functional_status": "REVALIDATE"
+    },
+    "f05": {
+      "path": "production/flow-canonical-20261001/f05/index.html",
+      "sha": "64b65790370f23149275a6f4c7ea0a6b38a59a86",
+      "functional_status": "REVALIDATE"
+    },
+    "f06": {
+      "path": "production/flow-canonical-20261001/f06/index.html",
+      "sha": "0cf95e47a78714ce5089fbafe61b55bbd9593847",
+      "functional_status": "REVALIDATE"
+    },
+    "f07": {
+      "path": "production/flow-canonical-20261001/f07/index.html",
+      "sha": "3c1956630d6779263cf23722771da0dc4174826c",
+      "functional_status": "REVALIDATE"
+    },
+    "f08": {
+      "path": "production/flow-canonical-20261001/f08/index.html",
+      "sha": "2f248f251fd0219cd9dd6c3ec5fa7aa5f5ecede4",
+      "functional_status": "REVALIDATE"
+    },
+    "f09": {
+      "path": "production/flow-canonical-20261001/f09/index.html",
+      "sha": "11d7b1ce4d7fadef65189362e8fbfe35ac45092c",
+      "functional_status": "REVALIDATE"
+    }
+  },
+  "edge_functions": {
+    "central-atendimento": {
+      "version": 150,
+      "status": "ACTIVE",
+      "hash": "37c32ba842979c207ba14797615db88f537162ae69eb033105ae64445894c08d"
+    },
+    "cr-f00-intake": {
+      "version": 18,
+      "status": "ACTIVE",
+      "hash": "8c115007001fc9468d86d5b8203a1d00ba85d18005181ce2333e8e00bcb8ab5e"
+    },
+    "cr-flow-runtime-v2": {
+      "version": 9,
+      "status": "ACTIVE",
+      "hash": "868a3cb7a27519d17e5849d117385dac40d29b033d11df47cb0831be0499b3a5"
+    },
+    "cr-f01-canonical-runtime": {
+      "version": 1,
+      "status": "ACTIVE",
+      "hash": "b21e449bb43a594ce9d7781a3476039c289d1e41938400fc3b5803fd7733b40e"
+    },
+    "centro-operacoes": {
+      "version": 274,
+      "status": "ACTIVE",
+      "hash": "26fd6d54b3d7880b00d934722d3df06b762e5a45011e39798e4d6d2919f52bac"
+    }
+  },
+  "promotion_command": "FXX aprovado e validado",
+  "rules": {
+    "one_central": true,
+    "one_journey": true,
+    "one_candidate_per_phase": true,
+    "phase_scoped_promotion": true,
+    "phase_scoped_rollback": true,
+    "global_visual_files_require_explicit_authorization": true,
+    "shared_runtime_requires_isolated_candidate_and_regression_gate": true,
+    "forward_only": true,
+    "never_auto_restore_historical_versions": true
+  }
+}
