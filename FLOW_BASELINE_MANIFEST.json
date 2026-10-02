@@ -75,9 +75,9 @@
   },
   "edge_functions": {
     "central-atendimento": {
-      "version": 150,
+      "version": 151,
       "status": "ACTIVE",
-      "hash": "37c32ba842979c207ba14797615db88f537162ae69eb033105ae64445894c08d"
+      "hash": "bdcfc67ef3db247f9a1a4193f90975fd989f4bfbe5619ebf32bb652b0f88e593"
     },
     "cr-f00-intake": {
       "version": 18,
@@ -111,5 +111,17 @@
     "shared_runtime_requires_isolated_candidate_and_regression_gate": true,
     "forward_only": true,
     "never_auto_restore_historical_versions": true
+  },
+  "app": {
+    "status": "CANONICAL_APPROVED_PROMOTED",
+    "source_branch": "cr-app-new-central-identity-20261001",
+    "source_commit": "e76057789a8b0812b5f61cd3508f241b74c03ff9",
+    "source_blob": "769722c8e31c54b2890986efeb70f2a7f79acb82",
+    "production_path": "production/app-canonical-20261001/index.html",
+    "production_blob": "769722c8e31c54b2890986efeb70f2a7f79acb82",
+    "official_mode": "central-atendimento?mode=app",
+    "official_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/app-canonical-20261001/",
+    "rollback_path": "central-runtime/app/",
+    "visual_status": "APPROVED"
   }
 }
