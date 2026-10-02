@@ -3112,6 +3112,19 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  #pendapp .pv2-row{grid-template-columns:1fr;gap:7px;padding:12px}
  #pendapp .pv2-row .pv2-actions{grid-column:auto}
 }
+
+@media(max-width:700px){
+ #pendapp{max-width:100%;min-width:0;overflow-x:hidden}
+ #pendapp .pv2-head,#pendapp .pv2-head>*,#pendapp .pv2-lock,#pendapp .pv2-toolbar,#pendapp .pv2-board{min-width:0;max-width:100%}
+ #pendapp .pv2-head h1{font-size:27px;line-height:1.08;white-space:normal;overflow-wrap:anywhere}
+ #pendapp .pv2-lock code{white-space:normal;overflow-wrap:anywhere;word-break:break-word}
+ #pendapp .pv2-metrics{grid-template-columns:minmax(0,1fr) minmax(0,1fr);width:100%}
+ #pendapp .pv2-metric{min-width:0;overflow:hidden}
+ #pendapp .pv2-metric span{white-space:normal;overflow-wrap:anywhere}
+ #pendapp .pv2-toolbar>*{min-width:0;width:100%}
+ #pendapp .pv2-row{min-width:0;max-width:100%;overflow:hidden}
+ #pendapp .pv2-title,#pendapp .pv2-sub{overflow-wrap:anywhere;word-break:break-word}
+}
 </style>
 <script id="cr-pendencias-vivas-v2-candidate">
 (function(){
