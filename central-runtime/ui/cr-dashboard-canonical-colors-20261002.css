@@ -173,3 +173,189 @@ a{color:#075bd8}
   .provstats{grid-template-columns:1fr!important}
   .provstats div{width:100%!important}
 }
+
+
+/* DASHBOARD FULL LIGHT CANONICAL R7 R8 — 2026-10-02
+   Visual-only. Preserve all HTML, JS, data, calculations, APIs and events. */
+
+/* R8 — Operação Viva */
+.r8commandbar{
+  background:linear-gradient(180deg,#ffffff 0%,#f4faff 100%)!important;
+  color:#17315d!important;border:1px solid #d5e7f2!important;
+  border-left:4px solid #ffc514!important;box-shadow:0 5px 14px rgba(13,63,111,.08)!important
+}
+.r8mode{color:#9d6d0b!important}
+.r8context{color:#07165b!important}
+.r8quick button{
+  background:#fff!important;color:#075bd8!important;border:1px solid #c7dff0!important;
+  box-shadow:0 2px 6px rgba(18,69,112,.05)!important
+}
+.r8quick button:hover{
+  background:#edf7fc!important;color:#075bd8!important;border-color:#9cc8e6!important
+}
+
+/* R8 — Resultado do período */
+.r8result{
+  background:linear-gradient(180deg,#ffffff 0%,#f7fbfe 100%)!important;
+  color:#17315d!important;border:1px solid #d5e7f2!important;
+  border-top:3px solid #ffc514!important;box-shadow:0 8px 24px rgba(13,63,111,.09)!important
+}
+.r8resultperiod small{color:#6d8299!important}
+.r8resultperiod b{color:#9d6d0b!important}
+.r8resultmetric{
+  background:linear-gradient(180deg,#f9fdff,#edf7fc)!important;color:#17315d!important;
+  border:1px solid #d5e7f2!important;box-shadow:none!important
+}
+.r8resultmetric span{color:#6d8299!important}
+.r8resultmetric b{color:#07165b!important;opacity:1!important;text-shadow:none!important}
+
+/* R7 — KPIs executivos */
+.r7mastercard{
+  background:linear-gradient(180deg,#ffffff 0%,#f8fcff 100%)!important;
+  color:#17315d!important;border:1px solid #d5e7f2!important;
+  box-shadow:0 6px 18px rgba(13,63,111,.08)!important
+}
+.r7mastercard:before{
+  background:radial-gradient(circle,rgba(255,197,20,.16),transparent 66%)!important
+}
+.r7mastercard:hover{
+  border-color:#9fcbe7!important;box-shadow:0 9px 22px rgba(13,63,111,.11)!important
+}
+.r7icon{
+  background:#edf7fc!important;border:1px solid #bcd9ed!important;color:#075bd8!important;
+  box-shadow:0 3px 9px rgba(13,63,111,.07)!important
+}
+.r7masterlabel{color:#315c8a!important}
+.r7mastervalue{color:#07165b!important;opacity:1!important;text-shadow:none!important}
+.r7mastersub{color:#6d8299!important}
+.r7trend span{
+  background:#edf7fc!important;color:#315c8a!important;border:1px solid #d5e7f2!important
+}
+.r7trend .pos{background:#eafaf2!important;color:#087a50!important;border-color:#bfe9d4!important}
+.r7trend .neg{background:#fff1f4!important;color:#b71735!important;border-color:#ffc4cf!important}
+.r7trend .neu{background:#f2f7fb!important;color:#5f7488!important;border-color:#d5e7f2!important}
+
+/* R7 — Support KPIs */
+.r7supportcard{
+  background:linear-gradient(180deg,#fff,#f8fcff)!important;color:#17315d!important;
+  border:1px solid #d5e7f2!important;box-shadow:0 4px 12px rgba(13,63,111,.06)!important
+}
+.r7supportcard .lab{color:#6d8299!important}
+.r7supportcard .v{color:#07165b!important}
+.r7supportcard .small{color:#6d8299!important}
+
+/* Alertas */
+.r7alert{
+  background:#f9fdff!important;color:#17315d!important;border:1px solid #d5e7f2!important
+}
+.r7alert.warn{background:#fff8df!important;color:#624d00!important;border-color:#f1d471!important}
+.r7alert.bad{background:#fff1f4!important;color:#9f1831!important;border-color:#ffc4cf!important}
+.r7alert.ok{background:#eafaf2!important;color:#087a50!important;border-color:#bfe9d4!important}
+
+/* Leitura da Diretoria / smart cards */
+.r7readpanel{
+  background:#fff!important;color:#17315d!important;border-color:#d5e7f2!important
+}
+.r7read{color:#17315d!important}
+.r7smartcard{
+  background:linear-gradient(180deg,#f9fdff,#edf7fc)!important;color:#17315d!important;
+  border:1px solid #d5e7f2!important
+}
+.r7smartcard span{color:#6d8299!important}
+.r7smartcard b{color:#07165b!important}
+.r7smartcard small{color:#6d8299!important}
+
+/* OP KPIs */
+.opkpi{
+  background:linear-gradient(180deg,#fff,#f8fcff)!important;color:#17315d!important;
+  border:1px solid #d5e7f2!important;box-shadow:0 4px 12px rgba(13,63,111,.06)!important
+}
+.opkpi:before{background:#0877f9!important}
+.opkpi b{color:#07165b!important}
+.opkpi span{color:#6d8299!important}
+
+/* R8 — Controle de custos */
+.r8costsummary{
+  background:linear-gradient(180deg,#fff,#f8fcff)!important;color:#17315d!important;
+  border:1px solid #d5e7f2!important;border-left:4px solid #ffc514!important;
+  box-shadow:0 5px 14px rgba(13,63,111,.07)!important
+}
+.r8costsummary h4{color:#07165b!important}
+.r8costitem{
+  background:#edf7fc!important;color:#17315d!important;border:1px solid #d5e7f2!important
+}
+.r8costitem span{color:#6d8299!important}
+.r8costitem b{color:#07165b!important}
+
+/* Drawers / detalhes */
+.r6drawer{background:rgba(3,27,70,.42)!important;backdrop-filter:blur(6px)!important}
+.r6drawerpanel{
+  background:#eef8fd!important;color:#17315d!important;border-left:1px solid #d5e7f2!important;
+  box-shadow:-20px 0 50px rgba(6,40,86,.18)!important
+}
+.r6drawerhead{
+  background:linear-gradient(180deg,#ffffff,#edf7fc)!important;color:#07165b!important;
+  border-bottom:1px solid #d5e7f2!important
+}
+.r6drawerhead b{color:#07165b!important}
+.r6drawerhead button{
+  background:#fff!important;color:#075bd8!important;border:1px solid #bcd9ed!important
+}
+.r6metric{border-top-color:#d5e7f2!important;color:#17315d!important}
+.r6metric span{color:#6d8299!important}
+.r6metric b{color:#07165b!important}
+
+/* Acertos Vivos — visual only */
+.aclive{
+  background:linear-gradient(180deg,#fff,#f8fcff)!important;color:#17315d!important;
+  border:1px solid #d5e7f2!important;border-top:3px solid #ffc514!important;
+  box-shadow:0 6px 18px rgba(13,63,111,.08)!important
+}
+.aclivehead h3{color:#07165b!important}
+.aclivehead .muted{color:#6d8299!important}
+.acbtn{
+  background:#fff!important;color:#075bd8!important;border:1px solid #c7dff0!important
+}
+.acbtn.primary{
+  background:linear-gradient(180deg,#1688ff,#075bd8)!important;color:#fff!important;border-color:#0b6fe6!important
+}
+.ackpi,.acshare,.achsnap{
+  background:linear-gradient(180deg,#f9fdff,#edf7fc)!important;color:#17315d!important;
+  border:1px solid #d5e7f2!important
+}
+.ackpi span,.acshare span,.achsnap small{color:#6d8299!important}
+.ackpi b,.acshare b,.achsnap b{color:#07165b!important}
+.ackpi.gold b{color:#9d6d0b!important}
+.acfilters input,.acfilters select{
+  background:#fff!important;color:#17315d!important;border:1px solid #d5e7f2!important
+}
+.acstatus{color:#6d8299!important}
+.acsel{color:#9d6d0b!important}
+.acwarn{color:#8a5d00!important}
+.acbad{color:#b71735!important}
+.acok{color:#087a50!important}
+.acdetails{color:#6d8299!important}
+
+/* Generic old-dark descendants inside converted R7/R8/AC blocks */
+:is(.r8commandbar,.r8result,.r7mastercard,.r7supportcard,.r7readpanel,.r7smartcard,.opkpi,.r8costsummary,.r8costitem,.aclive,.ackpi,.acshare,.achsnap)
+  :is(h1,h2,h3,h4,strong,b){text-shadow:none!important}
+
+/* Mobile */
+@media(max-width:700px){
+  .r8commandbar,.r8result,.r7mastercard,.r7supportcard,.r7readpanel,.r7smartcard,.opkpi,.r8costsummary,.aclive{
+    max-width:100%!important;min-width:0!important
+  }
+  .r8result{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .r8resultperiod{grid-column:1/-1!important}
+  .r7master{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .r7support{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .r7smart{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:430px){
+  .r8quick{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .r8result{grid-template-columns:1fr!important}
+  .r8resultperiod{grid-column:auto!important}
+  .r7master{grid-template-columns:1fr!important}
+  .r7support{grid-template-columns:1fr 1fr!important}
+  .r7smart{grid-template-columns:1fr!important}
+}
