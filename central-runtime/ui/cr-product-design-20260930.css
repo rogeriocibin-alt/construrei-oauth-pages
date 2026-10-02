@@ -280,3 +280,98 @@ header{background:rgba(248,252,255,.97)!important;border-bottom-color:var(--crp-
   .card,.box,.panel,.cr-section{border-radius:12px!important}
   .btn,button,.tool,.trellobtn,.miniBtn,.copyBtn,.finalBtn{min-height:44px}
 }
+
+
+/* CR-GLOBAL-VISUAL-NORMALIZATION-20261001 */
+:root{
+  --cr-ui-navy:#031b46;
+  --cr-ui-navy-2:#05265f;
+  --cr-ui-blue:#0875f5;
+  --cr-ui-gold:#ffc400;
+  --cr-ui-bg:#eef7fc;
+  --cr-ui-surface:#ffffff;
+  --cr-ui-text:#17315d;
+  --cr-ui-ink:#07175b;
+  --cr-ui-muted:#637d98;
+  --cr-ui-line:#d3e4f1;
+  --cr-ui-dark-text:#f7fbff;
+  --cr-ui-dark-muted:#c8d9e9;
+}
+
+/* Contraste defensivo: superfícies escuras nunca podem herdar texto escuro */
+.cr-hero,.caseRibbon,.topbar,.drawer,.mobile-nav{
+  color:var(--cr-ui-dark-text)!important;
+}
+.cr-hero h1,.cr-hero h2,.cr-hero h3,.cr-hero strong,
+.caseRibbon b,.caseRibbon strong,.topbar b,.topbar strong,
+.drawer h1,.drawer h2,.drawer h3{
+  color:#fff!important;
+}
+.cr-hero p,.cr-hero .mut,.cr-hero .muted,.caseRibbon span,
+.topbar small,.drawer p,.drawer .mut,.drawer .muted{
+  color:var(--cr-ui-dark-muted)!important;
+}
+
+/* Formulários: visual canônico e legibilidade uniforme */
+input,select,textarea,.input,.in{
+  min-height:42px!important;
+  line-height:1.35!important;
+  font-size:14px!important;
+}
+textarea{min-height:104px!important;resize:vertical!important}
+label,.label,.cr-field label{
+  line-height:1.35!important;
+  letter-spacing:.01em!important;
+}
+select option{color:var(--cr-ui-text)!important;background:#fff!important}
+
+/* Botões: ergonomia mínima comum */
+button,.btn,.tool,.trellobtn,.yearbtn,.tab,.chip,.month,.miniBtn,.copyBtn,.finalBtn{
+  min-height:42px!important;
+  padding-top:9px!important;
+  padding-bottom:9px!important;
+  line-height:1.2!important;
+}
+
+/* Cards e títulos: evita herança de baixa legibilidade */
+.card h1,.card h2,.card h3,.box h1,.box h2,.box h3,
+.panel h1,.panel h2,.panel h3,.cr-section h1,.cr-section h2,.cr-section h3{
+  color:var(--cr-ui-ink)!important;
+}
+.card p,.box p,.panel p,.cr-section p,
+.card span,.box span,.panel span,.cr-section span{
+  text-rendering:optimizeLegibility;
+}
+
+/* Notebook 1366x768 em CTRL+0: mais respiro sem esmagar títulos */
+@media (min-width:981px) and (max-width:1600px){
+  .side{
+    width:auto;
+    padding:15px 13px 18px!important;
+    overflow-y:auto!important;
+    scrollbar-width:thin;
+  }
+  .side .grp{margin:12px 0 14px!important}
+  .side .gt{
+    padding:0 10px 7px!important;
+    font-size:10px!important;
+    line-height:1.25!important;
+    letter-spacing:1.08px!important;
+  }
+  .side .nav{
+    min-height:38px!important;
+    padding:9px 11px!important;
+    margin:2px 0!important;
+    gap:10px!important;
+    font-size:14px!important;
+    line-height:1.25!important;
+    white-space:normal!important;
+  }
+  .side .nav i{flex:0 0 auto!important}
+}
+
+/* Em telas menores, preservar área clicável sem sobreposição */
+@media(max-width:980px){
+  .side .nav{min-height:44px!important;font-size:15px!important;line-height:1.28!important}
+  input,select,textarea,.input,.in{font-size:16px!important}
+}
