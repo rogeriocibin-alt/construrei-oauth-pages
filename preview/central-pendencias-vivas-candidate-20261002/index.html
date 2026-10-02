@@ -3126,133 +3126,124 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  #pendapp .pv2-title,#pendapp .pv2-sub{overflow-wrap:anywhere;word-break:break-word}
 }
 </style>
-<script id="cr-pendencias-vivas-v2-candidate">
+<script id="cr-pendencias-vivas-v3-candidate">
 (function(){
 'use strict';
-if(window.__CR_PV2)return;window.__CR_PV2=true;
+window.__CR_PV2=true;
 var API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-vivas-candidate-20261002';
-var PUBLIC='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=pending-board';
-var state={items:[],history:false,selected:null};
+var state={items:[],history:false,summary:null};
 
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
 function sess(){try{return sessionStorage.getItem('crGestaoSession')||localStorage.getItem('crGestaoSession')||''}catch(_){return''}}
 function mapStatus(x){
- var s=String(x.status||'');
- if(s==='Não iniciado')return'PENDENTE';
- if(s==='Em andamento')return'EM ANDAMENTO';
- if(s==='Bloqueado')return'BLOQUEADA';
- if(s==='Em validação')return'EXECUÇÃO CONCLUÍDA • AGUARDANDO HOMOLOGAÇÃO';
- if(s==='Concluído')return'CONCLUÍDA';
- if(s==='Cancelado')return'HISTÓRICO';
- if(s==='Aguardando'){
-  if(x.due_date){var d=new Date(x.due_date+'T23:59:59');if(d>Date.now())return'ADIADA / AMANHÃ'}
-  return'PENDENTE';
- }
- return s.toUpperCase()||'PENDENTE';
+ if(x.public_status)return x.public_status;
+ if(x.confirmation_state==='REQUER_HUMANO')return'EXECUÇÃO CONCLUÍDA • AGUARDANDO HOMOLOGAÇÃO';
+ return {ABERTO:'PENDENTE',EM_ANDAMENTO:'EM ANDAMENTO',BLOQUEADO:'BLOQUEADA',AGUARDANDO_TERCEIRO:'AGUARDANDO TERCEIRO',AGENDADO:'AGENDADO',AMANHA:'ADIADA / AMANHÃ',CONCLUIDO:'CONCLUÍDA'}[x.status]||x.status||'PENDENTE';
 }
-function due(x){return x.due_date?new Date(x.due_date+'T12:00:00').toLocaleDateString('pt-BR'):'—'}
-function owner(x){return x.owner||x.operational_owner||'Sem responsável'}
-function fillSelect(id,vals){var el=document.getElementById(id);if(!el)return;var cur=el.value,first=el.options[0].outerHTML;el.innerHTML=first+vals.map(function(v){return'<option>'+esc(v)+'</option>'}).join('');el.value=cur}
+function pid(x){return x.pending_id||x.id||''}
+function due(x){return x.due_at?new Date(x.due_at).toLocaleDateString('pt-BR'):'—'}
+function owner(x){return x.responsible||x.next_action_responsible||'Sem responsável'}
+function metricCards(m){
+ var rows=[['Agora',(m.pending||0)+(m.in_progress||0)],['Pendentes',m.pending||0],['Em andamento',m.in_progress||0],['Bloqueadas',m.blocked||0],['Amanhã / adiadas',m.tomorrow||0],['Aguardando homologação',m.awaiting_homologation||0],['Concluídas hoje',m.completed_today||0]];
+ var h=document.getElementById('pv2Metrics');if(h)h.innerHTML=rows.map(function(x){return'<div class="pv2-metric"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>'}).join('');
+}
 function metrics(items){
- var active=items.filter(function(x){return !['Concluído','Cancelado'].includes(String(x.status))});
- function n(s){return active.filter(function(x){return mapStatus(x)===s}).length}
- var today=new Date().toISOString().slice(0,10);
- var m=[
-  ['Agora',active.filter(function(x){return['P0','P1'].includes(x.priority)&&mapStatus(x)!=='ADIADA / AMANHÃ'}).length],
-  ['Pendentes',n('PENDENTE')],
-  ['Em andamento',n('EM ANDAMENTO')],
-  ['Bloqueadas',n('BLOQUEADA')],
-  ['Amanhã / adiadas',n('ADIADA / AMANHÃ')],
-  ['Aguardando homologação',n('EXECUÇÃO CONCLUÍDA • AGUARDANDO HOMOLOGAÇÃO')],
-  ['Concluídas hoje',items.filter(function(x){return x.status==='Concluído'&&String(x.updated_at||'').slice(0,10)===today}).length]
- ];
- var h=document.getElementById('pv2Metrics');if(h)h.innerHTML=m.map(function(x){return'<div class="pv2-metric"><b>'+x[1]+'</b><span>'+x[0]+'</span></div>'}).join('');
+ if(state.summary){metricCards(state.summary);return}
+ var active=items.filter(function(x){return x.status!=='CONCLUIDO'});
+ metricCards({
+  pending:active.filter(function(x){return x.status==='ABERTO'}).length,
+  in_progress:active.filter(function(x){return x.status==='EM_ANDAMENTO'}).length,
+  blocked:active.filter(function(x){return x.status==='BLOQUEADO'}).length,
+  tomorrow:active.filter(function(x){return x.status==='AMANHA'}).length,
+  awaiting_homologation:active.filter(function(x){return x.confirmation_state==='REQUER_HUMANO'}).length,
+  completed_today:0
+ });
 }
+function fillSelect(id,vals){var el=document.getElementById(id);if(!el)return;var cur=el.value,first=el.options[0]?el.options[0].outerHTML:'<option value="">Todos</option>';el.innerHTML=first+vals.map(function(v){return'<option>'+esc(v)+'</option>'}).join('');el.value=cur}
 function filtered(){
  var q=(document.getElementById('pv2Q')?.value||'').toLowerCase(),st=document.getElementById('pv2Status')?.value||'',a=document.getElementById('pv2Area')?.value||'',o=document.getElementById('pv2Owner')?.value||'';
  return state.items.filter(function(x){
-  var hist=['Concluído','Cancelado'].includes(String(x.status));
-  if(state.history?!hist:hist)return false;
-  if(st&&mapStatus(x)!==st)return false;if(a&&String(x.area||'')!==a)return false;if(o&&owner(x)!==o)return false;
-  if(q&&!JSON.stringify([x.id,x.title,x.description,x.area,x.owner,x.operational_owner,x.next_step,x.blocker]).toLowerCase().includes(q))return false;
+  var hist=x.status==='CONCLUIDO';if(state.history?!hist:hist)return false;
+  if(st&&mapStatus(x)!==st)return false;if(a&&String(x.category||'')!==a)return false;if(o&&owner(x)!==o)return false;
+  if(q&&!JSON.stringify([pid(x),x.title,x.description,x.category,x.client_name,x.responsible,x.next_action,x.block_reason,x.source_system,x.source_ref]).toLowerCase().includes(q))return false;
   return true;
  });
 }
+function actionButtons(x){
+ var s=String(x.status||''),a=[];
+ if(['ABERTO','AGENDADO','AMANHA','AGUARDANDO_TERCEIRO'].includes(s))a.push(['STARTED','Iniciar']);
+ if(s!=='BLOQUEADO'&&s!=='CONCLUIDO')a.push(['BLOCKED','Bloquear']);
+ if(s!=='CONCLUIDO')a.push(['DEFERRED','Amanhã']);
+ if(s!=='CONCLUIDO'&&x.confirmation_state!=='REQUER_HUMANO')a.push(['COMPLETED','Concluir']);
+ if(x.confirmation_state==='REQUER_HUMANO')a.push(['HOMOLOGATED','Homologar']);
+ if(s==='CONCLUIDO')a.push(['REOPENED','Reabrir']);
+ return a.map(function(v){return'<button type="button" data-pv-id="'+esc(pid(x))+'" data-pv-event="'+v[0]+'">'+v[1]+'</button>'}).join('');
+}
 function render(){
  metrics(state.items);
- fillSelect('pv2Area',Array.from(new Set(state.items.map(function(x){return x.area||'CENTRAL'}))).sort());
+ fillSelect('pv2Area',Array.from(new Set(state.items.map(function(x){return x.category||'OPERACIONAL'}))).sort());
  fillSelect('pv2Owner',Array.from(new Set(state.items.map(owner))).sort());
  var list=filtered(),h=document.getElementById('pv2Board');if(!h)return;
- if(!list.length){h.innerHTML='<div class="card pv2-empty"><b>Nenhum item nesta visão.</b><p class="mut">A visão principal esconde concluídas e canceladas; use Histórico para auditoria.</p></div>';return}
+ if(!sess()){
+  h.innerHTML='<div class="card pv2-empty"><b>Banco Mestre protegido.</b><p class="mut">Os totais acima são reais da candidata. Para abrir registros, histórico e ações, entre pelo acesso autenticado da Central.</p></div>';return;
+ }
+ if(!list.length){h.innerHTML='<div class="card pv2-empty"><b>Nenhum item nesta visão.</b><p class="mut">A candidata não cria placeholders. Itens aparecerão quando forem registrados no Banco Mestre.</p></div>';return}
  h.innerHTML=list.slice(0,150).map(function(x){
-   var st=mapStatus(x),detail=x.blocker?('Bloqueio: '+x.blocker):(x.next_step||x.description||'Sem próximo passo registrado.');
-   return '<div class="pv2-row" data-pv-id="'+esc(x.id)+'">'+
-    '<div><div class="pv2-title">'+esc(x.title||x.id)+'</div><div class="pv2-sub">'+esc(x.id)+' • '+esc(x.area||'CENTRAL')+' • '+esc(detail)+'</div></div>'+
-    '<span class="pv2-chip" data-state="'+esc(st)+'">'+esc(st)+'</span>'+
-    '<div><b class="pv2-title">'+esc(owner(x))+'</b><div class="pv2-sub">'+esc(x.priority||'P1')+'</div></div>'+
-    '<div><b class="pv2-title">'+esc(due(x))+'</b><div class="pv2-sub">'+esc(x.updated_by||'')+'</div></div>'+
-    '<div class="pv2-actions">'+actionButtons(x)+'</div>'+
-   '</div>';
+  var st=mapStatus(x),detail=x.block_reason?('Bloqueio: '+x.block_reason):(x.next_action||x.description||'Sem próximo passo registrado.');
+  return '<div class="pv2-row" data-pv-id="'+esc(pid(x))+'">'+
+   '<div><div class="pv2-title">'+esc(x.title||pid(x))+'</div><div class="pv2-sub">'+esc(x.budget_code||pid(x))+' • '+esc(x.category||'OPERACIONAL')+' • '+esc(detail)+'</div></div>'+
+   '<span class="pv2-chip" data-state="'+esc(st)+'">'+esc(st)+'</span>'+
+   '<div><b class="pv2-title">'+esc(owner(x))+'</b><div class="pv2-sub">'+esc(x.priority||'P2')+'</div></div>'+
+   '<div><b class="pv2-title">'+esc(due(x))+'</b><div class="pv2-sub">'+esc(x.updated_by||'')+'</div></div>'+
+   '<div class="pv2-actions">'+actionButtons(x)+'</div></div>';
  }).join('');
  h.querySelectorAll('[data-pv-id]').forEach(function(row){row.addEventListener('click',function(e){if(e.target.closest('button'))return;openDetail(row.dataset.pvId)})});
  h.querySelectorAll('[data-pv-event]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();eventItem(b.dataset.pvId,b.dataset.pvEvent)})});
 }
-function actionButtons(x){
- var s=String(x.status||''),a=[];
- if(['Não iniciado','Aguardando'].includes(s))a.push(['STARTED','Iniciar']);
- if(s!=='Bloqueado'&&!['Concluído','Cancelado'].includes(s))a.push(['BLOCKED','Bloquear']);
- if(!['Concluído','Cancelado'].includes(s))a.push(['DEFERRED','Amanhã']);
- if(!['Concluído','Cancelado','Em validação'].includes(s))a.push(['COMPLETED','Concluir']);
- if(s==='Em validação')a.push(['HOMOLOGATED','Homologar']);
- if(['Concluído','Cancelado'].includes(s))a.push(['REOPENED','Reabrir']);
- return a.map(function(v){return'<button type="button" data-pv-id="'+esc(x.id)+'" data-pv-event="'+v[0]+'">'+v[1]+'</button>'}).join('');
-}
 async function eventItem(id,kind){
- var s=sess();if(!s){alert('Para alterar pendências, entre pelo acesso Rogério — Diretor ou Éder — Admin Técnico.');return}
- var x=state.items.find(function(i){return i.id===id})||{},body={kind:kind,item_id:id,actor:'Sistema',idempotency_key:'ui-'+id+'-'+kind+'-'+Date.now(),area:x.area};
- if(kind==='BLOCKED'){var r=prompt('Qual é o bloqueio real?');if(!r)return;body.blocker=r}
- if(kind==='DEFERRED'){var d=new Date();d.setDate(d.getDate()+1);body.due_date=d.toISOString().slice(0,10);body.next_step=x.next_step||'Retomar na data programada.'}
+ var s=sess();if(!s){alert('Ação protegida: autenticação necessária.');return}
+ var x=state.items.find(function(i){return pid(i)===id})||{};
+ var body={kind:kind,pending_id:id,idempotency_key:'ui-'+id+'-'+kind+'-'+Date.now(),source_system:'CENTRAL_UI',source_ref:'ui:'+id+':'+kind};
+ if(kind==='BLOCKED'){var r=prompt('Qual é o bloqueio real?');if(!r)return;body.block_reason=r}
+ if(kind==='DEFERRED'){var d=new Date();d.setDate(d.getDate()+1);body.due_at=d.toISOString();body.next_action=x.next_action||'Retomar na data programada.'}
  if(kind==='COMPLETED')body.human_gate=true;
- if(kind==='HOMOLOGATED'&&!confirm('Homologar esta conclusão?'))return;
+ if(kind==='HOMOLOGATED'&&!confirm('Homologar esta conclusão como Diretoria?'))return;
  try{
   var r=await fetch(API+'?api=event',{method:'POST',headers:{'content-type':'application/json','x-cr-session':s},body:JSON.stringify(body)});
   var d=await r.json();if(!r.ok)throw Error(d.error||('HTTP '+r.status));await load(true);
  }catch(e){alert('Pendências Vivas: '+e.message)}
 }
 async function createItem(){
- var s=sess();if(!s){alert('Entre pelo acesso Rogério — Diretor ou Éder — Admin Técnico para criar.');return}
+ var s=sess();if(!s){alert('Ação protegida: autenticação necessária.');return}
  var title=prompt('Título objetivo da pendência:');if(!title)return;
- var area=(prompt('Módulo/área (ex.: CENTRAL, APP, F01, SAÚDE TÉCNICA):','CENTRAL')||'CENTRAL').toUpperCase();
- var next=prompt('Próximo passo:','Triar e executar a próxima ação comprovável.')||'Triar e executar a próxima ação comprovável.';
- var body={kind:'FOUND',title:title,area:area,next_step:next,actor:'Sistema',priority:'P1',idempotency_key:'manual-'+Date.now()};
+ var category=(prompt('Categoria (OPERACIONAL, ADMINISTRATIVA, FINANCEIRA, TÉCNICA, ORÇAMENTO, AGENDA, TERCEIRO, SISTEMA):','OPERACIONAL')||'OPERACIONAL').toUpperCase();
+ var next=prompt('Próxima ação:','Triar e executar a próxima ação comprovável.')||'Triar e executar a próxima ação comprovável.';
+ var body={kind:'FOUND',title:title,category:category,next_action:next,priority:'P1',source_system:'MANUAL',source_ref:'manual-'+Date.now(),idempotency_key:'manual-'+Date.now()};
  try{
   var r=await fetch(API+'?api=event',{method:'POST',headers:{'content-type':'application/json','x-cr-session':s},body:JSON.stringify(body)});
   var d=await r.json();if(!r.ok)throw Error(d.error||('HTTP '+r.status));
-  if(d.deduplicated)alert('Item semelhante encontrado. A informação foi condensada na pendência existente '+d.merged_into+'.');
+  if(d.deduplicated)alert('Item semelhante já existe. Registro condensado em '+d.merged_into+'.');
   await load(true);
  }catch(e){alert('Pendências Vivas: '+e.message)}
 }
-async function openDetail(id){
- var x=state.items.find(function(i){return i.id===id});if(!x)return;
+function openDetail(id){
+ var x=state.items.find(function(i){return pid(i)===id});if(!x)return;
  var h=document.getElementById('pv2Detail');if(!h)return;h.hidden=false;
  h.innerHTML='<div class="actions" style="justify-content:space-between"><div class="tag">'+esc(mapStatus(x))+'</div><button class="btn" id="pv2Close">Fechar</button></div>'+
- '<h2>'+esc(x.title)+'</h2><p class="mut">'+esc(x.id)+' • '+esc(x.area||'CENTRAL')+' • '+esc(owner(x))+'</p>'+
- '<div class="card"><b>Próxima ação</b><p>'+esc(x.next_step||'—')+'</p><b>Bloqueio</b><p>'+esc(x.blocker||'Nenhum')+'</p><b>Descrição</b><p>'+esc(x.description||'—')+'</p><b>Última atualização</b><p>'+esc(x.updated_at?new Date(x.updated_at).toLocaleString('pt-BR'):'—')+' • '+esc(x.updated_by||'—')+'</p></div>'+
- '<div class="notice"><b>Rastreabilidade</b><br>Origem e evidências permanecem no histórico canônico. Para alterações, a candidata exige autenticação e grava auditoria append-only.</div>';
+ '<h2>'+esc(x.title)+'</h2><p class="mut">'+esc(x.budget_code||pid(x))+' • '+esc(x.category||'OPERACIONAL')+' • '+esc(owner(x))+'</p>'+
+ '<div class="card"><b>Próxima ação</b><p>'+esc(x.next_action||'—')+'</p><b>Bloqueio</b><p>'+esc(x.block_reason||'Nenhum')+'</p><b>Origem</b><p>'+esc((x.source_system||'—')+(x.source_ref?' • '+x.source_ref:''))+'</p><b>Última atualização</b><p>'+esc(x.updated_at?new Date(x.updated_at).toLocaleString('pt-BR'):'—')+' • '+esc(x.updated_by||'—')+'</p></div>'+
+ '<div class="notice"><b>Rastreabilidade</b><br>Alterações ficam registradas no histórico append-only da candidata, com ator, papel, correlação, origem e estado anterior/posterior.</div>';
  document.getElementById('pv2Close').onclick=function(){h.hidden=true};
 }
-function homeSummary(items){
- var h=document.getElementById('boardSummary');if(!h)return;
- var active=items.filter(function(x){return!['Concluído','Cancelado'].includes(String(x.status))});
- var rows=[['Agora',active.filter(function(x){return['P0','P1'].includes(x.priority)&&mapStatus(x)!=='ADIADA / AMANHÃ'}).length,'Prioridade e exceções'],['Em andamento',active.filter(function(x){return x.status==='Em andamento'}).length,'Execuções comprovadamente iniciadas'],['Bloqueadas',active.filter(function(x){return x.status==='Bloqueado'}).length,'Impedimentos reais'],['Amanhã',active.filter(function(x){return mapStatus(x)==='ADIADA / AMANHÃ'}).length,'Itens conscientemente adiados']];
- h.innerHTML=rows.map(function(r){return'<button type="button" class="cr-pending-item" data-action="go" data-page-target="pendapp" style="text-align:left;border:0;background:transparent;width:100%"><div class="cr-pending-count">'+r[1]+'</div><div class="cr-pending-copy"><h3>'+r[0]+'</h3><div class="cr-pending-lines">'+r[2]+'</div></div></button>'}).join('');
-}
 async function load(silent){
- var h=document.getElementById('pv2Board');if(h&&!silent)h.innerHTML='<div class="notice">Sincronizando Banco Mestre…</div>';
+ var h=document.getElementById('pv2Board');if(h&&!silent)h.innerHTML='<div class="notice">Sincronizando Banco Mestre candidato…</div>';
  try{
-  var r=await fetch(PUBLIC+'&t='+Date.now(),{cache:'no-store'}),d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||('HTTP '+r.status));
-  state.items=(d.items||[]);homeSummary(state.items);render();
- }catch(e){if(h)h.innerHTML='<div class="notice">Não foi possível carregar o Banco Mestre: '+esc(e.message)+'</div>'}
+  var s=sess(),url=s?(API+'?api=board&history=1&t='+Date.now()):(API+'?api=summary&t='+Date.now());
+  var headers=s?{'x-cr-session':s}:{};
+  var r=await fetch(url,{cache:'no-store',headers:headers}),d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||('HTTP '+r.status));
+  if(s){state.items=d.items||[];state.summary=null}else{state.items=[];state.summary=d.metrics||{}}
+  render();
+ }catch(e){if(h)h.innerHTML='<div class="notice">Não foi possível carregar o Banco Mestre candidato: '+esc(e.message)+'</div>'}
 }
 function init(){
  var n=document.getElementById('pv2New');if(n)n.onclick=createItem;
@@ -3264,4 +3255,65 @@ function init(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
-</body></html>
+<style id="cr-executive-live-v3-style">
+#crExecutiveLayerV3{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+#crExecutiveLayerV3 .card h3{margin:0 0 6px;color:#0a3767}
+#crExecutiveLayerV3 .cr-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}
+#crExecutiveLayerV3 .cr-mini{border:1px solid #d9e7f5;border-radius:10px;padding:8px;background:#f8fbff}
+#crExecutiveLayerV3 .cr-mini b{display:block;font-size:17px;color:#0a3767}
+#crExecutiveLayerV3 .cr-mini span{font-size:9px;color:#68819b}
+#crTechHealthLive .cr-health-line{display:grid;grid-template-columns:1.5fr .8fr .8fr;gap:8px;padding:7px 0;border-bottom:1px solid #e4edf6;font-size:11px}
+@media(max-width:800px){#crExecutiveLayerV3{grid-template-columns:1fr}#crExecutiveLayerV3 .cr-mini-grid{grid-template-columns:1fr 1fr}}
+</style>
+<script id="cr-executive-live-v3">
+(function(){
+'use strict';
+if(window.__crExecutiveV3)return;window.__crExecutiveV3=true;
+var API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-vivas-candidate-20261002';
+var EXEC='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=public-summary';
+function e(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
+function v(x){return x===0?'0':(x==null?'—':x)}
+function opCard(icon,label,value,detail,status,tone){return '<div class="cr-op-card '+tone+'"><div class="cr-op-top"><span class="cr-op-icon">'+icon+'</span><span class="cr-op-label">'+e(label)+'</span></div><div class="cr-op-value">'+e(v(value))+'</div><div class="cr-op-detail">'+e(detail)+'</div><div class="cr-op-status">'+e(status)+'</div></div>'}
+function src(summary,code){return (summary.sources||[]).find(function(x){return x.source_code===code})||{status:'NAO_INTEGRADO'}}
+function ensureLayer(){
+ var k=document.getElementById('kpis');if(!k)return null;
+ var layer=document.getElementById('crExecutiveLayerV3');
+ if(!layer){layer=document.createElement('div');layer.id='crExecutiveLayerV3';k.parentNode.insertBefore(layer,k.nextSibling)}
+ return layer;
+}
+async function refresh(){
+ var rs=await Promise.allSettled([
+  fetch(EXEC+'&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),
+  fetch(API+'?api=summary&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),
+  fetch(API+'?api=technical-health&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()})
+ ]);
+ var ex=rs[0].status==='fulfilled'?rs[0].value:{},sm=rs[1].status==='fulfilled'?rs[1].value:{metrics:{},sources:[]},th=rs[2].status==='fulfilled'?rs[2].value:null;
+ var o=ex&&ex.operacao?ex.operacao:{},m=sm.metrics||{},agenda=src(sm,'AGENDA'),gc=src(sm,'GESTAOCLICK');
+ var k=document.getElementById('kpis');
+ if(k)k.innerHTML=
+  opCard('🔧','Serviços em andamento',o.servicos_em_andamento,'Leitura real da Central','Em execução','blue')+
+  opCard('▣','Aguardando pagamento',o.aguardando_pagamento,'Leitura real da Central','Financeiro','green')+
+  opCard('▦','Visitas',o.visitas_hoje,'Agendamentos do dia','Agenda','purple')+
+  opCard('▥','Orçamentos',o.orcamentos,'Leitura disponível na Central','Envio / aprovação','orange')+
+  opCard('◷','Agenda de amanhã',agenda.status==='OK'?m.tomorrow:null,agenda.status==='OK'?'Fonte Agenda conectada':'FONTE AINDA NÃO INTEGRADA',agenda.status,'amber')+
+  opCard('↶','Pendências de ontem',m.overdue,'Banco Mestre candidato','Atrasadas / vencidas','red')+
+  opCard('●','Pendências vivas',m.total_live,'Banco Mestre candidato','Gestão viva','blue')+
+  opCard('!','Bloqueadas',m.blocked,'Impedimentos registrados','Exceções','red');
+ var layer=ensureLayer();
+ if(layer)layer.innerHTML=
+  '<div class="card"><h3>Gestão da Agenda</h3><div class="mut">'+(agenda.status==='OK'?'Fonte operacional conectada.':'Agenda operacional ainda não integrada; nenhum número é simulado.')+'</div><div class="cr-mini-grid"><div class="cr-mini"><b>—</b><span>Hoje · fonte Agenda</span></div><div class="cr-mini"><b>'+(agenda.status==='OK'?e(v(m.tomorrow)):'—')+'</b><span>Amanhã</span></div><div class="cr-mini"><b>'+e(v(m.overdue))+'</b><span>Pendências vencidas no Banco Mestre</span></div></div></div>'+
+  '<div class="card"><h3>Orçamentos / Serviços em Fluxo</h3><div class="mut">'+(gc.status==='OK'?'GestãoClick conectado em leitura executiva.':'GestãoClick ainda não integrado nesta camada. Estrutura preparada sem criar métricas fictícias.')+'</div><div class="cr-mini-grid"><div class="cr-mini"><b>'+e(v(o.orcamentos))+'</b><span>Orçamentos conhecidos</span></div><div class="cr-mini"><b>—</b><span>Tempo por etapa</span></div><div class="cr-mini"><b>—</b><span>Exceções GestãoClick</span></div></div></div>';
+ paintHealth(th);
+}
+function paintHealth(d){
+ var p=document.getElementById('health');if(!p||!d)return;
+ var box=document.getElementById('crTechHealthLive');
+ if(!box){box=document.createElement('div');box.id='crTechHealthLive';box.className='card';box.style.marginBottom='14px';var anchor=p.querySelector('.hero,.card');if(anchor)anchor.parentNode.insertBefore(box,anchor.nextSibling);else p.insertBefore(box,p.firstChild)}
+ box.innerHTML='<div class="tag">TELEMETRIA REAL · CANDIDATA</div><h2 style="margin:6px 0">Saúde Técnica</h2><p class="mut">Sem “OK” artificial: cada linha abaixo vem de checagem real ou declara explicitamente não integração.</p>'+
+ (d.components||[]).map(function(x){return '<div class="cr-health-line"><b>'+e(x.component)+'</b><span>'+e(x.status)+'</span><span>'+(x.latency_ms==null?'—':e(x.latency_ms)+' ms')+'</span></div>'}).join('')+
+ '<div class="pv2-sub" style="margin-top:8px">Build '+e(d.build)+' · verificado '+e(new Date(d.checked_at).toLocaleString('pt-BR'))+'</div>';
+}
+function init(){refresh();setInterval(refresh,30000)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script></body></html>
