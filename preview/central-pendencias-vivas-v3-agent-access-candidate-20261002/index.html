@@ -2830,7 +2830,7 @@ function crExecMetric(key){return DASH_EXEC&&DASH_EXEC.operacao?DASH_EXEC.operac
 function crFmtBRL(v){return typeof v==='number'?v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}):'—'}
 function crMetricVal(x){return x&&x.status==='ok'&&x.value!=null?x.value:'—'}
 function crMetricDetail(x,okText){if(!x)return 'Dado não carregado';if(x.status==='ok')return okText||x.note||'Fonte operacional validada';return x.note||'Não disponível nesta etapa'}
-async function crLoadExecSnapshot(){try{var r=await fetch('./dashboard-executivo-summary.candidate.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);DASH_EXEC=await r.json()}catch(_){DASH_EXEC=null}}
+async function crLoadExecSnapshot(){try{var r=await fetch('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-executivo-summary-candidate-20261001?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);DASH_EXEC=await r.json()}catch(_){DASH_EXEC=null}} async function crLoadPendingV3(){try{var r=await fetch('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-vivas-candidate-20261002?api=summary&t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);window.__CR_PENDING_SUMMARY=await r.json()}catch(_){window.__CR_PENDING_SUMMARY={metrics:{},sources:[]}}}
 function render(){var m=DATA.metrics||{};setText('#release','V100-R12.8');setText('#live','LIVE • '+new Date(DATA.generated_at).toLocaleTimeString('pt-BR'));
 var logo=qs('.brand img'),heroLogo=qs('#crHeroLogo');if(logo&&heroLogo&&!heroLogo.getAttribute('src'))heroLogo.setAttribute('src',logo.getAttribute('src')||'');
 var dt=new Date(DATA.generated_at||Date.now()),dateEl=qs('#crHeroDate');if(dateEl)dateEl.textContent=dt.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});var up=qs('#crHomeUpdated');if(up)up.textContent='Última atualização: '+dt.toLocaleString('pt-BR');
@@ -2847,7 +2847,7 @@ setHtml('#kpis',
  homeKpi('↶','Pendências de ontem',crPM.overdue==null?'—':crPM.overdue,'Banco Mestre candidato','Atrasadas / vencidas','red')+
  homeKpi('●','Pendências vivas',crPM.total_live==null?'—':crPM.total_live,'Banco Mestre candidato','Gestão viva','blue')+
  homeKpi('!','Bloqueadas',crPM.blocked==null?'—':crPM.blocked,'Impedimentos registrados','Exceções','red'));
-var links=DATA.links||{};
+setText('#crAgendaTomorrowV3',crAgenda.status==='OK'?(crPM.tomorrow||0):'—');setText('#crPendOverdueV3',crPM.overdue==null?'—':crPM.overdue);setText('#crBudgetKnownV3',crMetricVal(exO));var links=DATA.links||{};
 var appAction='<a class="cr-quick-hit" href="'+esc(links.app||'')+'" aria-label="Abrir APP"></a>';
 var f00Action='<a class="cr-quick-hit" href="'+esc(links.f00||links.novo_chamado||'')+'" aria-label="Abrir F00"></a>';
 var checklistAction=links.checklist?'<a class="cr-quick-hit" href="'+esc(links.checklist)+'" target="_blank" rel="noopener noreferrer" aria-label="Abrir Checklist"></a>':'<button class="cr-quick-hit" type="button" disabled aria-label="Checklist indisponível"></button>';
@@ -2892,7 +2892,7 @@ function crLive(){var ts=DATA&&DATA.generated_at?new Date(DATA.generated_at):new
 function crModuleNotice(id,msg){var p=qs('#'+id);if(!p)return;var n=p.querySelector('.cr-load-note');if(!n){n=document.createElement('div');n.className='notice cr-load-note';p.insertBefore(n,p.firstChild)}n.textContent=msg}
 async function crLoadPending(force){if(__crPendingInFlight||(__crPendingLoaded&&!force))return;__crPendingInFlight=true;try{BOARD=await crJson('?api=pending-board&t='+Date.now(),15000);__crPendingLoaded=true;render();crLive()}catch(e){crModuleNotice('pendapp','Pendências temporariamente indisponíveis: '+e.message);crModuleNotice('wizy','Pendências temporariamente indisponíveis: '+e.message);crModuleNotice('eder','Pendências temporariamente indisponíveis: '+e.message);crLive()}finally{__crPendingInFlight=false}}
 async function crLoadDev(force){if(__crDevInFlight||(__crDevLoaded&&!force))return;__crDevInFlight=true;try{DEV=await crJson('?api=development-summary&t='+Date.now(),22000);__crDevLoaded=true;render();crLive()}catch(e){['htmls','docs','os','grc','sst','security','audit','releases','gaps','history','health'].forEach(function(id){crModuleNotice(id,'Dados técnicos temporariamente indisponíveis: '+e.message)});crLive()}finally{__crDevInFlight=false}}
-async function boot(){if(__crBootInFlight)return;__crBootInFlight=true;if(!__crCoreReady)setText('#live','CONECTANDO');try{DATA=await crJson('?api=public-summary&t='+Date.now(),10000);await crLoadExecSnapshot();if(!BOARD)BOARD=crEmptyBoard();if(!DEV)DEV=crEmptyDev();__crCoreReady=true;render();crLive();setTimeout(function(){crLoadPending(false)},80)}catch(e){if(!__crCoreReady){setText('#live','ERRO');var c=qs('.content');if(c&&!qs('#bootError')){var d=document.createElement('div');d.id='bootError';d.className='notice';d.textContent='Falha ao carregar núcleo da Central: '+e.message;c.insertBefore(d,c.firstChild)}}else crLive()}finally{__crBootInFlight=false}}
+async function boot(){if(__crBootInFlight)return;__crBootInFlight=true;if(!__crCoreReady)setText('#live','CONECTANDO');try{DATA=await crJson('?api=public-summary&t='+Date.now(),10000);await Promise.all([crLoadExecSnapshot(),crLoadPendingV3()]);if(!BOARD)BOARD=crEmptyBoard();if(!DEV)DEV=crEmptyDev();__crCoreReady=true;render();crLive();setTimeout(function(){crLoadPending(false)},80)}catch(e){if(!__crCoreReady){setText('#live','ERRO');var c=qs('.content');if(c&&!qs('#bootError')){var d=document.createElement('div');d.id='bootError';d.className='notice';d.textContent='Falha ao carregar núcleo da Central: '+e.message;c.insertBefore(d,c.firstChild)}}else crLive()}finally{__crBootInFlight=false}}
 function crLazyTarget(t){if(!t)return;var id=t.getAttribute('data-page')||t.getAttribute('data-page-target')||'';if(['pendapp','wizy','eder','pending'].indexOf(id)>=0)crLoadPending(false);if(['htmls','docs','os','apis','grc','sst','security','audit','releases','gaps','history','health','technical','admin'].indexOf(id)>=0)crLoadDev(false)}
 document.addEventListener('click',function(e){crLazyTarget(e.target.closest('[data-page],[data-page-target]'))},true);
 window.go=go;window.toggleSide=toggleSide;window.openResource=openResource;window.backWorkspace=backWorkspace;window.copyLink=copyLink;window.closeDetail=closeDetail;
@@ -3207,55 +3207,23 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 #crTechHealthLive .cr-health-line{display:grid;grid-template-columns:1.5fr .8fr .8fr;gap:8px;padding:7px 0;border-bottom:1px solid #e4edf6;font-size:11px}
 @media(max-width:800px){#crExecutiveLayerV3{grid-template-columns:1fr}#crExecutiveLayerV3 .cr-mini-grid{grid-template-columns:1fr 1fr}}
 </style>
-<script id="cr-executive-live-v3">
+<script id="cr-technical-health-v3">
 (function(){
 'use strict';
-if(window.__crExecutiveV3)return;window.__crExecutiveV3=true;
-var API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-vivas-candidate-20261002';
-var EXEC='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-executivo-summary-candidate-20261001';
+var U='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-vivas-candidate-20261002?api=technical-health';
 function e(v){return String(v==null?'':v).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
-function v(x){return x===0?'0':(x==null?'—':x)}\nfunction mv(x){return x&&x.status==='ok'&&x.value!=null?x.value:null}\nfunction md(x,label){if(!x)return 'Dado não carregado';if(x.status==='ok'){if(x.amount!=null)return Number(x.amount).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})+' '+label;return x.note||'Fonte operacional validada'}return x.note||'FONTE AINDA NÃO INTEGRADA'}
-function opCard(icon,label,value,detail,status,tone){return '<div class="cr-op-card '+tone+'"><div class="cr-op-top"><span class="cr-op-icon">'+icon+'</span><span class="cr-op-label">'+e(label)+'</span></div><div class="cr-op-value">'+e(v(value))+'</div><div class="cr-op-detail">'+e(detail)+'</div><div class="cr-op-status">'+e(status)+'</div></div>'}
-function src(summary,code){return (summary.sources||[]).find(function(x){return x.source_code===code})||{status:'NAO_INTEGRADO'}}
-function ensureLayer(){
- var k=document.getElementById('kpis');if(!k)return null;
- var layer=document.getElementById('crExecutiveLayerV3');
- if(!layer){layer=document.createElement('div');layer.id='crExecutiveLayerV3';k.parentNode.insertBefore(layer,k.nextSibling)}
- return layer;
+async function load(){
+ try{
+  var r=await fetch(U+'&t='+Date.now(),{cache:'no-store'}),d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||('HTTP '+r.status));
+  var p=document.getElementById('health');if(!p)return;
+  var b=document.getElementById('crTechHealthLive');
+  if(!b){b=document.createElement('div');b.id='crTechHealthLive';b.className='card';b.style.marginBottom='14px';p.insertBefore(b,p.firstChild)}
+  b.innerHTML='<div class="tag">TELEMETRIA REAL · CANDIDATA</div><h2 style="margin:6px 0">Saúde Técnica</h2><p class="mut">Sem OK artificial: cada componente vem de checagem real ou declara explicitamente não integração.</p>'+
+   (d.components||[]).map(function(x){return '<div class="cr-health-line"><b>'+e(x.component)+'</b><span>'+e(x.status)+'</span><span>'+(x.latency_ms==null?'—':e(x.latency_ms)+' ms')+'</span></div>'}).join('')+
+   '<div class="mut" style="margin-top:8px">Build '+e(d.build||'')+' · verificado '+e(new Date(d.checked_at).toLocaleString('pt-BR'))+'</div>';
+ }catch(_){}
 }
-async function refresh(){
- var rs=await Promise.allSettled([
-  fetch(EXEC+'?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),
-  fetch(API+'?api=summary&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()}),
-  fetch(API+'?api=technical-health&t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw Error('HTTP '+r.status);return r.json()})
- ]);
- var ex=rs[0].status==='fulfilled'?rs[0].value:{},sm=rs[1].status==='fulfilled'?rs[1].value:{metrics:{},sources:[]},th=rs[2].status==='fulfilled'?rs[2].value:null;
- window.__CR_PENDING_SUMMARY=sm; var o=ex&&ex.operacao?ex.operacao:{},m=sm.metrics||{},agenda=src(sm,'AGENDA'),gc=src(sm,'GESTAOCLICK');
- var k=document.getElementById('kpis');
- if(k)k.innerHTML=
-  opCard('🔧','Serviços em andamento',mv(o.servicos_em_andamento),md(o.servicos_em_andamento,'em execução'),'Em execução','blue')+
-  opCard('▣','Aguardando pagamento',mv(o.aguardando_pagamento),md(o.aguardando_pagamento,'em aberto'),'Financeiro','green')+
-  opCard('▦','Visitas',mv(o.visitas_hoje),md(o.visitas_hoje,''),'Agenda','purple')+
-  opCard('▥','Orçamentos',mv(o.orcamentos),md(o.orcamentos,''),'Envio / aprovação','orange')+
-  opCard('◷','Agenda de amanhã',agenda.status==='OK'?m.tomorrow:null,agenda.status==='OK'?'Fonte Agenda conectada':'FONTE AINDA NÃO INTEGRADA',agenda.status,'amber')+
-  opCard('↶','Pendências de ontem',m.overdue,'Banco Mestre candidato','Atrasadas / vencidas','red')+
-  opCard('●','Pendências vivas',m.total_live,'Banco Mestre candidato','Gestão viva','blue')+
-  opCard('!','Bloqueadas',m.blocked,'Impedimentos registrados','Exceções','red');
- var layer=ensureLayer();
- if(layer)layer.innerHTML=
-  '<div class="card"><h3>Gestão da Agenda</h3><div class="mut">'+(agenda.status==='OK'?'Fonte operacional conectada.':'Agenda operacional ainda não integrada; nenhum número é simulado.')+'</div><div class="cr-mini-grid"><div class="cr-mini"><b>—</b><span>Hoje · fonte Agenda</span></div><div class="cr-mini"><b>'+(agenda.status==='OK'?e(v(m.tomorrow)):'—')+'</b><span>Amanhã</span></div><div class="cr-mini"><b>'+e(v(m.overdue))+'</b><span>Pendências vencidas no Banco Mestre</span></div></div></div>'+
-  '<div class="card"><h3>Orçamentos / Serviços em Fluxo</h3><div class="mut">'+(gc.status==='OK'?'GestãoClick conectado em leitura executiva.':'GestãoClick ainda não integrado nesta camada. Estrutura preparada sem criar métricas fictícias.')+'</div><div class="cr-mini-grid"><div class="cr-mini"><b>'+e(v(mv(o.orcamentos)))+'</b><span>Orçamentos conhecidos</span></div><div class="cr-mini"><b>—</b><span>Tempo por etapa</span></div><div class="cr-mini"><b>—</b><span>Exceções GestãoClick</span></div></div></div>';
- paintHealth(th);
-}
-function paintHealth(d){
- var p=document.getElementById('health');if(!p||!d)return;
- var box=document.getElementById('crTechHealthLive');
- if(!box){box=document.createElement('div');box.id='crTechHealthLive';box.className='card';box.style.marginBottom='14px';var anchor=p.querySelector('.hero,.card');if(anchor)anchor.parentNode.insertBefore(box,anchor.nextSibling);else p.insertBefore(box,p.firstChild)}
- box.innerHTML='<div class="tag">TELEMETRIA REAL · CANDIDATA</div><h2 style="margin:6px 0">Saúde Técnica</h2><p class="mut">Sem “OK” artificial: cada linha abaixo vem de checagem real ou declara explicitamente não integração.</p>'+
- (d.components||[]).map(function(x){return '<div class="cr-health-line"><b>'+e(x.component)+'</b><span>'+e(x.status)+'</span><span>'+(x.latency_ms==null?'—':e(x.latency_ms)+' ms')+'</span></div>'}).join('')+
- '<div class="pv2-sub" style="margin-top:8px">Build '+e(d.build)+' · verificado '+e(new Date(d.checked_at).toLocaleString('pt-BR'))+'</div>';
-}
-function init(){refresh();setTimeout(refresh,1200);setInterval(refresh,30000)}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
+setInterval(load,30000);
 })();
 </script></body></html>
