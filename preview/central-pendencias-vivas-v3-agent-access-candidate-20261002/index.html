@@ -3241,7 +3241,7 @@ async function refresh(){
  var layer=ensureLayer();
  if(layer)layer.innerHTML=
   '<div class="card"><h3>Gestão da Agenda</h3><div class="mut">'+(agenda.status==='OK'?'Fonte operacional conectada.':'Agenda operacional ainda não integrada; nenhum número é simulado.')+'</div><div class="cr-mini-grid"><div class="cr-mini"><b>—</b><span>Hoje · fonte Agenda</span></div><div class="cr-mini"><b>'+(agenda.status==='OK'?e(v(m.tomorrow)):'—')+'</b><span>Amanhã</span></div><div class="cr-mini"><b>'+e(v(m.overdue))+'</b><span>Pendências vencidas no Banco Mestre</span></div></div></div>'+
-  '<div class="card"><h3>Orçamentos / Serviços em Fluxo</h3><div class="mut">'+(gc.status==='OK'?'GestãoClick conectado em leitura executiva.':'GestãoClick ainda não integrado nesta camada. Estrutura preparada sem criar métricas fictícias.')+'</div><div class="cr-mini-grid"><div class="cr-mini"><b>'+e(v(o.orcamentos))+'</b><span>Orçamentos conhecidos</span></div><div class="cr-mini"><b>—</b><span>Tempo por etapa</span></div><div class="cr-mini"><b>—</b><span>Exceções GestãoClick</span></div></div></div>';
+  '<div class="card"><h3>Orçamentos / Serviços em Fluxo</h3><div class="mut">'+(gc.status==='OK'?'GestãoClick conectado em leitura executiva.':'GestãoClick ainda não integrado nesta camada. Estrutura preparada sem criar métricas fictícias.')+'</div><div class="cr-mini-grid"><div class="cr-mini"><b>'+e(v(mv(o.orcamentos)))+'</b><span>Orçamentos conhecidos</span></div><div class="cr-mini"><b>—</b><span>Tempo por etapa</span></div><div class="cr-mini"><b>—</b><span>Exceções GestãoClick</span></div></div></div>';
  paintHealth(th);
 }
 function paintHealth(d){
