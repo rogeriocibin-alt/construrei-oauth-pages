@@ -15,7 +15,7 @@
   ],
   "icons": [
     {
-      "src": "./pwa-icon.svg?v=20261003applogo1",
+      "src": "./pwa-icon.svg?v=20261003applogo2",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
