@@ -239,7 +239,8 @@ body.app-candidate pre{color:var(--crh-text)!important}
       <div class="fusion-kpi"><b id="fkActive">0</b><span>Chamados ativos</span></div>
       <div class="fusion-kpi"><b id="fkWaiting">0</b><span>Aguardando resposta</span></div>
       <div class="fusion-kpi"><b id="fkMissing">0</b><span>Informações faltando</span></div>
-      <div class="fusion-kpi"><b id="fkReady">0</b><span>Prontos para seguir</span></div>
+      <div class="fusion-kpi"><b id="fkReady">0</b><span>Prontos para qualificação</span></div>
+      <div class="fusion-kpi"><b id="fkQualify">0</b><span>Em qualificação</span></div>
       <div class="fusion-kpi"><b id="fkAgenda">0</b><span>Com disponibilidade</span></div>
       <div class="fusion-kpi"><b id="fkPayment">0</b><span>Pagamento a esclarecer</span></div>
     </div>
@@ -312,7 +313,8 @@ body.app-candidate pre{color:var(--crh-text)!important}
   <div class="stats">
     <div class="stat" data-filter="COLLECT"><b id="kCollect">0</b><span>EM COLETA</span></div>
     <div class="stat" data-filter="WAIT"><b id="kWait">0</b><span>AGUARDANDO RESPOSTA</span></div>
-    <div class="stat" data-filter="READY"><b id="kReady">0</b><span>PRONTOS PARA SEGUIR</span></div>
+    <div class="stat" data-filter="READY"><b id="kReady">0</b><span>PRONTOS PARA QUALIFICAÇÃO</span></div>
+    <div class="stat" data-filter="QUALIFY"><b id="kQualify">0</b><span>EM QUALIFICAÇÃO</span></div>
     <div class="stat" data-filter="ALL"><b id="kAll">0</b><span>HISTÓRICO / TOTAL</span></div>
   </div>
 
@@ -582,6 +584,7 @@ function render(){
   $("kCollect").textContent=rows.filter(x=>x.status==="EM_COLETA"||x.status==="INCOMPLETO").length;
   $("kWait").textContent=rows.filter(x=>x.status==="AGUARDANDO_RESPOSTA").length;
   $("kReady").textContent=rows.filter(x=>x.status==="PRONTO_F01").length;
+  $("kQualify").textContent=rows.filter(x=>x.status==="LIBERADO_F01").length;
   $("kAll").textContent=rows.length;
 
   const q=($("search").value||"").toLowerCase();
@@ -629,6 +632,10 @@ async function processNew(){
 function fact(label,value){
   if(!value)return"";
   return '<div class="fact"><b>✓ '+esc(label)+'</b><span>'+esc(value)+'</span></div>';
+}
+function factWarn(label,value){
+  if(!value)return"";
+  return '<div class="fact"><b>⚠ '+esc(label)+'</b><span>'+esc(value)+'</span></div>';
 }
 function renderItems(arr){
   const meta=new Set(["cliente/origem","endereço","endereco","base","data","quantidade","valor unitário","valor unitario","total"]);
@@ -717,7 +724,7 @@ async function openCase(id){
     const missing=correctedMissing(d);
     current=d.case;
     $("capture").classList.add("hidden");$("caseView").classList.remove("hidden");
-    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=d.case.title||d.case.problem||"Chamado em organização";$("viewStatus").textContent=humanStatus(d.case.status);
+    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=isPlaceholderProblem(d.case.problem)?"Escopo a confirmar":(d.case.title||d.case.problem||"Chamado em organização");$("viewStatus").textContent=humanStatus(d.case.status);
     $("viewPending").textContent=missing.length+" pendência"+(missing.length===1?"":"s");
 
     const identified=[
@@ -725,9 +732,9 @@ async function openCase(id){
       fact("Endereço",d.case.address),
       fact("Contato",isBogusContact(d.case.contact_name)?"":d.case.contact_name),
       fact("Telefone",d.case.contact_phone),
-      fact("Problema identificado",d.case.problem),
+      (isPlaceholderProblem(d.case.problem)?factWarn("Problema / escopo insuficiente",d.case.problem):fact("Problema identificado",d.case.problem)),
       fact("Pagamento / autorização",d.case.payment),
-      fact("Disponibilidade",d.case.availability),
+      (!hasConcreteAvailability(d.case.availability)&&d.case.availability?factWarn("Disponibilidade insuficiente",d.case.availability):fact("Disponibilidade",d.case.availability)),
       fact("Acesso",d.case.access_note),
       fact("Evidências",(d.files||[]).length?((d.files||[]).length+" arquivo(s) recebido(s)"):"")
     ].join("");
@@ -933,13 +940,14 @@ load();
     const active=all.filter(c=>["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01","LIBERADO_F01"].includes(c.status));
     const waiting=all.filter(c=>c.status==="AGUARDANDO_RESPOSTA");
     const ready=all.filter(c=>c.status==="PRONTO_F01");
+    const qualify=all.filter(c=>c.status==="LIBERADO_F01");
     const collect=all.filter(c=>c.status==="EM_COLETA"||c.status==="INCOMPLETO");
     const missing=active.reduce((n,c)=>n+pc(c),0);
     const agenda=all.filter(c=>String(c.availability||"").trim());
     const payment=active.filter(c=>!String(c.payment||"").trim());
 
     const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
-    set("fkActive",active.length);set("fkWaiting",waiting.length);set("fkMissing",missing);set("fkReady",ready.length);set("fkAgenda",agenda.length);set("fkPayment",payment.length);
+    set("fkActive",active.length);set("fkWaiting",waiting.length);set("fkMissing",missing);set("fkReady",ready.length);set("fkQualify",qualify.length);set("fkAgenda",agenda.length);set("fkPayment",payment.length);
     set("closeCollect",collect.length);set("closeWait",waiting.length);set("closeReady",ready.length);
     set("pendCount",missing+" pendência"+(missing===1?"":"s"));
     set("agendaCount",agenda.length+" item"+(agenda.length===1?"":"s"));
