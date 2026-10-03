@@ -10,10 +10,11 @@ const STATUS_LABEL={
 const VIEW_TITLES={
   now:'Cockpit do Projeto',pending:'Pendências do Projeto',history:'Histórico Vivo',canonical:'Cadeia Canônica',fronts:'Frentes',versions:'Versões',
   decisions:'Decisões',timeline:'Linha do Tempo',products:'Produtos',infrastructure:'Infraestrutura & TI',recoverables:'Recuperáveis',
-  governance:'Governança',search:'Busca'
+  audits:'Auditorias',governance:'Governança',search:'Busca'
 };
 
-const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null};
+const CURRENT_RELEASE={version:'1.1.0',build:'CR-PM-V1.1.0-C0-20261003',environment:'candidate'};
+const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null};
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -420,6 +421,120 @@ function renderRecoverables(){
   `;
 }
 
+
+function severityBadge(level){
+  const cls=level==='high'?'attention':level==='medium'?'review':'archived';
+  return `<span class="badge ${cls}">${esc(String(level||'info').toUpperCase())}</span>`;
+}
+
+function renderAudits(){
+  const d=state.data||{}, audits=arr(d.audits), findings=arr(d.audit_findings), sources=arr(d.source_matrix), recs=arr(d.reconciliations);
+  const a=audits[0];
+  const target=$('#view-audits'); if(!target)return;
+  target.innerHTML=`
+    <div class="page-intro"><div><h2>Auditorias</h2><p>Auditorias viram objetos de gestão: original preservado, achados rastreáveis, tratamento, rechecagem e evidência.</p></div></div>
+    ${a?`<section class="card audit-hero">
+      <div class="card-head"><div><small class="mono">AUD-001 • ${esc(a.date)}</small><h3>${esc(a.title)}</h3><p>${esc(a.summary)}</p></div><span class="badge review">Implementação planejada</span></div>
+      <div class="audit-kpis">
+        <div><small>Achados</small><b>${esc(a.findings_total)}</b></div>
+        <div><small>Original</small><b>Preservado</b></div>
+        <div><small>SHA-256</small><b class="mono">${esc(short(a.original_evidence?.sha256))}…</b></div>
+        <div><small>Persistência</small><b>Supabase interno</b></div>
+      </div>
+      <div class="card-pad"><p><b>Escopo:</b> ${esc(a.scope)}</p><p class="mono">Evidência: ${esc(a.original_evidence?.file)} • ${esc(a.original_evidence?.sha256)}</p></div>
+    </section>`:''}
+    <div class="section-grid audit-grid">
+      <section class="card">
+        <div class="card-head"><div><h3>Achados e tratamento</h3><p>P0/P1/P2 + controles estruturais, sem “dar baixa” por aparência.</p></div><span class="badge candidate">${findings.length} itens</span></div>
+        <div class="audit-findings">${findings.map(x=>`<div class="audit-row"><div>${severityBadge(x.severity)} <span class="mono">${esc(x.code)}</span><b>${esc(x.title)}</b><small>${esc(x.implementation_item)} • ${esc(label(x.status))}</small></div></div>`).join('')}</div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h3>Matriz de fontes</h3><p>Saúde, confiança e idade do dado — sem transformar “conhecido” em “vivo”.</p></div></div>
+        <div class="source-grid">${sources.map(s=>`<div class="source-row"><div><b>${esc(s.name)}</b><small>${esc(s.note||'')}</small></div><div class="source-state">${badge(s.status==='healthy'?'live':s.status==='error'?'blocked':s.status==='stale'?'attention':'unconfirmed')}<small>${esc(s.last_read||'—')} • ${esc(s.confidence)}</small></div></div>`).join('')}</div>
+      </section>
+    </div>
+    <section class="card" style="margin-top:16px">
+      <div class="card-head"><div><h3>Reconciliações abertas</h3><p>Divergência vira objeto; fontes não são somadas nem “ajustadas” por conveniência.</p></div></div>
+      <div class="card-pad">${recs.map(r=>`<div class="rule-row"><span class="rule-state partial">!</span><div><b>${esc(r.title)}</b><small>${esc(r.difference)} • ${esc(r.next_action)}</small></div>${badge(r.status==='open'?'blocked':'review')}</div>`).join('')}</div>
+    </section>
+  `;
+}
+
+function syncReleaseUi(meta=CURRENT_RELEASE){
+  const chip=$('#versionChip');
+  if(chip) chip.textContent=`V${meta.version||CURRENT_RELEASE.version} • ${short(meta.build||CURRENT_RELEASE.build)}`;
+}
+
+function releaseNotesHtml(meta){
+  const notes=arr(meta?.changes||meta?.release_notes);
+  return `<div class="detail-block"><b>Versão</b><p>V${esc(meta?.version||CURRENT_RELEASE.version)} • <span class="mono">${esc(meta?.build||CURRENT_RELEASE.build)}</span></p></div>
+    <div class="detail-block"><b>Ambiente</b><p>${esc(meta?.environment||CURRENT_RELEASE.environment)}</p></div>
+    <div class="detail-block"><b>Mudanças</b>${notes.length?`<ul>${notes.map(n=>`<li>${esc(typeof n==='string'?n:(n.title||JSON.stringify(n)))}</li>`).join('')}</ul>`:'<p>Sem changelog adicional.</p>'}</div>
+    <div class="detail-block"><b>Regra</b><p>Atualização ocorre neste mesmo PWA. A instalação não é recriada e a canônica não é promovida por atualização de cache.</p></div>`;
+}
+
+function hideUpdateBanner(){ const b=$('#updateBanner'); if(b)b.hidden=true; }
+function showUpdateBanner(remote){
+  const b=$('#updateBanner'); if(!b)return;
+  b.hidden=false;
+  const t=$('#updateBannerText');
+  if(t)t.textContent=`V${remote.version||'?'} • ${remote.build||'novo build'} está disponível. O pacote só é ativado por inteiro.`;
+}
+async function activateWaitingWorker(reg){
+  if(reg?.waiting){reg.waiting.postMessage({type:'SKIP_WAITING'});return true;}
+  const worker=reg?.installing;
+  if(worker){
+    await new Promise(resolve=>{
+      const done=()=>{if(worker.state==='installed'||worker.state==='redundant')resolve();};
+      worker.addEventListener('statechange',done); done();
+    });
+    if(reg.waiting){reg.waiting.postMessage({type:'SKIP_WAITING'});return true;}
+  }
+  return false;
+}
+async function updatePwaNow(){
+  if(!('serviceWorker' in navigator)){location.reload();return;}
+  const btn=$('#updateNowBtn'); if(btn){btn.disabled=true;btn.textContent='Atualizando…';}
+  try{
+    const reg=await navigator.serviceWorker.getRegistration();
+    if(reg) await reg.update();
+    const activated=await activateWaitingWorker(reg);
+    if(!activated) location.reload();
+  }catch(err){
+    openDrawer('Atualização do Gestor','PWA',`<div class="detail-block"><b>Falha ao atualizar</b><p>${esc(err?.message||err)}</p><p>Nenhuma versão canônica foi alterada. Tente novamente quando houver conexão.</p></div>`);
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='Atualizar agora';}
+  }
+}
+async function checkReleaseUpdate(){
+  try{
+    const r=await fetch(`./version.json?ts=${Date.now()}`,{cache:'no-store'});
+    if(!r.ok) throw new Error('version HTTP '+r.status);
+    const remote=await r.json();
+    state.remoteRelease=remote;
+    syncReleaseUi(CURRENT_RELEASE);
+    localStorage.setItem('cr-pm-last-seen-build',CURRENT_RELEASE.build);
+    if(remote.build && remote.build!==CURRENT_RELEASE.build) showUpdateBanner(remote);
+    return remote;
+  }catch(err){
+    state.remoteRelease={...CURRENT_RELEASE,version_check_error:String(err?.message||err)};
+    syncReleaseUi(CURRENT_RELEASE);
+    return state.remoteRelease;
+  }
+}
+function bindReleaseUi(){
+  const chip=$('#versionChip');
+  if(chip) chip.onclick=()=>openDrawer('Versão do Gestor','Release',releaseNotesHtml(state.remoteRelease||CURRENT_RELEASE));
+  const notes=$('#updateNotesBtn');
+  if(notes) notes.onclick=()=>openDrawer('O que muda','Atualização disponível',releaseNotesHtml(state.remoteRelease||CURRENT_RELEASE));
+  const later=$('#updateLaterBtn'); if(later) later.onclick=hideUpdateBanner;
+  const now=$('#updateNowBtn'); if(now) now.onclick=updatePwaNow;
+  if('serviceWorker' in navigator){
+    let reloading=false;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloading)return;reloading=true;location.reload();});
+  }
+}
+
 function renderGovernance(){
   const d=state.data,a=d.repository_audit||{};
   $('#view-governance').innerHTML=`
@@ -533,7 +648,7 @@ function bindExternalButtons(){
 }
 
 function renderAll(){
-  renderNow();renderPending();renderHistory();renderCanonical();renderFronts();renderVersions();renderDecisions();renderTimeline();renderProducts();renderRecoverables();renderGovernance();
+  renderNow();renderPending();renderHistory();renderCanonical();renderFronts();renderVersions();renderDecisions();renderTimeline();renderProducts();renderRecoverables();renderAudits();renderGovernance();
 }
 
 let deferredInstallPrompt=null;
@@ -546,10 +661,12 @@ window.addEventListener('appinstalled',()=>{const b=$('#installPwaBtn'); if(b)b.
 
 async function init(){
   try{
-    const r=await fetch('./project-data.json?v=20261003owner1',{cache:'no-store'});
+    const r=await fetch('./project-data.json?v=20261003v110c0',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     state.data=await r.json();
     renderAll();
+    bindReleaseUi();
+    syncReleaseUi(CURRENT_RELEASE);
     setView('now');
     refreshLiveRepository();
     setInterval(refreshLiveRepository,300000);
@@ -570,8 +687,10 @@ async function init(){
       }
     };
     if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('./sw.js?v=20261003applogo2',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{});
+      navigator.serviceWorker.register('./sw.js?v=20261003v110c0',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
     }
+
+    if(!('serviceWorker' in navigator)) checkReleaseUpdate();
 
     $('#presentationBtn').onclick=()=>{
       document.body.classList.toggle('presentation');
