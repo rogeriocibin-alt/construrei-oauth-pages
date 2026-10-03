@@ -18,8 +18,9 @@ function activatePage(id,label){
  return true;
 }
 function goPrimary(text,id,label){
+ if(activatePage(id,label))return true;
  const n=navByText(text);if(n){try{n.click()}catch{}}
- setTimeout(()=>{if(document.querySelector('.page.on')?.id!==id)activatePage(id,label)},20);
+ return false;
 }
 const today=()=>{const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),da=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+da};
 const sess=()=>{try{return sessionStorage.getItem('crGestaoSession')||localStorage.getItem('crGestaoSession')||''}catch{return''}};
@@ -40,31 +41,48 @@ function buildHeader(){
  const input=$('input',h);input.onkeydown=e=>{if(e.key!=='Enter')return;const q=norm(input.value).toLowerCase();if(!q)return;const n=$$('.side .nav').find(x=>norm(x.innerText).toLowerCase().includes(q));if(n)n.click()};
 }
 function buildSidebar(){
- const side=$('.side');if(!side||$('.cr-v10-primary-nav'))return;
- const groups=$('.side>.grp');groups.forEach(g=>g.classList.add('cr-v10-original'));
- const nav=document.createElement('div');nav.className='cr-v10-primary-nav';
- const defs=[
-  ['⌂','Início','Dashboard Executivo','dashboard','Dashboard Executivo'],
-  ['⚙','Operação','Esteira F00 → F09','flows','Operação'],
-  ['✓','Pendências','APP • Pendências','pendapp','Pendências'],
-  ['▥','Inteligência','IA & Context Gateway','context','Inteligência'],
-  ['▭','Base técnica','Documentações','docs','Base técnica']
- ];
- nav.innerHTML=defs.map((d,i)=>'<button class="cr-v10-side-btn '+(i===0?'on':'')+'" data-target="'+esc(d[2])+'" data-page="'+esc(d[3])+'" data-label="'+esc(d[4])+'"><span class="cr-v10-side-icon">'+d[0]+'</span>'+d[1]+'</button>').join('');
- const more=document.createElement('details');more.className='cr-v10-more';more.innerHTML='<summary>Mais acessos ▾</summary>';
- groups.forEach(g=>more.appendChild(g.cloneNode(true)));
- side.insertBefore(nav,groups[0]||null);side.appendChild(more);
- $('.cr-v10-side-btn',nav).forEach(b=>b.onclick=()=>{
-   goPrimary(b.dataset.target,b.dataset.page,b.dataset.label);
-   $('.cr-v10-side-btn',nav).forEach(x=>x.classList.remove('on'));b.classList.add('on');side.classList.remove('open');
- });
- $('.cr-v10-more .nav',more).forEach(cl=>cl.onclick=e=>{
-   e.preventDefault();e.stopPropagation();
-   const txt=norm(cl.innerText),id=cl.dataset.page;
-   if(id)activatePage(id,txt);
-   else {const orig=navByText(txt);if(orig&&orig!==cl)orig.click()}
-   side.classList.remove('open');
- });
+ try{
+  const side=$('.side');if(!side||$('.cr-v10-primary-nav',side))return;
+  const groups=[...side.children].filter(x=>x.classList&&x.classList.contains('grp'));
+  groups.forEach(g=>g.classList.add('cr-v10-original'));
+  const nav=document.createElement('div');nav.className='cr-v10-primary-nav';
+  const defs=[
+   ['⌂','Início','Dashboard Executivo','dashboard','Dashboard Executivo'],
+   ['⚙','Operação','Esteira F00 → F09','flows','Operação'],
+   ['✓','Pendências','APP • Pendências','pendapp','Pendências'],
+   ['▥','Inteligência','IA & Context Gateway','context','Inteligência'],
+   ['▭','Base técnica','Documentações','docs','Base técnica']
+  ];
+  nav.innerHTML=defs.map((d,i)=>'<button class="cr-v10-side-btn '+(i===0?'on':'')+'" data-target="'+esc(d[2])+'" data-page="'+esc(d[3])+'" data-label="'+esc(d[4])+'"><span class="cr-v10-side-icon">'+d[0]+'</span>'+d[1]+'</button>').join('');
+  if(groups.length)side.insertBefore(nav,groups[0]);else side.appendChild(nav);
+
+  const more=document.createElement('details');more.className='cr-v10-more';
+  const sum=document.createElement('summary');sum.textContent='Mais acessos ▾';more.appendChild(sum);
+  groups.forEach(g=>{
+    const title=norm($('.gt',g)?.innerText);
+    if(title){const t=document.createElement('div');t.className='gt';t.textContent=title;more.appendChild(t)}
+    $$('.nav',g).forEach(orig=>{
+      const b=document.createElement('button');b.type='button';b.className='nav cr-v10-more-btn';
+      b.innerHTML='<i></i><span>'+esc(norm(orig.innerText))+'</span>';
+      b.dataset.page=orig.dataset.page||'';b.dataset.label=norm(orig.innerText);
+      b.onclick=e=>{
+        e.preventDefault();e.stopPropagation();
+        const id=b.dataset.page,label=b.dataset.label;
+        if(id)activatePage(id,label);
+        else {const n=navByText(label);if(n){try{n.click()}catch{}}}
+        side.classList.remove('open');
+      };
+      more.appendChild(b);
+    });
+  });
+  side.appendChild(more);
+
+  $$('.cr-v10-side-btn',nav).forEach(b=>b.onclick=()=>{
+    goPrimary(b.dataset.target,b.dataset.page,b.dataset.label);
+    $$('.cr-v10-side-btn',nav).forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    side.classList.remove('open');
+  });
+ }catch(e){console.error('CR_V10_SIDEBAR_INIT',e)}
 }
 function legacyWrap(){
  const dash=$('#dashboard');if(!dash||$('.cr-v10',dash))return null;
