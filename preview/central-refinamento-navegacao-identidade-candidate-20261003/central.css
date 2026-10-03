@@ -370,3 +370,20 @@ html,body{background:var(--v10-bg)!important;color:var(--v10-text)!important}
 .content{overflow-x:hidden!important}.content>.page{display:none!important}.content>.page.on{display:block!important}.side>.grp,.side>.footer{display:none!important}.cr-con-director{overflow:visible!important}.cr-con-director-card{min-width:0!important;max-width:100%!important}.cr-v10,.cr-v10-card,.cr-v10-main-grid,.cr-v10-lower{min-width:0!important;max-width:100%!important}.cr-v12-flow-body{overflow-x:hidden!important}
 @media(max-width:600px){.cr-con-director{display:grid!important;grid-template-columns:1fr 1fr!important;overflow:visible!important}.cr-con-director-card{min-width:0!important}.cr-v10-main-grid,.cr-v10-lower{grid-template-columns:1fr!important}.cr-v10-card{overflow:hidden!important}.cr-con-status{width:100%!important;min-width:0!important}.main,.content{max-width:100vw!important;overflow-x:hidden!important}}
 @media(max-width:410px){.cr-con-director{grid-template-columns:1fr!important}}
+
+/* P0 POS-VIDEO 2026-10-03 — runtime hero actually rendered by central.js */
+.cr-p0-hero{background:linear-gradient(115deg,#031b46 0%,#073a83 58%,#05245a 100%)!important;overflow:hidden!important}
+.cr-p0-ey{font-size:9px;font-weight:900;letter-spacing:.12em;color:#ffd33c;margin-bottom:7px}
+.cr-p0-hero-art{position:relative!important;display:block!important;min-height:150px!important;overflow:hidden!important;background:radial-gradient(circle at 75% 16%,rgba(255,202,42,.18),transparent 32%)!important}
+.cr-p0-slogan{position:absolute;z-index:4;left:8%;top:18px;color:#f0f6ff;font:italic 17px/1.08 Georgia,serif;transform:rotate(-7deg);text-shadow:0 2px 5px rgba(0,0,0,.35)}
+.cr-p0-skyline{position:absolute;z-index:2;right:7%;bottom:-5px;width:70%;height:92%;display:flex;align-items:flex-end;gap:5px;opacity:.88;transform:skewX(-3deg)}
+.cr-p0-skyline i{display:block;background:linear-gradient(180deg,#1c5b91,#061b3b);border:1px solid rgba(154,207,246,.3);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+.cr-p0-skyline i:nth-child(1){width:17%;height:48%}.cr-p0-skyline i:nth-child(2){width:20%;height:72%}.cr-p0-skyline i:nth-child(3){width:22%;height:94%}.cr-p0-skyline i:nth-child(4){width:18%;height:65%}.cr-p0-skyline i:nth-child(5){width:23%;height:84%}
+.cr-p0-hero-logo{position:absolute!important;z-index:6!important;right:16px!important;top:12px!important;width:68px!important;height:68px!important;display:block!important;object-fit:contain!important;background:#fff!important;border-radius:50%!important;padding:3px!important;border:2px solid rgba(255,205,47,.7)!important;box-shadow:0 6px 18px rgba(0,0,0,.28)!important}
+@media(max-width:700px){
+ .cr-p0-hero{grid-template-columns:1fr!important}
+ .cr-p0-hero-art{display:block!important;min-height:112px!important}
+ .cr-p0-slogan{left:6%!important;top:15px!important;font-size:14px!important}
+ .cr-p0-skyline{display:flex!important;right:8%!important;width:65%!important;height:96%!important}
+ .cr-p0-hero-logo{display:block!important;right:9px!important;top:8px!important;width:50px!important;height:50px!important}
+}
