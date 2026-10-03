@@ -1,15 +1,16 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1",
-    "status": "CANDIDATA ISOLADA",
+    "version": "V1 • GESTÃO VIVA",
+    "status": "GESTOR VIVO — MESMO LINK / CHECKPOINT V1 PRESERVADO",
     "generated_at": "2026-10-03",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "cr-project-manager-v1-candidate-20261003",
-    "coverage": "Histórico inicial reconstruído com evidências verificadas no repositório e decisões registradas no projeto. Itens sem evidência suficiente permanecem marcados como NÃO CONFIRMADO.",
+    "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
     "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
     "audit_snapshot": "2026-10-03",
-    "audit_state": "V1 auditada contra branches/checkpoints atuais do repositório"
+    "audit_state": "Snapshot automático incorporado com 201 branches; atualização online do GitHub ocorre ao abrir o Gestor.",
+    "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -635,6 +636,30 @@
         "gestor"
       ],
       "evidence": "Regra de governança aprovada para o Gestor."
+    },
+    {
+      "id": "d6",
+      "date": "2026-10-03",
+      "title": "Gestor V1 evolui no mesmo link com checkpoint preservado",
+      "status": "confirmed",
+      "decision": "Não criar uma sucessão desnecessária de links para esta evolução; preservar a V1 anterior em checkpoint e desenvolver o mesmo endereço como Gestor Vivo.",
+      "reason": "Reduzir dispersão, manter acesso imediato e preservar rollback verificável.",
+      "impact": [
+        "gestor"
+      ],
+      "evidence": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003"
+    },
+    {
+      "id": "d7",
+      "date": "2026-10-03",
+      "title": "Pendências do projeto são objetos vivos",
+      "status": "confirmed",
+      "decision": "Medição, idade, prioridade, próxima ação e conclusão devem ser calculadas/atualizadas sem depender da memória ou edição manual do Owner.",
+      "reason": "Evitar projetos-monstro, pendências esquecidas e itens já concluídos ainda tratados como abertos.",
+      "impact": [
+        "gestor"
+      ],
+      "evidence": "Decisão explícita do Rogério em 03/10/2026."
     }
   ],
   "demands": [
@@ -751,6 +776,13 @@
       "title": "Nasce o Gestor do Projeto",
       "detail": "Projeto passa a ter cockpit superior de governança e memória.",
       "confidence": "explicit_decision"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "governance",
+      "title": "Gestor V1 passa a Gestão Viva no mesmo link",
+      "detail": "Checkpoint anterior preservado; entram Radar de Pendências, envelhecimento, ações do Owner e Histórico Vivo indexado por referências leves.",
+      "confidence": "explicit_decision"
     }
   ],
   "recoverables": [
@@ -830,18 +862,18 @@
     "Alguns branches/checkpoints possuem nomes claros, porém ainda não tiveram seu conteúdo documental individual lido nesta primeira carga."
   ],
   "repository_audit": {
-    "total_branches": 197,
-    "checkpoint_branches": 95,
-    "central_branches": 54,
+    "total_branches": 201,
+    "checkpoint_branches": 99,
+    "central_branches": 45,
     "app_branches": 47,
     "presentation_branches": 14,
-    "candidate_branches": 43,
+    "candidate_branches": 45,
     "canonical_branches": 52,
     "approved_or_homologated_branches": 26,
     "v9_refs": 7,
     "v10_refs": 5,
     "v11_refs": 8,
-    "base_main_commit": "52b6833cd60bc6541ae30884e9d9edf5c17f6c38",
+    "base_main_commit": "aa693dea4b809a24ea01649b1f88525c2af077d5",
     "warnings": [
       {
         "severity": "attention",
@@ -856,5 +888,1497 @@
         "detail": "A auditoria encontrou 197 branches e 95 refs com nome de checkpoint. O Gestor passa a resumir o estado corrente sem apagar a trilha histórica."
       }
     ]
-  }
+  },
+  "operating_principles": [
+    "Se uma informação depende da memória do Rogério para continuar existindo, a gestão está incompleta.",
+    "Toda pendência do projeto precisa de fonte, estado, prioridade, última movimentação, próximo passo, dependência e critério objetivo de conclusão.",
+    "Medição e envelhecimento são automáticos; ação humana só aparece quando realmente exige decisão do Owner.",
+    "Concluído precisa ser detectável e permanecer no histórico, não desaparecer.",
+    "Histórico é referência leve: links, branches, commits, checkpoints e decisões — arquivos pesados ficam na origem.",
+    "Máximo de 2 frentes em execução simultaneamente; fila não consome capacidade."
+  ],
+  "project_pending": [
+    {
+      "id": "PM-01",
+      "title": "Central Executiva + Agenda + indicadores",
+      "domain": "Central",
+      "priority": "P0",
+      "state": "in_progress",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-03",
+      "next_action": "Consolidar candidata executiva funcional e validar sem promover a Central canônica por numeração.",
+      "dependency": "Validação/homologação controlada",
+      "source": "CHECKPOINT_V11_PREMIUM_RESOLVED_20261003",
+      "close_when": "Candidata final comparada, testada, checkpoint registrada e homologação explícita.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-02",
+      "title": "APP Atendimento Gabrielly / F01",
+      "domain": "APP",
+      "priority": "P1",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-03",
+      "next_action": "Retomar F01 action-first sem romper a baseline oficial do APP.",
+      "dependency": "Vaga de execução",
+      "source": "CHECKPOINT_APP_GABI_V11_ATENDIMENTO_GABRIELLY_20261003",
+      "close_when": "Fluxo F01 validado em mobile/desktop e checkpoint homologado.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-03",
+      "title": "F00→F09 / coerência F00→F01",
+      "domain": "Fluxos",
+      "priority": "P1",
+      "state": "review",
+      "owner": "Bio + CR Assertivo",
+      "last_movement": "2026-10-02",
+      "next_action": "Auditar transição F00→F01 e manter jornada canônica única, sem links externos quebrando o atendimento.",
+      "dependency": "Evidência funcional da esteira",
+      "source": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
+      "close_when": "Transição ponta a ponta revisada e sem regressão do namespace canônico.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-04",
+      "title": "Banco Mestre / Gestor do Projeto vivo",
+      "domain": "Gestor",
+      "priority": "P0",
+      "state": "in_progress",
+      "owner": "Bio + CR Assertivo",
+      "last_movement": "2026-10-03",
+      "next_action": "Transformar V1 em gestão à vista, com métricas vivas, pendências e memória navegável no mesmo link.",
+      "dependency": "Nenhuma para leitura; persistência superior segue por integração",
+      "source": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
+      "close_when": "Gestor mede, atualiza e apresenta estado/histórico sem depender de edição manual.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-05",
+      "title": "Pendências Vivas — histórico e edição controlada",
+      "domain": "Gestor",
+      "priority": "P1",
+      "state": "review",
+      "owner": "Bio",
+      "last_movement": "2026-10-02",
+      "next_action": "Manter histórico de mudanças, conclusão detectável e trilha de decisões.",
+      "dependency": "Banco Mestre",
+      "source": "CHECKPOINT_PENDENCIAS_VIVAS_V2_CANDIDATE_20261002",
+      "close_when": "Cada pendência possuir ciclo detecta→mede→propõe→acompanha→fecha com histórico.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-06",
+      "title": "Hoje na Operação com dados reais",
+      "domain": "Central",
+      "priority": "P1",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-02",
+      "next_action": "Consolidar Serviços em Andamento, Aguardando Pagamento, Visitas, Orçamentos, Agenda de amanhã e Pendências de ontem com fontes reais.",
+      "dependency": "Fontes operacionais confiáveis",
+      "source": "cr-hoje-operacao-candidate-20261001",
+      "close_when": "Cards executivos refletem dados reais, clicáveis e rastreáveis até a origem.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-07",
+      "title": "GestãoClick + Agenda + Trello — fontes vivas",
+      "domain": "Integrações",
+      "priority": "P1",
+      "state": "review",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-03",
+      "next_action": "Consolidar leituras e conciliações sem duplicar comando manual entre sistemas.",
+      "dependency": "APIs/credenciais e saúde das fontes",
+      "source": "CHECKPOINT_CR_EXECUTIVE_V9_GOOGLE_AGENDA_20261002",
+      "close_when": "Estado da operação pode ser lido pela camada executiva com origem e atualização verificáveis.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-08",
+      "title": "Saúde Técnica real",
+      "domain": "Desenvolvimento",
+      "priority": "P1",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-02",
+      "next_action": "Exibir telemetria de API, banco, integrações, latência, última verificação, ambiente e versão.",
+      "dependency": "Endpoints de saúde/telemetria",
+      "source": "Desenvolvimento / Saúde Técnica",
+      "close_when": "Saúde deixa de ser decoração e passa a refletir sinais reais com timestamp.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-09",
+      "title": "Financeiro / Acertos",
+      "domain": "Financeiro",
+      "priority": "P1",
+      "state": "blocked",
+      "owner": "Bio + financeiro",
+      "last_movement": "2026-09-30",
+      "next_action": "Auditar divergência entre Central e Trello e preservar obras liquidadas sem reabertura indevida.",
+      "dependency": "Conciliação das fontes",
+      "source": "Caso Rogério: Central R$ 3.171,83 × Trello R$ 3.741,85",
+      "close_when": "Totais reconciliados e regra financeira aplicada com rastreabilidade.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-10",
+      "title": "Acessos / Meeting / Documentação / Base Técnica",
+      "domain": "Base Técnica",
+      "priority": "P2",
+      "state": "review",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-02",
+      "next_action": "Revisar acessos principais, Meeting e documentação sem criar duplicidade de links.",
+      "dependency": "Inventário técnico",
+      "source": "Base Técnica / Documentação",
+      "close_when": "Acessos essenciais testados, documentação coerente e referências estáveis.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-11",
+      "title": "Homologação notebook + celular",
+      "domain": "Qualidade",
+      "priority": "P1",
+      "state": "review",
+      "owner": "Rogério + CR Assertivo",
+      "last_movement": "2026-10-03",
+      "next_action": "Executar validação comparativa somente quando a candidata estiver pronta, evitando microvalidações constantes.",
+      "dependency": "Candidata estabilizada",
+      "source": "Regra de homologação do projeto",
+      "close_when": "Mesmo comportamento essencial validado em notebook e celular com checkpoint.",
+      "human_action": true,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-12",
+      "title": "Identidade visual / acabamento premium da Central",
+      "domain": "Visual",
+      "priority": "P2",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-03",
+      "next_action": "Preservar azul canônico, botões, hierarquia, legibilidade e responsividade sem redesenhar a lógica.",
+      "dependency": "Base funcional estável",
+      "source": "cr-blue-canonical-option-b-20260930",
+      "close_when": "Identidade consistente nos módulos prioritários sem regressão funcional.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-13",
+      "title": "Academy — revisão visual e conteúdo",
+      "domain": "Academy",
+      "priority": "P2",
+      "state": "queue",
+      "owner": "A definir",
+      "last_movement": "2026-10-01",
+      "next_action": "Auditar conteúdo, versão e experiência sem abrir frente antes de existir capacidade.",
+      "dependency": "Fila / limite de 2 frentes",
+      "source": "Produto Academy",
+      "close_when": "Conteúdo e apresentação revisados, versionados e aprovados.",
+      "human_action": false,
+      "provenance": "current_explicit"
+    },
+    {
+      "id": "PM-14",
+      "title": "Memorial histórico / genealogia completa do projeto",
+      "domain": "Histórico",
+      "priority": "P1",
+      "state": "in_progress_support",
+      "owner": "Bio + Gestor",
+      "last_movement": "2026-10-03",
+      "next_action": "Indexar automaticamente branches/checkpoints/commits e organizar por produto, data e papel.",
+      "dependency": "Repositório e conversas históricas verificáveis",
+      "source": "GitHub + decisões registradas",
+      "close_when": "Cobertura histórica navegável e mensurada, com itens sem evidência explicitamente marcados.",
+      "human_action": false,
+      "provenance": "current_explicit"
+    },
+    {
+      "id": "PM-15",
+      "title": "Item legado #15 — identidade nominal ainda não recuperada",
+      "domain": "Banco Mestre legado",
+      "priority": "P2",
+      "state": "unconfirmed",
+      "owner": "Bio",
+      "last_movement": "2026-10-03",
+      "next_action": "Reconciliar o nome original somente quando surgir evidência documental/conversacional verificável.",
+      "dependency": "Evidência histórica",
+      "source": "Banco Mestre original de 15 itens",
+      "close_when": "Nome, origem e critério original forem recuperados sem inferência.",
+      "human_action": false,
+      "provenance": "legacy_unconfirmed"
+    }
+  ],
+  "history_catalog": {
+    "snapshot_at": "2026-10-03",
+    "repository": "rogeriocibin-alt/construrei-oauth-pages",
+    "total_refs": 201,
+    "earliest_date": "2026-09-27",
+    "latest_date": "2026-10-03",
+    "by_kind": {
+      "checkpoint": 99,
+      "safety": 13,
+      "candidate": 23,
+      "canonical": 31,
+      "development": 31,
+      "recovery": 3,
+      "main": 1
+    },
+    "by_product": {
+      "app": 47,
+      "executive": 23,
+      "central": 45,
+      "flows": 36,
+      "project": 35,
+      "presentation": 14,
+      "gestor": 1
+    },
+    "coverage_note": "Snapshot leve do repositório. O navegador tenta atualizar esta lista diretamente do GitHub ao abrir o Gestor; se a consulta falhar, usa este snapshot.",
+    "branches": [
+      {
+        "name": "CHECKPOINT_APP_CANDIDATE_CENTRAL_IDENTITY_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_CANONICAL_PROMOTED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_OPERATIONAL_HARDENING_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V8_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V9_RECONCILIATION_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V10_BEFORE_F01_UX_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V11_ATENDIMENTO_GABRIELLY_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V11_F01_CRM_UX_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V11_PRE_MOBILE_FIX_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_OFFICIAL_CANDIDATE_FUSION_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_VISUAL_ARCHITECTURE_LOCKED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_CANONICAL_APPROVED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V6_APPROVED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V7_AGENDA_BRIDGE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V8_LIVE_AGENDA_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_SIDEBAR_HOMOLOGATED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_CHECKLIST_DASHBOARD_CANONICAL_FINAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_CR_EXECUTIVE_V9_GOOGLE_AGENDA_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_DASHBOARD_FULL_LIGHT_CANONICAL_FINAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_F00_INTEGRATED_CENTRAL_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F00_LOGIC_RECOVERY_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F00_SLOT_CANONICAL_PROMOTED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F01_CANONICAL_PROMOTED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F01_DELIVERY_FIXED_HOMOLOGATED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F01_VISUAL_UNIFICATION_WITH_F00_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_FLOW_VISUAL_ARCHITECTURE_LOCKED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_GLOBAL_VISUAL_EQUALIZATION_FINAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_GLOBAL_VISUAL_NORMALIZED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_HOMOLOGACAO_COLOR_MATCH_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_HOMOLOGACAO_LINK_REGISTRY_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_IDENTITY_VISUAL_CANONICAL_FINAL_GUARDED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_IDENTITY_VISUAL_CANONICAL_GUARDED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_IDENTITY_VISUAL_CANONICAL_HOMOLOGATED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_INTERNAL_UI_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_MISSAO_CENTRAL_ENCERRADA_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_NO_REGRESSION_FLOW_LOCK_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PENDENCIAS_VIVAS_V2_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_POST_F00_SLOT_CANONICAL_FIX_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_POST_F01_CANONICAL_EVOLUTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_POST_F01_SINGLE_CANONICAL_DELIVERY_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_APP_APPROVED_PROMOTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_PRE_CHECKLIST_DASHBOARD_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_PRE_DASHBOARD_FULL_LIGHT_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F00_SLOT_CANONICAL_FIX_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F01_CANONICAL_EVOLUTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F01_DELIVERY_FIX_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F01_SINGLE_CANONICAL_DELIVERY_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F01_VISUAL_UNIFICATION_WITH_F00_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_FULL_FLOW_F00_F09_PROMOTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_GLOBAL_VISUAL_EQUALIZATION_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_GLOBAL_VISUAL_NORMALIZATION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_HOMOLOGACAO_COLOR_MATCH_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_HOMOLOGACAO_FINAL_PROMOTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_HOMOLOGACAO_FULL_LINK_REGISTRY_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_HOMOLOGACAO_UI_REFINEMENT_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_INTERNAL_UI_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_INTERNAL_UI_MAIN_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PRESENTATION_EXECUTIVE_CANONICAL_PROMOTION_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PRESENTATION_EXECUTIVE_REBUILD_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PRESENTATION_MACRO_PUBLISH_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PROMOTION_F00_SLOT_CANONICAL_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PROMOTION_F01_CANONICAL_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_BEFORE_EXECUTIVE_REBUILD_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_MACRO_LIVE_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_V2_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_HOMOLOGADA_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PROJECT_MANAGER_V1_CANDIDATE_20261003_FINAL",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PROJECT_MANAGER_V1_CANDIDATE_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PROJECT_MANAGER_V1_PUBLISHED_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_V9_GOOGLE_AGENDA_READY_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V9_GOOGLE_AGENDA_VALIDATED_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V9_SIDEBAR_REFINED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V10_DENSITY_100PCT_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V10_EXECUTIVE_MODEL_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V10_MENU_FIXED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V11_PREMIUM_DETAIL_CANDIDATE_20261003_B",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V11_PREMIUM_DETAIL_CANDIDATE_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V11_PREMIUM_RESOLVED_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "FINAL_CHECKPOINT_APP_CONSTRUREI_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "FINAL_CHECKPOINT_CONSTRUREI_FLOW_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "FINAL_CHECKPOINT_HOMOLOGACAO_CANONICAL_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "backup/central-before-afternoon-restore-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "backup/central-before-recovery-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "backup/central-before-shell-repair-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "backup/central-call-pre-screenfix-20260928-1843",
+        "date": "2026-09-28",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "backup/meeting-pre-google-meet-restore-20260928",
+        "date": "2026-09-28",
+        "kind": "safety",
+        "product": "project"
+      },
+      {
+        "name": "candidate/central-performance-20260929",
+        "date": "2026-09-29",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "central-before-pagey-independence-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-canonical-afternoon-20260929",
+        "date": "2026-09-29",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "central-canonical-recovered-20260929",
+        "date": "2026-09-29",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "central-homologada-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "central-pre-external-quarantine-20260929-2158",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-pre-final-recovery-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-pre-restore-20260929-2140",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-pre-v2-menu-recovery-20260929-2250",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-recovery-candidate-20260929-2300",
+        "date": "2026-09-29",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/app-candidate-approved-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/app-gabi-pre-operational-hardening-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/app-pre-v766-recovery-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/app-pre-visual-canonical-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/central-mission-closed-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-official-pre-sidebar-distribution-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-pre-cirurgical-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-pre-menu-canonical-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-pre-sidebar-refinement-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-sidebar-refinement-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/pre-app-central-identity-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/pre-app-official-candidate-fusion-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint-pre-identity-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "cr-app-approved-promotion-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-audited-central-alignment-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-baseline-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-candidate-central-identity-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-canonical-locked-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-canonical-real-identity-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-f01-embedded-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-f01-ux-v11-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-f01-ux-v11-mobile-fix-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-final-checkpoint-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-functional-next-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-gabi-engine-v8-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-gabi-operational-hardening-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-gabi-v9-reconciliation-ui-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-identity-candidate-20260930",
+        "date": "2026-09-30",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-lock-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-new-central-identity-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-official-candidate-fusion-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-v766-functional-canonical-20260930",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-v766-visual-candidate-20260930",
+        "date": "2026-09-30",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-visual-canonical-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-blue-canonical-option-b-20260930",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-central-canonical-approved-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-central-canonical-links-only-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-executive-v6-canonical-approved-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-central-executive-v6-next-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-executive-v7-agenda-bridge-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-executive-v8-live-agenda-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-executive-v9-google-agenda-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-executive-v10-model-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-global-link-audit-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-next-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-official-router-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-responsive-final-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-sidebar-fill-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-sidebar-refinement-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-docs-status-visual-canonical-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-executive-readonly-v4-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-executive-static-v5-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-f00-central-integration-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f00-f09-canonical-ui-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f00-logic-recovery-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f00-slot-canonical-fix-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f01-canonical-evolution-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f01-canonical-promotion-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f01-single-canonical-delivery-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f01-visual-unification-with-f00-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-final-checkpoint-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "cr-flow-functional-next-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-flow-governance-lock-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-flow-no-regression-lock-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-flow-no-regression-locked-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-flow-visual-architecture-locked-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-full-flow-f00-f09-central-promotion-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-full-flow-next-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-global-access-ui-canonical-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-global-visual-normalization-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "project"
+      },
+      {
+        "name": "cr-hoje-operacao-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "project"
+      },
+      {
+        "name": "cr-home-canonical-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "cr-home-canonical-frozen-20260930",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "cr-home-reference-candidate-20260930",
+        "date": "2026-09-30",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "cr-home-reference-rebuild-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-home-sane-p0-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-homologacao-canonical-locked-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-homologacao-color-match-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-homologacao-final-promotion-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-homologacao-links-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-homologacao-ui-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-identity-canonical-20260930-v1",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "cr-identity-reference-v2-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-pendencias-vivas-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "project"
+      },
+      {
+        "name": "cr-presentation-executive-macro-live-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-presentation-executive-viva-canonical-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-presentation-executive-viva-canonical-final-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-presentation-executive-viva-homologada-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-presentation-pre-executive-viva-promotion-20261002",
+        "date": "2026-10-02",
+        "kind": "safety",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-project-manager-v1-candidate-20261003",
+        "date": "2026-10-03",
+        "kind": "candidate",
+        "product": "gestor"
+      },
+      {
+        "name": "cr-remaining-color-canonical-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-v4-visual-equalization-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "project"
+      },
+      {
+        "name": "fix/app-v766-boot-sync-recovery-20260930",
+        "date": "2026-09-30",
+        "kind": "recovery",
+        "product": "app"
+      },
+      {
+        "name": "fix/app-v766-cloud-origin-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "fix/app-visual-canonical-recovery-20260930",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "fix/central-call-media-decoupling-20260928",
+        "date": "2026-09-28",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "fix/central-menu-documentacao-unica-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "freeze/central-canonical-92ef8f27",
+        "date": "",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "freeze/central-renderer-golden-2026-09-27",
+        "date": "2026-09-27",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "main",
+        "date": "",
+        "kind": "main",
+        "product": "project"
+      },
+      {
+        "name": "recovery/central-good-20260929",
+        "date": "2026-09-29",
+        "kind": "recovery",
+        "product": "central"
+      },
+      {
+        "name": "restore/presentation-live-38p-20260930",
+        "date": "2026-09-30",
+        "kind": "recovery",
+        "product": "presentation"
+      }
+    ]
+  },
+  "live_sources": [
+    {
+      "id": "github",
+      "name": "GitHub — branches/checkpoints/commits",
+      "mode": "auto_browser",
+      "status": "live",
+      "purpose": "Genealogia, versões, checkpoints e atualização do histórico."
+    },
+    {
+      "id": "project_data",
+      "name": "Banco Mestre do Gestor",
+      "mode": "versioned_dataset",
+      "status": "live",
+      "purpose": "Pendências, decisões, regras e critérios de conclusão versionados no próprio projeto."
+    },
+    {
+      "id": "supabase",
+      "name": "Persistência/telemetria superior",
+      "mode": "planned_integration",
+      "status": "partial",
+      "purpose": "Próxima camada para atualização server-side e fontes operacionais sem depender do navegador."
+    }
+  ]
 }
