@@ -16,7 +16,7 @@ const b64url=(bytes:Uint8Array)=>{let s="";for(const b of bytes)s+=String.fromCh
 const str64url=(s:string)=>b64url(new TextEncoder().encode(s));
 function pemToBytes(pem:string){const raw=pem.replace(/-----BEGIN PRIVATE KEY-----|-----END PRIVATE KEY-----|\s+/g,"");const bin=atob(raw);const out=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);return out}
 async function googleAccessToken(){
-  const raw=sec("GOOGLE_CALENDAR_SERVICE_ACCOUNT_JSON");
+  const raw=sec("GOOGLE_CALENDAR_SERVICE_ACCOUNT_JSON")||sec("google_calender_service_account_json");
   if(!raw)throw Error("GOOGLE_SERVICE_ACCOUNT_SECRET_MISSING");
   let sa:any;try{sa=JSON.parse(raw)}catch{throw Error("GOOGLE_SERVICE_ACCOUNT_SECRET_INVALID_JSON")}
   if(!sa?.client_email||!sa?.private_key)throw Error("GOOGLE_SERVICE_ACCOUNT_FIELDS_MISSING");
