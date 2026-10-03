@@ -1,5 +1,5 @@
-const CACHE='cr-project-manager-owner-pwa-20261003-v1';
-const SHELL=['./','./index.html','./styles.css','./app.js','./project-data.json','./manifest.webmanifest','./pwa-icon.svg'];
+const CACHE='cr-project-manager-owner-pwa-20261003-v2';
+const SHELL=['./','./index.html','./styles.css','./app.js','./project-data.json','./infra-data.json','./manifest.webmanifest','./pwa-icon.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
