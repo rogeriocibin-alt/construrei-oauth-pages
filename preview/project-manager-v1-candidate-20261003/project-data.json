@@ -1,16 +1,21 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1 • GESTÃO VIVA",
-    "status": "GESTOR VIVO — MESMO LINK / CHECKPOINT V1 PRESERVADO",
+    "version": "V1.1.0 • CICLO 0",
+    "status": "CANDIDATA ISOLADA — CICLO 0 EM VALIDAÇÃO / CANÔNICAS PRESERVADAS",
     "generated_at": "2026-10-03",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
-    "branch": "cr-project-manager-v1-candidate-20261003",
+    "branch": "cr-project-manager-v1-1-cycle0-20261003",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
     "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
     "audit_snapshot": "2026-10-03",
     "audit_state": "Snapshot automático incorporado com 201 branches; atualização online do GitHub ocorre ao abrir o Gestor.",
-    "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003"
+    "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
+    "build": "CR-PM-V1.1.0-C0-20261003",
+    "environment": "candidate",
+    "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
+    "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
+    "persistence": "Supabase cr_internal: modelo persistente V1.1 criado; PWA mantém snapshot versionado como fallback até API autenticada do owner."
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -65,7 +70,7 @@
       "id": "r7",
       "label": "Banco Mestre persistente do Gestor já conectado",
       "status": "partial",
-      "evidence": "V1 usa dataset estruturado estático; persistência Supabase está preparada, mas ainda não conectada."
+      "evidence": "Modelo persistente V1.1 criado em cr_internal; PWA ainda usa snapshot versionado como fallback até API autenticada do owner. Não declarar conexão completa antes do teste."
     }
   ],
   "products": [
@@ -503,11 +508,11 @@
       "status": "executing",
       "priority": "P0",
       "objective": "Entregar o cockpit visual que organiza memória, versões, decisões, frentes e direção do projeto.",
-      "progress": 92,
+      "progress": 96,
       "owner": "CR Assertivo + Bio",
-      "last_advance": "Cockpit, navegação, busca, drawers, governança e auditoria estrutural concluídos na branch isolada.",
-      "next_action": "Validar visual e comportamento em desktop/celular; depois congelar checkpoint da candidata V1.",
-      "dependency": "Validação humana da V1 antes de qualquer persistência ou promoção.",
+      "last_advance": "Ciclo 0 implementado: baseline protegida, persistência aditiva, AUD-001 estruturada, matriz de fontes, reconciliações e PWA V1.1 preparado para atualização viva.",
+      "next_action": "Concluir testes estáticos/segurança, checkpoint do Ciclo 0 e validação humana do PWA instalado em notebook/celular; não promover a canônica.",
+      "dependency": "Teste humano do PWA instalado + rechecagem do backup antes de homologação.",
       "blocked": false,
       "age_days": 0
     },
@@ -2383,23 +2388,23 @@
     {
       "id": "github",
       "name": "GitHub — branches/checkpoints/commits",
-      "mode": "auto_browser",
+      "mode": "direct_connector",
       "status": "live",
       "purpose": "Genealogia, versões, checkpoints e atualização do histórico."
     },
     {
       "id": "project_data",
-      "name": "Banco Mestre do Gestor",
-      "mode": "versioned_dataset",
+      "name": "Snapshot versionado do Gestor",
+      "mode": "pwa_fallback",
       "status": "live",
-      "purpose": "Pendências, decisões, regras e critérios de conclusão versionados no próprio projeto."
+      "purpose": "Fallback coerente/offline; não substitui persistência transacional."
     },
     {
       "id": "supabase",
-      "name": "Persistência/telemetria superior",
-      "mode": "planned_integration",
-      "status": "partial",
-      "purpose": "Próxima camada para atualização server-side e fontes operacionais sem depender do navegador."
+      "name": "Persistência superior V1.1",
+      "mode": "internal_persistent_model",
+      "status": "live",
+      "purpose": "Auditorias, releases, fontes, reconciliações, métricas, automações e eventos; leitura pública não exposta."
     }
   ],
   "owner_architecture": {
@@ -2592,5 +2597,407 @@
     "refresh_behavior": "O Gestor atualiza histórico do repositório automaticamente e exibe os destinos operacionais a partir do registro canônico incorporado.",
     "anti_stale_rule": "Se um produto mudar e o Gestor não refletir a mudança, a entrega não deve ser considerada concluída.",
     "owner_visibility": "Toda promoção, candidata, canônica, regressão, homologação e mudança de versão relevante precisa deixar evidência no Gestor."
+  },
+  "release_meta": {
+    "version": "1.1.0",
+    "build": "CR-PM-V1.1.0-C0-20261003",
+    "environment": "candidate",
+    "status": "cycle0_validation",
+    "branch": "cr-project-manager-v1-1-cycle0-20261003",
+    "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
+    "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
+    "update_mode": "same_url_atomic_pwa_bundle",
+    "canonical_changed": false
+  },
+  "audits": [
+    {
+      "id": "AUD-001",
+      "number": 1,
+      "title": "Auditoria 001 — Project Manager CONSTRU-REI — V1 Gestão Viva",
+      "date": "2026-10-03",
+      "type": "external_product_governance_audit",
+      "product": "gestor",
+      "version": "V1",
+      "build": "c0f8298e",
+      "status": "implementation_planned",
+      "auditor": "Auditoria externa fornecida pelo proprietário",
+      "scope": "Gestão de projetos, governança de produto, operação, negócios, risco, automação e visibilidade executiva.",
+      "summary": "Fundação forte de governança; evolução necessária para verdade persistente, reconciliação, gates, continuidade e resultado de negócio.",
+      "original_evidence": {
+        "file": "Auditoria_do_Project_Manager_CONSTRU-REI.pdf",
+        "library_file_id": "libfile_8027b520cbf8819192ffc862272b40f9",
+        "sha256": "c91dca4cbdb48c22ea3543e6e5aa947a54019a3f92eefac4cdb206817c960c26"
+      },
+      "findings_total": 25,
+      "storage": "Supabase cr_internal.pm_audits_v1 / pm_audit_findings_v1"
+    }
+  ],
+  "audit_findings": [
+    {
+      "id": "AUD-001-F01",
+      "audit_id": "AUD-001",
+      "code": "P0-01",
+      "title": "Reconciliar contadores críticos",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F02",
+      "audit_id": "AUD-001",
+      "code": "P0-02",
+      "title": "Sanear deriva do checkpoint V9",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-01"
+    },
+    {
+      "id": "AUD-001-F03",
+      "audit_id": "AUD-001",
+      "code": "P0-03",
+      "title": "Conectar Banco Mestre persistente",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F04",
+      "audit_id": "AUD-001",
+      "code": "P0-04",
+      "title": "Criar matriz de fontes e sincronismo",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-07"
+    },
+    {
+      "id": "AUD-001-F05",
+      "audit_id": "AUD-001",
+      "code": "P0-05",
+      "title": "Tratar backup falhando como incidente",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-08"
+    },
+    {
+      "id": "AUD-001-F06",
+      "audit_id": "AUD-001",
+      "code": "P0-06",
+      "title": "Revisar superfície de segurança Supabase",
+      "severity": "high",
+      "status": "planned",
+      "implementation_item": "PM-08"
+    },
+    {
+      "id": "AUD-001-F07",
+      "audit_id": "AUD-001",
+      "code": "P0-07",
+      "title": "Gate real de promoção",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F08",
+      "audit_id": "AUD-001",
+      "code": "P0-08",
+      "title": "Separar avanço material de edição",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-05"
+    },
+    {
+      "id": "AUD-001-F09",
+      "audit_id": "AUD-001",
+      "code": "P1-01",
+      "title": "Camada financeira e resultado de negócio",
+      "severity": "high",
+      "status": "planned",
+      "implementation_item": "PM-09"
+    },
+    {
+      "id": "AUD-001-F10",
+      "audit_id": "AUD-001",
+      "code": "P1-02",
+      "title": "Dependências explícitas entre pendências",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-05"
+    },
+    {
+      "id": "AUD-001-F11",
+      "audit_id": "AUD-001",
+      "code": "P1-03",
+      "title": "Valor, risco, esforço, prazo e impacto por frente",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F12",
+      "audit_id": "AUD-001",
+      "code": "P1-04",
+      "title": "Alertas automáticos relevantes",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F13",
+      "audit_id": "AUD-001",
+      "code": "P1-05",
+      "title": "Máquina de estados auditável",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-05"
+    },
+    {
+      "id": "AUD-001-F14",
+      "audit_id": "AUD-001",
+      "code": "P1-06",
+      "title": "Dicionário de métricas acessível",
+      "severity": "medium",
+      "status": "in_progress",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F15",
+      "audit_id": "AUD-001",
+      "code": "P1-07",
+      "title": "Topo com sincronismo e falhas de fonte",
+      "severity": "medium",
+      "status": "in_progress",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F16",
+      "audit_id": "AUD-001",
+      "code": "P1-08",
+      "title": "Tela mudou desde a última visita",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-14"
+    },
+    {
+      "id": "AUD-001-F17",
+      "audit_id": "AUD-001",
+      "code": "P2-01",
+      "title": "Busca semântica executiva",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-14"
+    },
+    {
+      "id": "AUD-001-F18",
+      "audit_id": "AUD-001",
+      "code": "P2-02",
+      "title": "Simulação de cenários",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F19",
+      "audit_id": "AUD-001",
+      "code": "P2-03",
+      "title": "Score de prontidão por produto",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F20",
+      "audit_id": "AUD-001",
+      "code": "P2-04",
+      "title": "Previsões de atraso, caixa e capacidade",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-09"
+    },
+    {
+      "id": "AUD-001-F21",
+      "audit_id": "AUD-001",
+      "code": "P2-05",
+      "title": "Relatórios diário e semanal",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F22",
+      "audit_id": "AUD-001",
+      "code": "P2-06",
+      "title": "Matriz de papéis e permissões por camada",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-10"
+    },
+    {
+      "id": "AUD-001-F23",
+      "audit_id": "AUD-001",
+      "code": "P2-07",
+      "title": "Retenção e classificação de dados sensíveis",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-10"
+    },
+    {
+      "id": "AUD-001-F24",
+      "audit_id": "AUD-001",
+      "code": "CTRL-01",
+      "title": "Enforcement do limite de duas frentes",
+      "severity": "high",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F25",
+      "audit_id": "AUD-001",
+      "code": "DOD-01",
+      "title": "Definition of Done visível por frente",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    }
+  ],
+  "source_matrix": [
+    {
+      "id": "SRC-GITHUB",
+      "name": "GitHub",
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "agora",
+      "note": "Leitura direta do repositório/refs."
+    },
+    {
+      "id": "SRC-SUPABASE",
+      "name": "Supabase",
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "agora",
+      "note": "Projeto ACTIVE_HEALTHY; persistência V1.1 criada."
+    },
+    {
+      "id": "SRC-CENTRAL",
+      "name": "Central CONSTRU-REI",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "—",
+      "note": "Checkpoint conhecido; runtime não revalidado neste ciclo."
+    },
+    {
+      "id": "SRC-APP",
+      "name": "APP CONSTRU-REI",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "—",
+      "note": "Baseline conhecida; runtime não revalidado neste ciclo."
+    },
+    {
+      "id": "SRC-TRELLO",
+      "name": "Trello",
+      "status": "stale",
+      "confidence": "medium",
+      "last_read": "27/09",
+      "note": "Cofre Zero anterior; exige leitura atual para decisões."
+    },
+    {
+      "id": "SRC-GESTAOCLICK",
+      "name": "GestãoClick",
+      "status": "stale",
+      "confidence": "medium",
+      "last_read": "28/09",
+      "note": "Cofre Zero anterior; exige leitura atual para decisões."
+    },
+    {
+      "id": "SRC-GCAL",
+      "name": "Google Calendar",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "—",
+      "note": "Integração V9 conhecida; não reconsultada neste ciclo."
+    },
+    {
+      "id": "SRC-NETLIFY",
+      "name": "Netlify",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "03/10 snapshot",
+      "note": "Inventário anterior conhecido; revalidação pendente."
+    },
+    {
+      "id": "SRC-VERCEL",
+      "name": "Vercel",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "03/10 snapshot",
+      "note": "0 projetos no último inventário."
+    },
+    {
+      "id": "SRC-PWA",
+      "name": "PWA Gestor",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "código atual",
+      "note": "Manifest/SW confirmados; teste instalado ainda pendente."
+    },
+    {
+      "id": "SRC-BANCO-MESTRE",
+      "name": "Banco Mestre",
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "agora",
+      "note": "Dataset e motor persistente conciliados progressivamente."
+    },
+    {
+      "id": "SRC-BACKUP",
+      "name": "Backups automáticos",
+      "status": "error",
+      "confidence": "high",
+      "last_read": "03/10",
+      "note": "Falhas 01–03/10 registradas; incidente aberto."
+    },
+    {
+      "id": "SRC-COFRE-ZERO",
+      "name": "Cofre Zero",
+      "status": "stale",
+      "confidence": "high",
+      "last_read": "28/09",
+      "note": "Última execução persistente completa localizada."
+    }
+  ],
+  "reconciliations": [
+    {
+      "id": "REC-V9-POINTER-20261003",
+      "title": "Deriva do ponteiro V9",
+      "status": "investigating",
+      "difference": "VALIDATED aponta para APP V11; V9 técnico dedicado aponta para 773cfe0…",
+      "next_action": "Preservar histórico e criar evidência saneada, sem reescrever silenciosamente o ref."
+    },
+    {
+      "id": "REC-FIN-ROGERIO-20260929",
+      "title": "Acertos Rogério — Central × Trello",
+      "status": "open",
+      "difference": "R$ 570,02",
+      "next_action": "Conciliar lançamento a lançamento; não somar nem promediar fontes."
+    }
+  ],
+  "cycle0": {
+    "status": "implemented_pending_validation",
+    "baseline": {
+      "commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
+      "checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003"
+    },
+    "canonical_changed": false,
+    "persistence": {
+      "migration": "project_manager_cycle0_persistence_v1",
+      "schema": "cr_internal",
+      "new_entities": 10
+    },
+    "audit": {
+      "id": "AUD-001",
+      "findings": 25,
+      "original_sha256": "c91dca4cbdb48c22ea3543e6e5aa947a54019a3f92eefac4cdb206817c960c26"
+    },
+    "stop_gate": "Não avançar ao próximo pacote P0 até testes estáticos, segurança pós-migração, checkpoint final e teste humano do PWA instalado/desktop/celular."
   }
 }
