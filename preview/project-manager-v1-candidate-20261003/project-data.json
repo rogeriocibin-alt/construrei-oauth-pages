@@ -2620,7 +2620,9 @@
       "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
       "canonical_changed": false
     },
-    "ui_commit_tested": "543d368635891b64b203df6badec0cda43dced9e"
+    "ui_commit_tested": "543d368635891b64b203df6badec0cda43dced9e",
+    "candidate_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_RECONCILED_20261003",
+    "last_tested_at": "2026-10-03T12:16:52-03:00"
   },
   "audits": [
     {
@@ -3101,7 +3103,7 @@
           "evidence": "Falhas 01–03/10 registradas; nova execução/restauração comprovada ainda ausente."
         }
       ],
-      "last_tested_at": "2026-10-03T12:15:00-03:00"
+      "last_tested_at": "2026-10-03T12:16:52-03:00"
     },
     "promotion_gate": {
       "decision": "BLOCKED",
@@ -3114,6 +3116,7 @@
       ],
       "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
       "canonical_changed": false
-    }
+    },
+    "reconciled_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_RECONCILED_20261003"
   }
 }
