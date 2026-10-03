@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="cr-build" content="CR-EXECUTIVE-V10-MODEL-CANDIDATE-20261002">
+<title>CONSTRU-REI • Dashboard Executivo V10</title>
+<style>html,body{margin:0;min-height:100%;font-family:Inter,system-ui,Segoe UI,Arial;background:#eef6fb;color:#07165b}#boot{min-height:100vh;display:grid;place-items:center;padding:24px}#card{max-width:560px;background:#fff;border:1px solid #cfdfeb;border-radius:18px;padding:24px;box-shadow:0 18px 50px rgba(6,40,86,.14)}#card b{display:block;font-size:21px;margin-bottom:8px}#card small{color:#567394}</style>
+</head><body>
+<div id="boot"><div id="card"><b>Central CONSTRU-REI</b><small>Carregando candidata executiva V10 • layout de decisão rápida…</small></div></div>
+<script>
+(async()=>{try{
+const baseUrl='../central-executive-v5-static-candidate-20261002/index.html?base='+Date.now();
+const r=await fetch(baseUrl,{cache:'no-store'});if(!r.ok)throw new Error('Falha ao carregar base: HTTP '+r.status);
+let h=await r.text();
+h=h.replace('<head>','<head><base href="../central-executive-v5-static-candidate-20261002/">');
+h=h.replace('</head>','<meta name="cr-v10-package" content="CR-EXECUTIVE-V10-MODEL-CANDIDATE-20261002"><link rel="stylesheet" href="../central-executive-v10-model-candidate-20261002/v10-model.css?v=20261002a"></head>');
+h=h.replace('</body>','<script src="../central-executive-v6-package-candidate-20261002/v6-patch.js?v=c0d0a309"><\/script><script src="../central-executive-v6-package-candidate-20261002/v6-health-patch.js?v=13510d5"><\/script><script src="../central-executive-v6-package-candidate-20261002/v6-source-sync-patch.js?v=c609d5b"><\/script><script src="../central-executive-v7-agenda-bridge-candidate-20261002/v7-agenda-bridge.js?v=223ab949"><\/script><script src="../central-executive-v9-google-agenda-candidate-20261002/v9-google-agenda.js?v=20261002b"><\/script><script src="../central-executive-v10-model-candidate-20261002/v10-model.js?v=20261002a"><\/script></body>');
+document.open();document.write(h);document.close();
+}catch(e){document.getElementById('card').innerHTML='<b>Não foi possível abrir a candidata V10.</b><small>'+String(e.message||e)+'</small>'}})();
+</script></body></html>
