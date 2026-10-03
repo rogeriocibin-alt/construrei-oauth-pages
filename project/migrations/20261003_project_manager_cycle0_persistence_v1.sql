@@ -24,6 +24,8 @@ create table if not exists cr_internal.pm_versions_v1 (
   unique(product_key, semantic_version)
 );
 
+create index if not exists pm_versions_v1_baseline_idx on cr_internal.pm_versions_v1(baseline_version_id);
+
 create table if not exists cr_internal.pm_releases_v1 (
   release_id text primary key,
   version_id text not null references cr_internal.pm_versions_v1(version_id),
