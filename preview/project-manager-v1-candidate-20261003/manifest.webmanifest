@@ -15,10 +15,11 @@
   ],
   "icons": [
     {
-      "src": "./pwa-icon.svg?v=20261003applogo2",
+      "src": "./pwa-icon.svg?v=20261003v110c0",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "id": "./"
 }
