@@ -262,7 +262,13 @@ body.app-candidate pre{color:var(--crh-text)!important}
 
 <section class="fusion-page" data-view="agenda">
   <div class="fusion-wrap">
-    <div class="fusion-section-title"><div><h2>Agenda do atendimento</h2><p>Disponibilidades e janelas de atendimento identificadas nos chamados, para confirmação e acompanhamento.</p></div><span id="agendaCount" class="fusion-chip">0 itens</span></div>
+    <div class="fusion-section-title"><div><h2>Agenda do atendimento</h2><p>Disponibilidades dos chamados + visão consolidada da agenda real da operação.</p></div><span id="agendaCount" class="fusion-chip">0 itens</span></div>
+    <div class="fusion-summary" style="margin-bottom:10px">
+      <div class="fusion-card"><strong id="agendaToday">—</strong><span>Visitas hoje</span></div>
+      <div class="fusion-card"><strong id="agendaTomorrow">—</strong><span>Agenda amanhã</span></div>
+      <div class="fusion-card"><strong id="agendaYesterday">—</strong><span>Pendências de ontem</span></div>
+    </div>
+    <div id="agendaBridgeNote" class="sub" style="margin:0 0 9px;color:#6d8299">Sincronizando agenda consolidada…</div>
     <div id="fusionAgendaList" class="fusion-list"></div>
   </div>
 </section>
@@ -350,6 +356,12 @@ body.app-candidate pre{color:var(--crh-text)!important}
             <span id="viewStatus" class="status"></span>
             <span id="viewPending" class="countBadge"></span>
           </div>
+        </div>
+
+        <div id="opCaseSummary" class="box">
+          <b>CONDUÇÃO DO ATENDIMENTO</b>
+          <div id="opCaseMeta" class="op-meta" style="margin-top:8px"></div>
+          <div id="opCaseNext" class="mut small" style="margin-top:8px"></div>
         </div>
 
         <div class="box">
@@ -463,12 +475,33 @@ function inFilter(x){
   return true;
 }
 function formatDate(v){try{return new Date(v).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}catch{return""}}
+function humanStatus(v){
+  return ({EM_COLETA:"EM COLETA",INCOMPLETO:"INCOMPLETO",AGUARDANDO_RESPOSTA:"AGUARDANDO RESPOSTA",PRONTO_F01:"PRONTO PARA SEGUIR"})[v]||String(v||"");
+}
+function isBogusContact(v){
+  const n=String(v||"").trim().toLowerCase();
+  const bad=new Set(["quantidade","valor unitário","valor unitario","total","endereço","endereco","data","base","cliente/origem","solicitante","unidade envolvida","unidade afetada","descrição","descricao","serviço","servico","material","horário","horario"]);
+  return !n||bad.has(n)||/^r\$\s*\d/i.test(n)||/^\d+[\s.,%]/.test(n);
+}
+function correctedMissing(d){
+  const arr=Array.isArray(d.missing)?[...d.missing]:[];
+  if(isBogusContact(d.case?.contact_name) && !arr.some(x=>/nome.*contato|contato.*nome/i.test(String(x))))arr.push("nome do contato no imóvel");
+  return [...new Set(arr.map(x=>String(x).trim()).filter(Boolean))];
+}
+function caseAgeHours(v){const t=new Date(v||0).getTime();return t?Math.max(0,(Date.now()-t)/36e5):0}
+function caseNextAction(c,missing){
+  if(c.status==="AGUARDANDO_RESPOSTA")return "Conferir se houve resposta, cobrar se necessário e incorporar a resposta neste mesmo chamado.";
+  if(c.status==="PRONTO_F01"&&!missing.length)return "Revisar os dados e encaminhar para a próxima etapa.";
+  if(missing.length)return "Coletar "+(missing.length===1?"1 informação":missing.length+" informações")+" que ainda "+(missing.length===1?"falta":"faltam")+".";
+  return "Revisar o chamado e definir a próxima ação.";
+}
 
 async function hydrateOperationalDetails(list){
   const active=list.filter(x=>["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01"].includes(x.status));
   const results=await Promise.allSettled(active.map(async c=>{
     const d=await api("get",{id:c.id});
-    return {id:c.id,missing:Array.isArray(d.missing)?d.missing:[],ready:!!d.ready,case:d.case||{},events:Array.isArray(d.events)?d.events:[]};
+    const missing=correctedMissing(d);
+    return {id:c.id,missing,ready:!!d.ready&&!missing.length,case:d.case||{},events:Array.isArray(d.events)?d.events:[]};
   }));
   const byId=new Map(results.filter(r=>r.status==="fulfilled").map(r=>[r.value.id,r.value]));
   return list.map(c=>{
@@ -496,7 +529,7 @@ function render(){
   data.forEach(x=>{
     const d=document.createElement("div");d.className="case";
     const pc=pendingCount(x);
-    d.innerHTML='<div class="caseTop"><div class="caseNo">'+esc(x.case_number)+'</div><span class="status">'+esc(x.status)+'</span></div>'+
+    d.innerHTML='<div class="caseTop"><div class="caseNo">'+esc(x.case_number)+'</div><span class="status">'+esc(humanStatus(x.status))+'</span></div>'+
       '<div style="font-weight:800;margin-top:5px">'+esc(x.client||"Cliente a identificar")+'</div>'+
       '<div class="mut small">'+esc(x.address||x.title||x.problem||"Aguardando organização")+'</div>'+
       '<div class="pending">'+(pc===0?"✓ 0 pendências":pc+" pendência"+(pc===1?"":"s"))+'</div>'+
@@ -536,7 +569,16 @@ function fact(label,value){
   return '<div class="fact"><b>✓ '+esc(label)+'</b><span>'+esc(value)+'</span></div>';
 }
 function renderItems(arr){
-  const items=Array.isArray(arr)?arr:[];
+  const meta=new Set(["cliente/origem","endereço","endereco","base","data","quantidade","valor unitário","valor unitario","total"]);
+  const items=(Array.isArray(arr)?arr:[]).filter(x=>{
+    const subject=String(x?.subject||"").trim().toLowerCase();
+    const env=String(x?.environment||"").replace(/[🏢📍📄📅]/g,"").trim().toLowerCase();
+    if(meta.has(subject)||meta.has(env))return false;
+    if(/^r\$\s*[\d.,]+$/i.test(subject))return false;
+    if(/^\d+\s*unidade(s)?$/i.test(subject))return false;
+    if(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(subject))return false;
+    return true;
+  });
   $("itemCount").textContent=items.length;
   $("itemsBox").classList.toggle("hidden",!items.length);
   const visible=items.slice(0,8);
@@ -548,7 +590,7 @@ function renderInvolved(arr){
   const blocked=new Set(["quantidade","valor unitário","valor unitario","total","endereço","endereco","data","base","cliente/origem","solicitante","unidade envolvida","possível unidade de origem","possivel unidade de origem","unidade afetada","apartamento de baixo","apartamento de cima","descrição","descricao","serviço","servico","material","horário","horario"]);
   const raw=Array.isArray(arr)?arr:[];
   const a=raw.filter(x=>{
-    if(x&&x.unit)return true;
+    if(x&&x.unit)return String(x.unit).trim().length>1 || /\d/.test(String(x.unit));
     const n=String(x?.name||"").trim().toLowerCase();
     if(!n||blocked.has(n))return false;
     if(/^r\$\s*\d/i.test(n)||/^\d+[\s.,%]/.test(n))return false;
@@ -609,15 +651,17 @@ function fillEdit(c){
 }
 async function openCase(id){
   try{
-    const d=await api("get",{id});current=d.case;
+    const d=await api("get",{id});
+    const missing=correctedMissing(d);
+    current=d.case;
     $("capture").classList.add("hidden");$("caseView").classList.remove("hidden");
-    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=d.case.title||d.case.problem||"Chamado em organização";$("viewStatus").textContent=d.case.status;
-    $("viewPending").textContent=d.missing.length+" pendência"+(d.missing.length===1?"":"s");
+    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=d.case.title||d.case.problem||"Chamado em organização";$("viewStatus").textContent=humanStatus(d.case.status);
+    $("viewPending").textContent=missing.length+" pendência"+(missing.length===1?"":"s");
 
     const identified=[
       fact("Cliente / origem",d.case.client),
       fact("Endereço",d.case.address),
-      fact("Contato",d.case.contact_name),
+      fact("Contato",isBogusContact(d.case.contact_name)?"":d.case.contact_name),
       fact("Telefone",d.case.contact_phone),
       fact("Problema identificado",d.case.problem),
       fact("Pagamento / autorização",d.case.payment),
@@ -632,10 +676,10 @@ async function openCase(id){
     renderItems(st.items||[]);
     renderInvolved(st.involved||[]);
 
-    if(d.missing.length){
+    if(missing.length){
       $("missingBox").classList.remove("hidden");
-      $("missing").innerHTML=d.missing.map(x=>'<div class="missingItem">⚠ '+esc(x)+'</div>').join("");
-      $("gateText").innerHTML='<span class="warn">Ainda faltam '+d.missing.length+' informação(ões) para liberar.</span>';
+      $("missing").innerHTML=missing.map(x=>'<div class="missingItem">⚠ '+esc(x)+'</div>').join("");
+      $("gateText").innerHTML='<span class="warn">Ainda '+(missing.length===1?'falta 1 informação':'faltam '+missing.length+' informações')+' para seguir.</span>';
     }else{
       $("missingBox").classList.add("hidden");
       $("gateText").innerHTML='<span class="okline">✓ Sem pendências críticas. Pronto para seguir.</span>';
@@ -643,11 +687,18 @@ async function openCase(id){
     renderFiles(d.files||[]);
     $("message").textContent=d.message||"Nenhuma mensagem necessária.";
     $("gc").textContent=d.gestaoclick||"";
-    $("release").disabled=!d.ready||d.case.released_f01;$("release").textContent=d.case.released_f01?"ENCAMINHADO":"Enviar para próxima etapa";
+    $("release").disabled=!d.ready||missing.length>0||d.case.released_f01;$("release").textContent=d.case.released_f01?"ENCAMINHADO":"Enviar para próxima etapa";
     $("moreBox").classList.toggle("hidden",!!d.case.released_f01);
     $("f01").href=d.f01_url||"#";$("f01").classList.toggle("hidden",!d.case.released_f01);
     $("timeline").innerHTML=(d.events||[]).map(x=>"• "+esc(formatDate(x.created_at))+" — "+esc(x.event_text)).join("<br>")||"Sem eventos.";
-    $("moreRaw").value="";$("moreFiles").value="";fillEdit(d.case);
+    const age=Math.floor(caseAgeHours(d.case.updated_at));
+    const overdue=age>=24 && d.case.status!=="PRONTO_F01";
+    $("opCaseMeta").innerHTML=
+      '<span class="op-pill">Responsável: Gabrielly</span>'+
+      (d.case.status==="AGUARDANDO_RESPOSTA"?'<span class="op-pill warn">Dependência: cliente/contato</span>':'')+
+      '<span class="op-pill '+(overdue?'bad':'')+'">'+(overdue?'Parado há '+age+'h':'Atualizado '+esc(formatDate(d.case.updated_at)))+'</span>';
+    $("opCaseNext").innerHTML='<b>Próxima ação:</b> '+esc(caseNextAction(d.case,missing));
+    $("moreRaw").value="";$("moreFiles").value="";fillEdit({...d.case,contact_name:isBogusContact(d.case.contact_name)?"":d.case.contact_name});
   }catch(e){alert(e.message)}
 }
 async function reprocess(){
@@ -662,7 +713,7 @@ async function reprocess(){
 }
 async function markWaiting(){
   if(!current)return;
-  try{await api("wait",{id:current.id});filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();alert("Chamado movido para AGUARDANDO RESPOSTA. Ele saiu da fila ativa, mas continua no histórico.")}catch(e){alert(e.message)}
+  try{await api("wait",{id:current.id});filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();alert("Chamado movido para AGUARDANDO RESPOSTA. Ele saiu da fila ativa, mas continua registrado no histórico.")}catch(e){alert(e.message)}
 }
 async function copyAndWait(){
   if(!current)return;
@@ -803,6 +854,22 @@ load();
     bindRows();
     health(true,"Dados sincronizados");
   }
+  async function loadAgendaBridge(){
+    const note=q("#agendaBridgeNote");
+    try{
+      const r=await fetch("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v8-candidate-20261002?view=public",{cache:"no-store"});
+      if(!r.ok)throw new Error("HTTP "+r.status);
+      const d=await r.json();
+      const k=d.kpis||{};
+      const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=String(v??0)};
+      set("agendaToday",k.visits_today?.count??0);
+      set("agendaTomorrow",k.agenda_tomorrow?.count??0);
+      set("agendaYesterday",k.pending_yesterday?.count??0);
+      if(note)note.textContent="Agenda consolidada sincronizada com a operação.";
+    }catch(e){
+      if(note)note.textContent="Agenda consolidada temporariamente indisponível; as disponibilidades dos chamados continuam visíveis abaixo.";
+    }
+  }
   function health(ok,msg){
     const e=q("#fusionHealth");if(!e)return;e.classList.toggle("ok",!!ok);e.classList.toggle("bad",ok===false);
     const s=q("span",e);if(s)s.textContent=msg||(ok?"Dados sincronizados":"Dados indisponíveis");
@@ -828,7 +895,9 @@ load();
   window.addEventListener("unhandledrejection",()=>health(false,"Falha de sincronização"));
   setTimeout(renderFusion,500);
   setTimeout(renderFusion,1600);
+  loadAgendaBridge();
   setInterval(renderFusion,30000);
+  setInterval(loadAgendaBridge,120000);
 })();
 </script>
 </body>
