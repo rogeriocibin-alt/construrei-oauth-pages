@@ -18,7 +18,10 @@ function activatePage(id,label){
  return true;
 }
 function goPrimary(text,id,label){
- if(activatePage(id,label))return true;
+ if(activatePage(id,label)){
+   setTimeout(()=>{const vt=$('.cr-v10-title b');if(vt)vt.textContent=label;const crumb=$('#crumb');if(crumb)crumb.textContent=label},40);
+   return true;
+ }
  const n=navByText(text);if(n){try{n.click()}catch{}}
  return false;
 }
