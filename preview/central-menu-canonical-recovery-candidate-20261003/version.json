@@ -1,0 +1,21 @@
+{
+  "version": "menu-canonical-recovery-candidate-20261003",
+  "build": "CR-CENTRAL-MENU-CANONICAL-RECOVERY-CANDIDATE-20261003",
+  "status": "AWAITING_OWNER_HOMOLOGATION",
+  "canonical_changed": false,
+  "base": "CR-CENTRAL-CONSOLIDATED-FUNCTIONAL-RECOVERY-CANDIDATE-20261003",
+  "navigation_source": {
+    "commit": "92ef8f27d71ac176abc6452df165a048c4405d60",
+    "file": "preview/central-approved-router-candidate-20261001/index.html",
+    "blob": "b90367bed503245a5bea9b4db4f15b46622ab6b2"
+  },
+  "changes": [
+    "menu reduced to homologated visible modules",
+    "technical excess removed from navigation",
+    "Dashboard Gerencial V4 relabeled Gestão Financeira",
+    "Documentação points to homologated centro-operacoes?open=docs",
+    "APP keeps homologated direct endpoint",
+    "internal homologated modules preserve internal-page behavior"
+  ],
+  "checkpoint_before": "CHECKPOINT_CENTRAL_PRE_MENU_CANONICAL_RECOVERY_20261003"
+}
