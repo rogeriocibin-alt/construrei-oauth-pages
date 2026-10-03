@@ -9,7 +9,7 @@ const STATUS_LABEL={
 };
 const VIEW_TITLES={
   now:'Cockpit do Projeto',pending:'Pendências do Projeto',history:'Histórico Vivo',canonical:'Cadeia Canônica',fronts:'Frentes',versions:'Versões',
-  decisions:'Decisões',timeline:'Linha do Tempo',products:'Produtos',recoverables:'Recuperáveis',
+  decisions:'Decisões',timeline:'Linha do Tempo',products:'Produtos',infrastructure:'Infraestrutura & TI',recoverables:'Recuperáveis',
   governance:'Governança',search:'Busca'
 };
 
