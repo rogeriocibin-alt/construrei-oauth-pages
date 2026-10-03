@@ -1,0 +1,32 @@
+{
+  "version": "consolidated-functional-recovery-candidate-20261003",
+  "build": "CR-CENTRAL-CONSOLIDATED-FUNCTIONAL-RECOVERY-CANDIDATE-20261003",
+  "status": "AWAITING_OWNER_HOMOLOGATION",
+  "canonical_changed": false,
+  "base": "CR-CENTRAL-CONSOLIDATED-CANDIDATE-20261003",
+  "presentation": {
+    "status": "HOMOLOGATED_CANONICAL",
+    "path": "central/presentation.html",
+    "commit": "93816fbe52ecba8270a732cb80b3a20b05621888",
+    "features": [
+      "20 páginas",
+      "dados vivos",
+      "PDF",
+      "PowerPoint",
+      "Radar Executivo"
+    ]
+  },
+  "functional_recovery": [
+    "single organized menu",
+    "presentation viva restored",
+    "legacy pages contained by route",
+    "mobile overflow containment",
+    "validated executive dashboard preserved"
+  ],
+  "safeguards": {
+    "production_homologated_untouched": true,
+    "no_patch_stack_reintroduced": true,
+    "no_fake_zero": true
+  },
+  "checkpoint_before": "CHECKPOINT_CENTRAL_CONSOLIDATED_PRE_FUNCTIONAL_RECOVERY_20261003"
+}
