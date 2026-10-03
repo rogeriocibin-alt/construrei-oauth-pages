@@ -4,13 +4,13 @@ const API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-execu
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const norm=s=>String(s||'').replace(/\s+/g,' ').trim();
-const navByText=t=>$('.side>.grp .nav,.side .cr-v10-original .nav').find(x=>norm(x.innerText)===t)||$('.side .nav').find(x=>norm(x.innerText)===t);
+const navByText=t=>$$('.side>.grp .nav,.side .cr-v10-original .nav').find(x=>norm(x.innerText)===t)||$$('.side .nav').find(x=>norm(x.innerText)===t);
 const proxy=t=>{const n=navByText(t); if(n)n.click()};
 function activatePage(id,label){
  const p=document.getElementById(id);if(!p)return false;
- $('.page').forEach(x=>x.classList.remove('on'));p.classList.add('on');
- $('.side .nav').forEach(x=>x.classList.remove('on'));
- const n=$('.side .nav').find(x=>x.dataset.page===id);if(n)n.classList.add('on');
+ $$('.page').forEach(x=>x.classList.remove('on'));p.classList.add('on');
+ $$('.side .nav').forEach(x=>x.classList.remove('on'));
+ const n=$$('.side .nav').find(x=>x.dataset.page===id);if(n)n.classList.add('on');
  const title=label||norm(n?.innerText)||'Central CONSTRU-REI';
  const crumb=$('#crumb');if(crumb)crumb.textContent=title;
  const vt=$('.cr-v10-title b');if(vt)vt.textContent=title;
