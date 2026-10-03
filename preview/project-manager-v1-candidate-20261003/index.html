@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow">
-  <meta name="cr-build" content="CR-PROJECT-MANAGER-V1-CANDIDATE-20261003">
+  <meta name="cr-build" content="CR-PROJECT-MANAGER-V1-LIVE-GOVERNANCE-20261003">
   <title>Gestor do Projeto • CONSTRU-REI</title>
-  <link rel="stylesheet" href="./styles.css?v=20261003b">
+  <link rel="stylesheet" href="./styles.css?v=20261003live1">
 </head>
 <body>
   <div class="app-shell">
@@ -21,6 +21,8 @@
 
       <nav class="nav" id="nav">
         <button class="nav-btn active" data-view="now"><span class="ico">⌂</span><span>Agora</span></button>
+        <button class="nav-btn" data-view="pending"><span class="ico">!</span><span>Pendências do Projeto</span></button>
+        <button class="nav-btn" data-view="history"><span class="ico">◷</span><span>Histórico Vivo</span></button>
         <button class="nav-btn" data-view="canonical"><span class="ico">◇</span><span>Cadeia Canônica</span></button>
         <button class="nav-btn" data-view="fronts"><span class="ico">▦</span><span>Frentes</span></button>
         <button class="nav-btn" data-view="versions"><span class="ico">⌘</span><span>Versões</span></button>
@@ -33,7 +35,7 @@
 
       <div class="sidebar-foot">
         <div class="status-dot"></div>
-        <div><b>V1 candidata isolada</b><small>Produção preservada</small></div>
+        <div><b>V1 • Gestão Viva</b><small>Mesmo link • checkpoint preservado</small></div>
       </div>
     </aside>
 
@@ -46,13 +48,15 @@
         </div>
         <label class="search">
           <span>⌕</span>
-          <input id="globalSearch" placeholder="Buscar versão, frente, decisão, commit...">
+          <input id="globalSearch" placeholder="Buscar pendência, versão, frente, decisão, commit...">
         </label>
         <button class="ghost-btn" id="presentationBtn">Modo apresentação</button>
       </header>
 
       <div class="content">
         <section class="view active" id="view-now"></section>
+        <section class="view" id="view-pending"></section>
+        <section class="view" id="view-history"></section>
         <section class="view" id="view-canonical"></section>
         <section class="view" id="view-fronts"></section>
         <section class="view" id="view-versions"></section>
@@ -78,6 +82,6 @@
     <div class="drawer-body" id="drawerBody"></div>
   </aside>
 
-  <script src="./app.js?v=20261003b"></script>
+  <script src="./app.js?v=20261003live1"></script>
 </body>
 </html>
