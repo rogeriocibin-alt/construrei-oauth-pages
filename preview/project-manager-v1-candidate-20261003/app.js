@@ -5,7 +5,8 @@ const STATUS_LABEL={
   executing:'Em execução',queue:'Fila',review:'Revisão',archived:'Arquivada',completed:'Concluída',
   live:'Vivo',blocked:'Bloqueada',partial:'Parcial',attention:'Atenção',preserved:'Preservado',
   confirmed:'Confirmada',approved_queue:'Fila aprovada',analysis:'Em análise',archived_safe:'Arquivo seguro',
-  superseded:'Substituída',unconfirmed:'Não confirmado',in_progress:'Em execução',in_progress_support:'Apoio ativo'
+  superseded:'Substituída',unconfirmed:'Não confirmado',not_confirmed:'Não confirmado',in_progress:'Em execução',in_progress_support:'Apoio ativo',
+  registered:'Registrada',implementation_planned:'Implementação planejada',investigating:'Investigando',planned:'Planejada',healthy:'Saudável',error:'Erro',stale:'Desatualizada'
 };
 const VIEW_TITLES={
   now:'Cockpit do Projeto',pending:'Pendências do Projeto',history:'Histórico Vivo',canonical:'Cadeia Canônica',fronts:'Frentes',versions:'Versões',
@@ -14,14 +15,16 @@ const VIEW_TITLES={
 };
 
 const CURRENT_RELEASE={version:'1.1.0',build:'CR-PM-V1.1.0-C0-20261003',environment:'candidate'};
-const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null};
+const PM_API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
+const PM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
+const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const arr=v=>Array.isArray(v)?v:[];
 const label=s=>STATUS_LABEL[s]||String(s||'').replace(/_/g,' ');
 const short=s=>s?String(s).slice(0,8):'—';
-const statusClass=s=>['canonical','candidate','homologated','homologation','executing','queue','review','archived','completed','live','blocked','partial','attention'].includes(s)?s:(s==='preserved'?'canonical':s==='confirmed'?'completed':s==='in_progress'?'executing':s==='in_progress_support'?'homologation':s==='unconfirmed'?'attention':'review');
+const statusClass=s=>['canonical','candidate','homologated','homologation','executing','queue','review','archived','completed','live','blocked','partial','attention'].includes(s)?s:(s==='preserved'?'canonical':s==='confirmed'||s==='healthy'?'completed':s==='in_progress'?'executing':s==='in_progress_support'?'homologation':s==='unconfirmed'||s==='not_confirmed'||s==='stale'?'attention':s==='error'?'blocked':'review');
 const badge=s=>`<span class="badge ${statusClass(s)}">${esc(label(s))}</span>`;
 const ghCommit=sha=>sha?`https://github.com/rogeriocibin-alt/construrei-oauth-pages/commit/${encodeURIComponent(sha)}`:'';
 const ghBranch=br=>br?`https://github.com/rogeriocibin-alt/construrei-oauth-pages/tree/${encodeURIComponent(br)}`:'';
@@ -93,6 +96,41 @@ function metric(labelText,value,meta,icon,extra=''){
 }
 
 
+
+function fmtLiveTs(v){
+  if(!v)return '—';
+  try{return new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(v));}
+  catch{return String(v)}
+}
+function renderLiveRibbon(){
+  const live=state.pmLive, sync=state.pmSync, fallback=arr(state.data?.source_matrix);
+  const s=live?.sources||{};
+  const total=Number(s.count??fallback.length);
+  const healthy=Number(s.healthy??fallback.filter(x=>x.status==='healthy').length);
+  const attention=Number((s.degraded_or_error??0)+(s.stale??0)+(s.not_confirmed??0)) || fallback.filter(x=>x.status!=='healthy').length;
+  return `<section class="live-ribbon ${sync?.ok?'is-live':'is-fallback'}">
+    <div class="live-main"><span class="live-dot"></span><div><b>${sync?.ok?'Banco Mestre persistente conectado':'Fallback versionado ativo'}</b><small>${sync?.ok?('Snapshot '+fmtLiveTs(live?.generated_at)):'Sem resposta viva neste instante; o snapshot local permanece disponível.'}</small></div></div>
+    <div class="live-facts"><span><b>${healthy}/${total}</b> fontes saudáveis</span><span><b>${attention}</b> atenção/revalidação</span><span><b>V1.1</b> candidata C0</span></div>
+  </section>`;
+}
+async function refreshProjectManagerLive(){
+  try{
+    const r=await fetch(PM_API+'?api=snapshot',{cache:'no-store',headers:{Authorization:'Bearer '+PM_ANON,apikey:PM_ANON,Accept:'application/json'}});
+    if(!r.ok)throw new Error('PM API '+r.status);
+    const body=await r.json();
+    if(!body?.ok)throw new Error(body?.error||'snapshot inválido');
+    state.pmLive=body;
+    state.pmSync={ok:true,at:body.generated_at||new Date().toISOString()};
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1 • C0 • LIVE';
+  }catch(err){
+    state.pmSync={ok:false,at:new Date().toISOString(),error:String(err?.message||err)};
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1 • C0 • FALLBACK';
+  }
+  renderNow();
+  renderAudits();
+  renderGovernance();
+}
+
 function renderOwnerHub(){
   const items=arr(state.data.owner_access);
   const central=items.find(x=>x.id==='central');
@@ -101,7 +139,7 @@ function renderOwnerHub(){
     <section class="owner-hub card">
       <div class="card-head"><div><h3>Seu acesso único ao CONSTRU-REI</h3><p>Camada do proprietário/desenvolvedor. A equipe continua operando diretamente pela Central.</p></div><div class="spacer"></div><span class="badge live">PWA do proprietário</span></div>
       ${central?`<button class="central-gateway external-btn" data-url="${esc(central.url)}">
-        <div class="gateway-mark"><img src="./pwa-icon.svg?v=20261003applogo2" alt="APP CONSTRU-REI"></div>
+        <div class="gateway-mark"><img src="./pwa-icon.svg?v=20261003v110c0" alt="APP CONSTRU-REI"></div>
         <div class="gateway-copy"><small>CENTRAL CONSTRU-REI</small><strong>Operação viva</strong><span>${esc(central.source)} • ${esc(central.access)}</span></div>
         <div class="gateway-state"><span class="live-dot"></span><b>Entrar na Central</b><em>→</em></div>
       </button>`:''}
@@ -130,6 +168,7 @@ function renderNow(){
 
   $('#view-now').innerHTML=`
     ${renderOwnerHub()}
+    ${renderLiveRibbon()}
     <section class="hero">
       <div class="hero-grid">
         <div>
@@ -428,35 +467,56 @@ function severityBadge(level){
 }
 
 function renderAudits(){
-  const d=state.data||{}, audits=arr(d.audits), findings=arr(d.audit_findings), sources=arr(d.source_matrix), recs=arr(d.reconciliations);
-  const a=audits[0];
-  const target=$('#view-audits'); if(!target)return;
+  const d=state.data||{}, live=state.pmLive;
+  const audits=arr(live?.audit_summary?.audits).length?arr(live.audit_summary.audits):arr(d.audits);
+  const findings=arr(live?.findings).length?arr(live.findings):arr(d.audit_findings);
+  const sources=arr(live?.sources?.sources).length?arr(live.sources.sources):arr(d.source_matrix).map(s=>({
+    source_id:s.id,source_name:s.name,status:s.status,confidence:s.confidence,last_read_at:s.last_read,notes:s.note,purpose:s.note
+  }));
+  const recs=arr(live?.reconciliations?.items).length?arr(live.reconciliations.items):arr(d.reconciliations).map(x=>({
+    reconciliation_id:x.id,title:x.title,status:x.status,resolution_rule:x.next_action,difference_text:x.difference
+  }));
+  const defs=arr(live?.metric_definitions);
+  const a=audits[0], target=$('#view-audits'); if(!target)return;
+  const open=findings.filter(x=>!['closed','not_applicable','accepted_risk'].includes(x.status)).length;
+  const high=findings.filter(x=>['critical','high'].includes(x.severity)&&!['closed','not_applicable','accepted_risk'].includes(x.status)).length;
+  const sourceAttention=sources.filter(x=>x.status!=='healthy').length;
   target.innerHTML=`
-    <div class="page-intro"><div><h2>Auditorias</h2><p>Auditorias viram objetos de gestão: original preservado, achados rastreáveis, tratamento, rechecagem e evidência.</p></div></div>
+    <div class="page-intro"><div><h2>Auditorias</h2><p>Auditoria vira objeto de gestão: original preservado, achados rastreáveis, tratamento, reteste e evidência. O estado vivo vem do Supabase; o snapshot local é apenas fallback.</p></div></div>
+    ${renderLiveRibbon()}
+    <section class="metrics">
+      ${metric('Auditorias',audits.length,'Registro estruturado','◎')}
+      ${metric('Achados abertos',open,'Sem baixa por aparência','!')}
+      ${metric('Alta/Crítica',high,'Podem bloquear promoção','×')}
+      ${metric('Fontes com atenção',sourceAttention,'Erro, stale ou não confirmado','⌁')}
+      ${metric('Reconciliações',recs.length,'Divergências como objetos','⇄')}
+      ${metric('Métricas definidas',defs.length||7,'Definição + fonte + fórmula','∑')}
+    </section>
     ${a?`<section class="card audit-hero">
-      <div class="card-head"><div><small class="mono">AUD-001 • ${esc(a.date)}</small><h3>${esc(a.title)}</h3><p>${esc(a.summary)}</p></div><span class="badge review">Implementação planejada</span></div>
+      <div class="card-head"><div><small class="mono">${esc(a.audit_id||a.id)} • ${esc(a.audit_date||a.date)}</small><h3>${esc(a.title)}</h3><p>${esc(a.summary)}</p></div>${badge(a.status||'review')}</div>
       <div class="audit-kpis">
-        <div><small>Achados</small><b>${esc(a.findings_total)}</b></div>
+        <div><small>Achados</small><b>${findings.length}</b></div>
         <div><small>Original</small><b>Preservado</b></div>
-        <div><small>SHA-256</small><b class="mono">${esc(short(a.original_evidence?.sha256))}…</b></div>
-        <div><small>Persistência</small><b>Supabase interno</b></div>
+        <div><small>Persistência</small><b>${state.pmSync?.ok?'Viva':'Fallback'}</b></div>
+        <div><small>Última leitura</small><b>${esc(fmtLiveTs(state.pmSync?.at))}</b></div>
       </div>
-      <div class="card-pad"><p><b>Escopo:</b> ${esc(a.scope)}</p><p class="mono">Evidência: ${esc(a.original_evidence?.file)} • ${esc(a.original_evidence?.sha256)}</p></div>
+      <div class="card-pad"><p><b>Escopo:</b> ${esc(a.scope||'Gestão, governança, operação, risco e automação.')}</p></div>
     </section>`:''}
     <div class="section-grid audit-grid">
       <section class="card">
-        <div class="card-head"><div><h3>Achados e tratamento</h3><p>P0/P1/P2 + controles estruturais, sem “dar baixa” por aparência.</p></div><span class="badge candidate">${findings.length} itens</span></div>
-        <div class="audit-findings">${findings.map(x=>`<div class="audit-row"><div>${severityBadge(x.severity)} <span class="mono">${esc(x.code)}</span><b>${esc(x.title)}</b><small>${esc(x.implementation_item)} • ${esc(label(x.status))}</small></div></div>`).join('')}</div>
+        <div class="card-head"><div><h3>Achados e tratamento</h3><p>P0/P1/P2 + controles estruturais, com estado e responsável.</p></div><span class="badge candidate">${findings.length} itens</span></div>
+        <div class="audit-findings">${findings.map(x=>`<div class="audit-row"><div>${severityBadge(x.severity)} <span class="mono">${esc(x.finding_code||x.code)}</span><b>${esc(x.title)}</b><small>${esc(x.implementation_item||'—')} • ${esc(x.owner||'sem responsável explícito')} • ${esc(label(x.status))}</small></div></div>`).join('')}</div>
       </section>
       <section class="card">
-        <div class="card-head"><div><h3>Matriz de fontes</h3><p>Saúde, confiança e idade do dado — sem transformar “conhecido” em “vivo”.</p></div></div>
-        <div class="source-grid">${sources.map(s=>`<div class="source-row"><div><b>${esc(s.name)}</b><small>${esc(s.note||'')}</small></div><div class="source-state">${badge(s.status==='healthy'?'live':s.status==='error'?'blocked':s.status==='stale'?'attention':'unconfirmed')}<small>${esc(s.last_read||'—')} • ${esc(s.confidence)}</small></div></div>`).join('')}</div>
+        <div class="card-head"><div><h3>Matriz de fontes</h3><p>Saúde, confiança e idade do dado — “conhecido” não é sinônimo de “vivo”.</p></div></div>
+        <div class="source-grid">${sources.map(s=>`<div class="source-row"><div><b>${esc(s.source_name||s.name)}</b><small>${esc(s.purpose||s.notes||s.note||'')}</small></div><div class="source-state">${badge(s.status==='healthy'?'live':s.status==='error'?'blocked':s.status==='stale'?'attention':'unconfirmed')}<small>${esc(fmtLiveTs(s.last_read_at)||s.last_read||'—')} • ${esc(s.confidence||'unknown')}</small></div></div>`).join('')}</div>
       </section>
     </div>
     <section class="card" style="margin-top:16px">
-      <div class="card-head"><div><h3>Reconciliações abertas</h3><p>Divergência vira objeto; fontes não são somadas nem “ajustadas” por conveniência.</p></div></div>
-      <div class="card-pad">${recs.map(r=>`<div class="rule-row"><span class="rule-state partial">!</span><div><b>${esc(r.title)}</b><small>${esc(r.difference)} • ${esc(r.next_action)}</small></div>${badge(r.status==='open'?'blocked':'review')}</div>`).join('')}</div>
+      <div class="card-head"><div><h3>Reconciliações abertas</h3><p>Divergência vira objeto; fontes não são somadas, promediadas nem “corrigidas” por conveniência.</p></div></div>
+      <div class="card-pad">${recs.map(r=>`<div class="rule-row"><span class="rule-state partial">!</span><div><b>${esc(r.title)}</b><small>${esc(r.difference_text||'')} ${esc(r.resolution_rule||r.next_action||'')}</small></div>${badge(r.status==='open'?'blocked':'review')}</div>`).join('')||'<div class="empty">Nenhuma reconciliação registrada.</div>'}</div>
     </section>
+    ${defs.length?`<section class="card" style="margin-top:16px"><div class="card-head"><div><h3>Dicionário de métricas</h3><p>Nenhum contador crítico fica sem definição, fonte e fórmula.</p></div></div><div class="card-pad">${defs.map(m=>`<div class="govern-item"><p><b>${esc(m.title)}</b></p><p>${esc(m.definition)} <span class="mono">• ${esc(m.formula)}</span></p><small>${esc(m.canonical_source)} • ${esc(m.period_definition)} • confiança: ${esc(m.confidence_rule)}</small></div>`).join('')}</div></section>`:''}
   `;
 }
 
@@ -535,10 +595,34 @@ function bindReleaseUi(){
   }
 }
 
+
+function renderCycle0Gate(){
+  const c=state.data?.cycle0||{}, v=c.validation||{}, g=c.promotion_gate||{};
+  const automated=arr(v.automated), pending=arr(v.pending);
+  const passed=automated.filter(x=>x.status==='PASS').length;
+  const blocked=pending.filter(x=>x.status==='BLOCKED').length;
+  const human=pending.filter(x=>x.status==='PENDING_HUMAN').length;
+  return `<section class="card" style="margin-bottom:16px">
+    <div class="card-head"><div><h3>Gate de promoção — Ciclo 0</h3><p>Implementação técnica não equivale a homologação. A candidata só avança quando todos os gates obrigatórios estiverem satisfeitos.</p></div><span class="badge ${g.decision==='BLOCKED'?'blocked':'completed'}">${esc(g.decision||'EM VALIDAÇÃO')}</span></div>
+    <section class="metrics" style="padding:0 14px 14px">
+      ${metric('Testes automáticos',passed+'/'+automated.length,'Executados sobre a candidata','✓')}
+      ${metric('Bloqueios técnicos',blocked,'Continuidade / infraestrutura','!')}
+      ${metric('Validações humanas',human,'Notebook, celular e homologação','◎')}
+      ${metric('Canônica alterada',g.canonical_changed?'SIM':'NÃO','Proteção preservada','◇')}
+    </section>
+    <div class="section-grid" style="padding:0 14px 14px">
+      <div><h4 style="margin:0 0 8px;color:var(--navy)">Automação</h4>${automated.map(x=>`<div class="rule-row"><span class="rule-state ok">✓</span><div><b>${esc(x.label)}</b><small>${esc(x.evidence)}</small></div><span class="badge completed">PASS</span></div>`).join('')}</div>
+      <div><h4 style="margin:0 0 8px;color:var(--navy)">Ainda bloqueia promoção</h4>${pending.map(x=>`<div class="rule-row"><span class="rule-state partial">!</span><div><b>${esc(x.label)}</b><small>${esc(x.evidence)}</small></div><span class="badge ${x.status==='BLOCKED'?'blocked':'attention'}">${esc(x.status)}</span></div>`).join('')}</div>
+    </div>
+    <div class="notice" style="margin:0 14px 14px"><b>Rollback:</b> <span class="mono">${esc(g.rollback||'—')}</span>. ${esc(g.reason||'')}</div>
+  </section>`;
+}
+
 function renderGovernance(){
   const d=state.data,a=d.repository_audit||{};
   $('#view-governance').innerHTML=`
     <div class="page-intro"><div><h2>Governança</h2><p>Regras que fazem o projeto terminar: menos frentes, mais evidência, baseline explícita e histórico preservado.</p></div></div>
+    ${renderCycle0Gate()}
     <div class="section-grid">
       <div class="card">
         <div class="card-head"><div><h3>Regras operacionais</h3><p>Guardrails aprovados para condução.</p></div></div>
@@ -669,7 +753,9 @@ async function init(){
     syncReleaseUi(CURRENT_RELEASE);
     setView('now');
     refreshLiveRepository();
+    refreshProjectManagerLive();
     setInterval(refreshLiveRepository,300000);
+    setInterval(refreshProjectManagerLive,300000);
 
     $$('.nav-btn').forEach(b=>b.onclick=()=>setView(b.dataset.view));
     $('#drawerClose').onclick=closeDrawer;
