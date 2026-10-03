@@ -1,0 +1,133 @@
+/* CONSTRU-REI V9 — Sidebar Executive Refinement — 2026-10-02
+   Candidate-only visual layer. No routes, data sources, auth or business logic changed. */
+:root{--cr-v9-side:258px;--cr-v9-btn-h:32px;--cr-v9-gap:3px}
+.layout{--side:var(--cr-v9-side)!important}
+.side{
+  width:var(--cr-v9-side)!important;
+  padding:10px 9px 8px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:0!important;
+  overflow-y:auto!important;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(106,166,224,.42) transparent;
+}
+.side::-webkit-scrollbar{width:5px}.side::-webkit-scrollbar-track{background:transparent}.side::-webkit-scrollbar-thumb{background:rgba(106,166,224,.38);border-radius:999px}
+.side .brand{
+  flex:0 0 auto!important;
+  padding:5px 7px 10px!important;
+  margin:0 0 5px!important;
+  gap:9px!important;
+}
+.side .brand img{width:54px!important;height:54px!important;min-width:54px!important}
+.side .brand strong{font-size:13px!important;line-height:1.03!important;letter-spacing:.01em!important}
+.side .brand small{font-size:7.3px!important;line-height:1.25!important;margin-top:3px!important}
+
+.side .grp{
+  margin:3px 0 4px!important;
+  padding:0!important;
+  display:grid!important;
+  gap:var(--cr-v9-gap)!important;
+}
+.side .gt{
+  margin:0 2px 1px!important;
+  padding:3px 7px 2px!important;
+  min-height:15px!important;
+  display:flex!important;
+  align-items:center!important;
+  font-size:7.1px!important;
+  line-height:1!important;
+  letter-spacing:.115em!important;
+  color:#ffd538!important;
+  opacity:.96!important;
+}
+.side .gt:after{
+  content:""!important;
+  height:1px!important;
+  flex:1!important;
+  margin-left:7px!important;
+  background:linear-gradient(90deg,rgba(255,213,56,.33),transparent)!important;
+}
+
+.side .nav{
+  position:relative!important;
+  width:100%!important;
+  min-height:var(--cr-v9-btn-h)!important;
+  padding:5px 8px!important;
+  border:1px solid rgba(178,211,238,.11)!important;
+  border-radius:8px!important;
+  gap:7px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018))!important;
+  color:#edf6ff!important;
+  font-size:10.7px!important;
+  line-height:1.1!important;
+  font-weight:740!important;
+  box-shadow:0 2px 6px rgba(0,10,35,.08)!important;
+  transition:background .14s ease,border-color .14s ease,transform .14s ease,box-shadow .14s ease!important;
+}
+.side .nav:hover{
+  transform:translateX(2px)!important;
+  background:linear-gradient(90deg,rgba(18,126,244,.24),rgba(9,77,163,.16))!important;
+  border-color:rgba(82,164,244,.38)!important;
+  box-shadow:0 5px 12px rgba(0,29,84,.15)!important;
+}
+.side .nav.on{
+  background:linear-gradient(90deg,#0d78ef 0%,#075fd2 62%,#064da9 100%)!important;
+  border-color:rgba(105,184,255,.72)!important;
+  color:#fff!important;
+  box-shadow:inset 3px 0 0 #ffd327,0 5px 13px rgba(0,52,133,.24)!important;
+  transform:none!important;
+}
+.side .nav i{
+  width:18px!important;
+  height:18px!important;
+  min-width:18px!important;
+  flex:0 0 18px!important;
+  border-radius:5px!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  background:rgba(185,218,245,.09)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)!important;
+}
+.side .nav i:after{inset:5px!important;border-radius:2px!important;background:#d7e9f8!important}
+.side .nav:hover i{background:rgba(255,255,255,.16)!important;border-color:rgba(255,255,255,.32)!important}
+.side .nav.on i{
+  background:#fff!important;
+  border-color:#fff!important;
+  box-shadow:0 2px 7px rgba(0,0,0,.13)!important;
+}
+.side .nav.on i:after{background:#076be1!important}
+
+.cr-side-footer{
+  margin-top:auto!important;
+  min-height:31px!important;
+  padding:6px 7px!important;
+  border-top:1px solid rgba(255,255,255,.10)!important;
+  background:linear-gradient(180deg,transparent,rgba(0,15,49,.20))!important;
+}
+.cr-side-footer small{font-size:7px!important}
+
+/* 1366x768: preserve visual button treatment while minimizing unnecessary scroll. */
+@media (min-width:981px) and (max-height:820px){
+  :root{--cr-v9-side:244px;--cr-v9-btn-h:29px;--cr-v9-gap:2px}
+  .side{padding:7px 7px 6px!important}
+  .side .brand{padding:3px 6px 7px!important;margin-bottom:3px!important}
+  .side .brand img{width:46px!important;height:46px!important;min-width:46px!important}
+  .side .brand strong{font-size:12px!important}.side .brand small{font-size:6.7px!important}
+  .side .grp{margin:2px 0 3px!important}
+  .side .gt{min-height:12px!important;padding:2px 6px 1px!important;font-size:6.5px!important}
+  .side .nav{padding:4px 7px!important;font-size:10px!important;border-radius:7px!important}
+  .side .nav i{width:16px!important;height:16px!important;min-width:16px!important;flex-basis:16px!important}
+  .side .nav i:after{inset:4px!important}
+  .cr-side-footer{min-height:27px!important;padding:4px 6px!important}
+}
+
+/* Mobile keeps drawer behavior already approved, only inherits the button polish. */
+@media(max-width:980px){
+  .layout{--side:300px!important}
+  .side{width:min(88vw,320px)!important;padding:10px 9px 88px!important}
+  .side .brand img{width:56px!important;height:56px!important;min-width:56px!important}
+  .side .nav{min-height:40px!important;padding:8px 10px!important;font-size:13px!important;border-radius:10px!important}
+  .side .nav i{width:20px!important;height:20px!important;min-width:20px!important;flex-basis:20px!important}
+  .side .grp{margin:5px 0 6px!important;gap:4px!important}
+  .side .gt{font-size:7.6px!important;padding:4px 7px 2px!important}
+}
