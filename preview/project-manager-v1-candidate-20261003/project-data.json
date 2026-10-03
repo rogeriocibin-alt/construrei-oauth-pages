@@ -2380,5 +2380,196 @@
       "status": "partial",
       "purpose": "Próxima camada para atualização server-side e fontes operacionais sem depender do navegador."
     }
-  ]
+  ],
+  "owner_architecture": {
+    "updated_at": "2026-10-03",
+    "principle": "Um único PWA para o proprietário; a equipe continua operando pela Central.",
+    "owner_entry": "Gestor do Projeto CONSTRU-REI",
+    "team_entry": "Central CONSTRU-REI",
+    "rules": [
+      "O Gestor é a camada do proprietário/desenvolvedor e deve refletir o estado vivo dos produtos.",
+      "A Central permanece a camada operacional da equipe.",
+      "Nenhum produto pode evoluir sem sua versão, status ou evidência aparecer no Gestor.",
+      "Links operacionais vêm do registro canônico; não duplicar Central nem criar cópias paralelas.",
+      "Histórico e checkpoints permanecem preservados por referência, sem poluir a navegação diária."
+    ]
+  },
+  "owner_access": [
+    {
+      "id": "central",
+      "name": "Central CONSTRU-REI",
+      "kind": "Núcleo operacional",
+      "status": "canonical",
+      "access": "MASTER",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes",
+      "source": "centro-operacoes v274",
+      "description": "Ambiente operacional da equipe e porta de entrada para a operação."
+    },
+    {
+      "id": "app",
+      "name": "APP CONSTRU-REI",
+      "kind": "Aplicativo operacional",
+      "status": "canonical",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=app",
+      "source": "central-atendimento v151",
+      "description": "Aplicação operacional atual."
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard Gerencial",
+      "kind": "Gestão",
+      "status": "canonical",
+      "access": "MASTER",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=centro-comando",
+      "source": "runtime canônico / director_command",
+      "description": "Visão gerencial consolidada."
+    },
+    {
+      "id": "academy",
+      "name": "CONSTRU-REI Academy",
+      "kind": "Conhecimento",
+      "status": "review",
+      "access": "INTERNO",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=academy",
+      "source": "runtime canônico / academy",
+      "description": "Treinamento e conhecimento."
+    },
+    {
+      "id": "docs",
+      "name": "Documentação Viva",
+      "kind": "Conhecimento",
+      "status": "review",
+      "access": "CHAVE",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=docs",
+      "source": "centro-operacoes / knowledge",
+      "description": "Documentação e referência técnica."
+    },
+    {
+      "id": "presentation",
+      "name": "Apresentação Institucional",
+      "kind": "Conhecimento",
+      "status": "canonical",
+      "access": "INTERNO",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=presentation",
+      "source": "runtime canônico / presentation",
+      "description": "Apresentação viva do projeto."
+    },
+    {
+      "id": "health",
+      "name": "Saúde do Sistema",
+      "kind": "Tecnologia",
+      "status": "live",
+      "access": "INTERNO",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=health",
+      "source": "centro-operacoes",
+      "description": "Saúde e telemetria do ambiente."
+    },
+    {
+      "id": "f00",
+      "name": "F00 • Captador Inteligente",
+      "kind": "Esteira Operacional",
+      "status": "live",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f00",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f01",
+      "name": "F01 • Atendimento & Qualificação",
+      "kind": "Esteira Operacional",
+      "status": "live",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f01",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f02",
+      "name": "F02 • Cotação & Orçamento",
+      "kind": "Esteira Operacional",
+      "status": "live",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f02",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f03",
+      "name": "F03 • Proposta & Ordem de Serviço",
+      "kind": "Esteira Operacional",
+      "status": "live",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f03",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f04",
+      "name": "F04 • Agenda & Mobilização",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f04",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f05",
+      "name": "F05 • Materiais & Terceiros",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f05",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f06",
+      "name": "F06 • Campo & Evidências",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f06",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f07",
+      "name": "F07 • Qualidade, Aceite & Documentos",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f07",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f08",
+      "name": "F08 • NF, Cobrança & Resultado",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f08",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f09",
+      "name": "F09 • Pós-venda & Garantia",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f09",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    }
+  ],
+  "live_product_policy": {
+    "source_of_truth": "HOMOLOGACAO_LINK_REGISTRY_AUDIT_20261001.md + repositório GitHub",
+    "refresh_behavior": "O Gestor atualiza histórico do repositório automaticamente e exibe os destinos operacionais a partir do registro canônico incorporado.",
+    "anti_stale_rule": "Se um produto mudar e o Gestor não refletir a mudança, a entrega não deve ser considerada concluída.",
+    "owner_visibility": "Toda promoção, candidata, canônica, regressão, homologação e mudança de versão relevante precisa deixar evidência no Gestor."
+  }
 }
