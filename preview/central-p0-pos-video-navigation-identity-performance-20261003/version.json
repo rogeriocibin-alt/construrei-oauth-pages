@@ -1,6 +1,6 @@
 {
-  "version": "p0-pos-video-20261003",
-  "build": "CR-CENTRAL-P0-POS-VIDEO-20261003",
+  "version": "p0.1-pos-video-20261003",
+  "build": "CR-CENTRAL-P0.1-POS-VIDEO-20261003",
   "status": "AWAITING_OWNER_VALIDATION",
   "canonical_changed": false,
   "official_endpoint_changed": false,
@@ -17,8 +17,12 @@
     "runtime hero now owns institutional skyline/slogan/logo",
     "APP and F00-F09 receive explicit current-Central return parameter",
     "FAST and Agenda load independently with progressive rendering",
-    "single canonical route registry; zero location.assign"
+    "single canonical route registry; zero location.assign",
+    "fixed fatal route-binding bug: querySelector -> querySelectorAll helper",
+    "header logo rendered from existing embedded brand asset",
+    "runtime hero identity forced visible against legacy mobile CSS"
   ],
   "gate": "CANDIDATA P0 POS-VIDEO PRONTA PARA VALIDACAO DO ROGERIO",
-  "base_sha": "5dd0ea808e911cdbb4f49178d1b87a6cec75bf74"
+  "base_sha": "5dd0ea808e911cdbb4f49178d1b87a6cec75bf74",
+  "hotfix_sha": "eb14fbc5963dea8da38d95aab3c8d5403a2ff781"
 }
