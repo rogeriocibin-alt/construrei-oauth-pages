@@ -196,7 +196,7 @@ function renderNow(){
   `;
   bindDetailButtons();
   bindExternalButtons();
-  $('.jump-view').forEach(b=>b.onclick=()=>setView(b.dataset.target));
+  $$('.jump-view').forEach(b=>b.onclick=()=>setView(b.dataset.target));
 }
 
 function frontCard(f,index){
