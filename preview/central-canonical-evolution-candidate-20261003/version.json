@@ -1,0 +1,29 @@
+{
+  "version": "canonical-evolution-candidate-20261003",
+  "build": "CR-CENTRAL-CANONICAL-EVOLUTION-CANDIDATE-20261003",
+  "status": "AWAITING_OWNER_HOMOLOGATION",
+  "canonical_changed": false,
+  "baseline": {
+    "commit": "92ef8f27d71ac176abc6452df165a048c4405d60",
+    "branch": "cr-central-canonical-approved-20261001",
+    "checkpoint": "CHECKPOINT_CENTRAL_CANONICAL_APPROVED_20261001",
+    "file": "preview/central-approved-router-candidate-20261001/index.html",
+    "blob": "b90367bed503245a5bea9b4db4f15b46622ab6b2"
+  },
+  "checkpoint_before": "CHECKPOINT_CENTRAL_CANONICAL_PRE_EVOLUTION_20261003",
+  "changes": [
+    "homologated shell/layout retained",
+    "F00-F09 home pipeline replaced by validated executive Agenda and GestãoClick panels",
+    "executive KPIs use validated read-only sources",
+    "pending source-in-implementation avoids false zero",
+    "source health uses real integration state",
+    "sidebar content retained and reorganized as expandable functional groups",
+    "Dashboard V4 exposed as Financeiro > Gestão Financeira"
+  ],
+  "sources": [
+    "cr-executive-readonly-v12-1-candidate-20261003",
+    "cr-agenda-executive-v12-1-candidate-20261003",
+    "cr-executive-readonly-v12-candidate-20261003"
+  ],
+  "promotion": false
+}
