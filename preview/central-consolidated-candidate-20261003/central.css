@@ -365,3 +365,8 @@ html,body{background:var(--v10-bg)!important;color:var(--v10-text)!important}
 .cr-con-updated{font-size:6.5px;color:#6d8399}.cr-con-refresh[disabled]{opacity:.55;cursor:wait}
 @media(max-width:980px){.cr-con-director{grid-template-columns:repeat(2,minmax(0,1fr))}.cr-con-status{grid-template-columns:110px 1fr 34px 70px}}
 @media(max-width:600px){.cr-con-director{display:flex;overflow-x:auto}.cr-con-director-card{min-width:155px}.cr-con-status{grid-template-columns:95px 1fr 30px}.cr-con-status em{display:none}}
+
+/* Functional recovery: final ownership and responsive containment */
+.content{overflow-x:hidden!important}.content>.page{display:none!important}.content>.page.on{display:block!important}.side>.grp,.side>.footer{display:none!important}.cr-con-director{overflow:visible!important}.cr-con-director-card{min-width:0!important;max-width:100%!important}.cr-v10,.cr-v10-card,.cr-v10-main-grid,.cr-v10-lower{min-width:0!important;max-width:100%!important}.cr-v12-flow-body{overflow-x:hidden!important}
+@media(max-width:600px){.cr-con-director{display:grid!important;grid-template-columns:1fr 1fr!important;overflow:visible!important}.cr-con-director-card{min-width:0!important}.cr-v10-main-grid,.cr-v10-lower{grid-template-columns:1fr!important}.cr-v10-card{overflow:hidden!important}.cr-con-status{width:100%!important;min-width:0!important}.main,.content{max-width:100vw!important;overflow-x:hidden!important}}
+@media(max-width:410px){.cr-con-director{grid-template-columns:1fr!important}}
