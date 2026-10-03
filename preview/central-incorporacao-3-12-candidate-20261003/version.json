@@ -1,0 +1,29 @@
+{
+  "version": "incorporacao-3-12-candidate-20261003",
+  "build": "CR-CENTRAL-INCORPORACAO-3-12-CANDIDATE-20261003",
+  "status": "AWAITING_OWNER_HOMOLOGATION",
+  "official_endpoint_changed": false,
+  "canonical_changed": false,
+  "baseline_commit": "92ef8f27d71ac176abc6452df165a048c4405d60",
+  "baseline_blob": "b90367bed503245a5bea9b4db4f15b46622ab6b2",
+  "checkpoint_before": "CHECKPOINT_CENTRAL_PRE_INCORPORACAO_3_12_20261003",
+  "branch": "cr-central-incorporacao-3-12-candidate-20261003",
+  "items": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "pending_policy": "SOURCE_IN_IMPLEMENTATION_NO_FALSE_ZERO",
+  "sources": [
+    "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home",
+    "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v12-1-candidate-20261003?view=public",
+    "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-candidate-20261003?view=public-home"
+  ]
+}
