@@ -15,7 +15,7 @@
     "environment": "candidate",
     "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
     "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
-    "persistence": "Supabase cr_internal: modelo persistente V1.1 criado; PWA mantém snapshot versionado como fallback até API autenticada do owner."
+    "persistence": "Supabase cr_internal conectado por API candidata sanitizada; snapshot local permanece como fallback offline."
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -2607,7 +2607,20 @@
     "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
     "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
     "update_mode": "same_url_atomic_pwa_bundle",
-    "canonical_changed": false
+    "canonical_changed": false,
+    "promotion_gate": {
+      "decision": "BLOCKED",
+      "reason": "Automação técnica aprovada, porém continuidade e validação humana ainda não satisfazem o gate.",
+      "blockers": [
+        "C0-B01",
+        "C0-H01",
+        "C0-H02",
+        "C0-H03"
+      ],
+      "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
+      "canonical_changed": false
+    },
+    "ui_commit_tested": "543d368635891b64b203df6badec0cda43dced9e"
   },
   "audits": [
     {
@@ -2657,7 +2670,7 @@
       "code": "P0-03",
       "title": "Conectar Banco Mestre persistente",
       "severity": "high",
-      "status": "in_progress",
+      "status": "retest",
       "implementation_item": "PM-04"
     },
     {
@@ -2666,7 +2679,7 @@
       "code": "P0-04",
       "title": "Criar matriz de fontes e sincronismo",
       "severity": "high",
-      "status": "in_progress",
+      "status": "retest",
       "implementation_item": "PM-07"
     },
     {
@@ -2756,7 +2769,7 @@
       "code": "P1-06",
       "title": "Dicionário de métricas acessível",
       "severity": "medium",
-      "status": "in_progress",
+      "status": "retest",
       "implementation_item": "PM-04"
     },
     {
@@ -2765,7 +2778,7 @@
       "code": "P1-07",
       "title": "Topo com sincronismo e falhas de fonte",
       "severity": "medium",
-      "status": "in_progress",
+      "status": "retest",
       "implementation_item": "PM-04"
     },
     {
@@ -2998,6 +3011,109 @@
       "findings": 25,
       "original_sha256": "c91dca4cbdb48c22ea3543e6e5aa947a54019a3f92eefac4cdb206817c960c26"
     },
-    "stop_gate": "Não avançar ao próximo pacote P0 até testes estáticos, segurança pós-migração, checkpoint final e teste humano do PWA instalado/desktop/celular."
+    "stop_gate": "Não avançar ao próximo pacote P0 até testes estáticos, segurança pós-migração, checkpoint final e teste humano do PWA instalado/desktop/celular.",
+    "validation": {
+      "automated": [
+        {
+          "id": "C0-T01",
+          "label": "Sintaxe app.js",
+          "status": "PASS",
+          "evidence": "V8 compile/new Function sobre o arquivo exato da branch candidata."
+        },
+        {
+          "id": "C0-T02",
+          "label": "Sintaxe sw.js",
+          "status": "PASS",
+          "evidence": "V8 compile/new Function sobre o Service Worker exato da branch candidata."
+        },
+        {
+          "id": "C0-T03",
+          "label": "Referências DOM",
+          "status": "PASS",
+          "evidence": "33 IDs utilizados pelo app.js; 0 ausentes no index.html."
+        },
+        {
+          "id": "C0-T04",
+          "label": "Contrato persistente",
+          "status": "PASS",
+          "evidence": "cr_project_manager_snapshot_v1() retornou CR_PROJECT_MANAGER_SNAPSHOT_V1."
+        },
+        {
+          "id": "C0-T05",
+          "label": "API autenticada",
+          "status": "PASS",
+          "evidence": "Edge Function candidata retornou HTTP 200 com anon JWT válido."
+        },
+        {
+          "id": "C0-T06",
+          "label": "API sem autenticação",
+          "status": "PASS",
+          "evidence": "Requisição sem Authorization retornou HTTP 401."
+        },
+        {
+          "id": "C0-T07",
+          "label": "Privacidade do snapshot",
+          "status": "PASS",
+          "evidence": "sanitized=true; contains_secrets=false; contains_raw_financial_values=false."
+        },
+        {
+          "id": "C0-T08",
+          "label": "ACL das tabelas internas",
+          "status": "PASS",
+          "evidence": "anon/authenticated sem SELECT; service_role com SELECT; RLS habilitado."
+        },
+        {
+          "id": "C0-T09",
+          "label": "RPC mínima",
+          "status": "PASS",
+          "evidence": "SECURITY INVOKER; EXECUTE somente service_role; search_path fixo."
+        },
+        {
+          "id": "C0-T10",
+          "label": "PWA bundle versionado",
+          "status": "PASS",
+          "evidence": "manifest standalone + version.json + Service Worker com bundle completo e rollback preservado."
+        }
+      ],
+      "pending": [
+        {
+          "id": "C0-H01",
+          "label": "PWA instalado no notebook",
+          "status": "PENDING_HUMAN",
+          "evidence": "Precisa validar atualização no app instalado real."
+        },
+        {
+          "id": "C0-H02",
+          "label": "PWA instalado no celular",
+          "status": "PENDING_HUMAN",
+          "evidence": "Precisa validar atualização e responsividade no app instalado real."
+        },
+        {
+          "id": "C0-H03",
+          "label": "Homologação do proprietário",
+          "status": "PENDING_HUMAN",
+          "evidence": "Candidata não vira canônica sem aprovação explícita."
+        },
+        {
+          "id": "C0-B01",
+          "label": "Backup recente / restauração",
+          "status": "BLOCKED",
+          "evidence": "Falhas 01–03/10 registradas; nova execução/restauração comprovada ainda ausente."
+        }
+      ],
+      "last_tested_at": "2026-10-03T12:15:00-03:00"
+    },
+    "promotion_gate": {
+      "decision": "BLOCKED",
+      "reason": "Automação técnica aprovada, porém continuidade e validação humana ainda não satisfazem o gate.",
+      "blockers": [
+        "C0-B01",
+        "C0-H01",
+        "C0-H02",
+        "C0-H03"
+      ],
+      "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
+      "canonical_changed": false
+    }
   }
 }
