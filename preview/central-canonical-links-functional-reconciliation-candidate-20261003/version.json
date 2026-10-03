@@ -1,10 +1,10 @@
 {
-  "version": "canonical-links-functional-reconciliation-candidate-20261003",
-  "build": "CR-CENTRAL-CANONICAL-LINKS-FUNCTIONAL-RECONCILIATION-20261003",
+  "version": "refinamento-navegacao-identidade-candidate-20261003",
+  "build": "CR-CENTRAL-REFINAMENTO-NAVEGACAO-IDENTIDADE-20261003",
   "status": "AWAITING_OWNER_HOMOLOGATION",
   "canonical_changed": false,
   "official_endpoint_changed": false,
-  "branch": "cr-central-canonical-links-functional-reconciliation-20261003",
+  "branch": "cr-central-refinamento-navegacao-identidade-20261003",
   "canonical_base": "92ef8f27d71ac176abc6452df165a048c4405d60",
   "candidate_parent": "0c3d4a18cbd7bbb773df047c30840a254b7cbff4",
   "route_source": "HOMOLOGACAO_LINK_REGISTRY_AUDIT_20261001.md",
@@ -14,13 +14,12 @@
     "cr-executive-readonly-v12-candidate-20261003"
   ],
   "fixes": [
-    "removed duplicated concatenated runtime",
-    "single CR_CANONICAL_ROUTE_REGISTRY",
-    "restored canonical finance route",
-    "restored canonical presentation route",
-    "restored canonical APP and F00-F09 family",
-    "preserved live Google Agenda, Trello and GestaoClick executive reads",
-    "fail-soft source states"
+    "external navigation isolated from current Central history",
+    "direct location.assign removed",
+    "single CR_CANONICAL_ROUTE_REGISTRY preserved",
+    "hero logo bound to existing embedded canonical brand source",
+    "existing institutional skyline/slogan restored on mobile"
   ],
-  "gate": "CANDIDATA PRONTA PARA HOMOLOGACAO DO ROGERIO"
+  "gate": "CANDIDATA PRONTA PARA VALIDACAO VISUAL DO ROGERIO",
+  "base_sha": "09b4dc827cb4132c140d6bbdbf25e7fbb38a222b"
 }
