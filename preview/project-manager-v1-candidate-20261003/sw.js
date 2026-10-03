@@ -1,4 +1,4 @@
-const BUILD='CR-PM-V1.1.1-C0-EXEC-20261003';
+const BUILD='CR-PM-V1.1.1-C0-CANONICAL-20261003';
 const CACHE='cr-project-manager-'+BUILD;
 const CORE=['./','./index.html','./styles.css','./executive-dashboard.css','./app.js','./executive-dashboard.js','./project-data.json','./infra-data.json','./manifest.webmanifest','./pwa-icon.svg'];
 const VERSION='./version.json';
