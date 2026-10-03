@@ -1,0 +1,40 @@
+(()=>{'use strict';
+if(window.__CR_V12_CONSOLIDATION)return;window.__CR_V12_CONSOLIDATION=true;
+const API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-candidate-20261003';
+const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v9-google-candidate-20261002';
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const brl=c=>c==null?'—':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(Number(c)/100);
+const sess=()=>{try{return sessionStorage.getItem('crGestaoSession')||localStorage.getItem('crGestaoSession')||''}catch{return''}};
+async function get(url){const h={},s=sess();if(s)h['x-cr-session']=s;const r=await fetch(url,{headers:h,cache:'no-store'}),d=await r.json().catch(()=>({}));if(!r.ok||d.ok===false)throw Error(d.error||('HTTP '+r.status));return d}
+function modal(){let m=$('#crV12Modal');if(m)return m;m=document.createElement('div');m.id='crV12Modal';m.className='cr-v12-modal';m.hidden=true;m.innerHTML='<div class="cr-v12-modal-card"><div class="cr-v12-modal-head"><h3></h3><button>Fechar</button></div><div class="cr-v12-modal-body"></div></div>';document.body.appendChild(m);$('button',m).onclick=()=>m.hidden=true;m.onclick=e=>{if(e.target===m)m.hidden=true};return m}
+function openStatus(status,items){const m=modal(),rows=(items||[]).filter(x=>x.status===status);$('h3',m).textContent=status+' • '+rows.length+' orçamento(s)';$('.cr-v12-modal-body',m).innerHTML=rows.length?'<table class="cr-v12-table"><thead><tr><th>Orçamento</th><th>Cliente</th><th>Valor</th><th>Data</th><th>Responsável</th><th>Última alteração</th></tr></thead><tbody>'+rows.map(x=>'<tr><td>'+esc(x.case||'—')+'</td><td>'+esc(x.customer||'—')+'</td><td>'+esc(brl(x.total_cents))+'</td><td>'+esc(x.date||'—')+'</td><td>'+esc(x.responsible||'—')+'</td><td>'+esc(x.updated_at||'não fornecida')+'</td></tr>').join('')+'</tbody></table>':'<div class="cr-v10-empty">Nenhum registro nesta leitura.</div>';m.hidden=false}
+function setLegacyAgendaNote(){const n=$('#crV5AgendaNote');if(n)n.textContent='Google Calendar V9 é a fonte primária oficial da Agenda na V12. Trello e GestãoClick enriquecem os compromissos.'}
+function sourceStrip(d){const root=$('.cr-v10');if(!root)return;let s=$('#crV12Sources');if(!s){s=document.createElement('div');s.id='crV12Sources';s.className='cr-v12-source-strip';root.prepend(s)}
+ const src=d.sources||{},p=d.pending||{};const pill=(name,ok,extra,cls='')=>'<span class="cr-v12-source-pill '+(ok?'':cls||'warn')+'">'+esc(name)+' • '+esc(ok?'ONLINE':extra||'INDISPONÍVEL')+'</span>';
+ s.innerHTML=pill('Google Agenda',src.agenda?.ok,src.agenda?.primary)+pill('GestãoClick',src.gestaoclick?.ok,'INDISPONÍVEL')+pill('Trello',src.trello?.ok,'INDISPONÍVEL')+'<span class="cr-v12-source-pill neutral">Pendências • '+esc(p.source_status==='SOURCE_IN_IMPLEMENTATION'?'FONTE EM IMPLANTAÇÃO':'ATIVA')+'</span>';
+}
+function kpis(d){const host=$('#v10Kpis');if(!host)return;const k=d.kpis||{},ak=d.agenda?.today_kpis||{};
+ const data=[['blue','⚙','Serviços em andamento',k.services_in_progress?.count??'—','Trello'],['green','$','Aguardando pagamento',k.awaiting_payment?.count??'—','Trello / Gestão'],['purple','▣','Agenda hoje',ak.events_total??'—','Google Calendar V9'],['orange','▤','Orçamentos analisados',k.quotes?.records_analyzed??'—',k.quotes?.complete?'GestãoClick • população completa':'GestãoClick • amostra'],['red','!','Exceções',k.source_exceptions?.count??'—','Trello / fontes']];
+ host.innerHTML=data.map(x=>'<article class="cr-v10-card cr-v10-kpi '+x[0]+'"><div class="cr-v10-kpi-icon">'+x[1]+'</div><h3>'+esc(x[2])+'</h3><div class="val">'+esc(x[3])+'</div><div class="meta">'+esc(x[4])+'</div></article>').join('');
+}
+function quotes(d){const host=$('#v10Quotes');if(!host)return;const by=d.quotes?.by_status||{},entries=Object.entries(by).sort((a,b)=>b[1].count-a[1].count),max=Math.max(1,...entries.map(x=>x[1].count));host.className='cr-v12-flow-body';
+ host.innerHTML=entries.length?entries.map(([name,v])=>'<div class="cr-v12-flow-row" data-status="'+esc(name)+'"><span>'+esc(name)+'</span><div class="bar"><i style="width:'+Math.max(2,v.count/max*100)+'%"></i></div><b>'+v.count+'</b><em>'+esc(brl(v.total_cents))+'</em></div>').join(''):'<div class="cr-v10-empty">GestãoClick indisponível.</div>';
+ const meta=host.parentElement?.querySelector('.cr-v12-meta')||document.createElement('div');meta.className='cr-v12-meta';meta.textContent=d.quotes?.complete?'Leitura completa nesta consulta: '+d.quotes.records_analyzed+' registros • status bruto preservado.':'Leitura parcial/amostral • não interpretar como total.';if(!meta.parentElement)host.insertAdjacentElement('afterend',meta);
+ $$('.cr-v12-flow-row',host).forEach(r=>r.onclick=()=>openStatus(r.dataset.status,d.quotes?.items||[]));
+}
+function pending(d){const host=$('#v10Priorities');if(!host)return;const p=d.pending||{};if(p.source_status==='SOURCE_IN_IMPLEMENTATION'){host.innerHTML='<div class="cr-v12-pending-state"><b>Pendências Vivas • fonte em implantação</b>O Banco Mestre existe, porém ainda não recebe alimentação operacional homologada. A V12 não transforma ausência de fonte em “0 pendências”.</div>';return}
+}
+function attention(d){const host=$('#v10Priorities');if(!host||d.pending?.source_status!=='SOURCE_IN_IMPLEMENTATION')return}
+function health(d){const host=$('#v10Health');if(!host)return;const s=d.sources||{};const rows=[['Google Agenda',s.agenda?.ok,s.agenda?.ok?(s.agenda.today_events+' hoje • '+s.agenda.tomorrow_events+' amanhã'):'Indisponível'],['GestãoClick',s.gestaoclick?.ok,s.gestaoclick?.ok?(s.gestaoclick.records_analyzed+' registros lidos'):'Indisponível'],['Trello',s.trello?.ok,s.trello?.ok?'Leitura operacional ativa':'Indisponível'],['Pendências',false,d.pending?.source_status==='SOURCE_IN_IMPLEMENTATION'?'Fonte em implantação':'Sem confirmação']];
+ host.innerHTML=rows.map(x=>'<div class="cr-v10-health-card"><h4>'+esc(x[0])+'</h4><b style="color:'+(x[1]?'#079359':'#8a6a13')+'">'+esc(x[1]?'Online':'Atenção')+'</b><small>'+esc(x[2])+'</small></div>').join('');
+}
+async function agendaDetails(){try{return await get(AGENDA+'?view=details&t='+Date.now())}catch{return null}}
+function agenda(det,d){const host=$('#v10Agenda');if(!host)return;const items=det?.items||[],k=d.agenda?.today_kpis||{};if(!items.length){host.innerHTML='<div class="cr-v10-empty"><b>'+esc(k.events_total??'—')+' eventos reais hoje.</b><br>Google Calendar V9 é a fonte primária. Detalhes exigem sessão autorizada.</div>';return}
+ const tm=v=>{try{return new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'}).format(new Date(v))}catch{return'—'}};
+ host.innerHTML=items.slice(0,6).map(x=>'<div class="cr-v10-ag-row"><div class="cr-v10-time">'+esc(tm(x.starts_at))+'</div><span class="cr-v10-dot"></span><div><div class="cr-v10-ag-title">'+esc(x.title||x.type)+'</div><div class="cr-v10-ag-desc">'+esc(x.location||'')+'</div></div><span class="cr-v10-badge '+(x.incomplete?'warn':'ok')+'">'+esc(x.incomplete?'Incompleta':x.type||'Programada')+'</span><span class="cr-v10-source">Google V9</span></div>').join('');
+}
+async function refresh(){try{const [d,det]=await Promise.all([get(API+'?view=home&t='+Date.now()).catch(()=>get(API+'?view=public-home&t='+Date.now())),agendaDetails()]);sourceStrip(d);kpis(d);quotes(d);pending(d);health(d);agenda(det,d);setLegacyAgendaNote();const st=$('#crV5State');if(st)st.textContent='CANDIDATA V12 • fontes reais consolidadas';}catch(e){console.error('CR_V12_REFRESH',e)}}
+function init(){modal();setTimeout(refresh,1200);setInterval(refresh,60000)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
