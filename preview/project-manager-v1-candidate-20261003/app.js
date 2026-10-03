@@ -5,25 +5,59 @@ const STATUS_LABEL={
   executing:'Em execução',queue:'Fila',review:'Revisão',archived:'Arquivada',completed:'Concluída',
   live:'Vivo',blocked:'Bloqueada',partial:'Parcial',attention:'Atenção',preserved:'Preservado',
   confirmed:'Confirmada',approved_queue:'Fila aprovada',analysis:'Em análise',archived_safe:'Arquivo seguro',
-  superseded:'Substituída',unconfirmed:'Não confirmado'
+  superseded:'Substituída',unconfirmed:'Não confirmado',in_progress:'Em execução',in_progress_support:'Apoio ativo'
 };
 const VIEW_TITLES={
-  now:'Cockpit do Projeto',canonical:'Cadeia Canônica',fronts:'Frentes',versions:'Versões',
+  now:'Cockpit do Projeto',pending:'Pendências do Projeto',history:'Histórico Vivo',canonical:'Cadeia Canônica',fronts:'Frentes',versions:'Versões',
   decisions:'Decisões',timeline:'Linha do Tempo',products:'Produtos',recoverables:'Recuperáveis',
   governance:'Governança',search:'Busca'
 };
 
-const state={data:null,view:'now',versionFilter:'all',search:''};
+const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null};
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const arr=v=>Array.isArray(v)?v:[];
 const label=s=>STATUS_LABEL[s]||String(s||'').replace(/_/g,' ');
 const short=s=>s?String(s).slice(0,8):'—';
-const statusClass=s=>['canonical','candidate','homologated','homologation','executing','queue','review','archived','completed','live','blocked','partial','attention'].includes(s)?s:(s==='preserved'?'canonical':s==='confirmed'?'completed':'review');
+const statusClass=s=>['canonical','candidate','homologated','homologation','executing','queue','review','archived','completed','live','blocked','partial','attention'].includes(s)?s:(s==='preserved'?'canonical':s==='confirmed'?'completed':s==='in_progress'?'executing':s==='in_progress_support'?'homologation':s==='unconfirmed'?'attention':'review');
 const badge=s=>`<span class="badge ${statusClass(s)}">${esc(label(s))}</span>`;
 const ghCommit=sha=>sha?`https://github.com/rogeriocibin-alt/construrei-oauth-pages/commit/${encodeURIComponent(sha)}`:'';
 const ghBranch=br=>br?`https://github.com/rogeriocibin-alt/construrei-oauth-pages/tree/${encodeURIComponent(br)}`:'';
+const today=()=>new Date(new Date().toLocaleString('en-US',{timeZone:'America/Sao_Paulo'}));
+const ageDays=dateStr=>{
+  if(!dateStr) return null;
+  const d=new Date(dateStr+'T12:00:00-03:00');
+  return Math.max(0,Math.floor((today()-d)/86400000));
+};
+const ageBand=days=>days==null?'Sem data':days===0?'Hoje':days<=2?'Recente':days<=5?'Envelhecendo':'Antiga';
+const priWeight=p=>({P0:0,P1:1,P2:2,P3:3}[p]??9);
+const histDate=name=>{
+  let m=String(name||'').match(/(2026)(\d{2})(\d{2})/);
+  if(m) return `${m[1]}-${m[2]}-${m[3]}`;
+  m=String(name||'').match(/(2026)-(\d{2})-(\d{2})/);
+  return m?`${m[1]}-${m[2]}-${m[3]}`:'';
+};
+const histKind=name=>{
+  const u=String(name||'').toUpperCase();
+  if(u.includes('CHECKPOINT')) return 'checkpoint';
+  if(/(^|\/)BACKUP|PRE-|BEFORE|FREEZE/.test(u)) return 'safety';
+  if(u.includes('CANONICAL')||u.includes('HOMOLOG')) return 'canonical';
+  if(u.includes('CANDIDATE')) return 'candidate';
+  if(u.includes('RECOVERY')||u.includes('RESTORE')) return 'recovery';
+  if(name==='main') return 'main';
+  return 'development';
+};
+const histProduct=name=>{
+  const l=String(name||'').toLowerCase();
+  if(l.includes('project-manager')) return 'gestor';
+  if(l.includes('presentation')) return 'presentation';
+  if(l.includes('app')) return 'app';
+  if(l.includes('f00')||l.includes('f01')||l.includes('flow')) return 'flows';
+  if(l.includes('dashboard')||l.includes('executive')||l.includes('v9')||l.includes('v10')||l.includes('v11')) return 'executive';
+  if(l.includes('central')||l.includes('home')||l.includes('sidebar')||l.includes('identity')) return 'central';
+  return 'project';
+};
 
 function setView(view){
   state.view=view;
@@ -66,6 +100,12 @@ function renderNow(){
   const checks=arr(d.decision_readiness?.checks);
   const ready=checks.filter(x=>x.done).length;
   const firstRec=arr(d.recommendations)[0];
+  const pp=arr(d.project_pending);
+  const pActive=pp.filter(x=>['in_progress','in_progress_support'].includes(x.state));
+  const pBlocked=pp.filter(x=>x.state==='blocked');
+  const pHuman=pp.filter(x=>x.human_action&&x.state!=='completed');
+  const pOld=pp.filter(x=>(ageDays(x.last_movement)||0)>=3&&x.state!=='completed');
+  const hist=(state.liveBranches||d.history_catalog?.branches||[]);
 
   $('#view-now').innerHTML=`
     <section class="hero">
@@ -81,7 +121,11 @@ function renderNow(){
 
     <section class="metrics">
       ${metric('Frentes em execução',active.length,'Limite rígido: 2','⇢')}
-      ${metric('Branches auditadas',audit.total_branches??'197','Snapshot do repositório','⑂')}
+      ${metric('Pendências do projeto',pp.length,`${pActive.length} ativas • ${pBlocked.length} bloqueada(s)`,'!')}
+      ${metric('Ação do Rogério',pHuman.length,pHuman.length?'Somente decisões realmente humanas':'Nenhuma ação humana pendente','◎')}
+      ${metric('Sem avanço ≥3d',pOld.length,'Envelhecimento calculado automaticamente','◷')}
+      ${metric('Referências históricas',hist.length,state.liveSync?.ok?'GitHub atualizado ao vivo':'Snapshot com atualização automática','↺')}
+      ${metric('Branches auditadas',audit.total_branches??hist.length,'Snapshot do repositório','⑂')}
       ${metric('Checkpoints',audit.checkpoint_branches??'95','Branches de checkpoint identificadas','◇')}
       ${metric('Produtos canônicos',canon,'Baselines preservadas','✓')}
       ${metric('Fila consciente',queue.length,'Demandas não viram frente automaticamente','≡')}
@@ -109,6 +153,18 @@ function renderNow(){
       </div>
     </section>
 
+    <section class="card" style="margin-top:16px">
+      <div class="card-head"><div><h3>Radar de Pendências do Projeto</h3><p>O que exige atenção agora — separado das pendências operacionais da Central/APP.</p></div><div class="spacer"></div><button class="soft-btn jump-view" data-target="pending">Abrir gestão completa</button></div>
+      <div class="pending-radar">
+        ${pp.slice().sort((a,b)=>priWeight(a.priority)-priWeight(b.priority)||(ageDays(b.last_movement)||0)-(ageDays(a.last_movement)||0)).slice(0,6).map(p=>`
+          <button class="pending-mini detail-btn" data-type="pending" data-id="${esc(p.id)}">
+            <span class="pending-id">${esc(p.id)}</span><span class="pending-mini-title">${esc(p.title)}</span>
+            <span class="badge ${statusClass(p.state)}">${esc(label(p.state))}</span>
+            <span class="age-pill">${esc(ageBand(ageDays(p.last_movement)))} • ${esc(ageDays(p.last_movement))}d</span>
+          </button>`).join('')}
+      </div>
+    </section>
+
     ${audit.warnings?.length?`
     <section class="card" style="margin-top:16px">
       <div class="card-head"><div><h3>Achados da auditoria</h3><p>Inconsistências que não devem ficar escondidas na memória.</p></div></div>
@@ -118,6 +174,7 @@ function renderNow(){
     </section>`:''}
   `;
   bindDetailButtons();
+  $('.jump-view').forEach(b=>b.onclick=()=>setView(b.dataset.target));
 }
 
 function frontCard(f,index){
@@ -133,6 +190,128 @@ function frontCard(f,index){
     </div>
   </article>`;
 }
+
+
+function pendingCard(p){
+  const age=ageDays(p.last_movement);
+  const action=p.human_action?'<span class="owner-action">AÇÃO DO ROGÉRIO</span>':'<span class="auto-action">GESTÃO AUTOMÁTICA</span>';
+  return `<article class="pending-card ${p.state==='blocked'?'is-blocked':''}">
+    <div class="pending-head">
+      <div><span class="pending-code">${esc(p.id)}</span><h3>${esc(p.title)}</h3></div>
+      <div class="decision-meta">${action}${badge(p.state)}<span class="badge review">${esc(p.priority)}</span></div>
+    </div>
+    <div class="pending-grid">
+      <div><small>Área</small><b>${esc(p.domain)}</b></div>
+      <div><small>Responsável</small><b>${esc(p.owner)}</b></div>
+      <div><small>Última movimentação</small><b>${esc(p.last_movement||'—')}</b></div>
+      <div><small>Idade</small><b>${esc(ageBand(age))} • ${esc(age??'—')}d</b></div>
+    </div>
+    <div class="pending-next"><small>Próxima ação</small><p>${esc(p.next_action)}</p></div>
+    <div class="pending-foot"><span class="source-chip">${esc(p.source||'Sem fonte')}</span><button class="soft-btn detail-btn" data-type="pending" data-id="${esc(p.id)}">Abrir contexto</button></div>
+  </article>`;
+}
+
+function renderPending(){
+  const d=state.data;
+  const all=arr(d.project_pending);
+  const legacy=all.filter(x=>x.provenance==='legacy_recovered').length;
+  const list=all.filter(p=>{
+    if(state.pendingFilter==='all') return true;
+    if(state.pendingFilter==='human') return p.human_action&&p.state!=='completed';
+    if(state.pendingFilter==='blocked') return p.state==='blocked';
+    if(state.pendingFilter==='aging') return (ageDays(p.last_movement)||0)>=3&&p.state!=='completed';
+    if(state.pendingFilter==='active') return ['in_progress','in_progress_support'].includes(p.state);
+    if(state.pendingFilter==='unconfirmed') return p.state==='unconfirmed';
+    return true;
+  }).sort((a,b)=>priWeight(a.priority)-priWeight(b.priority)||(ageDays(b.last_movement)||0)-(ageDays(a.last_movement)||0));
+
+  const active=all.filter(x=>['in_progress','in_progress_support'].includes(x.state)).length;
+  const human=all.filter(x=>x.human_action&&x.state!=='completed').length;
+  const blocked=all.filter(x=>x.state==='blocked').length;
+  const old=all.filter(x=>(ageDays(x.last_movement)||0)>=3&&x.state!=='completed').length;
+
+  $('#view-pending').innerHTML=`
+    <div class="page-intro"><div><h2>Pendências do Projeto</h2><p>Banco Mestre vivo do projeto inteiro. Não confundir com pendências operacionais do APP/Central. A idade é calculada automaticamente e ação humana só aparece quando realmente depende do Owner.</p></div></div>
+    <section class="metrics pending-metrics">
+      ${metric('Itens visíveis',all.length,'Banco Mestre atual','!')}
+      ${metric('Em execução',active,'Limite geral: 2 frentes','⇢')}
+      ${metric('Ação do Rogério',human,'Decisões humanas explícitas','◎')}
+      ${metric('Bloqueadas',blocked,'Precisam destravar dependência','×')}
+      ${metric('Sem avanço ≥3d',old,'Envelhecimento automático','◷')}
+      ${metric('Legado nominal',legacy+'/15','Restante não será inventado','◇')}
+    </section>
+    <div class="toolbar">
+      ${[['all','Todas'],['active','Ativas'],['human','Ação do Rogério'],['blocked','Bloqueadas'],['aging','Envelhecendo'],['unconfirmed','Não confirmado']].map(([id,t])=>`<button class="filter-btn ${state.pendingFilter===id?'active':''}" data-pfilter="${id}">${t}</button>`).join('')}
+    </div>
+    <div class="pending-board">${list.map(p=>pendingCard(p)).join('')}</div>
+    <div class="notice" style="margin-top:14px"><b>Regra-mãe:</b> se a informação depende de você lembrar, cobrar ou editar manualmente para continuar existindo, a gestão ainda não está pronta. O Gestor deve detectar, medir, propor, acompanhar e fechar com evidência.</div>
+  `;
+  $('[data-pfilter]').forEach(b=>b.onclick=()=>{state.pendingFilter=b.dataset.pfilter;renderPending();});
+  bindDetailButtons();
+}
+
+function historyRows(){
+  const fallback=arr(state.data.history_catalog?.branches);
+  return state.liveBranches||fallback;
+}
+
+function renderHistory(){
+  const d=state.data;
+  const all=historyRows();
+  const list=all.filter(x=>state.historyFilter==='all'||x.product===state.historyFilter||x.kind===state.historyFilter)
+    .slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')||a.name.localeCompare(b.name));
+  const hc=d.history_catalog||{};
+  const dates=all.map(x=>x.date).filter(Boolean).sort();
+  const live=state.liveSync;
+  const counts={}; all.forEach(x=>counts[x.kind]=(counts[x.kind]||0)+1);
+  $('#view-history').innerHTML=`
+    <div class="page-intro"><div><h2>Histórico Vivo</h2><p>Memória navegável do desenvolvimento: referências leves para versões, checkpoints, recuperações e candidatas. Nada de duplicar arquivos pesados.</p></div></div>
+    <section class="history-status card">
+      <div class="history-live ${live?.ok?'ok':'fallback'}"><span class="live-dot"></span><div><b>${live?.ok?'GitHub sincronizado ao abrir':'Usando snapshot versionado'}</b><small>${live?.at?('Atualizado '+live.at):esc(hc.coverage_note||'')}</small></div></div>
+      <div class="history-kpis">
+        <div><small>Referências</small><strong>${all.length}</strong></div>
+        <div><small>Checkpoints</small><strong>${counts.checkpoint||0}</strong></div>
+        <div><small>Canônicas/homologadas</small><strong>${counts.canonical||0}</strong></div>
+        <div><small>Candidatas</small><strong>${counts.candidate||0}</strong></div>
+        <div><small>Período indexado</small><strong class="range">${esc(dates[0]||hc.earliest_date||'—')} → ${esc(dates[dates.length-1]||hc.latest_date||'—')}</strong></div>
+      </div>
+    </section>
+    <div class="toolbar">
+      ${[['all','Tudo'],['central','Central'],['app','APP'],['flows','F00→F09'],['executive','Executiva'],['presentation','Apresentação'],['gestor','Gestor'],['checkpoint','Checkpoints'],['recovery','Recuperações']].map(([id,t])=>`<button class="filter-btn ${state.historyFilter===id?'active':''}" data-hfilter="${id}">${t}</button>`).join('')}
+    </div>
+    <div class="card table-wrap"><table class="data-table history-table">
+      <thead><tr><th>Data</th><th>Produto</th><th>Tipo</th><th>Referência</th><th></th></tr></thead>
+      <tbody>${list.map(x=>`<tr><td class="mono">${esc(x.date||'—')}</td><td>${esc(x.product)}</td><td><span class="badge review">${esc(x.kind)}</span></td><td><b>${esc(x.name)}</b></td><td><button class="soft-btn external-btn" data-url="${esc(ghBranch(x.name))}">Abrir</button></td></tr>`).join('')}</tbody>
+    </table></div>
+  `;
+  $('[data-hfilter]').forEach(b=>b.onclick=()=>{state.historyFilter=b.dataset.hfilter;renderHistory();});
+  bindExternalButtons();
+}
+
+async function refreshLiveRepository(){
+  const base='https://api.github.com/repos/rogeriocibin-alt/construrei-oauth-pages';
+  try{
+    const out=[];
+    for(let page=1;page<=5;page++){
+      const r=await fetch(`${base}/branches?per_page=100&page=${page}`,{headers:{Accept:'application/vnd.github+json'}});
+      if(!r.ok) throw new Error('GitHub '+r.status);
+      const rows=await r.json();
+      out.push(...rows.map(x=>x.name));
+      if(rows.length<100) break;
+    }
+    if(out.length){
+      state.liveBranches=[...new Set(out)].map(name=>({name,date:histDate(name),kind:histKind(name),product:histProduct(name)}));
+      state.liveSync={ok:true,at:new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}).format(new Date())};
+      if(state.view==='history') renderHistory();
+      renderNow();
+      renderGovernance();
+    }
+  }catch(err){
+    state.liveSync={ok:false,error:String(err?.message||err)};
+    if(state.view==='history') renderHistory();
+  }
+}
+
 
 function renderCanonical(){
   const d=state.data;
@@ -257,7 +436,8 @@ function renderSearch(q){
       ['Decisão',d.decisions,'title',['decision','reason','evidence']],
       ['Produto',d.products,'name',['summary','current','layer']],
       ['Checkpoint',d.checkpoints,'name',['role','commit']],
-      ['Marco',d.milestones,'title',['detail','type']]
+      ['Marco',d.milestones,'title',['detail','type']],
+      ['Pendência',d.project_pending,'title',['id','domain','priority','state','owner','next_action','dependency','source','close_when']]
     ];
     for(const [kind,list,titleKey,fields] of groups){
       for(const item of arr(list)){
@@ -290,6 +470,20 @@ function detailHtml(type,id){
       ${v.url?`<div class="detail-block"><button class="primary-btn external-btn" data-url="${esc(v.url)}">Abrir versão</button></div>`:''}
     `};
   }
+  if(type==='pending'){
+    const p=arr(d.project_pending).find(x=>x.id===id); if(!p)return null;
+    const age=ageDays(p.last_movement);
+    return {title:p.title,eyebrow:p.id+' • '+p.priority,html:`
+      <div class="detail-block"><b>Estado</b><p>${label(p.state)} • ${ageBand(age)} (${age??'—'} dias)</p></div>
+      <div class="detail-block"><b>Responsável</b><p>${esc(p.owner)}</p></div>
+      <div class="detail-block"><b>Próxima ação</b><p>${esc(p.next_action)}</p></div>
+      <div class="detail-block"><b>Dependência</b><p>${esc(p.dependency)}</p></div>
+      <div class="detail-block"><b>Fonte / evidência</b><p class="mono">${esc(p.source||'—')}</p></div>
+      <div class="detail-block"><b>Critério de conclusão</b><p>${esc(p.close_when)}</p></div>
+      <div class="detail-block"><b>Alçada</b><p>${p.human_action?'Depende de decisão humana do Rogério.':'Deve ser acompanhada/medida pelo sistema e pelos agentes, sem cobrança manual do Rogério.'}</p></div>
+      <div class="detail-block"><b>Origem</b><p>${esc(p.provenance||'—')}</p></div>
+    `};
+  }
   if(type==='front'){
     const f=arr(d.fronts).find(x=>x.id===id); if(!f)return null;
     return {title:f.name,eyebrow:'Frente • '+label(f.status),html:`
@@ -315,7 +509,7 @@ function bindExternalButtons(){
 }
 
 function renderAll(){
-  renderNow();renderCanonical();renderFronts();renderVersions();renderDecisions();renderTimeline();renderProducts();renderRecoverables();renderGovernance();
+  renderNow();renderPending();renderHistory();renderCanonical();renderFronts();renderVersions();renderDecisions();renderTimeline();renderProducts();renderRecoverables();renderGovernance();
 }
 
 async function init(){
@@ -325,6 +519,8 @@ async function init(){
     state.data=await r.json();
     renderAll();
     setView('now');
+    refreshLiveRepository();
+    setInterval(refreshLiveRepository,300000);
 
     $$('.nav-btn').forEach(b=>b.onclick=()=>setView(b.dataset.view));
     $('#drawerClose').onclick=closeDrawer;
