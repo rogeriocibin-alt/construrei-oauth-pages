@@ -28,8 +28,8 @@
     "Gate do Ciclo 0 visível: promoção permanece bloqueada até continuidade e homologação."
   ],
   "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
-  "candidate_checkpoint": "PENDING_EXECUTIVE_DASHBOARD_VALIDATION",
-  "last_tested_at": null,
+  "candidate_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_EXECUTIVE_DASHBOARD_CANDIDATE_20261003",
+  "last_tested_at": "2026-10-03T13:31:48-03:00",
   "promotion_gate": {
     "decision": "BLOCKED",
     "blockers": [
@@ -38,5 +38,15 @@
       "pwa_mobile_validation",
       "owner_homologation"
     ]
+  },
+  "runtime_validation": {
+    "static_bundle": "PASS",
+    "public_index_http": "PASS_200",
+    "version_json_http": "PASS_200",
+    "executive_js_http": "PASS_200",
+    "executive_css_http": "PASS_200",
+    "pwa_installed_notebook": "PENDING_HUMAN",
+    "pwa_installed_mobile": "PENDING_HUMAN",
+    "visual_homologation": "PENDING_HUMAN"
   }
 }
