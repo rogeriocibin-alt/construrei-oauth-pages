@@ -47,7 +47,18 @@ const CR_CANONICAL_ROUTE_REGISTRY=Object.freeze({
 const STATUS_COLORS={'AGUARDANDO VISITA/AGENDAMENTO':'#0a8cff','EM ELABORAÇÃO':'#3c8fe8','AGUARDANDO ENVIO':'#62a9ee','AGUARDANDO APROVAÇÃO':'#f2b233','EM ANDAMENTO':'#168fb8','RETORNO':'#7b46e8','AGUARDANDO PAGAMENTO':'#16b879','AGUARDANDO ACERTO':'#ff8a24','FINALIZADO':'#138a61','NÃO APROVADO':'#d85b67','CANCELADO':'#93a9bd'};
 async function get(u){const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'}),d=await r.json().catch(()=>({}));if(!r.ok||d.ok===false)throw Error(d.error||('HTTP '+r.status));return d}
 function activatePage(id,label){const p=document.getElementById(id);if(!p)return false;$$('.page').forEach(x=>x.classList.toggle('on',x===p));const t=$('.cr-v10-title b');if(t)t.textContent=label||id;$('.side')?.classList.remove('open');window.scrollTo(0,0);return true}
-function navigate(key){const r=CR_CANONICAL_ROUTE_REGISTRY[key];if(!r)return;if(r.external){window.location.assign(r.external);return}if(activatePage(r.page,r.label)&&r.focus)setTimeout(()=>document.getElementById(r.focus)?.scrollIntoView({behavior:'smooth',block:'start'}),50)}
+function navigate(key){
+  const r=CR_CANONICAL_ROUTE_REGISTRY[key]; if(!r)return;
+  if(r.external){
+    const w=window.open(r.external,'_blank','noopener,noreferrer');
+    if(!w) window.location.href=r.external;
+    return;
+  }
+  if(activatePage(r.page,r.label)){
+    try{history.replaceState({crCentral:true,page:r.page},'',location.pathname+location.search+'#'+r.page)}catch(_){}
+    if(r.focus)setTimeout(()=>document.getElementById(r.focus)?.scrollIntoView({behavior:'smooth',block:'start'}),50);
+  }
+}
 function header(){const main=$('.main');if(!main)return;$('.cr-v10-header')?.remove();const h=document.createElement('header');h.className='cr-v10-header';const date=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(new Date());h.innerHTML='<div class="cr-v10-title"><button class="cr-v10-menu" aria-label="Abrir menu">☰</button><div><b>Dashboard Executivo</b><small>Central CONSTRU-REI • candidata reconciliada</small></div></div><label class="cr-v10-search">⌕<input aria-label="Busca global" placeholder="Buscar módulo..."></label><div class="cr-v10-user"><div class="cr-v10-avatar">RD</div><div><b>Rogério</b><small>Diretor</small></div><span class="cr-v10-date">'+esc(date)+'</span></div>';main.insertBefore(h,main.firstChild);$('.cr-v10-menu',h).onclick=()=>$('.side')?.classList.toggle('open');$('input',h).onkeydown=e=>{if(e.key!=='Enter')return;const q=e.target.value.toLowerCase();const k=Object.keys(CR_CANONICAL_ROUTE_REGISTRY).find(k=>CR_CANONICAL_ROUTE_REGISTRY[k].label.toLowerCase().includes(q));if(k)navigate(k)}}
 function nav(){const side=$('.side');if(!side)return;$('#crConNav')?.remove();const brand=$('.brand',side);if(brand){$('strong',brand).textContent='CONSTRU-REI';$('small',brand).textContent='CONSTRUINDO RESULTADOS'}const groups=[
 ['⌂','Início',[['Dashboard Executivo','dashboard']]],
@@ -75,4 +86,15 @@ async function loadFull(){try{state.full=await get(FULL);state.updatedAt.full=ne
 async function refreshAll(){const b=$('.cr-con-refresh');if(b){b.disabled=true;b.textContent='↻ Atualizando…'}await loadFast();await loadFull();if(b){b.disabled=false;b.textContent='↻ Atualizar'}}
 function boot(){document.documentElement.classList.add('cr-v11-ready');header();nav();shell();renderFast();loadFast();setTimeout(loadFull,100);window.CR_CENTRAL={BUILD,state,ROUTES:CR_CANONICAL_ROUTE_REGISTRY,refresh:refreshAll}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+/* CR refinement 2026-10-03: identity + navigation guard, no legacy fallback */
+(function(){
+  function bindIdentity(){
+    const brand=document.querySelector('.brand img');
+    const hero=document.getElementById('crHeroLogo');
+    if(brand&&hero&&!hero.getAttribute('src')) hero.setAttribute('src',brand.currentSrc||brand.getAttribute('src')||'');
+  }
+  window.crCanonicalBack=function(){ activatePage('dashboard','Dashboard Executivo'); try{history.replaceState({crCentral:true,page:'dashboard'},'',location.pathname+location.search+'#dashboard')}catch(_){} };
+  window.addEventListener('popstate',function(){ if(location.pathname.includes('central-canonical-links-functional-reconciliation-candidate-20261003')) window.crCanonicalBack(); });
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindIdentity);else bindIdentity();
 })();
