@@ -1,7 +1,7 @@
 {
   "name": "Gestor do Projeto CONSTRU-REI",
-  "short_name": "Gestor CR",
-  "description": "Cockpit do proprietário e desenvolvedor do ecossistema CONSTRU-REI.",
+  "short_name": "Gestor CR APP",
+  "description": "Cockpit do proprietário do ecossistema APP CONSTRU-REI.",
   "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",
@@ -15,7 +15,7 @@
   ],
   "icons": [
     {
-      "src": "./pwa-icon.svg",
+      "src": "./pwa-icon.svg?v=20261003applogo1",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
