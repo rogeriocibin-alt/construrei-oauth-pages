@@ -1,0 +1,26 @@
+{
+  "version": "canonical-links-functional-reconciliation-candidate-20261003",
+  "build": "CR-CENTRAL-CANONICAL-LINKS-FUNCTIONAL-RECONCILIATION-20261003",
+  "status": "AWAITING_OWNER_HOMOLOGATION",
+  "canonical_changed": false,
+  "official_endpoint_changed": false,
+  "branch": "cr-central-canonical-links-functional-reconciliation-20261003",
+  "canonical_base": "92ef8f27d71ac176abc6452df165a048c4405d60",
+  "candidate_parent": "0c3d4a18cbd7bbb773df047c30840a254b7cbff4",
+  "route_source": "HOMOLOGACAO_LINK_REGISTRY_AUDIT_20261001.md",
+  "functional_sources": [
+    "cr-executive-readonly-v12-1-candidate-20261003",
+    "cr-agenda-executive-v12-1-candidate-20261003",
+    "cr-executive-readonly-v12-candidate-20261003"
+  ],
+  "fixes": [
+    "removed duplicated concatenated runtime",
+    "single CR_CANONICAL_ROUTE_REGISTRY",
+    "restored canonical finance route",
+    "restored canonical presentation route",
+    "restored canonical APP and F00-F09 family",
+    "preserved live Google Agenda, Trello and GestaoClick executive reads",
+    "fail-soft source states"
+  ],
+  "gate": "CANDIDATA PRONTA PARA HOMOLOGACAO DO ROGERIO"
+}
