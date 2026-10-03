@@ -2908,7 +2908,6 @@ document.addEventListener('click',function(e){var b=e.target.closest('[data-acti
 document.addEventListener('input',function(e){if(!e.target.classList.contains('board-filter'))return;var q=String(e.target.value||'').toLowerCase();var page=e.target.closest('.page');if(page)Array.prototype.slice.call(page.querySelectorAll('.item')).forEach(function(x){x.style.display=x.textContent.toLowerCase().indexOf(q)>=0?'':'none'})});
 qsa('.nav[data-page]').forEach(function(x){x.addEventListener('click',function(){go(x.getAttribute('data-page'))})});
 var d=qs('#detail');if(d)d.addEventListener('click',function(e){if(e.target===d)closeDetail()});
-function rmBadge(){['__site_serving_banner','__site_serving_badge','__site_serving_panel'].forEach(function(id){var x=document.getElementById(id);if(x)x.remove()})}new MutationObserver(rmBadge).observe(document.documentElement,{childList:true,subtree:true});setInterval(rmBadge,500);
 boot();setInterval(function(){boot()},60000);
 })();
 </script>
