@@ -199,3 +199,28 @@ html,body{background:var(--v10-bg)!important;color:var(--v10-text)!important}
   .cr-v10-card-head h2{font-size:11.5px!important}
   .cr-v10-priority{padding:7px 0!important}
 }
+
+
+/* V10 sidebar positioning hotfix — keep navigation pinned directly below brand at 100% zoom */
+.layout>.side{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  align-items:stretch!important;
+}
+.cr-v10-primary-nav{
+  margin-top:10px!important;
+  flex:0 0 auto!important;
+}
+.cr-v10-more{
+  margin-top:8px!important;
+  flex:0 0 auto!important;
+}
+.side>.cr-v10-original{
+  display:none!important;
+}
+@media (min-width:981px){
+  .layout>.side{justify-content:flex-start!important}
+  .cr-v10-primary-nav{margin-top:10px!important}
+  .cr-v10-more{margin-top:8px!important}
+}
