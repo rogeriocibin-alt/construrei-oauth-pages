@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="cr-build" content="CR-EXECUTIVE-V9-GOOGLE-AGENDA-LOADER-20261002">
+<title>CONSTRU-REI • Candidata Executiva V9</title>
+<style>html,body{margin:0;min-height:100%;font-family:Inter,system-ui,Segoe UI,Arial;background:#eef8fd;color:#07165b}#boot{min-height:100vh;display:grid;place-items:center;padding:24px}#card{max-width:520px;background:#fff;border:1px solid #c9e0ef;border-radius:18px;padding:22px;box-shadow:0 16px 42px rgba(6,40,86,.14)}#card b{display:block;font-size:20px;margin-bottom:8px}#card small{color:#567394}</style>
+</head><body>
+<div id="boot"><div id="card"><b>Central CONSTRU-REI</b><small>Carregando candidata Executiva V9 • Google Agenda…</small></div></div>
+<script>
+(async()=>{try{
+const baseUrl='../central-executive-v8-live-agenda-candidate-20261002/index.html?base='+Date.now();
+const r=await fetch(baseUrl,{cache:'no-store'});if(!r.ok)throw new Error('Falha ao carregar base V8: HTTP '+r.status);
+let h=await r.text();
+h=h.replace('</head>','<meta name="cr-v9-package" content="CR-EXECUTIVE-V9-GOOGLE-AGENDA-20261002"></head>');
+h=h.replace('</body>','<script src="../central-executive-v9-google-agenda-candidate-20261002/v9-google-agenda.js?v=20261002a"><\/script></body>');
+document.open();document.write(h);document.close();
+}catch(e){document.getElementById('card').innerHTML='<b>Não foi possível abrir a candidata.</b><small>'+String(e.message||e)+'</small>'}})();
+</script></body></html>
