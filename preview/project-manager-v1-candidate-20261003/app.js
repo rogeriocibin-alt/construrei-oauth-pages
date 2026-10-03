@@ -5,7 +5,8 @@ const STATUS_LABEL={
   executing:'Em execução',queue:'Fila',review:'Revisão',archived:'Arquivada',completed:'Concluída',
   live:'Vivo',blocked:'Bloqueada',partial:'Parcial',attention:'Atenção',preserved:'Preservado',
   confirmed:'Confirmada',approved_queue:'Fila aprovada',analysis:'Em análise',archived_safe:'Arquivo seguro',
-  superseded:'Substituída',unconfirmed:'Não confirmado',in_progress:'Em execução',in_progress_support:'Apoio ativo'
+  superseded:'Substituída',unconfirmed:'Não confirmado',not_confirmed:'Não confirmado',in_progress:'Em execução',in_progress_support:'Apoio ativo',
+  registered:'Registrada',implementation_planned:'Implementação planejada',investigating:'Investigando',planned:'Planejada',healthy:'Saudável',error:'Erro',stale:'Desatualizada'
 };
 const VIEW_TITLES={
   now:'Cockpit do Projeto',pending:'Pendências do Projeto',history:'Histórico Vivo',canonical:'Cadeia Canônica',fronts:'Frentes',versions:'Versões',
@@ -21,7 +22,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 const arr=v=>Array.isArray(v)?v:[];
 const label=s=>STATUS_LABEL[s]||String(s||'').replace(/_/g,' ');
 const short=s=>s?String(s).slice(0,8):'—';
-const statusClass=s=>['canonical','candidate','homologated','homologation','executing','queue','review','archived','completed','live','blocked','partial','attention'].includes(s)?s:(s==='preserved'?'canonical':s==='confirmed'?'completed':s==='in_progress'?'executing':s==='in_progress_support'?'homologation':s==='unconfirmed'?'attention':'review');
+const statusClass=s=>['canonical','candidate','homologated','homologation','executing','queue','review','archived','completed','live','blocked','partial','attention'].includes(s)?s:(s==='preserved'?'canonical':s==='confirmed'||s==='healthy'?'completed':s==='in_progress'?'executing':s==='in_progress_support'?'homologation':s==='unconfirmed'||s==='not_confirmed'||s==='stale'?'attention':s==='error'?'blocked':'review');
 const badge=s=>`<span class="badge ${statusClass(s)}">${esc(label(s))}</span>`;
 const ghCommit=sha=>sha?`https://github.com/rogeriocibin-alt/construrei-oauth-pages/commit/${encodeURIComponent(sha)}`:'';
 const ghBranch=br=>br?`https://github.com/rogeriocibin-alt/construrei-oauth-pages/tree/${encodeURIComponent(br)}`:'';
@@ -130,6 +131,7 @@ function renderNow(){
 
   $('#view-now').innerHTML=`
     ${renderOwnerHub()}
+    ${renderLiveRibbon()}
     <section class="hero">
       <div class="hero-grid">
         <div>
@@ -669,7 +671,9 @@ async function init(){
     syncReleaseUi(CURRENT_RELEASE);
     setView('now');
     refreshLiveRepository();
+    refreshProjectManagerLive();
     setInterval(refreshLiveRepository,300000);
+    setInterval(refreshProjectManagerLive,300000);
 
     $$('.nav-btn').forEach(b=>b.onclick=()=>setView(b.dataset.view));
     $('#drawerClose').onclick=closeDrawer;
