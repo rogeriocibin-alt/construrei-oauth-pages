@@ -1,18 +1,18 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1.1.0 • CICLO 0",
-    "status": "CANDIDATA ISOLADA — CICLO 0 EM VALIDAÇÃO / CANÔNICAS PRESERVADAS",
+    "version": "V1.1.1 • CANÔNICA HOMOLOGADA",
+    "status": "CANÔNICA HOMOLOGADA — CONTINUIDADE P0 AINDA ABERTA",
     "generated_at": "2026-10-03",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
-    "branch": "cr-project-manager-v1-1-cycle0-20261003",
+    "branch": "cr-project-manager-v1-1-1-canonical-approved-20261003",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
     "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
     "audit_snapshot": "2026-10-03",
     "audit_state": "Snapshot automático incorporado com 201 branches; atualização online do GitHub ocorre ao abrir o Gestor.",
     "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
-    "build": "CR-PM-V1.1.0-C0-20261003",
-    "environment": "candidate",
+    "build": "CR-PM-V1.1.1-C0-CANONICAL-20261003",
+    "environment": "canonical",
     "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
     "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
     "persistence": "Supabase cr_internal conectado por API candidata sanitizada; snapshot local permanece como fallback offline."
@@ -505,14 +505,14 @@
     {
       "id": "front-gestor-v1",
       "name": "Gestor do Projeto CONSTRU-REI — V1",
-      "status": "executing",
+      "status": "completed",
       "priority": "P0",
       "objective": "Entregar o cockpit visual que organiza memória, versões, decisões, frentes e direção do projeto.",
-      "progress": 96,
+      "progress": 100,
       "owner": "CR Assertivo + Bio",
-      "last_advance": "Ciclo 0 implementado: baseline protegida, persistência aditiva, AUD-001 estruturada, matriz de fontes, reconciliações e PWA V1.1 preparado para atualização viva.",
-      "next_action": "Concluir testes estáticos/segurança, checkpoint do Ciclo 0 e validação humana do PWA instalado em notebook/celular; não promover a canônica.",
-      "dependency": "Teste humano do PWA instalado + rechecagem do backup antes de homologação.",
+      "last_advance": "V1.1.1 promovida a canônica homologada por decisão explícita do proprietário; continuidade/backup permanece como P0 aberto.",
+      "next_action": "Validar PWA instalado em notebook/celular e tratar P0 de continuidade/backup sem reabrir o redesign do Gestor.",
+      "dependency": "P0 de continuidade/backup e validação pós-promoção do PWA instalado.",
       "blocked": false,
       "age_days": 0
     },
@@ -809,6 +809,13 @@
       "title": "Marca oficial APP CONSTRU-REI incorporada ao Gestor",
       "detail": "Sidebar, cabeçalho, acesso à Central e ícone do PWA passam a usar a mesma fonte oficial de marca.",
       "confidence": "verified_commit"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "promotion",
+      "title": "Gestor V1.1.1 promovido a canônico homologado",
+      "detail": "Promoção autorizada explicitamente pelo proprietário. O mesmo PWA/endereço foi preservado; backup/continuidade e validações do PWA instalado permanecem abertas.",
+      "confidence": "owner_homologated"
     }
   ],
   "recoverables": [
@@ -2599,29 +2606,28 @@
     "owner_visibility": "Toda promoção, candidata, canônica, regressão, homologação e mudança de versão relevante precisa deixar evidência no Gestor."
   },
   "release_meta": {
-    "version": "1.1.0",
-    "build": "CR-PM-V1.1.0-C0-20261003",
-    "environment": "candidate",
-    "status": "cycle0_validation",
-    "branch": "cr-project-manager-v1-1-cycle0-20261003",
+    "version": "1.1.1",
+    "build": "CR-PM-V1.1.1-C0-CANONICAL-20261003",
+    "environment": "canonical",
+    "status": "canonical",
+    "branch": "cr-project-manager-v1-1-1-canonical-approved-20261003",
     "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
     "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
     "update_mode": "same_url_atomic_pwa_bundle",
-    "canonical_changed": false,
+    "canonical_changed": true,
     "promotion_gate": {
-      "decision": "BLOCKED",
-      "reason": "Automação técnica aprovada, porém continuidade e validação humana ainda não satisfazem o gate.",
+      "decision": "PROMOTED_OWNER_APPROVED_WITH_OPEN_P0",
+      "reason": "Homologação explícita do proprietário; continuidade/backup e validação do PWA instalado permanecem abertas.",
       "blockers": [
         "C0-B01",
         "C0-H01",
-        "C0-H02",
-        "C0-H03"
+        "C0-H02"
       ],
-      "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
-      "canonical_changed": false
+      "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_PRE_CANONICAL_PROMOTION_20261003",
+      "canonical_changed": true
     },
     "ui_commit_tested": "543d368635891b64b203df6badec0cda43dced9e",
-    "candidate_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_RECONCILED_20261003",
+    "candidate_checkpoint": "CHECKPOINT_PM_V1_1_1_EXEC_DASH_20261003",
     "last_tested_at": "2026-10-03T12:16:52-03:00"
   },
   "audits": [
@@ -2997,12 +3003,12 @@
     }
   ],
   "cycle0": {
-    "status": "implemented_pending_validation",
+    "status": "canonical_homologated_with_open_p0",
     "baseline": {
       "commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
       "checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003"
     },
-    "canonical_changed": false,
+    "canonical_changed": true,
     "persistence": {
       "migration": "project_manager_cycle0_persistence_v1",
       "schema": "cr_internal",
@@ -3093,8 +3099,8 @@
         {
           "id": "C0-H03",
           "label": "Homologação do proprietário",
-          "status": "PENDING_HUMAN",
-          "evidence": "Candidata não vira canônica sem aprovação explícita."
+          "status": "PASS_OWNER_APPROVED",
+          "evidence": "Homologação explícita do proprietário registrada em 03/10/2026."
         },
         {
           "id": "C0-B01",
@@ -3106,16 +3112,15 @@
       "last_tested_at": "2026-10-03T12:16:52-03:00"
     },
     "promotion_gate": {
-      "decision": "BLOCKED",
-      "reason": "Automação técnica aprovada, porém continuidade e validação humana ainda não satisfazem o gate.",
+      "decision": "PROMOTED_OWNER_APPROVED_WITH_OPEN_P0",
+      "reason": "Proprietário homologou e autorizou a promoção. P0 de continuidade e testes do PWA instalado continuam pendentes.",
       "blockers": [
         "C0-B01",
         "C0-H01",
-        "C0-H02",
-        "C0-H03"
+        "C0-H02"
       ],
-      "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
-      "canonical_changed": false
+      "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_PRE_CANONICAL_PROMOTION_20261003",
+      "canonical_changed": true
     },
     "reconciled_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_RECONCILED_20261003"
   }
