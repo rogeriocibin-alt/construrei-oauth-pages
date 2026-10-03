@@ -1,32 +1,21 @@
 {
-  "version": "consolidated-functional-recovery-candidate-20261003",
-  "build": "CR-CENTRAL-CONSOLIDATED-FUNCTIONAL-RECOVERY-CANDIDATE-20261003",
+  "version": "menu-canonical-recovery-candidate-20261003",
+  "build": "CR-CENTRAL-MENU-CANONICAL-RECOVERY-CANDIDATE-20261003",
   "status": "AWAITING_OWNER_HOMOLOGATION",
   "canonical_changed": false,
-  "base": "CR-CENTRAL-CONSOLIDATED-CANDIDATE-20261003",
-  "presentation": {
-    "status": "HOMOLOGATED_CANONICAL",
-    "path": "central/presentation.html",
-    "commit": "93816fbe52ecba8270a732cb80b3a20b05621888",
-    "features": [
-      "20 páginas",
-      "dados vivos",
-      "PDF",
-      "PowerPoint",
-      "Radar Executivo"
-    ]
+  "base": "CR-CENTRAL-CONSOLIDATED-FUNCTIONAL-RECOVERY-CANDIDATE-20261003",
+  "navigation_source": {
+    "commit": "92ef8f27d71ac176abc6452df165a048c4405d60",
+    "file": "preview/central-approved-router-candidate-20261001/index.html",
+    "blob": "b90367bed503245a5bea9b4db4f15b46622ab6b2"
   },
-  "functional_recovery": [
-    "single organized menu",
-    "presentation viva restored",
-    "legacy pages contained by route",
-    "mobile overflow containment",
-    "validated executive dashboard preserved"
+  "changes": [
+    "menu reduced to homologated visible modules",
+    "technical excess removed from navigation",
+    "Dashboard Gerencial V4 relabeled Gestão Financeira",
+    "Documentação points to homologated centro-operacoes?open=docs",
+    "APP keeps homologated direct endpoint",
+    "internal homologated modules preserve internal-page behavior"
   ],
-  "safeguards": {
-    "production_homologated_untouched": true,
-    "no_patch_stack_reintroduced": true,
-    "no_fake_zero": true
-  },
-  "checkpoint_before": "CHECKPOINT_CENTRAL_CONSOLIDATED_PRE_FUNCTIONAL_RECOVERY_20261003"
+  "checkpoint_before": "CHECKPOINT_CENTRAL_PRE_MENU_CANONICAL_RECOVERY_20261003"
 }
