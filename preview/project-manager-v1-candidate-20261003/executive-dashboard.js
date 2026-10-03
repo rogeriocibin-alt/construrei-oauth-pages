@@ -92,7 +92,7 @@ function attention(x){
   var d=x.data||{}, list=[];
   var gate=(d.cycle0&&d.cycle0.promotion_gate&&d.cycle0.promotion_gate.decision)||'BLOCKED';
   var backup=x.rows.find(function(s){return /backup/i.test(String(s.source_id||s.source_name||''));});
-  if(String(gate).toUpperCase()==='BLOCKED')list.push({tone:'red',icon:'⛔',title:'Promoção bloqueada',summary:'A candidata não deve virar canônica enquanto continuidade e validações humanas estiverem pendentes.',meta:'Gate de promoção • decisão objetiva',view:'governance'});
+  if(String(gate).toUpperCase()==='BLOCKED')list.push({tone:'red',icon:'⛔',title:'Homologada com P0 aberto',summary:'A versão foi homologada pelo proprietário, mas continuidade/backup e validações de instalação permanecem abertas como P0.',meta:'Homologação explícita • continuidade ainda aberta',view:'governance'});
   if(backup&&backup.status!=='healthy')list.push({tone:'red',icon:'↺',title:'Continuidade / backup exige ação',summary:backup.notes||'A rotina de continuidade ainda não está saudável.',meta:(backup.source_name||'Backup')+' • '+label(backup.status),view:'infrastructure'});
   x.human.slice(0,2).forEach(function(p){list.push({tone:'amber',icon:'◎',title:p.title,summary:p.next_action||'Decisão humana pendente.',meta:(p.priority||'—')+' • proprietário',view:'pending',filter:'human'});});
   x.severe.slice(0,2).forEach(function(f){list.push({tone:'orange',icon:'!',title:f.title,summary:'Achado '+(f.finding_code||f.code||'')+' permanece '+label(f.status)+'.',meta:'Auditoria • '+String(f.severity||'').toUpperCase(),view:'audits'});});
@@ -123,11 +123,11 @@ function render(payload){
   var html=[];
 
   html.push('<section id="executiveDashboard" class="xd-root">');
-  html.push('<section class="xd-hero"><div class="xd-hero-main"><div class="xd-kicker">GESTÃO EXECUTIVA • CICLO 0</div><h2>O projeto inteiro em uma tela.<br><span>Veja, decida e entre na ação.</span></h2><p>Estado, risco, capacidade, decisões e avanço comprovado primeiro. A camada técnica continua preservada nos níveis seguintes.</p><div class="xd-actions">');
+  html.push('<section class="xd-hero"><div class="xd-hero-main"><div class="xd-kicker">GESTÃO EXECUTIVA • CANÔNICA HOMOLOGADA</div><h2>O projeto inteiro em uma tela.<br><span>Veja, decida e entre na ação.</span></h2><p>Estado, risco, capacidade, decisões e avanço comprovado primeiro. A camada técnica continua preservada nos níveis seguintes.</p><div class="xd-actions">');
   if(central)html.push('<button class="primary-btn xd-url" data-url="'+esc(central.url)+'">Abrir Central ↗</button>');
   if(app)html.push('<button class="soft-btn xd-url" data-url="'+esc(app.url)+'">Abrir APP ↗</button>');
   html.push('<button class="soft-btn" data-view="pending">Pendências</button><button class="soft-btn" data-view="audits">Auditorias</button></div></div>');
-  html.push('<div class="xd-state"><small>ESTADO GERAL</small><div><span>Versão</span><b>V1.1.1 • C0</b></div><div><span>Ambiente</span><b>Candidata isolada</b></div><div><span>Dados</span><b>'+(payload.liveOk?'LIVE • persistente':'FALLBACK • versionado')+'</b></div><div><span>Última leitura</span><b>'+esc(fmt(payload.generatedAt))+'</b></div><div class="xd-gate '+(String(gate).toUpperCase()==='BLOCKED'?'blocked':'ok')+'"><span>'+(String(gate).toUpperCase()==='BLOCKED'?'⛔':'✓')+'</span><p><small>GATE DE PROMOÇÃO</small><strong>'+esc(label(gate))+'</strong></p></div></div></section>');
+  html.push('<div class="xd-state"><small>ESTADO GERAL</small><div><span>Versão</span><b>V1.1.1 • CANÔNICA</b></div><div><span>Ambiente</span><b>Canônica homologada</b></div><div><span>Dados</span><b>'+(payload.liveOk?'LIVE • persistente':'FALLBACK • versionado')+'</b></div><div><span>Última leitura</span><b>'+esc(fmt(payload.generatedAt))+'</b></div><div class="xd-gate '+(String(gate).toUpperCase()==='BLOCKED'?'blocked':'ok')+'"><span>'+(String(gate).toUpperCase()==='BLOCKED'?'⛔':'✓')+'</span><p><small>GATE DE PROMOÇÃO</small><strong>'+esc(label(gate))+'</strong></p></div></div></section>');
 
   html.push('<div class="xd-section-head"><div><small>PROJETO EM NÚMEROS</small><h3>Tamanho, pressão e capacidade</h3></div><span>Clique para chegar ao detalhe.</span></div><section class="xd-metrics">');
   html.push(metric('Frentes ativas',x.active.length+'/2',x.queue.length+' na fila','▦','fronts',x.active.length>=2?'amber':'green'));
@@ -196,7 +196,7 @@ function render(payload){
 }
 async function load(){
   try{
-    var dataResp=await fetch('./project-data.json?v=20261003v111exec',{cache:'no-store'});
+    var dataResp=await fetch('./project-data.json?v=20261003v111canon',{cache:'no-store'});
     var data=await dataResp.json();
     var live=null,ok=false,generatedAt=data.meta&&data.meta.generated_at;
     try{
