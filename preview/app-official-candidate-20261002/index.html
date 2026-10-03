@@ -556,6 +556,12 @@ function isPlaceholderProblem(v){
   const n=String(v||"").trim().toLowerCase().replace(/[.]+$/,"");
   return !n||["atendimento técnico","atendimento tecnico","serviço","servico","manutenção","manutencao","verificar"].includes(n);
 }
+function cleanPayment(v){
+  return String(v||"")
+    .replace(/^[\s⚠?¿!•*]+/u,"")
+    .replace(/^(?:respons[aá]vel\s+pelo\s+pagamento(?:\s*\/\s*autoriza[cç][aã]o)?|pagamento(?:\s*\/\s*autoriza[cç][aã]o)?|autoriza[cç][aã]o)\s*[-:=]\s*/i,"")
+    .trim();
+}
 function hasConcreteAvailability(v){
   const s=String(v||"").trim().toLowerCase();
   if(!s)return false;
@@ -579,7 +585,7 @@ function qualificationIssues(c){
   if(!String(c.address||"").trim())out.push("Confirmar endereço do imóvel.");
   if(isBogusContact(c.contact_name))out.push("Confirmar pessoa de contato no imóvel.");
   if(!String(c.contact_phone||"").replace(/\D/g,""))out.push("Confirmar telefone do contato.");
-  if(!String(c.payment||"").trim())out.push("Confirmar quem paga / autoriza.");
+  if(!cleanPayment(c.payment))out.push("Confirmar quem paga / autoriza.");
   if(isPlaceholderProblem(c.problem))out.push("Descrever o problema / escopo real.");
   if(!hasConcreteAvailability(c.availability))out.push("Definir data, horário ou janela concreta para atendimento.");
   return [...new Set(out)];
@@ -800,7 +806,7 @@ function qualificationNextAction(c){
   if(isPlaceholderProblem(c.problem))return "Falta entender exatamente o problema / escopo. Cole a mensagem do cliente, morador ou responsável.";
   if(isBogusContact(c.contact_name))return "Falta confirmar quem é a pessoa de contato no imóvel.";
   if(!String(c.contact_phone||"").replace(/\D/g,""))return "Falta confirmar o telefone do contato no imóvel.";
-  if(!String(c.payment||"").trim())return "Falta confirmar quem paga ou autoriza este atendimento.";
+  if(!cleanPayment(c.payment))return "Falta confirmar quem paga ou autoriza este atendimento.";
   if(!hasConcreteAvailability(c.availability))return "Falta definir data, horário ou uma janela concreta de disponibilidade.";
   if(!String(c.address||"").trim())return "Falta confirmar o endereço completo do imóvel.";
   return "Dados suficientes. Revise o resumo e prepare o pré-orçamento.";
@@ -818,7 +824,7 @@ function renderQualificationWorkspace(d){
     qualItem("Endereço",!!String(c.address||"").trim(),c.address||"Não identificado"),
     qualItem("Contato",contactOk,contactOk?c.contact_name:"Confirmar pessoa de contato"),
     qualItem("Telefone",phoneOk,phoneOk?c.contact_phone:"Confirmar telefone"),
-    qualItem("Quem paga / autoriza",!!String(c.payment||"").trim(),c.payment||"Confirmar responsável"),
+    qualItem("Quem paga / autoriza",!!cleanPayment(c.payment),cleanPayment(c.payment)||"Confirmar responsável"),
     qualItem("Problema / escopo",problemOk,problemOk?c.problem:"Escopo ainda insuficiente"),
     qualItem("Disponibilidade",availOk,availOk?c.availability:"Definir data, horário ou janela"),
     qualItem("Acesso",!!String(c.access_note||"").trim(),c.access_note||"Confirmar se necessário",!String(c.access_note||"").trim()),
@@ -830,7 +836,7 @@ function renderQualificationWorkspace(d){
     fact("Endereço",c.address),
     fact("Contato",contactOk?c.contact_name:""),
     fact("Telefone",c.contact_phone),
-    fact("Pagamento / autorização",c.payment),
+    fact("Pagamento / autorização",cleanPayment(c.payment)),
     fact("Disponibilidade",availOk?c.availability:"A confirmar"),
     fact("Acesso",c.access_note)
   ].join("");
@@ -888,7 +894,7 @@ async function openCase(id){
       fact("Contato",isBogusContact(d.case.contact_name)?"":d.case.contact_name),
       fact("Telefone",d.case.contact_phone),
       (isPlaceholderProblem(d.case.problem)?factWarn("Problema / escopo insuficiente",d.case.problem):fact("Problema identificado",d.case.problem)),
-      fact("Pagamento / autorização",d.case.payment),
+      fact("Pagamento / autorização",cleanPayment(d.case.payment)),
       (!hasConcreteAvailability(d.case.availability)&&d.case.availability?factWarn("Disponibilidade insuficiente",d.case.availability):fact("Disponibilidade",d.case.availability)),
       fact("Acesso",d.case.access_note),
       fact("Evidências",(d.files||[]).length?((d.files||[]).length+" arquivo(s) recebido(s)"):"")
@@ -940,6 +946,12 @@ async function openCase(id){
       else{$("reprocessResult").classList.add("hidden");$("reprocessResult").classList.remove("warn");$("reprocessResult").innerHTML=""}
     }
     fillEdit({...d.case,contact_name:isBogusContact(d.case.contact_name)?"":d.case.contact_name});
+    if(window.innerWidth<=790){
+      setTimeout(()=>{
+        const target=inQualification?$("stageBox"):$("caseView");
+        if(target)target.scrollIntoView({behavior:"auto",block:"start"});
+      },60);
+    }
   }catch(e){alert(e.message)}
 }
 async function reprocess(){
