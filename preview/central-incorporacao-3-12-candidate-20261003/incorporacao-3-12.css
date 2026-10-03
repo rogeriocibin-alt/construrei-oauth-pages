@@ -7,3 +7,13 @@
 .cr-executive-update{display:flex;align-items:center;gap:7px;margin-top:12px;color:#cfe3f8;font-size:10px;font-weight:700}
 .cr-executive-visual{min-height:150px!important}
 @media(max-width:760px){.cr-executive-header{min-height:126px!important}.cr-executive-header .cr-hero-main{padding:16px 18px!important}.cr-executive-header .cr-hero-main h1{font-size:28px!important;line-height:1.05!important}.cr-executive-tagline{font-size:12px!important;max-width:95%}.cr-executive-update{font-size:9px;margin-top:9px}.cr-executive-header .cr-hero-visual{display:none!important}}
+
+/* P0-02 — restore the existing CSS skyline language on mobile without increasing hero height */
+@media(max-width:760px){
+.cr-executive-header{position:relative!important;overflow:hidden!important;isolation:isolate}
+.cr-executive-header .cr-hero-main{position:relative!important;z-index:3!important}
+.cr-executive-header .cr-hero-visual{display:block!important;position:absolute!important;inset:0!important;min-height:0!important;z-index:1!important;pointer-events:none!important;opacity:.52!important;background:transparent!important}
+.cr-executive-header .cr-hero-visual:before{content:"";position:absolute;right:-3%;bottom:-2px;width:58%;height:74%;opacity:.72;background:linear-gradient(90deg,transparent 0 5%,rgba(69,142,202,.28) 5% 15%,transparent 15% 19%,rgba(91,165,218,.34) 19% 31%,transparent 31% 35%,rgba(58,128,188,.31) 35% 49%,transparent 49% 53%,rgba(95,169,220,.3) 53% 66%,transparent 66% 70%,rgba(61,133,192,.34) 70% 86%,transparent 86%);clip-path:polygon(0 100%,0 56%,8% 56%,8% 35%,18% 35%,18% 67%,27% 67%,27% 20%,38% 20%,38% 58%,47% 58%,47% 40%,59% 40%,59% 72%,68% 72%,68% 28%,80% 28%,80% 62%,90% 62%,90% 46%,100% 46%,100% 100%)}
+.cr-executive-header .cr-skyline{display:block!important;position:absolute!important;right:2%!important;bottom:0!important;width:44%!important;height:68%!important;opacity:.34!important;filter:saturate(.9)}
+.cr-executive-header .cr-hero-slogan,.cr-executive-header #crHeroLogo,.cr-executive-header .cr-hero-welcome{display:none!important}
+}
