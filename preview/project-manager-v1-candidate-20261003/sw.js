@@ -1,28 +1,67 @@
-const CACHE='cr-project-manager-owner-pwa-20261003-v3';
-const SHELL=['./','./index.html','./styles.css','./app.js','./project-data.json','./infra-data.json','./manifest.webmanifest','./pwa-icon.svg'];
+const BUILD='CR-PM-V1.1.0-C0-20261003';
+const CACHE='cr-project-manager-'+BUILD;
+const CORE=['./','./index.html','./styles.css','./app.js','./project-data.json','./infra-data.json','./manifest.webmanifest','./pwa-icon.svg'];
+const VERSION='./version.json';
+
 self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()));
+  event.waitUntil((async()=>{
+    const cache=await caches.open(CACHE);
+    const requests=[...CORE,VERSION].map(url=>new Request(url,{cache:'reload'}));
+    await cache.addAll(requests);
+  })());
 });
+
 self.addEventListener('activate',event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+  event.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(k=>k.startsWith('cr-project-manager-')&&k!==CACHE).map(k=>caches.delete(k)));
+    await self.clients.claim();
+  })());
 });
+
+self.addEventListener('message',event=>{
+  if(event.data?.type==='SKIP_WAITING') self.skipWaiting();
+});
+
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET') return;
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin) return;
-  event.respondWith((async()=>{
-    try{
-      const fresh=await fetch(event.request,{cache:'no-store'});
-      if(fresh && fresh.ok){
-        const cache=await caches.open(CACHE);
-        cache.put(event.request,fresh.clone()).catch(()=>{});
-      }
-      return fresh;
-    }catch(_){
-      const cached=await caches.match(event.request);
+
+  if(url.pathname.endsWith('/version.json')){
+    event.respondWith((async()=>{
+      try{
+        const fresh=await fetch(event.request,{cache:'no-store'});
+        if(fresh?.ok) return fresh;
+      }catch(_){}
+      return (await caches.open(CACHE)).match(VERSION,{ignoreSearch:true}) ||
+        new Response('{}',{headers:{'content-type':'application/json'}});
+    })());
+    return;
+  }
+
+  const coreHit=event.request.mode==='navigate' || CORE.some(p=>p!=='./' && url.pathname.endsWith(p.replace('./','/')));
+  if(coreHit){
+    event.respondWith((async()=>{
+      const cache=await caches.open(CACHE);
+      const key=event.request.mode==='navigate'?'./index.html':event.request;
+      const cached=await cache.match(key,{ignoreSearch:true});
       if(cached) return cached;
-      if(event.request.mode==='navigate') return caches.match('./index.html');
-      throw _;
+      try{return await fetch(event.request,{cache:'no-store'});}
+      catch(err){
+        if(event.request.mode==='navigate') return cache.match('./index.html',{ignoreSearch:true});
+        throw err;
+      }
+    })());
+    return;
+  }
+
+  event.respondWith((async()=>{
+    try{return await fetch(event.request,{cache:'no-store'});}
+    catch(err){
+      const cached=await caches.match(event.request,{ignoreSearch:true});
+      if(cached) return cached;
+      throw err;
     }
   })());
 });

@@ -1,0 +1,21 @@
+{
+  "app": "Gestor do Projeto CONSTRU-REI",
+  "version": "1.1.0",
+  "build": "CR-PM-V1.1.0-C0-20261003",
+  "environment": "candidate",
+  "release_status": "cycle0_validation",
+  "released_at": "2026-10-03T11:16:00-03:00",
+  "branch": "cr-project-manager-v1-1-cycle0-20261003",
+  "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
+  "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
+  "canonical_changed": false,
+  "update_policy": "same_url_atomic_pwa_bundle",
+  "changes": [
+    "AUD-001 registrada e tratada como objeto vivo, com original preservado por hash.",
+    "Modelo persistente V1.1 criado no Supabase interno, reutilizando governança existente.",
+    "Matriz de fontes, reconciliações e dicionário inicial de métricas registrados.",
+    "Versão/build/ambiente visíveis e mecanismo de atualização do PWA sem reinstalação.",
+    "Service Worker ativa o novo pacote somente como bundle completo."
+  ],
+  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003"
+}
