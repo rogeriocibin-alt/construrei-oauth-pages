@@ -91,6 +91,26 @@ function metric(labelText,value,meta,icon,extra=''){
   return `<article class="metric ${extra}"><div class="metric-top"><span class="metric-label">${esc(labelText)}</span><span class="metric-icon">${esc(icon)}</span></div><div class="metric-value">${esc(value)}</div><small>${esc(meta)}</small></article>`;
 }
 
+
+function renderOwnerHub(){
+  const items=arr(state.data.owner_access);
+  const central=items.find(x=>x.id==='central');
+  const rest=items.filter(x=>x.id!=='central');
+  return `
+    <section class="owner-hub card">
+      <div class="card-head"><div><h3>Seu acesso único ao CONSTRU-REI</h3><p>Camada do proprietário/desenvolvedor. A equipe continua operando diretamente pela Central.</p></div><div class="spacer"></div><span class="badge live">PWA do proprietário</span></div>
+      ${central?`<button class="central-gateway external-btn" data-url="${esc(central.url)}">
+        <div class="gateway-mark">CR</div>
+        <div class="gateway-copy"><small>CENTRAL CONSTRU-REI</small><strong>Operação viva</strong><span>${esc(central.source)} • ${esc(central.access)}</span></div>
+        <div class="gateway-state"><span class="live-dot"></span><b>Entrar na Central</b><em>→</em></div>
+      </button>`:''}
+      <div class="owner-links">
+        ${rest.map(x=>`<button class="owner-link external-btn" data-url="${esc(x.url)}"><span class="owner-link-kind">${esc(x.kind)}</span><b>${esc(x.name)}</b><small>${esc(x.description)}</small><span class="owner-link-foot">${badge(x.status)}<em>Abrir ↗</em></span></button>`).join('')}
+      </div>
+      <div class="notice owner-rule"><b>Regra de sincronismo:</b> se APP, Central, Dashboard ou qualquer módulo evoluir e o Gestor não refletir essa evolução, a entrega ainda não está concluída.</div>
+    </section>`;
+}
+
 function renderNow(){
   const d=state.data;
   const active=arr(d.fronts).filter(f=>['executing','homologation'].includes(f.status));
@@ -108,6 +128,7 @@ function renderNow(){
   const hist=(state.liveBranches||d.history_catalog?.branches||[]);
 
   $('#view-now').innerHTML=`
+    ${renderOwnerHub()}
     <section class="hero">
       <div class="hero-grid">
         <div>
@@ -174,7 +195,8 @@ function renderNow(){
     </section>`:''}
   `;
   bindDetailButtons();
-  $$('.jump-view').forEach(b=>b.onclick=()=>setView(b.dataset.target));
+  bindExternalButtons();
+  $('.jump-view').forEach(b=>b.onclick=()=>setView(b.dataset.target));
 }
 
 function frontCard(f,index){
@@ -383,10 +405,12 @@ function renderTimeline(){
 }
 
 function renderProducts(){
+  const live=arr(state.data.owner_access);
   $('#view-products').innerHTML=`
-    <div class="page-intro"><div><h2>Produtos</h2><p>O Gestor governa produtos distintos. Central, APP, Fluxos, Apresentação e integrações não devem ser misturados como se fossem uma única versão.</p></div></div>
-    <div class="product-grid">${arr(state.data.products).map(p=>`<article class="card product"><div>${badge(p.status)}</div><h3>${esc(p.name)}</h3><p>${esc(p.summary)}</p><div class="product-current"><b>Atual:</b> ${esc(p.current)}</div></article>`).join('')}</div>
+    <div class="page-intro"><div><h2>Produtos</h2><p>Mapa do proprietário. Produtos, módulos e acessos operacionais ficam reunidos aqui; a equipe continua usando a Central.</p></div></div>
+    <div class="product-grid">${arr(state.data.products).map(p=>{const a=live.find(x=>x.id===p.id);return `<article class="card product"><div>${badge(p.status)}</div><h3>${esc(p.name)}</h3><p>${esc(p.summary)}</p><div class="product-current"><b>Atual:</b> ${esc(p.current)}</div>${a?`<button class="soft-btn external-btn" data-url="${esc(a.url)}" style="margin-top:12px">Abrir produto ↗</button>`:''}</article>`}).join('')}</div>
   `;
+  bindExternalButtons();
 }
 
 function renderRecoverables(){
@@ -512,9 +536,17 @@ function renderAll(){
   renderNow();renderPending();renderHistory();renderCanonical();renderFronts();renderVersions();renderDecisions();renderTimeline();renderProducts();renderRecoverables();renderGovernance();
 }
 
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  const b=$('#installPwaBtn'); if(b)b.hidden=false;
+});
+window.addEventListener('appinstalled',()=>{const b=$('#installPwaBtn'); if(b)b.hidden=true; deferredInstallPrompt=null;});
+
 async function init(){
   try{
-    const r=await fetch('./project-data.json?v=20261003b',{cache:'no-store'});
+    const r=await fetch('./project-data.json?v=20261003owner1',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     state.data=await r.json();
     renderAll();
@@ -526,6 +558,21 @@ async function init(){
     $('#drawerClose').onclick=closeDrawer;
     $('#drawerBackdrop').onclick=()=>{closeDrawer();closeSidebar();};
     $('#mobileMenu').onclick=()=>$('#sidebar').classList.contains('open')?closeSidebar():openSidebar();
+    const installBtn=$('#installPwaBtn');
+    if(installBtn) installBtn.onclick=async()=>{
+      if(deferredInstallPrompt){
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt=null;
+        installBtn.hidden=true;
+      }else{
+        openDrawer('Instalar Gestor','PWA','<div class="detail-block"><b>Instalação</b><p>Use o menu do navegador e escolha “Adicionar à tela inicial” ou “Instalar app”. O Gestor usa este mesmo endereço.</p></div>');
+      }
+    };
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('./sw.js?v=20261003owner1').catch(()=>{});
+    }
+
     $('#presentationBtn').onclick=()=>{
       document.body.classList.toggle('presentation');
       $('#presentationBtn').textContent=document.body.classList.contains('presentation')?'Sair da apresentação':'Modo apresentação';
