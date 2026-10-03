@@ -1,0 +1,20 @@
+{
+  "version": "consolidated-candidate-20261003",
+  "build": "CR-CENTRAL-CONSOLIDATED-CANDIDATE-20261003",
+  "status": "AWAITING_OWNER_HOMOLOGATION",
+  "runtime": "SINGLE_OWNER_SINGLE_STORE_SINGLE_ROUTER",
+  "canonical_changed": false,
+  "reference": "V12.1",
+  "safeguards": {
+    "production_homologated_untouched": true,
+    "no_patch_stack": true,
+    "no_fake_zero": true
+  },
+  "sources": {
+    "agenda": "Google Calendar V12.1 fast",
+    "operation": "Trello via executive fast",
+    "quotes": "GestãoClick V12 full aggregate",
+    "pending": "Banco Mestre / source in implementation"
+  },
+  "checkpoint_before": "CHECKPOINT_CENTRAL_PRE_CONSOLIDACAO_FINAL_20261003"
+}
