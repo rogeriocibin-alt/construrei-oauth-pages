@@ -7,3 +7,12 @@
 .cr-executive-update{display:flex;align-items:center;gap:7px;margin-top:12px;color:#cfe3f8;font-size:10px;font-weight:700}
 .cr-executive-visual{min-height:150px!important}
 @media(max-width:760px){.cr-executive-header{min-height:126px!important}.cr-executive-header .cr-hero-main{padding:16px 18px!important}.cr-executive-header .cr-hero-main h1{font-size:28px!important;line-height:1.05!important}.cr-executive-tagline{font-size:12px!important;max-width:95%}.cr-executive-update{font-size:9px;margin-top:9px}.cr-executive-header .cr-hero-visual{display:none!important}}
+
+
+/* P0-04 — approved executive cover. Candidate only. */
+.cr-executive-header{position:relative!important;overflow:hidden!important;min-height:clamp(170px,20vw,250px)!important;background:linear-gradient(90deg,rgba(4,24,50,.90) 0%,rgba(4,30,62,.72) 36%,rgba(4,25,51,.20) 68%,rgba(3,19,40,.12) 100%),url("./assets/capa-executiva-construrei-20261003.webp") center center/cover no-repeat!important}
+.cr-executive-header:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,19,40,.03),rgba(3,19,40,.24));z-index:0}
+.cr-executive-header .cr-hero-main{position:relative;z-index:2;max-width:760px;text-shadow:0 2px 18px rgba(0,0,0,.36)}
+.cr-executive-header .cr-hero-visual{position:relative;z-index:2;background:transparent!important}
+.cr-executive-header .cr-skyline{display:none!important}
+@media(max-width:760px){.cr-executive-header{min-height:158px!important;background-position:58% center!important}.cr-executive-header .cr-hero-main{padding:18px!important;background:linear-gradient(90deg,rgba(3,23,49,.86),rgba(3,23,49,.46) 68%,transparent)!important}.cr-executive-header .cr-hero-visual{display:none!important}}
