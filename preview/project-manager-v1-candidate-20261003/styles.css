@@ -88,3 +88,8 @@ button{cursor:pointer}
 @media(max-width:560px){
   .topbar .ghost-btn{padding:8px 9px;font-size:10px}.hero{padding:20px}.hero h2{font-size:23px}.metrics{grid-template-columns:1fr 1fr;gap:9px}.metric{padding:13px}.metric-value{font-size:23px}.product-grid{grid-template-columns:1fr}.chain-node{min-width:165px}
 }
+
+/* V1 mobile interaction hardening */
+@media(max-width:900px){
+  .sidebar{z-index:60}
+}
