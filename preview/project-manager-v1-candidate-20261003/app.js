@@ -100,7 +100,7 @@ function renderOwnerHub(){
     <section class="owner-hub card">
       <div class="card-head"><div><h3>Seu acesso único ao CONSTRU-REI</h3><p>Camada do proprietário/desenvolvedor. A equipe continua operando diretamente pela Central.</p></div><div class="spacer"></div><span class="badge live">PWA do proprietário</span></div>
       ${central?`<button class="central-gateway external-btn" data-url="${esc(central.url)}">
-        <div class="gateway-mark">CR</div>
+        <div class="gateway-mark"><img src="./pwa-icon.svg?v=20261003applogo1" alt="APP CONSTRU-REI"></div>
         <div class="gateway-copy"><small>CENTRAL CONSTRU-REI</small><strong>Operação viva</strong><span>${esc(central.source)} • ${esc(central.access)}</span></div>
         <div class="gateway-state"><span class="live-dot"></span><b>Entrar na Central</b><em>→</em></div>
       </button>`:''}
