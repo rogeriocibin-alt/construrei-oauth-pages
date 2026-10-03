@@ -15,7 +15,7 @@ const baseUrl='../central-executive-v5-static-candidate-20261002/index.html?base
 const r=await fetch(baseUrl,{cache:'no-store'});if(!r.ok)throw new Error('Falha ao carregar base V5: HTTP '+r.status);
 let h=await r.text();
 h=h.replace('<head>','<head><base href="../central-executive-v5-static-candidate-20261002/">');
-h=h.replace('</head>','<meta name="cr-v9-package" content="CR-EXECUTIVE-V9-GOOGLE-AGENDA-20261002"></head>');
+h=h.replace('</head>','<meta name="cr-v9-package" content="CR-EXECUTIVE-V9-GOOGLE-AGENDA-20261002"><link rel="stylesheet" href="../central-executive-v9-google-agenda-candidate-20261002/v9-sidebar-refinement.css?v=20261002c"></head>');
 h=h.replace('</body>','<script src="../central-executive-v6-package-candidate-20261002/v6-patch.js?v=c0d0a309"><\/script><script src="../central-executive-v6-package-candidate-20261002/v6-health-patch.js?v=13510d5"><\/script><script src="../central-executive-v6-package-candidate-20261002/v6-source-sync-patch.js?v=c609d5b"><\/script><script src="../central-executive-v7-agenda-bridge-candidate-20261002/v7-agenda-bridge.js?v=223ab949"><\/script><script src="../central-executive-v9-google-agenda-candidate-20261002/v9-google-agenda.js?v=20261002b"><\/script></body>');
 document.open();document.write(h);document.close();
 }catch(e){document.getElementById('card').innerHTML='<b>Não foi possível abrir a candidata.</b><small>'+String(e.message||e)+'</small>'}})();
