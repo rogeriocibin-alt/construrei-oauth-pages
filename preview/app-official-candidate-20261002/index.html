@@ -13,7 +13,7 @@
 .grid{display:grid;grid-template-columns:350px 1fr;gap:10px}.card{background:linear-gradient(160deg,#0b2746,#081d34);border:1px solid var(--line);border-radius:15px;padding:12px}.input,textarea{width:100%;background:#061929;border:1px solid #31536d;color:#fff;border-radius:10px;padding:11px;font:inherit}.label{font-size:11px;color:var(--mut);font-weight:800;margin:8px 0 5px}.list{max-height:72vh;overflow:auto}.case{border:1px solid #31536d;border-radius:12px;padding:10px;margin:8px 0;background:#071b2d;cursor:pointer}.case:hover{border-color:#6992ac}.caseTop{display:flex;justify-content:space-between;gap:8px}.caseNo{font-weight:900;font-size:16px}.status{font-size:9px;border:1px solid #4a6c83;border-radius:999px;padding:4px 7px;height:max-content}.pending{color:var(--warn);font-size:10px;font-weight:800;margin-top:7px}.updated{font-size:10px;color:var(--mut);margin-top:4px}.capture{max-width:760px;margin:0 auto}.capture h2{font-size:22px;margin:5px 0}.number{font-size:20px;font-weight:900;letter-spacing:.04em}.drop{margin-top:9px;border:1px dashed #557b94;border-radius:13px;padding:11px;background:#071b2d}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.box{border:1px solid #31536d;background:#071b2d;border-radius:12px;padding:11px;margin-top:9px}.identified{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.fact{background:#061929;border:1px solid #22445f;border-radius:10px;padding:9px}.compactList{margin-top:8px}.compactRow{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid #1e4058}.compactRow:first-child{border-top:0}.compactCode{min-width:58px;color:#f1cb62;font-weight:900;font-size:10px}.compactMain{flex:1}.compactMain b{display:block}.compactMeta{color:#a9bdcc;font-size:10px;margin-top:2px}.typeBadge{display:inline-block;margin-left:6px;border:1px solid #406782;border-radius:999px;padding:3px 7px;font-size:9px;color:#b9d4e6}.fact b{display:block;color:var(--ok);font-size:10px;margin-bottom:4px}.fact span{white-space:pre-wrap}.missing{border-color:#755e28;background:#241f12}.missing h3{color:var(--warn);margin:0 0 8px}.missingItem{padding:7px 0;border-top:1px solid #463d23}.missingItem:first-of-type{border-top:0}.countBadge{display:inline-block;background:#493b13;color:#ffd86a;border:1px solid #7e6621;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:900}.okline{color:var(--ok);font-weight:900}.hidden{display:none!important}.caseHeader{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.caseHeader h2{margin:0}.files{margin-top:7px}.evidenceGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:9px}.thumb{position:relative;min-height:118px;background:#061929;border:1px solid #274b65;border-radius:11px;overflow:hidden;cursor:pointer}.thumb:hover{border-color:#6e9ab5}.thumbMedia{width:100%;height:88px;display:flex;align-items:center;justify-content:center;background:#03111e;overflow:hidden}.thumbMedia img,.thumbMedia video,.thumbMedia iframe{width:100%;height:100%;object-fit:cover;border:0}.thumbIcon{font-size:27px}.thumbName{font-size:9px;color:#c2d4df;padding:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.previewModal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px}.previewCard{position:relative;width:min(980px,96vw);height:min(780px,90vh);background:#061524;border:1px solid #446b85;border-radius:14px;padding:10px;display:flex;flex-direction:column}.previewHead{display:flex;gap:8px;align-items:center;margin-bottom:8px}.previewHead b{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.previewBody{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#020b12;border-radius:10px;overflow:hidden}.previewBody img,.previewBody video,.previewBody iframe{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;border:0}.previewBody audio{width:min(600px,90%)}.editGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}details summary{cursor:pointer;font-weight:800;color:#b9d4e6}pre{font:inherit;white-space:pre-wrap;margin:8px 0}.empty{text-align:center;color:var(--mut);padding:25px 10px}
 @media(max-width:790px){.wrap{padding:10px}.evidenceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.thumb{min-height:108px}.thumbMedia{height:80px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.list{max-height:36vh}.identified,.editGrid{grid-template-columns:1fr}.btn{min-height:44px}.caseHeader{display:block}.caseHeader .toolbar{margin-top:8px}}
 </style>
-<meta name="cr-f00-canonical-pilot" content="20261001"><meta name="cr-preview-isolated" content="F00-CANONICAL-UI-20261001"><meta name="cr-candidate" content="APP-GABI-OPERATIONAL-HARDENING-V9-20261002">
+<meta name="cr-f00-canonical-pilot" content="20261001"><meta name="cr-preview-isolated" content="F00-CANONICAL-UI-20261001"><meta name="cr-candidate" content="APP-GABI-ATENDIMENTO-F01-EMBEDDED-V10-20261002">
 <meta name="cr-architecture" content="APP=casa;GabiFlow=Atendimento;F00=motor;single-route=/f00/">
 <style id="cr-fusion-style">
 :root{
@@ -239,7 +239,8 @@ body.app-candidate pre{color:var(--crh-text)!important}
       <div class="fusion-kpi"><b id="fkActive">0</b><span>Chamados ativos</span></div>
       <div class="fusion-kpi"><b id="fkWaiting">0</b><span>Aguardando resposta</span></div>
       <div class="fusion-kpi"><b id="fkMissing">0</b><span>Informações faltando</span></div>
-      <div class="fusion-kpi"><b id="fkReady">0</b><span>Prontos para seguir</span></div>
+      <div class="fusion-kpi"><b id="fkReady">0</b><span>Prontos para qualificação</span></div>
+      <div class="fusion-kpi"><b id="fkQualify">0</b><span>Em qualificação</span></div>
       <div class="fusion-kpi"><b id="fkAgenda">0</b><span>Com disponibilidade</span></div>
       <div class="fusion-kpi"><b id="fkPayment">0</b><span>Pagamento a esclarecer</span></div>
     </div>
@@ -312,7 +313,8 @@ body.app-candidate pre{color:var(--crh-text)!important}
   <div class="stats">
     <div class="stat" data-filter="COLLECT"><b id="kCollect">0</b><span>EM COLETA</span></div>
     <div class="stat" data-filter="WAIT"><b id="kWait">0</b><span>AGUARDANDO RESPOSTA</span></div>
-    <div class="stat" data-filter="READY"><b id="kReady">0</b><span>PRONTOS PARA SEGUIR</span></div>
+    <div class="stat" data-filter="READY"><b id="kReady">0</b><span>PRONTOS PARA QUALIFICAÇÃO</span></div>
+    <div class="stat" data-filter="QUALIFY"><b id="kQualify">0</b><span>EM QUALIFICAÇÃO</span></div>
     <div class="stat" data-filter="ALL"><b id="kAll">0</b><span>HISTÓRICO / TOTAL</span></div>
   </div>
 
@@ -416,11 +418,23 @@ body.app-candidate pre{color:var(--crh-text)!important}
           <button class="btn copy" data-copy="gc">Copiar dados</button>
         </div>
 
-        <div class="box">
-          <b>PRÓXIMA ETAPA</b>
-          <div id="gateText" style="margin:7px 0"></div>
-          <button id="release" class="btn ok">Enviar para próxima etapa</button>
-          <a id="f01" class="btn hidden" target="_blank">Abrir F01</a>
+        <div id="stageBox" class="box">
+          <b id="stageTitle">PRÓXIMA ETAPA</b>
+          <div id="stageBadge" class="op-meta" style="margin-top:8px"></div>
+          <div id="gateText" style="margin:8px 0"></div>
+
+          <div id="f01Embedded" class="hidden">
+            <div class="mut small" style="margin:4px 0 10px">O atendimento continua aqui. F01 organiza a qualificação antes da orçamentação, sem abrir outro sistema.</div>
+            <div id="f01Checklist" class="compactList"></div>
+            <div id="f01NextAction" class="box" style="margin:10px 0 0"></div>
+            <div class="actions" style="margin-top:10px">
+              <button id="f01AddInfo" class="btn">Incorporar nova informação</button>
+              <button id="f01Edit" class="btn">Revisar dados</button>
+              <button id="f01CopyBudget" class="btn">Copiar pré-orçamento</button>
+            </div>
+          </div>
+
+          <button id="release" class="btn ok">Concluir coleta e iniciar qualificação</button>
         </div>
 
         <details class="box">
@@ -472,30 +486,62 @@ function pendingCount(x){
 }
 function inFilter(x){
   if(filter==="ALL")return true;
-  if(filter==="ACTIVE")return x.status==="EM_COLETA"||x.status==="INCOMPLETO"||x.status==="PRONTO_F01";
+  if(filter==="ACTIVE")return x.status==="EM_COLETA"||x.status==="INCOMPLETO"||x.status==="PRONTO_F01"||x.status==="LIBERADO_F01";
   if(filter==="COLLECT")return x.status==="EM_COLETA"||x.status==="INCOMPLETO";
   if(filter==="WAIT")return x.status==="AGUARDANDO_RESPOSTA";
   if(filter==="READY")return x.status==="PRONTO_F01";
+  if(filter==="QUALIFY")return x.status==="LIBERADO_F01";
   return true;
 }
 function formatDate(v){try{return new Date(v).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}catch{return""}}
 function humanStatus(v){
-  return ({EM_COLETA:"EM COLETA",INCOMPLETO:"INCOMPLETO",AGUARDANDO_RESPOSTA:"AGUARDANDO RESPOSTA",PRONTO_F01:"PRONTO PARA SEGUIR"})[v]||String(v||"");
+  return ({EM_COLETA:"EM COLETA",INCOMPLETO:"INCOMPLETO",AGUARDANDO_RESPOSTA:"AGUARDANDO RESPOSTA",PRONTO_F01:"PRONTO PARA QUALIFICAÇÃO",LIBERADO_F01:"EM QUALIFICAÇÃO"})[v]||String(v||"");
 }
 function isBogusContact(v){
   const n=String(v||"").trim().toLowerCase();
   const bad=new Set(["quantidade","valor unitário","valor unitario","total","endereço","endereco","data","base","cliente/origem","solicitante","unidade envolvida","unidade afetada","descrição","descricao","serviço","servico","material","horário","horario"]);
   return !n||bad.has(n)||/^r\$\s*\d/i.test(n)||/^\d+[\s.,%]/.test(n);
 }
+function isPlaceholderProblem(v){
+  const n=String(v||"").trim().toLowerCase().replace(/[.]+$/,"");
+  return !n||["atendimento técnico","atendimento tecnico","serviço","servico","manutenção","manutencao","verificar"].includes(n);
+}
+function hasConcreteAvailability(v){
+  const s=String(v||"").trim().toLowerCase();
+  if(!s)return false;
+  if(/\b([01]?\d|2[0-3])[:h][0-5]?\d?\b/.test(s))return true;
+  if(/\b(segunda|terça|terca|quarta|quinta|sexta|sábado|sabado|domingo)\b/.test(s))return true;
+  if(/\b(hoje|amanhã|amanha)\b/.test(s)&&/\b(manhã|manha|tarde|noite|\d{1,2})\b/.test(s))return true;
+  if(/\b\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?\b/.test(s))return true;
+  return false;
+}
 function correctedMissing(d){
   const arr=Array.isArray(d.missing)?[...d.missing]:[];
-  if(isBogusContact(d.case?.contact_name) && !arr.some(x=>/nome.*contato|contato.*nome/i.test(String(x))))arr.push("nome do contato no imóvel");
+  const c=d.case||{};
+  if(isBogusContact(c.contact_name) && !arr.some(x=>/nome.*contato|contato.*nome/i.test(String(x))))arr.push("nome do contato no imóvel");
+  if(isPlaceholderProblem(c.problem) && !arr.some(x=>/problema|escopo|itens.*atendimento/i.test(String(x))))arr.push("descrição do problema ou escopo do atendimento");
+  if(!hasConcreteAvailability(c.availability) && !arr.some(x=>/disponibilidade|horário|horario|agenda/i.test(String(x))))arr.push("disponibilidade concreta para atendimento");
   return [...new Set(arr.map(x=>String(x).trim()).filter(Boolean))];
+}
+function qualificationIssues(c){
+  const out=[];
+  if(!String(c.client||"").trim())out.push("Confirmar cliente / origem.");
+  if(!String(c.address||"").trim())out.push("Confirmar endereço do imóvel.");
+  if(isBogusContact(c.contact_name))out.push("Confirmar pessoa de contato no imóvel.");
+  if(!String(c.contact_phone||"").replace(/\D/g,""))out.push("Confirmar telefone do contato.");
+  if(!String(c.payment||"").trim())out.push("Confirmar quem paga / autoriza.");
+  if(isPlaceholderProblem(c.problem))out.push("Descrever o problema / escopo real.");
+  if(!hasConcreteAvailability(c.availability))out.push("Definir data, horário ou janela concreta para atendimento.");
+  return [...new Set(out)];
 }
 function caseAgeHours(v){const t=new Date(v||0).getTime();return t?Math.max(0,(Date.now()-t)/36e5):0}
 function caseNextAction(c,missing){
   if(c.status==="AGUARDANDO_RESPOSTA")return "Conferir se houve resposta, cobrar se necessário e incorporar a resposta neste mesmo chamado.";
-  if(c.status==="PRONTO_F01"&&!missing.length)return "Revisar os dados e encaminhar para a próxima etapa.";
+  if(c.status==="LIBERADO_F01"){
+    const q=qualificationIssues(c);
+    return q.length?"Completar "+(q.length===1?"1 ponto de qualificação":q.length+" pontos de qualificação")+" antes de orçar.":"Qualificação suficiente: revisar o resumo e preparar a orçamentação.";
+  }
+  if(c.status==="PRONTO_F01"&&!missing.length)return "Revisar os dados e iniciar a qualificação no mesmo atendimento.";
   if(missing.length)return "Coletar "+(missing.length===1?"1 informação":missing.length+" informações")+" que ainda "+(missing.length===1?"falta":"faltam")+".";
   return "Revisar o chamado e definir a próxima ação.";
 }
@@ -515,7 +561,7 @@ function collectionMessage(missing){
 }
 
 async function hydrateOperationalDetails(list){
-  const active=list.filter(x=>["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01"].includes(x.status));
+  const active=list.filter(x=>["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01","LIBERADO_F01"].includes(x.status));
   const results=await Promise.allSettled(active.map(async c=>{
     const d=await api("get",{id:c.id});
     const missing=correctedMissing(d);
@@ -538,6 +584,7 @@ function render(){
   $("kCollect").textContent=rows.filter(x=>x.status==="EM_COLETA"||x.status==="INCOMPLETO").length;
   $("kWait").textContent=rows.filter(x=>x.status==="AGUARDANDO_RESPOSTA").length;
   $("kReady").textContent=rows.filter(x=>x.status==="PRONTO_F01").length;
+  $("kQualify").textContent=rows.filter(x=>x.status==="LIBERADO_F01").length;
   $("kAll").textContent=rows.length;
 
   const q=($("search").value||"").toLowerCase();
@@ -585,6 +632,10 @@ async function processNew(){
 function fact(label,value){
   if(!value)return"";
   return '<div class="fact"><b>✓ '+esc(label)+'</b><span>'+esc(value)+'</span></div>';
+}
+function factWarn(label,value){
+  if(!value)return"";
+  return '<div class="fact"><b>⚠ '+esc(label)+'</b><span>'+esc(value)+'</span></div>';
 }
 function renderItems(arr){
   const meta=new Set(["cliente/origem","endereço","endereco","base","data","quantidade","valor unitário","valor unitario","total"]);
@@ -673,7 +724,7 @@ async function openCase(id){
     const missing=correctedMissing(d);
     current=d.case;
     $("capture").classList.add("hidden");$("caseView").classList.remove("hidden");
-    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=d.case.title||d.case.problem||"Chamado em organização";$("viewStatus").textContent=humanStatus(d.case.status);
+    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=isPlaceholderProblem(d.case.problem)?"Escopo a confirmar":(d.case.title||d.case.problem||"Chamado em organização");$("viewStatus").textContent=humanStatus(d.case.status);
     $("viewPending").textContent=missing.length+" pendência"+(missing.length===1?"":"s");
 
     const identified=[
@@ -681,9 +732,9 @@ async function openCase(id){
       fact("Endereço",d.case.address),
       fact("Contato",isBogusContact(d.case.contact_name)?"":d.case.contact_name),
       fact("Telefone",d.case.contact_phone),
-      fact("Problema identificado",d.case.problem),
+      (isPlaceholderProblem(d.case.problem)?factWarn("Problema / escopo insuficiente",d.case.problem):fact("Problema identificado",d.case.problem)),
       fact("Pagamento / autorização",d.case.payment),
-      fact("Disponibilidade",d.case.availability),
+      (!hasConcreteAvailability(d.case.availability)&&d.case.availability?factWarn("Disponibilidade insuficiente",d.case.availability):fact("Disponibilidade",d.case.availability)),
       fact("Acesso",d.case.access_note),
       fact("Evidências",(d.files||[]).length?((d.files||[]).length+" arquivo(s) recebido(s)"):"")
     ].join("");
@@ -705,9 +756,26 @@ async function openCase(id){
     renderFiles(d.files||[]);
     $("message").textContent=missing.length?collectionMessage(missing):(d.message||"Nenhuma mensagem necessária.");
     $("gc").textContent=d.gestaoclick||"";
-    $("release").disabled=!d.ready||missing.length>0||d.case.released_f01;$("release").textContent=d.case.released_f01?"ENCAMINHADO":"Enviar para próxima etapa";
-    $("moreBox").classList.toggle("hidden",!!d.case.released_f01);
-    $("f01").href=d.f01_url||"#";$("f01").classList.toggle("hidden",!d.case.released_f01);
+    const inQualification=d.case.status==="LIBERADO_F01"||!!d.case.released_f01;
+    $("release").classList.toggle("hidden",inQualification);
+    $("release").disabled=!d.ready||missing.length>0;
+    $("release").textContent="Concluir coleta e iniciar qualificação";
+    $("moreBox").classList.remove("hidden");
+    $("stageTitle").textContent=inQualification?"F01 — ATENDIMENTO & QUALIFICAÇÃO":"PRÓXIMA ETAPA";
+    $("stageBadge").innerHTML=inQualification
+      ? '<span class="op-pill">F01 ativo</span><span class="op-pill">Responsável: Gabrielly</span>'
+      : '<span class="op-pill">F00 • coleta</span>';
+    $("f01Embedded").classList.toggle("hidden",!inQualification);
+    if(inQualification){
+      const qi=qualificationIssues(d.case);
+      $("gateText").innerHTML='<span class="okline">✓ Coleta encerrada. Continue o atendimento neste card.</span>';
+      $("f01Checklist").innerHTML=
+        '<b>ANTES DE ORÇAR</b>'+
+        (qi.length
+          ? qi.map(x=>'<div class="missingItem">⚠ '+esc(x)+'</div>').join("")
+          : '<div class="okline" style="margin-top:8px">✓ Dados mínimos de qualificação completos.</div>');
+      $("f01NextAction").innerHTML='<b>Próxima ação</b><div class="mut small" style="margin-top:6px">'+esc(caseNextAction(d.case,missing))+'</div>';
+    }
     $("timeline").innerHTML=(d.events||[]).map(x=>"• "+esc(formatDate(x.created_at))+" — "+esc(x.event_text)).join("<br>")||"Sem eventos.";
     const age=Math.floor(caseAgeHours(d.case.updated_at));
     const overdue=age>=24 && d.case.status!=="PRONTO_F01";
@@ -783,16 +851,31 @@ async function saveEdit(){
   }catch(e){alert(e.message)}
 }
 async function releaseF01(){
-  if(!current||!confirm("Enviar este chamado para a próxima etapa?\n\nApós a confirmação, ele sairá da fila ativa de atendimento."))return;
+  if(!current)return;
   try{
-    await api("release",{id:current.id});
-    filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();
-    alert("Encaminhamento confirmado. O chamado saiu da fila ativa de atendimento e seguiu para a próxima etapa.");
+    const check=await api("get",{id:current.id});
+    const blockers=correctedMissing(check);
+    if(blockers.length){
+      await openCase(current.id);
+      alert("Ainda não vou iniciar a qualificação. Falta: "+blockers.join("; ")+".");
+      return;
+    }
+    if(!confirm("Concluir a coleta e iniciar a qualificação deste atendimento?\n\nO card continuará aberto aqui no APP."))return;
+    const keepId=current.id;
+    await api("release",{id:keepId});
+    filter="ACTIVE";
+    document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));
+    await load();
+    await openCase(keepId);
+    alert("F01 iniciado. O atendimento continua neste mesmo card.");
   }catch(e){alert(e.message)}
 }
 async function copyFrom(id){try{await navigator.clipboard.writeText($(id).textContent||"")}catch{}}
 
 $("newBtn").onclick=showCapture;$("clearNew").onclick=showCapture;$("processNew").onclick=processNew;$("reprocess").onclick=reprocess;$("waiting").onclick=markWaiting;$("saveEdit").onclick=saveEdit;$("release").onclick=releaseF01;$("copyWait").onclick=copyAndWait;$("previewClose").onclick=closePreview;$("previewModal").onclick=e=>{if(e.target===$("previewModal"))closePreview()};
+$("f01AddInfo").onclick=()=>{$("moreBox").scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>$("moreRaw").focus(),250)};
+$("f01Edit").onclick=()=>{const d=$("editDetails")||document.querySelector("details.box");if(d){d.open=true;d.scrollIntoView({behavior:"smooth",block:"center"})}};
+$("f01CopyBudget").onclick=()=>copyFrom("gc");
 $("search").oninput=render;$("newFiles").onchange=()=>{$("selectedFiles").textContent=[...$("newFiles").files].map(f=>f.name).join(" • ")};
 document.querySelectorAll(".stat").forEach(s=>s.onclick=()=>{filter=s.dataset.filter;document.querySelectorAll(".stat").forEach(x=>x.classList.toggle("on",x===s));render()});
 document.querySelectorAll(".copy").forEach(b=>b.onclick=()=>copyFrom(b.dataset.copy));
@@ -807,10 +890,11 @@ load();
   function hours(v){const t=new Date(v||0).getTime();return t?Math.max(0,(Date.now()-t)/36e5):0}
   function pc(c){return pendingCount(c)}
   function statusLabel(v){
-    return ({EM_COLETA:"EM COLETA",INCOMPLETO:"INCOMPLETO",AGUARDANDO_RESPOSTA:"AGUARDANDO RESPOSTA",PRONTO_F01:"PRONTO PARA SEGUIR"})[v]||String(v||"");
+    return ({EM_COLETA:"EM COLETA",INCOMPLETO:"INCOMPLETO",AGUARDANDO_RESPOSTA:"AGUARDANDO RESPOSTA",PRONTO_F01:"PRONTO PARA QUALIFICAÇÃO",LIBERADO_F01:"EM QUALIFICAÇÃO"})[v]||String(v||"");
   }
   function ownerText(c){
     if(c.status==="AGUARDANDO_RESPOSTA")return "Aguardando cliente/contato";
+    if(c.status==="LIBERADO_F01")return "Gabrielly · qualificação";
     if(c.status==="PRONTO_F01")return "Gabrielly · revisar";
     return "Gabrielly · coleta";
   }
@@ -833,7 +917,11 @@ load();
   }
   function nextText(c){
     if(c.status==="AGUARDANDO_RESPOSTA")return "Acompanhar retorno e incorporar a resposta no mesmo chamado.";
-    if(c.status==="PRONTO_F01")return "Coleta suficiente: revisar e encaminhar para a próxima etapa.";
+    if(c.status==="LIBERADO_F01"){
+      const q=qualificationIssues(c);
+      return q.length?"Qualificação em andamento: "+q.length+" ponto"+(q.length===1?"":"s")+" antes de orçar.":"Qualificação suficiente: preparar orçamentação.";
+    }
+    if(c.status==="PRONTO_F01")return "Coleta suficiente: revisar e iniciar a qualificação.";
     const n=pc(c);
     if(n)return "Coletar "+pluralInfo(n)+" que ainda "+(n===1?"falta":"faltam")+".";
     return "Abrir o chamado e confirmar o próximo passo.";
@@ -849,16 +937,17 @@ load();
   }
   function renderFusion(){
     const all=cases();
-    const active=all.filter(c=>["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01"].includes(c.status));
+    const active=all.filter(c=>["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01","LIBERADO_F01"].includes(c.status));
     const waiting=all.filter(c=>c.status==="AGUARDANDO_RESPOSTA");
     const ready=all.filter(c=>c.status==="PRONTO_F01");
+    const qualify=all.filter(c=>c.status==="LIBERADO_F01");
     const collect=all.filter(c=>c.status==="EM_COLETA"||c.status==="INCOMPLETO");
     const missing=active.reduce((n,c)=>n+pc(c),0);
     const agenda=all.filter(c=>String(c.availability||"").trim());
     const payment=active.filter(c=>!String(c.payment||"").trim());
 
     const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
-    set("fkActive",active.length);set("fkWaiting",waiting.length);set("fkMissing",missing);set("fkReady",ready.length);set("fkAgenda",agenda.length);set("fkPayment",payment.length);
+    set("fkActive",active.length);set("fkWaiting",waiting.length);set("fkMissing",missing);set("fkReady",ready.length);set("fkQualify",qualify.length);set("fkAgenda",agenda.length);set("fkPayment",payment.length);
     set("closeCollect",collect.length);set("closeWait",waiting.length);set("closeReady",ready.length);
     set("pendCount",missing+" pendência"+(missing===1?"":"s"));
     set("agendaCount",agenda.length+" item"+(agenda.length===1?"":"s"));
