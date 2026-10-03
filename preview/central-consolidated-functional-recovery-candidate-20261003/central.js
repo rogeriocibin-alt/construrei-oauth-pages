@@ -10,6 +10,35 @@ const brl=c=>c==null?'—':new Intl.NumberFormat('pt-BR',{style:'currency',curre
 const state={agenda:null,fast:null,full:null,loading:{},errors:{},updatedAt:{}};
 const ROUTES={
  dashboard:{label:'Dashboard Executivo',page:'dashboard'},
+ app:{label:'APP CONSTRU-REI',external:'https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=app'},
+ flows:{label:'Esteira F00 → F09',canonicalPage:'flows'},
+ checklist:{label:'Checklist de Campo',canonicalPage:'checklist'},
+ homolog:{label:'Homologação',canonicalPage:'homolog'},
+ pending:{label:'APP • Pendências',canonicalPage:'pendapp'},
+ wizy:{label:'Wizy Flow • WZ',canonicalPage:'wizy'},
+ eder:{label:'Éder • Agora',canonicalPage:'eder'},
+ intelligence:{label:'IA & Context Gateway',canonicalPage:'context'},
+ docs:{label:'Documentação',external:'https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=docs'},
+ meeting:{label:'Google Meet',canonicalPage:'meeting'},
+ presentation:{label:'Apresentação Institucional',canonicalPage:'presentation'},
+ academy:{label:'CONSTRU-REI Academy',canonicalPage:'academy'},
+ history:{label:'Histórico / Snapshots',canonicalPage:'history'},
+ health:{label:'Saúde do Sistema',canonicalPage:'health'},
+ finance:{label:'Gestão Financeira',external:'https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/dashboard/?rev=dashboard-v14-protected-20260929-2258'},
+ technical:{label:'Éder — Admin Técnico',external:'https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=technical'},
+ admin:{label:'Rogério — Diretor',external:'https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=admin'}
+}()=>{'use strict';
+if(window.__CR_CONSOLIDATED)return;window.__CR_CONSOLIDATED=true;
+const BUILD='CR-CENTRAL-CONSOLIDATED-CANDIDATE-20261003';
+const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
+const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v12-1-candidate-20261003?view=public';
+const FULL='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-candidate-20261003?view=public-home';
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const brl=c=>c==null?'—':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(Number(c)/100);
+const state={agenda:null,fast:null,full:null,loading:{},errors:{},updatedAt:{}};
+const ROUTES={
+ dashboard:{label:'Dashboard Executivo',page:'dashboard'},
  agenda:{label:'Agenda',page:'dashboard',focus:'v10Agenda'},
  services:{label:'Serviços',page:'dashboard',focus:'v10Kpis'},
  quotes:{label:'Orçamentos',page:'dashboard',focus:'v10Quotes'},
@@ -27,18 +56,17 @@ const ROUTES={
 const STATUS_COLORS={'AGUARDANDO VISITA/AGENDAMENTO':'#0a8cff','EM ELABORAÇÃO':'#3c8fe8','AGUARDANDO ENVIO':'#62a9ee','AGUARDANDO APROVAÇÃO':'#f2b233','EM ANDAMENTO':'#168fb8','RETORNO':'#7b46e8','AGUARDANDO PAGAMENTO':'#16b879','AGUARDANDO ACERTO':'#ff8a24','FINALIZADO':'#138a61','NÃO APROVADO':'#d85b67','CANCELADO':'#93a9bd'};
 async function get(u){const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'}),d=await r.json().catch(()=>({}));if(!r.ok||d.ok===false)throw Error(d.error||r.status);return d}
 function activatePage(id,label){const p=document.getElementById(id);if(!p)return false;$$('.page').forEach(x=>x.classList.toggle('on',x===p));const t=$('.cr-v10-title b');if(t)t.textContent=label||id;$('.side')?.classList.remove('open');window.scrollTo(0,0);return true}
-function navigate(key){const r=ROUTES[key];if(!r)return;if(r.external){window.location.assign(r.external);return}if(activatePage(r.page,r.label)&&r.focus)setTimeout(()=>document.getElementById(r.focus)?.scrollIntoView({behavior:'smooth',block:'start'}),50)}
+function navigate(key){const r=ROUTES[key];if(!r)return;if(r.external){window.location.assign(r.external);return}if(r.canonicalPage){window.location.assign('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open='+encodeURIComponent(r.canonicalPage));return}if(activatePage(r.page,r.label)&&r.focus)setTimeout(()=>document.getElementById(r.focus)?.scrollIntoView({behavior:'smooth',block:'start'}),50)}
 function header(){const main=$('.main');if(!main)return;$('.cr-v10-header')?.remove();const h=document.createElement('header');h.className='cr-v10-header';const date=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(new Date());h.innerHTML='<div class="cr-v10-title"><button class="cr-v10-menu" aria-label="Abrir menu">☰</button><div><b>Dashboard Executivo</b><small>Central CONSTRU-REI • runtime consolidado</small></div></div><label class="cr-v10-search">⌕<input aria-label="Busca global" placeholder="Buscar módulo..."></label><div class="cr-v10-user"><div class="cr-v10-avatar">RD</div><div><b>Rogério</b><small>Diretor</small></div><span class="cr-v10-date">'+esc(date)+'</span></div>';main.insertBefore(h,main.firstChild);$('.cr-v10-menu',h).onclick=()=>$('.side')?.classList.toggle('open');$('input',h).onkeydown=e=>{if(e.key!=='Enter')return;const q=e.target.value.toLowerCase();const k=Object.keys(ROUTES).find(k=>ROUTES[k].label.toLowerCase().includes(q));if(k)navigate(k)}}
 function nav(){const side=$('.side');if(!side)return;$('#crConNav')?.remove();const brand=$('.brand',side);if(brand){$('strong',brand).textContent='CONSTRU-REI';$('small',brand).textContent='CONSTRUINDO RESULTADOS'}const groups=[
 ['⌂','Início',[['Dashboard Executivo','dashboard']]],
-['⚙','Operação',[['Hoje na Operação','dashboard'],['Agenda','agenda'],['Serviços','services'],['Orçamentos','quotes'],['APP / Atendimento','app'],['Fluxos F00–F09','flows'],['Checklist de Campo','checklist'],['Homologação','homolog']]],
-['$','Financeiro',[['Gestão Financeira','finance'],['Aguardando Pagamento','finance'],['Aguardando Acerto','finance']]],
-['☷','Gestão',[['Minha Atenção','dashboard'],['Pendências','pending'],['Wizy Flow','wizy'],['Éder • Agora','eder'],['Auditorias','audit']]],
-['★','Empresa',[['Apresentação Viva','presentation'],['Academy','academy'],['Google Meet','meeting']]],
-['⌁','Inteligência & Integrações',[['GestãoClick','quotes'],['Trello / Operação','services'],['Google Agenda','agenda'],['IA & Context Gateway','intelligence'],['Fontes / Sincronização','health']]],
-['▣','Desenvolvimento',[['Status do Desenvolvimento','status'],['Saúde Técnica','health'],['Releases','releases'],['Gaps Técnicos','gaps'],['Histórico / Snapshots','versions']]],
-['▤','Base Técnica & Governança',[['Documentação Viva','docs'],['Acervo Técnico','acervo'],['Central OS','os'],['APIs / Schema','apis'],['GRC / Gates','governance'],['SST','sst'],['Segurança','security'],['HTMLs Validados','htmls']]],
-['⚿','Acesso Técnico',[['Éder — Admin Técnico','technical'],['Rogério — Diretor','admin'],['Workspace','workspace']]]];
+['⚙','Operação',[['APP CONSTRU-REI','app'],['Esteira F00 → F09','flows'],['Checklist de Campo','checklist'],['Homologação','homolog']]],
+['$','Financeiro',[['Gestão Financeira','finance']]],
+['☷','Pendências',[['APP • Pendências','pending'],['Wizy Flow • WZ','wizy'],['Éder • Agora','eder']]],
+['⌁','Inteligência & Integração',[['IA & Context Gateway','intelligence']]],
+['▤','Documentação',[['Documentação','docs']]],
+['★','Equipe & Conhecimento',[['Google Meet','meeting'],['Apresentação Institucional','presentation'],['CONSTRU-REI Academy','academy'],['Histórico / Snapshots','history'],['Saúde do Sistema','health']]],
+['⚿','Acesso Técnico',[['Éder — Admin Técnico','technical'],['Rogério — Diretor','admin']]]];
 const n=document.createElement('nav');n.id='crConNav';n.className='cr-con-nav';n.innerHTML=groups.map((g,i)=>'<details class="cr-con-group" '+(i<2?'open':'')+'><summary><span>'+g[0]+'</span>'+esc(g[1])+'</summary><div class="cr-con-sub">'+g[2].map(x=>'<button data-route="'+x[1]+'">'+esc(x[0])+'</button>').join('')+'</div></details>').join('');brand?.insertAdjacentElement('afterend',n);$$('button',n).forEach(b=>b.onclick=()=>{$$('button',n).forEach(x=>x.classList.remove('on'));b.classList.add('on');navigate(b.dataset.route)})}
 function shell(){const dash=$('#dashboard');if(!dash)return;dash.innerHTML='<div class="cr-v10"><section class="cr-v10-hero"><div class="cr-v10-hero-main"><div class="cr-v10-hero-copy"><h1>Central <span>CONSTRU-REI</span></h1><p>Controle executivo de operação, agenda, orçamentos e gestão.</p></div><div class="cr-v10-actions"><button class="cr-v10-action primary" data-route="app">＋ Abrir APP</button><button class="cr-v10-action" data-route="agenda">▣ Agenda Google</button><button class="cr-v10-action cr-con-refresh">↻ Atualizar</button></div></div><div class="cr-v10-hero-art"></div></section><section class="cr-v10-kpis" id="v10Kpis"></section><section class="cr-v10-main-grid"><article class="cr-v10-card"><div class="cr-v10-card-head"><span>▣</span><h2>Agenda e operação de hoje</h2><small>Horário • equipe • atividade • orçamento • local.</small><span class="spacer"></span><span id="crAgendaUpdated" class="cr-con-updated"></span></div><div class="cr-v10-agenda-body" id="v10Agenda"><div class="cr-v10-empty">Carregando Google Agenda…</div></div></article><article class="cr-v10-card"><div class="cr-v10-card-head"><span>▥</span><h2>Orçamentos / Serviços em fluxo</h2><small>Status reais do GestãoClick, com leitura por cor.</small><span class="spacer"></span><span id="crQuotesUpdated" class="cr-con-updated"></span></div><div class="cr-v12-flow-body" id="v10Quotes"><div class="cr-v10-empty">Carregando agregados…</div></div></article></section><section class="cr-v10-lower"><article class="cr-v10-card"><div class="cr-v10-card-head"><span>☷</span><h2>Minha Atenção / Pendências</h2><small>Sem confundir exceção técnica com pendência operacional.</small></div><div class="cr-v10-priority-body" id="v10Priorities"></div></article><article class="cr-v10-card"><div class="cr-v10-card-head"><span>⌁</span><h2>Saúde das fontes</h2><small>Resumo executivo das integrações.</small></div><div class="cr-v10-health" id="v10Health"></div></article></section><section class="cr-v10-card"><div class="cr-v10-card-head"><span>◆</span><h2>Gestão da Diretoria</h2><small>Sinais sustentados por fontes reais.</small></div><div class="cr-con-director" id="crConDirector"></div></section></div>';$$('[data-route]',dash).forEach(b=>b.onclick=()=>navigate(b.dataset.route));$('.cr-con-refresh',dash).onclick=refreshAll}
 function fmtTime(v){try{return new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'}).format(new Date(v))}catch{return'—'}}
