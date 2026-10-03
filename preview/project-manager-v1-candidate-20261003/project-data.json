@@ -7,7 +7,9 @@
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "cr-project-manager-v1-candidate-20261003",
     "coverage": "Histórico inicial reconstruído com evidências verificadas no repositório e decisões registradas no projeto. Itens sem evidência suficiente permanecem marcados como NÃO CONFIRMADO.",
-    "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada."
+    "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
+    "audit_snapshot": "2026-10-03",
+    "audit_state": "V1 auditada contra branches/checkpoints atuais do repositório"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -500,10 +502,10 @@
       "status": "executing",
       "priority": "P0",
       "objective": "Entregar o cockpit visual que organiza memória, versões, decisões, frentes e direção do projeto.",
-      "progress": 65,
+      "progress": 92,
       "owner": "CR Assertivo + Bio",
-      "last_advance": "Branch isolada criada e V1 em implementação.",
-      "next_action": "Publicar candidata e validar visual/navegação com Rogério.",
+      "last_advance": "Cockpit, navegação, busca, drawers, governança e auditoria estrutural concluídos na branch isolada.",
+      "next_action": "Validar visual e comportamento em desktop/celular; depois congelar checkpoint da candidata V1.",
       "dependency": "Validação humana da V1 antes de qualquer persistência ou promoção.",
       "blocked": false,
       "age_days": 0
@@ -826,5 +828,33 @@
     "Motivos detalhados de todas as versões históricas não estão documentados em um único artefato; devem ser enriquecidos por checkpoints e conversas antigas.",
     "Google Meet embutido: existência funcional anterior foi relatada, mas a implementação exata ainda precisa ser localizada no repositório.",
     "Alguns branches/checkpoints possuem nomes claros, porém ainda não tiveram seu conteúdo documental individual lido nesta primeira carga."
-  ]
+  ],
+  "repository_audit": {
+    "total_branches": 197,
+    "checkpoint_branches": 95,
+    "central_branches": 54,
+    "app_branches": 47,
+    "presentation_branches": 14,
+    "candidate_branches": 43,
+    "canonical_branches": 52,
+    "approved_or_homologated_branches": 26,
+    "v9_refs": 7,
+    "v10_refs": 5,
+    "v11_refs": 8,
+    "base_main_commit": "52b6833cd60bc6541ae30884e9d9edf5c17f6c38",
+    "warnings": [
+      {
+        "severity": "attention",
+        "ref": "CHECKPOINT_V9_GOOGLE_AGENDA_VALIDATED_20261003",
+        "title": "Checkpoint V9 validado apresenta deriva de ponteiro",
+        "detail": "O ref atualmente aponta para ae2e8e9… (APP V11 mobile), enquanto os checkpoints técnicos dedicados da Executiva V9 permanecem em 773cfe0… (Google Agenda), 88e106c… (service secret) e 377e112… (sidebar refinada). Não usar o nome VALIDATED isoladamente como evidência da V9 até saneamento."
+      },
+      {
+        "severity": "attention",
+        "ref": "governança",
+        "title": "Volume histórico exige fonte de verdade explícita",
+        "detail": "A auditoria encontrou 197 branches e 95 refs com nome de checkpoint. O Gestor passa a resumir o estado corrente sem apagar a trilha histórica."
+      }
+    ]
+  }
 }
