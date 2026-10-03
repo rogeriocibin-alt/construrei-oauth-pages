@@ -1110,16 +1110,16 @@
     },
     {
       "id": "PM-15",
-      "title": "Item legado #15 — identidade nominal ainda não recuperada",
+      "title": "Reconciliação dos 3 itens legados ainda sem nome seguro",
       "domain": "Banco Mestre legado",
       "priority": "P2",
       "state": "unconfirmed",
       "owner": "Bio",
       "last_movement": "2026-10-03",
-      "next_action": "Reconciliar o nome original somente quando surgir evidência documental/conversacional verificável.",
-      "dependency": "Evidência histórica",
-      "source": "Banco Mestre original de 15 itens",
-      "close_when": "Nome, origem e critério original forem recuperados sem inferência.",
+      "next_action": "Recuperar os 3 nomes restantes do Banco Mestre original somente por evidência documental/conversacional verificável; não completar por inferência.",
+      "dependency": "Evidência histórica dos 3 itens originais faltantes",
+      "source": "Banco Mestre original — cobertura nominal atual 12/15",
+      "close_when": "Os 3 nomes, origens e critérios originais forem recuperados com evidência.",
       "human_action": false,
       "provenance": "legacy_unconfirmed"
     }
