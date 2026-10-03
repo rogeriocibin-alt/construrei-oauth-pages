@@ -1,6 +1,8 @@
 (()=>{'use strict';
 if(window.__CR_V11_PREMIUM)return;window.__CR_V11_PREMIUM=true;
+const API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v9-google-candidate-20261002';
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const norm=s=>String(s||'').replace(/\s+/g,' ').trim();
 function polishBrand(){
  const b=$('.side .brand');if(!b)return;
  const strong=$('strong',b),small=$('small',b);
@@ -29,13 +31,36 @@ function healthState(card){
 }
 function polishHealth(){
  $$('.cr-v10-health-card').forEach(card=>{
-   if($('.cr-v11-health-pill',card))return;
-   const [label,cls]=healthState(card),p=document.createElement('span');
-   p.className='cr-v11-health-pill '+cls;p.textContent='● '+label;card.appendChild(p);
+   const [label,cls]=healthState(card);let p=$('.cr-v11-health-pill',card);
+   if(!p){p=document.createElement('span');card.appendChild(p)}
+   p.className='cr-v11-health-pill '+cls;p.textContent='● '+label;
+ });
+}
+async function syncAgendaHealth(){
+ try{
+   const d=new Date(),day=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+   const r=await fetch(API+'?view=health&date='+day+'&t='+Date.now(),{cache:'no-store'}),j=await r.json();
+   if(!r.ok||!j.ok)return;
+   const card=$$('.cr-v10-health-card').find(x=>/^agenda$/i.test(norm($('h4',x)?.textContent)));
+   if(!card)return;
+   const b=$('b',card),s=$('small',card);
+   if(b)b.textContent='Online';
+   if(s)s.textContent=String(j.google_events??0)+' eventos • Google Agenda';
+   let p=$('.cr-v11-health-pill',card);if(!p){p=document.createElement('span');card.appendChild(p)}
+   p.className='cr-v11-health-pill';p.textContent='● Operacional';
+ }catch{}
+}
+const lastKpis=new Map();
+function stabilizeKpis(){
+ $$('.cr-v10-kpi').forEach(card=>{
+   const key=norm($('h3',card)?.textContent),v=$('.val',card);if(!key||!v)return;
+   const cur=norm(v.textContent);
+   if(cur&&cur!=='—'){lastKpis.set(key,cur);return}
+   const prev=lastKpis.get(key);if(prev)v.textContent=prev;
  });
 }
 function markReady(){document.documentElement.classList.add('cr-v11-ready');document.body?.classList.add('cr-v11-ready')}
-function run(){markReady();polishBrand();polishHeader();polishHero();polishHealth()}
+function run(){markReady();polishBrand();polishHeader();polishHero();polishHealth();stabilizeKpis();syncAgendaHealth()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
 [500,1200,2500,5000].forEach(ms=>setTimeout(run,ms));
 setInterval(run,5000);
