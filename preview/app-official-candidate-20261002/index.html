@@ -3,7 +3,7 @@
 <head><meta name="cr-ui-shell" content="CR-UI-SHELL-V1-PROMOTION-READY-F00-20260922"><meta name="cr-flow-code" content="F00">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CONSTRU-REI • F00</title>
+<title>CONSTRU-REI • Atendimento</title>
 <style>
 :root{--bg:#061524;--card:#0b2237;--card2:#071b2d;--line:#294d68;--gold:#d6a51b;--gold2:#f1cb62;--mut:#a9bdcc;--ok:#4fd39a;--warn:#f0bd4b;--bad:#ff727a;--blue:#5db4ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% 0,#0d3a64 0,#07192b 38%,#061524 78%);color:#fff;font:14px Inter,Arial,sans-serif}
@@ -13,7 +13,7 @@
 .grid{display:grid;grid-template-columns:350px 1fr;gap:10px}.card{background:linear-gradient(160deg,#0b2746,#081d34);border:1px solid var(--line);border-radius:15px;padding:12px}.input,textarea{width:100%;background:#061929;border:1px solid #31536d;color:#fff;border-radius:10px;padding:11px;font:inherit}.label{font-size:11px;color:var(--mut);font-weight:800;margin:8px 0 5px}.list{max-height:72vh;overflow:auto}.case{border:1px solid #31536d;border-radius:12px;padding:10px;margin:8px 0;background:#071b2d;cursor:pointer}.case:hover{border-color:#6992ac}.caseTop{display:flex;justify-content:space-between;gap:8px}.caseNo{font-weight:900;font-size:16px}.status{font-size:9px;border:1px solid #4a6c83;border-radius:999px;padding:4px 7px;height:max-content}.pending{color:var(--warn);font-size:10px;font-weight:800;margin-top:7px}.updated{font-size:10px;color:var(--mut);margin-top:4px}.capture{max-width:760px;margin:0 auto}.capture h2{font-size:22px;margin:5px 0}.number{font-size:20px;font-weight:900;letter-spacing:.04em}.drop{margin-top:9px;border:1px dashed #557b94;border-radius:13px;padding:11px;background:#071b2d}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.box{border:1px solid #31536d;background:#071b2d;border-radius:12px;padding:11px;margin-top:9px}.identified{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.fact{background:#061929;border:1px solid #22445f;border-radius:10px;padding:9px}.compactList{margin-top:8px}.compactRow{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid #1e4058}.compactRow:first-child{border-top:0}.compactCode{min-width:58px;color:#f1cb62;font-weight:900;font-size:10px}.compactMain{flex:1}.compactMain b{display:block}.compactMeta{color:#a9bdcc;font-size:10px;margin-top:2px}.typeBadge{display:inline-block;margin-left:6px;border:1px solid #406782;border-radius:999px;padding:3px 7px;font-size:9px;color:#b9d4e6}.fact b{display:block;color:var(--ok);font-size:10px;margin-bottom:4px}.fact span{white-space:pre-wrap}.missing{border-color:#755e28;background:#241f12}.missing h3{color:var(--warn);margin:0 0 8px}.missingItem{padding:7px 0;border-top:1px solid #463d23}.missingItem:first-of-type{border-top:0}.countBadge{display:inline-block;background:#493b13;color:#ffd86a;border:1px solid #7e6621;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:900}.okline{color:var(--ok);font-weight:900}.hidden{display:none!important}.caseHeader{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.caseHeader h2{margin:0}.files{margin-top:7px}.evidenceGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:9px}.thumb{position:relative;min-height:118px;background:#061929;border:1px solid #274b65;border-radius:11px;overflow:hidden;cursor:pointer}.thumb:hover{border-color:#6e9ab5}.thumbMedia{width:100%;height:88px;display:flex;align-items:center;justify-content:center;background:#03111e;overflow:hidden}.thumbMedia img,.thumbMedia video,.thumbMedia iframe{width:100%;height:100%;object-fit:cover;border:0}.thumbIcon{font-size:27px}.thumbName{font-size:9px;color:#c2d4df;padding:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.previewModal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px}.previewCard{position:relative;width:min(980px,96vw);height:min(780px,90vh);background:#061524;border:1px solid #446b85;border-radius:14px;padding:10px;display:flex;flex-direction:column}.previewHead{display:flex;gap:8px;align-items:center;margin-bottom:8px}.previewHead b{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.previewBody{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#020b12;border-radius:10px;overflow:hidden}.previewBody img,.previewBody video,.previewBody iframe{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;border:0}.previewBody audio{width:min(600px,90%)}.editGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}details summary{cursor:pointer;font-weight:800;color:#b9d4e6}pre{font:inherit;white-space:pre-wrap;margin:8px 0}.empty{text-align:center;color:var(--mut);padding:25px 10px}
 @media(max-width:790px){.wrap{padding:10px}.evidenceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.thumb{min-height:108px}.thumbMedia{height:80px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.list{max-height:36vh}.identified,.editGrid{grid-template-columns:1fr}.btn{min-height:44px}.caseHeader{display:block}.caseHeader .toolbar{margin-top:8px}}
 </style>
-<meta name="cr-f00-canonical-pilot" content="20261001"><meta name="cr-preview-isolated" content="F00-CANONICAL-UI-20261001"><meta name="cr-candidate" content="APP-GABIFLOW-F00-FUSION-20261002">
+<meta name="cr-f00-canonical-pilot" content="20261001"><meta name="cr-preview-isolated" content="F00-CANONICAL-UI-20261001"><meta name="cr-candidate" content="APP-GABI-OPERATIONAL-HARDENING-20261002">
 <meta name="cr-architecture" content="APP=casa;GabiFlow=Atendimento;F00=motor;single-route=/f00/">
 <style id="cr-fusion-style">
 :root{
@@ -177,6 +177,23 @@ body.app-candidate pre{color:var(--crh-text)!important}
   .cr-modules,.cr-nav{padding-left:10px!important;padding-right:10px!important}
 }
 </style>
+<style id="cr-gabi-operational-hardening-20261002">
+.op-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.op-pill{display:inline-flex;align-items:center;min-height:22px;padding:3px 7px;border:1px solid #d7e7f3;border-radius:999px;background:#f7fbff;color:#4f6f91;font-size:9px;font-weight:850}
+.op-pill.bad{background:#fff0f2;border-color:#f3c4cc;color:#b31637}
+.op-pill.warn{background:#fff7e7;border-color:#efd7a3;color:#8b5b00}
+.op-pill.ok{background:#eaf9f3;border-color:#bae8d5;color:#08754c}
+.op-alert{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:flex-start;padding:10px;border:1px solid #dce9f4;border-radius:10px;background:#fff}
+.op-alert strong{display:block;color:#07165b;font-size:11px}.op-alert span{display:block;color:#5f7895;font-size:10px;margin-top:2px}
+.op-dot{width:10px;height:10px;border-radius:50%;margin-top:3px;background:#0877f9}.op-dot.bad{background:#ee2147}.op-dot.warn{background:#f2a500}.op-dot.ok{background:#0daf67}
+@media(max-width:720px){
+  .cr-app-shell{position:relative!important}
+  html{scroll-padding-top:12px}
+  .case,.fusion-row{scroll-margin-top:12px}
+  .cr-context{min-width:0}
+  .cr-top{align-items:flex-start!important}
+}
+</style>
 </head>
 <body class="app-candidate">
 <div class="cr-app-shell">
@@ -190,7 +207,7 @@ body.app-candidate pre{color:var(--crh-text)!important}
       <h1>Gabrielly • Atendimento & Relacionamento</h1>
       <p>Uma tela, um chamado, um histórico. Gabi Flow na experiência; F00 no motor.</p>
     </div>
-    <div id="fusionHealth" class="cr-health"><i></i><span>Conectando ao F00</span></div>
+    <div id="fusionHealth" class="cr-health"><i></i><span>Sincronizando dados</span></div>
   </div>
   <div class="cr-modules">
     <button class="cr-module active">Atendimento • Gabi</button>
@@ -212,30 +229,25 @@ body.app-candidate pre{color:var(--crh-text)!important}
 <section class="fusion-page active" data-view="agora">
   <div class="fusion-wrap">
     <div class="fusion-hero">
-      <div><h2 id="fusionGreeting">Gabrielly, aqui está o que pede atenção agora.</h2><p>Você não precisa lembrar de tudo. O cockpit lê o mesmo F00 e organiza o próximo passo sem criar uma segunda esteira.</p></div>
+      <div><h2 id="fusionGreeting">Gabrielly, aqui está o que pede atenção agora.</h2><p>A fila organiza o próximo passo, os retornos e o que não pode ficar para trás.</p></div>
       <div id="fusionDate" class="fusion-date">Hoje</div>
     </div>
     <div class="fusion-kpis">
       <div class="fusion-kpi"><b id="fkActive">0</b><span>Chamados ativos</span></div>
       <div class="fusion-kpi"><b id="fkWaiting">0</b><span>Aguardando resposta</span></div>
       <div class="fusion-kpi"><b id="fkMissing">0</b><span>Informações faltando</span></div>
-      <div class="fusion-kpi"><b id="fkReady">0</b><span>Prontos para F01</span></div>
+      <div class="fusion-kpi"><b id="fkReady">0</b><span>Prontos para seguir</span></div>
       <div class="fusion-kpi"><b id="fkAgenda">0</b><span>Com disponibilidade</span></div>
       <div class="fusion-kpi"><b id="fkPayment">0</b><span>Pagamento a esclarecer</span></div>
     </div>
     <div class="fusion-grid">
       <section class="fusion-card">
-        <h3>O que fazer agora</h3><div class="sub">Fila inteligente derivada dos chamados reais do F00.</div>
+        <h3>O que fazer agora</h3><div class="sub">Fila priorizada pelos atendimentos reais.</div>
         <div id="fusionNowList" class="fusion-list"><div class="fusion-empty">Carregando chamados…</div></div>
       </section>
       <section class="fusion-card">
-        <h3>Regras de contenção</h3><div class="sub">Filosofia original do Gabi Flow aplicada à mesma esteira.</div>
-        <div class="fusion-rules">
-          <div class="fusion-rule"><b>Mensagem não é gestão</b><span>Toda informação precisa entrar no chamado e produzir status ou próximo passo.</span></div>
-          <div class="fusion-rule"><b>Nada sem responsável operacional</b><span>Se depende de alguém, o caso precisa mostrar de quem estamos aguardando.</span></div>
-          <div class="fusion-rule"><b>Nada sem próxima ação</b><span>Ao abrir um chamado, a próxima movimentação precisa estar evidente.</span></div>
-          <div class="fusion-rule"><b>Fechar o dia olhando pendências</b><span>O sistema mostra o que ficou em coleta, aguardando resposta ou pronto para seguir.</span></div>
-        </div>
+        <h3>Alertas de atendimento</h3><div class="sub">Só o que precisa de ação, sem texto de treinamento.</div>
+        <div id="fusionAlertList" class="fusion-list"><div class="fusion-empty">Calculando exceções…</div></div>
       </section>
     </div>
   </div>
@@ -243,14 +255,20 @@ body.app-candidate pre{color:var(--crh-text)!important}
 
 <section class="fusion-page" data-view="pendencias">
   <div class="fusion-wrap">
-    <div class="fusion-section-title"><div><h2>Pendências vivas</h2><p>Não é uma lista paralela: são as lacunas e esperas do próprio F00.</p></div><span id="pendCount" class="fusion-chip">0 pendências</span></div>
+    <div class="fusion-section-title"><div><h2>Pendências vivas</h2><p>Lacunas, esperas e retornos do próprio atendimento, em uma única fila.</p></div><span id="pendCount" class="fusion-chip">0 pendências</span></div>
     <div id="fusionPendingList" class="fusion-list"></div>
   </div>
 </section>
 
 <section class="fusion-page" data-view="agenda">
   <div class="fusion-wrap">
-    <div class="fusion-section-title"><div><h2>Agenda a partir da coleta</h2><p>Disponibilidades capturadas nos chamados aparecem aqui. O agendamento definitivo será a próxima camada, sobre o mesmo dado.</p></div><span id="agendaCount" class="fusion-chip">0 itens</span></div>
+    <div class="fusion-section-title"><div><h2>Agenda do atendimento</h2><p>Disponibilidades dos chamados + visão consolidada da agenda real da operação.</p></div><span id="agendaCount" class="fusion-chip">0 itens</span></div>
+    <div class="fusion-summary" style="margin-bottom:10px">
+      <div class="fusion-card"><strong id="agendaToday">—</strong><span>Visitas hoje</span></div>
+      <div class="fusion-card"><strong id="agendaTomorrow">—</strong><span>Agenda amanhã</span></div>
+      <div class="fusion-card"><strong id="agendaYesterday">—</strong><span>Pendências de ontem</span></div>
+    </div>
+    <div id="agendaBridgeNote" class="sub" style="margin:0 0 9px;color:#6d8299">Sincronizando agenda consolidada…</div>
     <div id="fusionAgendaList" class="fusion-list"></div>
   </div>
 </section>
@@ -264,20 +282,16 @@ body.app-candidate pre{color:var(--crh-text)!important}
 
 <section class="fusion-page" data-view="fechamento">
   <div class="fusion-wrap">
-    <div class="fusion-section-title"><div><h2>Fechamento do dia</h2><p>Visão rápida para a Gabi terminar o dia sabendo exatamente o que ficou aberto.</p></div><span class="fusion-chip">Gabi Flow incorporado</span></div>
+    <div class="fusion-section-title"><div><h2>Fechamento do dia</h2><p>Visão rápida para a Gabi terminar o dia sabendo exatamente o que ficou aberto.</p></div><span class="fusion-chip">Atendimento integrado</span></div>
     <div class="fusion-summary">
       <div class="fusion-card"><strong id="closeCollect">0</strong><span>Em coleta / incompletos</span></div>
       <div class="fusion-card"><strong id="closeWait">0</strong><span>Aguardando resposta</span></div>
-      <div class="fusion-card"><strong id="closeReady">0</strong><span>Prontos para F01</span></div>
+      <div class="fusion-card"><strong id="closeReady">0</strong><span>Prontos para seguir</span></div>
     </div>
     <div class="fusion-card" style="margin-top:10px">
-      <h3>Antes de encerrar</h3><div class="sub">O dia está sob controle quando você consegue responder estas três perguntas.</div>
-      <div class="fusion-rules">
-        <div class="fusion-rule"><b>O que depende da Gabrielly?</b><span>Veja Em coleta / incompletos e abra cada chamado com informação faltante.</span></div>
-        <div class="fusion-rule"><b>De quem estamos aguardando?</b><span>Confira Retornos; qualquer resposta recebida deve ser incorporada no mesmo chamado.</span></div>
-        <div class="fusion-rule"><b>O que já pode andar?</b><span>Confira Prontos para F01 e faça a passagem sem reabrir a coleta.</span></div>
-      </div>
-      <div class="fusion-actions"><button class="fusion-btn primary" data-go="pendencias">Revisar pendências</button><button class="fusion-btn" data-go="retornos">Revisar retornos</button><button class="fusion-btn" data-go="novo">Abrir atendimentos</button></div>
+      <h3>Exceções antes de encerrar</h3><div class="sub">Se houver algo aqui, ainda existe trabalho operacional pendente.</div>
+      <div id="closeExceptionList" class="fusion-list"><div class="fusion-empty">Calculando pendências…</div></div>
+      <div class="fusion-actions"><button class="fusion-btn primary" data-go="pendencias">Resolver pendências</button><button class="fusion-btn" data-go="retornos">Cobrar retornos</button><button class="fusion-btn" data-go="novo">Abrir atendimentos</button></div>
     </div>
   </div>
 </section>
@@ -286,8 +300,8 @@ body.app-candidate pre{color:var(--crh-text)!important}
   <div class="head">
     <div>
       <div class="eyebrow">CONSTRU-REI • APP</div>
-      <h1>F00 — Captador Inteligente de Chamados</h1>
-      <div class="mut small">A Gabi joga a informação. O F00 organiza e aponta só o que falta.</div>
+      <h1>Atendimentos</h1>
+      <div class="mut small">Cole o que chegou. O sistema organiza, preserva o histórico e mostra o que falta.</div>
     </div>
     <div style="margin-left:auto"><button id="newBtn" class="btn gold">+ Novo chamado</button></div>
   </div>
@@ -295,7 +309,7 @@ body.app-candidate pre{color:var(--crh-text)!important}
   <div class="stats">
     <div class="stat" data-filter="COLLECT"><b id="kCollect">0</b><span>EM COLETA</span></div>
     <div class="stat" data-filter="WAIT"><b id="kWait">0</b><span>AGUARDANDO RESPOSTA</span></div>
-    <div class="stat" data-filter="READY"><b id="kReady">0</b><span>PRONTOS PARA F01</span></div>
+    <div class="stat" data-filter="READY"><b id="kReady">0</b><span>PRONTOS PARA SEGUIR</span></div>
     <div class="stat" data-filter="ALL"><b id="kAll">0</b><span>HISTÓRICO / TOTAL</span></div>
   </div>
 
@@ -342,6 +356,12 @@ body.app-candidate pre{color:var(--crh-text)!important}
             <span id="viewStatus" class="status"></span>
             <span id="viewPending" class="countBadge"></span>
           </div>
+        </div>
+
+        <div id="opCaseSummary" class="box">
+          <b>CONDUÇÃO DO ATENDIMENTO</b>
+          <div id="opCaseMeta" class="op-meta" style="margin-top:8px"></div>
+          <div id="opCaseNext" class="mut small" style="margin-top:8px"></div>
         </div>
 
         <div class="box">
@@ -393,9 +413,9 @@ body.app-candidate pre{color:var(--crh-text)!important}
         </div>
 
         <div class="box">
-          <b>F00 → F01</b>
+          <b>PRÓXIMA ETAPA</b>
           <div id="gateText" style="margin:7px 0"></div>
-          <button id="release" class="btn ok">Liberar para F01</button>
+          <button id="release" class="btn ok">Enviar para próxima etapa</button>
           <a id="f01" class="btn hidden" target="_blank">Abrir F01</a>
         </div>
 
@@ -442,7 +462,10 @@ async function api(name,payload={}){
 }
 function esc(v){return String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 function normalizeNo(v){return String(v||"").replace(/\s/g,"")}
-function pendingCount(x){return Array.isArray(x.missing_fields)?x.missing_fields.length:0}
+function pendingCount(x){
+  if(Array.isArray(x._exactMissing))return x._exactMissing.length;
+  return Array.isArray(x.missing_fields)?x.missing_fields.length:0
+}
 function inFilter(x){
   if(filter==="ALL")return true;
   if(filter==="ACTIVE")return x.status==="EM_COLETA"||x.status==="INCOMPLETO"||x.status==="PRONTO_F01";
@@ -452,10 +475,60 @@ function inFilter(x){
   return true;
 }
 function formatDate(v){try{return new Date(v).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}catch{return""}}
+function humanStatus(v){
+  return ({EM_COLETA:"EM COLETA",INCOMPLETO:"INCOMPLETO",AGUARDANDO_RESPOSTA:"AGUARDANDO RESPOSTA",PRONTO_F01:"PRONTO PARA SEGUIR"})[v]||String(v||"");
+}
+function isBogusContact(v){
+  const n=String(v||"").trim().toLowerCase();
+  const bad=new Set(["quantidade","valor unitário","valor unitario","total","endereço","endereco","data","base","cliente/origem","solicitante","unidade envolvida","unidade afetada","descrição","descricao","serviço","servico","material","horário","horario"]);
+  return !n||bad.has(n)||/^r\$\s*\d/i.test(n)||/^\d+[\s.,%]/.test(n);
+}
+function correctedMissing(d){
+  const arr=Array.isArray(d.missing)?[...d.missing]:[];
+  if(isBogusContact(d.case?.contact_name) && !arr.some(x=>/nome.*contato|contato.*nome/i.test(String(x))))arr.push("nome do contato no imóvel");
+  return [...new Set(arr.map(x=>String(x).trim()).filter(Boolean))];
+}
+function caseAgeHours(v){const t=new Date(v||0).getTime();return t?Math.max(0,(Date.now()-t)/36e5):0}
+function caseNextAction(c,missing){
+  if(c.status==="AGUARDANDO_RESPOSTA")return "Conferir se houve resposta, cobrar se necessário e incorporar a resposta neste mesmo chamado.";
+  if(c.status==="PRONTO_F01"&&!missing.length)return "Revisar os dados e encaminhar para a próxima etapa.";
+  if(missing.length)return "Coletar "+(missing.length===1?"1 informação":missing.length+" informações")+" que ainda "+(missing.length===1?"falta":"faltam")+".";
+  return "Revisar o chamado e definir a próxima ação.";
+}
+function collectionMessage(missing){
+  const lines=(missing||[]).map(x=>{
+    const t=String(x||"").toLowerCase();
+    if(/complemento.*endere/.test(t))return "Confirmar o complemento do endereço (apto, bloco, torre, casa ou unidade).";
+    if(/endere/.test(t))return "Confirmar o endereço completo do imóvel.";
+    if(/nome.*contato|contato.*nome/.test(t))return "Confirmar o nome da pessoa de contato no imóvel.";
+    if(/telefone/.test(t))return "Confirmar o telefone do contato no imóvel.";
+    if(/pagamento|autoriza/.test(t))return "Confirmar quem autorizou o atendimento ou será responsável pelo pagamento.";
+    if(/disponibilidade|dias e horários|dias e horarios/.test(t))return "Confirmar dias e horários disponíveis para visita ou atendimento.";
+    if(/acesso/.test(t))return "Confirmar como será o acesso ao imóvel.";
+    return "Confirmar: "+String(x||"").replace(/^confirmar:\s*/i,"")+".";
+  });
+  return "INFORMAÇÕES QUE AINDA PRECISAMOS:\n"+lines.map(x=>"• "+x).join("\n");
+}
 
+async function hydrateOperationalDetails(list){
+  const active=list.filter(x=>["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01"].includes(x.status));
+  const results=await Promise.allSettled(active.map(async c=>{
+    const d=await api("get",{id:c.id});
+    const missing=correctedMissing(d);
+    return {id:c.id,missing,ready:!!d.ready&&!missing.length,case:d.case||{},events:Array.isArray(d.events)?d.events:[]};
+  }));
+  const byId=new Map(results.filter(r=>r.status==="fulfilled").map(r=>[r.value.id,r.value]));
+  return list.map(c=>{
+    const d=byId.get(c.id);if(!d)return c;
+    return {...c,...d.case,_exactMissing:d.missing,_exactReady:d.ready,_detailCase:d.case,_events:d.events};
+  });
+}
 async function load(){
-  try{rows=(await api("list")).cases||[];render()}
-  catch(e){$("list").innerHTML='<div class="empty">'+esc(e.message)+'</div>'}
+  try{
+    const base=(await api("list")).cases||[];
+    rows=await hydrateOperationalDetails(base);
+    render();
+  }catch(e){$("list").innerHTML='<div class="empty">'+esc(e.message)+'</div>'}
 }
 function render(){
   $("kCollect").textContent=rows.filter(x=>x.status==="EM_COLETA"||x.status==="INCOMPLETO").length;
@@ -470,7 +543,7 @@ function render(){
   data.forEach(x=>{
     const d=document.createElement("div");d.className="case";
     const pc=pendingCount(x);
-    d.innerHTML='<div class="caseTop"><div class="caseNo">'+esc(x.case_number)+'</div><span class="status">'+esc(x.status)+'</span></div>'+
+    d.innerHTML='<div class="caseTop"><div class="caseNo">'+esc(x.case_number)+'</div><span class="status">'+esc(humanStatus(x.status))+'</span></div>'+
       '<div style="font-weight:800;margin-top:5px">'+esc(x.client||"Cliente a identificar")+'</div>'+
       '<div class="mut small">'+esc(x.address||x.title||x.problem||"Aguardando organização")+'</div>'+
       '<div class="pending">'+(pc===0?"✓ 0 pendências":pc+" pendência"+(pc===1?"":"s"))+'</div>'+
@@ -500,7 +573,7 @@ async function processNew(){
     await load();await openCase(d.case.id);
   }catch(e){
     if(e.data&&e.data.code==="DUPLICATE_CASE"&&e.data.existing){
-      $("newMsg").innerHTML='<span class="warn">Este chamado já existe no F00.</span> <button id="openDup" class="btn">Abrir '+esc(no)+'</button>';
+      $("newMsg").innerHTML='<span class="warn">Este chamado já existe no atendimento.</span> <button id="openDup" class="btn">Abrir '+esc(no)+'</button>';
       $("openDup").onclick=()=>openCase(e.data.existing.id);
     }else $("newMsg").innerHTML='<span class="warn">'+esc(e.message)+'</span>';
   }
@@ -510,7 +583,16 @@ function fact(label,value){
   return '<div class="fact"><b>✓ '+esc(label)+'</b><span>'+esc(value)+'</span></div>';
 }
 function renderItems(arr){
-  const items=Array.isArray(arr)?arr:[];
+  const meta=new Set(["cliente/origem","endereço","endereco","base","data","quantidade","valor unitário","valor unitario","total"]);
+  const items=(Array.isArray(arr)?arr:[]).filter(x=>{
+    const subject=String(x?.subject||"").trim().toLowerCase();
+    const env=String(x?.environment||"").replace(/[🏢📍📄📅]/g,"").trim().toLowerCase();
+    if(meta.has(subject)||meta.has(env))return false;
+    if(/^r\$\s*[\d.,]+$/i.test(subject))return false;
+    if(/^\d+\s*unidade(s)?$/i.test(subject))return false;
+    if(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(subject))return false;
+    return true;
+  });
   $("itemCount").textContent=items.length;
   $("itemsBox").classList.toggle("hidden",!items.length);
   const visible=items.slice(0,8);
@@ -519,10 +601,24 @@ function renderItems(arr){
   $("items").innerHTML=html;
 }
 function renderInvolved(arr){
-  const a=Array.isArray(arr)?arr:[];
+  const blocked=new Set(["quantidade","valor unitário","valor unitario","total","endereço","endereco","data","base","cliente/origem","solicitante","unidade envolvida","possível unidade de origem","possivel unidade de origem","unidade afetada","apartamento de baixo","apartamento de cima","descrição","descricao","serviço","servico","material","horário","horario"]);
+  const raw=Array.isArray(arr)?arr:[];
+  const a=raw.filter(x=>{
+    if(x&&x.unit)return String(x.unit).trim().length>1 || /\d/.test(String(x.unit));
+    const n=String(x?.name||"").trim().toLowerCase();
+    if(!n||blocked.has(n))return false;
+    if(/^r\$\s*\d/i.test(n)||/^\d+[\s.,%]/.test(n))return false;
+    if(n===String(x?.role||"").trim().toLowerCase() && !x?.phone)return false;
+    return true;
+  });
   $("involvedCount").textContent=a.length;
   $("involvedBox").classList.toggle("hidden",!a.length);
-  $("involved").innerHTML=a.slice(0,12).map(x=>'<div class="compactRow"><div class="compactCode">'+esc(x.unit?("UN "+x.unit):(x.type==="pessoa"?"PESSOA":"ENV"))+'</div><div class="compactMain"><b>'+esc(x.name||x.role||"Envolvido")+'</b><div class="compactMeta">'+esc([x.role,x.phone].filter(Boolean).join(" • "))+'</div></div></div>').join("");
+  $("involved").innerHTML=a.slice(0,12).map(x=>{
+    const isUnit=!!x.unit;
+    const title=isUnit?("Unidade "+x.unit):(x.name||"Pessoa envolvida");
+    const meta=isUnit?String(x.role||"unidade relacionada"):[x.role,x.phone].filter(Boolean).join(" • ");
+    return '<div class="compactRow"><div class="compactCode">'+esc(isUnit?("UN "+x.unit):"PESSOA")+'</div><div class="compactMain"><b>'+esc(title)+'</b><div class="compactMeta">'+esc(meta)+'</div></div></div>';
+  }).join("");
 }
 
 function fileKind(f){
@@ -569,15 +665,17 @@ function fillEdit(c){
 }
 async function openCase(id){
   try{
-    const d=await api("get",{id});current=d.case;
+    const d=await api("get",{id});
+    const missing=correctedMissing(d);
+    current=d.case;
     $("capture").classList.add("hidden");$("caseView").classList.remove("hidden");
-    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=d.case.title||d.case.problem||"Chamado em organização";$("viewStatus").textContent=d.case.status;
-    $("viewPending").textContent=d.missing.length+" pendência"+(d.missing.length===1?"":"s");
+    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=d.case.title||d.case.problem||"Chamado em organização";$("viewStatus").textContent=humanStatus(d.case.status);
+    $("viewPending").textContent=missing.length+" pendência"+(missing.length===1?"":"s");
 
     const identified=[
       fact("Cliente / origem",d.case.client),
       fact("Endereço",d.case.address),
-      fact("Contato",d.case.contact_name),
+      fact("Contato",isBogusContact(d.case.contact_name)?"":d.case.contact_name),
       fact("Telefone",d.case.contact_phone),
       fact("Problema identificado",d.case.problem),
       fact("Pagamento / autorização",d.case.payment),
@@ -592,22 +690,29 @@ async function openCase(id){
     renderItems(st.items||[]);
     renderInvolved(st.involved||[]);
 
-    if(d.missing.length){
+    if(missing.length){
       $("missingBox").classList.remove("hidden");
-      $("missing").innerHTML=d.missing.map(x=>'<div class="missingItem">⚠ '+esc(x)+'</div>').join("");
-      $("gateText").innerHTML='<span class="warn">Ainda faltam '+d.missing.length+' informação(ões) para liberar.</span>';
+      $("missing").innerHTML=missing.map(x=>'<div class="missingItem">⚠ '+esc(x)+'</div>').join("");
+      $("gateText").innerHTML='<span class="warn">Ainda '+(missing.length===1?'falta 1 informação':'faltam '+missing.length+' informações')+' para seguir.</span>';
     }else{
       $("missingBox").classList.add("hidden");
-      $("gateText").innerHTML='<span class="okline">✓ Sem pendências críticas. Pronto para F01.</span>';
+      $("gateText").innerHTML='<span class="okline">✓ Sem pendências críticas. Pronto para seguir.</span>';
     }
     renderFiles(d.files||[]);
-    $("message").textContent=d.message||"Nenhuma mensagem necessária.";
+    $("message").textContent=missing.length?collectionMessage(missing):(d.message||"Nenhuma mensagem necessária.");
     $("gc").textContent=d.gestaoclick||"";
-    $("release").disabled=!d.ready||d.case.released_f01;$("release").textContent=d.case.released_f01?"NO F01":"Liberar para F01";
+    $("release").disabled=!d.ready||missing.length>0||d.case.released_f01;$("release").textContent=d.case.released_f01?"ENCAMINHADO":"Enviar para próxima etapa";
     $("moreBox").classList.toggle("hidden",!!d.case.released_f01);
     $("f01").href=d.f01_url||"#";$("f01").classList.toggle("hidden",!d.case.released_f01);
     $("timeline").innerHTML=(d.events||[]).map(x=>"• "+esc(formatDate(x.created_at))+" — "+esc(x.event_text)).join("<br>")||"Sem eventos.";
-    $("moreRaw").value="";$("moreFiles").value="";fillEdit(d.case);
+    const age=Math.floor(caseAgeHours(d.case.updated_at));
+    const overdue=age>=24 && d.case.status!=="PRONTO_F01";
+    $("opCaseMeta").innerHTML=
+      '<span class="op-pill">Responsável: Gabrielly</span>'+
+      (d.case.status==="AGUARDANDO_RESPOSTA"?'<span class="op-pill warn">Dependência: cliente/contato</span>':'')+
+      '<span class="op-pill '+(overdue?'bad':'')+'">'+(overdue?'Parado há '+age+'h':'Atualizado '+esc(formatDate(d.case.updated_at)))+'</span>';
+    $("opCaseNext").innerHTML='<b>Próxima ação:</b> '+esc(caseNextAction(d.case,missing));
+    $("moreRaw").value="";$("moreFiles").value="";fillEdit({...d.case,contact_name:isBogusContact(d.case.contact_name)?"":d.case.contact_name});
   }catch(e){alert(e.message)}
 }
 async function reprocess(){
@@ -622,7 +727,7 @@ async function reprocess(){
 }
 async function markWaiting(){
   if(!current)return;
-  try{await api("wait",{id:current.id});filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();alert("Chamado movido para AGUARDANDO RESPOSTA. Ele saiu da fila ativa, mas continua no histórico.")}catch(e){alert(e.message)}
+  try{await api("wait",{id:current.id});filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();alert("Chamado movido para AGUARDANDO RESPOSTA. Ele saiu da fila ativa, mas continua registrado no histórico.")}catch(e){alert(e.message)}
 }
 async function copyAndWait(){
   if(!current)return;
@@ -652,11 +757,11 @@ async function saveEdit(){
   }catch(e){alert(e.message)}
 }
 async function releaseF01(){
-  if(!current||!confirm("Liberar este chamado para o F01?\n\nApós a confirmação do F01, ele sairá da fila ativa do F00."))return;
+  if(!current||!confirm("Enviar este chamado para a próxima etapa?\n\nApós a confirmação, ele sairá da fila ativa de atendimento."))return;
   try{
     await api("release",{id:current.id});
     filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();
-    alert("Transferência confirmada. O chamado saiu da fila ativa do F00 e agora está no F01.");
+    alert("Encaminhamento confirmado. O chamado saiu da fila ativa de atendimento e seguiu para a próxima etapa.");
   }catch(e){alert(e.message)}
 }
 async function copyFrom(id){try{await navigator.clipboard.writeText($(id).textContent||"")}catch{}}
@@ -674,7 +779,24 @@ load();
   function cases(){try{return Array.isArray(rows)?rows:[]}catch(e){return[]}}
   function esc2(v){return String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
   function hours(v){const t=new Date(v||0).getTime();return t?Math.max(0,(Date.now()-t)/36e5):0}
-  function pc(c){return Array.isArray(c.missing_fields)?c.missing_fields.length:0}
+  function pc(c){return pendingCount(c)}
+  function statusLabel(v){
+    return ({EM_COLETA:"EM COLETA",INCOMPLETO:"INCOMPLETO",AGUARDANDO_RESPOSTA:"AGUARDANDO RESPOSTA",PRONTO_F01:"PRONTO PARA SEGUIR"})[v]||String(v||"");
+  }
+  function ownerText(c){
+    if(c.status==="AGUARDANDO_RESPOSTA")return "Aguardando cliente/contato";
+    if(c.status==="PRONTO_F01")return "Gabrielly · revisar";
+    return "Gabrielly · coleta";
+  }
+  function dueText(c){
+    const age=Math.floor(hours(c.updated_at));
+    if(c.status==="AGUARDANDO_RESPOSTA"&&age>=24)return "Atrasado · "+age+"h";
+    if(c.status==="AGUARDANDO_RESPOSTA")return "Retorno hoje";
+    if(c.status==="PRONTO_F01")return "Pronto agora";
+    if(age>=24)return "Parado · "+age+"h";
+    return "Hoje";
+  }
+  function pluralInfo(n){return n===1?"1 informação":n+" informações"}
   function suggestedPriority(c){
     const age=hours(c.updated_at);
     if(c.status==="AGUARDANDO_RESPOSTA"&&age>=24)return"P0";
@@ -685,15 +807,16 @@ load();
   }
   function nextText(c){
     if(c.status==="AGUARDANDO_RESPOSTA")return "Acompanhar retorno e incorporar a resposta no mesmo chamado.";
-    if(c.status==="PRONTO_F01")return "Coleta suficiente: revisar e liberar para F01.";
+    if(c.status==="PRONTO_F01")return "Coleta suficiente: revisar e encaminhar para a próxima etapa.";
     const n=pc(c);
-    if(n)return "Coletar "+n+" informação"+(n===1?"":"ões")+" que ainda falta"+(n===1?"":"m")+".";
+    if(n)return "Coletar "+pluralInfo(n)+" que ainda "+(n===1?"falta":"faltam")+".";
     return "Abrir o chamado e confirmar o próximo passo.";
   }
   function row(c,extra){
     const p=suggestedPriority(c);
     const title=c.client||c.address||c.title||c.problem||"Chamado em organização";
-    return '<div class="fusion-row" data-case-id="'+esc2(c.id)+'"><div class="fusion-pri '+p.toLowerCase()+'">'+p+'</div><div class="fusion-main"><b>'+esc2(c.case_number||"Sem nº")+' • '+esc2(title)+'</b><span>'+esc2(extra||nextText(c))+'</span></div><div class="fusion-status">'+esc2(c.status||"")+'</div></div>';
+    const due=dueText(c),bad=due.startsWith("Atrasado")||due.startsWith("Parado");
+    return '<div class="fusion-row" data-case-id="'+esc2(c.id)+'"><div class="fusion-pri '+p.toLowerCase()+'">'+p+'</div><div class="fusion-main"><b>'+esc2(c.case_number||"Sem nº")+' • '+esc2(title)+'</b><span>'+esc2(extra||nextText(c))+'</span><div class="op-meta"><i class="op-pill">'+esc2(ownerText(c))+'</i><i class="op-pill '+(bad?"bad":"")+'">'+esc2(due)+'</i></div></div><div class="fusion-status">'+esc2(statusLabel(c.status))+'</div></div>';
   }
   function bindRows(){
     qa(".fusion-row[data-case-id]").forEach(el=>el.onclick=async()=>{showView("novo");try{await openCase(el.dataset.caseId)}catch(e){}});
@@ -720,18 +843,50 @@ load();
     q("#fusionNowList").innerHTML=now.length?now.map(c=>row(c)).join(""):'<div class="fusion-empty">Nenhum chamado ativo. A fila está limpa.</div>';
 
     const pend=active.filter(c=>pc(c)>0||c.status==="AGUARDANDO_RESPOSTA");
-    q("#fusionPendingList").innerHTML=pend.length?pend.map(c=>row(c,pc(c)?pc(c)+" informação"+(pc(c)===1?"":"ões")+" pendente"+(pc(c)===1?"":"s")+".":"Aguardando resposta externa.")).join(""):'<div class="fusion-empty">Nenhuma pendência viva encontrada no F00.</div>';
+    q("#fusionPendingList").innerHTML=pend.length?pend.map(c=>row(c,pc(c)?pluralInfo(pc(c))+" pendente"+(pc(c)===1?"":"s")+".":"Aguardando resposta externa.")).join(""):'<div class="fusion-empty">Nenhuma pendência viva encontrada no F00.</div>';
 
-    q("#fusionAgendaList").innerHTML=agenda.length?agenda.map(c=>row(c,"Disponibilidade: "+String(c.availability))).join(""):'<div class="fusion-empty">Ainda não há disponibilidade capturada nos chamados. Quando o F00 identificar esse dado, ele aparece aqui automaticamente.</div>';
+    q("#fusionAgendaList").innerHTML=agenda.length?agenda.map(c=>row(c,"Disponibilidade: "+String(c.availability))).join(""):'<div class="fusion-empty">Ainda não há disponibilidade registrada nos chamados ativos.</div>';
 
     q("#fusionReturnList").innerHTML=waiting.length?waiting.map(c=>row(c,"Aguardando resposta há aproximadamente "+Math.floor(hours(c.updated_at))+"h.")).join(""):'<div class="fusion-empty">Nenhum chamado marcado como aguardando resposta.</div>';
 
+    const overdue=active.filter(c=>hours(c.updated_at)>=24 && c.status!=="PRONTO_F01");
+    const alertHost=q("#fusionAlertList");
+    if(alertHost){
+      const parts=[];
+      if(overdue.length)parts.push('<div class="op-alert"><i class="op-dot bad"></i><div><strong>'+overdue.length+' atendimento'+(overdue.length===1?'':'s')+' parado'+(overdue.length===1?'':'s')+' há mais de 24h</strong><span>Abrir agora e definir a próxima ação.</span></div></div>');
+      if(waiting.length)parts.push('<div class="op-alert"><i class="op-dot warn"></i><div><strong>'+waiting.length+' retorno'+(waiting.length===1?'':'s')+' externo'+(waiting.length===1?'':'s')+'</strong><span>Conferir se houve resposta e cobrar quando necessário.</span></div></div>');
+      if(ready.length)parts.push('<div class="op-alert"><i class="op-dot ok"></i><div><strong>'+ready.length+' pronto'+(ready.length===1?'':'s')+' para seguir</strong><span>Revisar e encaminhar sem reabrir a coleta.</span></div></div>');
+      alertHost.innerHTML=parts.length?parts.join(""):'<div class="op-alert"><i class="op-dot ok"></i><div><strong>Sem exceções críticas agora</strong><span>A fila está sob controle.</span></div></div>';
+    }
+
+    const closeHost=q("#closeExceptionList");
+    if(closeHost){
+      const exceptions=[...overdue,...waiting.filter(c=>!overdue.some(o=>o.id===c.id)),...collect.filter(c=>!overdue.some(o=>o.id===c.id)),...ready];
+      closeHost.innerHTML=exceptions.length?exceptions.map(c=>row(c)).join(""):'<div class="op-alert"><i class="op-dot ok"></i><div><strong>Dia sem pendências operacionais</strong><span>Nenhum atendimento ativo ficou órfão.</span></div></div>';
+    }
+
     bindRows();
-    health(true);
+    health(true,"Dados sincronizados");
+  }
+  async function loadAgendaBridge(){
+    const note=q("#agendaBridgeNote");
+    try{
+      const r=await fetch("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v8-candidate-20261002?view=public",{cache:"no-store"});
+      if(!r.ok)throw new Error("HTTP "+r.status);
+      const d=await r.json();
+      const k=d.kpis||{};
+      const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=String(v??0)};
+      set("agendaToday",k.visits_today?.count??0);
+      set("agendaTomorrow",k.agenda_tomorrow?.count??0);
+      set("agendaYesterday",k.pending_yesterday?.count??0);
+      if(note)note.textContent="Agenda consolidada sincronizada com a operação.";
+    }catch(e){
+      if(note)note.textContent="Agenda consolidada temporariamente indisponível; as disponibilidades dos chamados continuam visíveis abaixo.";
+    }
   }
   function health(ok,msg){
     const e=q("#fusionHealth");if(!e)return;e.classList.toggle("ok",!!ok);e.classList.toggle("bad",ok===false);
-    const s=q("span",e);if(s)s.textContent=msg||(ok?"F00 conectado":"F00 indisponível");
+    const s=q("span",e);if(s)s.textContent=msg||(ok?"Dados sincronizados":"Dados indisponíveis");
   }
   function showView(view){
     qa(".fusion-page").forEach(p=>p.classList.toggle("active",p.dataset.view===view));
@@ -754,7 +909,9 @@ load();
   window.addEventListener("unhandledrejection",()=>health(false,"Falha de sincronização"));
   setTimeout(renderFusion,500);
   setTimeout(renderFusion,1600);
+  loadAgendaBridge();
   setInterval(renderFusion,30000);
+  setInterval(loadAgendaBridge,120000);
 })();
 </script>
 </body>
