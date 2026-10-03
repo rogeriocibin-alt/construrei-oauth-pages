@@ -1,0 +1,860 @@
+{
+  "meta": {
+    "title": "Gestor do Projeto CONSTRU-REI",
+    "version": "V1",
+    "status": "CANDIDATA ISOLADA",
+    "generated_at": "2026-10-03",
+    "repository": "rogeriocibin-alt/construrei-oauth-pages",
+    "branch": "cr-project-manager-v1-candidate-20261003",
+    "coverage": "Histórico inicial reconstruído com evidências verificadas no repositório e decisões registradas no projeto. Itens sem evidência suficiente permanecem marcados como NÃO CONFIRMADO.",
+    "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
+    "audit_snapshot": "2026-10-03",
+    "audit_state": "V1 auditada contra branches/checkpoints atuais do repositório"
+  },
+  "governance": [
+    "Máximo de 2 frentes em execução simultaneamente.",
+    "Ideia não é frente ativa.",
+    "Candidata não é canônica.",
+    "Nenhuma hipótese de teste altera a última versão segura.",
+    "Entrega exige objetivo cumprido, teste, versão/checkpoint e decisão registrada.",
+    "Toda evolução parte de checkpoint aprovado e ocorre em candidata isolada.",
+    "Regressões e perdas permanecem visíveis no histórico.",
+    "Histórico não é apagado: versões substituídas viram referência de recuperação.",
+    "Uma fonte de verdade por produto.",
+    "Objetivo do projeto é concluir, homologar e entregar — não acumular desenvolvimento."
+  ],
+  "canonical_rules": [
+    {
+      "id": "r1",
+      "label": "Central oficial preservada durante candidatas executivas",
+      "status": "preserved",
+      "evidence": "Checkpoint V8 registra explicitamente: Central oficial não alterada."
+    },
+    {
+      "id": "r2",
+      "label": "APP oficial evolui somente por candidata isolada",
+      "status": "preserved",
+      "evidence": "FINAL_CHECKPOINT_APP_CONSTRUREI_20261001 define uma única baseline oficial e evolução isolada."
+    },
+    {
+      "id": "r3",
+      "label": "F00→F09 possui namespace canônico único",
+      "status": "preserved",
+      "evidence": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001."
+    },
+    {
+      "id": "r4",
+      "label": "Apresentação Viva preserva PDF, PowerPoint, dados vivos e Radar",
+      "status": "preserved",
+      "evidence": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002."
+    },
+    {
+      "id": "r5",
+      "label": "Versões executivas V9/V10/V11 permanecem candidatas até homologação explícita",
+      "status": "preserved",
+      "evidence": "Branches/checkpoints e loaders publicados como candidate/preview."
+    },
+    {
+      "id": "r6",
+      "label": "No máximo duas frentes ativas",
+      "status": "preserved",
+      "evidence": "Regra de governança adotada pelo Gestor V1; nesta carga há uma frente ativa."
+    },
+    {
+      "id": "r7",
+      "label": "Banco Mestre persistente do Gestor já conectado",
+      "status": "partial",
+      "evidence": "V1 usa dataset estruturado estático; persistência Supabase está preparada, mas ainda não conectada."
+    }
+  ],
+  "products": [
+    {
+      "id": "gestor",
+      "name": "Gestor do Projeto",
+      "layer": "Governança",
+      "status": "candidate",
+      "summary": "Cockpit superior de direção, memória, versões, decisões, frentes e entrega.",
+      "current": "V1 candidata"
+    },
+    {
+      "id": "central",
+      "name": "Central CONSTRU-REI",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "Camada executiva/gestão e ponto de acesso aos módulos.",
+      "current": "Canônica aprovada 01/10"
+    },
+    {
+      "id": "executive",
+      "name": "Dashboard Executivo",
+      "layer": "Produto gerenciado",
+      "status": "candidate",
+      "summary": "Cadeia experimental/aprovada V6→V11 sem promoção automática da Central oficial.",
+      "current": "V11 Premium candidata"
+    },
+    {
+      "id": "app",
+      "name": "APP CONSTRU-REI",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "Produto operacional com baseline oficial protegida.",
+      "current": "Baseline oficial 01/10 + candidatas V8→V11"
+    },
+    {
+      "id": "flows",
+      "name": "Esteira F00→F09",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "Jornada operacional consolidada em namespace canônico único.",
+      "current": "F00→F09 homologado 01/10"
+    },
+    {
+      "id": "agenda",
+      "name": "Agenda / Google Calendar",
+      "layer": "Integração",
+      "status": "candidate",
+      "summary": "Agenda executiva evoluiu de bridge/Trello para Google Calendar na V9.",
+      "current": "Google Agenda V9 candidata"
+    },
+    {
+      "id": "presentation",
+      "name": "Apresentação Executiva Viva",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "20 páginas, dados vivos, Radar Macro, PDF e PowerPoint.",
+      "current": "Canônica 02/10"
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard Gerencial V4",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "Painel gerencial preservado como fonte de leitura.",
+      "current": "V4 preservado"
+    },
+    {
+      "id": "academy",
+      "name": "Academy",
+      "layer": "Produto gerenciado",
+      "status": "review",
+      "summary": "Módulo existente; revisão visual/conteúdo permanece pendente.",
+      "current": "Em revisão"
+    },
+    {
+      "id": "docs",
+      "name": "Documentação",
+      "layer": "Produto gerenciado",
+      "status": "review",
+      "summary": "Base documental preservada; revisão de consistência visual prevista.",
+      "current": "Preservada"
+    },
+    {
+      "id": "trello",
+      "name": "Trello",
+      "layer": "Fonte operacional",
+      "status": "live",
+      "summary": "Fonte de cards e parte da agenda/monitoramento operacional.",
+      "current": "Leitura operacional"
+    },
+    {
+      "id": "gestaoclick",
+      "name": "GestãoClick",
+      "layer": "Fonte operacional",
+      "status": "live",
+      "summary": "Fonte para orçamentos, ordens de serviço e conciliações.",
+      "current": "Leitura operacional"
+    },
+    {
+      "id": "supabase",
+      "name": "Supabase",
+      "layer": "Infraestrutura",
+      "status": "live",
+      "summary": "Edge Functions, runtimes e APIs da Central.",
+      "current": "Infraestrutura ativa"
+    }
+  ],
+  "versions": [
+    {
+      "id": "central-canonical-20261001",
+      "product": "central",
+      "name": "Central Canônica Aprovada 01/10",
+      "date": "2026-10-01",
+      "status": "canonical",
+      "parent": "recuperação/identidade anterior",
+      "commit": "92ef8f27d71ac176abc6452df165a048c4405d60",
+      "branch": "cr-central-canonical-approved-20261001",
+      "checkpoint": "CHECKPOINT_CENTRAL_CANONICAL_APPROVED_20261001",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-approved-router-candidate-20261001/",
+      "gains": [
+        "HOME aprovada",
+        "roteamento aprovado",
+        "base oficial segura"
+      ],
+      "losses": [],
+      "note": "Referência oficial da Central; candidatas executivas posteriores não implicam promoção automática."
+    },
+    {
+      "id": "exec-v6",
+      "product": "executive",
+      "name": "Executiva V6 Aprovada",
+      "date": "2026-10-02",
+      "status": "homologated",
+      "parent": "V5 executiva estática",
+      "commit": "43edad3801f5e38cf2604b82dc45be33aff3bc29",
+      "branch": "cr-central-executive-v6-canonical-approved-20261002",
+      "checkpoint": "CHECKPOINT_CENTRAL_EXECUTIVE_V6_APPROVED_20261002",
+      "url": "",
+      "gains": [
+        "baseline executiva aprovada"
+      ],
+      "losses": [],
+      "note": "Checkpoint V8 confirma que a V6 permaneceu congelada como base aprovada."
+    },
+    {
+      "id": "exec-v7",
+      "product": "executive",
+      "name": "Executiva V7 Agenda Bridge",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "exec-v6",
+      "commit": "1ac6a831db51ffd0eb2103e3866e531bedea6ae3",
+      "branch": "cr-central-executive-v7-agenda-bridge-candidate-20261002",
+      "checkpoint": "CHECKPOINT_CENTRAL_EXECUTIVE_V7_AGENDA_BRIDGE_20261002",
+      "url": "",
+      "gains": [
+        "ponte de agenda"
+      ],
+      "losses": [],
+      "note": "Etapa de integração entre a baseline executiva e agenda viva."
+    },
+    {
+      "id": "exec-v8",
+      "product": "executive",
+      "name": "Executiva V8 Agenda Viva",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "exec-v7",
+      "commit": "caeb85fd5eb747911ab071c57ad2801542d25b61",
+      "branch": "cr-central-executive-v8-live-agenda-candidate-20261002",
+      "checkpoint": "CHECKPOINT_CENTRAL_EXECUTIVE_V8_LIVE_AGENDA_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-executive-v8-live-agenda-candidate-20261002/",
+      "gains": [
+        "Agenda Viva por dados Trello",
+        "conciliação GestãoClick",
+        "zero confiável quando fonte responde"
+      ],
+      "losses": [],
+      "note": "Checkpoint registra 182 cards com data operacional e 109 conciliados; produção permaneceu intocada."
+    },
+    {
+      "id": "exec-v9",
+      "product": "executive",
+      "name": "Executiva V9 Google Agenda",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "exec-v8",
+      "commit": "3571b14a01036ccabb5dea7e8026cdbfcb1510ad",
+      "branch": "cr-central-executive-v9-google-agenda-candidate-20261002",
+      "checkpoint": "CHECKPOINT_CR_EXECUTIVE_V9_GOOGLE_AGENDA_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-executive-v9-google-agenda-candidate-20261002/",
+      "gains": [
+        "Google Calendar como fonte oficial de compromissos",
+        "conciliação Trello/GestãoClick"
+      ],
+      "losses": [],
+      "note": "V9 é pacote de Agenda Google sobre a cadeia executiva; não contém sozinha todos os refinamentos posteriores."
+    },
+    {
+      "id": "exec-v10",
+      "product": "executive",
+      "name": "Executiva V10 Executive Model",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "exec-v9",
+      "commit": "987014fa463c8fbb398241a4b57d27fe70a2f8a4",
+      "branch": "",
+      "checkpoint": "CHECKPOINT_V10_MENU_FIXED_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-executive-v10-menu-fixed-candidate-20261002/",
+      "gains": [
+        "layout executivo",
+        "KPIs",
+        "ações prioritárias",
+        "saúde técnica",
+        "esteira F00→F09",
+        "menu corrigido"
+      ],
+      "losses": [],
+      "note": "Mantém o script da V9 Google Agenda e adiciona modelo executivo V10."
+    },
+    {
+      "id": "exec-v11",
+      "product": "executive",
+      "name": "Executiva V11 Premium Detail",
+      "date": "2026-10-03",
+      "status": "candidate",
+      "parent": "exec-v10",
+      "commit": "52b6833cd60bc6541ae30884e9d9edf5c17f6c38",
+      "branch": "",
+      "checkpoint": "CHECKPOINT_V11_PREMIUM_RESOLVED_20261003",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-executive-v11-premium-detail-candidate-20261003/",
+      "gains": [
+        "refinamento premium",
+        "correção de loop DOM",
+        "saúde da agenda ligada ao Google Calendar vivo"
+      ],
+      "losses": [],
+      "note": "Candidata superior da cadeia visual executiva; não é automaticamente a Central canônica."
+    },
+    {
+      "id": "app-official",
+      "product": "app",
+      "name": "APP Baseline Oficial 01/10",
+      "date": "2026-10-01",
+      "status": "canonical",
+      "parent": "APP anterior",
+      "commit": "",
+      "branch": "",
+      "checkpoint": "FINAL_CHECKPOINT_APP_CONSTRUREI_20261001",
+      "url": "",
+      "gains": [
+        "baseline única oficial",
+        "proteção arquitetural",
+        "política forward-only"
+      ],
+      "losses": [],
+      "note": "production/app-canonical-20261001/index.html; futuras mudanças devem ocorrer em candidatas isoladas."
+    },
+    {
+      "id": "app-v9",
+      "product": "app",
+      "name": "APP V9 Reconciliação",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "app-official",
+      "commit": "6981717971251f444c581d388da68cbc0b913ae8",
+      "branch": "cr-app-gabi-v9-reconciliation-ui-20261002",
+      "checkpoint": "CHECKPOINT_APP_GABI_V9_RECONCILIATION_20261002",
+      "url": "",
+      "gains": [
+        "reconciliação incremental"
+      ],
+      "losses": [],
+      "note": "Candidata incremental do APP."
+    },
+    {
+      "id": "app-v11",
+      "product": "app",
+      "name": "APP V11 F01 CRM / Mobile",
+      "date": "2026-10-03",
+      "status": "candidate",
+      "parent": "app-v9",
+      "commit": "ae2e8e9e17f4a1b2d63af4a845c1749f3800c51f",
+      "branch": "cr-app-f01-ux-v11-mobile-fix-20261002",
+      "checkpoint": "CHECKPOINT_APP_GABI_V11_ATENDIMENTO_GABRIELLY_20261003",
+      "url": "",
+      "gains": [
+        "F01 orientado à próxima ação",
+        "foco mobile",
+        "normalização de rótulos"
+      ],
+      "losses": [],
+      "note": "Mantém o motor V9 do APP e evolui UX do F01."
+    },
+    {
+      "id": "flows-01",
+      "product": "flows",
+      "name": "F00→F09 Canônico",
+      "date": "2026-10-01",
+      "status": "canonical",
+      "parent": "previews individuais F00→F09",
+      "commit": "11df60c4866aa6bd946e6dedee0f1b4512b80246",
+      "branch": "cr-full-flow-f00-f09-central-promotion-20261001",
+      "checkpoint": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
+      "url": "",
+      "gains": [
+        "produto operacional único",
+        "namespace canônico",
+        "shell compartilhado"
+      ],
+      "losses": [],
+      "note": "Checkpoint determina não reconstruir fases individualmente e não misturar versões históricas."
+    },
+    {
+      "id": "presentation-20p",
+      "product": "presentation",
+      "name": "Apresentação Executiva Viva 20p",
+      "date": "2026-10-02",
+      "status": "canonical",
+      "parent": "presentation-38p",
+      "commit": "93816fbe52ecba8270a732cb80b3a20b05621888",
+      "branch": "cr-presentation-executive-viva-canonical-20261002",
+      "checkpoint": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/presentation.html?rev=93816fbe",
+      "gains": [
+        "20 páginas executivas",
+        "Radar Macro",
+        "dados vivos",
+        "PDF",
+        "PowerPoint",
+        "auto-years"
+      ],
+      "losses": [],
+      "note": "Homologada, canônica e congelada."
+    },
+    {
+      "id": "presentation-38p",
+      "product": "presentation",
+      "name": "Apresentação histórica 38p",
+      "date": "2026-09-30",
+      "status": "archived",
+      "parent": "",
+      "commit": "",
+      "branch": "",
+      "checkpoint": "CHECKPOINT_PRE_PRESENTATION_EXECUTIVE_CANONICAL_PROMOTION_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/archive/presentation-live-38p-20260930/",
+      "gains": [
+        "rollback histórico"
+      ],
+      "losses": [
+        "não é corrente"
+      ],
+      "note": "Somente rollback histórico; não usar como base de evolução."
+    }
+  ],
+  "checkpoints": [
+    {
+      "name": "CHECKPOINT_CENTRAL_CANONICAL_APPROVED_20261001",
+      "date": "2026-10-01",
+      "commit": "92ef8f27d71ac176abc6452df165a048c4405d60",
+      "role": "Central oficial aprovada"
+    },
+    {
+      "name": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
+      "date": "2026-10-01",
+      "commit": "11df60c4866aa6bd946e6dedee0f1b4512b80246",
+      "role": "Esteira F00→F09 canônica"
+    },
+    {
+      "name": "CHECKPOINT_APP_CANONICAL_PROMOTED_20261001",
+      "date": "2026-10-01",
+      "commit": "4f29a684d80bbb2f945936d4b6444e81418b0d7a",
+      "role": "APP baseline oficial"
+    },
+    {
+      "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V6_APPROVED_20261002",
+      "date": "2026-10-02",
+      "commit": "43edad3801f5e38cf2604b82dc45be33aff3bc29",
+      "role": "Baseline executiva V6 aprovada"
+    },
+    {
+      "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V7_AGENDA_BRIDGE_20261002",
+      "date": "2026-10-02",
+      "commit": "1ac6a831db51ffd0eb2103e3866e531bedea6ae3",
+      "role": "Agenda Bridge V7"
+    },
+    {
+      "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V8_LIVE_AGENDA_20261002",
+      "date": "2026-10-02",
+      "commit": "caeb85fd5eb747911ab071c57ad2801542d25b61",
+      "role": "Agenda Viva V8"
+    },
+    {
+      "name": "CHECKPOINT_CR_EXECUTIVE_V9_GOOGLE_AGENDA_20261002",
+      "date": "2026-10-02",
+      "commit": "773cfe0a0dc52b6e8e2b297385e90cb6b2550eb7",
+      "role": "Google Agenda V9"
+    },
+    {
+      "name": "CHECKPOINT_V10_EXECUTIVE_MODEL_CANDIDATE_20261002",
+      "date": "2026-10-02",
+      "commit": "16de62fd1b273b380891681f71db94b50641375c",
+      "role": "Executive Model V10"
+    },
+    {
+      "name": "CHECKPOINT_V10_MENU_FIXED_20261002",
+      "date": "2026-10-02",
+      "commit": "987014fa463c8fbb398241a4b57d27fe70a2f8a4",
+      "role": "V10 menu corrigido"
+    },
+    {
+      "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002",
+      "date": "2026-10-02",
+      "commit": "08079cca98673fd505777a99675e6091021adb46",
+      "role": "Apresentação Viva canônica"
+    },
+    {
+      "name": "CHECKPOINT_V11_PREMIUM_RESOLVED_20261003",
+      "date": "2026-10-03",
+      "commit": "52b6833cd60bc6541ae30884e9d9edf5c17f6c38",
+      "role": "V11 Premium candidata resolvida"
+    },
+    {
+      "name": "CHECKPOINT_APP_GABI_V11_ATENDIMENTO_GABRIELLY_20261003",
+      "date": "2026-10-03",
+      "commit": "ae2e8e9e17f4a1b2d63af4a845c1749f3800c51f",
+      "role": "APP V11 atendimento/F01"
+    }
+  ],
+  "fronts": [
+    {
+      "id": "front-gestor-v1",
+      "name": "Gestor do Projeto CONSTRU-REI — V1",
+      "status": "executing",
+      "priority": "P0",
+      "objective": "Entregar o cockpit visual que organiza memória, versões, decisões, frentes e direção do projeto.",
+      "progress": 92,
+      "owner": "CR Assertivo + Bio",
+      "last_advance": "Cockpit, navegação, busca, drawers, governança e auditoria estrutural concluídos na branch isolada.",
+      "next_action": "Validar visual e comportamento em desktop/celular; depois congelar checkpoint da candidata V1.",
+      "dependency": "Validação humana da V1 antes de qualquer persistência ou promoção.",
+      "blocked": false,
+      "age_days": 0
+    },
+    {
+      "id": "front-central-exec",
+      "name": "Central Executiva V9→V11",
+      "status": "homologation",
+      "priority": "P1",
+      "objective": "Consolidar qual candidata executiva deve seguir para homologação sem confundir pacote V9 com cadeia V10/V11.",
+      "progress": 85,
+      "owner": "CR Assertivo",
+      "last_advance": "V11 Premium recebeu correções de saúde da Agenda em 03/10.",
+      "next_action": "Comparação visual/funcional controlada contra baseline aprovada antes de promoção.",
+      "dependency": "Decisão do Rogério.",
+      "blocked": false,
+      "age_days": 1
+    },
+    {
+      "id": "front-app-f01",
+      "name": "APP — F01 CRM action-first",
+      "status": "queue",
+      "priority": "P1",
+      "objective": "Evoluir atendimento/F01 sem romper baseline oficial do APP.",
+      "progress": 70,
+      "owner": "CR Assertivo",
+      "last_advance": "V11 mobile/foco F01 criada.",
+      "next_action": "Retomar somente após fechar uma vaga de execução.",
+      "dependency": "Limite de duas frentes.",
+      "blocked": false,
+      "age_days": 1
+    },
+    {
+      "id": "front-academy",
+      "name": "Academy — revisão visual e conteúdo",
+      "status": "queue",
+      "priority": "P2",
+      "objective": "Revisar consistência e versão do conteúdo.",
+      "progress": 15,
+      "owner": "A definir",
+      "last_advance": "Frente registrada no plano de nivelamento.",
+      "next_action": "Auditar após frentes P0/P1.",
+      "dependency": "Fila",
+      "blocked": false,
+      "age_days": 2
+    },
+    {
+      "id": "front-docs",
+      "name": "Documentação — consistência visual",
+      "status": "queue",
+      "priority": "P2",
+      "objective": "Revisar consistência visual sem alterar conteúdo canônico.",
+      "progress": 25,
+      "owner": "A definir",
+      "last_advance": "Auditoria visual registrada.",
+      "next_action": "Retomar após frentes prioritárias.",
+      "dependency": "Fila",
+      "blocked": false,
+      "age_days": 2
+    }
+  ],
+  "decisions": [
+    {
+      "id": "d1",
+      "date": "2026-10-01",
+      "title": "Central canônica protegida",
+      "status": "confirmed",
+      "decision": "Evoluções devem ocorrer em candidata isolada; canônica não é ambiente de teste.",
+      "reason": "Evitar regressões e permitir rollback objetivo.",
+      "impact": [
+        "central",
+        "executive",
+        "app",
+        "flows"
+      ],
+      "evidence": "Checkpoint/branches canônicos do repositório."
+    },
+    {
+      "id": "d2",
+      "date": "2026-10-01",
+      "title": "F00→F09 como produto único",
+      "status": "confirmed",
+      "decision": "A jornada completa é uma única fonte canônica; não reconstruir fases individualmente.",
+      "reason": "Evitar mistura de versões históricas e divergência de shell.",
+      "impact": [
+        "flows",
+        "app",
+        "central"
+      ],
+      "evidence": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001."
+    },
+    {
+      "id": "d3",
+      "date": "2026-10-02",
+      "title": "Apresentação Viva 20p é canônica",
+      "status": "confirmed",
+      "decision": "20 páginas, Radar Macro, PDF + PowerPoint e dados vivos formam a baseline corrente.",
+      "reason": "Homologação explícita e checkpoint de promoção.",
+      "impact": [
+        "presentation"
+      ],
+      "evidence": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002."
+    },
+    {
+      "id": "d4",
+      "date": "2026-10-03",
+      "title": "Gestor do Projeto acima da Central",
+      "status": "confirmed",
+      "decision": "Gestor passa a ser camada de governança; Central e demais módulos são produtos gerenciados.",
+      "reason": "Retirar dependência da memória humana e organizar direção/entrega.",
+      "impact": [
+        "gestor",
+        "central",
+        "app",
+        "executive"
+      ],
+      "evidence": "Decisão explícita do Rogério nesta frente."
+    },
+    {
+      "id": "d5",
+      "date": "2026-10-03",
+      "title": "Limite de duas frentes ativas",
+      "status": "confirmed",
+      "decision": "Terceira demanda entra em fila até conclusão, pausa formal ou encerramento de uma frente.",
+      "reason": "Reduzir dispersão e aumentar taxa de entrega.",
+      "impact": [
+        "gestor"
+      ],
+      "evidence": "Regra de governança aprovada para o Gestor."
+    }
+  ],
+  "demands": [
+    {
+      "id": "q1",
+      "title": "Conectar Banco Mestre persistente ao Gestor",
+      "state": "approved_queue",
+      "priority": "P1",
+      "note": "Somente depois da validação visual/arquitetural da V1."
+    },
+    {
+      "id": "q2",
+      "title": "Automatizar ingestão de branches/commits/checkpoints",
+      "state": "analysis",
+      "priority": "P1",
+      "note": "Transformar auditoria manual inicial em atualização viva."
+    },
+    {
+      "id": "q3",
+      "title": "Modo apresentação executivo do Gestor",
+      "state": "executing",
+      "priority": "P0",
+      "note": "Incluído na V1."
+    },
+    {
+      "id": "q4",
+      "title": "Comparador automático de versões",
+      "state": "approved_queue",
+      "priority": "P1",
+      "note": "Comparar ganho/perda e risco antes de homologar candidata."
+    }
+  ],
+  "milestones": [
+    {
+      "date": "2026-09-29",
+      "type": "recovery",
+      "title": "Recuperação/canonização da Central",
+      "detail": "Branches central-canonical-recovered-20260929 e central-canonical-afternoon-20260929 registram fase de recuperação.",
+      "confidence": "verified_branch"
+    },
+    {
+      "date": "2026-09-30",
+      "type": "identity",
+      "title": "Retorno à identidade azul canônica",
+      "detail": "Branch cr-blue-canonical-option-b-20260930 e checkpoints de identidade registram retomada visual.",
+      "confidence": "verified_branch"
+    },
+    {
+      "date": "2026-10-01",
+      "type": "canonical",
+      "title": "Central canônica aprovada",
+      "detail": "Checkpoint/branch apontam para commit 92ef8f27…",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-01",
+      "type": "canonical",
+      "title": "F00→F09 homologado como um único produto",
+      "detail": "Namespace production/flow-canonical-20261001 e checkpoint de homologação.",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-01",
+      "type": "canonical",
+      "title": "APP oficial consolidado",
+      "detail": "Baseline única protegida por política forward-only.",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "version",
+      "title": "Executiva V6 aprovada",
+      "detail": "Baseline executiva congelada no commit 43edad38…",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "integration",
+      "title": "V7/V8 evoluem Agenda",
+      "detail": "Agenda Bridge e Agenda Viva com Trello + GestãoClick.",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "integration",
+      "title": "V9 incorpora Google Agenda",
+      "detail": "Google Calendar passa a compor a cadeia executiva.",
+      "confidence": "verified_commit"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "version",
+      "title": "V10 cria modelo executivo",
+      "detail": "KPIs, ações prioritárias, saúde técnica, esteira e refinamento do menu.",
+      "confidence": "verified_commit"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "canonical",
+      "title": "Apresentação Executiva Viva homologada",
+      "detail": "20 páginas, Radar Macro, dados vivos, PDF e PowerPoint.",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "version",
+      "title": "V11 Premium Detail",
+      "detail": "Refinamento premium e correções da Agenda viva.",
+      "confidence": "verified_commit"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "governance",
+      "title": "Nasce o Gestor do Projeto",
+      "detail": "Projeto passa a ter cockpit superior de governança e memória.",
+      "confidence": "explicit_decision"
+    }
+  ],
+  "recoverables": [
+    {
+      "id": "rec1",
+      "title": "Apresentação histórica 38 páginas",
+      "status": "archived_safe",
+      "existed_in": "archive/presentation-live-38p-20260930",
+      "disappeared": "Substituída pela canônica 20p",
+      "value": "Rollback histórico e comparação de conteúdo.",
+      "recommendation": "Não restaurar como corrente; usar somente para recuperação pontual/consulta.",
+      "risk": "high_if_promoted"
+    },
+    {
+      "id": "rec2",
+      "title": "Agenda Viva V8 baseada em Trello",
+      "status": "superseded",
+      "existed_in": "Executiva V8",
+      "disappeared": "Evolução para Google Agenda V9",
+      "value": "Referência técnica de conciliação Trello/GestãoClick.",
+      "recommendation": "Preservar como alternativa histórica; não substituir Google Agenda sem decisão explícita.",
+      "risk": "medium"
+    },
+    {
+      "id": "rec3",
+      "title": "Google Meet embutido na Central",
+      "status": "unconfirmed",
+      "existed_in": "Relato de validações anteriores",
+      "disappeared": "Não confirmado no levantamento inicial do repositório",
+      "value": "Possível função útil para reuniões dentro da Central.",
+      "recommendation": "Localizar evidência técnica antes de classificar como recuperável.",
+      "risk": "unknown"
+    }
+  ],
+  "decision_readiness": {
+    "title": "Homologar uma candidata executiva acima da V6",
+    "checks": [
+      {
+        "label": "Última baseline aprovada identificada",
+        "done": true
+      },
+      {
+        "label": "Cadeia V9→V10→V11 identificada",
+        "done": true
+      },
+      {
+        "label": "Produção oficial preservada",
+        "done": true
+      },
+      {
+        "label": "Validação comparativa humana da candidata final",
+        "done": false
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "priority": "P0",
+      "title": "Validar o Gestor V1 antes de abrir novas frentes",
+      "rationale": "O próprio mecanismo de governança precisa virar fonte de orientação antes de ampliar o volume de desenvolvimento."
+    },
+    {
+      "priority": "P1",
+      "title": "Não promover V11 só por ser numericamente mais nova",
+      "rationale": "V11 é candidata da cadeia executiva; a Central oficial continua protegida até homologação explícita."
+    },
+    {
+      "priority": "P1",
+      "title": "Transformar esta auditoria estática em ingestão automática",
+      "rationale": "Depois da validação visual, branches, commits e checkpoints devem alimentar o Banco Mestre sem atualização manual."
+    }
+  ],
+  "unconfirmed": [
+    "Histórico anterior às evidências localizadas no repositório em 29/09/2026 ainda não foi reconstruído nesta V1.",
+    "Motivos detalhados de todas as versões históricas não estão documentados em um único artefato; devem ser enriquecidos por checkpoints e conversas antigas.",
+    "Google Meet embutido: existência funcional anterior foi relatada, mas a implementação exata ainda precisa ser localizada no repositório.",
+    "Alguns branches/checkpoints possuem nomes claros, porém ainda não tiveram seu conteúdo documental individual lido nesta primeira carga."
+  ],
+  "repository_audit": {
+    "total_branches": 197,
+    "checkpoint_branches": 95,
+    "central_branches": 54,
+    "app_branches": 47,
+    "presentation_branches": 14,
+    "candidate_branches": 43,
+    "canonical_branches": 52,
+    "approved_or_homologated_branches": 26,
+    "v9_refs": 7,
+    "v10_refs": 5,
+    "v11_refs": 8,
+    "base_main_commit": "52b6833cd60bc6541ae30884e9d9edf5c17f6c38",
+    "warnings": [
+      {
+        "severity": "attention",
+        "ref": "CHECKPOINT_V9_GOOGLE_AGENDA_VALIDATED_20261003",
+        "title": "Checkpoint V9 validado apresenta deriva de ponteiro",
+        "detail": "O ref atualmente aponta para ae2e8e9… (APP V11 mobile), enquanto os checkpoints técnicos dedicados da Executiva V9 permanecem em 773cfe0… (Google Agenda), 88e106c… (service secret) e 377e112… (sidebar refinada). Não usar o nome VALIDATED isoladamente como evidência da V9 até saneamento."
+      },
+      {
+        "severity": "attention",
+        "ref": "governança",
+        "title": "Volume histórico exige fonte de verdade explícita",
+        "detail": "A auditoria encontrou 197 branches e 95 refs com nome de checkpoint. O Gestor passa a resumir o estado corrente sem apagar a trilha histórica."
+      }
+    ]
+  }
+}
