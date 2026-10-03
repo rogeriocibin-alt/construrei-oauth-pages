@@ -1,16 +1,19 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
   "version": "1.1.1",
-  "build": "CR-PM-V1.1.1-C0-EXEC-20261003",
-  "environment": "candidate",
-  "release_status": "executive_dashboard_candidate",
+  "build": "CR-PM-V1.1.1-C0-CANONICAL-20261003",
+  "environment": "canonical",
+  "release_status": "canonical_homologated",
   "released_at": "2026-10-03T13:08:00-03:00",
-  "branch": "cr-project-manager-v1-1-executive-dashboard-20261003",
+  "branch": "cr-project-manager-v1-1-1-canonical-approved-20261003",
   "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
   "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
-  "canonical_changed": false,
+  "canonical_changed": true,
   "update_policy": "same_url_atomic_pwa_bundle",
   "changes": [
+    "V1.1.1 promovida a canônica homologada por instrução explícita do proprietário.",
+    "Backup/continuidade permanece como P0 aberto; promoção não implica resolução desse risco.",
+    "Validação do PWA instalado em notebook e celular permanece pendente e registrada.",
     "Dashboard Executivo visual criado como camada de decisão sobre o Gestor existente, sem nova arquitetura.",
     "Home reorganizada por estado, métricas, atenção, capacidade, decisões, progresso por evidência e últimos avanços.",
     "Cartões executivos clicáveis navegam para Pendências, Auditorias, Governança, Versões, Produtos, Frentes e Infraestrutura.",
@@ -18,7 +21,6 @@
     "Cores representam estado: saudável, atenção, degradado e bloqueado.",
     "Acessos ao ecossistema foram rebaixados para segundo nível para reduzir ruído na tomada de decisão.",
     "PWA continua no mesmo produto/endereço, com API sanitizada viva e fallback versionado preservados.",
-    "Promoção canônica continua bloqueada até continuidade, testes em PWA instalado e homologação explícita.",
     "AUD-001 registrada e tratada como objeto vivo, com original preservado por hash.",
     "Modelo persistente V1.1 criado no Supabase interno, reutilizando governança existente.",
     "Matriz de fontes, reconciliações e dicionário inicial de métricas registrados.",
@@ -27,17 +29,17 @@
     "API sanitizada persistente conectada ao PWA com JWT e fallback local.",
     "Gate do Ciclo 0 visível: promoção permanece bloqueada até continuidade e homologação."
   ],
-  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
+  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_PRE_CANONICAL_PROMOTION_20261003",
   "candidate_checkpoint": "CHECKPOINT_PM_V1_1_1_EXEC_DASH_20261003",
   "last_tested_at": "2026-10-03T13:31:48-03:00",
   "promotion_gate": {
-    "decision": "BLOCKED",
-    "blockers": [
-      "backup_recent_restore",
-      "pwa_notebook_validation",
-      "pwa_mobile_validation",
-      "owner_homologation"
-    ]
+    "decision": "PROMOTED_OWNER_APPROVED_WITH_OPEN_P0",
+    "open_items": [
+      "backup_continuity_p0",
+      "pwa_installed_notebook_validation",
+      "pwa_installed_mobile_validation"
+    ],
+    "note": "Promoção autorizada explicitamente pelo proprietário. Itens abertos não foram marcados como resolvidos e permanecem visíveis no Gestor."
   },
   "runtime_validation": {
     "static_bundle": "PASS",
@@ -47,6 +49,12 @@
     "executive_css_http": "PASS_200",
     "pwa_installed_notebook": "PENDING_HUMAN",
     "pwa_installed_mobile": "PENDING_HUMAN",
-    "visual_homologation": "PENDING_HUMAN"
+    "visual_homologation": "PASS_OWNER_APPROVED"
+  },
+  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_CANONICAL_PROMOTED_20261003",
+  "owner_homologation": {
+    "status": "APPROVED",
+    "source": "explicit_owner_instruction_in_chat",
+    "note": "Proprietário solicitou promover a candidata homologada V1.1.1."
   }
 }
