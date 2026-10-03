@@ -74,8 +74,8 @@
       "name": "Gestor do Projeto",
       "layer": "Governança",
       "status": "candidate",
-      "summary": "Cockpit superior de direção, memória, versões, decisões, frentes e entrega.",
-      "current": "V1 candidata"
+      "summary": "Cockpit superior do proprietário para governança, memória, versões, decisões e desenvolvimento do ecossistema APP CONSTRU-REI.",
+      "current": "V1 candidata • identidade oficial APP incorporada"
     },
     {
       "id": "central",
@@ -660,6 +660,20 @@
         "gestor"
       ],
       "evidence": "Decisão explícita do Rogério em 03/10/2026."
+    },
+    {
+      "id": "d8",
+      "date": "2026-10-03",
+      "title": "Gestor assume a marca oficial do APP CONSTRU-REI",
+      "status": "confirmed",
+      "decision": "O Gestor do Projeto usa a logo oficial do APP CONSTRU-REI como marca visual do ecossistema, mantendo o Gestor como camada superior do proprietário e a Central/APP como camada operacional.",
+      "reason": "Eliminar divergência visual e deixar explícita a ligação exclusiva do projeto ao APP CONSTRU-REI.",
+      "impact": [
+        "gestor",
+        "pwa",
+        "central-gateway"
+      ],
+      "evidence": "Logo oficial incorporada ao mesmo PWA em 03/10/2026."
     }
   ],
   "demands": [
@@ -783,6 +797,13 @@
       "title": "Gestor V1 passa a Gestão Viva no mesmo link",
       "detail": "Checkpoint anterior preservado; entram Radar de Pendências, envelhecimento, ações do Owner e Histórico Vivo indexado por referências leves.",
       "confidence": "explicit_decision"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "governance",
+      "title": "Marca oficial APP CONSTRU-REI incorporada ao Gestor",
+      "detail": "Sidebar, cabeçalho, acesso à Central e ícone do PWA passam a usar a mesma fonte oficial de marca.",
+      "confidence": "verified_commit"
     }
   ],
   "recoverables": [
