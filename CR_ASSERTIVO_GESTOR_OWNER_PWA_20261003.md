@@ -71,3 +71,26 @@ Só considerar pronto quando o mesmo Gestor:
 - não exigir atualização manual de Rogério para manter o estado do projeto coerente.
 
 Execute de forma assertiva, incremental e auditável. Se houver incerteza, marque como não confirmado em vez de fabricar certeza.
+
+
+## Infraestrutura & TI — extensão obrigatória de 03/10/2026
+O Gestor passa a ser também a fonte de verdade da infraestrutura do projeto. Manter visíveis, com status e evidência: Supabase, GitHub, Netlify, Vercel, notebook Rogerio-2022, Cofre Zero, backups e integrações externas.
+
+### Estado auditado
+- Supabase CONSTRU-REI: ACTIVE_HEALTHY; 157 tabelas public; 330 Edge Functions ativas.
+- GitHub: 2 repositórios visíveis na conexão; principal público e dashboard candidato privado.
+- Netlify: 7 sites CONSTRU-REI; plano Free confirmado.
+- Vercel: 1 time conectado; 0 projetos.
+- Cofre Zero: presente; RESTORE_PROVEN=TRUE em 26/09/2026.
+- Backup diário: crítico; falhou em 01/10, 02/10 e 03/10 no dump do banco porque a engine do Docker não estava disponível.
+- A rotina alcançou Google Drive e o remote de Storage antes da falha do dump.
+- Edge semanal: instalação registrada para domingo 04:30, mas execução ainda não comprovada por marcador/log na auditoria.
+
+### Regras
+1. Não presumir plano, quota, custo ou limite. Quando a fonte não retornar a informação, mostrar “não confirmado”.
+2. Não publicar valores de acesso no PWA; mostrar somente metadados, saúde e atalhos administrativos.
+3. Toda nova hospedagem, conta, site, projeto, banco, bucket ou integração deve aparecer no Gestor no mesmo pacote de entrega.
+4. O backup precisa ser redesenhado para reduzir dependência do notebook/Docker e depois ter restauração comprovada.
+5. A documentação de desenvolvimento pertence ao Gestor: arquitetura, infraestrutura, deploy, branches, checkpoints, releases, backup, restore, incidentes e saúde técnica.
+6. A Central conserva documentação operacional: APP, dashboards usados pela equipe, F00–F09, links, procedimentos e referência operacional.
+7. A retirada de conteúdo de desenvolvimento da Central deve ocorrer primeiro em candidata isolada, com validação antes de promoção.
