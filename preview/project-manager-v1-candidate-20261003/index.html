@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="cr-build" content="CR-PROJECT-MANAGER-V1-CANDIDATE-20261003">
+  <title>Gestor do Projeto • CONSTRU-REI</title>
+  <link rel="stylesheet" href="./styles.css?v=20261003a">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">CR</div>
+        <div>
+          <strong>CONSTRU-REI</strong>
+          <span>Gestor do Projeto</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav">
+        <button class="nav-btn active" data-view="now"><span class="ico">⌂</span><span>Agora</span></button>
+        <button class="nav-btn" data-view="canonical"><span class="ico">◇</span><span>Cadeia Canônica</span></button>
+        <button class="nav-btn" data-view="fronts"><span class="ico">▦</span><span>Frentes</span></button>
+        <button class="nav-btn" data-view="versions"><span class="ico">⌘</span><span>Versões</span></button>
+        <button class="nav-btn" data-view="decisions"><span class="ico">✓</span><span>Decisões</span></button>
+        <button class="nav-btn" data-view="timeline"><span class="ico">↗</span><span>Linha do Tempo</span></button>
+        <button class="nav-btn" data-view="products"><span class="ico">▣</span><span>Produtos</span></button>
+        <button class="nav-btn" data-view="recoverables"><span class="ico">↺</span><span>Recuperáveis</span></button>
+        <button class="nav-btn" data-view="governance"><span class="ico">⚑</span><span>Governança</span></button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="status-dot"></div>
+        <div><b>V1 candidata isolada</b><small>Produção preservada</small></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menu">☰</button>
+        <div class="heading">
+          <div class="crumbs" id="crumbs">Gestor do Projeto / Agora</div>
+          <h1 id="pageTitle">Cockpit do Projeto</h1>
+        </div>
+        <label class="search">
+          <span>⌕</span>
+          <input id="globalSearch" placeholder="Buscar versão, frente, decisão, commit...">
+        </label>
+        <button class="ghost-btn" id="presentationBtn">Modo apresentação</button>
+      </header>
+
+      <div class="content">
+        <section class="view active" id="view-now"></section>
+        <section class="view" id="view-canonical"></section>
+        <section class="view" id="view-fronts"></section>
+        <section class="view" id="view-versions"></section>
+        <section class="view" id="view-decisions"></section>
+        <section class="view" id="view-timeline"></section>
+        <section class="view" id="view-products"></section>
+        <section class="view" id="view-recoverables"></section>
+        <section class="view" id="view-governance"></section>
+        <section class="view" id="view-search"></section>
+      </div>
+    </main>
+  </div>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <small id="drawerEyebrow">Detalhe</small>
+        <h2 id="drawerTitle">Informação</h2>
+      </div>
+      <button id="drawerClose" class="icon-btn" aria-label="Fechar">×</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+
+  <script src="./app.js?v=20261003a"></script>
+</body>
+</html>
