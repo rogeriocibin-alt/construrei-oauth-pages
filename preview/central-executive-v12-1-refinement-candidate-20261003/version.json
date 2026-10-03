@@ -1,0 +1,15 @@
+{
+  "version": "12.1.0-candidate",
+  "build": "CR-EXECUTIVE-V12.1-REFINEMENT-CANDIDATE-20261003",
+  "status": "AWAITING_OWNER_HOMOLOGATION",
+  "canonical_changed": false,
+  "changes": [
+    "progressive loading",
+    "Google Calendar live timeline with team",
+    "fifth KPI replaced",
+    "unified expandable sidebar",
+    "F00-F09 pipeline removed from executive home",
+    "director management cards use only available real sources"
+  ],
+  "checkpoint_before": "CHECKPOINT_CENTRAL_V12_PRE_V12_1_20261003"
+}
