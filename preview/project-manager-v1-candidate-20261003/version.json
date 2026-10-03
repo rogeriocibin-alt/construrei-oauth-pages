@@ -15,7 +15,20 @@
     "Modelo persistente V1.1 criado no Supabase interno, reutilizando governança existente.",
     "Matriz de fontes, reconciliações e dicionário inicial de métricas registrados.",
     "Versão/build/ambiente visíveis e mecanismo de atualização do PWA sem reinstalação.",
-    "Service Worker ativa o novo pacote somente como bundle completo."
+    "Service Worker ativa o novo pacote somente como bundle completo.",
+    "API sanitizada persistente conectada ao PWA com JWT e fallback local.",
+    "Gate do Ciclo 0 visível: promoção permanece bloqueada até continuidade e homologação."
   ],
-  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003"
+  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
+  "candidate_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_RECONCILED_20261003",
+  "last_tested_at": "2026-10-03T12:16:52-03:00",
+  "promotion_gate": {
+    "decision": "BLOCKED",
+    "blockers": [
+      "backup_recent_restore",
+      "pwa_notebook_validation",
+      "pwa_mobile_validation",
+      "owner_homologation"
+    ]
+  }
 }
