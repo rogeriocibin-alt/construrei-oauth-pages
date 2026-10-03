@@ -43,9 +43,10 @@ function buildHeader(){
 function buildSidebar(){
  try{
   const side=$('.side');if(!side||$('.cr-v10-primary-nav',side))return;
+  side.style.setProperty('display','flex','important');side.style.setProperty('flex-direction','column','important');side.style.setProperty('justify-content','flex-start','important');side.style.setProperty('align-items','stretch','important');
   const groups=[...side.children].filter(x=>x.classList&&x.classList.contains('grp'));
   groups.forEach(g=>g.classList.add('cr-v10-original'));
-  const nav=document.createElement('div');nav.className='cr-v10-primary-nav';
+  const nav=document.createElement('div');nav.className='cr-v10-primary-nav';nav.style.setProperty('margin-top','10px','important');
   const defs=[
    ['⌂','Início','Dashboard Executivo','dashboard','Dashboard Executivo'],
    ['⚙','Operação','Esteira F00 → F09','flows','Operação'],
@@ -56,7 +57,7 @@ function buildSidebar(){
   nav.innerHTML=defs.map((d,i)=>'<button class="cr-v10-side-btn '+(i===0?'on':'')+'" data-target="'+esc(d[2])+'" data-page="'+esc(d[3])+'" data-label="'+esc(d[4])+'"><span class="cr-v10-side-icon">'+d[0]+'</span>'+d[1]+'</button>').join('');
   if(groups.length)side.insertBefore(nav,groups[0]);else side.appendChild(nav);
 
-  const more=document.createElement('details');more.className='cr-v10-more';
+  const more=document.createElement('details');more.className='cr-v10-more';more.style.setProperty('margin-top','8px','important');
   const sum=document.createElement('summary');sum.textContent='Mais acessos ▾';more.appendChild(sum);
   groups.forEach(g=>{
     const title=norm($('.gt',g)?.innerText);
