@@ -387,3 +387,22 @@ html,body{background:var(--v10-bg)!important;color:var(--v10-text)!important}
  .cr-p0-skyline{display:flex!important;right:8%!important;width:65%!important;height:96%!important}
  .cr-p0-hero-logo{display:block!important;right:9px!important;top:8px!important;width:50px!important;height:50px!important}
 }
+
+/* P0.1 — isolate actual runtime identity from legacy mobile hide rules */
+.cr-v10 .cr-p0-hero{display:grid!important;grid-template-columns:minmax(0,1.55fr) minmax(220px,.65fr)!important;min-height:190px!important}
+.cr-v10 .cr-p0-hero-art{display:block!important;visibility:visible!important;opacity:1!important;min-height:170px!important;position:relative!important}
+.cr-v10 .cr-p0-skyline{display:flex!important;visibility:visible!important;opacity:.92!important}
+.cr-v10 .cr-p0-slogan{display:block!important;visibility:visible!important;opacity:1!important}
+.cr-v10 .cr-p0-hero-logo{display:block!important;visibility:visible!important;opacity:1!important}
+.cr-p01-header-logo{background:#fff!important;padding:2px!important;overflow:hidden!important}
+.cr-p01-header-logo img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;border-radius:50%!important}
+@media(max-width:700px){
+ .cr-v10 .cr-p0-hero{grid-template-columns:1fr!important;min-height:260px!important}
+ .cr-v10 .cr-p0-hero-main{min-height:142px!important}
+ .cr-v10 .cr-p0-hero-art{display:block!important;min-height:112px!important;height:112px!important}
+ .cr-v10 .cr-p0-skyline{display:flex!important;bottom:-4px!important}
+ .cr-v10 .cr-p0-slogan{display:block!important}
+ .cr-v10 .cr-p0-hero-logo{display:block!important}
+ .cr-v10-main-grid .cr-v10-card{min-height:0!important}
+ .cr-v10-agenda-body,.cr-v12-flow-body{min-height:88px!important}
+}
