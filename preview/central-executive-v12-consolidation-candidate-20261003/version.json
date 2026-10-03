@@ -1,0 +1,24 @@
+{
+  "version": "12.0.0-candidate",
+  "build": "CR-EXECUTIVE-V12-CONSOLIDATION-CANDIDATE-20261003",
+  "environment": "candidate",
+  "canonical_changed": false,
+  "baseline": {
+    "v11_checkpoint": "CHECKPOINT_CENTRAL_V11_PRE_V12_20261003",
+    "v11_sha": "52b6833cd60bc6541ae30884e9d9edf5c17f6c38",
+    "canonical": "production/central-homologada-20261001/"
+  },
+  "sources": {
+    "agenda": "Google Calendar V9 primary; Trello + GestãoClick enrichment",
+    "quotes": "GestãoClick",
+    "operation": "Trello GESTÃO DE OBRAS 2026",
+    "pending": "Banco Mestre — source in implementation"
+  },
+  "safeguards": {
+    "no_fake_zero": true,
+    "no_hardcoded_metrics": true,
+    "read_only_executive_api": true,
+    "canonical_untouched": true
+  },
+  "status": "ready_for_owner_homologation_after_runtime_validation"
+}
