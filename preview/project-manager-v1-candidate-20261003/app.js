@@ -14,7 +14,7 @@ const VIEW_TITLES={
   audits:'Auditorias',governance:'Governança',search:'Busca'
 };
 
-const CURRENT_RELEASE={version:'1.1.0',build:'CR-PM-V1.1.0-C0-20261003',environment:'candidate'};
+const CURRENT_RELEASE={version:'1.1.1',build:'CR-PM-V1.1.1-C0-EXEC-20261003',environment:'candidate'};
 const PM_API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
 const PM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
 const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
@@ -110,7 +110,7 @@ function renderLiveRibbon(){
   const attention=Number((s.degraded_or_error??0)+(s.stale??0)+(s.not_confirmed??0)) || fallback.filter(x=>x.status!=='healthy').length;
   return `<section class="live-ribbon ${sync?.ok?'is-live':'is-fallback'}">
     <div class="live-main"><span class="live-dot"></span><div><b>${sync?.ok?'Banco Mestre persistente conectado':'Fallback versionado ativo'}</b><small>${sync?.ok?('Snapshot '+fmtLiveTs(live?.generated_at)):'Sem resposta viva neste instante; o snapshot local permanece disponível.'}</small></div></div>
-    <div class="live-facts"><span><b>${healthy}/${total}</b> fontes saudáveis</span><span><b>${attention}</b> atenção/revalidação</span><span><b>V1.1</b> candidata C0</span></div>
+    <div class="live-facts"><span><b>${healthy}/${total}</b> fontes saudáveis</span><span><b>${attention}</b> atenção/revalidação</span><span><b>V1.1.1</b> dashboard executivo • candidata C0</span></div>
   </section>`;
 }
 async function refreshProjectManagerLive(){
@@ -121,10 +121,10 @@ async function refreshProjectManagerLive(){
     if(!body?.ok)throw new Error(body?.error||'snapshot inválido');
     state.pmLive=body;
     state.pmSync={ok:true,at:body.generated_at||new Date().toISOString()};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1 • C0 • LIVE';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1.1 • C0 • LIVE';
   }catch(err){
     state.pmSync={ok:false,at:new Date().toISOString(),error:String(err?.message||err)};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1 • C0 • FALLBACK';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1.1 • C0 • FALLBACK';
   }
   renderNow();
   renderAudits();
@@ -139,7 +139,7 @@ function renderOwnerHub(){
     <section class="owner-hub card">
       <div class="card-head"><div><h3>Seu acesso único ao CONSTRU-REI</h3><p>Camada do proprietário/desenvolvedor. A equipe continua operando diretamente pela Central.</p></div><div class="spacer"></div><span class="badge live">PWA do proprietário</span></div>
       ${central?`<button class="central-gateway external-btn" data-url="${esc(central.url)}">
-        <div class="gateway-mark"><img src="./pwa-icon.svg?v=20261003v110c0" alt="APP CONSTRU-REI"></div>
+        <div class="gateway-mark"><img src="./pwa-icon.svg?v=20261003v111exec" alt="APP CONSTRU-REI"></div>
         <div class="gateway-copy"><small>CENTRAL CONSTRU-REI</small><strong>Operação viva</strong><span>${esc(central.source)} • ${esc(central.access)}</span></div>
         <div class="gateway-state"><span class="live-dot"></span><b>Entrar na Central</b><em>→</em></div>
       </button>`:''}
@@ -745,7 +745,7 @@ window.addEventListener('appinstalled',()=>{const b=$('#installPwaBtn'); if(b)b.
 
 async function init(){
   try{
-    const r=await fetch('./project-data.json?v=20261003v110c0',{cache:'no-store'});
+    const r=await fetch('./project-data.json?v=20261003v111exec',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     state.data=await r.json();
     renderAll();
@@ -773,7 +773,7 @@ async function init(){
       }
     };
     if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('./sw.js?v=20261003v110c0',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
+      navigator.serviceWorker.register('./sw.js?v=20261003v111exec',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
     }
 
     if(!('serviceWorker' in navigator)) checkReleaseUpdate();
