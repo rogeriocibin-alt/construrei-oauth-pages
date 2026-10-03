@@ -1,0 +1,25 @@
+{
+  "version": "refinamento-navegacao-identidade-candidate-20261003",
+  "build": "CR-CENTRAL-REFINAMENTO-NAVEGACAO-IDENTIDADE-20261003",
+  "status": "AWAITING_OWNER_HOMOLOGATION",
+  "canonical_changed": false,
+  "official_endpoint_changed": false,
+  "branch": "cr-central-refinamento-navegacao-identidade-20261003",
+  "canonical_base": "92ef8f27d71ac176abc6452df165a048c4405d60",
+  "candidate_parent": "0c3d4a18cbd7bbb773df047c30840a254b7cbff4",
+  "route_source": "HOMOLOGACAO_LINK_REGISTRY_AUDIT_20261001.md",
+  "functional_sources": [
+    "cr-executive-readonly-v12-1-candidate-20261003",
+    "cr-agenda-executive-v12-1-candidate-20261003",
+    "cr-executive-readonly-v12-candidate-20261003"
+  ],
+  "fixes": [
+    "external navigation isolated from current Central history",
+    "direct location.assign removed",
+    "single CR_CANONICAL_ROUTE_REGISTRY preserved",
+    "hero logo bound to existing embedded canonical brand source",
+    "existing institutional skyline/slogan restored on mobile"
+  ],
+  "gate": "CANDIDATA PRONTA PARA VALIDACAO VISUAL DO ROGERIO",
+  "base_sha": "09b4dc827cb4132c140d6bbdbf25e7fbb38a222b"
+}
