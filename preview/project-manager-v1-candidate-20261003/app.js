@@ -174,7 +174,7 @@ function renderNow(){
     </section>`:''}
   `;
   bindDetailButtons();
-  $('.jump-view').forEach(b=>b.onclick=()=>setView(b.dataset.target));
+  $$('.jump-view').forEach(b=>b.onclick=()=>setView(b.dataset.target));
 }
 
 function frontCard(f,index){
@@ -246,7 +246,7 @@ function renderPending(){
     <div class="pending-board">${list.map(p=>pendingCard(p)).join('')}</div>
     <div class="notice" style="margin-top:14px"><b>Regra-mãe:</b> se a informação depende de você lembrar, cobrar ou editar manualmente para continuar existindo, a gestão ainda não está pronta. O Gestor deve detectar, medir, propor, acompanhar e fechar com evidência.</div>
   `;
-  $('[data-pfilter]').forEach(b=>b.onclick=()=>{state.pendingFilter=b.dataset.pfilter;renderPending();});
+  $$('[data-pfilter]').forEach(b=>b.onclick=()=>{state.pendingFilter=b.dataset.pfilter;renderPending();});
   bindDetailButtons();
 }
 
@@ -284,7 +284,7 @@ function renderHistory(){
       <tbody>${list.map(x=>`<tr><td class="mono">${esc(x.date||'—')}</td><td>${esc(x.product)}</td><td><span class="badge review">${esc(x.kind)}</span></td><td><b>${esc(x.name)}</b></td><td><button class="soft-btn external-btn" data-url="${esc(ghBranch(x.name))}">Abrir</button></td></tr>`).join('')}</tbody>
     </table></div>
   `;
-  $('[data-hfilter]').forEach(b=>b.onclick=()=>{state.historyFilter=b.dataset.hfilter;renderHistory();});
+  $$('[data-hfilter]').forEach(b=>b.onclick=()=>{state.historyFilter=b.dataset.hfilter;renderHistory();});
   bindExternalButtons();
 }
 
