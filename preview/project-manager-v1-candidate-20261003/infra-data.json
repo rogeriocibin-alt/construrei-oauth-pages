@@ -1,0 +1,585 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-03",
+  "title": "Infraestrutura do Projeto CONSTRU-REI",
+  "policy": {
+    "owner_view": "Gestor do Projeto",
+    "team_view": "Central CONSTRU-REI",
+    "secrets": "Valores de senhas, tokens, chaves privadas e service-role nunca são gravados no PWA. O Gestor mostra somente existência, localização lógica, saúde e acesso administrativo.",
+    "freshness": "Cada item indica se foi verificado ao vivo, por snapshot ou por evidência local.",
+    "anti_stale": "Mudança de provedor, hospedagem, plano, limite, versão ou backup precisa atualizar esta camada antes de a entrega ser considerada concluída."
+  },
+  "summary": {
+    "providers_total": 10,
+    "providers_live_verified": 6,
+    "critical_alerts": 1,
+    "attention_alerts": 4,
+    "netlify_sites": 7,
+    "vercel_projects": 0,
+    "github_repositories": 2,
+    "supabase_projects": 2,
+    "supabase_edge_functions": 330,
+    "supabase_public_tables": 157
+  },
+  "topology": [
+    {
+      "layer": "Gestor / PWA do proprietário",
+      "platform": "GitHub Pages",
+      "asset": "construrei-oauth-pages",
+      "role": "Interface de governança e desenvolvimento",
+      "status": "live",
+      "freshness": "repo_verificado"
+    },
+    {
+      "layer": "Central / APIs / Runtime",
+      "platform": "Supabase",
+      "asset": "CONSTRU-REI Centro de Controle",
+      "role": "Edge Functions, PostgreSQL, Storage e integrações",
+      "status": "live",
+      "freshness": "connector_live"
+    },
+    {
+      "layer": "Código-fonte",
+      "platform": "GitHub",
+      "asset": "construrei-oauth-pages + dashboard privado",
+      "role": "Versionamento, checkpoints e histórico",
+      "status": "live",
+      "freshness": "connector_live"
+    },
+    {
+      "layer": "Hospedagens históricas / failover",
+      "platform": "Netlify",
+      "asset": "7 projetos CONSTRU-REI",
+      "role": "Previews, dashboard e failover",
+      "status": "attention",
+      "freshness": "connector_live"
+    },
+    {
+      "layer": "Hospedagem alternativa",
+      "platform": "Vercel",
+      "asset": "0 projetos no time conectado",
+      "role": "Conta disponível, sem workload atual",
+      "status": "idle",
+      "freshness": "connector_live"
+    },
+    {
+      "layer": "Backup base / recuperação",
+      "platform": "Notebook Rogerio-2022",
+      "asset": "Cofre Zero",
+      "role": "Baseline local restore-proven",
+      "status": "attention",
+      "freshness": "device_live"
+    },
+    {
+      "layer": "Backup remoto",
+      "platform": "Google Drive via rclone",
+      "asset": "CONSTRUREI-BACKUP-AUTO",
+      "role": "CURRENT/HISTORY de backup",
+      "status": "attention",
+      "freshness": "log_2026-10-03"
+    },
+    {
+      "layer": "Storage operacional",
+      "platform": "Supabase Storage via rclone",
+      "asset": "10 buckets observados",
+      "role": "Arquivos operacionais",
+      "status": "live",
+      "freshness": "log_2026-10-03"
+    },
+    {
+      "layer": "Operação externa",
+      "platform": "Trello / GestãoClick / Google Calendar",
+      "asset": "Integrações operacionais",
+      "role": "Cards, orçamentos, agenda e conciliações",
+      "status": "partial",
+      "freshness": "project_registry"
+    },
+    {
+      "layer": "Acesso remoto",
+      "platform": "Desktop Commander",
+      "asset": "Rogerio-2022",
+      "role": "Auditoria e manutenção local autorizada",
+      "status": "live",
+      "freshness": "connector_live"
+    }
+  ],
+  "providers": [
+    {
+      "id": "supabase",
+      "name": "Supabase",
+      "category": "Backend / Banco / Storage / Edge",
+      "account": "Organização Rogério Cibin",
+      "plan": "Não confirmado pelo conector",
+      "plan_status": "unknown",
+      "health": "healthy",
+      "health_label": "ACTIVE_HEALTHY",
+      "usage": [
+        {
+          "label": "Projetos na organização",
+          "value": "2"
+        },
+        {
+          "label": "Projeto CONSTRU-REI",
+          "value": "ACTIVE_HEALTHY"
+        },
+        {
+          "label": "Região",
+          "value": "sa-east-1"
+        },
+        {
+          "label": "PostgreSQL",
+          "value": "17.6.1.166"
+        },
+        {
+          "label": "Tabelas public",
+          "value": "157"
+        },
+        {
+          "label": "Edge Functions",
+          "value": "330 ativas"
+        },
+        {
+          "label": "verify_jwt=false",
+          "value": "226 (exige revisão por função; não implica falha por si só)"
+        }
+      ],
+      "assets": [
+        {
+          "name": "CONSTRU-REI Centro de Controle",
+          "kind": "Projeto",
+          "status": "healthy",
+          "detail": "ref yspuaamokjbrosytqjpg"
+        },
+        {
+          "name": "Camila Meu Dia",
+          "kind": "Outro projeto na organização",
+          "status": "healthy",
+          "detail": "fora do escopo CONSTRU-REI"
+        }
+      ],
+      "admin_url": "https://supabase.com/dashboard/project/yspuaamokjbrosytqjpg",
+      "source": "Conector Supabase • 03/10/2026",
+      "alerts": [
+        "Advisor de segurança: INFO — RLS habilitado sem policy em 159 achados; revisar intenção de acesso.",
+        "Advisor de performance: 4 FKs sem índice, 126 índices sem uso e Auth DB connections em valor absoluto."
+      ]
+    },
+    {
+      "id": "github",
+      "name": "GitHub",
+      "category": "Código / Git / GitHub Pages / Checkpoints",
+      "account": "rogeriocibin-alt",
+      "plan": "Não confirmado pelo conector",
+      "plan_status": "unknown",
+      "health": "healthy",
+      "usage": [
+        {
+          "label": "Repositórios visíveis",
+          "value": "2"
+        },
+        {
+          "label": "Principal",
+          "value": "construrei-oauth-pages • público"
+        },
+        {
+          "label": "Dashboard",
+          "value": "construrei-dashboard-v4-candidate • privado"
+        },
+        {
+          "label": "Gestor PWA",
+          "value": "GitHub Pages no repositório principal"
+        }
+      ],
+      "assets": [
+        {
+          "name": "construrei-oauth-pages",
+          "kind": "Repo público",
+          "status": "healthy",
+          "detail": "main • fonte do Gestor/Central/checkpoints"
+        },
+        {
+          "name": "construrei-dashboard-v4-candidate",
+          "kind": "Repo privado",
+          "status": "healthy",
+          "detail": "dashboard candidato"
+        }
+      ],
+      "admin_url": "https://github.com/rogeriocibin-alt",
+      "source": "Conector GitHub • 03/10/2026",
+      "alerts": [
+        "O repositório do Gestor é público: nunca publicar credenciais, tokens ou senhas no HTML/JSON do PWA."
+      ]
+    },
+    {
+      "id": "netlify",
+      "name": "Netlify",
+      "category": "Hospedagem histórica / previews / failover",
+      "account": "rogeriocibin’s team",
+      "plan": "Free",
+      "plan_status": "confirmed",
+      "health": "attention",
+      "usage": [
+        {
+          "label": "Plano",
+          "value": "Free (confirmado)"
+        },
+        {
+          "label": "Projetos CONSTRU-REI",
+          "value": "7"
+        },
+        {
+          "label": "MFA do time",
+          "value": "Não exigido"
+        },
+        {
+          "label": "Deploy confirmado ready",
+          "value": "construrei-dashboard"
+        },
+        {
+          "label": "Outros sites",
+          "value": "registrados como current; deploy detalhado não retornado"
+        }
+      ],
+      "assets": [
+        {
+          "name": "construrei-dashboard",
+          "kind": "Site",
+          "status": "healthy",
+          "detail": "deploy current/ready",
+          "url": "https://construrei-dashboard.netlify.app"
+        },
+        {
+          "name": "construrei-f01",
+          "kind": "Site",
+          "status": "partial",
+          "detail": "SSO do time exigido",
+          "url": "https://construrei-f01.netlify.app"
+        },
+        {
+          "name": "construrei-knowledge-v3",
+          "kind": "Site",
+          "status": "partial",
+          "detail": "SSO do time exigido",
+          "url": "https://construrei-knowledge-v3.netlify.app"
+        },
+        {
+          "name": "construrei-central-failover-v1",
+          "kind": "Site",
+          "status": "partial",
+          "detail": "failover histórico",
+          "url": "https://construrei-central-failover-v1.netlify.app"
+        },
+        {
+          "name": "construrei-agenda-v52",
+          "kind": "Site",
+          "status": "partial",
+          "detail": "agenda histórica",
+          "url": "https://construrei-agenda-v52.netlify.app"
+        },
+        {
+          "name": "construrei-home-reference-preview-20260930",
+          "kind": "Site",
+          "status": "partial",
+          "detail": "preview histórico • SSO do time",
+          "url": "https://construrei-home-reference-preview-20260930.netlify.app"
+        },
+        {
+          "name": "construrei-f00-canonical-preview-20261001",
+          "kind": "Site",
+          "status": "partial",
+          "detail": "preview F00 • SSO do time",
+          "url": "https://construrei-f00-canonical-preview-20261001.netlify.app"
+        }
+      ],
+      "admin_url": "https://app.netlify.com/teams/rogeriocibin",
+      "source": "Conector Netlify • 03/10/2026",
+      "alerts": [
+        "Mapear quais sites ainda são necessários e quais podem ser congelados/arquivados.",
+        "MFA não está exigido no time; avaliar endurecimento de acesso."
+      ]
+    },
+    {
+      "id": "vercel",
+      "name": "Vercel",
+      "category": "Hospedagem / Deploy",
+      "account": "contatoconstrurei-3042's projects",
+      "plan": "Não confirmado pelo conector",
+      "plan_status": "unknown",
+      "health": "idle",
+      "usage": [
+        {
+          "label": "Times conectados",
+          "value": "1"
+        },
+        {
+          "label": "Projetos",
+          "value": "0"
+        },
+        {
+          "label": "Uso atual do CONSTRU-REI",
+          "value": "Nenhum workload identificado"
+        }
+      ],
+      "assets": [],
+      "admin_url": "https://vercel.com/dashboard",
+      "source": "Conector Vercel • 03/10/2026",
+      "alerts": [
+        "Conta conectada, porém sem projetos; manter visível para evitar a falsa impressão de que algo atual está hospedado aqui."
+      ]
+    },
+    {
+      "id": "notebook",
+      "name": "Rogerio-2022",
+      "category": "Dispositivo local / manutenção",
+      "account": "Notebook autorizado",
+      "plan": "Dispositivo próprio",
+      "plan_status": "n/a",
+      "health": "healthy",
+      "usage": [
+        {
+          "label": "Desktop Commander",
+          "value": "Online • app 0.2.52"
+        },
+        {
+          "label": "Remote MCP calls restantes",
+          "value": "85% no momento da auditoria"
+        },
+        {
+          "label": "Função",
+          "value": "Ferramentas locais, Cofre Zero, scripts de backup e manutenção"
+        }
+      ],
+      "assets": [
+        {
+          "name": "Cofre Zero",
+          "kind": "Baseline local",
+          "status": "healthy",
+          "detail": "RESTORE_PROVEN=TRUE • validado em 26/09/2026"
+        },
+        {
+          "name": "CONSTRUREI-BACKUP-AUTO",
+          "kind": "Automação local",
+          "status": "critical",
+          "detail": "execução diária falhando desde 01/10 por dependência do Docker"
+        }
+      ],
+      "admin_url": "https://mcp.desktopcommander.app/",
+      "source": "Desktop Commander • 03/10/2026",
+      "alerts": [
+        "Dependência local do Docker está quebrando o backup diário; isso conflita com a meta de independência de dispositivo."
+      ]
+    },
+    {
+      "id": "google-drive",
+      "name": "Google Drive / rclone",
+      "category": "Backup remoto",
+      "account": "Remote construrei-drive",
+      "plan": "Não confirmado",
+      "plan_status": "unknown",
+      "health": "attention",
+      "usage": [
+        {
+          "label": "Conectividade",
+          "value": "OK no início da rotina de 03/10 às 03:00"
+        },
+        {
+          "label": "Destino",
+          "value": "CONSTRUREI-BACKUP-AUTO/CURRENT + HISTORY"
+        },
+        {
+          "label": "Última conclusão diária",
+          "value": "Não comprovada; a rotina falhou antes do envio do novo backup"
+        }
+      ],
+      "assets": [
+        {
+          "name": "CONSTRUREI-COFRE-ZERO",
+          "kind": "Pasta remota observada",
+          "status": "healthy",
+          "detail": "remoto acessível via rclone"
+        }
+      ],
+      "admin_url": "https://drive.google.com/",
+      "source": "Logs locais de backup • 03/10/2026",
+      "alerts": [
+        "A conectividade está OK, mas o pacote diário não chega à etapa de sincronização porque o dump do banco falha antes."
+      ]
+    }
+  ],
+  "backups": {
+    "cofre_zero": {
+      "status": "restore_proven",
+      "validation_date": "2026-09-26",
+      "local_baseline": "Cofre Zero presente",
+      "contents": [
+        "dump de banco",
+        "Edge Functions congeladas",
+        "Storage",
+        "restore runbook",
+        "checksums"
+      ],
+      "note": "Cofre Zero é baseline de recuperação comprovada, não espelho vivo. Deve permanecer preservado e imutável salvo nova validação formal.",
+      "edge_function_snapshot_count": 254,
+      "current_live_edge_functions": 330
+    },
+    "daily": {
+      "schedule": "03:00 diariamente (registro de instalação)",
+      "installed_at": "2026-09-26 07:37:10",
+      "state": "critical",
+      "last_attempt": "2026-10-03 03:00:04",
+      "last_result": "FALHA",
+      "failed_consecutive_dates": [
+        "2026-10-01",
+        "2026-10-02",
+        "2026-10-03"
+      ],
+      "root_cause": "Supabase CLI db dump exige Docker; Docker Desktop Linux Engine não estava disponível.",
+      "upstream_connectivity": [
+        "Google Drive remote alcançado",
+        "Supabase Storage/S3 remote alcançado"
+      ],
+      "action": "Redesenhar o dump para execução independente do notebook/Docker ou garantir engine disponível no agendamento; depois provar restauração."
+    },
+    "edge_weekly": {
+      "schedule": "Domingo 04:30 (registro de instalação)",
+      "state": "attention",
+      "evidence": "Script instalado, mas não foi encontrado LAST_SUCCESS_EDGE/LAST_ERROR_EDGE nem log edge-* no diretório auditado.",
+      "action": "Executar/validar uma corrida controlada e registrar sucesso/erro sem alterar o Cofre Zero."
+    }
+  },
+  "external_integrations": [
+    {
+      "name": "Trello",
+      "role": "Fonte operacional de cards e histórico",
+      "status": "registered",
+      "plan": "Não auditado nesta rodada"
+    },
+    {
+      "name": "GestãoClick",
+      "role": "Orçamentos, OS e conciliações",
+      "status": "registered",
+      "plan": "Não auditado nesta rodada"
+    },
+    {
+      "name": "Google Calendar",
+      "role": "Agenda executiva/operacional",
+      "status": "registered",
+      "plan": "Não auditado nesta rodada"
+    },
+    {
+      "name": "Pagey",
+      "role": "Publicações históricas/Edge Functions de publish",
+      "status": "legacy_active_refs",
+      "plan": "Não auditado"
+    },
+    {
+      "name": "Wizy Flow",
+      "role": "Fluxos/automação histórica",
+      "status": "historical",
+      "plan": "Não auditado"
+    },
+    {
+      "name": "Opera Connector",
+      "role": "Navegação assistida",
+      "status": "tooling",
+      "plan": "Não auditado"
+    },
+    {
+      "name": "OneDrive",
+      "role": "Arquivos locais sincronizados / acervo histórico",
+      "status": "partial",
+      "plan": "Não auditado"
+    }
+  ],
+  "documentation_boundary": {
+    "central_keeps": [
+      "Manuais e documentação de uso da Central",
+      "APP operacional",
+      "Dashboards usados pela equipe",
+      "F00–F09",
+      "Links e acessos operacionais",
+      "Procedimentos e referência necessários para Gabriele, Éder e Fabrício"
+    ],
+    "gestor_owns": [
+      "Arquitetura técnica e infraestrutura",
+      "Hospedagens, provedores, planos e limites",
+      "Git, branches, commits, checkpoints, releases e candidatas",
+      "Cofre Zero, backup, restore, continuidade e incidentes",
+      "Secrets: somente metadados e localização lógica, nunca o valor",
+      "Notebook, ferramentas de desenvolvimento, conectores e dependências",
+      "Roadmap, pendências de implementação, saúde técnica e decisões de engenharia"
+    ],
+    "migration_candidate": [
+      "Status do Desenvolvimento",
+      "Saúde Técnica",
+      "Documentação de deploy/arquitetura",
+      "Releases/checkpoints",
+      "Gaps técnicos e recuperações"
+    ],
+    "rule": "Central não deve virar painel de desenvolvimento; Gestor é a fonte de verdade do proprietário. A remoção da Central canônica só ocorre após validação em candidata para evitar regressão."
+  },
+  "risks": [
+    {
+      "severity": "critical",
+      "title": "Backup diário falhando",
+      "detail": "Três tentativas consecutivas 01–03/10 falharam no db dump por Docker indisponível.",
+      "action": "Corrigir dependência e provar novo backup/restauração."
+    },
+    {
+      "severity": "attention",
+      "title": "Edge semanal não comprovado",
+      "detail": "Não há marcador/log de execução semanal na pasta auditada.",
+      "action": "Validar a tarefa e registrar evidência."
+    },
+    {
+      "severity": "attention",
+      "title": "Planos/limites ainda não têm telemetria completa",
+      "detail": "Netlify Free foi confirmado; Supabase/GitHub/Vercel não expuseram plano/consumo pelos conectores usados.",
+      "action": "Adicionar adaptadores autenticados server-side para plano, quota e custo."
+    },
+    {
+      "severity": "attention",
+      "title": "Gestor está em repositório público",
+      "detail": "Infraestrutura pode ser mostrada, mas credenciais jamais podem ser embutidas.",
+      "action": "Manter secret metadata-only e considerar autenticação do Gestor se o nível de detalhe aumentar."
+    },
+    {
+      "severity": "attention",
+      "title": "Inventário de hospedagens históricas precisa racionalização",
+      "detail": "Há 7 sites Netlify e 0 projetos Vercel no time conectado.",
+      "action": "Classificar cada site: produção, failover, histórico ou descartável."
+    }
+  ],
+  "next_actions": [
+    {
+      "priority": "P0",
+      "title": "Restaurar backup diário confiável e independente do notebook",
+      "owner": "CR Assertivo",
+      "status": "open"
+    },
+    {
+      "priority": "P0",
+      "title": "Provar execução do backup semanal de Edge Functions",
+      "owner": "CR Assertivo",
+      "status": "open"
+    },
+    {
+      "priority": "P1",
+      "title": "Conectar telemetria de planos, quotas, custos e limites ao Gestor",
+      "owner": "CR Assertivo",
+      "status": "open"
+    },
+    {
+      "priority": "P1",
+      "title": "Classificar Netlify/Vercel por uso real e encerrar resíduos",
+      "owner": "CR Assertivo",
+      "status": "open"
+    },
+    {
+      "priority": "P1",
+      "title": "Migrar documentação de desenvolvimento da Central para o Gestor por candidata segura",
+      "owner": "CR Assertivo",
+      "status": "open"
+    }
+  ]
+}
