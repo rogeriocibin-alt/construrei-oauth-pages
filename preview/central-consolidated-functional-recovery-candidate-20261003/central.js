@@ -11,19 +11,19 @@ const state={agenda:null,fast:null,full:null,loading:{},errors:{},updatedAt:{}};
 const ROUTES={
  dashboard:{label:'Dashboard Executivo',page:'dashboard'},
  app:{label:'APP CONSTRU-REI',external:'https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=app'},
- flows:{label:'Esteira F00 → F09',canonicalPage:'flows'},
- checklist:{label:'Checklist de Campo',canonicalPage:'checklist'},
- homolog:{label:'Homologação',canonicalPage:'homolog'},
- pending:{label:'APP • Pendências',canonicalPage:'pendapp'},
- wizy:{label:'Wizy Flow • WZ',canonicalPage:'wizy'},
- eder:{label:'Éder • Agora',canonicalPage:'eder'},
- intelligence:{label:'IA & Context Gateway',canonicalPage:'context'},
+ flows:{label:'Esteira F00 → F09',page:'flows'},
+ checklist:{label:'Checklist de Campo',page:'checklist'},
+ homolog:{label:'Homologação',page:'homolog'},
+ pending:{label:'APP • Pendências',page:'pendapp'},
+ wizy:{label:'Wizy Flow • WZ',page:'wizy'},
+ eder:{label:'Éder • Agora',page:'eder'},
+ intelligence:{label:'IA & Context Gateway',page:'context'},
  docs:{label:'Documentação',external:'https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=docs'},
- meeting:{label:'Google Meet',canonicalPage:'meeting'},
- presentation:{label:'Apresentação Institucional',canonicalPage:'presentation'},
- academy:{label:'CONSTRU-REI Academy',canonicalPage:'academy'},
- history:{label:'Histórico / Snapshots',canonicalPage:'history'},
- health:{label:'Saúde do Sistema',canonicalPage:'health'},
+ meeting:{label:'Google Meet',page:'meeting'},
+ presentation:{label:'Apresentação Institucional',page:'presentation'},
+ academy:{label:'CONSTRU-REI Academy',page:'academy'},
+ history:{label:'Histórico / Snapshots',page:'history'},
+ health:{label:'Saúde do Sistema',page:'health'},
  finance:{label:'Gestão Financeira',external:'https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/dashboard/?rev=dashboard-v14-protected-20260929-2258'},
  technical:{label:'Éder — Admin Técnico',external:'https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=technical'},
  admin:{label:'Rogério — Diretor',external:'https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=admin'}
@@ -56,7 +56,7 @@ const ROUTES={
 const STATUS_COLORS={'AGUARDANDO VISITA/AGENDAMENTO':'#0a8cff','EM ELABORAÇÃO':'#3c8fe8','AGUARDANDO ENVIO':'#62a9ee','AGUARDANDO APROVAÇÃO':'#f2b233','EM ANDAMENTO':'#168fb8','RETORNO':'#7b46e8','AGUARDANDO PAGAMENTO':'#16b879','AGUARDANDO ACERTO':'#ff8a24','FINALIZADO':'#138a61','NÃO APROVADO':'#d85b67','CANCELADO':'#93a9bd'};
 async function get(u){const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'}),d=await r.json().catch(()=>({}));if(!r.ok||d.ok===false)throw Error(d.error||r.status);return d}
 function activatePage(id,label){const p=document.getElementById(id);if(!p)return false;$$('.page').forEach(x=>x.classList.toggle('on',x===p));const t=$('.cr-v10-title b');if(t)t.textContent=label||id;$('.side')?.classList.remove('open');window.scrollTo(0,0);return true}
-function navigate(key){const r=ROUTES[key];if(!r)return;if(r.external){window.location.assign(r.external);return}if(r.canonicalPage){window.location.assign('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open='+encodeURIComponent(r.canonicalPage));return}if(activatePage(r.page,r.label)&&r.focus)setTimeout(()=>document.getElementById(r.focus)?.scrollIntoView({behavior:'smooth',block:'start'}),50)}
+function navigate(key){const r=ROUTES[key];if(!r)return;if(r.external){window.location.assign(r.external);return}if(activatePage(r.page,r.label)&&r.focus)setTimeout(()=>document.getElementById(r.focus)?.scrollIntoView({behavior:'smooth',block:'start'}),50)}
 function header(){const main=$('.main');if(!main)return;$('.cr-v10-header')?.remove();const h=document.createElement('header');h.className='cr-v10-header';const date=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(new Date());h.innerHTML='<div class="cr-v10-title"><button class="cr-v10-menu" aria-label="Abrir menu">☰</button><div><b>Dashboard Executivo</b><small>Central CONSTRU-REI • runtime consolidado</small></div></div><label class="cr-v10-search">⌕<input aria-label="Busca global" placeholder="Buscar módulo..."></label><div class="cr-v10-user"><div class="cr-v10-avatar">RD</div><div><b>Rogério</b><small>Diretor</small></div><span class="cr-v10-date">'+esc(date)+'</span></div>';main.insertBefore(h,main.firstChild);$('.cr-v10-menu',h).onclick=()=>$('.side')?.classList.toggle('open');$('input',h).onkeydown=e=>{if(e.key!=='Enter')return;const q=e.target.value.toLowerCase();const k=Object.keys(ROUTES).find(k=>ROUTES[k].label.toLowerCase().includes(q));if(k)navigate(k)}}
 function nav(){const side=$('.side');if(!side)return;$('#crConNav')?.remove();const brand=$('.brand',side);if(brand){$('strong',brand).textContent='CONSTRU-REI';$('small',brand).textContent='CONSTRUINDO RESULTADOS'}const groups=[
 ['⌂','Início',[['Dashboard Executivo','dashboard']]],
