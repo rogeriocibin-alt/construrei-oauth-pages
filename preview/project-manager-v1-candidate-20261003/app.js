@@ -595,10 +595,34 @@ function bindReleaseUi(){
   }
 }
 
+
+function renderCycle0Gate(){
+  const c=state.data?.cycle0||{}, v=c.validation||{}, g=c.promotion_gate||{};
+  const automated=arr(v.automated), pending=arr(v.pending);
+  const passed=automated.filter(x=>x.status==='PASS').length;
+  const blocked=pending.filter(x=>x.status==='BLOCKED').length;
+  const human=pending.filter(x=>x.status==='PENDING_HUMAN').length;
+  return `<section class="card" style="margin-bottom:16px">
+    <div class="card-head"><div><h3>Gate de promoção — Ciclo 0</h3><p>Implementação técnica não equivale a homologação. A candidata só avança quando todos os gates obrigatórios estiverem satisfeitos.</p></div><span class="badge ${g.decision==='BLOCKED'?'blocked':'completed'}">${esc(g.decision||'EM VALIDAÇÃO')}</span></div>
+    <section class="metrics" style="padding:0 14px 14px">
+      ${metric('Testes automáticos',passed+'/'+automated.length,'Executados sobre a candidata','✓')}
+      ${metric('Bloqueios técnicos',blocked,'Continuidade / infraestrutura','!')}
+      ${metric('Validações humanas',human,'Notebook, celular e homologação','◎')}
+      ${metric('Canônica alterada',g.canonical_changed?'SIM':'NÃO','Proteção preservada','◇')}
+    </section>
+    <div class="section-grid" style="padding:0 14px 14px">
+      <div><h4 style="margin:0 0 8px;color:var(--navy)">Automação</h4>${automated.map(x=>`<div class="rule-row"><span class="rule-state ok">✓</span><div><b>${esc(x.label)}</b><small>${esc(x.evidence)}</small></div><span class="badge completed">PASS</span></div>`).join('')}</div>
+      <div><h4 style="margin:0 0 8px;color:var(--navy)">Ainda bloqueia promoção</h4>${pending.map(x=>`<div class="rule-row"><span class="rule-state partial">!</span><div><b>${esc(x.label)}</b><small>${esc(x.evidence)}</small></div><span class="badge ${x.status==='BLOCKED'?'blocked':'attention'}">${esc(x.status)}</span></div>`).join('')}</div>
+    </div>
+    <div class="notice" style="margin:0 14px 14px"><b>Rollback:</b> <span class="mono">${esc(g.rollback||'—')}</span>. ${esc(g.reason||'')}</div>
+  </section>`;
+}
+
 function renderGovernance(){
   const d=state.data,a=d.repository_audit||{};
   $('#view-governance').innerHTML=`
     <div class="page-intro"><div><h2>Governança</h2><p>Regras que fazem o projeto terminar: menos frentes, mais evidência, baseline explícita e histórico preservado.</p></div></div>
+    ${renderCycle0Gate()}
     <div class="section-grid">
       <div class="card">
         <div class="card-head"><div><h3>Regras operacionais</h3><p>Guardrails aprovados para condução.</p></div></div>
