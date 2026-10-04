@@ -582,3 +582,63 @@ html[data-cr-native-state="loading"] #dashboard .cr-home-panel{contain:layout pa
   #dashboard .cr-agenda-kind{grid-column:2;justify-self:start;margin-top:2px}
   #dashboard .cr-agenda-main small{white-space:normal}
 }
+
+
+/* FINAL HERO ART + MOBILE GLITCH CLEANUP • 2026-10-04
+   Owner-approved construction/renovation visual. No routing or data changes. */
+#dashboard>.cr-executive-header{
+  background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important;
+  border-color:rgba(255,196,0,.32)!important;
+}
+#dashboard>.cr-executive-header .cr-hero-main{
+  position:relative!important;
+  z-index:2!important;
+  background:linear-gradient(90deg,rgba(3,27,70,.96) 0%,rgba(4,40,92,.84) 76%,rgba(4,40,92,.28) 100%)!important;
+}
+#dashboard>.cr-executive-header .cr-hero-visual{
+  display:block!important;
+  position:relative!important;
+  min-height:clamp(170px,20vw,250px)!important;
+  background:
+    linear-gradient(90deg,rgba(4,35,80,.24),rgba(4,35,80,0) 28%),
+    url("./assets/hero-executivo-reformas-20261004.webp") center right/cover no-repeat!important;
+  overflow:hidden!important;
+}
+#dashboard>.cr-executive-header .cr-hero-visual>*{display:none!important}
+#dashboard>.cr-executive-header .cr-hero-visual:before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:linear-gradient(90deg,rgba(3,27,70,.36) 0%,rgba(3,27,70,.04) 36%,transparent 70%)!important;
+  pointer-events:none!important;
+}
+#dashboard>.cr-executive-header .cr-hero-visual:after{display:none!important}
+
+@media(max-width:980px){
+  #dashboard>.cr-executive-header{
+    grid-template-columns:1fr!important;
+    background:
+      linear-gradient(90deg,rgba(3,24,58,.98) 0%,rgba(3,32,75,.92) 52%,rgba(3,30,70,.42) 75%,rgba(3,23,55,.12) 100%),
+      url("./assets/hero-executivo-reformas-20261004.webp") right center/auto 100% no-repeat!important;
+  }
+  #dashboard>.cr-executive-header .cr-hero-main{
+    width:100%!important;
+    min-width:0!important;
+    max-width:74%!important;
+    background:transparent!important;
+  }
+  #dashboard>.cr-executive-header .cr-hero-visual{display:none!important}
+}
+@media(max-width:600px){
+  #dashboard>.cr-executive-header{
+    min-height:158px!important;
+    background:
+      linear-gradient(90deg,rgba(3,24,58,.99) 0%,rgba(3,32,75,.94) 56%,rgba(3,30,70,.56) 73%,rgba(3,23,55,.18) 100%),
+      url("./assets/hero-executivo-reformas-20261004.webp") right center/auto 100% no-repeat!important;
+  }
+  #dashboard>.cr-executive-header .cr-hero-main{
+    max-width:78%!important;
+    padding:18px!important;
+  }
+  #dashboard>.cr-executive-header .cr-executive-tagline{max-width:100%!important}
+}
