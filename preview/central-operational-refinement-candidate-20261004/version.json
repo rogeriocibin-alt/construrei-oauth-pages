@@ -1,0 +1,15 @@
+{
+  "candidate": "CR-CENTRAL-OPERATIONAL-REFINEMENT-20261004",
+  "base_official_sha": "ccc8e8a4cc97df5f7646813178287106657df9b1",
+  "branch": "cr-central-refinement-batch-20261004",
+  "official_untouched": true,
+  "scope": [
+    "saude-desenvolvimento-unificado",
+    "central-call-interna",
+    "documentacao-organizada",
+    "apresentacao-viva-responsiva",
+    "context-gateway-amigavel"
+  ],
+  "docs_edit_mode": "DRAFT_CANDIDATE",
+  "generated_at": "2026-10-04T13:00:00-03:00"
+}
