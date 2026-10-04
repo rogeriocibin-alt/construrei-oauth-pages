@@ -642,3 +642,151 @@ html[data-cr-native-state="loading"] #dashboard .cr-home-panel{contain:layout pa
   }
   #dashboard>.cr-executive-header .cr-executive-tagline{max-width:100%!important}
 }
+
+
+/* FINAL FULL-WIDTH HERO BACKGROUND • 2026-10-04
+   Owner-approved panorama fills the ENTIRE Gestão Executiva field.
+   Live HTML text is layered above it; the old split/right-column visual is disabled. */
+#dashboard>.cr-home-hero.cr-executive-header{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  display:block!important;
+  min-height:clamp(190px,22vw,300px)!important;
+  border:1px solid rgba(255,196,0,.35)!important;
+  border-radius:14px!important;
+  background-color:#031b46!important;
+  background-image:
+    linear-gradient(90deg,rgba(2,15,39,.88) 0%,rgba(3,24,60,.76) 34%,rgba(3,31,72,.48) 55%,rgba(3,27,61,.13) 82%,rgba(3,22,50,.04) 100%),
+    var(--cr-approved-hero,linear-gradient(112deg,#031b46 0%,#06428d 55%,#08275f 100%))!important;
+  background-position:center center,center center!important;
+  background-size:cover,cover!important;
+  background-repeat:no-repeat,no-repeat!important;
+  box-shadow:0 12px 30px rgba(8,45,88,.16)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header:before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  pointer-events:none!important;
+  background:
+    linear-gradient(90deg,rgba(1,13,35,.44) 0%,rgba(2,19,48,.20) 43%,rgba(2,22,51,.04) 72%,transparent 100%),
+    linear-gradient(180deg,rgba(2,14,34,.04),rgba(2,15,36,.18))!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  pointer-events:none!important;
+  background:radial-gradient(circle at 26% 48%,rgba(4,43,94,.06),rgba(2,17,43,0) 48%)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+  position:relative!important;
+  z-index:2!important;
+  width:min(760px,72%)!important;
+  max-width:72%!important;
+  min-height:clamp(190px,22vw,300px)!important;
+  padding:clamp(22px,3.1vw,44px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  background:transparent!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.62)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-visual{
+  display:none!important;
+  visibility:hidden!important;
+  width:0!important;
+  height:0!important;
+  min-height:0!important;
+  pointer-events:none!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main .ey{
+  margin:0 0 7px!important;
+  color:#ffd43b!important;
+  font-size:clamp(9px,1vw,13px)!important;
+  line-height:1.1!important;
+  font-weight:900!important;
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  text-shadow:0 2px 8px rgba(0,0,0,.55)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1{
+  margin:0 0 10px!important;
+  color:#fff!important;
+  font-size:clamp(30px,3.8vw,58px)!important;
+  line-height:.98!important;
+  font-weight:850!important;
+  letter-spacing:-.035em!important;
+  text-shadow:0 3px 18px rgba(0,0,0,.62)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1 span{
+  color:#ffd21d!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-executive-tagline{
+  margin:0!important;
+  max-width:680px!important;
+  color:#f7fbff!important;
+  font-size:clamp(12px,1.35vw,19px)!important;
+  line-height:1.38!important;
+  font-weight:600!important;
+  text-shadow:0 2px 12px rgba(0,0,0,.72)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-executive-update{
+  margin-top:14px!important;
+  color:#edf7ff!important;
+  font-size:clamp(9px,1vw,13px)!important;
+  font-weight:750!important;
+  text-shadow:0 2px 10px rgba(0,0,0,.7)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-executive-update .cr-live-dot{
+  background:#12c97a!important;
+  box-shadow:0 0 0 4px rgba(18,201,122,.14),0 0 14px rgba(18,201,122,.30)!important;
+}
+
+@media(max-width:980px){
+  #dashboard>.cr-home-hero.cr-executive-header{
+    min-height:245px!important;
+    background-position:center center,58% center!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+    width:min(680px,78%)!important;
+    max-width:78%!important;
+    min-height:245px!important;
+    padding:24px!important;
+  }
+}
+@media(max-width:600px){
+  #dashboard>.cr-home-hero.cr-executive-header{
+    min-height:250px!important;
+    border-radius:12px!important;
+    background-image:
+      linear-gradient(90deg,rgba(2,16,41,.94) 0%,rgba(3,25,61,.84) 43%,rgba(3,30,70,.54) 66%,rgba(3,26,61,.20) 88%,rgba(3,22,50,.08) 100%),
+      var(--cr-approved-hero,linear-gradient(112deg,#031b46 0%,#06428d 55%,#08275f 100%))!important;
+    background-position:center center,63% center!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+    width:84%!important;
+    max-width:84%!important;
+    min-height:250px!important;
+    padding:22px 18px!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1{
+    font-size:34px!important;
+    line-height:.96!important;
+    max-width:100%!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1 span{
+    display:block!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-executive-tagline{
+    max-width:100%!important;
+    font-size:12px!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-executive-update{
+    font-size:9px!important;
+    margin-top:13px!important;
+  }
+}
