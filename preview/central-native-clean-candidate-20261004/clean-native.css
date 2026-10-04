@@ -35,3 +35,95 @@ html[data-cr-native-state="loading"] #dashboard .cr-home-panel{contain:layout pa
 #dashboard .cr-health-panel{padding:7px!important}#dashboard .cr-health-panel .cr-panel-head{min-height:24px!important;margin-bottom:4px!important}#dashboard .cr-health-panel .cr-panel-title h2{font-size:10.5px!important}#dashboard .cr-health-panel .cr-panel-icon{width:22px!important;height:22px!important;font-size:10px!important}#dashboard .cr-health-panel .cr-health-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}#dashboard .cr-health-panel .cr-health-card{padding:4px 6px!important;min-height:0!important}#dashboard .cr-health-panel .cr-health-label{font-size:6.4px!important}#dashboard .cr-health-panel .cr-health-value{font-size:9.5px!important}#dashboard .cr-health-panel .cr-health-sub{font-size:6px!important}
 @media(max-width:700px){.cr-ml-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cr-ml-main{grid-template-columns:1fr}.cr-ml-gauge{grid-template-columns:64px 1fr}.cr-ml-ring{width:58px;height:58px}#dashboard .cr-health-panel .cr-health-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:420px){.cr-ml-grid{grid-template-columns:1fr 1fr}.cr-ml-title strong{font-size:11px}.cr-ml-source{display:none}}
+
+
+/* 2026-10-04 • dashboard source simplification + restored pending cards */
+#dashboard .cr-pending-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+#dashboard .cr-live-pending{
+  min-height:138px!important;
+  grid-template-columns:42px 1fr!important;
+  grid-template-rows:1fr auto!important;
+  column-gap:9px!important;
+  padding:10px!important;
+  border-left:3px solid #075bd8!important;
+}
+#dashboard .cr-live-pending.purple{border-left-color:#7f42c9!important}
+#dashboard .cr-live-pending.amber{border-left-color:#cfa33c!important}
+#dashboard .cr-live-pending .cr-pending-icon{
+  width:40px!important;height:40px!important;font-size:18px!important;
+}
+#dashboard .cr-live-pending .cr-pending-copy h3{
+  font-size:11px!important;line-height:1.08!important;
+}
+#dashboard .cr-live-pending .cr-pending-total{
+  font-size:28px!important;margin:3px 0!important;
+}
+#dashboard .cr-live-pending .cr-pending-lines{
+  font-size:8px!important;line-height:1.15!important;gap:2px!important;
+}
+#dashboard .cr-live-pending>.btn{
+  grid-column:1/-1!important;
+  width:100%!important;
+  min-height:34px!important;
+  margin-top:7px!important;
+  font-size:9px!important;
+}
+
+/* Coarse-pointer/mobile browser safeguard.
+   Also applies when Android is using a desktop-like 980px layout viewport. */
+@media (hover:none) and (pointer:coarse) and (max-width:1100px){
+  .content{padding-left:10px!important;padding-right:10px!important}
+  #dashboard .cr-kpi-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    overflow:visible!important;
+    gap:9px!important;
+    padding:0 9px 9px!important;
+  }
+  #dashboard .cr-kpi-grid .cr-op-card{
+    flex:none!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:128px!important;
+    padding:10px!important;
+  }
+  #dashboard .cr-kpi-grid .cr-op-label{font-size:12px!important}
+  #dashboard .cr-kpi-grid .cr-op-value{font-size:30px!important}
+  #dashboard .cr-kpi-grid .cr-op-detail{font-size:9px!important}
+  #dashboard .cr-kpi-grid .cr-op-status{font-size:9px!important}
+
+  #dashboard .cr-pending-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    overflow:visible!important;
+    padding:0 9px 9px!important;
+    gap:9px!important;
+  }
+  #dashboard .cr-pending-grid .cr-pending-card{
+    flex:none!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:150px!important;
+  }
+  #dashboard .cr-live-pending .cr-pending-copy h3{font-size:13px!important}
+  #dashboard .cr-live-pending .cr-pending-total{font-size:32px!important}
+  #dashboard .cr-live-pending .cr-pending-lines{font-size:10px!important}
+  #dashboard .cr-live-pending>.btn{min-height:42px!important;font-size:11px!important}
+
+  #crMaturityLive .cr-ml-title strong{font-size:14px!important}
+  #crMaturityLive .cr-ml-sub{font-size:10px!important}
+  #crMaturityLive .cr-ml-main{grid-template-columns:1fr!important}
+  #crMaturityLive .cr-ml-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #crMaturityLive .cr-ml-card{padding:11px!important}
+  #crMaturityLive .cr-ml-row span{font-size:10px!important}
+  #crMaturityLive .cr-ml-card small{font-size:8.5px!important;min-height:0!important}
+}
+@media (hover:none) and (pointer:coarse) and (max-width:600px){
+  #dashboard .cr-kpi-grid{grid-template-columns:1fr!important}
+  #crMaturityLive .cr-ml-grid{grid-template-columns:1fr!important}
+}
