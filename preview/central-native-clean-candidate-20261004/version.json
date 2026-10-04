@@ -1,0 +1,16 @@
+{
+  "build": "CR-CENTRAL-NATIVE-CLEAN-FROM-0DBC-20261004",
+  "status": "CANDIDATE_ISOLATED",
+  "baseline_commit": "0dbc589851971eed4cb7863f2073eb6588191549",
+  "baseline_branch": "baseline-central-homologada-rogerio-20261003",
+  "candidate_branch": "candidate-central-clean-from-homologada-20261003",
+  "official_endpoint_changed": false,
+  "rules": [
+    "Preserve owner-confirmed visual and functional baseline",
+    "Single owner for HOME dynamic regions",
+    "No legacy repaint lock",
+    "No Pagey banner injectors",
+    "No external legacy cr-v2 runtime",
+    "Do not promote without Rogério validation"
+  ]
+}
