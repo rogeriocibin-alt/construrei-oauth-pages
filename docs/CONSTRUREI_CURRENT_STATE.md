@@ -12,7 +12,7 @@
 - Publicação GitHub Pages funcional: `1d710b4c6c9a0781d04b9ae9b96147a146e48f22`
 - Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R6`
 - Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v5
-- API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v5
+- API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v6
 - Modelo canônico: `docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md`
 - Central oficial: **NÃO ALTERADA**
 - Base oficial protegida: `ccc8e8a4cc97df5f7646813178287106657df9b1`
@@ -38,6 +38,47 @@ https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-agenda-smarttex
 
 13. Correção anti-cache: o gerador usa novo arquivo físico `agenda-smart-text-r6.js`, carregado diretamente pelo HTML antes dos refinamentos; o loader legado foi removido para impedir retorno do código com `sess()/auth()`.
 14. O aviso amarelo “Sessão interna indisponível” deixa de fazer parte do fluxo desta candidata.
+15. Saneamento final de valores: remove `R# CONSTRU-REI — ESTADO MESTRE DA CENTRAL
+
+> Fonte de verdade para retomada entre conversas. Não depender do histórico do chat para identificar a candidata atual.
+
+## Estado atual — 2026-10-04
+
+- Projeto: Central CONSTRU-REI
+- Repositório: `rogeriocibin-alt/construrei-oauth-pages`
+- Candidata ativa: **Agenda Inteligente / Textos Operacionais R6**
+- Branch fonte: `cr-central-agenda-smarttext-candidate-20261004`
+- Commit funcional da branch candidata: `dee1298fff02653b38e7bccd67650907ea6b3419`
+- Publicação GitHub Pages funcional: `1d710b4c6c9a0781d04b9ae9b96147a146e48f22`
+- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R6`
+- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v5
+- API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v6
+- Modelo canônico: `docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md`
+- Central oficial: **NÃO ALTERADA**
+- Base oficial protegida: `ccc8e8a4cc97df5f7646813178287106657df9b1`
+
+## Link da última candidata
+
+https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-agenda-smarttext-candidate-20261004/
+
+## Rodada ativa — Agenda Inteligente R6
+
+1. Mantém **Expandir → gerar texto → copiar texto** em cada compromisso.
+2. Mantém os modelos canônicos de **VISITA/VISTORIA, EXECUÇÃO e RETORNO**.
+3. Remove do gerador a escolha explícita entre **Rogério/Diretoria** e **Éder/Técnico**.
+4. A Agenda reutiliza silenciosamente a sessão interna disponível; não apresenta seleção de perfil no fluxo de geração.
+5. Filtro obrigatório remove **valores monetários, preços, totais e parcelas** antes de entregar qualquer texto de visita, execução ou retorno.
+6. A forma de pagamento pode permanecer quando disponível, desde que sem valor monetário.
+7. O bloco **Orçamentos do GestãoClick** passa a ordenar os status em **ordem decrescente por quantidade de orçamentos**, com desempate alfabético.
+8. A candidata usa seu próprio `clean-native.js`; não depende mais do arquivo de renderização da versão congelada para esta melhoria.
+9. Navegação R2 (**Voltar • Início • Menu**) permanece preservada.
+10. A versão congelada anterior continua intocada.
+11. O gerador não depende mais de sessão Rogério/Éder: ele valida silenciosamente se o compromisso existe na Agenda operacional de hoje/amanhã e só então consulta o GestãoClick.
+12. A API não aceita consulta livre por número de orçamento; o escopo fica limitado aos eventos realmente agendados, preservando a segurança dos dados.
+
+13. Correção anti-cache: o gerador usa novo arquivo físico `agenda-smart-text-r6.js`, carregado diretamente pelo HTML antes dos refinamentos; o loader legado foi removido para impedir retorno do código com `sess()/auth()`.
+, preços/totais e também números monetários isolados como `2900.00`/`2.900,00` do texto operacional.
+16. Deduplicação semântica de serviços: elimina cabeçalhos como “ESCOPO DOS SERVIÇOS” e mantém somente a descrição mais completa quando orçamento, ordem de serviço e Agenda repetem o mesmo escopo.
 
 ## Congelamento preservado — versão anterior mais completa
 
@@ -60,4 +101,4 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-04 — R6: correção física anti-cache do gerador da Agenda; removido definitivamente o código legado de sessão/perfil do carregamento; geração fica vinculada apenas a eventos reais da Agenda hoje/amanhã, com valores monetários filtrados e GestãoClick em ordem decrescente por volume.
+2026-10-04 — R6 saneada: gerador sem sessão/perfil, API v6 com bloqueio reforçado de valores monetários e deduplicação semântica do escopo; interface R6 permanece a mesma.
