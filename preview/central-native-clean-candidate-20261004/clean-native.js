@@ -1,7 +1,7 @@
 (()=>{'use strict';
 if(window.__CR_NATIVE_CLEAN_V1)return;window.__CR_NATIVE_CLEAN_V1=true;
 window.__CR_NATIVE_HOME_OWNER=true;
-const BUILD='CR-CENTRAL-STATUS-CONSOLIDATION-AGENDA-ORDER-20261004';
+const BUILD='CR-CENTRAL-HERO-FULL-BG-20261004';
 const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
 const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=pending-board';
 const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v12-1-candidate-20261003?view=public';
@@ -360,12 +360,32 @@ async function refreshMaturity(){
  }finally{maturityRefreshing=false}
 }
 
+async function loadApprovedHeroBackground(){
+ const hero=document.querySelector('#dashboard>.cr-home-hero.cr-executive-header');
+ if(!hero)return;
+ const base='./assets/hero-full-bg-b64/part';
+ try{
+  const parts=await Promise.all([1,2,3,4,5].map(async n=>{
+   const r=await fetch(base+n+'.txt?v=20261004-final',{cache:'force-cache'});
+   if(!r.ok)throw Error('HERO_BG_PART_'+n+'_'+r.status);
+   return (await r.text()).trim();
+  }));
+  const b64=parts.join('');
+  if(!/^UklGR/.test(b64)||b64.length<40000)throw Error('HERO_BG_INVALID');
+  hero.style.setProperty('--cr-approved-hero','url("data:image/webp;base64,'+b64+'")');
+  hero.classList.add('cr-hero-bg-live');
+ }catch(err){
+  hero.classList.add('cr-hero-bg-fallback');
+  console.warn('[CONSTRU-REI] hero background fallback',err);
+ }
+}
+
 function boot(){
  document.documentElement.dataset.crBuild=BUILD;
  document.documentElement.dataset.crNativeState='loading';
- renderAll();patchReturns();
+ renderAll();patchReturns();loadApprovedHeroBackground();
  refresh().finally(()=>setTimeout(refreshMaturity,300));setTimeout(refreshAgendaToday,80);setTimeout(refreshBudgets,160);setInterval(refresh,30000);setInterval(refreshAgendaToday,60000);setInterval(refreshMaturity,60000);setInterval(refreshBudgets,90000);
- window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshAgendaToday,refreshMaturity,refreshBudgets,APP};
+ window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshAgendaToday,refreshMaturity,refreshBudgets,loadApprovedHeroBackground,APP};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
