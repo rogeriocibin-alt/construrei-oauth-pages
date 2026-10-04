@@ -9,9 +9,20 @@ const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendim
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const brl=c=>c==null?'—':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(Number(c)/100);
-const state={fast:null,agenda:null,full:null,errors:{},lastRefresh:null};
+const state={fast:null,agenda:null,full:null,errors:{},timings:{},lastRefresh:null};
 const COLORS={'AGUARDANDO VISITA/AGENDAMENTO':'#0a8cff','EM ELABORAÇÃO':'#3c8fe8','AGUARDANDO ENVIO':'#62a9ee','AGUARDANDO APROVAÇÃO':'#f2b233','EM ANDAMENTO':'#168fb8','RETORNO':'#7b46e8','AGUARDANDO PAGAMENTO':'#16b879','AGUARDANDO ACERTO':'#ff8a24','FINALIZADO':'#138a61','NÃO APROVADO':'#d85b67','CANCELADO':'#93a9bd'};
-async function get(u){const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'}),d=await r.json().catch(()=>({}));if(!r.ok||d.ok===false)throw Error(d.error||('HTTP '+r.status));return d}
+async function get(u,timeoutMs=8000){
+ const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeoutMs),started=performance.now();
+ try{
+  const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store',signal:ctrl.signal});
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok||d.ok===false)throw Error(d.error||('HTTP '+r.status));
+  return {data:d,ms:Math.round(performance.now()-started)};
+ }catch(err){
+  if(err?.name==='AbortError')throw Error('TIMEOUT_'+timeoutMs+'ms');
+  throw err;
+ }finally{clearTimeout(timer)}
+}
 function operationalToday(){const a=state.agenda?.kpis;if(!a)return null;return Number(a.visits||0)+Number(a.executions||0)+Number(a.returns||0)+Number(a.warranties||0)}
 function stamp(){const e=$('#crHomeUpdated');if(e)e.textContent='Atualizado '+new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'}).format(new Date())}
 function card(cls,ic,l,v,d,s){return '<article class="cr-op-card '+cls+'"><div class="cr-op-top"><span class="cr-op-icon">'+ic+'</span><span class="cr-op-label">'+esc(l)+'</span></div><div class="cr-op-value">'+esc(v)+'</div><div class="cr-op-detail">'+esc(d)+'</div><div class="cr-op-status">'+esc(s)+'</div></article>'}
@@ -29,15 +40,33 @@ function renderPending(){const h=$('#boardSummary');if(!h)return;const p=state.f
 function renderHealth(){const h=$('#homeHealth');if(!h)return;const s=state.fast?.sources||{},rows=[['Banco de Dados',s.database?.ok],['Trello',s.trello?.ok],['Google Agenda',s.agenda?.ok],['GestãoClick',state.full?.sources?.gestaoclick?.ok??null]];h.innerHTML=rows.map(([n,v])=>'<article class="cr-health-card '+(v===true?'ok':'')+'"><div class="cr-health-label">'+esc(n)+'</div><div class="cr-health-value">'+esc(v===true?'Operacional':v===false?'Atenção':'Carregando')+'</div><div class="cr-health-sub">'+esc(v===true?'Fonte disponível':v===false?'Verificar integração':'Sem presumir estado')+'</div></article>').join('')}
 function renderAll(){renderKpis();renderAgenda();renderQuotes();renderPending();renderHealth()}
 function patchReturns(){document.querySelectorAll('a[href]').forEach(el=>{const href=el.getAttribute('href')||'';if(/central-atendimento/.test(href)&&!/return=/.test(href)){try{const u=new URL(href,location.href);u.searchParams.set('return',location.href);el.setAttribute('href',u.toString())}catch(_){}}})}
+let refreshing=false;
 async function refresh(){
- document.documentElement.dataset.crNativeState='loading';
+ if(refreshing)return;
+ refreshing=true;
+ if(!state.fast&&!state.agenda&&!state.full)document.documentElement.dataset.crNativeState='loading';
  state.errors={};
- const [rf,ra,rq]=await Promise.allSettled([get(FAST),get(AGENDA),get(FULL)]);
- if(rf.status==='fulfilled')state.fast=rf.value;else{state.fast=null;state.errors.fast=String(rf.reason)}
- if(ra.status==='fulfilled')state.agenda=ra.value;else{state.agenda=null;state.errors.agenda=String(ra.reason)}
- if(rq.status==='fulfilled')state.full=rq.value;else{state.full=null;state.errors.full=String(rq.reason)}
- state.lastRefresh=new Date().toISOString();renderAll();
- document.documentElement.dataset.crNativeState=(state.fast||state.agenda||state.full)?'live':'error';
+ const load=async(key,url,apply)=>{
+  try{
+   const out=await get(url);
+   state[key]=out.data;
+   state.timings=state.timings||{};
+   state.timings[key]=out.ms;
+   state.lastRefresh=new Date().toISOString();
+   apply();
+   document.documentElement.dataset.crNativeState='live';
+  }catch(err){
+   state.errors[key]=String(err);
+   apply();
+   if(!state.fast&&!state.agenda&&!state.full)document.documentElement.dataset.crNativeState='error';
+  }
+ };
+ await Promise.allSettled([
+  load('fast',FAST,()=>{renderKpis();renderPending();renderHealth();stamp()}),
+  load('agenda',AGENDA,()=>{renderAgenda();renderKpis();renderHealth();stamp()}),
+  load('full',FULL,()=>{renderQuotes();renderHealth();stamp()})
+ ]);
+ refreshing=false;
 }
 function boot(){
  document.documentElement.dataset.crBuild=BUILD;
