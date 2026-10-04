@@ -7,7 +7,7 @@
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
 - Branch candidata ativa: `cr-central-refinement-batch-20261004`
-- HEAD da branch: `3c979d530ecd32640b1cc9a5d7f143f2b0f9f117`
+- Último commit funcional da candidata (desconsiderando commits documentais deste registro): `3c979d530ecd32640b1cc9a5d7f143f2b0f9f117`
 - Checkpoint da candidata: `5bdcea95b532dcc012272a1e3fcefbafe4af614b`
 - Base oficial congelada: `ccc8e8a4cc97df5f7646813178287106657df9b1`
 - Endpoint oficial: NÃO ALTERADO nesta rodada
@@ -34,7 +34,7 @@ https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-refinement-cand
 Sempre que houver nova candidata, homologação, promoção, rollback ou checkpoint relevante:
 
 1. Atualizar este arquivo no MESMO ciclo da mudança.
-2. Registrar link público funcional, branch, commit HEAD, checkpoint, estado da oficial e resumo das mudanças.
+2. Registrar link público funcional, branch, último commit funcional, checkpoint, estado da oficial e resumo das mudanças.
 3. Nunca considerar somente o histórico do chat como fonte de verdade.
 4. Ao retomar o projeto em nova conversa, consultar este arquivo antes de responder qual é a versão/link mais recente.
 5. Não sobrescrever a versão oficial sem gate de validação humana em notebook + celular.
