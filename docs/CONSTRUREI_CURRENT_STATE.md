@@ -11,7 +11,7 @@
 - Commit funcional da branch candidata: `4f11b69b72c1605464a038b3644bf94214ef6339`
 - Publicação GitHub Pages funcional: `430dab410b51a869f660d105a6d1ed88bf5f6e43`
 - Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R4`
-- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v2
+- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v3
 - API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v4
 - Modelo canônico: `docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md`
 - Central oficial: **NÃO ALTERADA**
