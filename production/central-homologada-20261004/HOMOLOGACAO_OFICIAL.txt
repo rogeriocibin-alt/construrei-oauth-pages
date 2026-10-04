@@ -1,0 +1,9 @@
+CONSTRU-REI — HOMOLOGAÇÃO OFICIAL DA CENTRAL
+Data: 2026-10-04
+Versão validada por Rogério: commit 862d561b488d5eb49662317f34f2bcd1b22db13f
+Origem validada: preview/central-native-clean-candidate-20261004/
+Destino de produção: production/central-homologada-20261004/
+Checkpoint: CHECKPOINT_CENTRAL_OFICIAL_CAPA_20261004
+Branch homologada: central-homologada-capa-20261004
+Rollback oficial anterior: ROLLBACK_CENTRAL_OFICIAL_PRE_CAPA_20261004 -> a5bc15c3adc297394e7de9542da325cebb570749
+Política: cópia byte-for-byte dos arquivos da candidata aprovada; nenhuma alteração visual/funcional durante a promoção.
