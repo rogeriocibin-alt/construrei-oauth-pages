@@ -6,12 +6,12 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Candidata ativa: **Agenda Inteligente / Textos Operacionais R5**
+- Candidata ativa: **Agenda Inteligente / Textos Operacionais R6**
 - Branch fonte: `cr-central-agenda-smarttext-candidate-20261004`
-- Commit funcional da branch candidata: `47731d9bf740f84246dafe0535197b06d4a6a30e`
-- Publicação GitHub Pages funcional: `2a71fdb97edb8fe7d821fab1589e9ec183900945`
-- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R5`
-- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v4
+- Commit funcional da branch candidata: `dee1298fff02653b38e7bccd67650907ea6b3419`
+- Publicação GitHub Pages funcional: `1d710b4c6c9a0781d04b9ae9b96147a146e48f22`
+- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R6`
+- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v5
 - API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v5
 - Modelo canônico: `docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md`
 - Central oficial: **NÃO ALTERADA**
@@ -21,7 +21,7 @@
 
 https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-agenda-smarttext-candidate-20261004/
 
-## Rodada ativa — Agenda Inteligente R5
+## Rodada ativa — Agenda Inteligente R6
 
 1. Mantém **Expandir → gerar texto → copiar texto** em cada compromisso.
 2. Mantém os modelos canônicos de **VISITA/VISTORIA, EXECUÇÃO e RETORNO**.
@@ -35,6 +35,9 @@ https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-agenda-smarttex
 10. A versão congelada anterior continua intocada.
 11. O gerador não depende mais de sessão Rogério/Éder: ele valida silenciosamente se o compromisso existe na Agenda operacional de hoje/amanhã e só então consulta o GestãoClick.
 12. A API não aceita consulta livre por número de orçamento; o escopo fica limitado aos eventos realmente agendados, preservando a segurança dos dados.
+
+13. Correção anti-cache: o gerador usa novo arquivo físico `agenda-smart-text-r6.js`, carregado diretamente pelo HTML antes dos refinamentos; o loader legado foi removido para impedir retorno do código com `sess()/auth()`.
+14. O aviso amarelo “Sessão interna indisponível” deixa de fazer parte do fluxo desta candidata.
 
 ## Congelamento preservado — versão anterior mais completa
 
@@ -57,4 +60,4 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-04 — R5: corrigido bloqueio “Sessão interna indisponível”; geração direta e silenciosa limitada aos compromissos reais da Agenda de hoje/amanhã; sem escolha Rogério/Éder; valores monetários continuam filtrados; GestãoClick permanece em ordem decrescente por volume.
+2026-10-04 — R6: correção física anti-cache do gerador da Agenda; removido definitivamente o código legado de sessão/perfil do carregamento; geração fica vinculada apenas a eventos reais da Agenda hoje/amanhã, com valores monetários filtrados e GestãoClick em ordem decrescente por volume.
