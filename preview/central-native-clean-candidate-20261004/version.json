@@ -1,9 +1,9 @@
 {
-  "build": "CR-CENTRAL-HERO-INLINE-FINAL-20261004",
-  "status": "CANDIDATE_HERO_INLINE_IMAGE_READY_FOR_HOMOLOGATION",
+  "build": "CR-CENTRAL-EXACT-HERO-PANORAMA-FINAL-20261004",
+  "status": "CANDIDATE_EXACT_HERO_READY_FOR_HOMOLOGATION",
   "baseline_commit": "0dbc589851971eed4cb7863f2073eb6588191549",
   "baseline_branch": "baseline-central-homologada-rogerio-20261003",
-  "candidate_branch": "candidate-central-hero-full-bg-20261004",
+  "candidate_branch": "candidate-exact-hero-main-20261004",
   "official_endpoint_changed": false,
   "rules": [
     "Preserve owner-confirmed visual and functional baseline",
@@ -56,8 +56,8 @@
   "pre_status_consolidation_checkpoint": "LOCK_CENTRAL_PRE_STATUS_CONSOLIDATION_20261004",
   "layout_order": "HOJE NA OPERAÇÃO → AGENDA OPERACIONAL → ORÇAMENTOS DO GESTÃO CLICK → PENDÊNCIAS/MATURIDADE/SAÚDE",
   "pre_final_hero_checkpoint": "LOCK_CENTRAL_PRE_FINAL_HERO_20261004",
-  "hero_asset": "generated panorama 2172x724, served as 1200x400 webp assembled client-side from 5 static chunks",
-  "hero_visual": "Imagem panorâmica aprovada ocupa 100% do campo Gestão Executiva; textos HTML vivos ficam sobrepostos com gradiente de legibilidade.",
+  "hero_asset": "assets/hero-executivo-exato-aprovado-20261004.webp",
+  "hero_visual": "Imagem ocupa 100% do hero; textos HTML vivos permanecem sobrepostos e destacados.",
   "mobile_header_glitch_fix": "Removido texto literal \\\\n que aparecia no canto superior esquerdo do mobile",
   "pre_hero_full_bg_checkpoint": "LOCK_PRE_HERO_FULL_BG_20261004",
   "hero_text": [
@@ -66,6 +66,7 @@
     "Uma visão da CONSTRU-REI para decidir, acompanhar e agir.",
     "Gestão integrada • dados vivos da operação"
   ],
-  "hero_delivery": "Approved panorama embedded directly in CSS as WebP data URI; no external asset dependency.",
-  "hero_cache": "clean-native.css?v=11"
+  "hero_delivery": "Arquivo binário real no repositório; sem data URI truncada e sem fallback visual.",
+  "hero_cache": "clean-native.css?v=12",
+  "hero_source": "Imagem aprovada 1000936090.png, otimizada em WebP 1024x341."
 }
