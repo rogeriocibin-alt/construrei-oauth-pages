@@ -1,9 +1,9 @@
 {
-  "build": "CR-CENTRAL-HERO-FULL-BG-FINAL-20261004",
-  "status": "CANDIDATE_FULL_WIDTH_HERO_READY_FOR_HOMOLOGATION",
+  "build": "CR-CENTRAL-HERO-FULL-BG-20261004",
+  "status": "CANDIDATE_FINAL_FULL_BG_READY_FOR_HOMOLOGATION",
   "baseline_commit": "0dbc589851971eed4cb7863f2073eb6588191549",
   "baseline_branch": "baseline-central-homologada-rogerio-20261003",
-  "candidate_branch": "candidate-central-hero-full-bg-final-20261004",
+  "candidate_branch": "candidate-central-hero-full-bg-20261004",
   "official_endpoint_changed": false,
   "rules": [
     "Preserve owner-confirmed visual and functional baseline",
@@ -43,11 +43,11 @@
   "pre_corrections_checkpoint_commit": "a01a18f2f4839ea2d895cb09010ebcaf7da9ed9f",
   "agenda_endpoint": "cr-agenda-executive-v12-1-candidate-20261003?view=public",
   "corrections_summary": [
-    "Arte aprovada aplicada ao hero Gestão Executiva",
-    "Desktop usa a arte na coluna direita preservando texto vivo à esquerda",
-    "Mobile usa a mesma arte como fundo responsivo com gradiente de legibilidade",
-    "Fragmento literal \\\\n removido do topo da página",
-    "Sem alteração em agenda, GestãoClick, pendências, medidores, rotas ou fontes de dados",
+    "Arte panorâmica aprovada aplicada como fundo de TODO o hero executivo",
+    "Removida a composição em coluna/faixa lateral",
+    "Texto permanece HTML nativo sobre a imagem com contraste e hierarquia executiva",
+    "Mobile e desktop usam a mesma arte em background cover com posicionamento responsivo",
+    "Agenda, GestãoClick, status consolidados, medidores, pendências, links e rotas permanecem inalterados",
     "Central oficial permanece inalterada até homologação expressa"
   ],
   "agenda_scope": "Hoje + amanhã, fonte Google Agenda, sem restaurar o antigo módulo Gestão da Agenda",
@@ -56,15 +56,14 @@
   "pre_status_consolidation_checkpoint": "LOCK_CENTRAL_PRE_STATUS_CONSOLIDATION_20261004",
   "layout_order": "HOJE NA OPERAÇÃO → AGENDA OPERACIONAL → ORÇAMENTOS DO GESTÃO CLICK → PENDÊNCIAS/MATURIDADE/SAÚDE",
   "pre_final_hero_checkpoint": "LOCK_CENTRAL_PRE_FINAL_HERO_20261004",
-  "hero_asset": "assets/hero-executivo-full-bg-approved-20261004.webp",
-  "hero_visual": "Imagem panorâmica aprovada ocupando todo o campo Gestão Executiva; textos nativos sobrepostos com gradiente de legibilidade.",
+  "hero_asset": "generated panorama 2172x724, served as 1200x400 webp assembled client-side from 5 static chunks",
+  "hero_visual": "Imagem panorâmica aprovada ocupa 100% do campo Gestão Executiva; textos HTML vivos ficam sobrepostos com gradiente de legibilidade.",
   "mobile_header_glitch_fix": "Removido texto literal \\\\n que aparecia no canto superior esquerdo do mobile",
-  "pre_full_bg_checkpoint": "LOCK_PRE_HERO_FULL_BG_20261004",
+  "pre_hero_full_bg_checkpoint": "LOCK_PRE_HERO_FULL_BG_20261004",
   "hero_text": [
     "DIRETORIA • VISÃO EXECUTIVA",
     "GESTÃO EXECUTIVA",
     "Uma visão da CONSTRU-REI para decidir, acompanhar e agir.",
     "Gestão integrada • dados vivos da operação"
-  ],
-  "hero_scope": "Somente hero executivo; agenda, GestãoClick, pendências, medidores, rotas e integrações preservados."
+  ]
 }
