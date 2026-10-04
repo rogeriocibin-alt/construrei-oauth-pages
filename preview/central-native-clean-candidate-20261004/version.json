@@ -1,20 +1,22 @@
 {
-  "build": "CR-CENTRAL-NATIVE-CLEAN-PERF-MATURITY-20261004",
-  "status": "CANDIDATE_ISOLATED_PERF_MATURITY",
+  "build": "CR-CENTRAL-NATIVE-CLEAN-SOURCES-PENDING-20261004",
+  "status": "CANDIDATE_ISOLATED_SOURCE_SIMPLIFICATION_PENDING_RESTORED",
   "baseline_commit": "0dbc589851971eed4cb7863f2073eb6588191549",
   "baseline_branch": "baseline-central-homologada-rogerio-20261003",
   "candidate_branch": "candidate-central-clean-from-homologada-20261003",
   "official_endpoint_changed": false,
   "rules": [
     "Preserve owner-confirmed visual and functional baseline",
-    "Independent source rendering: fast data first, audits later",
-    "8s maximum wait per primary source; no overlapping refresh cycles",
-    "Keep last valid data when one source fails",
-    "GestãoClick flow bars remain live and independent",
-    "Maturity/autonomy cockpit audits in background after primary load",
-    "No legacy repaint lock",
-    "No external legacy cr-v2 runtime",
+    "Dashboard Agenda panel removed from executive HOME",
+    "GestãoClick quote/status flow panel removed from executive HOME",
+    "No slow FULL GestãoClick quote request on HOME",
+    "Primary operational read has 8s client timeout and keeps last valid state",
+    "Pendências Vivas use pending-board source with APP, WIZY and ÉDER cards",
+    "Maturity cockpit uses CONSTRU-REI light blue/gold identity",
+    "Coarse-pointer/mobile layout remains readable even with desktop-like Android viewport",
     "Do not promote without Rogério validation"
   ],
-  "performance_commit": "410f9aee7ed9b568e851bb169fc111392dbc9b24"
+  "performance_commit": "410f9aee7ed9b568e851bb169fc111392dbc9b24",
+  "source_simplification_commit": "a73334f77d834b149bd7db71d25ced8f616903ed",
+  "ui_adjustment_commit": "effbd1240e4577169b8dea7c6e5f61b8cf18b3a4"
 }
