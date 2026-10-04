@@ -1,25 +1,23 @@
 {
-  "build": "CR-CENTRAL-NATIVE-CLEAN-SOURCES-PENDING-20261004",
-  "status": "CANDIDATE_ISOLATED_SOURCE_SIMPLIFICATION_PENDING_RESTORED_IDENTITY_REFINEMENT",
+  "build": "CR-CENTRAL-NATIVE-GC-STATUS-BARS-20261004",
+  "status": "CANDIDATE_ISOLATED_GESTAOCLICK_STATUS_BARS_PREMIUM_MATURITY",
   "baseline_commit": "0dbc589851971eed4cb7863f2073eb6588191549",
   "baseline_branch": "baseline-central-homologada-rogerio-20261003",
-  "candidate_branch": "candidate-central-clean-from-homologada-20261003",
+  "candidate_branch": "candidate-central-gc-status-bars-20261004",
   "official_endpoint_changed": false,
   "rules": [
-    "Preserve owner-confirmed visual and functional baseline",
-    "Dashboard Agenda panel removed from executive HOME",
-    "GestãoClick quote/status flow panel removed from executive HOME",
-    "No slow FULL GestãoClick quote request on HOME",
-    "Primary operational read has 8s client timeout and keeps last valid state",
-    "Pendências Vivas use pending-board source with APP, WIZY and ÉDER cards",
-    "Maturity cockpit uses CONSTRU-REI light blue/gold identity",
-    "Coarse-pointer/mobile layout remains readable even with desktop-like Android viewport",
-    "Do not promote without Rogério validation",
-    "Top-right director avatar uses APP CONSTRU-REI logo instead of temporary initial",
-    "Main maturity gauges use solid CONSTRU-REI blue/navy/gold identity colors with no transparent/white center"
+    "Preserve owner-confirmed current candidate as baseline",
+    "Maturity gauges use blue and teal identity without heavy gold treatment",
+    "GestãoClick quote statuses render as colored proportional bars with real counters",
+    "GestãoClick status data loads asynchronously and never blocks the Central shell",
+    "No fake zero when GestãoClick is unavailable",
+    "Raw GestãoClick status names remain the source of truth",
+    "Official/canonical Central is untouched until Rogério homologation"
   ],
   "performance_commit": "410f9aee7ed9b568e851bb169fc111392dbc9b24",
   "source_simplification_commit": "a73334f77d834b149bd7db71d25ced8f616903ed",
   "ui_adjustment_commit": "effbd1240e4577169b8dea7c6e5f61b8cf18b3a4",
-  "identity_refinement_commit": "4e2526859e36a7f9929044be96dbb9f2ebf72a59"
+  "identity_refinement_commit": "4e2526859e36a7f9929044be96dbb9f2ebf72a59",
+  "gestaoclick_status_endpoint": "cr-gestaoclick-orcamentos-status-candidate-20261004",
+  "gestaoclick_status_commit": "fe3be583849a24a3cfd61b7ae1a707ea690d44ef"
 }
