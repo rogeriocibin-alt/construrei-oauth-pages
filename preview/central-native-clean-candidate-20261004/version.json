@@ -1,9 +1,9 @@
 {
-  "build": "CR-CENTRAL-STATUS-CONSOLIDATION-AGENDA-ORDER-20261004",
-  "status": "CANDIDATE_STATUS_CONSOLIDATION_READY_FOR_VALIDATION",
+  "build": "CR-CENTRAL-FINAL-HERO-CLEAN-20261004",
+  "status": "CANDIDATE_FINAL_HERO_READY_FOR_HOMOLOGATION",
   "baseline_commit": "0dbc589851971eed4cb7863f2073eb6588191549",
   "baseline_branch": "baseline-central-homologada-rogerio-20261003",
-  "candidate_branch": "candidate-central-status-consolidation-20261004",
+  "candidate_branch": "candidate-central-final-hero-20261004",
   "official_endpoint_changed": false,
   "rules": [
     "Preserve owner-confirmed visual and functional baseline",
@@ -43,15 +43,20 @@
   "pre_corrections_checkpoint_commit": "a01a18f2f4839ea2d895cb09010ebcaf7da9ed9f",
   "agenda_endpoint": "cr-agenda-executive-v12-1-candidate-20261003?view=public",
   "corrections_summary": [
-    "Orçamentos do GestãoClick posicionados imediatamente abaixo da Agenda Operacional",
-    "Status equivalentes consolidados semanticamente em uma única barra",
-    "Contador de cada barra representa a soma total de todas as variações daquele status",
-    "Endpoint GestãoClick V3 e defesa adicional no front-end usam a mesma canonicalização",
-    "Central oficial permanece inalterada"
+    "Arte aprovada aplicada ao hero Gestão Executiva",
+    "Desktop usa a arte na coluna direita preservando texto vivo à esquerda",
+    "Mobile usa a mesma arte como fundo responsivo com gradiente de legibilidade",
+    "Fragmento literal \\\\n removido do topo da página",
+    "Sem alteração em agenda, GestãoClick, pendências, medidores, rotas ou fontes de dados",
+    "Central oficial permanece inalterada até homologação expressa"
   ],
   "agenda_scope": "Hoje + amanhã, fonte Google Agenda, sem restaurar o antigo módulo Gestão da Agenda",
   "status_dedup_policy": "Uma única barra por status operacional canônico; variações semânticas são somadas no mesmo contador.",
   "circular_gauge_palette": "APP CONSTRU-REI blue/cyan solid center",
   "pre_status_consolidation_checkpoint": "LOCK_CENTRAL_PRE_STATUS_CONSOLIDATION_20261004",
-  "layout_order": "HOJE NA OPERAÇÃO → AGENDA OPERACIONAL → ORÇAMENTOS DO GESTÃO CLICK → PENDÊNCIAS/MATURIDADE/SAÚDE"
+  "layout_order": "HOJE NA OPERAÇÃO → AGENDA OPERACIONAL → ORÇAMENTOS DO GESTÃO CLICK → PENDÊNCIAS/MATURIDADE/SAÚDE",
+  "pre_final_hero_checkpoint": "LOCK_CENTRAL_PRE_FINAL_HERO_20261004",
+  "hero_asset": "assets/hero-executivo-reformas-20261004.webp",
+  "hero_visual": "Arte aprovada: reparos/reformas, edifício, obra e profissional técnico em azul CONSTRU-REI com acento dourado",
+  "mobile_header_glitch_fix": "Removido texto literal \\\\n que aparecia no canto superior esquerdo do mobile"
 }
