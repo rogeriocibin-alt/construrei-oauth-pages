@@ -32,7 +32,6 @@ function style(){
  '#dashboard .cr-agenda-refresh{background:#e9f2f8;color:#24567e;border:1px solid #cbdfea!important}',
  '#dashboard .cr-agenda-auth{background:#fff8dc;border:1px solid #ecd37b;border-radius:10px;padding:10px;color:#694f00;font-size:9px;line-height:1.4}',
  '#dashboard .cr-agenda-auth-actions{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}',
- '#dashboard .cr-agenda-auth-actions button{border:0;border-radius:8px;padding:8px 10px;font-weight:900;font-size:8px;background:#0d6dcc;color:#fff}',
  '#dashboard .cr-agenda-missing{margin-top:7px;padding:7px 9px;border-radius:8px;background:#fff7e7;border:1px solid #f0d7a0;color:#745513;font-size:8px}',
  '#dashboard .cr-agenda-load{padding:10px;color:#56738d;font-size:9px}',
  '#dashboard .cr-agenda-copy-ok{color:#08774a;font-size:8px;font-weight:900;align-self:center}',
@@ -48,7 +47,7 @@ function setOpen(id,on){
 }
 function auth(id){
  const d=host(id);if(!d)return;
- d.innerHTML='<div class="cr-agenda-auth"><b>Dados completos protegidos.</b><br>Para consultar cliente, contato, endereço e escopo diretamente do GestãoClick, use uma sessão CONSTRU-REI. O acesso é feito uma vez e reutilizado nesta Central.<div class="cr-agenda-auth-actions"><button type="button" data-cr-agenda-login="admin">Rogério • Diretor</button><button type="button" data-cr-agenda-login="technical">Éder • Técnico</button></div></div>';
+ d.innerHTML='<div class="cr-agenda-auth"><b>Sessão interna indisponível.</b><br>Recarregue a Central e tente novamente. A Agenda não exige escolha entre perfis para gerar o texto.</div>';
 }
 function render(id,data){
  const d=host(id);if(!d)return;
@@ -58,7 +57,7 @@ function render(id,data){
 async function generate(id,force=false){
  const it=item(id),d=host(id);if(!it||!d)return;
  if(CACHE.has(id)&&!force){render(id,CACHE.get(id));return}
- const session=sess();if(!session){auth(id);return}
+ const session=sess()||localStorage.getItem(SK)||'';if(!session){auth(id);return}
  d.innerHTML='<div class="cr-agenda-load">Consultando o GestãoClick e montando o texto padrão…</div>';
  try{
    const r=await fetch(API,{method:'POST',cache:'no-store',headers:{'content-type':'application/json','x-cr-session':session},body:JSON.stringify({case:it.case,type:it.type,event:it})});
@@ -104,11 +103,10 @@ document.addEventListener('click',e=>{
  if(exp){e.preventDefault();e.stopPropagation();const id=exp.getAttribute('data-cr-agenda-expand')||'';const on=!OPEN.has(id);setOpen(id,on);if(on)generate(id,false);return}
  const cp=e.target.closest('[data-cr-agenda-copy]');if(cp){e.preventDefault();copy(cp.getAttribute('data-cr-agenda-copy')||'');return}
  const rf=e.target.closest('[data-cr-agenda-refresh]');if(rf){e.preventDefault();const id=rf.getAttribute('data-cr-agenda-refresh')||'';CACHE.delete(id);generate(id,true);return}
- const lg=e.target.closest('[data-cr-agenda-login]');
- if(lg){e.preventDefault();try{sessionStorage.setItem('crAgendaResumeSmartText','1')}catch(_){}if(typeof window.go==='function')window.go(lg.getAttribute('data-cr-agenda-login')||'admin')}
+
 },true);
 const agendaHost=q('#crAgendaRows');if(agendaHost)new MutationObserver(()=>setTimeout(restore,20)).observe(agendaHost,{childList:true,subtree:true});
-lastSession=sess();
-setInterval(()=>{const s=sess();if(s!==lastSession){lastSession=s;if(s)Array.from(OPEN).forEach(id=>{CACHE.delete(id);generate(id,true)})}},1200);
+lastSession=sess()||localStorage.getItem(SK)||'';
+setInterval(()=>{const s=sess()||localStorage.getItem(SK)||'';if(s!==lastSession){lastSession=s;if(s)Array.from(OPEN).forEach(id=>{CACHE.delete(id);generate(id,true)})}},1200);
 style();setTimeout(restore,250);
 })();
