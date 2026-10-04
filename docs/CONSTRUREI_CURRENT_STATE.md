@@ -133,3 +133,17 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - O valor é um **índice de execução por status**, não percentual de conclusão financeira nem percentual físico de obra.
 - APP/SISTEMA continuam automáticos no registro vivo; WIZY/ÉDER permanecem manuais.
 - A versão congelada anterior permanece preservada.
+
+
+## Executivo R8 — medidores modernos final
+
+- Data: 2026-10-04
+- Candidata: `cr-central-agenda-smarttext-candidate-20261004`
+- Commit funcional: `78700b8f91025caa6d44d02ef5a6c99d0fef1d43`
+- Checkpoint: `CHECKPOINT_CENTRAL_EXEC_METERS_R8_20261004`
+- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v7
+- Fonte viva de pendências: `cr-pendencias-executive-v2-candidate-20261004`
+- UI: gauge principal circular em SVG com progresso real, cinco mini-medidores de estágio e três mini-gauges APP/WIZY/ÉDER.
+- Estilo carregado por arquivo físico novo: `executive-meters-r8.css`, evitando interferência/caching do CSS anterior.
+- Painel permanece compacto no celular e mantém acesso direto às pendências.
+- Medidor representa avanço operacional ponderado por status, não conclusão financeira/física.
