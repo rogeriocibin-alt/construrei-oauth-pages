@@ -3560,4 +3560,41 @@ body.cr-homolog-view .side .nav.on{
     box-shadow:0 4px 9px rgba(226,173,0,.20),inset 0 1px 0 rgba(255,255,255,.32)!important;
   }
 }
-</style></body></html>
+</style>
+<!-- CR MATURITY COCKPIT CANDIDATE 2026-10-03 — isolated, no production promotion -->
+<style id="cr-maturity-cockpit-style">
+.cr-maturity{margin:14px 0;padding:16px;border:1px solid #c8d9ef;border-radius:20px;background:linear-gradient(145deg,#f8fbff,#edf5ff);box-shadow:0 12px 30px rgba(16,57,108,.09);color:#07165b}
+.cr-maturity-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:13px}.cr-maturity-head h2{margin:0;font-size:18px}.cr-maturity-head p{margin:3px 0 0;color:#42698f;font-size:11px}.cr-maturity-badge{font-size:10px;font-weight:900;padding:6px 9px;border-radius:999px;background:#dcecff;color:#0b4f91}
+.cr-maturity-hero{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.cr-meter{display:grid;grid-template-columns:92px 1fr;gap:12px;align-items:center;padding:12px;border-radius:16px;background:#fff;border:1px solid #d9e6f5}.cr-ring{--p:50;width:86px;height:86px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#0b66c3 calc(var(--p)*1%),#dce8f5 0);position:relative}.cr-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff}.cr-ring b{position:relative;font-size:20px}.cr-meter h3{margin:0 0 4px;font-size:13px}.cr-meter small{color:#527598;line-height:1.25}
+.cr-maturity-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.cr-mat-card{padding:10px;border-radius:14px;background:#fff;border:1px solid #dce7f3}.cr-mat-top{display:flex;justify-content:space-between;gap:8px;font-size:10px;font-weight:850}.cr-mat-top b{font-size:13px}.cr-mat-track{height:8px;background:#e5edf6;border-radius:999px;overflow:hidden;margin:8px 0 6px}.cr-mat-track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#1f79ce,#0a4f9c)}.cr-mat-card small{display:block;color:#58799a;font-size:8px;line-height:1.25}.cr-mat-priority{margin-top:11px;padding:10px 12px;border-radius:13px;background:#fff7e7;border:1px solid #f1d59d;font-size:10px;color:#744d00}.cr-mat-priority b{color:#5a3b00}
+@media(max-width:800px){.cr-maturity{padding:12px}.cr-maturity-hero{grid-template-columns:1fr}.cr-maturity-grid{grid-template-columns:1fr 1fr}.cr-meter{grid-template-columns:76px 1fr}.cr-ring{width:70px;height:70px}.cr-ring b{font-size:17px}}
+@media(max-width:480px){.cr-maturity-grid{grid-template-columns:1fr}.cr-maturity-head{align-items:start}.cr-maturity-badge{white-space:nowrap}}
+</style>
+<script id="cr-maturity-cockpit-script">
+(function(){
+ if(document.getElementById('crMaturityCockpit'))return;
+ var data=[
+  ['Gestão e Visibilidade Executiva',85,'Forte • Dashboard e visão executiva já embarcados'],
+  ['Financeiro / GestãoClick',82,'Forte • capacidade administrativa e financeira existente'],
+  ['Base Técnica e Governança',83,'Forte • checkpoints, rollback e promoção controlada'],
+  ['Dados e Integrações',76,'Avançando • ampliar rastreabilidade e telemetria real'],
+  ['Operação + Trello + Automações',78,'Avançando • histórico e automações sustentam a operação'],
+  ['Central / Ecossistema de Gestão',74,'Avançando • consolidar como ponto único de gestão'],
+  ['Esteira F00–F09',58,'Em construção • fechar fluxo operacional completo'],
+  ['APP Operacional',48,'Em construção • acelerar uso operacional real'],
+  ['Atendimento Integrado',38,'Prioridade • maior lacuna e maior retorno imediato']
+ ];
+ function card(x){return '<div class="cr-mat-card"><div class="cr-mat-top"><span>'+x[0]+'</span><b>'+x[1]+'%</b></div><div class="cr-mat-track"><i style="width:'+x[1]+'%"></i></div><small>'+x[2]+'</small></div>'}
+ var el=document.createElement('section'); el.id='crMaturityCockpit'; el.className='cr-maturity';
+ el.innerHTML='<div class="cr-maturity-head"><div><h2>Maturidade do Ecossistema CONSTRU-REI</h2><p>Capacidade real de operar, gerir, controlar e evoluir com segurança.</p></div><span class="cr-maturity-badge">Cockpit do Projeto</span></div>'+
+ '<div class="cr-maturity-hero"><div class="cr-meter"><div class="cr-ring" style="--p:68"><b>68%</b></div><div><h3>Maturidade Geral</h3><small>Ecossistema em consolidação. Mede capacidade existente + integração + homologação + uso.</small></div></div>'+
+ '<div class="cr-meter"><div class="cr-ring" style="--p:52"><b>52%</b></div><div><h3>Autonomia do Ecossistema</h3><small>Quanto da operação já funciona ponta a ponta sem controles paralelos ou intervenção manual crítica.</small></div></div></div>'+
+ '<div class="cr-maturity-grid">'+data.map(card).join('')+'</div>'+
+ '<div class="cr-mat-priority"><b>Maior alavanca de maturidade agora:</b> Atendimento → APP → F00/F01 → esteira ponta a ponta. Concluir esse circuito aumenta capacidade real, não apenas quantidade de telas.</div>';
+ var dash=document.getElementById('dashboard'); if(!dash)return;
+ var pending=dash.querySelector('.cr-pending-card');
+ var anchor=pending && pending.parentElement;
+ if(anchor && anchor.parentElement){anchor.parentElement.insertBefore(el,anchor)}else{dash.appendChild(el)}
+})();
+</script>
+</body></html>
