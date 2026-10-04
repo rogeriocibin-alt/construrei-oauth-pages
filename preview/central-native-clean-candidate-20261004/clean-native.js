@@ -1,7 +1,7 @@
 (()=>{'use strict';
 if(window.__CR_NATIVE_CLEAN_V1)return;window.__CR_NATIVE_CLEAN_V1=true;
 window.__CR_NATIVE_HOME_OWNER=true;
-const BUILD='CR-CENTRAL-NATIVE-CLEAN-FROM-0DBC-20261004';
+const BUILD='CR-CENTRAL-NATIVE-CLEAN-SOURCES-PENDING-20261004';
 const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
 const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=pending-board';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
