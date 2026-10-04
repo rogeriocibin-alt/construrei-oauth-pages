@@ -68,6 +68,22 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 6. Preservar a versão oficial anterior até a promoção ser efetivamente concluída.
 7. Toda promoção futura deve partir da pasta de produção congelada, nunca de pasta de candidata mutável.
 
+
+
+## Executivo R9 — correção responsiva dos medidores
+
+- Data: 2026-10-04
+- Status: **CANDIDATA PUBLICADA PARA VALIDAÇÃO NO CELULAR**
+- Branch: `cr-central-exec-r9-mobilefix-20261004`
+- Commit: `b42c491dba5a60fa375c2f2609e26c660ebf892e`
+- Checkpoint: `CHECKPOINT_CENTRAL_EXEC_R9_MOBILEFIX_20261004`
+- Preview: `preview/central-exec-r9-mobilefix-20261004/`
+- Correção: o arquivo `executive-meters-r8.css` existia, mas não estava referenciado pelo `index.html`; no celular isso fazia o SVG do gauge usar preenchimento preto padrão e removia a composição visual dos cards APP/WIZY/ÉDER.
+- A R9 adiciona explicitamente o stylesheet físico dos medidores com cache-buster próprio.
+- Nenhuma lógica, dado, API, métrica ou módulo validado foi alterado.
+- A R8 congelada em `production/central-homologada-exec-r8-20261004/` permanece intocada.
+- Gate: validar visualmente em celular antes de qualquer promoção/homologação.
+
 ## Última atualização
 
-2026-10-04 — Executivo R8 finalizado e congelado em produção; checkpoint de homologação criado; estado mestre saneado. O único passo não concluído é o repoint técnico da Edge oficial `centro-operacoes`, bloqueado pelo conector Supabase enquanto o notebook autorizado permanece offline.
+2026-10-04 — R9 corretiva publicada como preview para corrigir o carregamento do CSS dos medidores no celular. R8 congelada preservada; nenhuma promoção oficial executada.
