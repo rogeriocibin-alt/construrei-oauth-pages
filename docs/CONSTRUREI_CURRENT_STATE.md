@@ -6,13 +6,13 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Candidata ativa: **Agenda Inteligente / Textos Operacionais R4**
+- Candidata ativa: **Agenda Inteligente / Textos Operacionais R5**
 - Branch fonte: `cr-central-agenda-smarttext-candidate-20261004`
-- Commit funcional da branch candidata: `4f11b69b72c1605464a038b3644bf94214ef6339`
-- Publicação GitHub Pages funcional: `430dab410b51a869f660d105a6d1ed88bf5f6e43`
-- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R4`
-- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v3
-- API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v4
+- Commit funcional da branch candidata: `47731d9bf740f84246dafe0535197b06d4a6a30e`
+- Publicação GitHub Pages funcional: `2a71fdb97edb8fe7d821fab1589e9ec183900945`
+- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R5`
+- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v4
+- API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v5
 - Modelo canônico: `docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md`
 - Central oficial: **NÃO ALTERADA**
 - Base oficial protegida: `ccc8e8a4cc97df5f7646813178287106657df9b1`
@@ -21,7 +21,7 @@
 
 https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-agenda-smarttext-candidate-20261004/
 
-## Rodada ativa — Agenda Inteligente R4
+## Rodada ativa — Agenda Inteligente R5
 
 1. Mantém **Expandir → gerar texto → copiar texto** em cada compromisso.
 2. Mantém os modelos canônicos de **VISITA/VISTORIA, EXECUÇÃO e RETORNO**.
@@ -33,6 +33,8 @@ https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-agenda-smarttex
 8. A candidata usa seu próprio `clean-native.js`; não depende mais do arquivo de renderização da versão congelada para esta melhoria.
 9. Navegação R2 (**Voltar • Início • Menu**) permanece preservada.
 10. A versão congelada anterior continua intocada.
+11. O gerador não depende mais de sessão Rogério/Éder: ele valida silenciosamente se o compromisso existe na Agenda operacional de hoje/amanhã e só então consulta o GestãoClick.
+12. A API não aceita consulta livre por número de orçamento; o escopo fica limitado aos eventos realmente agendados, preservando a segurança dos dados.
 
 ## Congelamento preservado — versão anterior mais completa
 
@@ -55,4 +57,4 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-04 — R4: sem escolha Rogério/Éder no gerador; sessão transitória reutilizada sem persistência extra; valores monetários removidos dos textos; GestãoClick em ordem decrescente por volume.
+2026-10-04 — R5: corrigido bloqueio “Sessão interna indisponível”; geração direta e silenciosa limitada aos compromissos reais da Agenda de hoje/amanhã; sem escolha Rogério/Éder; valores monetários continuam filtrados; GestãoClick permanece em ordem decrescente por volume.
