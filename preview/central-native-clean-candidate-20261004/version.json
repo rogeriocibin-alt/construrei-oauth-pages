@@ -1,9 +1,9 @@
 {
-  "build": "CR-CENTRAL-NATIVE-CLEAN-GC-BARS-20261004",
-  "status": "CANDIDATE_ISOLATED_GC_STATUS_BARS_MATURITY_PALETTE_REFINEMENT",
+  "build": "CR-CENTRAL-NATIVE-CORRECTIONS-AGENDA-DEDUP-RINGS-20261004",
+  "status": "CANDIDATE_CORRECTIONS_READY_FOR_VALIDATION",
   "baseline_commit": "0dbc589851971eed4cb7863f2073eb6588191549",
   "baseline_branch": "baseline-central-homologada-rogerio-20261003",
-  "candidate_branch": "candidate-central-clean-from-homologada-20261003",
+  "candidate_branch": "candidate-central-corrections-20261004",
   "official_endpoint_changed": false,
   "rules": [
     "Preserve owner-confirmed visual and functional baseline",
@@ -26,7 +26,7 @@
   "source_simplification_commit": "a73334f77d834b149bd7db71d25ced8f616903ed",
   "ui_adjustment_commit": "effbd1240e4577169b8dea7c6e5f61b8cf18b3a4",
   "identity_refinement_commit": "4e2526859e36a7f9929044be96dbb9f2ebf72a59",
-  "gestaoclick_status_endpoint": "cr-gc-orcamentos-status-v1-candidate-20261004",
+  "gestaoclick_status_endpoint": "cr-gc-orcamentos-status-v2-candidate-20261004",
   "gestaoclick_status_policy": {
     "source": "GESTAOCLICK",
     "aggregate_only": true,
@@ -38,5 +38,14 @@
     "no_fake_zero_on_error": true
   },
   "prechange_checkpoint": "checkpoint-central-native-clean-pre-gc-bars-20261004",
-  "implementation_date": "2026-10-04"
+  "implementation_date": "2026-10-04",
+  "pre_corrections_checkpoint_branch": "LOCK_CENTRAL_GC_BARS_APPROVED_20261004",
+  "pre_corrections_checkpoint_commit": "a01a18f2f4839ea2d895cb09010ebcaf7da9ed9f",
+  "agenda_endpoint": "cr-agenda-executive-v12-1-candidate-20261003?view=public",
+  "corrections_summary": [
+    "Unique GestãoClick row per normalized status name",
+    "Agenda de Hoje restored from Google Agenda",
+    "Circular gauges changed to APP blue/cyan logo palette",
+    "No official route promotion"
+  ]
 }
