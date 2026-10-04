@@ -1,6 +1,6 @@
 {
-  "build": "CR-CENTRAL-HERO-FULL-BG-20261004",
-  "status": "CANDIDATE_FINAL_FULL_BG_READY_FOR_HOMOLOGATION",
+  "build": "CR-CENTRAL-HERO-INLINE-FINAL-20261004",
+  "status": "CANDIDATE_HERO_INLINE_IMAGE_READY_FOR_HOMOLOGATION",
   "baseline_commit": "0dbc589851971eed4cb7863f2073eb6588191549",
   "baseline_branch": "baseline-central-homologada-rogerio-20261003",
   "candidate_branch": "candidate-central-hero-full-bg-20261004",
@@ -65,5 +65,7 @@
     "GESTÃO EXECUTIVA",
     "Uma visão da CONSTRU-REI para decidir, acompanhar e agir.",
     "Gestão integrada • dados vivos da operação"
-  ]
+  ],
+  "hero_delivery": "Approved panorama embedded directly in CSS as WebP data URI; no external asset dependency.",
+  "hero_cache": "clean-native.css?v=11"
 }
