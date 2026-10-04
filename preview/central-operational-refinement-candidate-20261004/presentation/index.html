@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#061525">
+<title>CONSTRU-REI — Apresentação Executiva Viva</title>
+<link rel="icon" href="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app">
+<link rel="stylesheet" data-cr-design-system="CR-PRODUCT-DESIGN-20260930" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-product-design-20260930.css">
+<style>
+:root{
+  --navy:#061525;--navy2:#0a2542;--blue:#0d4f86;--blue2:#1870aa;
+  --gold:#c99d32;--gold2:#e1c365;--paper:#f5f8fb;--card:#ffffff;
+  --ink:#10263b;--mut:#6e8295;--line:#d8e3ec;--ok:#237957;--warn:#a97517;
+  --shadow:0 24px 70px rgba(6,21,37,.14)
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-snap-type:y proximity}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#dfe8ef;color:var(--ink)}
+a{color:inherit;text-decoration:none}
+.topbar{position:fixed;inset:0 0 auto 0;height:66px;z-index:100;display:flex;align-items:center;gap:14px;padding:0 16px;background:rgba(6,21,37,.96);backdrop-filter:blur(14px);color:#fff;border-bottom:1px solid #ffffff18}
+.brand{display:flex;align-items:center;gap:10px;min-width:220px}.brand img{width:42px;height:42px;border-radius:12px;background:white;padding:3px;object-fit:contain}.brand b{font-size:13px;letter-spacing:.04em}.brand small{display:block;color:#9fb2c4;font-size:8px;margin-top:2px;letter-spacing:.08em}
+.nav{display:flex;gap:4px;overflow:auto;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav a{white-space:nowrap;padding:8px 10px;border-radius:9px;font-size:9px;font-weight:900;color:#b9c9d7}.nav a:hover{background:#ffffff10;color:#fff}
+.actions{margin-left:auto;display:flex;gap:6px;align-items:center}.btn{border:1px solid #ffffff24;background:#ffffff0d;color:#fff;border-radius:10px;padding:8px 10px;font-size:9px;font-weight:900;cursor:pointer}.btn.gold{background:var(--gold);border-color:var(--gold);color:#061525}.live{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:900;color:#bfe8d3;white-space:nowrap}.dot{width:7px;height:7px;border-radius:50%;background:#2ab979;box-shadow:0 0 14px #2ab979}
+.deck{padding-top:66px}.slide{min-height:calc(100vh - 66px);scroll-snap-align:start;padding:18px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eef3f7,#f8fafc)}.slide:nth-child(even){background:linear-gradient(135deg,#f8fafc,#eaf0f5)}
+.inner{width:min(1420px,100%);min-height:min(790px,calc(100vh - 100px));background:var(--paper);border:1px solid #fff;border-radius:28px;box-shadow:var(--shadow);padding:30px 38px 52px;position:relative;overflow:hidden}
+.inner:before{content:"";position:absolute;left:0;right:0;top:0;height:7px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--blue2))}
+.dark .inner{background:radial-gradient(circle at 80% 10%,#12518a 0,#082a49 42%,#061525 100%);color:#fff;border-color:#174a72}.dark .inner:before{background:linear-gradient(90deg,var(--gold),#f1cf68,var(--blue2))}
+.dark h1,.dark h2,.dark h3{color:#fff}.dark .muted{color:#b6c8d7}.dark .card,.dark .metric,.dark .quote,.dark .flow,.dark .pillcard{background:#ffffff0b;border-color:#ffffff18;color:#f4f8fb}.dark .label{color:#e7c96f}.dark .foot{border-color:#ffffff18;color:#9fb5c7}
+.topline,.foot{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--mut);font-size:9px;font-weight:850;letter-spacing:.05em}.foot{position:absolute;left:38px;right:38px;bottom:18px;padding-top:10px;border-top:1px solid var(--line)}
+.kicker{margin-top:42px;font-size:10px;font-weight:1000;letter-spacing:.15em;color:#9b7613;text-transform:uppercase}.dark .kicker{color:#e4c663}
+h1,h2{margin:8px 0 0;color:#082a49;letter-spacing:-.045em;line-height:.98}h1{font-size:clamp(46px,7vw,94px);max-width:1120px}h2{font-size:clamp(34px,5vw,68px);max-width:1160px}h3{margin:0;color:#0b3559;font-size:18px}.lead{max-width:980px;margin:18px 0 0;font-size:clamp(17px,2vw,26px);line-height:1.4;color:#526b80}.dark .lead{color:#c4d3de}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:24px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:24px}.grid5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:24px}
+.card,.metric,.quote,.pillcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 8px 24px rgba(8,42,73,.04)}.metric{min-height:122px}.metric b{display:block;font-size:clamp(24px,3vw,44px);line-height:1;color:#0b3559;letter-spacing:-.04em}.dark .metric b{color:#fff}.metric span{display:block;margin-top:8px;font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:var(--mut)}.metric small{display:block;margin-top:5px;color:var(--mut);font-size:9px;line-height:1.35}
+.label{font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:1000;color:#9b7613}.big{font-size:clamp(26px,4vw,56px);font-weight:1000;letter-spacing:-.04em;color:#0b3559}.dark .big{color:#fff}.muted{color:var(--mut)}
+.quote{font-size:clamp(19px,2.6vw,34px);line-height:1.25;font-weight:850}.quote strong{color:#9b7613}.dark .quote strong{color:#e6c665}
+.bars{display:flex;align-items:flex-end;gap:16px;height:310px;margin-top:22px;padding:24px 8px 40px}.barcol{flex:1;min-width:0;height:100%;display:flex;align-items:flex-end;position:relative}.bar{width:100%;height:var(--h,10%);min-height:5px;border-radius:14px 14px 4px 4px;background:linear-gradient(180deg,#1870aa,#0d4f86);border:1px solid #2a78aa;box-shadow:inset 0 1px 0 #ffffff33}.bar.gold{background:linear-gradient(180deg,#e2bd59,#b78c27);border-color:#d4ad48}.barval{position:absolute;left:50%;bottom:calc(var(--h,10%) + 8px);transform:translateX(-50%);white-space:nowrap;font-weight:1000;font-size:13px;color:#14314b}.barlabel{position:absolute;left:0;right:0;bottom:-28px;text-align:center;font-size:10px;font-weight:900;color:var(--mut)}
+.flowline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:22px}.flow{border:1px solid var(--line);background:#fff;border-radius:15px;padding:12px;min-height:92px}.flow b{display:block;font-size:13px;color:#0b3559}.dark .flow b{color:#fff}.flow span{display:block;font-size:9px;color:var(--mut);margin-top:4px;line-height:1.3}.flow em{display:inline-block;margin-top:8px;font-style:normal;font-size:8px;font-weight:900;padding:4px 6px;border-radius:999px;background:#edf4f8;color:#31536d}.dark .flow em{background:#ffffff10;color:#c9d7e3}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:24px}.timeline .card{position:relative;padding-top:20px}.timeline .card:before{content:"";position:absolute;top:0;left:16px;right:16px;height:3px;background:var(--gold);border-radius:3px}
+.clientgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:18px}.client{border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px}.client b{display:block;color:#0b3559}.client span{display:block;color:var(--mut);font-size:9px;margin-top:4px}
+.ribbon{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}.pill{padding:7px 10px;border-radius:999px;background:#edf4f8;border:1px solid #d6e3ec;font-size:9px;font-weight:900;color:#31536d}.dark .pill{background:#ffffff0d;border-color:#ffffff18;color:#d3e0ea}
+.callout{margin-top:18px;border-left:4px solid var(--gold);padding:10px 14px;background:#fff8e7;border-radius:0 12px 12px 0;color:#5d4915;font-size:13px;font-weight:800;line-height:1.45}.dark .callout{background:#c99d3213;color:#f0d98f}
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:22px;align-items:start}
+.statlist{display:grid;gap:8px}.statrow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:12px}.statrow:first-child{border-top:0}.statrow b{color:#0b3559}.dark .statrow{border-color:#ffffff18}.dark .statrow b{color:#fff}
+.progress{height:12px;border-radius:999px;background:#dbe6ee;overflow:hidden}.progress i{display:block;height:100%;width:var(--w,0%);background:linear-gradient(90deg,var(--gold),var(--blue2))}
+.chapter{font-size:12px;font-weight:1000;color:#e6c665;letter-spacing:.14em;text-transform:uppercase}
+.index{position:fixed;right:10px;top:50%;transform:translateY(-50%);z-index:80;display:grid;gap:5px}.index a{width:7px;height:7px;border-radius:50%;background:#6f879b88;border:1px solid #fff9}.index a.on{height:19px;border-radius:8px;background:var(--gold)}
+@media(max-width:1000px){.nav{display:none}.grid5{grid-template-columns:repeat(3,1fr)}.flowline{grid-template-columns:repeat(3,1fr)}.clientgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.topbar{height:58px;padding:0 7px;gap:6px}.brand{min-width:auto}.brand img{width:38px;height:38px}.brand>div{display:none}.brand small{display:none}.actions{margin-left:auto;gap:4px;max-width:calc(100vw - 58px);overflow-x:auto;scrollbar-width:none}.actions::-webkit-scrollbar{display:none}.actions .hide-mobile{display:inline-flex;align-items:center}.live{display:none}.btn{padding:7px 8px;font-size:8px;white-space:nowrap}.deck{padding-top:58px}.slide{min-height:auto;padding:8px;align-items:flex-start}.inner{min-height:calc(100vh - 76px);border-radius:18px;padding:20px 17px 50px}.kicker{margin-top:28px}.grid2,.grid3,.grid4,.grid5,.split,.timeline{grid-template-columns:1fr}.flowline{grid-template-columns:repeat(2,1fr)}.clientgrid{grid-template-columns:repeat(2,1fr)}.bars{height:230px;gap:8px}.barval{font-size:8px}.foot{left:17px;right:17px;bottom:13px;font-size:7px}.foot span:last-child{display:none}.index{display:none}.metric{min-height:auto}.metric b{font-size:25px}}
+@media print{.topbar,.index{display:none!important}.deck{padding:0}.slide{padding:0;min-height:100vh;page-break-after:always;background:#fff!important}.inner{border:0;border-radius:0;box-shadow:none;min-height:100vh;width:100%}}
+</style>
+<style id="cr-presentation-refinement-20261004">
+/* visual refinement only — live data/export logic preserved */
+:root{--crp-safe:18px}
+body{overflow-x:hidden}
+.topbar{box-shadow:0 8px 26px rgba(0,0,0,.14)}
+.inner{border-color:#d9e5ed}
+.card,.metric,.quote,.pillcard{box-shadow:0 9px 28px rgba(8,42,73,.055)}
+@media(max-width:720px){
+ .topbar{height:62px;padding:0 8px}.brand img{width:40px;height:40px}.actions{max-width:calc(100vw - 54px);gap:5px}
+ .btn{font-size:9px;padding:8px 9px;border-radius:9px}.deck{padding-top:62px}
+ .slide{padding:7px;min-height:auto;display:block}.inner{min-height:auto;border-radius:16px;padding:18px 15px 20px;overflow:visible}
+ .kicker{margin-top:10px;font-size:8.5px;letter-spacing:.12em}h1{font-size:clamp(34px,10vw,48px);line-height:1.02}h2{font-size:clamp(28px,8.4vw,40px);line-height:1.04}
+ h3{font-size:16px}.lead{font-size:15px;line-height:1.42;margin-top:12px}.grid2,.grid3,.grid4,.grid5,.split,.timeline{grid-template-columns:1fr;gap:8px;margin-top:15px}
+ .card,.metric,.quote,.pillcard{padding:13px;border-radius:14px}.metric{min-height:0}.metric b{font-size:26px}.quote{font-size:20px}
+ .flowline{grid-template-columns:1fr 1fr;gap:7px;margin-top:14px}.clientgrid{grid-template-columns:1fr 1fr;gap:7px}.flow{min-height:80px;padding:10px}
+ .bars{height:210px;margin-top:12px;padding:18px 3px 34px}.barlabel{font-size:8px}.barval{font-size:8px}
+ .topline{font-size:8px}.foot{position:static;margin-top:18px;padding-top:9px;font-size:7.5px}.foot span:last-child{display:inline}
+ .callout{font-size:12px;margin-top:12px}.ribbon{margin-top:12px}.pill{font-size:8px;padding:6px 8px}.index{display:none}
+}
+@media(max-width:420px){.flowline,.clientgrid{grid-template-columns:1fr}.actions .btn{min-height:34px}.actions{overflow-x:auto}.inner{padding-left:13px;padding-right:13px}}
+</style></head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#s1"><img src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app" alt="CONSTRU-REI"><div><b>CONSTRU-REI</b><small>APRESENTAÇÃO EXECUTIVA VIVA</small></div></a>
+  <nav class="nav"><a href="#s1">Visão</a><a href="#s3">Negócio</a><a href="#s5">Números</a><a href="#s9">Operação</a><a href="#s11">Sistema</a><a href="#s13">Governança</a><a href="#s18">Próximos passos</a></nav>
+  <div class="actions"><span id="live" class="live"><span class="dot"></span>dados vivos</span><button class="btn hide-mobile" onclick="refreshData()">↻ Atualizar</button><button class="btn hide-mobile" onclick="window.print()">PDF</button><button id="pptBtn" class="btn hide-mobile">PowerPoint</button><a class="btn gold" href="../">Central</a></div>
+</header>
+<div class="index" id="index"></div>
+<main class="deck">
+
+<section class="slide dark" id="s1" data-page="1"><div class="inner">
+<div class="topline"><span>01 / 20</span><span id="yearTop">APRESENTAÇÃO VIVA</span></div>
+<div class="kicker">CONSTRU-REI • ESTRATÉGIA, OPERAÇÃO E DADOS</div>
+<h1>Da operação real a um sistema inteligente.</h1>
+<p class="lead">Uma empresa de manutenção, reparos e reformas transformando experiência de campo em processo, dados, governança e capacidade de escala.</p>
+<div class="ribbon"><span class="pill">OPERAÇÃO</span><span class="pill">PROCESSO</span><span class="pill">DADOS</span><span class="pill">INTELIGÊNCIA</span><span class="pill">GOVERNANÇA</span></div>
+<div class="foot"><span>CONSTRU-REI</span><span id="lastUpdate1">carregando dados vivos…</span></div>
+</div></section>
+
+<section class="slide dark" id="s2" data-page="2"><div class="inner">
+<div class="topline"><span>02 / 20</span><span>TESE CENTRAL</span></div>
+<div class="kicker">O QUE ESTAMOS CONSTRUINDO</div>
+<h2>Não é um aplicativo. É uma forma melhor de operar.</h2>
+<div class="grid2">
+<div class="quote">A experiência da equipe continua sendo o centro. <strong>A tecnologia organiza, conecta, registra e reduz atrito.</strong></div>
+<div class="card"><div class="label">PRINCÍPIO</div><div class="big" style="margin-top:10px">Uma história por demanda.</div><p class="muted">Do primeiro contato à garantia, sem recadastro, sem controles paralelos e sem depender da memória de uma pessoa.</p></div>
+</div>
+<div class="callout">Processo orienta. Tecnologia sustenta. Pessoa confere. Equipe evolui.</div>
+<div class="foot"><span>VISÃO</span><span>Mensagem única, sem excesso de tela</span></div>
+</div></section>
+
+<section class="slide" id="s3" data-page="3"><div class="inner">
+<div class="topline"><span>03 / 20</span><span>NOSSA ORIGEM</span></div>
+<div class="kicker">ANTES DA TECNOLOGIA, VEIO A RUA</div>
+<h2>Experiência operacional primeiro. Sistema depois.</h2>
+<div class="grid4">
+<div class="metric"><b>+8 anos</b><span>experiência acumulada</span><small>manutenção, reparos e reformas</small></div>
+<div class="metric"><b>Multitécnica</b><span>capacidade operacional</span><small>hidráulica, elétrica, pintura, telhados, infiltrações, drywall e mais</small></div>
+<div class="metric"><b>B2B + B2C</b><span>modelo de atendimento</span><small>imobiliárias, condomínios e clientes particulares</small></div>
+<div class="metric"><b>Curitiba + RMC</b><span>base operacional</span><small>coordenação de campo com rede própria e parceiros</small></div>
+</div>
+<div class="quote" style="margin-top:16px">O projeto digital nasce para <strong>preservar o que funciona na operação</strong> e eliminar perda de informação, retrabalho e improviso.</div>
+<div class="foot"><span>NEGÓCIO</span><span>Experiência convertida em método</span></div>
+</div></section>
+
+<section class="slide" id="s4" data-page="4"><div class="inner">
+<div class="topline"><span>04 / 20</span><span>O PROBLEMA DA ESCALA</span></div>
+<div class="kicker">QUANDO O VOLUME CRESCE</div>
+<h2>Improviso deixa de ser agilidade e vira custo.</h2>
+<div class="grid3">
+<div class="card"><div class="label">INFORMAÇÃO ESPALHADA</div><h3 style="margin-top:9px">WhatsApp, Trello, memória, documentos.</h3><p class="muted">O contexto quebra quando cada etapa precisa reconstruir o que aconteceu.</p></div>
+<div class="card"><div class="label">DEPENDÊNCIA DE PESSOAS</div><h3 style="margin-top:9px">Quem sabe vira gargalo.</h3><p class="muted">A operação fica frágil quando regra e histórico vivem só na cabeça de alguém.</p></div>
+<div class="card"><div class="label">GESTÃO REATIVA</div><h3 style="margin-top:9px">O problema aparece tarde.</h3><p class="muted">Sem dados vivos, a diretoria descobre desvios depois que eles já custaram tempo ou dinheiro.</p></div>
+</div>
+<div class="callout">A resposta não é “mais software”. É uma arquitetura que respeita a operação e cria uma fonte confiável de verdade.</div>
+<div class="foot"><span>NEGÓCIO</span><span>Escala exige previsibilidade</span></div>
+</div></section>
+
+<section class="slide dark" id="s5" data-page="5"><div class="inner">
+<div class="topline"><span>05 / 20</span><span>DADOS CONSOLIDADOS</span></div>
+<div class="kicker">A HISTÓRIA FINANCEIRA EM UMA TELA</div>
+<h2>O negócio contado pelos números.</h2>
+<div class="grid4">
+<div class="metric"><b id="lifeGross">—</b><span>faturamento identificado</span><small id="lifePeriod">período disponível</small></div>
+<div class="metric"><b id="lifeWorks">—</b><span>serviços / obras</span><small>base financeira consolidada</small></div>
+<div class="metric"><b id="lifeClients">—</b><span>clientes identificados</span><small>nomes únicos na base</small></div>
+<div class="metric"><b id="lifeProfit">—</b><span>lucro identificado</span><small>somatório dos anos disponíveis</small></div>
+</div>
+<div class="callout">Esses números vêm da mesma fonte gerencial da Dashboard. Nada é digitado manualmente nesta apresentação.</div>
+<div class="foot"><span>NÚMEROS</span><span class="dataStamp">dados vivos</span></div>
+</div></section>
+
+<section class="slide" id="s6" data-page="6"><div class="inner">
+<div class="topline"><span>06 / 20</span><span>EVOLUÇÃO ANUAL</span></div>
+<div class="kicker">FATURAMENTO • ANO A ANO</div>
+<h2>Crescimento que pode ser visto, comparado e explicado.</h2>
+<div id="annualBars" class="bars"></div>
+<div class="grid3" id="annualCards"></div>
+<div class="foot"><span>NÚMEROS</span><span>Períodos gerados automaticamente pela fonte</span></div>
+</div></section>
+
+<section class="slide" id="s7" data-page="7"><div class="inner">
+<div class="topline"><span>07 / 20</span><span>QUALIDADE DO RESULTADO</span></div>
+<div class="kicker">MAIS DO QUE FATURAMENTO</div>
+<h2>Quanto vendemos, com quantos serviços e com qual eficiência.</h2>
+<div class="grid5">
+<div class="metric"><b id="curGross">—</b><span>faturamento atual</span><small class="curYearText">ano mais recente</small></div>
+<div class="metric"><b id="curProfit">—</b><span>lucro</span><small>resultado identificado</small></div>
+<div class="metric"><b id="curMargin">—</b><span>margem</span><small>sobre faturamento</small></div>
+<div class="metric"><b id="curTicket">—</b><span>tíquete médio</span><small>por serviço classificável</small></div>
+<div class="metric"><b id="curWorks">—</b><span>serviços</span><small>volume operacional</small></div>
+</div>
+<div class="split">
+<div class="card"><div class="label">LEITURA EXECUTIVA</div><div id="financeRead" class="quote" style="margin-top:10px;font-size:24px">Carregando leitura do período…</div></div>
+<div class="card"><div class="label">COBERTURA DA BASE</div><div id="coverageBig" class="big" style="margin-top:10px">—</div><div class="progress" style="margin-top:12px"><i id="coverageBar" style="--w:0%"></i></div><p class="muted">Percentual de registros classificáveis na fonte gerencial.</p></div>
+</div>
+<div class="foot"><span>NÚMEROS</span><span class="dataStamp">dados vivos</span></div>
+</div></section>
+
+<section class="slide" id="s8" data-page="8"><div class="inner">
+<div class="topline"><span>08 / 20</span><span>BASE DE CLIENTES</span></div>
+<div class="kicker">RELACIONAMENTO COMO ATIVO</div>
+<h2>Uma carteira construída por recorrência e confiança.</h2>
+<div class="grid3">
+<div class="metric"><b id="clientsAll">—</b><span>clientes identificados</span><small>base única nos anos disponíveis</small></div>
+<div class="metric"><b id="clientsCurrent">—</b><span>clientes no ano atual</span><small class="curYearText">ano mais recente</small></div>
+<div class="metric"><b id="topClientCases">—</b><span>maior recorrência identificada</span><small id="topClientName">cliente</small></div>
+</div>
+<div id="clientGrid" class="clientgrid"></div>
+<div class="callout">A apresentação mostra a base que existe na fonte. Se a carteira muda, a leitura muda junto.</div>
+<div class="foot"><span>NÚMEROS</span><span>Clientes extraídos dos registros operacionais</span></div>
+</div></section>
+
+<section class="slide dark" id="s9" data-page="9"><div class="inner">
+<div class="topline"><span>09 / 20</span><span>OPERAÇÃO VIVA</span></div>
+<div class="kicker">O QUE ESTÁ ACONTECENDO AGORA</div>
+<h2>Diretoria enxerga a operação sem abrir cinco sistemas.</h2>
+<div class="grid4">
+<div class="metric"><b id="opProgress">—</b><span>em andamento</span><small>execução atual</small></div>
+<div class="metric"><b id="opPay">—</b><span>aguardando pagamento</span><small>financeiro pendente</small></div>
+<div class="metric"><b id="opSettle">—</b><span>aguardando acerto</span><small>fechamento interno</small></div>
+<div class="metric"><b id="opReturns">—</b><span>retornos</span><small>pós-execução / ajustes</small></div>
+</div>
+<div class="card" style="margin-top:16px"><div class="label">AMOSTRA DE OBRAS ABERTAS</div><div id="activeWorks" class="statlist" style="margin-top:8px"></div></div>
+<div class="foot"><span>OPERAÇÃO</span><span class="dataStamp">dados vivos</span></div>
+</div></section>
+
+<section class="slide" id="s10" data-page="10"><div class="inner">
+<div class="topline"><span>10 / 20</span><span>JORNADA ÚNICA</span></div>
+<div class="kicker">F00 → F09</div>
+<h2>Do chamado bruto à garantia: uma história contínua.</h2>
+<div class="flowline">
+<div class="flow"><b>F00 • Captar</b><span>organizar o chamado e completar o contexto</span></div>
+<div class="flow"><b>F01 • Triar</b><span>qualificar pessoas, problema e disponibilidade</span></div>
+<div class="flow"><b>F02 • Preparar</b><span>transformar contexto em orçamento</span></div>
+<div class="flow"><b>F03 • Aprovar</b><span>decisão e aceite</span></div>
+<div class="flow"><b>F04 • Programar</b><span>agenda, recursos e responsabilidade</span></div>
+<div class="flow"><b>F05 • Suprir</b><span>materiais, terceiros e pré-requisitos</span></div>
+<div class="flow"><b>F06 • Executar</b><span>campo, evidências e ocorrências</span></div>
+<div class="flow"><b>F07 • Conferir</b><span>qualidade, retorno e aceite técnico</span></div>
+<div class="flow"><b>F08 • Faturar</b><span>financeiro, custos e fechamento</span></div>
+<div class="flow"><b>F09 • Garantir</b><span>pós-venda, garantia e relacionamento</span></div>
+</div>
+<div class="callout">A jornada é estável; o status de cada etapa vem da Central e pode evoluir sem reescrever a apresentação.</div>
+<div class="foot"><span>OPERAÇÃO</span><span>Uma demanda • uma história • dez etapas</span></div>
+</div></section>
+
+<section class="slide dark" id="s11" data-page="11"><div class="inner">
+<div class="topline"><span>11 / 20</span><span>ARQUITETURA OPERACIONAL</span></div>
+<div class="kicker">UM ECOSSISTEMA, NÃO UM AMONTOADO DE LINKS</div>
+<h2>Cada módulo existe para uma decisão específica.</h2>
+<div class="grid3">
+<div class="pillcard"><div class="label">CENTRAL</div><h3 style="margin-top:8px">Ponto de entrada e governança</h3><p class="muted">Acesso aos módulos, controles e documentação.</p></div>
+<div class="pillcard"><div class="label">APP</div><h3 style="margin-top:8px">Porta operacional</h3><p class="muted">Experiência simples para transformar demanda em fluxo.</p></div>
+<div class="pillcard"><div class="label">DASHBOARD</div><h3 style="margin-top:8px">Leitura gerencial</h3><p class="muted">Finanças, operação, custos, acertos e saúde dos dados.</p></div>
+<div class="pillcard"><div class="label">WIZY FLOW</div><h3 style="margin-top:8px">Relacionamento e automação</h3><p class="muted">Complementa a operação sem capturar o núcleo do processo.</p></div>
+<div class="pillcard"><div class="label">ACADEMY + DOCS</div><h3 style="margin-top:8px">Memória da empresa</h3><p class="muted">Conhecimento técnico, regras, padrões e continuidade.</p></div>
+<div class="pillcard"><div class="label">MEETING + CONTROLES</div><h3 style="margin-top:8px">Coordenação e acesso</h3><p class="muted">Comunicação, responsabilidades e alçadas.</p></div>
+</div>
+<div class="foot"><span>SISTEMA</span><span>Funções diferentes • linguagem única</span></div>
+</div></section>
+
+<section class="slide" id="s12" data-page="12"><div class="inner">
+<div class="topline"><span>12 / 20</span><span>FONTE ÚNICA</span></div>
+<div class="kicker">DADOS QUE NÃO PRECISAM SER COPIADOS</div>
+<h2>Dashboard detalha. Apresentação sintetiza. A fonte é a mesma.</h2>
+<div class="grid3">
+<div class="card"><div class="label">TRELLO</div><div class="big" style="margin-top:8px">Operação</div><p class="muted">Histórico de obras, listas, custos, status e resumos reconciliados.</p></div>
+<div class="card"><div class="label">GESTÃOCLICK</div><div class="big" style="margin-top:8px">Conciliação</div><p class="muted">Fonte complementar para conferência — nunca substitui o núcleo operacional.</p></div>
+<div class="card"><div class="label">SUPABASE</div><div class="big" style="margin-top:8px">Orquestração</div><p class="muted">APIs, snapshots, documentação, governança e camadas de apresentação.</p></div>
+</div>
+<div class="quote" style="margin-top:16px">A apresentação viva <strong>não cria um segundo número</strong>. Ela lê o número já governado e o traduz para decisão.</div>
+<div class="foot"><span>SISTEMA</span><span>Sem planilha paralela</span></div>
+</div></section>
+
+<section class="slide dark" id="s13" data-page="13"><div class="inner">
+<div class="topline"><span>13 / 20</span><span>DESENVOLVIMENTO VIVO</span></div>
+<div class="kicker">O PROJETO TAMBÉM TEM TELEMETRIA</div>
+<h2>O estado do desenvolvimento aparece sem relatório manual.</h2>
+<div class="grid5">
+<div class="metric"><b id="flowOperational">—</b><span>fluxos operacionais</span><small id="flowTotal">de — fluxos</small></div>
+<div class="metric"><b id="flowValidation">—</b><span>em validação / preparação</span><small>estado vindo da Central</small></div>
+<div class="metric"><b id="evidenceCoverage">—</b><span>cobertura de evidências</span><small>itens do tracker com evidência</small></div>
+<div class="metric"><b id="docsCount">—</b><span>documentos vivos</span><small>base técnica e governança</small></div>
+<div class="metric"><b id="snapshotsCount">—</b><span>snapshots</span><small>histórico e rollback</small></div>
+</div>
+<div class="grid2">
+<div class="card"><div class="label">ÍNDICE DE STATUS DO TRACKER</div><div id="trackerIndex" class="big" style="margin-top:8px">—</div><div class="progress" style="margin-top:12px"><i id="trackerBar" style="--w:0%"></i></div><p class="muted">Indicador de status dos itens — não é percentual de conclusão do projeto.</p></div>
+<div class="card"><div class="label">VERSÃO / RELEASE</div><div id="releaseName" class="big" style="font-size:26px;margin-top:8px">—</div><p id="releaseBuild" class="muted">carregando build…</p></div>
+</div>
+<div class="foot"><span>GOVERNANÇA</span><span class="dataStamp">dados vivos</span></div>
+</div></section>
+
+<section class="slide" id="s14" data-page="14"><div class="inner">
+<div class="topline"><span>14 / 20</span><span>ESTEIRA DO PROJETO</span></div>
+<div class="kicker">STATUS DOS FLUXOS</div>
+<h2>O que está operacional e o que ainda está evoluindo.</h2>
+<div id="flowStatusGrid" class="flowline"></div>
+<div class="callout">Essa página é gerada a partir da Central. O texto do status não é mantido manualmente na apresentação.</div>
+<div class="foot"><span>GOVERNANÇA</span><span class="dataStamp">dados vivos</span></div>
+</div></section>
+
+<section class="slide" id="s15" data-page="15"><div class="inner">
+<div class="topline"><span>15 / 20</span><span>IA NA OPERAÇÃO</span></div>
+<div class="kicker">ASSISTIR, NÃO SUBSTITUIR</div>
+<h2>Inteligência artificial dentro de um processo humano.</h2>
+<div class="grid4">
+<div class="card"><div class="label">CAPTAR</div><h3 style="margin-top:8px">Entender informação bruta.</h3><p class="muted">Extrair contexto, pessoas, problema, disponibilidade e evidências.</p></div>
+<div class="card"><div class="label">SINTETIZAR</div><h3 style="margin-top:8px">Reduzir ruído.</h3><p class="muted">Transformar histórico longo em leitura útil para a próxima decisão.</p></div>
+<div class="card"><div class="label">CONFERIR</div><h3 style="margin-top:8px">Encontrar inconsistências.</h3><p class="muted">Apontar lacunas, divergências e sinais que merecem validação humana.</p></div>
+<div class="card"><div class="label">APRENDER</div><h3 style="margin-top:8px">Preservar conhecimento.</h3><p class="muted">Converter decisões recorrentes em critérios e documentação reutilizável.</p></div>
+</div>
+<div class="quote" style="margin-top:16px">A decisão continua humana. A IA reduz trabalho mecânico e <strong>aumenta contexto disponível para decidir.</strong></div>
+<div class="foot"><span>INTELIGÊNCIA</span><span>Assistiva • auditável • integrada ao processo</span></div>
+</div></section>
+
+<section class="slide dark" id="s16" data-page="16"><div class="inner">
+<div class="topline"><span>16 / 20</span><span>FINANCEIRO OPERACIONAL</span></div>
+<div class="kicker">ACERTO VIVO</div>
+<h2>Fechamento financeiro com regra, fonte e conferência.</h2>
+<div class="grid5">
+<div class="metric"><b id="aCases">—</b><span>obras no acerto</span><small>lista operacional atual</small></div>
+<div class="metric"><b id="aBase">—</b><span>base considerada</span><small>recebido quando disponível</small></div>
+<div class="metric"><b id="aCosts">—</b><span>custos</span><small>custos identificados</small></div>
+<div class="metric"><b id="aProfit">—</b><span>lucro</span><small>base menos custos</small></div>
+<div class="metric"><b id="aMargin">—</b><span>margem</span><small>resultado do acerto</small></div>
+</div>
+<div class="grid2">
+<div class="card"><div class="label">CAPITAL DE GIRO</div><div id="aCapital" class="big" style="margin-top:8px">—</div><p class="muted">Componente do rateio canônico.</p></div>
+<div class="card"><div class="label">CONFERÊNCIA</div><div id="aCheck" class="big" style="font-size:28px;margin-top:8px">—</div><p class="muted">Diferença entre lucro e distribuição.</p></div>
+</div>
+<div class="foot"><span>NÚMEROS</span><span class="dataStamp">dados vivos</span></div>
+</div></section>
+
+<section class="slide" id="s17" data-page="17"><div class="inner">
+<div class="topline"><span>17 / 20</span><span>RADAR EXECUTIVO</span></div>
+<div class="kicker">MÉTRICAS MACRO DO NEGÓCIO • DADOS VIVOS</div>
+<h2>A diretoria lê crescimento, eficiência, carteira e carga operacional em uma tela.</h2>
+<div class="grid4" style="margin-top:18px">
+<div class="metric"><b id="macroGrossGrowth">—</b><span>receita vs mesmo período</span><small id="macroGrossGrowthNote">comparação anual equivalente</small></div>
+<div class="metric"><b id="macroProfitGrowth">—</b><span>lucro vs mesmo período</span><small>comparação anual equivalente</small></div>
+<div class="metric"><b id="macroTicketGrowth">—</b><span>tíquete vs mesmo período</span><small>comparação anual equivalente</small></div>
+<div class="metric"><b id="macroMonthlyGross">—</b><span>receita média mensal</span><small>meses com dados no período atual</small></div>
+<div class="metric"><b id="macroGrossPerClient">—</b><span>receita por cliente</span><small>faturamento / clientes identificados</small></div>
+<div class="metric"><b id="macroProfitPerWork">—</b><span>lucro por serviço</span><small>lucro / volume de serviços</small></div>
+<div class="metric"><b id="macroOpenTotal">—</b><span>carga operacional aberta</span><small>andamento + pagamento + acerto + retornos</small></div>
+<div class="metric"><b id="macroReturnRate">—</b><span>retornos / serviços do ano</span><small>indicador operacional, não financeiro</small></div>
+</div>
+<div class="grid2" style="margin-top:12px">
+<div class="card"><div class="label">LEITURA EXECUTIVA AUTOMÁTICA</div><p id="macroRead" class="muted" style="font-size:13px;line-height:1.5;margin:9px 0 0">Carregando leitura macro…</p></div>
+<div class="card"><div class="label">PERÍODO E CARTEIRA</div><div class="statrow"><span>Período comparável</span><b id="macroPeriod">—</b></div><div class="statrow"><span>Maior cliente • participação nos serviços</span><b id="macroTop1">—</b></div><div class="statrow"><span>Top 5 clientes • participação nos serviços</span><b id="macroTop5">—</b></div><div class="statrow"><span>Atualização automática</span><b id="macroRefresh">—</b></div></div>
+</div>
+<div class="foot"><span>GESTÃO</span><span class="dataStamp">dados vivos</span></div>
+</div></section>
+
+<section class="slide dark" id="s18" data-page="18"><div class="inner">
+<div class="topline"><span>18 / 20</span><span>PRÓXIMOS 90 DIAS</span></div>
+<div class="kicker">MENOS NOVIDADE, MAIS PROVA OPERACIONAL</div>
+<h2>Consolidar antes de expandir.</h2>
+<div class="timeline">
+<div class="card"><div class="label">1 • USO REAL</div><h3 style="margin-top:8px">Rodar a esteira no cotidiano.</h3><p class="muted">Observar onde o processo ainda cria atrito e corrigir com evidência.</p></div>
+<div class="card"><div class="label">2 • DADOS</div><h3 style="margin-top:8px">Aumentar qualidade da base.</h3><p class="muted">Menos lacunas, melhor conciliação e histórico mais confiável.</p></div>
+<div class="card"><div class="label">3 • GOVERNANÇA</div><h3 style="margin-top:8px">Fechar gates e responsabilidades.</h3><p class="muted">Homologar, congelar, medir e só então avançar.</p></div>
+<div class="card"><div class="label">4 • AUTOMAÇÃO</div><h3 style="margin-top:8px">Automatizar o que já está claro.</h3><p class="muted">Tecnologia depois da regra — nunca antes dela.</p></div>
+</div>
+<div class="callout">A apresentação acompanha essa evolução automaticamente pelos mesmos dados que sustentam a Central e a Dashboard.</div>
+<div class="foot"><span>PRÓXIMOS PASSOS</span><span>Sequencial • comprovável • sem regressão</span></div>
+</div></section>
+
+<section class="slide" id="s19" data-page="19"><div class="inner">
+<div class="topline"><span>19 / 20</span><span>ONDE PODEMOS CHEGAR</span></div>
+<div class="kicker">ESCALA COM CONTROLE</div>
+<h2>Crescer sem perder a memória da operação.</h2>
+<div class="grid3">
+<div class="card"><div class="label">GESTÃO PREDITIVA</div><h3 style="margin-top:8px">Sinais antes do problema.</h3><p class="muted">Margem, atraso, retorno, capacidade, SLA e qualidade viram alertas úteis.</p></div>
+<div class="card"><div class="label">RELACIONAMENTO</div><h3 style="margin-top:8px">Cliente com contexto acumulado.</h3><p class="muted">Histórico, recorrência e pós-venda fortalecem retenção e confiança.</p></div>
+<div class="card"><div class="label">PRODUTO OPERACIONAL</div><h3 style="margin-top:8px">O método vira ativo.</h3><p class="muted">Processos, dados, Academy e automações podem sustentar uma operação maior.</p></div>
+</div>
+<div class="quote" style="margin-top:16px">A visão pode ser grande. A execução continua <strong>pequena, sequencial e comprovável.</strong></div>
+<div class="foot"><span>FUTURO</span><span>Escala sem perder controle</span></div>
+</div></section>
+
+<section class="slide dark" id="s20" data-page="20"><div class="inner">
+<div class="topline"><span>20 / 20</span><span>CONSTRU-REI</span></div>
+<div class="kicker">SÍNTESE</div>
+<h1>Processo orienta.<br>Tecnologia sustenta.<br>Pessoa confere.<br>Equipe evolui.</h1>
+<p class="lead">A CONSTRU-REI transforma experiência de campo em um sistema operacional próprio — vivo, mensurável e preparado para evoluir.</p>
+<div class="ribbon"><span class="pill" id="closingYears">dados vivos</span><span class="pill" id="closingRelease">release atual</span><span class="pill">sem números paralelos</span></div>
+<div class="foot"><span>FIM • APRESENTAÇÃO EXECUTIVA VIVA</span><span class="dataStamp">dados vivos</span></div>
+</div></section>
+
+</main>
+
+<script>
+const API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-presentation-executive-data-v1?api=data';
+const q=id=>document.getElementById(id);
+const brl=c=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format((Number(c)||0)/100);
+const brl2=c=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:2}).format((Number(c)||0)/100);
+const pct=n=>(Number(n)||0).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+const num=n=>new Intl.NumberFormat('pt-BR').format(Number(n)||0);
+const esc=s=>String(s??'—').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const compactMoney=c=>{const v=(Number(c)||0)/100,a=Math.abs(v);if(a>=1e6)return 'R$ '+(v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})+' mi';if(a>=1e3)return 'R$ '+(v/1e3).toLocaleString('pt-BR',{maximumFractionDigits:0})+' mil';return brl(c)};
+const signedPct=n=>n==null||!Number.isFinite(Number(n))?'—':(Number(n)>0?'+':'')+pct(Number(n));
+const safeGrowth=(cur,prev)=>prev==null||Number(prev)===0||cur==null?null:Math.round(((Number(cur)-Number(prev))/Math.abs(Number(prev)))*10000)/100;
+function periodTotals(months,cutoff){
+  const out={gross_cents:0,cost_cents:0,profit_cents:0,cases:0};
+  for(const x of (Array.isArray(months)?months:[])){const m=Number(x?.month||0);if(!m||m>cutoff)continue;out.gross_cents+=Number(x?.gross_cents||0);out.cost_cents+=Number(x?.cost_cents||0);out.profit_cents+=Number(x?.profit_cents||0);out.cases+=Number(x?.cases||0)}
+  out.ticket_cents=out.cases?Math.round(out.gross_cents/out.cases):0;return out
+}
+function deriveMacro(d){
+  const y=Number(d.current_year||0),ys=d.years||{},o=d.overview||{},life=d.lifetime||{},cur=ys[String(y)]||{},prev=ys[String(y-1)]||null;
+  const cms=Array.isArray(cur.months)?cur.months:[],active=cms.filter(x=>Number(x?.gross_cents||0)||Number(x?.cost_cents||0)||Number(x?.profit_cents||0)||Number(x?.cases||0));
+  const cutoff=active.length?Math.max(...active.map(x=>Number(x.month||0))):0;
+  const ct=cutoff?periodTotals(cms,cutoff):null,pt=cutoff&&prev?periodTotals(prev.months,cutoff):null;
+  const comparable=!!(ct&&pt&&(Number(pt.gross_cents||0)||Number(pt.cases||0)));
+  const activeMonths=cutoff?active.filter(x=>Number(x.month||0)<=cutoff).length:0;
+  const top=Array.isArray(d.top_clients)?d.top_clients:[],openTotal=Number(o.in_progress||0)+Number(o.awaiting_payment||0)+Number(o.awaiting_settlement||0)+Number(o.returns||0);
+  const mon=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  return{
+    year:y,cutoff,periodLabel:cutoff?('jan–'+mon[Math.max(0,cutoff-1)]+'/'+y):('base '+y),
+    grossGrowth:comparable?safeGrowth(ct.gross_cents,pt.gross_cents):null,
+    profitGrowth:comparable?safeGrowth(ct.profit_cents,pt.profit_cents):null,
+    ticketGrowth:comparable?safeGrowth(ct.ticket_cents,pt.ticket_cents):null,
+    monthlyGross:activeMonths?Math.round(ct.gross_cents/activeMonths):null,
+    grossPerClient:Number(o.clients_count||0)?Math.round(Number(o.gross_cents||0)/Number(o.clients_count)):null,
+    profitPerWork:Number(o.total_works||0)?Math.round(Number(o.profit_cents||0)/Number(o.total_works)):null,
+    openTotal,
+    returnRate:Number(o.total_works||0)?Math.round(Number(o.returns||0)/Number(o.total_works)*10000)/100:null,
+    top1Share:Number(life.works||0)&&top[0]?Math.round(Number(top[0].cases||0)/Number(life.works)*10000)/100:null,
+    top5Share:Number(life.works||0)?Math.round(top.slice(0,5).reduce((a,x)=>a+Number(x?.cases||0),0)/Number(life.works)*10000)/100:null,
+    comparable
+  }
+}
+function statusClass(s){s=String(s||'').toUpperCase();return s.includes('OPERACIONAL')||s.includes('GREEN')||s.includes('HOMOLOG')?'OPERACIONAL':s.includes('VALIDA')||s.includes('AMBER')||s.includes('PREPARAD')?'EM EVOLUÇÃO':'ATIVO'}
+function render(d){
+  const y=d.current_year||'', years=d.available_years||[], o=d.overview||{}, life=d.lifetime||{}, dev=d.development||{}, a=d.acertos||{};
+  document.querySelectorAll('.curYearText').forEach(x=>x.textContent=String(y));
+  q('yearTop').textContent='APRESENTAÇÃO VIVA • '+y;
+  q('lifeGross').textContent=compactMoney(life.gross_cents);q('lifeWorks').textContent=num(life.works);q('lifeClients').textContent=num(life.clients_count);q('lifeProfit').textContent=compactMoney(life.profit_cents);q('lifePeriod').textContent=(life.from||'—')+'–'+(life.to||'—');
+  q('curGross').textContent=compactMoney(o.gross_cents);q('curProfit').textContent=compactMoney(o.profit_cents);q('curMargin').textContent=pct(o.margin_pct);q('curTicket').textContent=brl(o.ticket_cents);q('curWorks').textContent=num(o.total_works);
+  q('coverageBig').textContent=pct((d.years||{})[y]?.coverage_pct||0);q('coverageBar').style.setProperty('--w',Math.max(0,Math.min(100,Number((d.years||{})[y]?.coverage_pct||0)))+'%');
+  const hist=d.history||[], cur=hist.at(-1)||{}, prev=hist.length>1?hist.at(-2):null,g=cur?.growth_vs_prior?.gross_pct;
+  q('financeRead').innerHTML=prev&&g!=null?('No período mais recente, o faturamento está <strong>'+pct(Math.abs(g))+'</strong> '+(g>=0?'acima':'abaixo')+' do ano anterior, com tíquete de <strong>'+esc(brl(o.ticket_cents))+'</strong> e margem de <strong>'+esc(pct(o.margin_pct))+'</strong>.'):('O período mais recente registra faturamento de <strong>'+esc(brl(o.gross_cents))+'</strong>, tíquete médio de <strong>'+esc(brl(o.ticket_cents))+'</strong> e margem de <strong>'+esc(pct(o.margin_pct))+'</strong>.');
+  const maxGross=Math.max(1,...hist.map(x=>Number(x.gross_cents||0)));
+  q('annualBars').innerHTML=hist.map((x,i)=>{const h=Math.max(4,Number(x.gross_cents||0)/maxGross*100);return '<div class="barcol"><div class="bar '+(i===hist.length-1?'gold':'')+'" style="--h:'+h+'%"></div><div class="barval">'+esc(compactMoney(x.gross_cents))+'</div><div class="barlabel">'+esc(x.year)+'</div></div>'}).join('');
+  q('annualCards').innerHTML=hist.map(x=>'<div class="card"><div class="label">'+esc(x.year)+'</div><div class="statrow"><span>Serviços</span><b>'+esc(num(x.cases))+'</b></div><div class="statrow"><span>Tíquete</span><b>'+esc(brl(x.ticket_cents))+'</b></div><div class="statrow"><span>Margem</span><b>'+esc(pct(x.margin_pct))+'</b></div></div>').join('');
+  const top=d.top_clients||[];q('clientsAll').textContent=num(life.clients_count);q('clientsCurrent').textContent=num(o.clients_count);q('topClientCases').textContent=top[0]?num(top[0].cases):'—';q('topClientName').textContent=top[0]?.name||'sem leitura';
+  q('clientGrid').innerHTML=top.slice(0,12).map(x=>'<div class="client"><b>'+esc(x.name)+'</b><span>'+esc(num(x.cases))+' registro(s) na base</span></div>').join('')||'<div class="card">Base de clientes aguardando leitura.</div>';
+  q('opProgress').textContent=num(o.in_progress);q('opPay').textContent=num(o.awaiting_payment);q('opSettle').textContent=num(o.awaiting_settlement);q('opReturns').textContent=num(o.returns);
+  q('activeWorks').innerHTML=(d.active||[]).slice(0,6).map(x=>'<div class="statrow"><span>'+esc((x.case||'—')+' • '+String(x.title||'Obra').slice(0,70))+'</span><b>'+esc(x.status||'')+'</b></div>').join('')||'<div class="muted">Sem obras abertas para exibir.</div>';
+  const macro=deriveMacro(d);
+  q('macroGrossGrowth').textContent=signedPct(macro.grossGrowth);q('macroProfitGrowth').textContent=signedPct(macro.profitGrowth);q('macroTicketGrowth').textContent=signedPct(macro.ticketGrowth);
+  q('macroMonthlyGross').textContent=macro.monthlyGross==null?'—':compactMoney(macro.monthlyGross);q('macroGrossPerClient').textContent=macro.grossPerClient==null?'—':compactMoney(macro.grossPerClient);q('macroProfitPerWork').textContent=macro.profitPerWork==null?'—':compactMoney(macro.profitPerWork);
+  q('macroOpenTotal').textContent=num(macro.openTotal);q('macroReturnRate').textContent=macro.returnRate==null?'—':pct(macro.returnRate);q('macroPeriod').textContent=macro.periodLabel;q('macroTop1').textContent=macro.top1Share==null?'—':pct(macro.top1Share);q('macroTop5').textContent=macro.top5Share==null?'—':pct(macro.top5Share);
+  q('macroRefresh').textContent=(d.sources?.refresh_seconds?num(d.sources.refresh_seconds)+' s':'automática');q('macroGrossGrowthNote').textContent=macro.comparable?('meses equivalentes • '+macro.periodLabel):'aguardando base mensal comparável';
+  const macroBits=[];if(macro.grossGrowth!=null)macroBits.push('receita '+(macro.grossGrowth>=0?'cresceu ':'recuou ')+pct(Math.abs(macro.grossGrowth))+' contra o mesmo período do ano anterior');if(macro.monthlyGross!=null)macroBits.push('média mensal de '+compactMoney(macro.monthlyGross));if(macro.grossPerClient!=null)macroBits.push('receita média de '+compactMoney(macro.grossPerClient)+' por cliente identificado');macroBits.push(num(macro.openTotal)+' itens na carga operacional aberta');if(macro.returnRate!=null)macroBits.push('retornos equivalem a '+pct(macro.returnRate)+' do volume anual identificado');q('macroRead').textContent=(macroBits.length?macroBits.join(' • '):'Base gerencial ainda sem período comparável suficiente.')+'.';
+  const fs=dev.flow_summary||{};q('flowOperational').textContent=num(fs.operational);q('flowValidation').textContent=num(fs.validation);q('flowTotal').textContent='de '+num(fs.total)+' fluxos';q('evidenceCoverage').textContent=pct(dev.evidence_coverage_percent);q('docsCount').textContent=num(dev.docs_count);q('snapshotsCount').textContent=num(dev.snapshots_count);
+  q('trackerIndex').textContent=pct(dev.tracker_status_index);q('trackerBar').style.setProperty('--w',Math.max(0,Math.min(100,Number(dev.tracker_status_index||0)))+'%');q('releaseName').textContent=dev.release||'—';q('releaseBuild').textContent=dev.build||'';
+  q('flowStatusGrid').innerHTML=(dev.flows||[]).map(f=>'<div class="flow"><b>'+esc((f.code||'')+' • '+(f.title||''))+'</b><span>'+esc(f.status||'')+'</span><em>'+esc(statusClass(f.status))+'</em></div>').join('')||'<div class="card">Status dos fluxos aguardando leitura da Central.</div>';
+  q('aCases').textContent=num(a.cases);q('aBase').textContent=compactMoney(a.base_cents);q('aCosts').textContent=compactMoney(a.cost_cents);q('aProfit').textContent=compactMoney(a.profit_cents);q('aMargin').textContent=pct(a.margin_pct);q('aCapital').textContent=compactMoney(a.capital_cents);q('aCheck').textContent=Number(a.difference_cents||0)===0?'CONFERIDO':'DIVERGENTE';
+  q('closingYears').textContent=(life.from||'—')+'–'+(life.to||'—')+' • '+num(life.works)+' serviços';q('closingRelease').textContent=dev.release||'release atual';
+  const ts=new Date(d.generated_at||Date.now()).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});document.querySelectorAll('.dataStamp').forEach(x=>x.textContent='dados vivos • '+ts);q('lastUpdate1').textContent='dados vivos • '+ts;q('live').innerHTML='<span class="dot"></span>dados vivos • '+ts;
+  try{localStorage.setItem('crExecutivePresentationLastGood',JSON.stringify(d))}catch{}
+}
+async function refreshData(){
+  q('live').textContent='atualizando…';
+  try{const r=await fetch(API+'&t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!d?.ok)throw new Error(d?.error||'dados indisponíveis');render(d)}
+  catch(e){let d=null;try{d=JSON.parse(localStorage.getItem('crExecutivePresentationLastGood')||'null')}catch{}if(d){render(d);q('live').textContent='último dado válido'}else q('live').textContent='dados indisponíveis'}
+}
+const slides=[...document.querySelectorAll('.slide')],idx=q('index');idx.innerHTML=slides.map((s,i)=>'<a href="#'+s.id+'" data-i="'+i+'" title="'+(i+1)+'"></a>').join('');const dots=[...idx.querySelectorAll('a')];
+const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){const i=slides.indexOf(e.target);dots.forEach((d,j)=>d.classList.toggle('on',i===j))}},{threshold:.45});slides.forEach(s=>io.observe(s));
+document.addEventListener('keydown',e=>{const cur=slides.findIndex(s=>Math.abs(s.getBoundingClientRect().top-66)<innerHeight*.45);if(e.key==='ArrowDown'||e.key==='PageDown'){e.preventDefault();slides[Math.min(slides.length-1,Math.max(0,cur)+1)]?.scrollIntoView()}if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();slides[Math.max(0,cur-1)]?.scrollIntoView()}});
+function load(src,global){return new Promise((ok,no)=>{if(global&&window[global])return ok(window[global]);const x=document.createElement('script');x.src=src;x.onload=()=>ok(global?window[global]:true);x.onerror=no;document.head.appendChild(x)})}
+async function exportPpt(){
+  const b=q('pptBtn');try{b.disabled=true;b.textContent='Gerando…';await load('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js','html2canvas');await load('https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js','PptxGenJS');const ppt=new window.PptxGenJS();ppt.layout='LAYOUT_WIDE';ppt.author='CONSTRU-REI';ppt.company='CONSTRU-REI';ppt.title='CONSTRU-REI — Apresentação Executiva Viva';for(let i=0;i<slides.length;i++){b.textContent='PPT '+(i+1)+'/'+slides.length;const c=await window.html2canvas(slides[i],{scale:1,useCORS:true,backgroundColor:'#e9eff4',logging:false,windowWidth:1440,windowHeight:900});const s=ppt.addSlide();s.addImage({data:c.toDataURL('image/jpeg',.86),x:0,y:0,w:13.333,h:7.5})}await ppt.writeFile({fileName:'CONSTRU-REI_Apresentacao_Executiva_Viva_'+new Date().toISOString().slice(0,10)+'.pptx'})}catch(e){alert('Não foi possível gerar o PowerPoint neste dispositivo. A apresentação continua disponível normalmente.')}finally{b.disabled=false;b.textContent='PowerPoint'}}
+q('pptBtn').addEventListener('click',exportPpt);
+refreshData();setInterval(refreshData,60000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshData()});
+</script>
+<div hidden data-cr-presentation="CR-PRESENTATION-EXECUTIVE-VIVA-CANDIDATE-20261002"></div>
+</body></html>
