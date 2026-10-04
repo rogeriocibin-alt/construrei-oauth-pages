@@ -116,3 +116,20 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Estado consolidado posterior: 8 registros `AUTO-*` e 79 evidências automáticas.
 - Estruturas usadas: `cc_items`, `cc_changes`, `cr_operational_evidence`, `cc_snapshots`.
 - Regra de segurança: a automação não conclui WIZY nem itens dependentes de ação/validação manual do Éder.
+
+
+## Executivo R7 — medidor de execução + painel compacto de pendências
+
+- Data: 2026-10-04
+- Candidata: `cr-central-agenda-smarttext-candidate-20261004`
+- Commit funcional: `0d6e3c3e9b5c3127b7a87001efc0dfdafb498159`
+- Checkpoint: `CHECKPOINT_CENTRAL_EXEC_PENDING_R7_20261004`
+- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v6
+- Fonte executiva de pendências: `cr-pendencias-executive-v2-candidate-20261004` v1
+- Medidor atual no momento da implementação: **51% de avanço operacional ponderado**
+- Base viva no momento da implementação: **93 itens ativos**, sendo 16 concluídos, 15 em validação, 25 em andamento, 31 aguardando, 5 bloqueados e 1 não iniciado.
+- Painel compacto: APP **14 abertas**, WIZY **22 abertas**, ÉDER **6 manuais**.
+- Regra do medidor: Concluído 100% • Em validação 75% • Em andamento 50% • Aguardando 25% • Bloqueado/Não iniciado 0%.
+- O valor é um **índice de execução por status**, não percentual de conclusão financeira nem percentual físico de obra.
+- APP/SISTEMA continuam automáticos no registro vivo; WIZY/ÉDER permanecem manuais.
+- A versão congelada anterior permanece preservada.
