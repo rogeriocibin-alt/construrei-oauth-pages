@@ -1,14 +1,15 @@
 (()=>{'use strict';
 if(window.__CR_NATIVE_CLEAN_V1)return;window.__CR_NATIVE_CLEAN_V1=true;
 window.__CR_NATIVE_HOME_OWNER=true;
-const BUILD='CR-CENTRAL-NATIVE-CLEAN-SOURCES-PENDING-20261004';
+const BUILD='CR-CENTRAL-NATIVE-GC-STATUS-BARS-20261004';
 const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
 const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=pending-board';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
+const GC_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gestaoclick-orcamentos-status-candidate-20261004';
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const brl=c=>c==null?'—':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(Number(c)/100);
-const state={fast:null,pending:null,errors:{},timings:{},lastRefresh:null};
+const state={fast:null,pending:null,gc:null,errors:{},timings:{},lastRefresh:null};
 async function get(u,timeoutMs=8000){
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeoutMs),started=performance.now();
  try{
@@ -103,14 +104,14 @@ const MATURITY='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-ope
 const MATURITY_BASE='./maturity-audit.json?v=1';
 const MATURITY_AX=[['management','Gestão e Visibilidade'],['finance','Financeiro / GestãoClick'],['technical','Base Técnica e Governança'],['data','Dados e Integrações'],['operation','Operação + Trello + Automações'],['central','Central / Ecossistema'],['flows','Esteira F00–F09'],['app','APP Operacional'],['service','Atendimento Integrado']];
 const mClamp=n=>Math.max(0,Math.min(100,Math.round(n||0)));
-const mTone=n=>n<45?'#c88b16':n<65?'#cfa33c':n<80?'#2d8fe5':n<90?'#075bd8':'#05265f';
+const mTone=n=>n<45?'#e74c5c':n<65?'#d89a18':n<75?'#18aeb2':n<90?'#2d8fe5':'#1769b0';
 const mText=n=>n<45?'Prioridade':n<60?'Estruturado':n<75?'Integrado':n<90?'Gerenciado':'Otimizado';
 function mObjects(v,out=[]){if(!v)return out;if(Array.isArray(v)){v.forEach(x=>mObjects(x,out));return out}if(typeof v==='object'){out.push(v);Object.keys(v).forEach(k=>mObjects(v[k],out))}return out}
 function mStatus(s){s=String(s||'').toUpperCase();if(/HOMOLOG|CONCLU|APROV|OPERACIONAL|PRODU/.test(s))return 1;if(/VALID|TEST|PRONTO/.test(s))return .78;if(/ANDAMENTO|IMPLEMENT|DESENV|EXECU/.test(s))return .55;if(/BLOQUE|AGUARD|PEND/.test(s))return .28;return .35}
 function mFlow(objs,code){return objs.find(x=>String(x.code||x.id||'').toUpperCase()===code)}
 function mArea(objs,re){return objs.filter(x=>re.test(String(x.area||x.module||x.code||x.title||''))&&(x.status||x.operational_status||x.implementation_status))}
 function mCompletion(items){if(!items.length)return null;return items.reduce((a,x)=>a+mStatus(x.status||x.operational_status||x.implementation_status),0)/items.length}
-function mGauge(id,n){const e=document.getElementById(id);if(!e)return;const t=mTone(n);e.style.setProperty('--p',n);e.style.setProperty('--tone',t);const b=e.querySelector('.cr-ml-ring b');if(b)b.textContent=n+'%';let chip=e.querySelector('.cr-ml-level');if(!chip){chip=document.createElement('span');chip.className='cr-ml-level';const box=e.lastElementChild;if(box)box.appendChild(chip)}if(chip)chip.textContent='NÍVEL • '+mText(n).toUpperCase()}
+function mGauge(id,n){const e=document.getElementById(id);if(!e)return;const t=id==='crMlAutonomy'?'#16b5a6':id==='crMlGeneral'?'#2087f2':mTone(n);e.style.setProperty('--p',n);e.style.setProperty('--tone',t);const b=e.querySelector('.cr-ml-ring b');if(b)b.textContent=n+'%';let chip=e.querySelector('.cr-ml-level');if(!chip){chip=document.createElement('span');chip.className='cr-ml-level';const box=e.lastElementChild;if(box)box.appendChild(chip)}if(chip)chip.textContent='NÍVEL • '+mText(n).toUpperCase()}
 function mAxis(k,n,note,detail){const e=document.querySelector('[data-axis="'+k+'"]');if(!e)return;const t=mTone(n);e.style.setProperty('--tone',t);e.dataset.level=mText(n);const b=e.querySelector('.cr-ml-row b'),i=e.querySelector('.cr-ml-track i'),s=e.querySelector('small');if(b)b.textContent=n+'%';if(i)i.style.width=n+'%';if(s)s.textContent=mText(n)+' • '+note;if(detail)e.title=detail}
 async function maturityGet(q,timeout){const out=await get(MATURITY+'?api='+q+'&maturity=1',timeout);return out.data}
 let maturityBaseCache=null;
@@ -170,12 +171,100 @@ async function refreshMaturity(){
  }finally{maturityRefreshing=false}
 }
 
+
+// GestãoClick • barras executivas de status (fonte real, leitura assíncrona)
+function gcRank(name){
+ const n=String(name||'').toUpperCase();
+ const order=[
+  /NOVO|VISITA|AGEND/,
+  /AN[ÁA]LISE/,
+  /ELABORA|OR[ÇC]AMENTO/,
+  /ENVIO|ENVIADO/,
+  /AGUARDANDO APROVA|APROVA[ÇC][ÃA]O/,
+  /^APROVADO$/,
+  /ANDAMENTO|EXECU/,
+  /RETORNO/,
+  /PAGAMENTO/,
+  /ACERTO|REVIS|AJUST/,
+  /FINALIZ|CONCLU/,
+  /N[ÃA]O APROV|REPROV/,
+  /CANCEL/
+ ];
+ const i=order.findIndex(r=>r.test(n));return i<0?90:i;
+}
+function gcTone(name){
+ const n=String(name||'').toUpperCase();
+ if(/CANCEL/.test(n))return '#8ba0b5';
+ if(/N[ÃA]O APROV|REPROV/.test(n))return '#e84b5b';
+ if(/FINALIZ|CONCLU|^APROVADO$/.test(n))return '#28b567';
+ if(/PAGAMENTO|ACERTO/.test(n))return '#f08a24';
+ if(/AGUARDANDO APROVA/.test(n))return '#e9aa18';
+ if(/ANDAMENTO|EXECU/.test(n))return '#6f5be8';
+ if(/RETORNO/.test(n))return '#8d55d9';
+ if(/ELABORA|OR[ÇC]AMENTO/.test(n))return '#13b8c8';
+ if(/ENVIO|ENVIADO/.test(n))return '#49a9f8';
+ if(/AN[ÁA]LISE/.test(n))return '#7c61df';
+ return '#2488ef';
+}
+function gcSkeleton(){
+ return '<div class="cr-gc-skeleton"><i></i><i></i><i></i><i></i></div>';
+}
+function renderGcStatuses(){
+ const h=$('#crGcStatusRows'),meta=$('#crGcStatusMeta');if(!h)return;
+ if(!state.gc){
+  h.innerHTML=state.errors.gc
+   ?'<div class="cr-gc-unavailable"><b>Dados temporariamente indisponíveis</b><span>O restante da Central continua operacional. Nova tentativa ocorrerá automaticamente.</span></div>'
+   :gcSkeleton();
+  if(meta)meta.textContent=state.errors.gc?'GestãoClick indisponível':'Conectando…';
+  return;
+ }
+ const rows=Array.isArray(state.gc.statuses)?state.gc.statuses.slice():[];
+ rows.sort((a,b)=>gcRank(a.status)-gcRank(b.status)||String(a.status).localeCompare(String(b.status),'pt-BR'));
+ if(!rows.length){
+  h.innerHTML='<div class="cr-gc-unavailable"><b>Nenhum status retornado</b><span>A fonte respondeu sem distribuição de orçamentos; nenhum zero foi presumido.</span></div>';
+  if(meta)meta.textContent='Fonte respondeu sem distribuição';
+  return;
+ }
+ const max=Math.max(1,...rows.map(x=>Number(x.count)||0));
+ const sum=rows.reduce((a,x)=>a+(Number(x.count)||0),0);
+ h.innerHTML=rows.map(x=>{
+  const count=Number(x.count)||0,tone=gcTone(x.status),w=count?Math.max(3,Math.round(count/max*100)):0;
+  return '<article class="cr-gc-row" style="--gc-tone:'+tone+'">'+
+   '<span class="cr-gc-dot"></span>'+
+   '<div class="cr-gc-name">'+esc(x.status||'SEM STATUS')+'</div>'+
+   '<div class="cr-gc-track"><i style="width:'+w+'%"></i></div>'+
+   '<b class="cr-gc-count">'+count+'</b>'+
+  '</article>';
+ }).join('');
+ const total=Number(state.gc.total_count);
+ const match=Number.isFinite(total)?sum===total:true;
+ if(meta){
+  const read=state.gc.read_at?new Date(state.gc.read_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—';
+  meta.textContent=rows.length+' status • '+(Number.isFinite(total)?total:sum)+' orçamentos • '+read+(match?'':' • divergência');
+  meta.classList.toggle('warn',!match||state.gc.complete===false);
+ }
+}
+let gcRefreshing=false;
+async function refreshGcStatuses(){
+ if(gcRefreshing)return;gcRefreshing=true;
+ try{
+  const out=await get(GC_STATUS,18000);
+  state.gc=out.data;
+  state.timings.gc=out.ms;
+  delete state.errors.gc;
+ }catch(err){
+  state.errors.gc=String(err);
+ }finally{
+  renderGcStatuses();renderHealth();gcRefreshing=false;
+ }
+}
+
 function boot(){
  document.documentElement.dataset.crBuild=BUILD;
  document.documentElement.dataset.crNativeState='loading';
- renderAll();patchReturns();
- refresh().finally(()=>setTimeout(refreshMaturity,300));setInterval(refresh,30000);setInterval(refreshMaturity,60000);
- window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshMaturity,APP};
+ renderAll();renderGcStatuses();patchReturns();
+ refresh().finally(()=>setTimeout(refreshMaturity,300));refreshGcStatuses();setInterval(refresh,30000);setInterval(refreshMaturity,60000);setInterval(refreshGcStatuses,300000);
+ window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshMaturity,refreshGcStatuses,APP,GC_STATUS};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
