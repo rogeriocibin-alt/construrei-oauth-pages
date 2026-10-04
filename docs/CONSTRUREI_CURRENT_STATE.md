@@ -42,3 +42,15 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 ## Última atualização
 
 2026-10-04 — rodada R2 de navegabilidade plena e estabilidade da Central candidata.
+
+## Congelamento — versão mais completa até o momento
+
+- Status: **CONGELADA / PRESERVADA**
+- Data: **2026-10-04**
+- Critério: versão considerada pelo Rogério como a mais completa até o momento.
+- Commit exato preservado: `2bb528851c343f6464418fadf36b115285aae916`
+- Branch congelada: `cr-central-most-complete-frozen-20261004-r2`
+- Checkpoint redundante: `CHECKPOINT_CENTRAL_MOST_COMPLETE_20261004_R2`
+- Link da candidata preservada: https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-refinement-candidate-20261004/?v=nav-r2-20261004
+- Regra: **não alterar essas duas referências**. Toda evolução futura deve partir de nova branch/candidata, preservando esta como ponto seguro de retorno.
+- A Central oficial continua separada; este congelamento **não é promoção automática para produção**.
