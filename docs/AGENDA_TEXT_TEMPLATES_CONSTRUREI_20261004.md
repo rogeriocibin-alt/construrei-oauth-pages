@@ -78,30 +78,23 @@ Tirar fotos e vídeos detalhados de todos os pontos vistoriados, incluindo o pro
 
 ## RETORNO — adaptação canônica
 
-📋 CONSTRUREI | INFORMAÇÕES RETORNO
+🔧 AGENDA DE RETORNO — CONSTRU-REI
 
-📝 ORÇAMENTO: [ORÇAMENTO]  
-👤 CLIENTE: [CLIENTE]  
-📍 ENDEREÇO: [ENDEREÇO]  
-📞 CONTATO: [CONTATO]
+📝 Orçamento: [Nº]  
+👤 Cliente: [CLIENTE]  
+📞 Telefone: [TELEFONE]  
+📍 Endereço: [ENDEREÇO]  
+💳 Forma de pagamento: [FORMA DE PAGAMENTO]
 
-📅 DATA: [DATA]  
-🕒 HORÁRIO: [HORÁRIO]  
-👷 PRESTADOR: [PRESTADOR]
+📅 Datas de retorno:  
+• [DATA] — [HORÁRIO / PERÍODO]
 
-📌 MOTIVO / SERVIÇOS DO RETORNO:
+👷 Prestador: [PRESTADOR]
 
-• [MOTIVO / SERVIÇO 1];  
-• [MOTIVO / SERVIÇO 2].
+🔎 Serviço:
 
-🔧 ORIENTAÇÃO:  
-Realizar o retorno referente ao serviço do orçamento [ORÇAMENTO], verificar a condição apresentada, executar os ajustes necessários dentro do escopo aplicável e registrar qualquer necessidade adicional antes de avançar.
-
-📸 IMPORTANTE:  
-Registrar fotos e vídeos antes, durante e após o retorno, deixando evidência clara do motivo encontrado e da solução aplicada.
-
-✅ FINALIZAÇÃO:  
-Ao finalizar, realizar conferência do serviço, testar o que for aplicável, registrar o resultado e informar imediatamente qualquer pendência ou nova necessidade identificada.
+• [MOTIVO / SERVIÇO DO RETORNO ADAPTADO];  
+• [DEMAIS ITENS, SE HOUVER].
 
 ---
 
