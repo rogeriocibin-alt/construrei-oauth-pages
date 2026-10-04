@@ -127,3 +127,245 @@ html[data-cr-native-state="loading"] #dashboard .cr-home-panel{contain:layout pa
   #dashboard .cr-kpi-grid{grid-template-columns:1fr!important}
   #crMaturityLive .cr-ml-grid{grid-template-columns:1fr!important}
 }
+
+
+/* CR GC BARS + MATURITY PALETTE V1 • 2026-10-04
+   Candidate-only visual refinement: lighter maturity palette + live GestãoClick status bars. */
+#dashboard .cr-maturity-live{
+  background:linear-gradient(135deg,#fbfdff 0%,#eef7ff 58%,#f0fbfa 100%)!important;
+  border-color:#c7dceb!important;
+}
+#dashboard .cr-maturity-live:before{
+  background:radial-gradient(circle,rgba(20,125,225,.13),rgba(20,178,165,.05) 45%,rgba(20,178,165,0) 70%)!important;
+}
+#dashboard .cr-ml-title i{
+  background:linear-gradient(145deg,#0b68c9,#1489e6)!important;
+  color:#fff!important;
+  box-shadow:0 5px 14px rgba(20,125,225,.18)!important;
+}
+#dashboard .cr-ml-gauge{
+  --tone:#147de1;
+  background:rgba(255,255,255,.96)!important;
+  border-color:#d6e5f1!important;
+  box-shadow:0 5px 16px rgba(14,60,112,.055)!important;
+}
+#dashboard #crMlGeneral{--tone:#147de1}
+#dashboard #crMlAutonomy{--tone:#14b2a5}
+#dashboard .cr-ml-ring{
+  box-shadow:inset 0 0 0 1px rgba(18,64,112,.03)!important;
+}
+#dashboard .cr-ml-ring:after{background:#fff!important}
+#dashboard .cr-ml-level{
+  display:inline-flex;
+  margin-top:5px;
+  padding:3px 7px;
+  border-radius:999px;
+  background:#edf6ff;
+  border:1px solid #cde3f6;
+  color:#1967ad;
+  font-size:6.7px;
+  font-weight:900;
+  letter-spacing:.035em;
+}
+#dashboard #crMlAutonomy .cr-ml-level{
+  background:#e9f9f6;
+  border-color:#c8eee8;
+  color:#0a8177;
+}
+#dashboard .cr-ml-card{
+  background:#fff!important;
+  border-color:#d8e5ef!important;
+  box-shadow:0 3px 10px rgba(14,60,112,.035)!important;
+}
+#dashboard .cr-ml-track{
+  background:#e9eff4!important;
+}
+#dashboard .cr-ml-track i{
+  background:var(--tone)!important;
+  box-shadow:none!important;
+}
+#dashboard .cr-ml-foot{
+  background:linear-gradient(90deg,#0b58a7,#147de1 58%,#128b91)!important;
+}
+#dashboard .cr-ml-foot b{color:#d7f6f1!important}
+
+/* GestãoClick budget/status executive card */
+#dashboard .cr-budget-status{
+  grid-column:1/-1!important;
+  position:relative;
+  overflow:hidden;
+  padding:11px!important;
+  background:linear-gradient(180deg,#ffffff 0%,#f7fbfe 100%)!important;
+  border:1px solid #cbdfea!important;
+  box-shadow:0 7px 20px rgba(18,69,112,.065)!important;
+}
+#dashboard .cr-budget-status:before{
+  content:"";
+  position:absolute;
+  width:220px;height:220px;border-radius:50%;
+  right:-105px;top:-145px;
+  background:radial-gradient(circle,rgba(106,82,215,.10),rgba(20,125,225,.04) 48%,transparent 70%);
+  pointer-events:none;
+}
+#dashboard .cr-budget-head{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  position:relative;
+  z-index:1;
+  margin-bottom:8px;
+}
+#dashboard .cr-budget-title{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+}
+#dashboard .cr-budget-icon{
+  width:30px;height:30px;flex:0 0 30px;
+  border-radius:9px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#6c55db,#4d72df);
+  color:#fff;
+  font-size:14px;
+  box-shadow:0 5px 14px rgba(94,83,211,.18);
+}
+#dashboard .cr-budget-title strong{
+  display:block;
+  color:#07165b;
+  font-size:13px;
+  letter-spacing:.005em;
+}
+#dashboard .cr-budget-sub{
+  color:#6c8298;
+  font-size:7.5px;
+  margin-top:1px;
+}
+#dashboard .cr-budget-meta{
+  margin-left:auto;
+  color:#4f708f;
+  font-size:7px;
+  text-align:right;
+  white-space:nowrap;
+}
+#dashboard .cr-budget-rows{
+  display:grid;
+  gap:3px;
+  position:relative;
+  z-index:1;
+}
+#dashboard .cr-budget-row{
+  display:grid;
+  grid-template-columns:9px minmax(145px,.9fr) minmax(180px,2.4fr) 34px;
+  align-items:center;
+  gap:8px;
+  min-height:29px;
+  padding:4px 8px;
+  border-radius:9px;
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(207,224,237,.72);
+}
+#dashboard .cr-budget-dot{
+  width:8px;height:8px;border-radius:50%;
+  display:block;
+  background:var(--budget-color,#2e86ed);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--budget-color,#2e86ed) 12%,transparent);
+}
+#dashboard .cr-budget-name{
+  min-width:0;
+  color:#16365d;
+  font-size:8.5px;
+  font-weight:800;
+  line-height:1.12;
+}
+#dashboard .cr-budget-track{
+  height:7px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#e6edf3;
+}
+#dashboard .cr-budget-track>i{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:var(--budget-color,#2e86ed);
+  transition:width .55s ease;
+}
+#dashboard .cr-budget-count{
+  text-align:right;
+  color:#07165b;
+  font-size:12px;
+  font-variant-numeric:tabular-nums;
+}
+#dashboard .cr-budget-unavailable{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  padding:13px;
+  border:1px dashed #c7dce9;
+  border-radius:10px;
+  background:#f7fbfe;
+  color:#597691;
+  font-size:8px;
+}
+#dashboard .cr-budget-unavailable b{color:#173d67;font-size:9px}
+#dashboard .cr-budget-skeleton{display:grid;gap:4px}
+#dashboard .cr-budget-sk-row{
+  display:grid;
+  grid-template-columns:9px minmax(120px,.9fr) minmax(180px,2.4fr) 30px;
+  gap:8px;
+  align-items:center;
+  padding:6px 8px;
+}
+#dashboard .cr-budget-sk-row i,
+#dashboard .cr-budget-sk-row span,
+#dashboard .cr-budget-sk-row b{
+  display:block;
+  height:7px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#e8eff5,#f5f9fc,#e8eff5);
+  background-size:220% 100%;
+  animation:crBudgetPulse 1.25s linear infinite;
+}
+#dashboard .cr-budget-sk-row i{width:8px;height:8px}
+#dashboard .cr-budget-sk-row b{width:22px;justify-self:end}
+@keyframes crBudgetPulse{to{background-position:-220% 0}}
+
+@media(max-width:700px){
+  #dashboard .cr-budget-status{padding:10px!important}
+  #dashboard .cr-budget-head{align-items:flex-start}
+  #dashboard .cr-budget-meta{font-size:6.5px;white-space:normal;max-width:120px}
+  #dashboard .cr-budget-row{
+    grid-template-columns:9px minmax(120px,1fr) minmax(100px,1.35fr) 32px;
+    gap:6px;
+    min-height:31px;
+    padding:5px 7px;
+  }
+  #dashboard .cr-budget-name{font-size:8.4px}
+  #dashboard .cr-budget-count{font-size:11px}
+}
+@media (hover:none) and (pointer:coarse) and (max-width:1100px){
+  #dashboard .cr-budget-status{padding:12px!important}
+  #dashboard .cr-budget-title strong{font-size:14px}
+  #dashboard .cr-budget-sub{font-size:10px}
+  #dashboard .cr-budget-meta{font-size:9px}
+  #dashboard .cr-budget-row{
+    grid-template-columns:10px minmax(125px,1fr) minmax(100px,1.45fr) 38px;
+    min-height:38px;
+    gap:8px;
+    padding:6px 8px;
+  }
+  #dashboard .cr-budget-dot{width:9px;height:9px}
+  #dashboard .cr-budget-name{font-size:10.5px}
+  #dashboard .cr-budget-track{height:8px}
+  #dashboard .cr-budget-count{font-size:13px}
+  #dashboard .cr-ml-track i{background:var(--tone)!important}
+}
+@media(max-width:420px){
+  #dashboard .cr-budget-head{display:grid;grid-template-columns:1fr}
+  #dashboard .cr-budget-meta{margin-left:39px;max-width:none;text-align:left}
+  #dashboard .cr-budget-row{
+    grid-template-columns:9px minmax(104px,1fr) minmax(78px,1.15fr) 31px;
+    gap:6px;
+  }
+}
