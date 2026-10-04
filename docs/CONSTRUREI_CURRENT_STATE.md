@@ -102,3 +102,17 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 ## Última atualização
 
 2026-10-04 — R6 saneada: gerador sem sessão/perfil, API v6 com bloqueio reforçado de valores monetários e deduplicação semântica do escopo; interface R6 permanece a mesma.
+
+
+## Registro vivo de pendências — 2026-10-04
+
+- APP/SISTEMA: **AUTOMÁTICO**
+- WIZY: **MANUAL**
+- ÉDER: **MANUAL**
+- Edge Function: `cr-pendencias-auto-sync-20261004` v1
+- Cron: `cr-pendencias-auto-sync-15m` • `*/15 * * * *`
+- Documento de arquitetura: `docs/PENDENCIAS_LIVE_REGISTRY_20261004.md`
+- Primeiro ciclo validado: HTTP 200 • 60 commits lidos • 51 evidências anexadas • 2 registros novos.
+- Estado consolidado posterior: 8 registros `AUTO-*` e 79 evidências automáticas.
+- Estruturas usadas: `cc_items`, `cc_changes`, `cr_operational_evidence`, `cc_snapshots`.
+- Regra de segurança: a automação não conclui WIZY nem itens dependentes de ação/validação manual do Éder.
