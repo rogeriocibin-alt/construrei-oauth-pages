@@ -8,11 +8,11 @@
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
 - Candidata ativa: **Agenda Inteligente / Textos Operacionais R1**
 - Branch fonte: `cr-central-agenda-smarttext-candidate-20261004`
-- Commit funcional da branch candidata: `d60d55a61740b2e46e7303cf916445bcabf4275d`
-- Publicação GitHub Pages correspondente: `75e714400689027743c73ea68105f589580e40b9`
-- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R1`
+- Commit funcional da branch candidata: `941d161affffdad4f1467f2e8062383aa0bf6115`
+- Publicação GitHub Pages correspondente: `bd234a2ed5f39e059105642d4d9cc9db0d2283f1`
+- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R2`
 - Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004`
-- API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v1
+- API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v2
 - Modelo canônico armazenado em: `docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md`
 - Central oficial: **NÃO ALTERADA**
 - Base oficial protegida: `ccc8e8a4cc97df5f7646813178287106657df9b1`
@@ -21,7 +21,7 @@
 
 https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-agenda-smarttext-candidate-20261004/
 
-## Rodada ativa — Agenda Inteligente / Textos Operacionais R1
+## Rodada ativa — Agenda Inteligente / Textos Operacionais R2
 
 1. Cada compromisso da Agenda passa a ter opção **Expandir**.
 2. Ao expandir, a Central identifica o tipo do compromisso: **VISITA/VISTORIA, EXECUÇÃO ou RETORNO**.
@@ -59,4 +59,4 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-04 — candidata de Agenda Inteligente com geração e cópia de textos padronizados integrada ao GestãoClick.
+2026-10-04 — R2: Agenda Inteligente com modelos canônicos de VISITA, EXECUÇÃO e RETORNO, expansão por compromisso, consulta ao GestãoClick e cópia do texto operacional.
