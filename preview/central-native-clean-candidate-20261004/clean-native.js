@@ -143,8 +143,11 @@ function renderBudgets(){
   meta.title='Fonte: GestãoClick • '+(d.complete?'população completa':'leitura limitada')+(d.read_at?' • '+new Date(d.read_at).toLocaleString('pt-BR'):'');
  }
 }
-function agendaTime(v,allDay){
- if(allDay)return'Dia inteiro';
+function agendaDay(offset){
+ const d=new Date(Date.now()+offset*86400000);
+ return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+}
+function agendaTime(v){
  const d=new Date(v);if(!Number.isFinite(d.getTime()))return'—';
  return new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'}).format(d);
 }
@@ -158,34 +161,52 @@ function renderAgendaToday(){
   if(meta)meta.textContent=state.lastAgendaOkAt?'Última leitura válida: '+new Date(state.lastAgendaOkAt).toLocaleTimeString('pt-BR'):'Conectando à agenda…';
   return;
  }
- const items=(Array.isArray(d.items)?d.items:[]).slice().sort((a,b)=>String(a.starts_at||'').localeCompare(String(b.starts_at||'')));
+ const items=(Array.isArray(d.items)?d.items:[]).slice().sort((a,b)=>(Number(a.day_order)||0)-(Number(b.day_order)||0)||String(a.starts_at||'').localeCompare(String(b.starts_at||'')));
  h.innerHTML=items.length?items.map(x=>{
   const team=Array.isArray(x.team)&&x.team.length?x.team.join(' + '):'Equipe não identificada';
-  const tm=agendaTime(x.starts_at,x.all_day);
+  const tm=agendaTime(x.starts_at);
   const type=String(x.type||'COMPROMISSO').toUpperCase();
   const caseNo=x.case?String(x.case):'';
   const title=String(x.title||'Compromisso');
   const detail=[title,x.location].filter(Boolean).join(' • ');
+  const day=String(x.day_label||'HOJE');
   return '<article class="cr-agenda-row">'+
    '<div class="cr-agenda-time">'+esc(tm)+'</div>'+
-   '<div class="cr-agenda-main"><strong>'+esc(team)+'</strong><span>'+esc([type,caseNo].filter(Boolean).join(' • '))+'</span><small>'+esc(detail)+'</small></div>'+
+   '<div class="cr-agenda-main"><strong>'+esc(team)+'</strong><span>'+esc([day,type,caseNo].filter(Boolean).join(' • '))+'</span><small>'+esc(detail)+'</small></div>'+
    '<span class="cr-agenda-kind">'+esc(type)+'</span>'+
   '</article>';
- }).join(''):'<div class="cr-agenda-empty">Nenhum compromisso confirmado para hoje.</div>';
+ }).join(''):'<div class="cr-agenda-empty">Nenhum compromisso confirmado para hoje ou amanhã.</div>';
  if(meta){
-  const n=items.length,stale=err?' • atualização pendente':'';
-  const checked=d.checked_at||d.read_at||state.lastAgendaOkAt;
+  const today=Number(d.today_count)||0,tomorrow=Number(d.tomorrow_count)||0,stale=err?' • atualização pendente':'';
+  const checked=d.checked_at||state.lastAgendaOkAt;
   const tm=checked?new Date(checked).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—';
-  meta.textContent=n+' compromisso'+(n===1?'':'s')+' • '+tm+stale;
+  meta.textContent=today+' hoje • '+tomorrow+' amanhã • '+tm+stale;
   meta.title='Fonte primária: Google Agenda CONSTRU-REI';
  }
 }
 async function refreshAgendaToday(){
  try{
-  const out=await get(AGENDA,9000);
-  state.agenda=out.data;
-  state.timings.agenda=out.ms;
-  state.lastAgendaOkAt=out.data?.checked_at||new Date().toISOString();
+  const today=agendaDay(0),tomorrow=agendaDay(1);
+  const started=performance.now();
+  const res=await Promise.allSettled([
+   get(AGENDA+'&date='+encodeURIComponent(today),9000),
+   get(AGENDA+'&date='+encodeURIComponent(tomorrow),9000)
+  ]);
+  const td=res[0].status==='fulfilled'?res[0].value.data:null;
+  const tm=res[1].status==='fulfilled'?res[1].value.data:null;
+  if(!td&&!tm)throw Error('AGENDA_TODAY_AND_TOMORROW_UNAVAILABLE');
+  const ti=Array.isArray(td?.items)?td.items.map(x=>({...x,day_label:'HOJE',day_order:0})):[];
+  const ni=Array.isArray(tm?.items)?tm.items.map(x=>({...x,day_label:'AMANHÃ',day_order:1})):[];
+  state.agenda={
+   ok:true,
+   today,tomorrow,
+   today_count:ti.length,
+   tomorrow_count:ni.length,
+   items:ti.concat(ni),
+   checked_at:new Date().toISOString()
+  };
+  state.timings.agenda=Math.round(performance.now()-started);
+  state.lastAgendaOkAt=state.agenda.checked_at;
   delete state.errors.agenda;
  }catch(err){
   state.errors.agenda=String(err);
