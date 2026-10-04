@@ -644,87 +644,56 @@ html[data-cr-native-state="loading"] #dashboard .cr-home-panel{contain:layout pa
 }
 
 
-/* FINAL FULL-WIDTH EXECUTIVE HERO • 2026-10-04
-   Owner-approved panoramic construction artwork as the background of the ENTIRE hero.
-   Text remains live HTML and sits above a readability gradient. */
+/* FINAL FULL-WIDTH HERO BACKGROUND • 2026-10-04
+   Owner-approved panorama fills the ENTIRE Gestão Executiva field.
+   Live HTML text is layered above it; the old split/right-column visual is disabled. */
 #dashboard>.cr-home-hero.cr-executive-header{
   position:relative!important;
   isolation:isolate!important;
-  display:grid!important;
-  grid-template-columns:1fr!important;
-  min-height:clamp(190px,20vw,250px)!important;
   overflow:hidden!important;
-  background:
-    linear-gradient(90deg,
-      rgba(2,19,47,.94) 0%,
-      rgba(3,31,72,.87) 30%,
-      rgba(3,39,86,.66) 52%,
-      rgba(3,32,73,.26) 72%,
-      rgba(3,22,53,.08) 100%),
-    url("https://raw.githubusercontent.com/rogeriocibin-alt/construrei-oauth-pages/candidate-central-hero-full-bg-final-20261004/preview/central-native-clean-candidate-20261004/assets/hero-executivo-full-bg-approved-20261004.webp") center center/cover no-repeat!important;
-  border:1px solid rgba(255,196,0,.34)!important;
-  box-shadow:0 10px 28px rgba(2,34,78,.16)!important;
+  display:block!important;
+  min-height:clamp(190px,22vw,300px)!important;
+  border:1px solid rgba(255,196,0,.35)!important;
+  border-radius:14px!important;
+  background-color:#031b46!important;
+  background-image:
+    linear-gradient(90deg,rgba(2,15,39,.88) 0%,rgba(3,24,60,.76) 34%,rgba(3,31,72,.48) 55%,rgba(3,27,61,.13) 82%,rgba(3,22,50,.04) 100%),
+    var(--cr-approved-hero,linear-gradient(112deg,#031b46 0%,#06428d 55%,#08275f 100%))!important;
+  background-position:center center,center center!important;
+  background-size:cover,cover!important;
+  background-repeat:no-repeat,no-repeat!important;
+  box-shadow:0 12px 30px rgba(8,45,88,.16)!important;
 }
 #dashboard>.cr-home-hero.cr-executive-header:before{
   content:""!important;
   position:absolute!important;
   inset:0!important;
-  z-index:0!important;
+  z-index:1!important;
   pointer-events:none!important;
   background:
-    linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,18,48,.08) 100%)!important;
+    linear-gradient(90deg,rgba(1,13,35,.44) 0%,rgba(2,19,48,.20) 43%,rgba(2,22,51,.04) 72%,transparent 100%),
+    linear-gradient(180deg,rgba(2,14,34,.04),rgba(2,15,36,.18))!important;
 }
 #dashboard>.cr-home-hero.cr-executive-header:after{
   content:""!important;
   position:absolute!important;
   inset:0!important;
-  z-index:0!important;
+  z-index:1!important;
   pointer-events:none!important;
-  background:radial-gradient(circle at 28% 48%,rgba(9,78,154,.10),transparent 42%)!important;
+  background:radial-gradient(circle at 26% 48%,rgba(4,43,94,.06),rgba(2,17,43,0) 48%)!important;
 }
 #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
   position:relative!important;
   z-index:2!important;
   width:min(760px,72%)!important;
-  max-width:760px!important;
-  min-width:0!important;
-  padding:24px 28px!important;
+  max-width:72%!important;
+  min-height:clamp(190px,22vw,300px)!important;
+  padding:clamp(22px,3.1vw,44px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
   background:transparent!important;
-  text-shadow:0 2px 12px rgba(0,0,0,.42)!important;
-}
-#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main .ey{
-  color:#ffd33c!important;
-  font-weight:900!important;
-  letter-spacing:.13em!important;
-}
-#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1{
-  color:#fff!important;
-  font-size:clamp(30px,3.1vw,48px)!important;
-  line-height:.98!important;
-  margin:7px 0 11px!important;
-  letter-spacing:-.025em!important;
-}
-#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1 span{
-  color:#ffd21d!important;
-}
-#dashboard>.cr-home-hero.cr-executive-header .cr-executive-tagline{
-  color:#f4f8ff!important;
-  font-size:clamp(12px,1.25vw,17px)!important;
-  line-height:1.35!important;
-  font-weight:650!important;
-  max-width:650px!important;
-  text-shadow:0 2px 10px rgba(0,0,0,.45)!important;
-}
-#dashboard>.cr-home-hero.cr-executive-header .cr-executive-update{
-  color:#e8f3ff!important;
-  font-size:clamp(9px,.9vw,12px)!important;
-  font-weight:750!important;
-  margin-top:12px!important;
-  text-shadow:0 2px 8px rgba(0,0,0,.45)!important;
-}
-#dashboard>.cr-home-hero.cr-executive-header .cr-live-dot{
-  background:#18d47c!important;
-  box-shadow:0 0 0 4px rgba(24,212,124,.13)!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.62)!important;
 }
 #dashboard>.cr-home-hero.cr-executive-header .cr-hero-visual{
   display:none!important;
@@ -734,47 +703,90 @@ html[data-cr-native-state="loading"] #dashboard .cr-home-panel{contain:layout pa
   min-height:0!important;
   pointer-events:none!important;
 }
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main .ey{
+  margin:0 0 7px!important;
+  color:#ffd43b!important;
+  font-size:clamp(9px,1vw,13px)!important;
+  line-height:1.1!important;
+  font-weight:900!important;
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  text-shadow:0 2px 8px rgba(0,0,0,.55)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1{
+  margin:0 0 10px!important;
+  color:#fff!important;
+  font-size:clamp(30px,3.8vw,58px)!important;
+  line-height:.98!important;
+  font-weight:850!important;
+  letter-spacing:-.035em!important;
+  text-shadow:0 3px 18px rgba(0,0,0,.62)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1 span{
+  color:#ffd21d!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-executive-tagline{
+  margin:0!important;
+  max-width:680px!important;
+  color:#f7fbff!important;
+  font-size:clamp(12px,1.35vw,19px)!important;
+  line-height:1.38!important;
+  font-weight:600!important;
+  text-shadow:0 2px 12px rgba(0,0,0,.72)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-executive-update{
+  margin-top:14px!important;
+  color:#edf7ff!important;
+  font-size:clamp(9px,1vw,13px)!important;
+  font-weight:750!important;
+  text-shadow:0 2px 10px rgba(0,0,0,.7)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-executive-update .cr-live-dot{
+  background:#12c97a!important;
+  box-shadow:0 0 0 4px rgba(18,201,122,.14),0 0 14px rgba(18,201,122,.30)!important;
+}
 
-@media(max-width:760px){
+@media(max-width:980px){
   #dashboard>.cr-home-hero.cr-executive-header{
-    min-height:220px!important;
-    background:
-      linear-gradient(90deg,
-        rgba(2,19,47,.97) 0%,
-        rgba(3,28,66,.92) 42%,
-        rgba(3,36,80,.70) 64%,
-        rgba(3,28,66,.28) 82%,
-        rgba(3,22,53,.08) 100%),
-      url("./assets/hero-executivo-full-bg-approved-20261004.webp") 62% center/cover no-repeat!important;
+    min-height:245px!important;
+    background-position:center center,58% center!important;
   }
   #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
-    width:82%!important;
-    max-width:82%!important;
-    padding:20px 18px!important;
+    width:min(680px,78%)!important;
+    max-width:78%!important;
+    min-height:245px!important;
+    padding:24px!important;
+  }
+}
+@media(max-width:600px){
+  #dashboard>.cr-home-hero.cr-executive-header{
+    min-height:250px!important;
+    border-radius:12px!important;
+    background-image:
+      linear-gradient(90deg,rgba(2,16,41,.94) 0%,rgba(3,25,61,.84) 43%,rgba(3,30,70,.54) 66%,rgba(3,26,61,.20) 88%,rgba(3,22,50,.08) 100%),
+      var(--cr-approved-hero,linear-gradient(112deg,#031b46 0%,#06428d 55%,#08275f 100%))!important;
+    background-position:center center,63% center!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+    width:84%!important;
+    max-width:84%!important;
+    min-height:250px!important;
+    padding:22px 18px!important;
   }
   #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1{
     font-size:34px!important;
     line-height:.96!important;
+    max-width:100%!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1 span{
+    display:block!important;
   }
   #dashboard>.cr-home-hero.cr-executive-header .cr-executive-tagline{
-    font-size:12px!important;
     max-width:100%!important;
+    font-size:12px!important;
   }
   #dashboard>.cr-home-hero.cr-executive-header .cr-executive-update{
     font-size:9px!important;
-  }
-}
-@media(max-width:430px){
-  #dashboard>.cr-home-hero.cr-executive-header{
-    min-height:214px!important;
-    background-position:64% center!important;
-  }
-  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
-    width:88%!important;
-    max-width:88%!important;
-    padding:18px 15px!important;
-  }
-  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1{
-    font-size:31px!important;
+    margin-top:13px!important;
   }
 }
