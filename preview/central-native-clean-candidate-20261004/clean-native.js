@@ -5,7 +5,7 @@ const BUILD='CR-CENTRAL-NATIVE-CORRECTIONS-AGENDA-DEDUP-RINGS-20261004';
 const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
 const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=pending-board';
 const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v12-1-candidate-20261003?view=public';
-const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v2-candidate-20261004';
+const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v3-candidate-20261004';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -99,20 +99,42 @@ function budgetColor(name){
 function budgetSkeleton(){
  return '<div class="cr-budget-skeleton">'+[1,2,3,4].map(()=>'<div class="cr-budget-sk-row"><i></i><span></span><b></b></div>').join('')+'</div>';
 }
+function canonicalBudgetStatus(v){
+ const raw=String(v||'SEM STATUS').trim()||'SEM STATUS',n=budgetNorm(raw);
+ if(!n||n==='SEM STATUS')return{key:'SEM_STATUS',name:'Sem status'};
+ if(/CANCEL/.test(n))return{key:'CANCELADO',name:'Cancelado'};
+ if(/NAO APROV|REPROV/.test(n))return{key:'NAO_APROVADO',name:'Não aprovado'};
+ if(/FINAL|CONCLU/.test(n))return{key:'CONCLUIDO',name:'Concluído'};
+ if(/PAGO|RECEBIDO/.test(n))return{key:'PAGO_RECEBIDO',name:'Pago / Recebido'};
+ if(/ACERTO|AJUST/.test(n))return{key:'AGUARDANDO_ACERTO',name:'Aguardando acerto'};
+ if(/PAGAMENTO/.test(n))return{key:'AGUARDANDO_PAGAMENTO',name:'Aguardando pagamento'};
+ if(/RETORNO/.test(n))return{key:'RETORNO',name:'Retorno'};
+ if(/ANDAMENTO|EXECU/.test(n))return{key:'EM_ANDAMENTO',name:'Em andamento'};
+ if(/AGUARDANDO APROV/.test(n))return{key:'AGUARDANDO_APROVACAO',name:'Aguardando aprovação'};
+ if(/APROVAD/.test(n))return{key:'APROVADO',name:'Aprovado'};
+ if(/AGUARDANDO ENVIO/.test(n))return{key:'AGUARDANDO_ENVIO',name:'Aguardando envio'};
+ if(/ENVIAD/.test(n))return{key:'ENVIADO',name:'Enviado'};
+ if(/ANALIS/.test(n))return{key:'EM_ANALISE',name:'Em análise'};
+ if(/ELABOR/.test(n))return{key:'EM_ELABORACAO',name:'Em elaboração'};
+ if(/ORCAMENT/.test(n))return{key:'ORCAMENTO',name:'Orçamento'};
+ if(/NOVO/.test(n))return{key:'NOVO',name:'Novo'};
+ if(/VISITA|AGENDAMENTO|AGENDADO/.test(n))return{key:'AGENDADO',name:'Agendado'};
+ return{key:'RAW:'+n,name:raw.replace(/\s+/g,' ')};
+}
 function mergeBudgetStatuses(input){
  const map=new Map();
  (Array.isArray(input)?input:[]).forEach((x,idx)=>{
-  const key=budgetNorm(x?.name||x?.status||'SEM STATUS')||'SEM STATUS';
-  const name=String(x?.name||x?.status||'SEM STATUS').trim()||'SEM STATUS';
+  const c=canonicalBudgetStatus(x?.name||x?.status||'SEM STATUS');
+  const key=String(x?.canonical_key||c.key);
+  const name=c.name;
   const count=Number(x?.count)||0,total=Number(x?.total_cents)||0,order=Number(x?.source_order);
   if(!map.has(key)){
-   map.set(key,{...x,name,count,total_cents:total,source_order:Number.isFinite(order)?order:999,_first:idx});
+   map.set(key,{...x,canonical_key:key,name,count,total_cents:total,source_order:Number.isFinite(order)?order:budgetRank(name),_first:idx});
   }else{
    const row=map.get(key);
    row.count+=count;
    row.total_cents=(Number(row.total_cents)||0)+total;
-   if(Number.isFinite(order))row.source_order=Math.min(Number(row.source_order)||999,order);
-   if(!row.source_color&&x?.source_color)row.source_color=x.source_color;
+   row.source_order=Math.min(Number(row.source_order)||999,Number.isFinite(order)?order:budgetRank(name));
   }
  });
  return [...map.values()];
@@ -139,7 +161,7 @@ function renderBudgets(){
   const stale=err?' • atualização pendente':'';
   const total=Number(d.total??d.records_analyzed??rows.reduce((a,x)=>a+Number(x.count||0),0));
   const t=state.timings.budgets!=null?' • '+state.timings.budgets+' ms':'';
-  meta.textContent=rows.length+' status • '+total+' orçamentos'+t+stale;
+  meta.textContent=rows.length+' status únicos • '+total+' orçamentos'+t+stale;
   meta.title='Fonte: GestãoClick • '+(d.complete?'população completa':'leitura limitada')+(d.read_at?' • '+new Date(d.read_at).toLocaleString('pt-BR'):'');
  }
 }
