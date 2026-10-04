@@ -230,7 +230,7 @@ async function refresh(){
  if(refreshing)return;
  refreshing=true;
  if(!state.fast&&!state.pending)document.documentElement.dataset.crNativeState='loading';
- state.errors={};
+ delete state.errors.fast;delete state.errors.pending;
  const load=async(key,url,apply,timeoutMs=8000)=>{
   try{
    const out=await get(url,timeoutMs);
