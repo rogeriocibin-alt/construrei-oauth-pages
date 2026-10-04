@@ -47,5 +47,8 @@
     "Agenda de Hoje restored from Google Agenda",
     "Circular gauges changed to APP blue/cyan logo palette",
     "No official route promotion"
-  ]
+  ],
+  "agenda_scope": "Hoje + amanhã, fonte Google Agenda, sem restaurar o antigo módulo Gestão da Agenda",
+  "status_dedup_policy": "Uma linha por nome de status normalizado; contagens somadas por status único",
+  "circular_gauge_palette": "APP CONSTRU-REI blue/cyan solid center"
 }
