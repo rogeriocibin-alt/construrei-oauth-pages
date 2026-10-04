@@ -3,7 +3,7 @@ if(window.__CR_NATIVE_CLEAN_V1)return;window.__CR_NATIVE_CLEAN_V1=true;
 window.__CR_NATIVE_HOME_OWNER=true;
 const BUILD='CR-CENTRAL-HERO-FULL-BG-20261004';
 const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
-const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=pending-board';
+const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-executive-v2-candidate-20261004';
 const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v12-1-candidate-20261003?view=public';
 const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v3-candidate-20261004';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
@@ -35,31 +35,29 @@ function renderKpis(){
  ].join('');
  stamp();
 }
-function pendingStats(arr){
- arr=Array.isArray(arr)?arr:[];
- return {
-  blocked:arr.filter(x=>/BLOQUE/i.test([x.status,x.operational_status].join(' '))).length,
-  waiting:arr.filter(x=>/AGUARD|DECIS|PEND/i.test([x.status,x.operational_status,x.next_step].join(' '))).length,
-  corrections:arr.filter(x=>/CORRE|AJUST|REVIS/i.test([x.status,x.title,x.next_step].join(' '))).length
- };
+function execMeter(b){
+ const x=b?.execution||{},pct=Math.max(0,Math.min(100,Number(x.index)||0));
+ const active=Number(x.active)||0,done=Number(x.concluded)||0,val=Number(x.validation)||0,prog=Number(x.progress)||0,blocked=Number(x.blocked)||0;
+ return '<section class="cr-exec-meter" style="--exec:'+pct+'"><div class="cr-exec-ring"><b>'+pct+'%</b><small>execução</small></div><div class="cr-exec-copy"><div class="cr-exec-kicker">MEDIDOR DE EXECUÇÃO</div><h3>Avanço operacional do sistema</h3><p>Índice vivo ponderado pelos estados das pendências.</p><div class="cr-exec-stats"><span><b>'+done+'</b> concluídas</span><span><b>'+val+'</b> validação</span><span><b>'+prog+'</b> andamento</span><span class="'+(blocked?'bad':'ok')+'"><b>'+blocked+'</b> bloqueadas</span></div><div class="cr-exec-foot">'+active+' itens ativos • APP/SISTEMA automáticos • WIZY/ÉDER manuais</div></div></section>';
 }
-function pendingCard(icon,label,open,arr,target,tone){
- const st=pendingStats(arr);
- return '<article class="cr-pending-card cr-live-pending '+esc(tone||'blue')+'"><div class="cr-pending-icon">'+icon+'</div><div class="cr-pending-copy"><h3>'+esc(label)+'</h3><div class="cr-pending-total">'+esc(open??0)+'</div><div class="cr-pending-lines"><span><i class="bad"></i>'+st.blocked+' bloqueada(s)</span><span><i class="warn"></i>'+st.waiting+' aguardando</span><span><i class="ok"></i>'+st.corrections+' ajuste/revisão</span></div></div><button class="btn primary" data-action="go" data-page-target="'+esc(target)+'">Abrir pendências</button></article>';
+function pendingMini(icon,label,s,target,tone){
+ s=s||{};
+ const open=Number(s.open)||0,blocked=Number(s.blocked)||0,waiting=Number(s.waiting)||0,review=Number(s.review)||0,progress=Number(s.progress)||0;
+ return '<button class="cr-pending-mini '+esc(tone||'blue')+'" data-action="go" data-page-target="'+esc(target)+'"><span class="cr-pm-icon">'+icon+'</span><span class="cr-pm-main"><span class="cr-pm-top"><b>'+esc(label)+'</b><strong>'+open+'</strong></span><span class="cr-pm-meta"><i class="bad"></i>'+blocked+' bloqueadas <i class="warn"></i>'+waiting+' aguardando <i class="ok"></i>'+review+' revisão <i class="run"></i>'+progress+' andamento</span></span><span class="cr-pm-open">Abrir ›</span></button>';
 }
 function renderPending(){
  const h=$('#boardSummary');if(!h)return;
  const b=state.pending;
  if(!b){
-  h.innerHTML='<article class="cr-pending-card cr-inc-pending"><div class="cr-pending-icon">!</div><div class="cr-pending-copy"><h3>Pendências WIZY / APP / Éder</h3><div class="cr-pending-lines"><span>'+(state.errors.pending?'Fonte temporariamente indisponível — nova tentativa automática.':'Conectando à fonte de pendências…')+'</span></div></div></article>';
+  h.innerHTML='<article class="cr-pending-compact-loading">▥ '+(state.errors.pending?'Fonte temporariamente indisponível — nova tentativa automática.':'Conectando ao painel vivo de pendências…')+'</article>';
   return;
  }
- const s=b.summary||{},boards=b.boards||{};
- h.innerHTML=[
-  pendingCard('▯','APP',s.app?.open??0,boards.app,'pendapp','blue'),
-  pendingCard('⌘','WIZY',s.wizy?.open??0,boards.wizy,'wizy','purple'),
-  pendingCard('♙','ÉDER',s.eder?.open??0,boards.eder,'eder','amber')
- ].join('');
+ const s=b.summary||{};
+ h.innerHTML=execMeter(b)+'<div class="cr-pending-mini-grid">'+[
+  pendingMini('▯','APP',s.app,'pendapp','blue'),
+  pendingMini('⌘','WIZY',s.wizy,'wizy','purple'),
+  pendingMini('♙','ÉDER',s.eder,'eder','amber')
+ ].join('')+'</div>';
 }
 function budgetNorm(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').replace(/\s+/g,' ').trim()}
 function budgetRank(name){
