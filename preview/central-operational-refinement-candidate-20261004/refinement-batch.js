@@ -18,7 +18,7 @@ const oldGo=window.go;
 window.go=function(id){if(id==='status')id='health';if(['docs','admin','technical','health','meeting','context','presentation'].includes(id)){localShow(id);if(id==='docs')loadDocs();if(id==='health')loadHealth();return}return typeof oldGo==='function'?oldGo(id):localShow(id)};
 function patchMenu(){
  const st=q('.nav[data-page="status"]');if(st)st.remove();
- const h=q('.nav[data-page="health"]');if(h)h.innerHTML='<i></i>Saúde e Desenvolvimento';
+ const h=q('.nav[data-page="health"]');if(h)h.innerHTML='<i></i>Saúde e Desenvolvimento'; const dnav=q('.nav[data-page="docs"]');if(dnav)dnav.innerHTML='<i></i>Documentação Viva'; const mnav=q('.nav[data-page="meeting"]');if(mnav)mnav.innerHTML='<i></i>Sala da Equipe'; const pnav=q('.nav[data-page="presentation"]');if(pnav)pnav.innerHTML='<i></i>Apresentação Viva';
  const grp=h&&h.closest('.grp');if(grp){const gt=grp.querySelector('.gt');if(gt)gt.textContent='Sistema'}
  const hp=q('#health');if(hp&&!hp.dataset.crr){hp.dataset.crr='1';hp.innerHTML='<div class="crr-head"><div class="crr-kicker">SISTEMA • EVIDÊNCIAS REAIS</div><h1>Saúde e Desenvolvimento</h1><p class="crr-sub">Estado operacional, versão, fontes e sinais técnicos úteis. Sem percentuais artificiais ou contadores decorativos.</p></div><div id="crrHealthGrid" class="crr-grid"><div class="crr-card"><div class="lab">Carregando</div><div class="val">…</div><div class="meta">Consultando fontes reais</div></div></div><section class="crr-section"><h2>Fontes verificadas</h2><div id="crrHealthSources" class="crr-card"></div></section>'}
 }
@@ -78,7 +78,10 @@ window.crOpenInternalMeeting=function(){const f=q('#workspaceFrame'),t=q('#works
 function patchQuickMeeting(){
  qa('.cr-quick-card').forEach(c=>{if(!/Google Meet|Sala da Equipe/i.test(c.textContent))return;const h=c.querySelector('h3');if(h)h.textContent='Sala da Equipe';const p=c.querySelector('p');if(p)p.textContent='Reunião interna • câmera, áudio e tela.';c.dataset.crrMeeting='1'});
 }
-document.addEventListener('click',function(e){const c=e.target.closest('.cr-quick-card[data-crr-meeting="1"]');if(c){e.preventDefault();e.stopImmediatePropagation();window.crOpenInternalMeeting()}},true);
+function patchQuickPresentation(){
+ qa('.cr-quick-card').forEach(c=>{if(!/^Apresentação$/i.test((c.querySelector('h3')?.textContent||'').trim()))return;const p=c.querySelector('p');if(p)p.textContent='Apresentação executiva viva • PDF e PowerPoint.';c.dataset.crrPresentation='1'});
+}
+document.addEventListener('click',function(e){const c=e.target.closest('.cr-quick-card[data-crr-meeting="1"]');if(c){e.preventDefault();e.stopImmediatePropagation();window.crOpenInternalMeeting();return}const p=e.target.closest('.cr-quick-card[data-crr-presentation="1"]');if(p){e.preventDefault();e.stopImmediatePropagation();window.crOpenPresentation()}},true);
 function classify(d){
  const s=[d.category,d.doc_type,d.title,(d.tags||[]).join(' ')].join(' ').toLowerCase();
  if(/release|homolog|checkpoint|decis/.test(s))return'Homologações & Releases';
@@ -123,7 +126,8 @@ async function downloadDoc(code){try{const r=await fetch(GEST+'?api=doc-download
 async function saveDraft(code){const msg=q('#crrEditMsg'),btn=q('#crrSaveDraft');if(btn)btn.disabled=true;if(msg)msg.textContent='Salvando rascunho versionado…';try{const r=await fetch(DOC_DRAFT+'?api=draft',{method:'POST',headers:{'content-type':'application/json','x-cr-session':session()},body:JSON.stringify({code,title:q('#crrEditTitle').value,content_text:q('#crrEditContent').value,reason:q('#crrEditReason').value})}),d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Edição candidata ainda não disponível');if(msg)msg.innerHTML='<b style="color:#07814b">Rascunho salvo.</b> Documento canônico não foi alterado.'}catch(e){if(msg)msg.innerHTML='<b style="color:#b22">Não foi possível salvar:</b> '+esc(e.message)}finally{if(btn)btn.disabled=false}}
 function patchPresentation(){const p=q('#presentationCard');if(!p)return;p.innerHTML='<div class="tag">APRESENTAÇÃO VIVA • CANDIDATA REFINADA</div><h2>CONSTRU-REI • Apresentação Executiva Viva</h2><p class="mut">Layout responsivo revisado para celular e desktop, preservando atualização, PDF e PowerPoint.</p><div class="actions"><button class="btn primary" onclick="window.crOpenPresentation()">Abrir aqui</button><button class="btn" onclick="window.open(PRESENTATION,\'_blank\')">Nova aba</button></div>'}
 window.crOpenPresentation=function(){const f=q('#workspaceFrame'),t=q('#workspaceTitle'),a=q('#workspaceExternal');if(t)t.textContent='Apresentação Executiva Viva';if(f){f.setAttribute('allow','clipboard-read; clipboard-write; fullscreen');f.src=PRESENTATION}if(a)a.href=PRESENTATION;localShow('workspace')};
-function applyOpen(){const id=new URLSearchParams(location.search).get('open');if(!id)return;if(id==='status')window.go('health');else if(['health','meeting','docs','context','presentation','admin','technical'].includes(id))window.go(id)}
-function tick(){patchMenu();patchContext();patchMeeting();patchQuickMeeting();patchPresentation();const s=session();if(s!==lastSession){lastSession=s;if(q('#docs.page.on'))loadDocs()}}
-document.addEventListener('DOMContentLoaded',()=>{tick();applyOpen();setTimeout(tick,250);setTimeout(()=>{if(q('#health.page.on'))loadHealth()},500)});setInterval(tick,1200);
+function applyOpen(){let id=new URLSearchParams(location.search).get('open')||String(location.hash||'').replace(/^#/,'');if(!id)return;if(id==='status')id='health';if(['health','meeting','docs','context','presentation','admin','technical'].includes(id))window.go(id)}
+function tick(){patchMenu();patchContext();patchMeeting();patchQuickMeeting();patchQuickPresentation();patchPresentation();const s=session();if(s!==lastSession){lastSession=s;if(q('#docs.page.on'))loadDocs()}}
+document.addEventListener('click',function(e){const n=e.target.closest('[data-page],[data-page-target]');if(!n)return;let id=n.getAttribute('data-page')||n.getAttribute('data-page-target');if(id==='status')id='health';if(id==='health')setTimeout(loadHealth,30);if(id==='docs')setTimeout(loadDocs,30);if(id==='context')setTimeout(patchContext,60);if(id==='meeting')setTimeout(patchMeeting,30);if(id==='presentation')setTimeout(patchPresentation,30)},true);
+document.addEventListener('DOMContentLoaded',()=>{tick();applyOpen();setTimeout(tick,250);setTimeout(()=>{if(q('#health.page.on'))loadHealth();if(q('#docs.page.on'))loadDocs()},500)});setInterval(tick,1200);
 })();
