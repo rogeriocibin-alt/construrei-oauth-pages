@@ -582,3 +582,76 @@ html[data-cr-native-state="loading"] #dashboard .cr-home-panel{contain:layout pa
   #dashboard .cr-agenda-kind{grid-column:2;justify-self:start;margin-top:2px}
   #dashboard .cr-agenda-main small{white-space:normal}
 }
+
+
+/* FINAL HOMOLOGATION HERO • 2026-10-04
+   Approved repair/renovation artwork. Native text stays live; artwork is decorative only. */
+#dashboard>.cr-home-hero.cr-executive-header{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  background:linear-gradient(116deg,#031b46 0%,#052d70 58%,#06347b 100%)!important;
+  border-color:rgba(255,196,0,.34)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header:before{
+  content:""!important;
+  position:absolute!important;
+  top:0!important;right:0!important;bottom:0!important;
+  width:46%!important;
+  background:url("./assets/hero-right-art-approved-20261004.webp") center center/cover no-repeat!important;
+  z-index:0!important;
+  pointer-events:none!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:
+    linear-gradient(90deg,rgba(3,24,57,.98) 0%,rgba(3,31,72,.96) 38%,rgba(3,37,82,.72) 56%,rgba(3,31,72,.20) 76%,rgba(3,24,57,.04) 100%),
+    linear-gradient(180deg,rgba(3,19,40,.02),rgba(3,19,40,.18))!important;
+  z-index:1!important;
+  pointer-events:none!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+  position:relative!important;
+  z-index:2!important;
+  max-width:760px!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.36)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-visual{
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+@media(max-width:760px){
+  #dashboard>.cr-home-hero.cr-executive-header{
+    min-height:250px!important;
+    grid-template-columns:1fr!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header:before{
+    width:52%!important;
+    background-position:center center!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header:after{
+    background:linear-gradient(90deg,rgba(3,23,49,.99) 0%,rgba(3,29,66,.97) 38%,rgba(3,30,69,.82) 58%,rgba(3,25,57,.32) 78%,rgba(3,23,49,.08) 100%)!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+    max-width:74%!important;
+    padding:20px 18px!important;
+    background:none!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1{
+    font-size:34px!important;
+    line-height:.96!important;
+    margin:7px 0 12px!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1 span{display:block!important}
+  #dashboard>.cr-home-hero.cr-executive-header .cr-executive-tagline{
+    max-width:100%!important;
+    font-size:12px!important;
+    line-height:1.34!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-executive-update{
+    font-size:9px!important;
+    margin-top:12px!important;
+  }
+}
