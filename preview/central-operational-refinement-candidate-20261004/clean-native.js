@@ -35,25 +35,46 @@ function renderKpis(){
  ].join('');
  stamp();
 }
+function execStage(label,value,active,tone,icon){
+ const n=Math.max(0,Number(value)||0),pct=active?Math.round(n*100/active):0;
+ return '<div class="crx-stage '+tone+'"><div class="crx-stage-head"><span class="crx-stage-icon">'+icon+'</span><span>'+esc(label)+'</span><b>'+n+'</b></div><div class="crx-stage-track"><i style="width:'+pct+'%"></i></div><small>'+pct+'% dos itens ativos</small></div>';
+}
 function execMeter(b){
  const x=b?.execution||{},pct=Math.max(0,Math.min(100,Number(x.index)||0));
- const active=Number(x.active)||0,done=Number(x.concluded)||0,val=Number(x.validation)||0,prog=Number(x.progress)||0,blocked=Number(x.blocked)||0;
- return '<section class="cr-exec-meter" style="--exec:'+pct+'"><div class="cr-exec-ring"><b>'+pct+'%</b><small>execução</small></div><div class="cr-exec-copy"><div class="cr-exec-kicker">MEDIDOR DE EXECUÇÃO</div><h3>Avanço operacional do sistema</h3><p>Índice vivo ponderado pelos estados das pendências.</p><div class="cr-exec-stats"><span><b>'+done+'</b> concluídas</span><span><b>'+val+'</b> validação</span><span><b>'+prog+'</b> andamento</span><span class="'+(blocked?'bad':'ok')+'"><b>'+blocked+'</b> bloqueadas</span></div><div class="cr-exec-foot">'+active+' itens ativos • APP/SISTEMA automáticos • WIZY/ÉDER manuais</div></div></section>';
+ const active=Number(x.active)||0,done=Number(x.concluded)||0,val=Number(x.validation)||0,prog=Number(x.progress)||0,waiting=Number(x.waiting)||0,blocked=Number(x.blocked)||0;
+ return '<section class="crx-exec">'+
+  '<div class="crx-exec-top"><div><span class="crx-eyebrow">EXECUÇÃO VIVA</span><h3>Avanço operacional do sistema</h3></div><span class="crx-live-dot"><i></i>ATUALIZAÇÃO AUTOMÁTICA</span></div>'+
+  '<div class="crx-exec-main">'+
+   '<div class="crx-gauge-wrap"><svg class="crx-gauge" viewBox="0 0 120 120" role="img" aria-label="Execução '+pct+' por cento"><defs><linearGradient id="crxGaugeGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#167ee8"/><stop offset="55%" stop-color="#0aa7d8"/><stop offset="100%" stop-color="#15b58e"/></linearGradient></defs><circle class="crx-gauge-bg" cx="60" cy="60" r="48" pathLength="100"></circle><circle class="crx-gauge-val" cx="60" cy="60" r="48" pathLength="100" style="stroke-dasharray:'+pct+' '+(100-pct)+'"></circle></svg><div class="crx-gauge-center"><b>'+pct+'%</b><span>EXECUÇÃO</span></div></div>'+
+   '<div class="crx-exec-copy"><p>Índice ponderado pelo estado real das pendências.</p><div class="crx-exec-number"><b>'+active+'</b><span>itens ativos monitorados</span></div><div class="crx-exec-legend"><span><i class="done"></i>Concluído 100%</span><span><i class="review"></i>Validação 75%</span><span><i class="run"></i>Andamento 50%</span><span><i class="wait"></i>Aguardando 25%</span></div></div>'+
+  '</div>'+
+  '<div class="crx-stages">'+[
+   execStage('Concluídas',done,active,'done','✓'),
+   execStage('Em validação',val,active,'review','◆'),
+   execStage('Em andamento',prog,active,'run','↗'),
+   execStage('Aguardando',waiting,active,'wait','◷'),
+   execStage('Bloqueadas',blocked,active,'blocked','!')
+  ].join('')+'</div>'+
+ '</section>';
 }
 function pendingMini(icon,label,s,target,tone){
  s=s||{};
- const open=Number(s.open)||0,blocked=Number(s.blocked)||0,waiting=Number(s.waiting)||0,review=Number(s.review)||0,progress=Number(s.progress)||0;
- return '<button class="cr-pending-mini '+esc(tone||'blue')+'" data-action="go" data-page-target="'+esc(target)+'"><span class="cr-pm-icon">'+icon+'</span><span class="cr-pm-main"><span class="cr-pm-top"><b>'+esc(label)+'</b><strong>'+open+'</strong></span><span class="cr-pm-meta"><i class="bad"></i>'+blocked+' bloqueadas <i class="warn"></i>'+waiting+' aguardando <i class="ok"></i>'+review+' revisão <i class="run"></i>'+progress+' andamento</span></span><span class="cr-pm-open">Abrir ›</span></button>';
+ const open=Number(s.open)||0,total=Number(s.total)||0,done=Number(s.done)||0,blocked=Number(s.blocked)||0,waiting=Number(s.waiting)||0,review=Number(s.review)||0,progress=Number(s.progress)||0;
+ const base=Math.max(1,total-Number(s.cancelled||0)),resolved=Math.max(0,Math.min(100,Math.round(done*100/base)));
+ return '<button type="button" class="crx-owner '+esc(tone||'blue')+'" data-action="go" data-page-target="'+esc(target)+'">'+
+  '<span class="crx-owner-top"><span class="crx-owner-icon">'+icon+'</span><b>'+esc(label)+'</b><span class="crx-owner-arrow">›</span></span>'+
+  '<span class="crx-owner-body"><span class="crx-owner-gauge" style="--p:'+resolved+'"><strong>'+open+'</strong><small>ABERTAS</small></span><span class="crx-owner-status"><em><i class="bad"></i>'+blocked+' bloqueadas</em><em><i class="warn"></i>'+waiting+' aguardando</em><em><i class="ok"></i>'+review+' revisão</em><em><i class="run"></i>'+progress+' andamento</em></span></span>'+
+ '</button>';
 }
 function renderPending(){
  const h=$('#boardSummary');if(!h)return;
  const b=state.pending;
  if(!b){
-  h.innerHTML='<article class="cr-pending-compact-loading">▥ '+(state.errors.pending?'Fonte temporariamente indisponível — nova tentativa automática.':'Conectando ao painel vivo de pendências…')+'</article>';
+  h.innerHTML='<article class="crx-loading"><span></span><b>Painel executivo</b><small>'+(state.errors.pending?'Fonte temporariamente indisponível — nova tentativa automática.':'Sincronizando pendências vivas…')+'</small></article>';
   return;
  }
  const s=b.summary||{};
- h.innerHTML=execMeter(b)+'<div class="cr-pending-mini-grid">'+[
+ h.innerHTML=execMeter(b)+'<div class="crx-owner-grid">'+[
   pendingMini('▯','APP',s.app,'pendapp','blue'),
   pendingMini('⌘','WIZY',s.wizy,'wizy','purple'),
   pendingMini('♙','ÉDER',s.eder,'eder','amber')
