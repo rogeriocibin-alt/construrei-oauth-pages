@@ -1,0 +1,25 @@
+/* CLEAN NATIVE CANDIDATE
+   Visual rules copied from owner-confirmed baseline 0dbc58985197.
+   Dynamic ownership moved to one controller; no observer-based repaint. */
+/* Candidate-only overlay. Homologated shell/menu/hero remain untouched. */.cr-inc-state{grid-column:1/-1;padding:14px;border:1px dashed #b9cee0;border-radius:9px;background:#f8fbfd;color:#526b85;font-size:10px}#quick.cr-inc-agenda{grid-template-columns:repeat(4,minmax(0,1fr))}.cr-inc-agenda-card{padding-right:10px!important}.cr-inc-agenda-card h3{padding-right:0!important}.cr-inc-badge{display:inline-flex;margin-top:7px;padding:3px 6px;border-radius:999px;font-size:7px;font-weight:850;background:#e8f7ef;color:#087342}.cr-inc-badge.warn{background:#fff4df;color:#9a6200}#flowHome.cr-inc-flow{grid-template-columns:repeat(6,minmax(0,1fr));overflow-x:auto}.cr-inc-status{border-top:3px solid var(--status)!important}.cr-inc-statusbar{height:4px;border-radius:999px;background:#edf3f7;margin-top:auto;overflow:hidden}.cr-inc-statusbar i{display:block;width:100%;height:100%;background:var(--status)}.cr-inc-pending{grid-column:1/-1!important}@media(max-width:980px){#quick.cr-inc-agenda,#flowHome.cr-inc-flow{display:flex!important;overflow-x:auto!important}.cr-inc-agenda-card{flex:0 0 250px!important}.cr-inc-status{flex:0 0 170px!important}}@media(max-width:600px){.cr-inc-agenda-card{flex-basis:86vw!important}.cr-inc-status{flex-basis:68vw!important}}
+/* P0-01 — executive header only; no navigation or downstream component changes */
+.cr-executive-header{min-height:150px!important}
+.cr-executive-header .cr-hero-main{justify-content:center!important;padding-top:20px!important;padding-bottom:20px!important}
+.cr-executive-header .cr-hero-main h1{margin:4px 0 6px!important}
+.cr-executive-tagline{margin:0!important;max-width:650px;color:#eef7ff;font-size:15px;line-height:1.35;font-weight:600}
+.cr-executive-update{display:flex;align-items:center;gap:7px;margin-top:12px;color:#cfe3f8;font-size:10px;font-weight:700}
+.cr-executive-visual{min-height:150px!important}
+@media(max-width:760px){.cr-executive-header{min-height:126px!important}.cr-executive-header .cr-hero-main{padding:16px 18px!important}.cr-executive-header .cr-hero-main h1{font-size:28px!important;line-height:1.05!important}.cr-executive-tagline{font-size:12px!important;max-width:95%}.cr-executive-update{font-size:9px;margin-top:9px}.cr-executive-header .cr-hero-visual{display:none!important}}
+
+
+/* P0-04 — approved executive cover. Candidate only. */
+.cr-executive-header{position:relative!important;overflow:hidden!important;min-height:clamp(170px,20vw,250px)!important;background:linear-gradient(90deg,rgba(4,24,50,.90) 0%,rgba(4,30,62,.72) 36%,rgba(4,25,51,.20) 68%,rgba(3,19,40,.12) 100%),url("https://raw.githubusercontent.com/rogeriocibin-alt/construrei-oauth-pages/0dbc589851971eed4cb7863f2073eb6588191549/preview/central-incorporacao-3-12-candidate-20261003/assets/capa-executiva-construrei-20261003.webp") center center/cover no-repeat!important}
+.cr-executive-header:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,19,40,.03),rgba(3,19,40,.24));z-index:0}
+.cr-executive-header .cr-hero-main{position:relative;z-index:2;max-width:760px;text-shadow:0 2px 18px rgba(0,0,0,.36)}
+.cr-executive-header .cr-hero-visual{position:relative;z-index:2;background:transparent!important}
+.cr-executive-header .cr-skyline{display:none!important}
+@media(max-width:760px){.cr-executive-header{min-height:158px!important;background-position:58% center!important}.cr-executive-header .cr-hero-main{padding:18px!important;background:linear-gradient(90deg,rgba(3,23,49,.86),rgba(3,23,49,.46) 68%,transparent)!important}.cr-executive-header .cr-hero-visual{display:none!important}}
+
+/* Stable first paint: final components exist before live data arrives. */
+.cr-native-loading{grid-column:1/-1;padding:14px;border:1px dashed #b9cee0;border-radius:9px;background:#f8fbfd;color:#526b85;font-size:10px}
+html[data-cr-native-state="loading"] #dashboard .cr-home-panel{contain:layout paint style}
