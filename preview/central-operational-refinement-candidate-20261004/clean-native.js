@@ -151,7 +151,7 @@ function renderBudgets(){
   }
   return;
  }
- const rows=mergeBudgetStatuses(d.statuses).sort((a,b)=>budgetRank(a.name)-budgetRank(b.name)||(Number(a.source_order)||999)-(Number(b.source_order)||999)||String(a.name).localeCompare(String(b.name),'pt-BR'));
+ const rows=mergeBudgetStatuses(d.statuses).sort((a,b)=>(Number(b.count)||0)-(Number(a.count)||0)||String(a.name).localeCompare(String(b.name),'pt-BR'));
  const max=Math.max(1,...rows.map(x=>Number(x.count)||0));
  h.innerHTML=rows.length?rows.map(x=>{
    const count=Number(x.count)||0,color=budgetColor(x.name),pct=count?Math.max(3,Math.round(count/max*100)):0;
@@ -161,7 +161,7 @@ function renderBudgets(){
   const stale=err?' • atualização pendente':'';
   const total=Number(d.total??d.records_analyzed??rows.reduce((a,x)=>a+Number(x.count||0),0));
   const t=state.timings.budgets!=null?' • '+state.timings.budgets+' ms':'';
-  meta.textContent=rows.length+' status únicos • '+total+' orçamentos'+t+stale;
+  meta.textContent=rows.length+' status únicos • '+total+' orçamentos • ordem decrescente'+t+stale;
   meta.title='Fonte: GestãoClick • '+(d.complete?'população completa':'leitura limitada')+(d.read_at?' • '+new Date(d.read_at).toLocaleString('pt-BR'):'');
  }
 }
