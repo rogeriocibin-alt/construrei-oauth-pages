@@ -1,0 +1,145 @@
+{
+  "schema": "cr-maturity-audit-v1",
+  "audited_at": "2026-10-04T00:18:00-03:00",
+  "audit_label": "Auditoria de maturidade operacional e tecnológica — candidata limpa",
+  "methodology": {
+    "scale": "0-100",
+    "levels": [
+      {
+        "min": 0,
+        "max": 39,
+        "label": "Inicial"
+      },
+      {
+        "min": 40,
+        "max": 59,
+        "label": "Estruturado"
+      },
+      {
+        "min": 60,
+        "max": 74,
+        "label": "Integrado"
+      },
+      {
+        "min": 75,
+        "max": 89,
+        "label": "Gerenciado"
+      },
+      {
+        "min": 90,
+        "max": 100,
+        "label": "Otimizado"
+      }
+    ],
+    "note": "Pontuação de capacidade instalada e evidenciada. Ativos embarcados no ecossistema contam como maturidade mesmo quando sua origem é externa ao código da Central. Disponibilidade momentânea de uma API não altera, sozinha, a maturidade estrutural."
+  },
+  "general": {
+    "score": 79,
+    "level": "Gerenciado"
+  },
+  "autonomy": {
+    "score": 72,
+    "level": "Integrado"
+  },
+  "axes": {
+    "management": {
+      "score": 86,
+      "weight": 12,
+      "level": "Gerenciado",
+      "evidence": [
+        "Dashboard Executivo / gerencial incorporado à Central",
+        "Pendências Vivas e visão executiva consolidadas",
+        "Project Manager V1 e checkpoints de gestão disponíveis"
+      ],
+      "gap": "Concluir consolidação de métricas sem duplicar telas nem exigir consultas paralelas."
+    },
+    "finance": {
+      "score": 78,
+      "weight": 10,
+      "level": "Gerenciado",
+      "evidence": [
+        "Dashboard Financeiro V4 embarcado no ecossistema",
+        "GestãoClick como fonte viva para orçamentos/serviços",
+        "Leitura executiva de status financeiros e operacionais"
+      ],
+      "gap": "Aumentar reconciliação automática e reduzir dependências manuais sem transformar o Dashboard em tela operacional."
+    },
+    "technical": {
+      "score": 82,
+      "weight": 12,
+      "level": "Gerenciado",
+      "evidence": [
+        "Checkpoints canônicos e histórico de recuperação",
+        "Guardas anti-regressão e separação entre candidata e homologada",
+        "Documentação viva e acervo técnico preservados"
+      ],
+      "gap": "Consolidar telemetria e recuperação comprovada de todos os componentes críticos."
+    },
+    "data": {
+      "score": 80,
+      "weight": 12,
+      "level": "Gerenciado",
+      "evidence": [
+        "Supabase como base de serviços e integrações",
+        "Integrações com GestãoClick, Google Agenda e Trello",
+        "Saúde técnica e fontes independentes no carregamento da candidata"
+      ],
+      "gap": "Padronizar contratos de dados, observabilidade e tratamento de falhas ponta a ponta."
+    },
+    "operation": {
+      "score": 88,
+      "weight": 15,
+      "level": "Gerenciado",
+      "evidence": [
+        "Trello utilizado como base operacional histórica",
+        "Automações de Trello embarcadas no modo de gestão",
+        "F00, agenda, pendências e serviços reais conectados à leitura executiva"
+      ],
+      "gap": "Fechar os handoffs operacionais para reduzir intervenções manuais entre atendimento, APP e fluxos."
+    },
+    "central": {
+      "score": 83,
+      "weight": 13,
+      "level": "Gerenciado",
+      "evidence": [
+        "Central única com navegação, acessos e áreas executivas consolidadas",
+        "Links canônicos e camadas de homologação preservadas",
+        "Candidata limpa sem sobreposição de runtime legado"
+      ],
+      "gap": "Homologar notebook/celular e manter uma única linha evolutiva sem versões paralelas."
+    },
+    "flows": {
+      "score": 72,
+      "weight": 10,
+      "level": "Integrado",
+      "evidence": [
+        "Esteira F00–F09 modelada e acessível pela Central",
+        "F00 validado e F01/F02 com trabalho relevante já consolidado",
+        "Checkpoints de fluxo e handoff existentes"
+      ],
+      "gap": "Comprovar execução ponta a ponta dos fluxos restantes com evidência operacional real."
+    },
+    "app": {
+      "score": 64,
+      "weight": 8,
+      "level": "Integrado",
+      "evidence": [
+        "APP / central-atendimento incorporado ao ecossistema",
+        "Acesso por link único e integração progressiva com a Central"
+      ],
+      "gap": "Fechar homologação funcional, responsividade e autonomia operacional do APP."
+    },
+    "service": {
+      "score": 67,
+      "weight": 8,
+      "level": "Integrado",
+      "evidence": [
+        "Atendimento conectado à triagem e aos fluxos iniciais",
+        "Estrutura F00/F01 preparada para organizar coleta e conversa operacional"
+      ],
+      "gap": "Eliminar dependências manuais e concluir o handoff Atendimento → APP → F00/F01 → esteira."
+    }
+  },
+  "leverage": "Atendimento → APP → F00/F01 → esteira ponta a ponta",
+  "scoring_note": "Dashboard gerencial, Dashboard Financeiro V4, Trello e suas automações são contabilizados como capacidade embarcada do ecossistema, conforme critério de maturidade definido para a CONSTRU-REI."
+}
