@@ -24,10 +24,10 @@
 .cr-ml-live{font-size:8px;font-weight:900;letter-spacing:.06em;color:#177349;background:#e8f7ef;border:1px solid #bfe7d0;border-radius:999px;padding:5px 8px;white-space:nowrap}
 .cr-ml-main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-bottom:9px;position:relative;z-index:1}
 .cr-ml-gauge{display:grid;grid-template-columns:76px 1fr;align-items:center;gap:11px;padding:10px 12px;border-radius:14px;background:#fff;border:1px solid #d8e7f2;min-height:94px;box-shadow:0 4px 12px rgba(14,60,112,.05)}
-.cr-ml-ring{--p:0;--tone:#075bd8;width:68px;height:68px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--tone) calc(var(--p)*1%),#e6eef5 0);box-shadow:0 6px 16px rgba(8,91,216,.10)}
+.cr-ml-ring{--p:0;--tone:#075bd8;width:68px;height:68px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--tone) calc(var(--p)*1%),#cfa33c 0);box-shadow:0 6px 16px rgba(8,91,216,.14),0 0 0 1px rgba(5,38,95,.06)}
 .cr-ml-ring:after{display:none!important}
-.cr-ml-ring:before{content:"";position:absolute;inset:7px;border-radius:50%;background:linear-gradient(180deg,#fff,#f4f9fd);border:1px solid #dce8f2}
-.cr-ml-ring b{position:relative;z-index:1;color:#07165b;font-size:18px;line-height:1}
+.cr-ml-ring:before{content:"";position:absolute;inset:7px;border-radius:50%;background:radial-gradient(circle at 28% 24%,rgba(255,255,255,.22),transparent 34%),linear-gradient(145deg,#0877f9 0%,#075bd8 38%,#05265f 72%,#cfa33c 100%);border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 1px 4px rgba(255,255,255,.16),inset 0 -4px 9px rgba(3,27,70,.18)}
+.cr-ml-ring b{position:relative;z-index:1;color:#fff;font-size:18px;line-height:1;font-weight:900;text-shadow:0 1px 2px rgba(3,27,70,.35)}
 .cr-ml-gauge h3{font-size:12px;margin:0 0 3px;color:#07165b}
 .cr-ml-gauge p{font-size:8.5px;line-height:1.28;margin:0;color:#587696}
 .cr-ml-level{display:inline-flex;margin-top:7px;padding:3px 6px;border-radius:999px;font-size:7px;font-weight:900;letter-spacing:.05em;background:#fff7df;border:1px solid #efd98d;color:#7d5b0d}
@@ -59,4 +59,34 @@
   .cr-ml-card small{min-height:0}
   .cr-ml-foot{align-items:flex-start;flex-direction:column}
   .cr-ml-source{white-space:normal}
+}
+
+
+/* Top profile — APP logo replaces the temporary director initial. */
+.cr-avatar.cr-avatar-logo{
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:hidden!important;
+  padding:3px!important;
+  background:linear-gradient(145deg,#fff 0%,#f2f7fb 100%)!important;
+  border:1px solid #c8ddf0!important;
+  box-shadow:0 3px 9px rgba(7,91,216,.14)!important;
+  color:transparent!important;
+}
+.cr-avatar.cr-avatar-logo img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  border-radius:50%!important;
+  background:#fff!important;
+}
+@media(max-width:600px){
+  .cr-avatar.cr-avatar-logo{width:34px!important;height:34px!important;min-width:34px!important;padding:2px!important}
 }
