@@ -192,10 +192,12 @@ function renderAgendaToday(){
   const title=String(x.title||'Compromisso');
   const detail=[title,x.location].filter(Boolean).join(' • ');
   const day=String(x.day_label||'HOJE');
-  return '<article class="cr-agenda-row">'+
+  const rid=String(x.id||caseNo||[x.starts_at,title].join('|'));
+  return '<article class="cr-agenda-row" data-cr-agenda-id="'+esc(rid)+'">'+
    '<div class="cr-agenda-time">'+esc(tm)+'</div>'+
    '<div class="cr-agenda-main"><strong>'+esc(team)+'</strong><span>'+esc([day,type,caseNo].filter(Boolean).join(' • '))+'</span><small>'+esc(detail)+'</small></div>'+
-   '<span class="cr-agenda-kind">'+esc(type)+'</span>'+
+   '<div class="cr-agenda-actions"><span class="cr-agenda-kind">'+esc(type)+'</span><button type="button" class="cr-agenda-expand" data-cr-agenda-expand="'+esc(rid)+'">Expandir</button></div>'+
+   '<div class="cr-agenda-detail" data-cr-agenda-detail="'+esc(rid)+'" hidden></div>'+
   '</article>';
  }).join(''):'<div class="cr-agenda-empty">Nenhum compromisso confirmado para hoje ou amanhã.</div>';
  if(meta){
