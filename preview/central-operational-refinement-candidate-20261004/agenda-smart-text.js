@@ -7,8 +7,7 @@ const SK='crGestaoSession',CACHE=new Map(),OPEN=new Set();
 let lastSession='';
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const sess=()=>{try{return sessionStorage.getItem(SK)||localStorage.getItem(SK)||''}catch(_){return''}};
-function persistSession(){try{const s=sessionStorage.getItem(SK)||'';if(s)localStorage.setItem(SK,s)}catch(_){}}
+const sess=()=>{try{return sessionStorage.getItem(SK)||''}catch(_){return''}};
 const items=()=>window.CR_NATIVE_CLEAN?.state?.agenda?.items||[];
 const item=id=>items().find(x=>String(x.id||'')===String(id))||null;
 const row=id=>qa('.cr-agenda-row').find(x=>String(x.dataset.crAgendaId||'')===String(id))||null;
@@ -107,7 +106,7 @@ document.addEventListener('click',e=>{
 
 },true);
 const agendaHost=q('#crAgendaRows');if(agendaHost)new MutationObserver(()=>setTimeout(restore,20)).observe(agendaHost,{childList:true,subtree:true});
-persistSession();lastSession=sess();
-setInterval(()=>{persistSession();const s=sess();if(s!==lastSession){lastSession=s;if(s)Array.from(OPEN).forEach(id=>{CACHE.delete(id);generate(id,true)})}},1200);
+lastSession=sess();
+setInterval(()=>{const s=sess();if(s!==lastSession){lastSession=s;if(s)Array.from(OPEN).forEach(id=>{CACHE.delete(id);generate(id,true)})}},1200);
 style();setTimeout(restore,250);
 })();
