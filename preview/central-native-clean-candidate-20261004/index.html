@@ -2665,9 +2665,9 @@ img,svg{max-width:100%}
 </style><meta name="cr-global-access-ui-canonical" content="20261001-r3">
 <link id="cr-global-access-ui-canonical-css" rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-access-canonical-20261001.css?v=20261001-r3">
 <meta name="cr-docs-status-visual-canonical" content="20261001-r1"><link id="cr-docs-status-visual-canonical-css" rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-docs-status-canonical-20261001.css?v=20261001-r1"><meta name="cr-remaining-color-canonical" content="20261002-r1"><link id="cr-remaining-color-canonical-css" rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-remaining-modules-canonical-20261002.css?v=20261002-r1">
-<link rel="stylesheet" href="./clean-native.css?v=5">
+<link rel="stylesheet" href="./clean-native.css?v=6">
 <script>window.__CR_NATIVE_HOME_OWNER=true;</script>
-<script defer src="./clean-native.js?v=5"></script>
+<script defer src="./clean-native.js?v=6"></script>
 <style id="cr-p0-03-menu-executive">
 /* P0-03: final sidebar hierarchy/density only. Routes and screen content unchanged. */
 #side.side>.grp{margin:7px 0!important}
@@ -2751,6 +2751,25 @@ img,svg{max-width:100%}
     </div>
   </section>
 
+  <section id="crBudgetStatus" class="cr-home-panel cr-budget-status">
+    <div class="cr-budget-head">
+      <div class="cr-budget-title">
+        <span class="cr-budget-icon">▤</span>
+        <div><strong>ORÇAMENTOS DO GESTÃO CLICK</strong><div class="cr-budget-sub">Acompanhamento em tempo real dos status dos orçamentos.</div></div>
+      </div>
+      <div id="crBudgetMeta" class="cr-budget-meta">Conectando ao GestãoClick…</div>
+    </div>
+    <div id="crBudgetStatusRows" class="cr-budget-rows">
+      <div class="cr-budget-skeleton">
+        <div class="cr-budget-sk-row"><i></i><span></span><b></b></div>
+        <div class="cr-budget-sk-row"><i></i><span></span><b></b></div>
+        <div class="cr-budget-sk-row"><i></i><span></span><b></b></div>
+        <div class="cr-budget-sk-row"><i></i><span></span><b></b></div>
+      </div>
+    </div>
+  </section>
+
+
   <div class="cr-bottom-grid">
     <section class="cr-home-panel cr-pending-panel">
       <div class="cr-panel-head">
@@ -2772,23 +2791,6 @@ img,svg{max-width:100%}
         <div class="cr-ml-card" data-axis="management"><div class="cr-ml-row"><span>Gestão e Visibilidade</span><b>—</b></div><div class="cr-ml-track"><i></i></div><small>Aguardando evidências vivas…</small></div><div class="cr-ml-card" data-axis="finance"><div class="cr-ml-row"><span>Financeiro / GestãoClick</span><b>—</b></div><div class="cr-ml-track"><i></i></div><small>Aguardando evidências vivas…</small></div><div class="cr-ml-card" data-axis="technical"><div class="cr-ml-row"><span>Base Técnica e Governança</span><b>—</b></div><div class="cr-ml-track"><i></i></div><small>Aguardando evidências vivas…</small></div><div class="cr-ml-card" data-axis="data"><div class="cr-ml-row"><span>Dados e Integrações</span><b>—</b></div><div class="cr-ml-track"><i></i></div><small>Aguardando evidências vivas…</small></div><div class="cr-ml-card" data-axis="operation"><div class="cr-ml-row"><span>Operação + Trello + Automações</span><b>—</b></div><div class="cr-ml-track"><i></i></div><small>Aguardando evidências vivas…</small></div><div class="cr-ml-card" data-axis="central"><div class="cr-ml-row"><span>Central / Ecossistema</span><b>—</b></div><div class="cr-ml-track"><i></i></div><small>Aguardando evidências vivas…</small></div><div class="cr-ml-card" data-axis="flows"><div class="cr-ml-row"><span>Esteira F00–F09</span><b>—</b></div><div class="cr-ml-track"><i></i></div><small>Aguardando evidências vivas…</small></div><div class="cr-ml-card" data-axis="app"><div class="cr-ml-row"><span>APP Operacional</span><b>—</b></div><div class="cr-ml-track"><i></i></div><small>Aguardando evidências vivas…</small></div><div class="cr-ml-card" data-axis="service"><div class="cr-ml-row"><span>Atendimento Integrado</span><b>—</b></div><div class="cr-ml-track"><i></i></div><small>Aguardando evidências vivas…</small></div>
       </div>
       <div class="cr-ml-foot"><span><b>Alavanca atual:</b> Atendimento → APP → F00/F01 → esteira ponta a ponta.</span><span id="crMlSource" class="cr-ml-source">auditoria em segundo plano</span></div>
-    </section>
-    <section id="crBudgetStatus" class="cr-home-panel cr-budget-status">
-      <div class="cr-budget-head">
-        <div class="cr-budget-title">
-          <span class="cr-budget-icon">▤</span>
-          <div><strong>ORÇAMENTOS DO GESTÃO CLICK</strong><div class="cr-budget-sub">Acompanhamento em tempo real dos status dos orçamentos.</div></div>
-        </div>
-        <div id="crBudgetMeta" class="cr-budget-meta">Conectando ao GestãoClick…</div>
-      </div>
-      <div id="crBudgetStatusRows" class="cr-budget-rows">
-        <div class="cr-budget-skeleton">
-          <div class="cr-budget-sk-row"><i></i><span></span><b></b></div>
-          <div class="cr-budget-sk-row"><i></i><span></span><b></b></div>
-          <div class="cr-budget-sk-row"><i></i><span></span><b></b></div>
-          <div class="cr-budget-sk-row"><i></i><span></span><b></b></div>
-        </div>
-      </div>
     </section>
     <section class="cr-home-panel cr-health-panel">
       <div class="cr-panel-head">
