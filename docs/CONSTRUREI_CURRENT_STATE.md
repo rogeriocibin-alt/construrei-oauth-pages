@@ -6,27 +6,45 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Branch fonte da candidata: `cr-central-refinement-batch-20261004`
-- HEAD funcional da branch fonte: `e892debb21414c09376f11cf6cf46521d698d85c`
-- Publicação GitHub Pages da candidata: `ceb2497f77ced35b4853e26609436954bbd6d9f5`
-- Arquivo de navegação persistente publicado em: `f5f698e5a09b513711fb86b40e16cc95fd0563f4`
+- Candidata ativa: **Agenda Inteligente / Textos Operacionais R1**
+- Branch fonte: `cr-central-agenda-smarttext-candidate-20261004`
+- Commit funcional da branch candidata: `d60d55a61740b2e46e7303cf916445bcabf4275d`
+- Publicação GitHub Pages correspondente: `75e714400689027743c73ea68105f589580e40b9`
+- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R1`
+- Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004`
+- API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v1
+- Modelo canônico armazenado em: `docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md`
+- Central oficial: **NÃO ALTERADA**
 - Base oficial protegida: `ccc8e8a4cc97df5f7646813178287106657df9b1`
-- Endpoint oficial: **NÃO ALTERADO**
-- Edge candidata: `cr-central-refinement-candidate-20261004` (redirect isolado para a candidata no GitHub Pages)
 
 ## Link da última candidata
 
-https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-refinement-candidate-20261004/
+https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-agenda-smarttext-candidate-20261004/
 
-## Rodada ativa — Navegação e estabilidade R2
+## Rodada ativa — Agenda Inteligente / Textos Operacionais R1
 
-1. Shell da Central passa a permanecer aberto durante a navegação interna.
-2. Regra **Voltar • Início • Menu** tratada como navegação persistente.
-3. APP CONSTRU-REI, Dashboard Financeiro V4 e Esteira F00–F09 abrem dentro do workspace da Central quando acionados pela Central, evitando `location.assign` e perda de contexto.
-4. Rotas Diretoria/Rogério e Técnico/Éder são tratadas localmente na candidata, evitando o redirecionamento legado que quebrava a experiência.
-5. Saúde e Desenvolvimento passa a usar consultas com timeout e modo fail-safe: falha de API não pode congelar a página.
-6. Links internos CONSTRU-REI são interceptados para permanecer na shell; nova aba fica como contingência explícita.
-7. Central oficial permanece congelada até validação humana em celular + notebook.
+1. Cada compromisso da Agenda passa a ter opção **Expandir**.
+2. Ao expandir, a Central identifica o tipo do compromisso: **VISITA/VISTORIA, EXECUÇÃO ou RETORNO**.
+3. O número do fluxo/orçamento é usado para consultar os registros correspondentes no **GestãoClick**.
+4. O gerador preenche cliente, endereço, contato, equipe/prestador, data, horário e escopo disponível.
+5. A redação é adaptada ao motivo real:
+   - visita/vistoria → levantamento para orçamento e orientações de vistoria;
+   - execução → escopo aprovado, registro antes/durante/depois e conferência final;
+   - retorno → motivo do retorno, correção/ajuste, evidências e finalização.
+6. Serviços de visita recebem adaptação contextual para categorias recorrentes como infiltração/vazamento, cobertura/telhado, elétrica, hidráulica, pintura/gesso/drywall e demais serviços.
+7. O texto pronto pode ser copiado pelo botão **Copiar texto**.
+8. Quando algum dado obrigatório não é localizado no GestãoClick, a Central sinaliza o campo faltante em vez de inventar informação.
+9. A consulta é somente leitura; gerar/copiar texto não altera GestãoClick, calendário ou orçamento.
+10. Dados pessoais detalhados do GestãoClick exigem sessão CONSTRU-REI ativa. A sessão é reutilizada, evitando autenticação repetida por item.
+11. A navegação R2 (**Voltar • Início • Menu**) permanece preservada.
+
+## Congelamento preservado — versão anterior mais completa
+
+- Status: **CONGELADA / PRESERVADA**
+- Commit exato: `2bb528851c343f6464418fadf36b115285aae916`
+- Branch congelada: `cr-central-most-complete-frozen-20261004-r2`
+- Checkpoint redundante: `CHECKPOINT_CENTRAL_MOST_COMPLETE_20261004_R2`
+- Regra: essas referências não devem ser alteradas. A candidata de Agenda Inteligente foi criada a partir desse ponto seguro.
 
 ## Regra de continuidade obrigatória
 
@@ -41,16 +59,4 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-04 — rodada R2 de navegabilidade plena e estabilidade da Central candidata.
-
-## Congelamento — versão mais completa até o momento
-
-- Status: **CONGELADA / PRESERVADA**
-- Data: **2026-10-04**
-- Critério: versão considerada pelo Rogério como a mais completa até o momento.
-- Commit exato preservado: `2bb528851c343f6464418fadf36b115285aae916`
-- Branch congelada: `cr-central-most-complete-frozen-20261004-r2`
-- Checkpoint redundante: `CHECKPOINT_CENTRAL_MOST_COMPLETE_20261004_R2`
-- Link da candidata preservada: https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-refinement-candidate-20261004/?v=nav-r2-20261004
-- Regra: **não alterar essas duas referências**. Toda evolução futura deve partir de nova branch/candidata, preservando esta como ponto seguro de retorno.
-- A Central oficial continua separada; este congelamento **não é promoção automática para produção**.
+2026-10-04 — candidata de Agenda Inteligente com geração e cópia de textos padronizados integrada ao GestãoClick.
