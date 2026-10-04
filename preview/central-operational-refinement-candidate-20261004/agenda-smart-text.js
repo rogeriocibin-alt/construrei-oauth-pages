@@ -7,7 +7,8 @@ const SK='crGestaoSession',CACHE=new Map(),OPEN=new Set();
 let lastSession='';
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const sess=()=>{try{return sessionStorage.getItem(SK)||''}catch(_){return''}};
+const sess=()=>{try{return sessionStorage.getItem(SK)||localStorage.getItem(SK)||''}catch(_){return''}};
+function persistSession(){try{const s=sessionStorage.getItem(SK)||'';if(s)localStorage.setItem(SK,s)}catch(_){}}
 const items=()=>window.CR_NATIVE_CLEAN?.state?.agenda?.items||[];
 const item=id=>items().find(x=>String(x.id||'')===String(id))||null;
 const row=id=>qa('.cr-agenda-row').find(x=>String(x.dataset.crAgendaId||'')===String(id))||null;
@@ -57,7 +58,7 @@ function render(id,data){
 async function generate(id,force=false){
  const it=item(id),d=host(id);if(!it||!d)return;
  if(CACHE.has(id)&&!force){render(id,CACHE.get(id));return}
- const session=sess()||localStorage.getItem(SK)||'';if(!session){auth(id);return}
+ const session=sess();if(!session){auth(id);return}
  d.innerHTML='<div class="cr-agenda-load">Consultando o GestãoClick e montando o texto padrão…</div>';
  try{
    const r=await fetch(API,{method:'POST',cache:'no-store',headers:{'content-type':'application/json','x-cr-session':session},body:JSON.stringify({case:it.case,type:it.type,event:it})});
@@ -106,7 +107,7 @@ document.addEventListener('click',e=>{
 
 },true);
 const agendaHost=q('#crAgendaRows');if(agendaHost)new MutationObserver(()=>setTimeout(restore,20)).observe(agendaHost,{childList:true,subtree:true});
-lastSession=sess()||localStorage.getItem(SK)||'';
-setInterval(()=>{const s=sess()||localStorage.getItem(SK)||'';if(s!==lastSession){lastSession=s;if(s)Array.from(OPEN).forEach(id=>{CACHE.delete(id);generate(id,true)})}},1200);
+persistSession();lastSession=sess();
+setInterval(()=>{persistSession();const s=sess();if(s!==lastSession){lastSession=s;if(s)Array.from(OPEN).forEach(id=>{CACHE.delete(id);generate(id,true)})}},1200);
 style();setTimeout(restore,250);
 })();
