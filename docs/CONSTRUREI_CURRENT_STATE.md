@@ -6,17 +6,27 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Versão executiva final desta rodada: **Executivo R8 — medidores modernos + painel compacto de pendências**
-- Branch de origem: `cr-central-agenda-smarttext-candidate-20261004`
-- Commit funcional R8: `78700b8f91025caa6d44d02ef5a6c99d0fef1d43`
-- Produção congelada no `main`: `3fe0ed0c063fb1888dd9178e399fede27c67a967`
-- Checkpoint funcional R8: `CHECKPOINT_CENTRAL_EXEC_METERS_R8_20261004`
-- Checkpoint de homologação congelada: `CHECKPOINT_CENTRAL_EXEC_R8_HOMOLOGADA_20261004`
-- Pasta de produção imutável desta rodada: `production/central-homologada-exec-r8-20261004/`
-- Edge candidata validada: `cr-central-agenda-smarttext-candidate-20261004` v7
+- Versão oficial atual: **Executivo R9 — medidores modernos + correção responsiva**
+- Branch homologada: `central-homologada-exec-r9-20261004`
+- Branch de origem validada: `cr-central-exec-r9-mobilefix-20261004`
+- Commit funcional R9: `b42c491dba5a60fa375c2f2609e26c660ebf892e`
+- Commit de produção congelada: `0e13035fb93813834a7c98021eeafa8ab4cec81a`
+- Checkpoint funcional: `CHECKPOINT_CENTRAL_EXEC_R9_MOBILEFIX_20261004`
+- Checkpoint homologado: `CHECKPOINT_CENTRAL_EXEC_R9_HOMOLOGADA_20261004`
+- Pasta de produção congelada: `production/central-homologada-exec-r9-20261004/`
 - Fonte viva de pendências: `cr-pendencias-executive-v2-candidate-20261004` v1
-- Central oficial `centro-operacoes`: **ainda aponta para a versão oficial anterior**; o repoint da Edge não foi executado porque a escrita foi bloqueada pelo conector Supabase e o dispositivo autorizado `Rogerio-2022` está offline.
-- Regra: não alterar a pasta de produção R8 nem os checkpoints acima. Próxima promoção da Edge deve apontar somente para a pasta congelada de produção.
+- Central oficial `centro-operacoes`: **HOMOLOGADA E PROMOVIDA — v279**
+- Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`
+- Destino HOME oficial: `production/central-homologada-exec-r9-20261004/`
+- Regra: não alterar a pasta de produção R9, a branch homologada nem o checkpoint homologado; evoluções futuras devem ocorrer em candidata isolada.
+
+## Link oficial atual
+
+https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/
+
+## Produção homologada R9
+
+https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-homologada-exec-r9-20261004/?v=0e13035fb93813834a7c98021eeafa8ab4cec81a
 
 ## Link público final da R8 congelada
 
@@ -73,17 +83,22 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 ## Executivo R9 — correção responsiva dos medidores
 
 - Data: 2026-10-04
-- Status: **CANDIDATA PUBLICADA PARA VALIDAÇÃO NO CELULAR**
+- Status: **HOMOLOGADA / CONGELADA / PROMOVIDA PARA A CENTRAL OFICIAL**
 - Branch: `cr-central-exec-r9-mobilefix-20261004`
 - Commit: `b42c491dba5a60fa375c2f2609e26c660ebf892e`
 - Checkpoint: `CHECKPOINT_CENTRAL_EXEC_R9_MOBILEFIX_20261004`
-- Preview: `preview/central-exec-r9-mobilefix-20261004/`
+- Preview validada: `preview/central-exec-r9-mobilefix-20261004/`
+- Produção congelada: `production/central-homologada-exec-r9-20261004/`
+- Commit de produção: `0e13035fb93813834a7c98021eeafa8ab4cec81a`
+- Branch homologada: `central-homologada-exec-r9-20261004`
+- Checkpoint homologado: `CHECKPOINT_CENTRAL_EXEC_R9_HOMOLOGADA_20261004`
+- Edge oficial: `centro-operacoes` v279
 - Correção: o arquivo `executive-meters-r8.css` existia, mas não estava referenciado pelo `index.html`; no celular isso fazia o SVG do gauge usar preenchimento preto padrão e removia a composição visual dos cards APP/WIZY/ÉDER.
 - A R9 adiciona explicitamente o stylesheet físico dos medidores com cache-buster próprio.
 - Nenhuma lógica, dado, API, métrica ou módulo validado foi alterado.
 - A R8 congelada em `production/central-homologada-exec-r8-20261004/` permanece intocada.
-- Gate: validar visualmente em celular antes de qualquer promoção/homologação.
+- Gate: **CONCLUÍDO** — Rogério validou visualmente a R9 no celular e autorizou homologação, congelamento e substituição da Central oficial.
 
 ## Última atualização
 
-2026-10-04 — R9 corretiva publicada como preview para corrigir o carregamento do CSS dos medidores no celular. R8 congelada preservada; nenhuma promoção oficial executada.
+2026-10-04 — R9 validada pelo Rogério, homologada e congelada em produção; `centro-operacoes` promovida para v279 mantendo o mesmo link oficial. R8 e versões anteriores permanecem preservadas para rollback.
