@@ -1,0 +1,16 @@
+{
+  "policy_id": "CR-HTML-DELIVERY-POLICY-V1",
+  "effective_from": "2026-10-04",
+  "rule": "Visual HTML candidates must be served by GitHub Pages/static hosting. Supabase Edge Functions may redirect to the visual candidate or serve APIs, but must not proxy raw HTML from GitHub.",
+  "visual_delivery": "github_pages",
+  "api_delivery": "supabase_edge_functions",
+  "forbidden": [
+    "proxy raw.githubusercontent.com HTML as final visual response",
+    "forward upstream Content-Type for visual HTML"
+  ],
+  "required": [
+    "candidate preview path on GitHub Pages",
+    "Edge visual endpoint redirects to Pages",
+    "official production unchanged until homologation"
+  ]
+}
