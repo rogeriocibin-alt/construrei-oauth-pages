@@ -55,30 +55,24 @@ Tirar fotos e vídeos detalhados de todos os pontos vistoriados, incluindo o pro
 
 ## EXECUÇÃO — modelo canônico
 
-👷 INFORMAÇÕES EXECUÇÃO
+🔧 AGENDA DE EXECUÇÃO — CONSTRU-REI
 
-📝 ORÇAMENTO: [ORÇAMENTO]  
-👤 CLIENTE: [CLIENTE]  
-📍 ENDEREÇO: [ENDEREÇO]  
-📞 CONTATO: [CONTATO]
+📝 Orçamento: [Nº]  
+👤 Cliente: [CLIENTE]  
+📞 Telefone: [TELEFONE]  
+📍 Endereço: [ENDEREÇO]  
+💳 Forma de pagamento: [FORMA DE PAGAMENTO]
 
-📅 DATA: [DATA]  
-🕒 HORÁRIO: [HORÁRIO]  
-👷 PRESTADOR: [PRESTADOR]
+📅 Datas de execução:  
+• [DATA] — [HORÁRIO / PERÍODO]
 
-📌 SERVIÇOS A SEREM EXECUTADOS:
+👷 Prestador: [PRESTADOR]
 
-Executar os serviços conforme escopo aprovado no orçamento [ORÇAMENTO].
+🔎 Serviço:
 
-• [SERVIÇO 1];  
-• [SERVIÇO 2];  
+• [SERVIÇO 1 ADAPTADO AO ESCOPO];  
+• [SERVIÇO 2 ADAPTADO AO ESCOPO];  
 • [DEMAIS SERVIÇOS].
-
-📸 IMPORTANTE:  
-Registrar fotos e vídeos antes, durante e após a execução dos serviços.
-
-✅ FINALIZAÇÃO:  
-Ao finalizar, realizar conferência dos serviços executados, testar o funcionamento quando aplicável, manter o local organizado e registrar qualquer pendência ou necessidade adicional identificada.
 
 ---
 
