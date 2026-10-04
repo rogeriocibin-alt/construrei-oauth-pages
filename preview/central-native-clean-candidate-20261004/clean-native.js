@@ -1,14 +1,15 @@
 (()=>{'use strict';
 if(window.__CR_NATIVE_CLEAN_V1)return;window.__CR_NATIVE_CLEAN_V1=true;
 window.__CR_NATIVE_HOME_OWNER=true;
-const BUILD='CR-CENTRAL-NATIVE-CLEAN-SOURCES-PENDING-20261004';
+const BUILD='CR-CENTRAL-NATIVE-CLEAN-GC-BARS-20261004';
 const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
 const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=pending-board';
+const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v1-candidate-20261004';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const brl=c=>c==null?'—':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(Number(c)/100);
-const state={fast:null,pending:null,errors:{},timings:{},lastRefresh:null};
+const state={fast:null,pending:null,budgets:null,errors:{},timings:{},lastRefresh:null,lastBudgetOkAt:null};
 async function get(u,timeoutMs=8000){
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeoutMs),started=performance.now();
  try{
@@ -59,17 +60,81 @@ function renderPending(){
   pendingCard('♙','ÉDER',s.eder?.open??0,boards.eder,'eder','amber')
  ].join('');
 }
+function budgetNorm(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/\s+/g,' ').trim()}
+function budgetRank(name){
+ const n=budgetNorm(name);
+ if(/NOVO|VISITA|AGENDAMENTO/.test(n))return 10;
+ if(/ANALIS|ELABOR|ORCAMENT/.test(n))return 20;
+ if(/AGUARDANDO ENVIO|ENVIAD/.test(n))return 30;
+ if(/AGUARDANDO APROV/.test(n))return 40;
+ if(/APROVAD/.test(n)&&!/NAO APROV|REPROV/.test(n))return 50;
+ if(/ANDAMENTO|EXECU/.test(n))return 60;
+ if(/RETORNO/.test(n))return 65;
+ if(/PAGAMENTO/.test(n))return 70;
+ if(/ACERTO|AJUST/.test(n))return 75;
+ if(/FINAL|CONCLU/.test(n))return 80;
+ if(/NAO APROV|REPROV/.test(n))return 90;
+ if(/CANCEL/.test(n))return 100;
+ return 85;
+}
+function budgetColor(name){
+ const n=budgetNorm(name);
+ if(/CANCEL/.test(n))return '#8094a8';
+ if(/NAO APROV|REPROV/.test(n))return '#e54d5d';
+ if(/FINAL|CONCLU/.test(n))return '#16a99b';
+ if(/PAGAMENTO/.test(n))return '#f17a32';
+ if(/ACERTO|AJUST/.test(n))return '#e99528';
+ if(/RETORNO/.test(n))return '#8059d9';
+ if(/ANDAMENTO|EXECU/.test(n))return '#5869d9';
+ if(/APROVAD/.test(n)&&!/AGUARDANDO/.test(n))return '#2fbd69';
+ if(/AGUARDANDO APROV/.test(n))return '#eea91c';
+ if(/AGUARDANDO ENVIO|ENVIAD/.test(n))return '#44a6e8';
+ if(/ANALIS|ELABOR/.test(n))return '#7658d7';
+ if(/ORCAMENT/.test(n))return '#17acd0';
+ if(/NOVO|VISITA|AGENDAMENTO/.test(n))return '#2e86ed';
+ const palette=['#258edc','#14a7a0','#6c63d9','#36a86f','#4c9bd9','#8b65c9'];
+ let h=0;for(let i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;return palette[h%palette.length];
+}
+function budgetSkeleton(){
+ return '<div class="cr-budget-skeleton">'+[1,2,3,4].map(()=>'<div class="cr-budget-sk-row"><i></i><span></span><b></b></div>').join('')+'</div>';
+}
+function renderBudgets(){
+ const h=$('#crBudgetStatusRows'),meta=$('#crBudgetMeta');if(!h)return;
+ const d=state.budgets,err=state.errors.budgets;
+ if(!d){
+  if(err){
+   h.innerHTML='<div class="cr-budget-unavailable"><b>Dados temporariamente indisponíveis</b><span>O GestãoClick não respondeu dentro da leitura segura. Nenhum contador zero foi presumido.</span></div>';
+   if(meta)meta.textContent=state.lastBudgetOkAt?'Última leitura válida: '+new Date(state.lastBudgetOkAt).toLocaleTimeString('pt-BR'):'Fonte indisponível nesta leitura';
+  }else{
+   h.innerHTML=budgetSkeleton();if(meta)meta.textContent='Conectando ao GestãoClick…';
+  }
+  return;
+ }
+ const rows=(Array.isArray(d.statuses)?d.statuses:[]).slice().sort((a,b)=>budgetRank(a.name)-budgetRank(b.name)||(Number(a.source_order)||999)-(Number(b.source_order)||999)||String(a.name).localeCompare(String(b.name),'pt-BR'));
+ const max=Math.max(1,...rows.map(x=>Number(x.count)||0));
+ h.innerHTML=rows.length?rows.map(x=>{
+   const count=Number(x.count)||0,color=budgetColor(x.name),pct=count?Math.max(3,Math.round(count/max*100)):0;
+   return '<div class="cr-budget-row" style="--budget-color:'+color+'"><i class="cr-budget-dot"></i><span class="cr-budget-name">'+esc(x.name||'SEM STATUS')+'</span><div class="cr-budget-track"><i style="width:'+pct+'%"></i></div><b class="cr-budget-count">'+count+'</b></div>';
+ }).join(''):'<div class="cr-budget-unavailable"><b>Nenhum status retornado</b><span>A fonte respondeu sem situações de orçamento disponíveis.</span></div>';
+ if(meta){
+  const stale=err?' • atualização pendente':'';
+  const total=Number(d.total??d.records_analyzed??rows.reduce((a,x)=>a+Number(x.count||0),0));
+  const t=state.timings.budgets!=null?' • '+state.timings.budgets+' ms':'';
+  meta.textContent=rows.length+' status • '+total+' orçamentos'+t+stale;
+  meta.title='Fonte: GestãoClick • '+(d.complete?'população completa':'leitura limitada')+(d.read_at?' • '+new Date(d.read_at).toLocaleString('pt-BR'):'');
+ }
+}
 function renderHealth(){
  const h=$('#homeHealth');if(!h)return;
  const s=state.fast?.sources||{},rows=[
   ['Banco de Dados',s.database?.ok,state.timings.fast],
   ['Trello',s.trello?.ok,state.timings.fast],
-  ['GestãoClick',s.gestaoclick?.ok??(state.fast?true:(state.errors.fast?false:null)),state.timings.fast],
+  ['GestãoClick',state.budgets?.source_health?.gestaoclick??s.gestaoclick?.ok??(state.fast?true:(state.errors.fast?false:null)),state.timings.budgets??state.timings.fast],
   ['Pendências',state.pending?true:(state.errors.pending?false:null),state.timings.pending]
  ];
  h.innerHTML=rows.map(([n,v,ms])=>'<article class="cr-health-card '+(v===true?'ok':'')+'"><div class="cr-health-label">'+esc(n)+'</div><div class="cr-health-value">'+esc(v===true?'Operacional':v===false?'Atenção':'Carregando')+'</div><div class="cr-health-sub">'+esc(v===true?('Fonte disponível'+(ms!=null?' • '+ms+' ms':'')):v===false?'Verificar integração':'Sem presumir estado')+'</div></article>').join('');
 }
-function renderAll(){renderKpis();renderPending();renderHealth()}
+function renderAll(){renderKpis();renderPending();renderBudgets();renderHealth()}
 function patchReturns(){document.querySelectorAll('a[href]').forEach(el=>{const href=el.getAttribute('href')||'';if(/central-atendimento/.test(href)&&!/return=/.test(href)){try{const u=new URL(href,location.href);u.searchParams.set('return',location.href);el.setAttribute('href',u.toString())}catch(_){}}})}
 let refreshing=false;
 async function refresh(){
@@ -99,18 +164,32 @@ async function refresh(){
  refreshing=false;
 }
 
+
+async function refreshBudgets(){
+ try{
+  const out=await get(BUDGET_STATUS,15000);
+  state.budgets=out.data;
+  state.timings.budgets=out.ms;
+  state.lastBudgetOkAt=out.data?.read_at||new Date().toISOString();
+  delete state.errors.budgets;
+ }catch(err){
+  state.errors.budgets=String(err);
+ }
+ renderBudgets();renderHealth();
+}
+
 const MATURITY='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes';
 const MATURITY_BASE='./maturity-audit.json?v=1';
 const MATURITY_AX=[['management','Gestão e Visibilidade'],['finance','Financeiro / GestãoClick'],['technical','Base Técnica e Governança'],['data','Dados e Integrações'],['operation','Operação + Trello + Automações'],['central','Central / Ecossistema'],['flows','Esteira F00–F09'],['app','APP Operacional'],['service','Atendimento Integrado']];
 const mClamp=n=>Math.max(0,Math.min(100,Math.round(n||0)));
-const mTone=n=>n<45?'#c88b16':n<65?'#cfa33c':n<80?'#2d8fe5':n<90?'#075bd8':'#05265f';
+const mTone=n=>n<55?'#e2a11f':n<70?'#18a79c':n<90?'#2787e5':'#2dbb70';
 const mText=n=>n<45?'Prioridade':n<60?'Estruturado':n<75?'Integrado':n<90?'Gerenciado':'Otimizado';
 function mObjects(v,out=[]){if(!v)return out;if(Array.isArray(v)){v.forEach(x=>mObjects(x,out));return out}if(typeof v==='object'){out.push(v);Object.keys(v).forEach(k=>mObjects(v[k],out))}return out}
 function mStatus(s){s=String(s||'').toUpperCase();if(/HOMOLOG|CONCLU|APROV|OPERACIONAL|PRODU/.test(s))return 1;if(/VALID|TEST|PRONTO/.test(s))return .78;if(/ANDAMENTO|IMPLEMENT|DESENV|EXECU/.test(s))return .55;if(/BLOQUE|AGUARD|PEND/.test(s))return .28;return .35}
 function mFlow(objs,code){return objs.find(x=>String(x.code||x.id||'').toUpperCase()===code)}
 function mArea(objs,re){return objs.filter(x=>re.test(String(x.area||x.module||x.code||x.title||''))&&(x.status||x.operational_status||x.implementation_status))}
 function mCompletion(items){if(!items.length)return null;return items.reduce((a,x)=>a+mStatus(x.status||x.operational_status||x.implementation_status),0)/items.length}
-function mGauge(id,n){const e=document.getElementById(id);if(!e)return;const t=mTone(n);e.style.setProperty('--p',n);e.style.setProperty('--tone',t);const b=e.querySelector('.cr-ml-ring b');if(b)b.textContent=n+'%';let chip=e.querySelector('.cr-ml-level');if(!chip){chip=document.createElement('span');chip.className='cr-ml-level';const box=e.lastElementChild;if(box)box.appendChild(chip)}if(chip)chip.textContent='NÍVEL • '+mText(n).toUpperCase()}
+function mGauge(id,n){const e=document.getElementById(id);if(!e)return;const t=id==='crMlAutonomy'?'#14b2a5':'#147de1';e.style.setProperty('--p',n);e.style.setProperty('--tone',t);const b=e.querySelector('.cr-ml-ring b');if(b)b.textContent=n+'%';let chip=e.querySelector('.cr-ml-level');if(!chip){chip=document.createElement('span');chip.className='cr-ml-level';const box=e.lastElementChild;if(box)box.appendChild(chip)}if(chip)chip.textContent='NÍVEL • '+mText(n).toUpperCase()}
 function mAxis(k,n,note,detail){const e=document.querySelector('[data-axis="'+k+'"]');if(!e)return;const t=mTone(n);e.style.setProperty('--tone',t);e.dataset.level=mText(n);const b=e.querySelector('.cr-ml-row b'),i=e.querySelector('.cr-ml-track i'),s=e.querySelector('small');if(b)b.textContent=n+'%';if(i)i.style.width=n+'%';if(s)s.textContent=mText(n)+' • '+note;if(detail)e.title=detail}
 async function maturityGet(q,timeout){const out=await get(MATURITY+'?api='+q+'&maturity=1',timeout);return out.data}
 let maturityBaseCache=null;
@@ -174,8 +253,8 @@ function boot(){
  document.documentElement.dataset.crBuild=BUILD;
  document.documentElement.dataset.crNativeState='loading';
  renderAll();patchReturns();
- refresh().finally(()=>setTimeout(refreshMaturity,300));setInterval(refresh,30000);setInterval(refreshMaturity,60000);
- window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshMaturity,APP};
+ refresh().finally(()=>setTimeout(refreshMaturity,300));setTimeout(refreshBudgets,120);setInterval(refresh,30000);setInterval(refreshMaturity,60000);setInterval(refreshBudgets,90000);
+ window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshMaturity,refreshBudgets,APP};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
