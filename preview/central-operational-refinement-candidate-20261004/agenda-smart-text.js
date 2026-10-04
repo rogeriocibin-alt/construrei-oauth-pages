@@ -77,8 +77,26 @@ async function copy(id){
  catch(_){const ta=document.createElement('textarea');ta.value=data.text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove()}
  if(st){st.textContent='✓ Copiado';setTimeout(()=>{st.textContent=''},1800)}
 }
+function orderedItems(){
+ return items().slice().sort((a,b)=>(Number(a.day_order)||0)-(Number(b.day_order)||0)||String(a.starts_at||'').localeCompare(String(b.starts_at||'')));
+}
+function decorate(){
+ const list=orderedItems(),rows=qa('#crAgendaRows .cr-agenda-row');
+ rows.forEach((a,i)=>{
+   const it=list[i];if(!it)return;
+   const id=String(it.id||it.case||[it.starts_at,it.title].join('|'));
+   a.dataset.crAgendaId=id;
+   let actions=q('.cr-agenda-actions',a);
+   if(!actions){
+     actions=document.createElement('div');actions.className='cr-agenda-actions';
+     const kind=q('.cr-agenda-kind',a);if(kind)actions.appendChild(kind);
+     const b=document.createElement('button');b.type='button';b.className='cr-agenda-expand';b.setAttribute('data-cr-agenda-expand',id);b.textContent='Expandir';actions.appendChild(b);a.appendChild(actions);
+   }
+   if(!q('.cr-agenda-detail',a)){const d=document.createElement('div');d.className='cr-agenda-detail';d.setAttribute('data-cr-agenda-detail',id);d.hidden=true;a.appendChild(d)}
+ });
+}
 function restore(){
- style();
+ style();decorate();
  qa('.cr-agenda-row[data-cr-agenda-id]').forEach(a=>{const id=a.dataset.crAgendaId||'';if(OPEN.has(id)){setOpen(id,true);generate(id,false)}});
 }
 document.addEventListener('click',e=>{
