@@ -6,11 +6,11 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Candidata ativa: **Agenda Inteligente / Textos Operacionais R3**
+- Candidata ativa: **Agenda Inteligente / Textos Operacionais R4**
 - Branch fonte: `cr-central-agenda-smarttext-candidate-20261004`
-- Commit funcional da branch candidata: `75b30296b2c32449c6d9e521b96e1582473b453a`
-- Publicação GitHub Pages funcional: `e7eddae51ccdfa454a41ad7102709c9e7ffc8cf1`
-- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R3`
+- Commit funcional da branch candidata: `4f11b69b72c1605464a038b3644bf94214ef6339`
+- Publicação GitHub Pages funcional: `430dab410b51a869f660d105a6d1ed88bf5f6e43`
+- Checkpoint da candidata: `CHECKPOINT_CENTRAL_AGENDA_SMARTTEXT_20261004_R4`
 - Edge da Central candidata: `cr-central-agenda-smarttext-candidate-20261004` v2
 - API de geração de texto: `cr-agenda-smart-text-candidate-20261004` v4
 - Modelo canônico: `docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md`
@@ -21,7 +21,7 @@
 
 https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-central-agenda-smarttext-candidate-20261004/
 
-## Rodada ativa — Agenda Inteligente R3
+## Rodada ativa — Agenda Inteligente R4
 
 1. Mantém **Expandir → gerar texto → copiar texto** em cada compromisso.
 2. Mantém os modelos canônicos de **VISITA/VISTORIA, EXECUÇÃO e RETORNO**.
@@ -55,4 +55,4 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-04 — R3: retirada da escolha de perfil no gerador, remoção de valores monetários dos textos e ordenação decrescente do bloco GestãoClick.
+2026-10-04 — R4: sem escolha Rogério/Éder no gerador; sessão transitória reutilizada sem persistência extra; valores monetários removidos dos textos; GestãoClick em ordem decrescente por volume.
