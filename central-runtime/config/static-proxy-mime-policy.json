@@ -1,0 +1,46 @@
+{
+  "policy_id": "CR-STATIC-PROXY-MIME-POLICY-V1",
+  "effective_from": "2026-10-04",
+  "purpose": "Prevent static HTML/CSS/JS assets proxied from raw storage from being rendered as source text.",
+  "rules": {
+    "never_forward_upstream_content_type": true,
+    "determine_content_type_from_requested_extension": true,
+    "html_default_for_directory_index": true,
+    "nosniff": true,
+    "fail_closed_unknown_binary": true
+  },
+  "mime_map": {
+    ".html": "text/html; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".js": "application/javascript; charset=utf-8",
+    ".mjs": "application/javascript; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".svg": "image/svg+xml",
+    ".webp": "image/webp",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".ico": "image/x-icon",
+    ".txt": "text/plain; charset=utf-8",
+    ".md": "text/plain; charset=utf-8",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
+    ".pdf": "application/pdf"
+  },
+  "required_headers": {
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"
+  },
+  "forbidden_patterns": [
+    "content-type = upstreamResponse.headers.get('content-type')",
+    "forward raw.githubusercontent.com MIME unchanged"
+  ],
+  "acceptance": [
+    "index.html opens as rendered UI, never visible source",
+    "css applies as stylesheet",
+    "js executes as JavaScript",
+    "json remains JSON",
+    "unknown extension returns application/octet-stream"
+  ]
+}
