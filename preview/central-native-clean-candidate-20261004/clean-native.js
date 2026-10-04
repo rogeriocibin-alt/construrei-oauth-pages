@@ -3,14 +3,12 @@ if(window.__CR_NATIVE_CLEAN_V1)return;window.__CR_NATIVE_CLEAN_V1=true;
 window.__CR_NATIVE_HOME_OWNER=true;
 const BUILD='CR-CENTRAL-NATIVE-CLEAN-FROM-0DBC-20261004';
 const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
-const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v12-1-candidate-20261003?view=public';
-const FULL='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-candidate-20261003?view=public-home';
+const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?api=pending-board';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const brl=c=>c==null?'—':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(Number(c)/100);
-const state={fast:null,agenda:null,full:null,errors:{},timings:{},lastRefresh:null};
-const COLORS={'AGUARDANDO VISITA/AGENDAMENTO':'#0a8cff','EM ELABORAÇÃO':'#3c8fe8','AGUARDANDO ENVIO':'#62a9ee','AGUARDANDO APROVAÇÃO':'#f2b233','EM ANDAMENTO':'#168fb8','RETORNO':'#7b46e8','AGUARDANDO PAGAMENTO':'#16b879','AGUARDANDO ACERTO':'#ff8a24','FINALIZADO':'#138a61','NÃO APROVADO':'#d85b67','CANCELADO':'#93a9bd'};
+const state={fast:null,pending:null,errors:{},timings:{},lastRefresh:null};
 async function get(u,timeoutMs=8000){
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeoutMs),started=performance.now();
  try{
@@ -23,32 +21,65 @@ async function get(u,timeoutMs=8000){
   throw err;
  }finally{clearTimeout(timer)}
 }
-function operationalToday(){const a=state.agenda?.kpis;if(!a)return null;return Number(a.visits||0)+Number(a.executions||0)+Number(a.returns||0)+Number(a.warranties||0)}
 function stamp(){const e=$('#crHomeUpdated');if(e)e.textContent='Atualizado '+new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'}).format(new Date())}
 function card(cls,ic,l,v,d,s){return '<article class="cr-op-card '+cls+'"><div class="cr-op-top"><span class="cr-op-icon">'+ic+'</span><span class="cr-op-label">'+esc(l)+'</span></div><div class="cr-op-value">'+esc(v)+'</div><div class="cr-op-detail">'+esc(d)+'</div><div class="cr-op-status">'+esc(s)+'</div></article>'}
-function renderKpis(){const h=$('#kpis');if(!h)return;const k=state.fast?.kpis||{};h.innerHTML=[
- card('blue','⚙','Serviços em andamento',k.services_in_progress?.count??'—',state.fast?'Fonte operacional real':'Conectando…','Trello'),
- card('green','$','Aguardando pagamento',k.awaiting_payment?.count??'—',state.fast?brl(k.awaiting_payment?.amount_cents):'Conectando…','GestãoClick'),
- card('purple','▣','Visitas do dia',state.agenda?operationalToday():'—',state.agenda?'Google Agenda':'Conectando…','Hoje'),
- card('orange','▤','Agenda amanhã',k.agenda_tomorrow?.count??'—',state.fast?'Google Agenda':'Conectando…','Planejamento'),
- card('amber','✓','Aguardando acerto',k.awaiting_adjustment?.count??'—',state.fast?brl(k.awaiting_adjustment?.amount_cents):'Conectando…','GestãoClick')
-].join('');stamp()}
-function time(v){try{return new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'}).format(new Date(v))}catch{return'—'}}
-function renderAgenda(){const h=$('#quick');if(!h)return;const a=state.agenda;if(!a){h.innerHTML='<div class="cr-inc-state">'+(state.errors.agenda?'Agenda indisponível nesta leitura — nenhum zero foi presumido.':'Conectando à Agenda…')+'</div>';return}const it=a.items||[];h.innerHTML=it.length?it.slice(0,7).map(x=>'<article class="cr-quick-card cr-inc-agenda-card"><div class="cr-quick-icon">▣</div><h3>'+esc(time(x.starts_at)+' • '+(x.title||x.type||'Compromisso'))+'</h3><p>'+esc([(x.team||[]).join(' + ')||'Responsável não identificado',x.case,x.location].filter(Boolean).join(' • '))+'</p><span class="cr-inc-badge '+(x.incomplete?'warn':'ok')+'">'+esc(x.incomplete?'Informação incompleta':x.type||'Programada')+'</span></article>').join(''):'<div class="cr-inc-state">Nenhum compromisso comprovado para hoje.</div>'}
-function renderQuotes(){const h=$('#flowHome');if(!h)return;const m=state.full?.quotes?.by_status||state.full?.quotes?.status_distribution||{},rows=Object.entries(m).map(([n,v])=>[n,typeof v==='number'?{count:v,total_cents:null}:v]).sort((a,b)=>(b[1].count||0)-(a[1].count||0));h.innerHTML=rows.length?rows.map(([n,v])=>'<article class="cr-flow-card cr-inc-status" style="--status:'+esc(COLORS[n]||'#93a9bd')+'"><div class="cr-flow-code">'+esc(n)+'</div><div class="cr-flow-active"><b>'+esc(v.count??'—')+'</b> registros</div><div class="cr-flow-state">'+esc(brl(v.total_cents))+'</div><div class="cr-inc-statusbar"><i></i></div></article>').join(''):'<div class="cr-inc-state">'+(state.errors.full?'GestãoClick indisponível nesta leitura — sem zero presumido.':'Conectando ao GestãoClick…')+'</div>'}
-function renderPending(){const h=$('#boardSummary');if(!h)return;const p=state.fast?.pending;if(!p||p.source_status==='SOURCE_IN_IMPLEMENTATION'){h.innerHTML='<article class="cr-pending-card cr-inc-pending"><div class="cr-pending-icon">!</div><div class="cr-pending-copy"><h3>'+(state.fast?'Pendências • fonte em implantação':'Pendências • conectando')+'</h3><div class="cr-pending-lines"><span>'+(state.fast?'Banco Mestre ainda sem alimentação operacional homologada.':'Carregando fonte operacional…')+'</span><span>Exceções técnicas não são convertidas em pendências.</span></div></div></article>';return}h.innerHTML='<article class="cr-pending-card"><div class="cr-pending-icon">▥</div><div class="cr-pending-copy"><h3>Pendências vivas</h3><div class="cr-pending-total">'+esc(p.total_live)+'</div><div class="cr-pending-lines"><span>Fonte operacional identificada.</span></div></div></article>'}
-function renderHealth(){const h=$('#homeHealth');if(!h)return;const s=state.fast?.sources||{},rows=[['Banco de Dados',s.database?.ok,state.timings.fast],['Trello',s.trello?.ok,state.timings.fast],['Google Agenda',s.agenda?.ok,state.timings.agenda],['GestãoClick',state.full?.sources?.gestaoclick?.ok??(state.errors.full?false:null),state.timings.full]];h.innerHTML=rows.map(([n,v,ms])=>'<article class="cr-health-card '+(v===true?'ok':'')+'"><div class="cr-health-label">'+esc(n)+'</div><div class="cr-health-value">'+esc(v===true?'Operacional':v===false?'Atenção':'Carregando')+'</div><div class="cr-health-sub">'+esc(v===true?('Fonte disponível'+(ms!=null?' • '+ms+' ms':'')):v===false?'Verificar integração':'Sem presumir estado')+'</div></article>').join('')}
-function renderAll(){renderKpis();renderAgenda();renderQuotes();renderPending();renderHealth()}
+function renderKpis(){
+ const h=$('#kpis');if(!h)return;
+ const k=state.fast?.kpis||{},waiting=state.errors.fast?'Leitura rápida indisponível — nova tentativa automática':'Conectando…';
+ h.innerHTML=[
+  card('blue','⚙','Serviços em andamento',k.services_in_progress?.count??'—',state.fast?'Fonte operacional real':waiting,'Trello'),
+  card('green','$','Aguardando pagamento',k.awaiting_payment?.count??'—',state.fast?brl(k.awaiting_payment?.amount_cents):waiting,'GestãoClick'),
+  card('amber','✓','Aguardando acerto',k.awaiting_adjustment?.count??'—',state.fast?brl(k.awaiting_adjustment?.amount_cents):waiting,'GestãoClick')
+ ].join('');
+ stamp();
+}
+function pendingStats(arr){
+ arr=Array.isArray(arr)?arr:[];
+ return {
+  blocked:arr.filter(x=>/BLOQUE/i.test([x.status,x.operational_status].join(' '))).length,
+  waiting:arr.filter(x=>/AGUARD|DECIS|PEND/i.test([x.status,x.operational_status,x.next_step].join(' '))).length,
+  corrections:arr.filter(x=>/CORRE|AJUST|REVIS/i.test([x.status,x.title,x.next_step].join(' '))).length
+ };
+}
+function pendingCard(icon,label,open,arr,target,tone){
+ const st=pendingStats(arr);
+ return '<article class="cr-pending-card cr-live-pending '+esc(tone||'blue')+'"><div class="cr-pending-icon">'+icon+'</div><div class="cr-pending-copy"><h3>'+esc(label)+'</h3><div class="cr-pending-total">'+esc(open??0)+'</div><div class="cr-pending-lines"><span><i class="bad"></i>'+st.blocked+' bloqueada(s)</span><span><i class="warn"></i>'+st.waiting+' aguardando</span><span><i class="ok"></i>'+st.corrections+' ajuste/revisão</span></div></div><button class="btn primary" data-action="go" data-page-target="'+esc(target)+'">Abrir pendências</button></article>';
+}
+function renderPending(){
+ const h=$('#boardSummary');if(!h)return;
+ const b=state.pending;
+ if(!b){
+  h.innerHTML='<article class="cr-pending-card cr-inc-pending"><div class="cr-pending-icon">!</div><div class="cr-pending-copy"><h3>Pendências WIZY / APP / Éder</h3><div class="cr-pending-lines"><span>'+(state.errors.pending?'Fonte temporariamente indisponível — nova tentativa automática.':'Conectando à fonte de pendências…')+'</span></div></div></article>';
+  return;
+ }
+ const s=b.summary||{},boards=b.boards||{};
+ h.innerHTML=[
+  pendingCard('▯','APP',s.app?.open??0,boards.app,'pendapp','blue'),
+  pendingCard('⌘','WIZY',s.wizy?.open??0,boards.wizy,'wizy','purple'),
+  pendingCard('♙','ÉDER',s.eder?.open??0,boards.eder,'eder','amber')
+ ].join('');
+}
+function renderHealth(){
+ const h=$('#homeHealth');if(!h)return;
+ const s=state.fast?.sources||{},rows=[
+  ['Banco de Dados',s.database?.ok,state.timings.fast],
+  ['Trello',s.trello?.ok,state.timings.fast],
+  ['GestãoClick',s.gestaoclick?.ok??(state.fast?true:(state.errors.fast?false:null)),state.timings.fast],
+  ['Pendências',state.pending?true:(state.errors.pending?false:null),state.timings.pending]
+ ];
+ h.innerHTML=rows.map(([n,v,ms])=>'<article class="cr-health-card '+(v===true?'ok':'')+'"><div class="cr-health-label">'+esc(n)+'</div><div class="cr-health-value">'+esc(v===true?'Operacional':v===false?'Atenção':'Carregando')+'</div><div class="cr-health-sub">'+esc(v===true?('Fonte disponível'+(ms!=null?' • '+ms+' ms':'')):v===false?'Verificar integração':'Sem presumir estado')+'</div></article>').join('');
+}
+function renderAll(){renderKpis();renderPending();renderHealth()}
 function patchReturns(){document.querySelectorAll('a[href]').forEach(el=>{const href=el.getAttribute('href')||'';if(/central-atendimento/.test(href)&&!/return=/.test(href)){try{const u=new URL(href,location.href);u.searchParams.set('return',location.href);el.setAttribute('href',u.toString())}catch(_){}}})}
 let refreshing=false;
 async function refresh(){
  if(refreshing)return;
  refreshing=true;
- if(!state.fast&&!state.agenda&&!state.full)document.documentElement.dataset.crNativeState='loading';
+ if(!state.fast&&!state.pending)document.documentElement.dataset.crNativeState='loading';
  state.errors={};
- const load=async(key,url,apply)=>{
+ const load=async(key,url,apply,timeoutMs=8000)=>{
   try{
-   const out=await get(url);
+   const out=await get(url,timeoutMs);
    state[key]=out.data;
    state.timings=state.timings||{};
    state.timings[key]=out.ms;
@@ -58,13 +89,12 @@ async function refresh(){
   }catch(err){
    state.errors[key]=String(err);
    apply();
-   if(!state.fast&&!state.agenda&&!state.full)document.documentElement.dataset.crNativeState='error';
+   if(!state.fast&&!state.pending)document.documentElement.dataset.crNativeState='error';
   }
  };
  await Promise.allSettled([
-  load('fast',FAST,()=>{renderKpis();renderPending();renderHealth();stamp()}),
-  load('agenda',AGENDA,()=>{renderAgenda();renderKpis();renderHealth();stamp()}),
-  load('full',FULL,()=>{renderQuotes();renderHealth();stamp()})
+  load('fast',FAST,()=>{renderKpis();renderHealth();stamp()},8000),
+  load('pending',PENDING,()=>{renderPending();renderHealth();stamp()},6500)
  ]);
  refreshing=false;
 }
@@ -73,7 +103,7 @@ const MATURITY='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-ope
 const MATURITY_BASE='./maturity-audit.json?v=1';
 const MATURITY_AX=[['management','Gestão e Visibilidade'],['finance','Financeiro / GestãoClick'],['technical','Base Técnica e Governança'],['data','Dados e Integrações'],['operation','Operação + Trello + Automações'],['central','Central / Ecossistema'],['flows','Esteira F00–F09'],['app','APP Operacional'],['service','Atendimento Integrado']];
 const mClamp=n=>Math.max(0,Math.min(100,Math.round(n||0)));
-const mTone=n=>n<45?'#d88b22':n<65?'#d6a51f':n<80?'#2d91c7':n<90?'#1684a7':'#08724f';
+const mTone=n=>n<45?'#c88b16':n<65?'#cfa33c':n<80?'#2d8fe5':n<90?'#075bd8':'#05265f';
 const mText=n=>n<45?'Prioridade':n<60?'Estruturado':n<75?'Integrado':n<90?'Gerenciado':'Otimizado';
 function mObjects(v,out=[]){if(!v)return out;if(Array.isArray(v)){v.forEach(x=>mObjects(x,out));return out}if(typeof v==='object'){out.push(v);Object.keys(v).forEach(k=>mObjects(v[k],out))}return out}
 function mStatus(s){s=String(s||'').toUpperCase();if(/HOMOLOG|CONCLU|APROV|OPERACIONAL|PRODU/.test(s))return 1;if(/VALID|TEST|PRONTO/.test(s))return .78;if(/ANDAMENTO|IMPLEMENT|DESENV|EXECU/.test(s))return .55;if(/BLOQUE|AGUARD|PEND/.test(s))return .28;return .35}
@@ -97,10 +127,10 @@ async function refreshMaturity(){
  maturityRefreshing=true;
  try{
   const [res,base]=await Promise.all([
-   Promise.allSettled([maturityGet('public-summary',5000),maturityGet('pending-board',6500),maturityGet('development-summary',8000)]),
+   Promise.allSettled([maturityGet('public-summary',5000),maturityGet('development-summary',8000)]),
    maturityBase()
   ]);
-  const pub=res[0].status==='fulfilled'?res[0].value:null,board=res[1].status==='fulfilled'?res[1].value:null,dev=res[2].status==='fulfilled'?res[2].value:null;
+  const pub=res[0].status==='fulfilled'?res[0].value:null,board=state.pending||null,dev=res[1].status==='fulfilled'?res[1].value:null;
   const live=[pub,board,dev].filter(Boolean).length,po=mObjects(pub),bo=mObjects(board),doo=mObjects(dev),all=po.concat(bo,doo);
   const flowVals=[];for(let i=0;i<10;i++){const f=mFlow(all,'F0'+i);if(f)flowVals.push(mStatus(f.implementation_status||f.status||f.operational_status))}
   const flowLive=flowVals.length?flowVals.reduce((a,b)=>a+b,0)/flowVals.length:null;
@@ -144,7 +174,6 @@ function boot(){
  document.documentElement.dataset.crBuild=BUILD;
  document.documentElement.dataset.crNativeState='loading';
  renderAll();patchReturns();
- const b=$('.cr-flow-panel .cr-panel-action');if(b)b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();refresh()});
  refresh().finally(()=>setTimeout(refreshMaturity,300));setInterval(refresh,30000);setInterval(refreshMaturity,60000);
  window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshMaturity,APP};
 }
