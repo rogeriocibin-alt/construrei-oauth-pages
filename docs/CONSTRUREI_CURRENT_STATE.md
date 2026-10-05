@@ -553,3 +553,16 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Conteúdo dos aliases conferido: `/central/` aponta para `centro-operacoes`; `/google-meet-central/` aponta para `sala-equipe-r12-candidate`; nenhum alias contém `Central Call` ou `WebRTC`.
 - Gestor H5 sincronizado com as ações de 05/10: PM-10, PM-11, PM-12 e PM-17 atualizados; versão Meeting R1.2 v5 registrada.
 - Gate remanescente: validação física final em celular e notebook dos controles nativos do Google Meet (câmera, microfone e compartilhamento), pois essas permissões pertencem ao navegador/app do aparelho.
+
+
+## Hotfix crítico — HTML exibido como código — 2026-10-05 18:55
+
+- Sintoma confirmado: os endpoints Supabase `centro-operacoes` e `sala-equipe-r12-candidate` respondiam o HTML com `Content-Type: text/plain` + `X-Content-Type-Options: nosniff`, fazendo navegador móvel exibir o código-fonte em vez da interface.
+- Correção estrutural: os endpoints oficiais permanecem estáveis, porém passam a responder com redirect HTTP 302 para páginas estáticas já publicadas no GitHub Pages, que entregam `Content-Type: text/html; charset=utf-8`.
+- `centro-operacoes`: **v286 ACTIVE** • build `CR-CENTRAL-OP-V2-UX-R1.2-OFFICIAL-PAGES-REDIRECT-H1-20261005` • hash `40d4ebbcfbb03edcaac7e22cf767429bf2f66873f44d88c0acb77f80394ed82e`.
+- Destino visual da Central: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- `sala-equipe-r12-candidate`: **v6 ACTIVE** • build `CR-SALA-EQUIPE-R1.2-APP-IDENTITY-V6-PAGES-REDIRECT-20261005` • hash `d0f07da807325463ccfd17c0dd837be7cb7108d3e8705d70cb15ad659942e8b3`.
+- Destino visual da Sala da Equipe: `preview/central-ux-navigation-r1-candidate-20261005/call/`.
+- Validação automática no notebook Rogerio-2022: **PASS 4/4** — alias da Central, alias da Sala, endpoint Supabase da Central e endpoint Supabase da Sala terminaram em HTTP 200, `text/html`, sem `text/plain`.
+- Links públicos preservados: `/central/` e `/google-meet-central/`.
+- Nenhuma lógica da Agenda v5, APP, dados operacionais ou Gestor H5 foi alterada.
