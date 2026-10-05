@@ -6,7 +6,7 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Versão oficial atual: **Executivo R9 + Agenda Operacional v5 + Identidade de Links v1.2 — OFICIAL**
+- Versão oficial atual: **Central Operacional V2 + Agenda v5 + Identidade de Links v1.3 — OFICIAL**
 - Branch homologada: `central-oficial-r9-agenda-v5-links-v1-2-20261005`
 - Branch de origem validada: `cr-central-exec-r9-mobilefix-20261004`
 - Commit funcional R9: `b42c491dba5a60fa375c2f2609e26c660ebf892e`
@@ -15,10 +15,10 @@
 - Checkpoint homologado: `CHECKPOINT_CENTRAL_R9_AGENDA_V5_LINKS_V1_2_20261005`
 - Pasta de produção congelada: `production/central-homologada-exec-r9-20261004/`
 - Fonte viva de pendências: `cr-pendencias-executive-v2-candidate-20261004` v1
-- Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — R9 + Agenda v5**; camada pública de Links v1.2 também **OFICIAL**
+- Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — Central Operacional V2**; link público preservado.nks v1.2 também **OFICIAL**
 - Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`
-- Destino HOME oficial: `production/central-homologada-exec-r9-20261004/`
-- Regra: não alterar a pasta de produção R9, a branch homologada nem o checkpoint homologado; evoluções futuras devem ocorrer em candidata isolada.
+- Destino HOME oficial: `production/central-operacional-v2-homologada-20261005/`
+- Regra: preservar a R9 como rollback; evoluções futuras da Central Operacional partem da V2 oficial em candidata isolada.
 
 ## Link oficial atual
 
@@ -335,3 +335,20 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Status: **CANDIDATE / NOT PROMOTED**.
 - Gate: validação humana móvel + notebook continua obrigatória antes de promoção.
 - R9 oficial e Gestor H4 oficial permanecem intocados.
+
+
+## Oficialização — Central Operacional V2 — 2026-10-05
+
+- Status: **OFICIAL / HOMOLOGADA / CONGELADA**.
+- Build: `CR-CENTRAL-OPERATION-ONLY-V2-OFFICIAL-20261005`.
+- Origem aprovada: `preview/central-operation-only-v2-direct-candidate-20261005/`.
+- Produção congelada: `production/central-operacional-v2-homologada-20261005/`.
+- Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`.
+- Alias oficial preservado: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/`.
+- Arquitetura: página direta, sem wrapper `centralFrame` / iframe.
+- Escopo: operação do negócio permanece na Central; governança, desenvolvimento e infraestrutura ficam no Gestor do Projeto.
+- Gate humano: **APROVADO PELO PROPRIETÁRIO NO CELULAR**; Rogério autorizou explicitamente homologação, oficialização e congelamento.
+- Notebook: não foi retestado neste ciclo; promoção ocorreu por autorização explícita do proprietário após validação móvel.
+- Regra antirregressão: nenhum link público oficial foi renomeado ou substituído.
+- Rollback imediato: `production/central-homologada-exec-r9-20261004/`.
+- Checkpoint anterior à V2: `checkpoint-before-central-operation-v2-video-fix-20261005`.
