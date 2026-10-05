@@ -224,3 +224,18 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Registro `official-links-registry.json` atualizado para apontar o Gestor ao runtime estável direto, não ao preview legado.
 - Central R9 + Agenda v5 e os demais aliases operacionais não foram alterados.
 - Validação humana no celular: **PENDENTE** após publicação.
+
+
+## Hotfix Gestor V1.1.2 H2 — Links Oficiais visíveis — 2026-10-05
+
+- Evidência visual: no celular, o Gestor abria em V1.1.2 mas o bloco **Links Oficiais** não aparecia.
+- Causa real: `executive-dashboard.css` continha a regra `#view-now>.owner-hub { display:none!important }`, escondendo deliberadamente o bloco que continha os acessos do proprietário.
+- Correção: removida somente a ocultação de `owner-hub`; as regras que escondem o dashboard legado duplicado foram preservadas.
+- A Home agora mantém o bloco **Seu acesso único ao CONSTRU-REI** visível.
+- O Dashboard Executivo também ganhou ação direta **Links Oficiais ↗**.
+- Rótulo interno do Dashboard Executivo corrigido de V1.1.1 para **V1.1.2**.
+- Build: `CR-PM-V1.1.2-H2-LINKS-VISIBLE-20261005`.
+- Checkpoint de rollback anterior: `checkpoint-gestor-v1-1-2-h1-before-owner-links-visibility-fix-20261005`.
+- Checkpoint lógico: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H2_LINKS_VISIBLE_20261005`.
+- Central R9, Agenda v5, APP e demais rotas operacionais permanecem intocados.
+- Validação humana no celular: **PENDENTE**.
