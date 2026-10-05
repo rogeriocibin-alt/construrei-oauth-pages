@@ -1,6 +1,6 @@
 {
-  "version": "LINK-IDENTITY-V1.3.2-20261005",
-  "status": "OFICIAL / HOMOLOGADA / CONGELADA",
+  "version": "LINK-IDENTITY-V1.3.3-20261005",
+  "status": "OFICIAL / HOMOLOGADA / CONGELADA — BASELINE FINAL 05/10",
   "policy": "Aliases amigáveis são a camada pública. Endpoints técnicos permanecem preservados como destinos canônicos; não renomear nem excluir endpoints internos.",
   "base_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages",
   "created_at": "2026-10-05",
@@ -281,21 +281,25 @@
       "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#sst"
     }
   ],
-  "approved_at": "2026-10-05T08:50:00-03:00",
+  "approved_at": "2026-10-05T18:55:00-03:00",
   "approved_by": "Rogério",
-  "checkpoint": "CHECKPOINT_CENTRAL_R9_AGENDA_V5_LINKS_V1_2_20261005",
-  "official_branch": "central-oficial-r9-agenda-v5-links-v1-2-20261005",
+  "checkpoint": "CHECKPOINT_CONSTRUREI_BASELINE_FINAL_APPROVED_20261005_1855",
+  "official_branch": "cr-construrei-baseline-final-approved-20261005",
   "validation": {
-    "gate": "VALIDAÇÃO HUMANA CONCLUÍDA",
+    "gate": "VALIDAÇÃO HUMANA CONCLUÍDA — BASELINE FINAL 05/10",
     "pages_build_head": "8dc210ea07d629f0a9ef09efaf838a17848b8b49",
     "pages_build_status": "success",
     "meeting_rule": "Aliases /google-meet-central/ e /meeting/ apontam para a Sala da Equipe R1.2 servida diretamente pelo Supabase; Google Meet é acionado somente pelo botão de entrada.",
     "compatibility": "Endpoints técnicos e aliases legados preservados; camada pública usa nomes amigáveis.",
     "central_v2_owner_mobile_homologation": "PASS_OWNER_APPROVED",
     "central_public_links_changed": false,
-    "central_route_hotfix": "PASS — centro-operacoes v283 aponta para production/central-operacional-v2-ux-r1-2-homologada-20261005/",
-    "central_404_hotfix": "PASS — runtime oficial não depende mais da pasta GitHub Pages UX R1.2",
-    "pages_note": "GitHub Pages estava em fila/cancelamentos; runtime crítico foi desacoplado dessa publicação."
+    "central_route_hotfix": "PASS — centro-operacoes v286 entrega a Central oficial por redirect para a pasta homologada UX R1.2.",
+    "central_404_hotfix": "PASS — destino homologado publicado e validado HTTP 200.",
+    "pages_note": "GitHub Pages está publicado e é usado como camada visual HTML; os aliases públicos permanecem estáveis.",
+    "central_html_delivery_hotfix": "PASS — centro-operacoes v286 redireciona para HTML publicado; destino final responde text/html.",
+    "meeting_html_delivery_hotfix": "PASS — sala-equipe-r12-candidate v6 redireciona para página publicada; destino final responde text/html.",
+    "owner_final_approval": "PASS_OWNER_APPROVED_2026-10-05_18:55",
+    "flow_owner_gate": "PENDENTE — F00→F09 ainda requer validação operacional do proprietário; não altera a baseline atual."
   },
   "project_manager_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H5_OFFICIAL_20261005",
   "project_manager_build": "CR-PM-V1.1.2-H5-UX-NAV-OFFICIAL-20261005",
