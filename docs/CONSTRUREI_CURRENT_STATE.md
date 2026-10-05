@@ -101,7 +101,7 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-05 — Hotfix cirúrgico da Agenda aplicado no Edge de leitura: identificação de Rogério/Fabrício corrigida, comparação sem dependência de acentos e fallback específico para Reunião Diária. Produção R9 e layout permaneceram congelados e intocados.
+2026-10-05 — Hotfix cirúrgico da Agenda aplicado no Edge de leitura v3: identificação de Rogério/Fabrício corrigida, comparação sem dependência de acentos, prioridade para responsáveis declarados no título do evento e fallback específico para Reunião Diária. Produção R9 e layout permaneceram congelados e intocados.
 
 ## Hotfix Agenda — identificação de equipe — 2026-10-05
 
@@ -113,12 +113,13 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
   - participantes do evento não eram incorporados ao texto usado para detecção.
   - a reunião recorrente `Reunião Diária` não tinha equipe explícita e caía no fallback genérico.
 - Correção aplicada somente na camada de Agenda/API, sem alterar a pasta de produção R9, layout, GestãoClick ou dados:
-  - Edge atualizado de **v1 para v2** mantendo o mesmo slug.
-  - BUILD: `CR-AGENDA-EXECUTIVE-V12.2-TEAM-PARSER-HOTFIX-20261005`.
+  - Edge atualizado de **v1 para v3** mantendo o mesmo slug.
+  - BUILD: `CR-AGENDA-EXECUTIVE-V12.3-TEAM-PARSER-PRIORITY-HOTFIX-20261005`.
   - detecção de nomes agora é insensível a acentos;
   - `Rogério` incluído no cadastro de responsáveis reconhecidos;
-  - participantes do Google Agenda entram como fonte adicional de identificação;
+  - nomes encontrados no título do evento têm prioridade; descrição/local/participantes são usados apenas como fallback, evitando que um contato citado na observação seja tratado como executor;
+  - participantes do Google Agenda entram como fonte adicional de identificação quando o título não define a equipe;
   - `Reunião Diária` sem nome explícito passa a ser apresentada como `Equipe CONSTRU-REI`.
 - Hash da fonte anterior do Edge: `23c0ab5649c517f111574efca73eaaf85b2c9d16d80bf4beaa6c473c2e6fd5b7`.
-- Hash da fonte corrigida do Edge: `4d16619bd0badcf99a69fb8dd180cd1385096e3b7db1c36e834fa9914b20015d`.
+- Hash da fonte corrigida final do Edge: `b6945819c68693a44be66c9f18d9a28c44364da6f5fc0e202d3eb3a739eb26d5`.
 - Regra antirregressão: nenhum arquivo em `production/central-homologada-exec-r9-20261004/` foi modificado neste hotfix.
