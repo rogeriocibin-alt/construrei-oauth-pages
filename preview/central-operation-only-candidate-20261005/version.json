@@ -1,0 +1,13 @@
+{
+  "build": "CR-CENTRAL-OPERATION-ONLY-CANDIDATE-20261005",
+  "status": "CANDIDATE / NOT PROMOTED",
+  "source": "production/central-homologada-exec-r9-20261004",
+  "source_commit": "0e13035fb93813834a7c98021eeafa8ab4cec81a",
+  "official_untouched": true,
+  "technical_destination": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/",
+  "validation_required": [
+    "celular",
+    "notebook"
+  ],
+  "promotion_gate": "human approval"
+}
