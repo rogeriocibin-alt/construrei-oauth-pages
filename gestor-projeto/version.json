@@ -1,16 +1,18 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
   "version": "1.1.2",
-  "build": "CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005",
+  "build": "CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005",
   "environment": "canonical",
-  "release_status": "official_homologated",
-  "released_at": "2026-10-05T12:18:00-03:00",
+  "release_status": "official_installability_hotfix",
+  "released_at": "2026-10-05T12:52:00-03:00",
   "branch": "cr-project-manager-v1-1-2-h3-official-20261005",
   "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
   "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
   "canonical_changed": true,
   "update_policy": "same_url_atomic_pwa_bundle",
   "changes": [
+    "HOTFIX H4 PWA: manifesto passou a declarar ícones 192x192 e 512x512 explicitamente, além de prefer_related_applications=false, para atender aos critérios de instalação do Chrome.",
+    "HOTFIX H4 PWA: cache/service worker inclui os ícones de instalação; nenhuma alteração visual ou funcional foi feita na H3.",
     "HOMOLOGAÇÃO FINAL H3: versão do botão único Central de Links aprovada pelo proprietário e congelada como oficial.",
     "HOTFIX H3: a Home do Gestor exibe apenas um botão compacto Central de Links, em vez de renderizar todos os acessos homologados.",
     "HOTFIX H3: a lista completa de acessos permanece concentrada em /links-oficiais/.",
@@ -44,7 +46,7 @@
     "API sanitizada persistente conectada ao PWA com JWT e fallback local.",
     "Gate do Ciclo 0 visível: promoção permanece bloqueada até continuidade e homologação."
   ],
-  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H2_LINKS_VISIBLE_20261005",
+  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_OFFICIAL_20261005",
   "candidate_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_LINKS_CANDIDATE_20261005",
   "last_tested_at": "2026-10-03T13:31:48-03:00",
   "promotion_gate": {
@@ -75,9 +77,13 @@
     "executive_version_label": "V1.1.2",
     "owner_links_mode": "SINGLE_BUTTON",
     "duplicate_links_action_removed": "PASS_STATIC",
-    "pwa_reinstall_mobile": "READY"
+    "pwa_reinstall_mobile": "READY",
+    "manifest_icon_192": "PASS_STATIC",
+    "manifest_icon_512": "PASS_STATIC",
+    "prefer_related_applications_false": "PASS_STATIC",
+    "chrome_install_retry": "PENDING_HUMAN_ONLINE"
   },
-  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_OFFICIAL_20261005",
+  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_PWA_INSTALLABLE_20261005",
   "owner_homologation": {
     "status": "APPROVED",
     "source": "explicit_owner_instruction_in_chat",
