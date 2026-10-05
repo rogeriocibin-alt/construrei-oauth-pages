@@ -260,6 +260,7 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Build: `CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005`
 - Branch oficial: `cr-project-manager-v1-1-2-h3-official-20261005`
 - Checkpoint homologado: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_OFFICIAL_20261005`
+- Commit oficial congelado: `dce58ac5212af0d0564476367d099e3a9730d9de`
 - Link estável: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/`
 - Gate humano: **CONCLUÍDO** — Rogério aprovou a H3 com botão único **Central de Links** e autorizou oficialização antes da reinstalação do PWA no celular.
 - Escopo congelado: Home compacta com um único botão para o diretório mestre `/links-oficiais/`; sem grade de acessos e sem botão duplicado no cabeçalho executivo.
