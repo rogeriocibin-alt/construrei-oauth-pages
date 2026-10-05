@@ -3,14 +3,15 @@
   "version": "1.1.2",
   "build": "CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005",
   "environment": "canonical",
-  "release_status": "official_installability_hotfix",
-  "released_at": "2026-10-05T12:52:00-03:00",
-  "branch": "cr-project-manager-v1-1-2-h3-official-20261005",
+  "release_status": "official_homologated_frozen",
+  "released_at": "2026-10-05T13:25:00-03:00",
+  "branch": "cr-project-manager-v1-1-2-h4-official-20261005",
   "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
   "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
   "canonical_changed": true,
   "update_policy": "same_url_atomic_pwa_bundle",
   "changes": [
+    "HOMOLOGAÇÃO FINAL H4: PWA instalável validado pelo proprietário; H4 congelada como versão oficial do Gestor.",
     "HOTFIX H4 PWA: manifesto passou a declarar ícones 192x192 e 512x512 explicitamente, além de prefer_related_applications=false, para atender aos critérios de instalação do Chrome.",
     "HOTFIX H4 PWA: cache/service worker inclui os ícones de instalação; nenhuma alteração visual ou funcional foi feita na H3.",
     "HOMOLOGAÇÃO FINAL H3: versão do botão único Central de Links aprovada pelo proprietário e congelada como oficial.",
@@ -65,13 +66,13 @@
     "executive_js_http": "PASS_200",
     "executive_css_http": "PASS_200",
     "pwa_installed_notebook": "PENDING_HUMAN",
-    "pwa_installed_mobile": "PENDING_HUMAN",
+    "pwa_installed_mobile": "PASS_OWNER_CONFIRMED",
     "visual_homologation": "OWNER_APPROVED_CHANGE_SCOPE",
     "official_links_card": "PASS_STATIC",
     "stable_scope_bundle": "PUBLISHED",
     "legacy_preview_redirect_removed": "PASS_STATIC",
     "cache_strategy": "NETWORK_FIRST_WITH_OFFLINE_FALLBACK",
-    "human_mobile_visual_confirmation": "PASS_OWNER_APPROVED",
+    "human_mobile_visual_confirmation": "PASS_OWNER_CONFIRMED",
     "owner_links_hub_visibility": "PASS_STATIC",
     "executive_links_button": "PASS_STATIC",
     "executive_version_label": "V1.1.2",
@@ -81,13 +82,14 @@
     "manifest_icon_192": "PASS_STATIC",
     "manifest_icon_512": "PASS_STATIC",
     "prefer_related_applications_false": "PASS_STATIC",
-    "chrome_install_retry": "PENDING_HUMAN_ONLINE"
+    "chrome_install_retry": "PASS_OWNER_CONFIRMED",
+    "final_homologation": "PASS_OWNER_APPROVED"
   },
-  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_PWA_INSTALLABLE_20261005",
+  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
   "owner_homologation": {
-    "status": "APPROVED",
+    "status": "APPROVED_FINAL",
     "source": "explicit_owner_instruction_in_chat",
-    "note": "Proprietário aprovou a H3 com botão único Central de Links e solicitou oficialização antes de reinstalar o PWA no celular."
+    "note": "Proprietário confirmou que a H4 está correta e autorizou finalizar o processo em 05/10/2026 às 13:25 -03:00."
   },
   "previous_official_commit": "cac1006b7404c5202f5e5a25c5dadcb96b3d6539"
 }
