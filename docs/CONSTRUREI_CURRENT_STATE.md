@@ -427,3 +427,15 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Auditoria de sintaxe inline: **PASS**.
 - Gestor H5: **não alterado**; permanece candidato validado pelo proprietário nesta rodada.
 - Gate: novo reteste móvel da Central R1.1 pendente antes de qualquer promoção.
+
+
+## Correção UX R1.2 — motor da Sala da Equipe — 2026-10-05
+
+- Evidência: vídeo móvel `1000938490.mp4` confirmou microfone e câmera autorizados/testados, enquanto a Sala própria mostrava compartilhamento indisponível e dependia da implementação WebRTC P2P da Central.
+- Diagnóstico: **não é tratado como problema de aparelho**. A regressão está na troca do motor de reunião por `Central Call` própria, com malha P2P/Supabase Realtime e STUN, sem infraestrutura TURN dedicada; isso não oferece a mesma confiabilidade do fluxo homologado anterior entre redes/aparelhos.
+- Correção R1.2: Google Meet homologado volta a ser o motor principal da Sala da Equipe: `https://meet.google.com/xtw-rihq-jwi`.
+- A Central continua sendo a porta de entrada; `preview/central-ux-navigation-r1-candidate-20261005/call/` agora é apenas lançador da sala oficial, sem solicitar câmera/microfone nem executar WebRTC próprio.
+- Todos os atalhos da candidata R1.2 convergem para a mesma sala oficial.
+- Build: `CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-ENGINE-CANDIDATE-20261005`.
+- Checkpoint anterior: `checkpoint-before-central-ux-r1-2-meet-engine-fix-20261005`.
+- Central Operacional V2 oficial permanece **inalterada**; promoção da R1.2 continua bloqueada até validação humana.
