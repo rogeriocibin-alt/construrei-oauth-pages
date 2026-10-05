@@ -279,3 +279,52 @@ Aprendizados canônicos:
 ## 23. Resultado esperado
 
 O ORÇA-REI deve receber, entender, confrontar, calcular, pesquisar, comparar, alertar, precificar, escrever e revisar. Rogério deve concentrar-se em decidir e aprovar.
+
+## 24. Entrada Inteligente no topo do F02
+
+O F02 deve expor, no cabeçalho do orçamento, um campo de **ENTRADA INTELIGENTE** para colagem de conteúdo bruto complementar, inclusive:
+- texto desorganizado;
+- rascunho de vistoria;
+- orçamento ou composição produzida por IA terceira;
+- lista de serviços e materiais;
+- mensagens copiadas;
+- observações técnicas;
+- preços, quantidades e premissas ainda não estruturados.
+
+A Entrada Inteligente **não cria um caso paralelo** e não substitui a esteira. O contexto originado no **F00** permanece vinculado ao mesmo caso e chega ao F02 pelo fluxo vigente. O conteúdo colado funciona como complemento/enriquecimento do mesmo orçamento.
+
+Ao processar a entrada, o ORÇA-REI deve:
+1. identificar e normalizar serviços, produtos/materiais, quantitativos, unidades, valores unitários, subtotais, totais e observações técnicas;
+2. distinguir preço de venda, custo, estimativa, referência externa e valor sem natureza comprovada;
+3. recalcular toda matemática em vez de confiar cegamente em subtotais ou totais recebidos;
+4. cruzar a entrada colada com os dados já herdados do F00/F01;
+5. preservar dados confirmados e evidências de maior hierarquia;
+6. quando houver conflito, marcar DIVERGENTE / AMBÍGUO / A CONFERIR em vez de sobrescrever silenciosamente;
+7. gerar o orçamento no padrão GestãoClick e manter a análise interna separada;
+8. manter rastreabilidade da origem de cada preço, quantidade, custo e premissa.
+
+### Regra de fusão F00 + Entrada Inteligente
+
+- **F00/F01 confirmado + entrada compatível:** consolidar.
+- **F00/F01 confirmado + entrada conflitante:** preservar o confirmado e emitir divergência.
+- **F00/F01 ausente + entrada suficientemente clara:** estruturar com natureza/origem explícita.
+- **Entrada de IA terceira:** tratar como fonte auxiliar, nunca como evidência superior por si só.
+- **Valor sem classificação de custo ou venda:** não inferir; marcar A CONFERIR.
+- **Quantidade aproximada:** manter aproximada até medição ou confirmação.
+
+### Resultado esperado da Entrada Inteligente
+
+Depois do processamento, o usuário deve receber uma composição editável já organizada em:
+- SERVIÇOS / mão de obra;
+- PRODUTOS / materiais;
+- QTD;
+- VR. UNIT.;
+- SUBTOTAL;
+- TOTAL SERVIÇOS;
+- TOTAL PRODUTOS;
+- TOTAL GERAL;
+- OBSERVAÇÕES TÉCNICAS;
+- alertas de divergência ou dados a conferir.
+
+Nenhum conteúdo colado pode apagar silenciosamente informação canônica já vinculada ao caso.
+
