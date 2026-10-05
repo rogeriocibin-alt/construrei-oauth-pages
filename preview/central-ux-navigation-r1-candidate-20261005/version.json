@@ -1,20 +1,19 @@
 {
   "product": "Central CONSTRU-REI",
-  "candidate": "UX Navigation R1",
-  "build": "CR-CENTRAL-OP-V2-UX-NAV-R1-CANDIDATE-20261005",
+  "candidate": "UX Navigation R1.1",
+  "build": "CR-CENTRAL-OP-V2-UX-NAV-R1.1-CANDIDATE-20261005",
   "status": "CANDIDATE_NOT_PROMOTED",
   "base_official": "production/central-operacional-v2-homologada-20261005/",
   "changes": [
-    "Topbar remove pesquisa e sino inativos; perfil Rogério/Diretor deixa de parecer menu clicável.",
-    "Ações reais Início e Atualizar entram no topo.",
-    "Dock móvel passa a Voltar, Início, Atualizar e Menu.",
-    "Atualizar recarrega a própria candidata com cache-bust; após promoção, pode consultar o endpoint canônico sem reinstalação.",
-    "Sala da Equipe ganha página clara, navegação de retorno e diagnóstico recolhível.",
-    "Conhecimento/Academy recebe leitura visual clara e separação entre uso operacional e engenharia.",
-    "Painel residual Desenvolvimento/Saúde Técnica é retirado da Home operacional."
+    "Mantém revisão R1: topbar limpo e navegação Voltar/Início/Atualizar/Menu.",
+    "Sala da Equipe bloqueia a sobrescrita recorrente do refinement-batch.js legado.",
+    "Todos os atalhos de reunião convergem para a mesma Sala da Equipe candidata clara.",
+    "Tela principal da Sala deixa de exibir Central Call/WebRTC/Realtime e compatibilidade como conteúdo principal.",
+    "Diagnóstico permanece disponível dentro da sala somente quando necessário.",
+    "Conhecimento & Treinamento remove nomenclaturas Academy/Base Técnica/Tecnologia do escopo operacional e explicita a fronteira com o Gestor."
   ],
   "gate": {
-    "mobile": "PENDING_OWNER",
+    "mobile": "PENDING_OWNER_RETEST_R1_1",
     "notebook": "PENDING_OWNER",
     "promotion": "BLOCKED"
   },
