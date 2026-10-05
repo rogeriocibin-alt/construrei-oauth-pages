@@ -619,7 +619,7 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - GitHub Actions: **fallback manual בלבד**; agendamento diário removido para evitar duplicidade.
 - Job legado `construrei-cloud-backup`: preservado apenas como rollback técnico.
 - Scheduler legado `construrei-cloud-backup-daily`: **PAUSADO**; não executa automaticamente.
-- Backup local Windows: **DESATIVADO / NO-OP**; `daily-safe.ps1` apenas registra que o backup oficial está na nuvem.
+- Backup local Windows: **NEUTRALIZADO / NO-OP**; `daily-safe.ps1` apenas registra que o backup oficial está na nuvem. A tarefa agendada `CONSTRUREI - Backup Automatico` ainda pode permanecer `Enabled` por ACL/elevação do Windows (`Access denied` ao tentar desabilitar sem UAC), mas não executa backup nem altera dados.
 - Payload local pesado: `C:\CONSTRUREI-COFRE-ZERO` e `C:\CONSTRUREI-BACKUP-AUTO\WORK` já removidos após validação externa. `CURRENT`, `HISTORY` e `RESTORE-DRILL` locais estão vazios.
 - Payload registrado antes da limpeza: 226.182.446 bytes (Cofre Zero) + 4.632.974.850 bytes (WORK) = **4.859.157.296 bytes liberáveis/removidos**.
 - Regra antirregressão: manter **um único Scheduler ativo**. Qualquer alteração de executor, secrets, imagem ou horário exige novo run manual + run via Scheduler + verificação Drive antes de promoção.
