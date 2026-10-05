@@ -1,0 +1,15 @@
+{
+  "app": "Central Operacional CONSTRU-REI",
+  "version": "R9-OP-V2",
+  "build": "CR-CENTRAL-OPERATION-ONLY-V2-DIRECT-20261005",
+  "status": "CANDIDATE_NOT_PROMOTED",
+  "base": "production/central-homologada-exec-r9-20261004",
+  "architecture": "direct-page-no-iframe",
+  "checkpoint_before": "checkpoint-before-central-operation-v2-video-fix-20261005",
+  "purpose": "Corrigir travamento/navegação/dados observado em vídeo móvel e separar operação de governança sem tocar a R9 oficial.",
+  "validation": {
+    "mobile": "PENDING_HUMAN",
+    "notebook": "PENDING_HUMAN",
+    "promotion": "BLOCKED"
+  }
+}
