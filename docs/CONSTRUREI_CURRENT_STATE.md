@@ -6,7 +6,7 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Versão oficial atual: **Central Operacional V2 + UX R1.2 + Agenda v5 + Identidade de Links v1.3.1 — OFICIAL**
+- Versão oficial atual: **Central Operacional V2 + UX R1.2 + Agenda v5 + Identidade de Links v1.3.2 — OFICIAL**
 - Branch homologada: `central-operacional-v2-ux-r1-2-oficial-20261005`
 - Branch de origem validada: `main` • candidata isolada `preview/central-operation-only-v2-direct-candidate-20261005/`
 - Commit funcional UX R1.2: `df3bfe574f638a1981330b2a0e9201c612056de6`
@@ -518,3 +518,22 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Registro de links atualizado para **LINK-IDENTITY-V1.3.1-20261005**.
 - Checkpoint anterior: `checkpoint-before-central-r12-route-alias-hotfix-20261005`.
 - Nenhuma alteração em Agenda v5, APP, dados operacionais ou Gestor H5.
+
+
+## Fechamento do 404 + Sala da Equipe — runtime direto — 2026-10-05
+
+- Causa do 404 confirmada: a UX R1.2 existia no repositório, porém a fila de **GitHub Pages** não havia publicado os commits correspondentes; o Edge oficial redirecionava para uma pasta ainda indisponível no site.
+- Correção estrutural: a Central deixa de depender do GitHub Pages no caminho crítico e passa a servir a UX R1.2 homologada **diretamente pelo Edge oficial**.
+- Edge `centro-operacoes`: **v285 ACTIVE**.
+- Build: `CR-CENTRAL-OP-V2-UX-R1.2-OFFICIAL-DIRECT-V2-20261005`.
+- Hash: `a4274b13ed1b9268dd7e421820fc498d17a6a56dc588435e4ad541a5aded0857`.
+- Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`.
+- Recursos físicos reaproveitados somente da R9 já publicada; conteúdo principal da Central não redireciona mais para pasta R1.2 do Pages.
+- Sala da Equipe: Edge `sala-equipe-r12-candidate` **v3 ACTIVE**, servindo a interface visual R1.2 homologada (azul-marinho + azul institucional + branco + amarelo).
+- Build Sala: `CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-LAUNCHER-DIRECT-20261005`.
+- Hash Sala: `087fb0b57dedb38c2100c2aac94b46ec5b27d398e1a7019ca87ffbbf69143d7e`.
+- WebRTC legado: **desativado / ausente da Sala R1.2**.
+- Motor de reunião: **Google Meet homologado**, acionado ao tocar em “Entrar na Sala da Equipe”.
+- Aliases `/meeting/` e `/google-meet-central/` consolidados para o runtime direto da Sala.
+- Identidade de Links: **v1.3.2**.
+- Observação: a fila do GitHub Pages permanece separada do runtime crítico; falha ou atraso de Pages não deve mais gerar 404 na Central oficial.

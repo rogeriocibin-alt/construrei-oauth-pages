@@ -1,5 +1,5 @@
 {
-  "version": "LINK-IDENTITY-V1.3.1-20261005",
+  "version": "LINK-IDENTITY-V1.3.2-20261005",
   "status": "OFICIAL / HOMOLOGADA / CONGELADA",
   "policy": "Aliases amigáveis são a camada pública. Endpoints técnicos permanecem preservados como destinos canônicos; não renomear nem excluir endpoints internos.",
   "base_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages",
@@ -11,7 +11,7 @@
       "label": "Central CONSTRU-REI",
       "slug": "central",
       "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/",
-      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes"
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/"
     },
     {
       "group": "Núcleo",
@@ -243,7 +243,7 @@
       "label": "Google Meet • Central",
       "slug": "google-meet-central",
       "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/google-meet-central/",
-      "target": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/call/?v=bd90b23b02d1941078dc73fd7cff5fefc91bef5e"
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/sala-equipe-r12-candidate"
     },
     {
       "group": "Técnico & Segurança",
@@ -289,11 +289,13 @@
     "gate": "VALIDAÇÃO HUMANA CONCLUÍDA",
     "pages_build_head": "8dc210ea07d629f0a9ef09efaf838a17848b8b49",
     "pages_build_status": "success",
-    "meeting_rule": "Google Meet • Central e /meeting/ abrem primeiro a Sala da Equipe UX R1.2 homologada, com identidade CONSTRU-REI; ao entrar na reunião, o Google Meet assume câmera, microfone e compartilhamento.",
+    "meeting_rule": "Aliases /google-meet-central/ e /meeting/ apontam para a Sala da Equipe R1.2 servida diretamente pelo Supabase; Google Meet é acionado somente pelo botão de entrada.",
     "compatibility": "Endpoints técnicos e aliases legados preservados; camada pública usa nomes amigáveis.",
     "central_v2_owner_mobile_homologation": "PASS_OWNER_APPROVED",
     "central_public_links_changed": false,
-    "central_route_hotfix": "PASS — centro-operacoes v283 aponta para production/central-operacional-v2-ux-r1-2-homologada-20261005/"
+    "central_route_hotfix": "PASS — centro-operacoes v283 aponta para production/central-operacional-v2-ux-r1-2-homologada-20261005/",
+    "central_404_hotfix": "PASS — runtime oficial não depende mais da pasta GitHub Pages UX R1.2",
+    "pages_note": "GitHub Pages estava em fila/cancelamentos; runtime crítico foi desacoplado dessa publicação."
   },
   "project_manager_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H5_OFFICIAL_20261005",
   "project_manager_build": "CR-PM-V1.1.2-H5-UX-NAV-OFFICIAL-20261005",
@@ -303,7 +305,7 @@
   "project_manager_official_branch": "cr-project-manager-v1-1-2-h5-official-20261005",
   "project_manager_checkpoint_branch": "checkpoint-project-manager-v1-1-2-h4-official-20261005",
   "project_manager_validation": "PWA MOBILE PASS OWNER CONFIRMED",
-  "official_central_build": "CR-CENTRAL-OP-V2-UX-NAV-R1.2-OFFICIAL-20261005",
+  "official_central_build": "CR-CENTRAL-OP-V2-UX-R1.2-OFFICIAL-DIRECT-V2-20261005",
   "official_central_production": "production/central-operacional-v2-ux-r1-2-homologada-20261005/",
   "hotfix": {
     "date": "2026-10-05",
@@ -311,5 +313,16 @@
     "edge_version": 283,
     "edge_hash": "37d8173b09679cb802f2f3258b9fe8fc4fb49ed62be6c55169f1b1a13643ef34",
     "checkpoint_branch": "checkpoint-before-central-r12-route-alias-hotfix-20261005"
+  },
+  "official_central_runtime": "supabase_edge_direct",
+  "official_central_edge_version": 285,
+  "official_central_edge_hash": "a4274b13ed1b9268dd7e421820fc498d17a6a56dc588435e4ad541a5aded0857",
+  "meeting_runtime": {
+    "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/sala-equipe-r12-candidate",
+    "edge_version": 3,
+    "edge_hash": "087fb0b57dedb38c2100c2aac94b46ec5b27d398e1a7019ca87ffbbf69143d7e",
+    "build": "CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-LAUNCHER-DIRECT-20261005",
+    "ui": "R1.2 homologated",
+    "legacy_webrtc": false
   }
 }
