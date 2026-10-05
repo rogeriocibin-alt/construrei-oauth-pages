@@ -318,3 +318,20 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - **Bio Gestor:** operação F00–F09, orçamentos, textos operacionais, CRM e gestão de fluxo, sem assumir engenharia de infraestrutura.
 - Regra: o comando do proprietário deve ser roteado automaticamente por assunto, preservando alçadas e evitando que um agente execute atividade fora de sua competência.
 - Exceção: somente quando não existir agente/ferramenta responsável disponível, o orquestrador deve declarar a limitação em vez de simular que outro agente executou.
+
+
+## Diagnóstico móvel + Central Operacional V2 — 2026-10-05
+
+- Evidência: vídeo móvel `1000938346.mp4` mostrou o Gestor abrindo no PWA e a Central Operacional candidata carregando a Home, porém sem atualizar os dados e com navegação interna travada.
+- Gestor: o chip visual `V1.1.2 • CR-PM-V1` não identifica H3/H4 porque `app.js` reduz o build para os primeiros 8 caracteres. O H4 oficial continua sendo `CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005`; tocar no chip de versão abre o build completo.
+- Causa arquitetural da Central candidata V1: ela carregava a R9 oficial inteira dentro de um `iframe` e aplicava poda por JavaScript/MutationObserver. Essa candidata foi reprovada para promoção.
+- Nova candidata: **Central Operacional V2 direta**, sem `iframe`.
+- Build: `CR-CENTRAL-OPERATION-ONLY-V2-DIRECT-20261005`.
+- Preview: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-operation-only-v2-direct-candidate-20261005/`.
+- Checkpoint anterior: `checkpoint-before-central-operation-v2-video-fix-20261005`.
+- Commit da correção estrutural: `9cf73b67dfb249532143fb6da03b70305990dd4f`.
+- Auditoria estática: nenhum dos módulos técnicos `status/homolog/context/htmls/apis/grc/security/audit/releases/gaps/history/health/technical/admin` permanece como section, nav ou action button na candidata V2.
+- A V2 reutiliza recursos estáticos da R9 congelada, mas a página principal é direta; não existe `centralFrame`/iframe.
+- Status: **CANDIDATE / NOT PROMOTED**.
+- Gate: validação humana móvel + notebook continua obrigatória antes de promoção.
+- R9 oficial e Gestor H4 oficial permanecem intocados.
