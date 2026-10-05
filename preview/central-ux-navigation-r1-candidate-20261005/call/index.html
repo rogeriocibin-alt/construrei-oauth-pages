@@ -3,268 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#eef7ff">
+<meta name="theme-color" content="#05265f">
+<meta name="cr-build" content="CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-LAUNCHER-20261005">
 <title>CONSTRU-REI • Sala da Equipe</title>
 <style>
-:root{--n:#04101f;--b:#0b4f91;--g:#d6a51b;--line:#244a68;--ok:#49d391;--bad:#ff6b78}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at 85% -10%,#124a76,#06182b 45%,#03101c);color:#fff;font:14px Inter,system-ui,Segoe UI,Arial;min-height:100vh;padding:14px}
-.room{max-width:1100px;margin:auto}.head{display:flex;gap:10px;align-items:center;margin-bottom:12px}.head h1{margin:0;font-size:22px}.status{margin-left:auto;border:1px solid #315c7b;border-radius:999px;padding:6px 10px;color:#c7d9e7}.status.live{color:#aef0cc;border-color:#24704e}.status.bad{color:#ffd1d5;border-color:#7b2731}
-.stage{background:linear-gradient(180deg,#082d53,#061d36);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:0 20px 60px #0005}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;min-height:55vh;align-content:center}.tile{position:relative;background:#010b13;border:1px solid #284d69;border-radius:16px;overflow:hidden;aspect-ratio:16/10;min-height:190px}.tile video{width:100%;height:100%;object-fit:cover}.label{position:absolute;left:9px;bottom:9px;background:#06192acc;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:800}.dot{position:absolute;right:9px;top:9px;width:9px;height:9px;border-radius:50%;background:#d8a91f}.dot.ok{background:var(--ok)}
-.actions{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:12px}.btn{border:1px solid #345b78;background:#0a3c6d;color:#fff;border-radius:12px;padding:10px 12px;font-weight:850}.btn.gold{background:linear-gradient(90deg,#bd8b11,#e4be4c);color:#211500;border-color:#e9ca72}.btn.bad{background:#7b2731}.btn:disabled{opacity:.45}
-.note{text-align:center;color:#9fb4c6;font-size:11px;margin-top:10px}.fallback{margin-top:12px;border:1px solid #725d28;background:#2d281b;border-radius:13px;padding:10px;color:#e9d9a7;text-align:center}.diag{margin-top:10px;border:1px solid #294f6c;border-radius:12px;padding:10px;background:#061a2e;color:#bfd0dd;font-size:11px}.diag b{color:#fff}.perm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}.perm div{border:1px solid #315873;border-radius:10px;padding:8px;background:#071d31}.oktxt{color:#aef0cc}.badtxt{color:#ffb6bd}
-.diagpanel{margin-top:12px;border:1px solid #315873;border-radius:14px;padding:12px;background:#06182b}.diaghead{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.diaghead h3{margin:0;margin-right:auto}.diaggrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}.diagitem{border:1px solid #294f6c;border-radius:10px;padding:8px;background:#071d31}.diagitem span{display:block;color:#9fb4c6;font-size:10px}.diagitem b{display:block;margin-top:2px;word-break:break-word}.diagresult{margin-top:10px;border:1px solid #294f6c;border-radius:10px;padding:10px;background:#041626;white-space:pre-wrap;word-break:break-word}.diagresult.good{border-color:#24704e;color:#bff3d7}.diagresult.warn{border-color:#806a2b;color:#f5e0a9}.diagresult.bad{border-color:#7b2731;color:#ffc4ca}@media(max-width:650px){body{padding:8px}.grid{grid-template-columns:1fr;min-height:62vh}.tile{min-height:210px}.head{align-items:flex-start}.head h1{font-size:18px}.status{font-size:11px;max-width:46%;text-align:center}.perm,.diaggrid{grid-template-columns:1fr}}
+:root{--navy:#031b46;--navy2:#05265f;--blue:#0877f9;--gold:#ffc514;--bg:#eef8fd;--line:#d5e7f2;--ink:#07165b;--text:#17315d}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(180deg,var(--bg),#f9fcfe);font:14px/1.45 Inter,system-ui,Segoe UI,Arial;color:var(--text);padding:14px}
+.wrap{max-width:760px;margin:0 auto}.top{display:flex;gap:8px;align-items:center;margin-bottom:12px}.top a,.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:850;text-decoration:none;cursor:pointer}
+.top a{background:#e5f1fb;color:#0a4aa7}.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 16px 42px rgba(6,40,86,.12);overflow:hidden}
+.hero{padding:24px;background:linear-gradient(120deg,var(--navy),var(--navy2) 62%,#6f5310);color:#fff}.ey{font-size:10px;font-weight:900;letter-spacing:.12em;color:#ffd83d}.hero h1{margin:7px 0 8px;font-size:28px}.hero p{margin:0;color:#dce9f5}
+.body{padding:20px}.ok{border:1px solid #bde6d1;background:#edf9f4;color:#176f4d;border-radius:12px;padding:12px;margin-bottom:14px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{background:linear-gradient(180deg,#1688ff,#075bd8);color:#fff;min-height:48px}.btn.gold{background:linear-gradient(180deg,#ffd52c,#ffc400);color:#15275e}.btn.secondary{background:#edf5fb;color:#0a4aa7;border:1px solid #cfe2f0}.note{margin-top:14px;color:#6a8298;font-size:12px}
+@media(max-width:600px){body{padding:9px}.hero{padding:18px}.hero h1{font-size:23px}.actions{grid-template-columns:1fr}.btn{width:100%}}
 </style>
-<link rel="stylesheet" data-cr-design-system="CR-PRODUCT-DESIGN-20260930" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-product-design-20260930.css"></head>
+</head>
 <body>
-<main class="room">
-<div class="callnav"><a class="btn" href="../">← Central</a><button class="btn" id="refreshCall" type="button">↻ Atualizar</button></div><div class="head"><div><small>SALA DA EQUIPE • INTERNA</small><h1>Reunião CONSTRU-REI</h1></div><div id="st" class="status">Pronto para entrar</div></div>
-<section class="stage">
-<div id="grid" class="grid"><div class="tile" id="local"><video id="lv" autoplay muted playsinline></video><span class="label">Você</span><i class="dot ok"></i></div></div>
-<div class="perm"><div>Microfone: <b id="pMic">não solicitado</b></div><div>Câmera: <b id="pCam">não solicitada</b></div></div>
-<div class="actions">
-<button id="join" class="btn gold">🎥 Entrar</button>
-<button id="mic" class="btn" disabled>🎙️ Microfone</button>
-<button id="cam" class="btn" disabled>📷 Câmera</button>
-<button id="share" class="btn" disabled>🖥️ Compartilhar</button>
-<button id="leave" class="btn bad" disabled>Encerrar</button><button id="toggleDiag" class="btn" type="button">🛠 Diagnóstico</button>
-</div>
-<div class="note">As permissões são pedidas somente após tocar em Entrar, uma por vez.</div>
-<div id="diag" class="diag"></div>
-<div class="diagpanel" id="diagPanel" hidden>
-  <div class="diaghead"><h3>Diagnóstico do aparelho</h3><button id="runDiag" class="btn">Executar diagnóstico do aparelho</button><button id="copyDiag" class="btn" disabled>Copiar diagnóstico</button></div>
-  <div class="diaggrid">
-    <div class="diagitem"><span>Navegador / sistema</span><b id="dBrowser">—</b></div>
-    <div class="diagitem"><span>Contexto seguro</span><b id="dSecure">—</b></div>
-    <div class="diagitem"><span>MediaDevices</span><b id="dMediaDevices">—</b></div>
-    <div class="diagitem"><span>getUserMedia</span><b id="dGetUserMedia">—</b></div>
-    <div class="diagitem"><span>getDisplayMedia / compartilhar tela</span><b id="dDisplayMedia">—</b></div>
-    <div class="diagitem"><span>Permissions API</span><b id="dPermApi">—</b></div>
-    <div class="diagitem"><span>Microfone</span><b id="dMic">não testado</b></div>
-    <div class="diagitem"><span>Câmera</span><b id="dCam">não testada</b></div>
-  </div>
-  <div id="diagResult" class="diagresult">Toque em “Executar diagnóstico do aparelho”. Nenhum teste de câmera/microfone será feito antes desse toque.</div>
-</div>
-</section>
-<div class="fallback">Google Meet fica apenas como contingência. <button id="fb" class="btn">Abrir Meet de contingência</button></div>
+<main class="wrap">
+  <div class="top"><a href="../">← Voltar à Central</a></div>
+  <section class="card">
+    <div class="hero">
+      <div class="ey">SALA DA EQUIPE • OFICIAL</div>
+      <h1>Reunião CONSTRU-REI</h1>
+      <p>A Central direciona para a sala oficial da equipe. O motor de reunião volta a ser o Google Meet homologado.</p>
+    </div>
+    <div class="body">
+      <div class="ok"><b>Conectividade restaurada.</b> Câmera, microfone, participantes e compartilhamento de tela ficam sob o Google Meet, sem a camada WebRTC experimental da Central.</div>
+      <div class="actions">
+        <button class="btn gold" id="join">🎥 Entrar na Sala da Equipe</button>
+        <button class="btn" id="copy">⧉ Copiar link da sala</button>
+        <button class="btn secondary" id="refresh">↻ Atualizar</button>
+        <button class="btn secondary" id="back">← Voltar à Central</button>
+      </div>
+      <div class="note">A Central não solicita permissões de câmera ou microfone nesta tela. Ao entrar, o Google Meet assume a reunião e pode abrir no aplicativo instalado ou no navegador.</div>
+    </div>
+  </section>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
 'use strict';
-const U="https://yspuaamokjbrosytqjpg.supabase.co";
-const K="sb_publishable_CKRScNxEWURNGv4Mz269hg_zdQEmwzS";
-const MEET="https://meet.google.com/xtw-rihq-jwi";
-const S=window.supabase.createClient(U,K,{auth:{persistSession:false}});
-const ROOM='central-call-main-v3';
-const ID=crypto.randomUUID();
-const CFG={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}]};
-let ch=null,ls=null,ss=null,joined=false;
-const peers=new Map(),queues=new Map(),q=s=>document.querySelector(s);
-function status(t,kind=''){q('#st').textContent=t;q('#st').className='status'+(kind?' '+kind:'')}
-function setPerm(id,text,ok){const el=q(id);el.textContent=text;el.className=ok===true?'oktxt':ok===false?'badtxt':''}
-const HAS_MEDIA_DEVICES=!!navigator.mediaDevices;
-const HAS_GET_USER_MEDIA=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
-const HAS_DISPLAY_MEDIA=!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia);
-function setShareAvailability(on=joined){
- const b=q('#share');
- if(!HAS_DISPLAY_MEDIA){
-   b.disabled=true;
-   b.textContent='🖥️ Compartilhar indisponível';
-   b.title='Compartilhamento de tela não disponível neste navegador/dispositivo.';
-   return;
- }
- b.disabled=!on;
- b.textContent=ss?'🖥️ Compartilhando':'🖥️ Compartilhar';
- b.title='Compartilhar a tela';
-}
-function buttons(on){['#mic','#cam','#leave'].forEach(x=>q(x).disabled=!on);q('#join').disabled=on;setShareAvailability(on)}
-let LAST_DIAG='';
-function diag(){q('#diag').innerHTML='<b>Contexto seguro:</b> '+(window.isSecureContext?'SIM':'NÃO')+' • <b>MediaDevices:</b> '+(HAS_MEDIA_DEVICES?'SIM':'NÃO')+' • <b>getUserMedia:</b> '+(HAS_GET_USER_MEDIA?'SIM':'NÃO')+' • <b>getDisplayMedia:</b> '+(HAS_DISPLAY_MEDIA?'SIM':'NÃO')+' • <b>Origem:</b> '+location.origin}
-diag();
-function detectBrowser(){
- const ua=navigator.userAgent||'';
- const m=ua.match(/(EdgA|EdgiOS|Edg|OPR|CriOS|Chrome|FxiOS|Firefox)\/([\d.]+)/i);
- const browser=m?(m[1]+' '+m[2]):'Navegador não identificado';
- const os=/Android/i.test(ua)?('Android '+((ua.match(/Android\s([\d.]+)/i)||[])[1]||'')):/iPhone|iPad|iPod/i.test(ua)?'iOS/iPadOS':/Windows/i.test(ua)?'Windows':/Mac OS/i.test(ua)?'macOS':'SO não identificado';
- return browser+' • '+os;
-}
-async function permissionState(name){try{if(!navigator.permissions||!navigator.permissions.query)return 'indisponível';const r=await navigator.permissions.query({name});return r.state}catch{return 'indisponível'}}
-function diagClass(el,state){el.className='';if(state===true)el.classList.add('oktxt');else if(state===false)el.classList.add('badtxt')}
-function setD(id,text,state){const el=q(id);el.textContent=text;diagClass(el,state)}
-function errorInfo(e){return {name:(e&&e.name)||'Erro',message:(e&&e.message)||'',label:errLabel(e)}}
-function conclusion(rep){
- if(!rep.secure)return 'Contexto inseguro: o navegador não permite câmera/microfone nesta origem.';
- if(!rep.mediaDevices||!rep.getUserMedia)return 'Navegador incompatível: getUserMedia não está disponível.';
- const errs=[rep.micError,rep.camError].filter(Boolean);
- if(!errs.length)return rep.displayMedia?'Central Call está correta. Microfone, câmera e compartilhamento de tela estão disponíveis neste navegador.':'Microfone e câmera estão autorizados. Compartilhamento de tela não é suportado neste navegador/dispositivo.';
- if(errs.some(x=>x.name==='NotReadableError'))return 'Outro aplicativo ou processo pode estar usando câmera/microfone neste aparelho.';
- if(errs.some(x=>x.name==='SecurityError'))return 'O navegador aplicou um bloqueio de segurança às permissões.';
- if(errs.some(x=>x.name==='NotAllowedError')){
-   if(/overlay|sobrepos|draw over|appear on top|another app|outro app/i.test(errs.map(x=>x.message).join(' ')))return 'O Android bloqueou a solicitação por possível sobreposição de outro aplicativo.';
-   if(rep.micPermission==='denied'||rep.camPermission==='denied')return 'Chrome/Android está com câmera ou microfone bloqueado nas permissões do site/aplicativo.';
-   return 'O navegador ou o Android recusou a permissão. A Central está acessível, mas a autorização do aparelho foi bloqueada.';
- }
- if(errs.some(x=>x.name==='NotFoundError'))return 'O navegador não encontrou câmera ou microfone disponível.';
- return 'O aparelho retornou um erro de mídia. Use o relatório copiado para identificar o código exato.';
-}
-async function runDiagnostic(){
- const btn=q('#runDiag'),copy=q('#copyDiag'),out=q('#diagResult');btn.disabled=true;copy.disabled=true;out.className='diagresult warn';out.textContent='Executando diagnóstico…';
- const rep={time:new Date().toISOString(),origin:location.origin,ua:navigator.userAgent||'',browser:detectBrowser(),secure:!!window.isSecureContext,mediaDevices:!!navigator.mediaDevices,getUserMedia:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),displayMedia:!!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia),permissionsApi:!!(navigator.permissions&&navigator.permissions.query)};
- setD('#dBrowser',rep.browser);
- setD('#dSecure',rep.secure?'✅ SIM':'❌ NÃO',rep.secure);
- setD('#dMediaDevices',rep.mediaDevices?'✅ disponível':'❌ indisponível',rep.mediaDevices);
- setD('#dGetUserMedia',rep.getUserMedia?'✅ disponível':'❌ indisponível',rep.getUserMedia);
- setD('#dDisplayMedia',rep.displayMedia?'✅ disponível':'⚠️ não suportado',rep.displayMedia?true:false);
- setD('#dPermApi',rep.permissionsApi?'✅ disponível':'⚠️ indisponível',rep.permissionsApi?true:undefined);
- rep.micPermission=await permissionState('microphone'); rep.camPermission=await permissionState('camera');
- setD('#dMic','permissão: '+rep.micPermission,rep.micPermission==='granted'?true:rep.micPermission==='denied'?false:undefined);
- setD('#dCam','permissão: '+rep.camPermission,rep.camPermission==='granted'?true:rep.camPermission==='denied'?false:undefined);
- if(rep.getUserMedia){
-   let s=null;
-   try{s=await navigator.mediaDevices.getUserMedia({audio:true,video:false});rep.micTest='OK';setD('#dMic','✅ autorizado e testado',true)}catch(e){rep.micTest='ERRO';rep.micError=errorInfo(e);setD('#dMic','❌ '+rep.micError.name+': '+rep.micError.label,false)}finally{if(s)s.getTracks().forEach(t=>t.stop())}
-   s=null;
-   try{s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:'user'}});rep.camTest='OK';setD('#dCam','✅ autorizada e testada',true)}catch(e){rep.camTest='ERRO';rep.camError=errorInfo(e);setD('#dCam','❌ '+rep.camError.name+': '+rep.camError.label,false)}finally{if(s)s.getTracks().forEach(t=>t.stop())}
- }
- rep.conclusion=conclusion(rep);
- const lines=[
-  'CONSTRU-REI • Diagnóstico Central Call',
-  'Data/hora: '+rep.time,
-  'Origem: '+rep.origin,
-  'Navegador/SO: '+rep.browser,
-  'Secure context: '+rep.secure,
-  'MediaDevices: '+rep.mediaDevices,
-  'getUserMedia: '+rep.getUserMedia,
-  'getDisplayMedia: '+rep.displayMedia,
-  'Permissions API: '+rep.permissionsApi,
-  'Permissão microfone: '+rep.micPermission,
-  'Teste microfone: '+(rep.micTest||'não executado')+(rep.micError?' • '+rep.micError.name+' • '+rep.micError.message:''),
-  'Permissão câmera: '+rep.camPermission,
-  'Teste câmera: '+(rep.camTest||'não executado')+(rep.camError?' • '+rep.camError.name+' • '+rep.camError.message:''),
-  'Conclusão: '+rep.conclusion
- ];
- LAST_DIAG=lines.join('\n');
- out.textContent=rep.conclusion+'\n\n'+LAST_DIAG;
- out.className='diagresult '+((rep.micTest==='OK'&&rep.camTest==='OK')?'good':(rep.micError||rep.camError)?'bad':'warn');
- copy.disabled=false;btn.disabled=false;
-}
-async function copyDiagnostic(){if(!LAST_DIAG)return;try{await navigator.clipboard.writeText(LAST_DIAG);status('Diagnóstico copiado','live')}catch(e){prompt('Copie o diagnóstico:',LAST_DIAG)}}
-async function requestAudio(){
- setPerm('#pMic','solicitando…');
- const s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true},video:false});
- setPerm('#pMic','autorizado',true);return s.getAudioTracks()[0]||null;
-}
-async function requestVideo(){
- setPerm('#pCam','solicitando…');
- const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:'user'}});
- setPerm('#pCam','autorizada',true);return s.getVideoTracks()[0]||null;
-}
-function errLabel(e){const n=e&&e.name||''; if(n==='NotAllowedError')return 'permissão bloqueada/negada pelo navegador ou sistema'; if(n==='NotFoundError')return 'dispositivo não encontrado'; if(n==='NotReadableError')return 'câmera/microfone em uso por outro app'; if(n==='SecurityError')return 'bloqueio de segurança do navegador'; return (e&&e.message)||n||'erro desconhecido'}
-function send(kind,data={}){return ch?ch.send({type:'broadcast',event:'rtc',payload:{kind,from:ID,name:'Participante',...data}}):Promise.resolve()}
-function tile(id,name){let t=document.getElementById('p-'+id);if(t)return t;t=document.createElement('div');t.id='p-'+id;t.className='tile';t.innerHTML='<video autoplay playsinline></video><span class="label"></span><i class="dot"></i>';t.querySelector('.label').textContent=name||'Participante';q('#grid').appendChild(t);return t}
-function rm(id){let p=peers.get(id);if(p){try{p.close()}catch{}peers.delete(id)}document.getElementById('p-'+id)?.remove();queues.delete(id)}
-function queue(id,c){if(!queues.has(id))queues.set(id,[]);queues.get(id).push(c)}
-async function flush(id,pc){for(const c of queues.get(id)||[]){try{await pc.addIceCandidate(c)}catch{}}queues.delete(id)}
-function peer(id,name){let pc=peers.get(id);if(pc)return pc;pc=new RTCPeerConnection(CFG);peers.set(id,pc);if(ls)ls.getTracks().forEach(t=>pc.addTrack(t,ls));pc.onicecandidate=e=>{if(e.candidate)send('candidate',{to:id,candidate:e.candidate.toJSON?e.candidate.toJSON():e.candidate})};pc.ontrack=e=>{let t=tile(id,name),v=t.querySelector('video');if(v.srcObject!==e.streams[0])v.srcObject=e.streams[0]};pc.onconnectionstatechange=()=>{let t=tile(id,name),d=t.querySelector('.dot'),s=pc.connectionState;d.classList.toggle('ok',s==='connected');if(['failed','closed'].includes(s))rm(id)};return pc}
-async function offer(id,name){let pc=peer(id,name);if(pc.signalingState!=='stable')return;let o=await pc.createOffer();await pc.setLocalDescription(o);await send('offer',{to:id,sdp:pc.localDescription})}
-async function handle(p){if(!p||p.from===ID||(p.to&&p.to!==ID))return;let id=p.from,n=p.name||'Participante';try{if(p.kind==='hello'){await send('welcome',{to:id});if(ID<id)await offer(id,n)}else if(p.kind==='welcome'){if(ID<id)await offer(id,n)}else if(p.kind==='offer'){let pc=peer(id,n);await pc.setRemoteDescription(p.sdp);await flush(id,pc);let a=await pc.createAnswer();await pc.setLocalDescription(a);await send('answer',{to:id,sdp:pc.localDescription})}else if(p.kind==='answer'){let pc=peer(id,n);await pc.setRemoteDescription(p.sdp);await flush(id,pc)}else if(p.kind==='candidate'){let pc=peer(id,n);if(pc.remoteDescription)await pc.addIceCandidate(p.candidate);else queue(id,p.candidate)}else if(p.kind==='leave')rm(id)}catch(e){console.warn(e)}}
-async function start(){
- if(joined)return;
- if(!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){status('Navegador incompatível ou contexto inseguro','bad');return}
- q('#join').disabled=true; status('Solicitando microfone…');
- let audio=null,video=null;
- try{audio=await requestAudio()}catch(e){setPerm('#pMic',errLabel(e),false);status('Microfone bloqueado pelo sistema','bad');q('#join').disabled=false;return}
- status('Solicitando câmera…');
- try{video=await requestVideo()}catch(e){setPerm('#pCam',errLabel(e),false);status('Câmera bloqueada; entrando só com áudio','bad')}
- ls=new MediaStream(); if(audio)ls.addTrack(audio); if(video)ls.addTrack(video); q('#lv').srcObject=ls;
- ch=S.channel(ROOM,{config:{broadcast:{self:false},presence:{key:ID}}}).on('broadcast',{event:'rtc'},({payload})=>handle(payload)).on('presence',{event:'sync'},()=>status('Ao vivo • '+Object.keys(ch.presenceState()).length+' participante(s)','live')).subscribe(async s=>{if(s==='SUBSCRIBED'){joined=true;buttons(true);status('Ao vivo • conectando equipe','live');await ch.track({joined_at:new Date().toISOString()});await send('hello')}});
-}
-async function end(){try{await send('leave')}catch{}for(const id of [...peers.keys()])rm(id);if(ch){try{await ch.untrack()}catch{}try{await S.removeChannel(ch)}catch{}ch=null}ss?.getTracks().forEach(t=>t.stop());ls?.getTracks().forEach(t=>t.stop());ss=ls=null;q('#lv').srcObject=null;joined=false;buttons(false);setPerm('#pMic','não solicitado');setPerm('#pCam','não solicitada');status('Reunião encerrada')}
-q('#join').addEventListener('click',start,{passive:true});
-q('#runDiag').addEventListener('click',runDiagnostic);
-q('#copyDiag').addEventListener('click',copyDiagnostic);
-q('#leave').onclick=end;
-q('#mic').onclick=()=>{let t=ls?.getAudioTracks()[0];if(t){t.enabled=!t.enabled;q('#mic').textContent=t.enabled?'🎙️ Microfone':'🔇 Sem áudio'}};
-q('#cam').onclick=()=>{let t=ls?.getVideoTracks()[0];if(t){t.enabled=!t.enabled;q('#cam').textContent=t.enabled?'📷 Câmera':'🚫 Sem vídeo'}};
-async function stopShare(){
- if(!ss)return;
- const cam=ls?.getVideoTracks()[0]||null;
- for(const pc of peers.values()){
-   const sender=pc.getSenders().find(x=>x.track&&x.track.kind==='video');
-   if(sender&&cam)await sender.replaceTrack(cam);
- }
- ss.getTracks().forEach(t=>{try{t.stop()}catch{}});
- ss=null;
- q('#lv').srcObject=ls;
- setShareAvailability(joined);
- if(joined)status('Ao vivo • compartilhamento encerrado','live');
-}
-q('#share').onclick=async()=>{
- if(!joined||!ls)return;
- if(!HAS_DISPLAY_MEDIA){
-   status('Compartilhamento de tela não disponível neste navegador móvel','bad');
-   q('#diagResult').textContent='Compartilhamento de tela não disponível neste navegador/dispositivo. Câmera e microfone continuam funcionando normalmente.';
-   q('#diagResult').className='diagresult warn';
-   return;
- }
- try{
-   ss=await navigator.mediaDevices.getDisplayMedia({video:true,audio:false});
-   const st=ss.getVideoTracks()[0];
-   if(!st)throw new Error('Nenhuma faixa de tela foi retornada.');
-   for(const pc of peers.values()){
-     const sender=pc.getSenders().find(x=>x.track&&x.track.kind==='video');
-     if(sender)await sender.replaceTrack(st);
-   }
-   q('#lv').srcObject=ss;
-   setShareAvailability(joined);
-   status('Ao vivo • compartilhando tela','live');
-   st.onended=()=>{stopShare().catch(console.warn)};
- }catch(e){
-   ss?.getTracks().forEach(t=>{try{t.stop()}catch{}});
-   ss=null;
-   q('#lv').srcObject=ls;
-   setShareAvailability(joined);
-   const n=e&&e.name||'';
-   status(n==='NotAllowedError'?'Compartilhamento cancelado ou bloqueado':'Falha ao iniciar compartilhamento','bad');
-   console.warn('SCREEN_SHARE_ERROR',e);
- }
-};
-q('#fb').onclick=()=>window.open(MEET,'_blank','noopener');
-window.addEventListener('beforeunload',()=>{if(joined)send('leave')});
-Promise.all([permissionState('microphone'),permissionState('camera')]).then(([m,c])=>{if(m!=='indisponível')setPerm('#pMic',m==='granted'?'já autorizado':m,m==='granted'?true:m==='denied'?false:undefined);if(c!=='indisponível')setPerm('#pCam',c==='granted'?'já autorizada':c,c==='granted'?true:c==='denied'?false:undefined)});
-setShareAvailability(false);
+const MEET='https://meet.google.com/xtw-rihq-jwi';
+document.getElementById('join').onclick=()=>location.assign(MEET);
+document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(MEET);document.getElementById('copy').textContent='✓ Link copiado'}catch(e){prompt('Copie o link da sala:',MEET)}};
+document.getElementById('refresh').onclick=()=>location.reload();
+document.getElementById('back').onclick=()=>location.assign('../');
 })();
 </script>
-
-<style id="cr-call-readable-r1">
-:root{--n:#07165b;--b:#0b67bd;--g:#d6a51b;--line:#cbddeb;--ok:#138f60;--bad:#c84452}
-body{background:linear-gradient(180deg,#eef7ff,#f8fbfd 55%,#eef4f9)!important;color:#17315d!important;padding:12px!important}
-.room{max-width:1180px!important}
-.callnav{display:flex;justify-content:space-between;gap:8px;margin:0 0 10px}
-.callnav .btn{text-decoration:none;display:inline-flex;align-items:center}
-.head{background:#fff;border:1px solid #d5e5f1;border-radius:16px;padding:14px 16px;box-shadow:0 10px 26px rgba(7,54,105,.08)}
-.head h1{color:#07165b!important}.head small{color:#0b67bd;font-weight:900;letter-spacing:.08em}
-.status{background:#f3f8fc!important;color:#45627e!important;border-color:#c7dbe9!important}
-.status.live{background:#edf9f4!important;color:#17734f!important;border-color:#bde6d1!important}
-.status.bad{background:#fff1f2!important;color:#a73543!important;border-color:#efc4c9!important}
-.stage{background:#fff!important;border-color:#d0e1ee!important;box-shadow:0 16px 38px rgba(7,54,105,.10)!important}
-.tile{background:#081624!important;border-color:#315d7e!important}
-.perm div,.diag,.diagpanel,.diagitem,.diagresult{background:#f7fbfe!important;color:#34546f!important;border-color:#d2e2ee!important}
-.perm div b,.diag b,.diaghead h3,.diagitem b{color:#17315d!important}
-.diagitem span,.note{color:#698096!important}
-.btn{background:linear-gradient(180deg,#1688ff,#075bd8)!important;border-color:#0b6fe6!important;color:#fff!important;box-shadow:0 5px 12px rgba(7,91,216,.16)}
-.btn.gold{background:linear-gradient(180deg,#ffd52c,#ffc400)!important;color:#15275e!important;border-color:#e2ad00!important}
-.btn.bad{background:#c84452!important;border-color:#a73340!important}
-.fallback{background:#fff8dc!important;color:#695114!important;border-color:#ead58a!important}
-.diagpanel[hidden]{display:none!important}
-@media(max-width:650px){.head{padding:12px}.callnav .btn{min-height:42px}.actions .btn{min-height:44px}}
-</style>
-<script id="cr-call-readable-r1-js">
-(function(){
- var d=document.getElementById('diagPanel'),t=document.getElementById('toggleDiag'),r=document.getElementById('refreshCall');
- if(t)t.addEventListener('click',function(){d.hidden=!d.hidden;t.textContent=d.hidden?'🛠 Diagnóstico':'✕ Fechar diagnóstico'});
- if(r)r.addEventListener('click',function(){var u=new URL(location.href);u.searchParams.set('_crrefresh',Date.now());location.replace(u.toString())});
-})();
-</script></body>
+</body>
 </html>
