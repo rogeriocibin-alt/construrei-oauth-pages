@@ -15,7 +15,7 @@
   ],
   "icons": [
     {
-      "src": "./pwa-icon.svg?v=20261005v112h1",
+      "src": "./pwa-icon.svg?v=20261005v112h2",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
