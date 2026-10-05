@@ -352,3 +352,14 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Regra antirregressão: nenhum link público oficial foi renomeado ou substituído.
 - Rollback imediato: `production/central-homologada-exec-r9-20261004/`.
 - Checkpoint anterior à V2: `checkpoint-before-central-operation-v2-video-fix-20261005`.
+
+
+### Fechamento técnico da promoção V2
+
+- Edge oficial `centro-operacoes`: **v280** • build `CR-CENTRAL-OPERATION-ONLY-V2-OFFICIAL-20261005` • hash `13f46b7165db757865458f4fe5353be9b98453f5fe3ea34f7c4ac9d4c169509d`.
+- Branch oficial: `central-operacional-v2-oficial-20261005`.
+- Checkpoint homologado: `CHECKPOINT_CENTRAL_OPERATIONAL_V2_OFFICIAL_20261005`.
+- Branch de checkpoint: `checkpoint-central-operacional-v2-homologada-20261005`.
+- Link oficial e alias `/central/` permanecem exatamente os mesmos.
+- Verificação pós-deploy pelo conector Supabase: **PASS** — v280 ativa e HOME aponta para a produção V2 congelada.
+- A checagem HTTP externa não pôde ser executada neste runtime por indisponibilidade de resolução DNS; isso não altera a confirmação do deploy retornada pelo Supabase.
