@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <meta name="cr-flow-code" content="F02">
-<meta name="cr-build" content="CR-F02-ORCA-REI-V1-R3-INTAKE-R2-20261005">
+<meta name="cr-build" content="CR-F02-ORCA-REI-V1-R3-INTAKE-R3-IMPORT-PDF-20261005">
 <title>CONSTRU-REI • F02 • ORÇA-REI V1</title>
 <link rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-shell.css">
 <link rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-product-design-20260930.css">
@@ -63,8 +63,8 @@ html,body{background:var(--or-bg)!important;color:var(--or-text)!important}.wrap
     <div class="mut">F01 entrega contexto • ORÇA-REI audita e precifica • Rogério aprova • F03 recebe</div>
   </div>
   <div style="margin-left:auto" class="toolbar">
-    <span class="tag">CR-F02-ORCA-REI-V1-R3-INTAKE-20261005</span>
-    <button id="fixture" class="btn">Caso escola 76626</button>
+    <span class="tag">CR-F02-ORCA-REI-V1-R3-IMPORT-PDF-20261005</span>
+    <button id="fixture" class="btn">Caso escola 766-26</button>
   </div>
 </div>
 
@@ -75,7 +75,7 @@ html,body{background:var(--or-bg)!important;color:var(--or-text)!important}.wrap
 </section>
 
 <section class="card">
-<div id="empty" style="padding:22px;text-align:center" class="mut">Selecione um orçamento da fila F02 ou carregue o caso escola 76626.</div>
+<div id="empty" style="padding:22px;text-align:center" class="mut">Selecione um orçamento da fila F02 ou carregue o caso escola 766-26.</div>
 <div id="view" class="hidden">
   <div class="row"><div><div class="ey">ORÇAMENTO</div><h2 id="no"></h2></div><span id="queue" class="tag"></span></div>
 
@@ -183,7 +183,7 @@ html,body{background:var(--or-bg)!important;color:var(--or-text)!important}.wrap
   </div>
 
   <div class="box">
-    <div class="row"><div class="sectionTitle">TEXTO GESTÃOCLICK / CLIENTE</div><div class="toolbar"><button id="generateText" class="btn">Gerar texto</button><button id="pdfBtn" class="btn pdfBtn">GERAR PDF PROFISSIONAL</button></div></div><div class="docHint">PDF do cliente: identidade CONSTRU-REI inspirada no Parecer Técnico 710-26. A análise financeira interna nunca entra no documento.</div>
+    <div class="row"><div class="sectionTitle">TEXTO GESTÃOCLICK / CLIENTE</div><div class="toolbar"><button id="generateText" class="btn">Gerar texto</button><button id="pdfBtn" class="btn pdfBtn">GERAR PDF PROFISSIONAL</button></div></div><div class="docHint">PDF do cliente: identidade CONSTRU-REI + BOOM NEGÓCIOS LTDA, CNPJ e contatos oficiais. Caso Escola 766-26 é o gabarito visual/estrutural. A análise financeira interna nunca entra no documento.</div>
     <div id="clientPreview" class="preview"></div>
   </div>
 
@@ -240,10 +240,109 @@ function showIntake(d){
   if(cf){$("intakeConflicts").textContent=cf;$("intakeConflicts").classList.remove("hidden")}else $("intakeConflicts").classList.add("hidden");
   $("intakePreview").textContent=intakeTextPreview(d);
 }
+
+function moneyBR(v){
+  var t=String(v==null?"":v).replace(/R\$/gi,"").trim().replace(/\./g,"").replace(",",".");
+  var x=Number(t.replace(/[^0-9.-]/g,""));return isFinite(x)?x:0
+}
+function cleanItemName(v){
+  return String(v||"").replace(/^[-•*\d.)\s]+/,"").replace(/[|—–-]+\s*$/,"").trim()
+}
+function parseReadyBudget(raw){
+  var lines=String(raw||"").replace(/\r/g,"").split("\n").map(function(x){return x.trim()}).filter(Boolean);
+  var section="",services=[],products=[],notes=[],warnings=[],header={},budgetNo="";
+  var pendingName="",pendingQty=null,pendingUnit=null,pendingSub=null;
+  var priceSeen=0;
+
+  function pushItem(name,q,u,sub){
+    name=cleanItemName(name);q=Number(q||1);u=Number(u||0);sub=Number(sub||0);
+    if(!name||!u)return false;
+    var item={name:name,detail:"",quantity:q||1,unit:"un",unit_value:u,nature_value:"INFORMADO",source_subtotal:sub||null};
+    var calc=(q||1)*u;
+    if(sub&&Math.abs(calc-sub)>.011)warnings.push("Subtotal informado de "+name+" ("+brl(sub)+") difere de QTD × VR. UNIT. ("+brl(calc)+"). O sistema manterá quantidade e valor unitário e recalculará o subtotal.");
+    (section==="product"?products:services).push(item);priceSeen++;return true
+  }
+  function flushPending(){
+    if(pendingName&&pendingUnit){pushItem(pendingName,pendingQty||1,pendingUnit,pendingSub||0)}
+    pendingName="";pendingQty=null;pendingUnit=null;pendingSub=null;
+  }
+
+  lines.forEach(function(line){
+    var plain=line.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+
+    var mm=line.match(/(?:OR[ÇC]AMENTO|FLUXO)\s*(?:N[º°.]?\s*)?[:#-]?\s*([0-9]{2,6}(?:-[0-9]{2})?)/i);
+    if(mm){budgetNo=mm[1]}
+    var hm=line.match(/^\s*(?:CLIENTE|CLIENTE\/ORIGEM)\s*:\s*(.+)$/i);if(hm){header.client=hm[1].trim();return}
+    hm=line.match(/^\s*ENDERE[ÇC]O\s*:\s*(.+)$/i);if(hm){header.address=hm[1].trim();return}
+    hm=line.match(/^\s*REFER[ÊE]NCIA\s*:\s*(.+)$/i);if(hm){header.reference=hm[1].trim();return}
+
+    if(/^(SERVI[ÇC]OS|M[ÃA]O DE OBRA)\b/.test(plain)){flushPending();section="service";return}
+    if(/^(PRODUTOS|MATERIAIS|PRODUTOS \/ MATERIAIS)\b/.test(plain)){flushPending();section="product";return}
+    if(/^(OBSERVA[ÇC][ÕO]ES|OBSERVA[ÇC][ÕO]ES T[ÉE]CNICAS|NOTAS T[ÉE]CNICAS)\b/.test(plain)){flushPending();section="notes";return}
+    if(/^(TOTAL|VALIDADE|GARANTIA)\b/.test(plain)){flushPending();if(section==="notes"&&plain.indexOf("TOTAL")!==0)notes.push(line);return}
+    if(section==="notes"){notes.push(line.replace(/^[-•*]\s*/,""));return}
+
+    // One-line forms: "Descrição | 4 | R$ 195,00 | R$ 780,00", or "Descrição — 4 x R$ 195,00 = R$ 780,00".
+    var vals=line.match(/R\$\s*[\d.]+(?:,\d{1,2})?/gi)||[];
+    var qx=line.match(/(?:QTD\.?\s*[:=]?\s*)?(\d+(?:[.,]\d+)?)\s*(?:x|×)\s*R\$\s*([\d.]+(?:,\d{1,2})?)(?:\s*(?:=|→)\s*R\$\s*([\d.]+(?:,\d{1,2})?))?/i);
+    if(qx){
+      var name=line.slice(0,qx.index).replace(/[|—–-]+\s*$/,"").trim();
+      if(!name&&pendingName)name=pendingName;
+      if(pushItem(name,Number(qx[1].replace(",",".")),moneyBR(qx[2]),qx[3]?moneyBR(qx[3]):0)){pendingName="";return}
+    }
+    if(vals.length>=2){
+      var firstPrice=line.search(/R\$/i),before=line.slice(0,firstPrice);
+      var qmatch=before.match(/(?:QTD\.?\s*[:=]?\s*)?(\d+(?:[.,]\d+)?)\s*(?:un|und|unid|m2|m²|m|h|hr|hora|x)?\s*[|;—–-]*\s*$/i);
+      var q=qmatch?Number(qmatch[1].replace(",",".")):1;
+      var name=(qmatch?before.slice(0,qmatch.index):before).replace(/[|;—–-]+\s*$/,"").trim();
+      if(!name&&pendingName)name=pendingName;
+      if(pushItem(name,q,moneyBR(vals[0]),moneyBR(vals[1]))){pendingName="";return}
+    }
+    if(vals.length===1 && pendingName){
+      pendingUnit=moneyBR(vals[0]);
+      var qonly=line.match(/(?:QTD\.?\s*[:=]?\s*)?(\d+(?:[.,]\d+)?)/i); if(qonly)pendingQty=Number(qonly[1].replace(",","."));
+      flushPending();return
+    }
+
+    // Multi-line labeled fields.
+    var ql=line.match(/^QTD\.?\s*[:=]\s*(\d+(?:[.,]\d+)?)/i);if(ql){pendingQty=Number(ql[1].replace(",","."));return}
+    var ul=line.match(/^(?:VR\.?\s*UNIT\.?|VALOR\s*UNIT[ÁA]RIO)\s*[:=]\s*R\$\s*([\d.]+(?:,\d{1,2})?)/i);if(ul){pendingUnit=moneyBR(ul[1]);return}
+    var sl=line.match(/^SUBTOTAL\s*[:=]\s*R\$\s*([\d.]+(?:,\d{1,2})?)/i);if(sl){pendingSub=moneyBR(sl[1]);flushPending();return}
+
+    // Candidate item title in an active commercial section.
+    if((section==="service"||section==="product") && !/R\$/.test(line) && line.length>2){
+      flushPending();pendingName=line.replace(/^[-•*]\s*/,"")
+    }
+  });
+  flushPending();
+
+  if(!priceSeen)return null;
+  var conflicts=[],applyAllowed=true;
+  var currentNo=String((cur&&cur.case_number)||"").replace(/\s/g,"");
+  var incomingNo=String(budgetNo||"").replace(/\s/g,"");
+  if(incomingNo&&currentNo&&incomingNo!==currentNo){
+    conflicts.push({field:"fluxo",confirmed:currentNo,incoming:incomingNo,action:"BLOQUEAR_MISTURA_DE_CASOS"});applyAllowed=false
+  }
+  return {
+    import_mode:"READY_BUDGET",
+    document_type:"ORCAMENTO_PRONTO",
+    header:header,
+    services:services,
+    products:products,
+    technical_notes:notes,
+    visit_checklist:[],
+    warnings:warnings.concat(["Orçamento pronto reconhecido: preços informados serão preservados; subtotais e total serão recalculados pelo sistema."]),
+    conflicts:conflicts,
+    apply_allowed:applyAllowed,
+    confidence:98
+  }
+}
 async function processIntake(){
   var raw=$("smartInput").value.trim();if(!raw){alert("Cole algum conteúdo na Entrada Inteligente.");return}
   $("processIntake").disabled=true;$("processIntake").textContent="PROCESSANDO...";
   try{
+    var ready=parseReadyBudget(raw);
+    if(ready){showIntake(ready);return}
     var d=await api("budget-intake",{token:fixtureMode?null:(cur&&cur.token),context:fixtureMode?(cur&&cur.state||{}):undefined,raw_text:raw,actor:"Rogério"});
     showIntake(d);
   }catch(e){alert("Entrada Inteligente: "+e.message)}
@@ -267,8 +366,14 @@ function applyIntake(){
   if(!$("client").value.trim()&&h.client)$("client").value=h.client;
   if(!$("address").value.trim()&&h.address)$("address").value=h.address;
   if(!$("reference").value.trim()&&h.reference)$("reference").value=h.reference;
-  (lastIntake.services||[]).forEach(function(x){mergeIntakeItem("service",x)});
-  (lastIntake.products||[]).forEach(function(x){mergeIntakeItem("product",x)});
+  if(lastIntake.import_mode==="READY_BUDGET"){
+    clearRows();
+    (lastIntake.services||[]).forEach(function(x){addRow("service",{name:x.name,detail:x.detail||"",quantity:x.quantity||1,unit_value:x.unit_value||0})});
+    (lastIntake.products||[]).forEach(function(x){addRow("product",{name:x.name,detail:x.detail||"",quantity:x.quantity||1,unit_value:x.unit_value||0})});
+  }else{
+    (lastIntake.services||[]).forEach(function(x){mergeIntakeItem("service",x)});
+    (lastIntake.products||[]).forEach(function(x){mergeIntakeItem("product",x)});
+  }
   var old=$("notes").value.trim(),extra=(lastIntake.technical_notes||[]).filter(function(x){return old.indexOf(x)<0});
   if(extra.length)$("notes").value=(old?old+"\n\n":"")+extra.join("\n");
   calc();textClient();
@@ -281,15 +386,15 @@ function clearIntake(){
 function clearRows(){$("services").innerHTML="";$("products").innerHTML=""}
 function showBase(){clearIntake();fixtureMode=false;$("empty").classList.add("hidden");$("view").classList.remove("hidden");$("saveBox").classList.remove("hidden");$("auditBox").classList.add("hidden");lastAudit=null}
 async function openCase(token){var d=await api("get",{token:token});cur=d.handoff;var s=cur.state||{},b=s.budget||{};showBase();$("no").textContent=cur.case_number;$("queue").textContent=s.queue_status||cur.status;$("client").value=s.client||"";$("address").value=s.address||"";$("reference").value=s.reference||s.contract||s.case_summary||"";clearRows();var items=Array.isArray(s.items)?s.items:(Array.isArray(s.services)?s.services:[]);var labor=b.labor_items||[];var materials=b.material_items||[];if(labor.length)labor.forEach(function(x){addRow("service",x)});else (items.length?items:[{subject:s.case_summary||"Serviço"}]).forEach(function(x){addRow("service",{name:x.subject||x.description||"Serviço",quantity:1})});if(materials.length)materials.forEach(function(x){addRow("product",x)});$("notes").value=(b.technical_notes||[]).join("\n")||"";$("humanApproved").checked=!!b.human_review_approved;$("commercialOverride").checked=!!b.commercial_override;if(b.pricing_params){$("charges").value=String((b.pricing_params.charges_rate||.185)*100).replace(".",",");$("target").value=String((b.pricing_params.target_margin||.30)*100).replace(".",",")}if(b.internal_analysis){var a=b.internal_analysis;$("costLabor").value=a.cost_labor||0;$("costMaterial").value=a.cost_material||0;$("costThird").value=a.cost_third_party||0;$("costOther").value=a.other_direct_costs||0;$("costsConfirmed").checked=!!a.costs_confirmed;showAudit(a);lastAudit=a}calc();textClient()}
-function fixture(){cur={token:null,case_number:"76626",state:{}};showBase();fixtureMode=true;$("saveBox").classList.add("hidden");$("no").textContent="76626";$("queue").textContent="CASO ESCOLA • QA ISOLADO";$("client").value="Cleverson – esposo Raquel";$("address").value="Rua Reinaldo Stocco, 546 – Sobrado 110";$("reference").value="Ajustes de portas e substituição de 02 portas de correr";clearRows();addRow("service",{name:"AJUSTE E REGULAGEM DE 04 PORTAS",detail:"Ajuste, alinhamento e regulagem das portas do Quarto 1, Quarto 2, banheiro social e lavanderia, incluindo correções necessárias nos pontos de fechamento e funcionamento.",quantity:4,unit_value:195});addRow("service",{name:"SUBSTITUIÇÃO DA PORTA DE CORRER – LAVABO",detail:"Retirada da porta existente e instalação de nova porta de correr completa, para vão aproximado de 80 cm, incluindo montagem, fixação, alinhamento, regulagem e acabamento.",quantity:1,unit_value:680});addRow("service",{name:"SUBSTITUIÇÃO DA PORTA DE CORRER – SUÍTE",detail:"Retirada da porta existente e instalação de nova porta de correr completa, para vão aproximado de 80 cm, incluindo montagem, fixação, alinhamento, regulagem e acabamento.",quantity:1,unit_value:680});addRow("product",{name:"PORTA DE CORRER BRANCA COMPLETA – APROX. 80 × 210 CM",quantity:2,unit_value:680});addRow("product",{name:"MASSA PARA MADEIRA",quantity:1,unit_value:32});addRow("product",{name:"LIXA PARA MADEIRA",quantity:1,unit_value:36});addRow("product",{name:"TINTA PARA MADEIRA",quantity:1,unit_value:115});$("notes").value="As quatro portas existentes serão ajustadas conforme as condições das folhas, batentes, dobradiças e pontos de fechamento.\n\nAs medidas definitivas das portas de correr deverão ser conferidas no imóvel antes da aquisição.\n\nO modelo definitivo deverá ser escolhido após confirmação das dimensões, sistema existente e componentes necessários.\n\nDanos ocultos identificados após desmontagem não estão automaticamente contemplados. Serviços adicionais somente após aprovação.";$("costLabor").value="0";$("costMaterial").value="1120";$("costThird").value="650";$("costOther").value="100";$("measureStatus").value="A_CONFERIR";$("materialStatus").value="A_CONFERIR";$("thirdStatus").value="A_CONFERIR";$("scopeStatus").value="PRELIMINAR";$("diagnosisStatus").value="NAO_APLICAVEL";$("costsConfirmed").checked=true;$("humanApproved").checked=true;$("commercialOverride").checked=false;calc();textClient();audit()}
+function fixture(){cur={token:null,case_number:"766-26",state:{}};showBase();fixtureMode=true;$("saveBox").classList.add("hidden");$("no").textContent="766-26";$("queue").textContent="CASO ESCOLA • QA ISOLADO";$("client").value="Cleverson – esposo Raquel";$("address").value="Rua Reinaldo Stocco, 546 – Sobrado 110";$("reference").value="Ajustes de portas e substituição de 02 portas de correr";clearRows();addRow("service",{name:"AJUSTE E REGULAGEM DE 04 PORTAS",detail:"Ajuste, alinhamento e regulagem das portas do Quarto 1, Quarto 2, banheiro social e lavanderia, incluindo correções necessárias nos pontos de fechamento e funcionamento.",quantity:4,unit_value:195});addRow("service",{name:"SUBSTITUIÇÃO DA PORTA DE CORRER – LAVABO",detail:"Retirada da porta existente e instalação de nova porta de correr completa, para vão aproximado de 80 cm, incluindo montagem, fixação, alinhamento, regulagem e acabamento.",quantity:1,unit_value:680});addRow("service",{name:"SUBSTITUIÇÃO DA PORTA DE CORRER – SUÍTE",detail:"Retirada da porta existente e instalação de nova porta de correr completa, para vão aproximado de 80 cm, incluindo montagem, fixação, alinhamento, regulagem e acabamento.",quantity:1,unit_value:680});addRow("product",{name:"PORTA DE CORRER BRANCA COMPLETA – APROX. 80 × 210 CM",quantity:2,unit_value:680});addRow("product",{name:"MASSA PARA MADEIRA",quantity:1,unit_value:32});addRow("product",{name:"LIXA PARA MADEIRA",quantity:1,unit_value:36});addRow("product",{name:"TINTA PARA MADEIRA",quantity:1,unit_value:115});$("notes").value="As quatro portas existentes serão ajustadas conforme as condições das folhas, batentes, dobradiças e pontos de fechamento.\n\nAs medidas definitivas das portas de correr deverão ser conferidas no imóvel antes da aquisição.\n\nO modelo definitivo deverá ser escolhido após confirmação das dimensões, sistema existente e componentes necessários.\n\nDanos ocultos identificados após desmontagem não estão automaticamente contemplados. Serviços adicionais somente após aprovação.";$("costLabor").value="0";$("costMaterial").value="1120";$("costThird").value="650";$("costOther").value="100";$("measureStatus").value="A_CONFERIR";$("materialStatus").value="A_CONFERIR";$("thirdStatus").value="A_CONFERIR";$("scopeStatus").value="PRELIMINAR";$("diagnosisStatus").value="NAO_APLICAVEL";$("costsConfirmed").checked=true;$("humanApproved").checked=true;$("commercialOverride").checked=false;calc();textClient();audit()}
 function pdfEscape(v){return esc(v).replace(/\n/g,"<br>")}
 function buildProfessionalPdf(){
  var t=calc(),services=extract("service"),products=extract("product"),no=$("no").textContent.trim()||"SEM-NUMERO",today=new Date().toLocaleDateString("pt-BR");
  function rows(items){return items.map(function(x){var d=x.detail?'<div class="detail">'+pdfEscape(x.detail)+'</div>':"";return '<tr><td><b>'+esc(x.name)+'</b>'+d+'</td><td class="c">'+String(x.quantity).replace(".",",")+'</td><td class="r">'+brl(x.unit_value)+'</td><td class="r strong">'+brl(x.value)+'</td></tr>'}).join("")}
  var obs=$("notes").value.trim().split(/\n+/).filter(Boolean).map(function(x){return '<li>'+esc(x)+'</li>'}).join("");
  return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Orçamento '+esc(no)+' • CONSTRU-REI</title><style>'+
- '@page{size:A4;margin:14mm 13mm 17mm}*{box-sizing:border-box}body{margin:0;color:#17315d;font:11.5px/1.5 Inter,Segoe UI,Arial,sans-serif;background:#fff}.page{position:relative;min-height:250mm}.header{background:linear-gradient(118deg,#031b46,#052d70 64%,#07377d);color:#fff;border-radius:11px;padding:15px 17px 13px;border-bottom:4px solid #ffc400;display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.brand{font-size:21px;font-weight:900;letter-spacing:.02em}.brand span{color:#ffc400}.sub{font-size:9px;color:#dceaff;margin-top:2px}.seal{text-align:right;font-size:8px;color:#dceaff}.seal b{display:block;color:#ffe27a;font-size:9px;letter-spacing:.08em}.title{margin:18px 0 8px}.title h1{margin:0;color:#07175b;font-size:21px}.title p{margin:3px 0;color:#637d98}.meta{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0 16px}.meta div{border:1px solid #d3e4f1;border-radius:8px;padding:8px 9px;background:#f7fbff}.meta b{display:block;color:#637d98;font-size:7.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}.meta span{color:#07175b;font-weight:700}h2{font-size:12px;color:#05265f;margin:15px 0 7px;padding-bottom:5px;border-bottom:2px solid #ffc400;letter-spacing:.04em}table{width:100%;border-collapse:collapse;margin-bottom:12px;page-break-inside:auto}thead{display:table-header-group}tr{page-break-inside:avoid}th{background:#05265f;color:#fff;font-size:8px;text-transform:uppercase;letter-spacing:.05em;padding:7px;border:1px solid #05265f}td{padding:7px;border-bottom:1px solid #dfeaf3;vertical-align:top}.detail{font-size:9.2px;color:#637d98;margin-top:3px;line-height:1.4}.c{text-align:center;width:9%}.r{text-align:right;width:17%;white-space:nowrap}.strong{font-weight:900;color:#07175b}.totals{margin-left:auto;width:52%;border:1px solid #d3e4f1;border-radius:9px;overflow:hidden}.totals div{display:flex;justify-content:space-between;padding:6px 9px;border-bottom:1px solid #e5edf4}.totals div:last-child{border:0;background:#05265f;color:#fff;font-size:13px;font-weight:900}.totals b{color:inherit}.obs{border:1px solid #d3e4f1;border-left:4px solid #ffc400;border-radius:8px;padding:9px 11px;background:#fbfdff}.obs ul{margin:0;padding-left:17px}.obs li{margin:3px 0}.terms{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}.terms div{background:#eef7fc;border:1px solid #d3e4f1;border-radius:8px;padding:8px}.terms b{display:block;font-size:8px;color:#637d98;text-transform:uppercase}.terms span{font-weight:800;color:#07175b}.footer{position:fixed;bottom:0;left:0;right:0;border-top:1px solid #d3e4f1;padding-top:5px;display:flex;justify-content:space-between;color:#637d98;font-size:7.5px}.footer strong{color:#05265f}.pageNo:after{content:"Página " counter(page) " de " counter(pages)}.noInternal{font-size:7px;color:#8aa0b4;text-align:right;margin-top:6px}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}'+
- '</style></head><body><div class="page"><div class="header"><div><div class="brand">CONSTRU-<span>REI</span></div><div class="sub">Manutenção e Reformas</div><div class="sub">MANUTENÇÃO • REFORMAS • DIAGNÓSTICO</div></div><div class="seal"><b>ORÇAMENTO PROFISSIONAL</b>Análise com prudência e evidência.<br>Emitido em '+today+'</div></div><div class="title"><h1>ORÇAMENTO Nº '+esc(no)+'</h1><p>'+esc($("reference").value)+'</p></div><div class="meta"><div><b>Cliente</b><span>'+esc($("client").value)+'</span></div><div><b>Endereço</b><span>'+esc($("address").value)+'</span></div><div><b>Referência</b><span>'+esc($("reference").value)+'</span></div><div><b>Documento</b><span>Proposta comercial CONSTRU-REI</span></div></div>'+
+ '@page{size:A4;margin:14mm 13mm 17mm}*{box-sizing:border-box}body{margin:0;color:#17315d;font:11.5px/1.5 Inter,Segoe UI,Arial,sans-serif;background:#fff}.page{position:relative;min-height:250mm}.header{background:linear-gradient(118deg,#031b46,#052d70 64%,#07377d);color:#fff;border-radius:11px;padding:15px 17px 13px;border-bottom:4px solid #ffc400;display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.brandWrap{display:flex;gap:11px;align-items:center}.logo{width:47px;height:47px;border-radius:11px;object-fit:cover;background:#fff}.brand{font-size:21px;font-weight:900;letter-spacing:.02em}.brand span{color:#ffc400}.sub{font-size:9px;color:#dceaff;margin-top:2px}.legal{font-size:7.6px;color:#dceaff;margin-top:5px;line-height:1.35}.seal{text-align:right;font-size:8px;color:#dceaff}.seal b{display:block;color:#ffe27a;font-size:9px;letter-spacing:.08em}.title{margin:18px 0 8px}.title h1{margin:0;color:#07175b;font-size:21px}.title p{margin:3px 0;color:#637d98}.meta{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0 16px}.meta div{border:1px solid #d3e4f1;border-radius:8px;padding:8px 9px;background:#f7fbff}.meta b{display:block;color:#637d98;font-size:7.5px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}.meta span{color:#07175b;font-weight:700}h2{font-size:12px;color:#05265f;margin:15px 0 7px;padding-bottom:5px;border-bottom:2px solid #ffc400;letter-spacing:.04em}table{width:100%;border-collapse:collapse;margin-bottom:12px;page-break-inside:auto}thead{display:table-header-group}tr{page-break-inside:avoid}th{background:#05265f;color:#fff;font-size:8px;text-transform:uppercase;letter-spacing:.05em;padding:7px;border:1px solid #05265f}td{padding:7px;border-bottom:1px solid #dfeaf3;vertical-align:top}.detail{font-size:9.2px;color:#637d98;margin-top:3px;line-height:1.4}.c{text-align:center;width:9%}.r{text-align:right;width:17%;white-space:nowrap}.strong{font-weight:900;color:#07175b}.totals{margin-left:auto;width:52%;border:1px solid #d3e4f1;border-radius:9px;overflow:hidden}.totals div{display:flex;justify-content:space-between;padding:6px 9px;border-bottom:1px solid #e5edf4}.totals div:last-child{border:0;background:#05265f;color:#fff;font-size:13px;font-weight:900}.totals b{color:inherit}.obs{border:1px solid #d3e4f1;border-left:4px solid #ffc400;border-radius:8px;padding:9px 11px;background:#fbfdff}.obs ul{margin:0;padding-left:17px}.obs li{margin:3px 0}.terms{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}.terms div{background:#eef7fc;border:1px solid #d3e4f1;border-radius:8px;padding:8px}.terms b{display:block;font-size:8px;color:#637d98;text-transform:uppercase}.terms span{font-weight:800;color:#07175b}.footer{position:fixed;bottom:0;left:0;right:0;border-top:1px solid #d3e4f1;padding-top:5px;display:flex;justify-content:space-between;color:#637d98;font-size:7.5px}.footer strong{color:#05265f}.pageNo:after{content:"Página " counter(page) " de " counter(pages)}.noInternal{font-size:7px;color:#8aa0b4;text-align:right;margin-top:6px}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}'+
+ '</style></head><body><div class="page"><div class="header"><div class="brandWrap"><img class="logo" src="data:image/webp;base64,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" alt="CONSTRU-REI"><div><div class="brand">CONSTRU-<span>REI</span></div><div class="sub">Manutenção e Reformas</div><div class="sub">MANUTENÇÃO • REFORMAS • DIAGNÓSTICO</div><div class="legal"><b>BOOM NEGÓCIOS LTDA</b> • CNPJ 32.329.721/0001-36<br>Rua Luiz Antonieto, 221 • Jardim das Américas • Curitiba/PR<br>(41) 8778-6277 | (41) 98778-6277 • boomnegocios2019@gmail.com</div></div></div><div class="seal"><b>ORÇAMENTO PROFISSIONAL</b>Análise com prudência e evidência.<br>Emitido em '+today+'</div></div><div class="title"><h1>ORÇAMENTO Nº '+esc(no)+'</h1><p>'+esc($("reference").value)+'</p></div><div class="meta"><div><b>Cliente</b><span>'+esc($("client").value)+'</span></div><div><b>Endereço</b><span>'+esc($("address").value)+'</span></div><div><b>Referência</b><span>'+esc($("reference").value)+'</span></div><div><b>Documento</b><span>Proposta comercial CONSTRU-REI</span></div></div>'+
  (services.length?'<h2>SERVIÇOS</h2><table><thead><tr><th>Descrição</th><th>Qtd.</th><th>Vr. unit.</th><th>Subtotal</th></tr></thead><tbody>'+rows(services)+'</tbody></table>':"")+
  (products.length?'<h2>PRODUTOS</h2><table><thead><tr><th>Descrição</th><th>Qtd.</th><th>Vr. unit.</th><th>Subtotal</th></tr></thead><tbody>'+rows(products)+'</tbody></table>':"")+
  '<div class="totals"><div><span>Total serviços</span><b>'+brl(t.services)+'</b></div><div><span>Total produtos</span><b>'+brl(t.products)+'</b></div><div><span>TOTAL GERAL</span><b>'+brl(t.total)+'</b></div></div>'+
