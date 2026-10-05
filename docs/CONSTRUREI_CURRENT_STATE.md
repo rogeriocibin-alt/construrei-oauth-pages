@@ -195,3 +195,17 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - O painel de Links Oficiais v1.2 e o registro estruturado passaram de candidata para **OFICIAL / HOMOLOGADA / CONGELADA**.
 - A Agenda v5 foi reconferida no Supabase e permanece ativa com hash `d283edaf9415b754ea18814d52941c26e16bcca5f0e5a4178b51049656ea028a`.
 - Nenhuma alteração adicional foi feita na interface visual R9 ou na lógica validada da Agenda v5 durante esta promoção.
+
+
+## Gestor do Projeto V1.1.2 + Links Oficiais v1.3 — 2026-10-05
+
+- Status: **OFICIAL / HOMOLOGADA / CONGELADA**
+- Build: `CR-PM-V1.1.2-LINKS-OFFICIAL-20261005`
+- Branch: `cr-project-manager-v1-1-2-links-official-20261005`
+- Checkpoint: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_LINKS_OFFICIAL_20261005`
+- Link estável do Gestor: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/`
+- Link estável de Links Oficiais: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/links-oficiais/`
+- Mudança: botão/card **Links Oficiais** incorporado à Home do Gestor, junto aos acessos principais de governança.
+- Identidade de Links atualizada para **v1.3**, incluindo o Gestor no grupo Núcleo.
+- Regra: os aliases públicos existentes da Central, APP, Meeting, Wizy FLOW e Éder Agora foram preservados; nenhuma rota operacional da equipe foi trocada.
+- Central R9 + Agenda v5 permanecem congeladas na versão oficial anterior; esta promoção altera somente o Gestor/registro de links.

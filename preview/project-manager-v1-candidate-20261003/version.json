@@ -1,16 +1,20 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
-  "version": "1.1.1",
-  "build": "CR-PM-V1.1.1-C0-CANONICAL-20261003",
+  "version": "1.1.2",
+  "build": "CR-PM-V1.1.2-LINKS-OFFICIAL-20261005",
   "environment": "canonical",
-  "release_status": "canonical_homologated",
-  "released_at": "2026-10-03T13:08:00-03:00",
-  "branch": "cr-project-manager-v1-1-1-canonical-approved-20261003",
+  "release_status": "official_homologated",
+  "released_at": "2026-10-05T10:50:00-03:00",
+  "branch": "cr-project-manager-v1-1-2-links-official-20261005",
   "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
   "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
   "canonical_changed": true,
   "update_policy": "same_url_atomic_pwa_bundle",
   "changes": [
+    "Links Oficiais incorporado à home do Gestor como acesso de governança ao diretório mestre homologado.",
+    "Alias estável /gestor-projeto/ criado para o Gestor sem alterar o endereço interno do PWA.",
+    "Identidade de Links evoluída para v1.3 com o Gestor do Projeto registrado no núcleo.",
+    "Versão V1.1.2 homologada e oficializada por instrução explícita do proprietário.",
     "V1.1.1 promovida a canônica homologada por instrução explícita do proprietário.",
     "Backup/continuidade permanece como P0 aberto; promoção não implica resolução desse risco.",
     "Validação do PWA instalado em notebook e celular permanece pendente e registrada.",
@@ -29,8 +33,8 @@
     "API sanitizada persistente conectada ao PWA com JWT e fallback local.",
     "Gate do Ciclo 0 visível: promoção permanece bloqueada até continuidade e homologação."
   ],
-  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_PRE_CANONICAL_PROMOTION_20261003",
-  "candidate_checkpoint": "CHECKPOINT_PM_V1_1_1_EXEC_DASH_20261003",
+  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_CANONICAL_PROMOTED_20261003",
+  "candidate_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_LINKS_CANDIDATE_20261005",
   "last_tested_at": "2026-10-03T13:31:48-03:00",
   "promotion_gate": {
     "decision": "PROMOTED_OWNER_APPROVED_WITH_OPEN_P0",
@@ -49,12 +53,14 @@
     "executive_css_http": "PASS_200",
     "pwa_installed_notebook": "PENDING_HUMAN",
     "pwa_installed_mobile": "PENDING_HUMAN",
-    "visual_homologation": "PASS_OWNER_APPROVED"
+    "visual_homologation": "OWNER_APPROVED_CHANGE_SCOPE",
+    "official_links_card": "PASS_STATIC"
   },
-  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_CANONICAL_PROMOTED_20261003",
+  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_LINKS_OFFICIAL_20261005",
   "owner_homologation": {
     "status": "APPROVED",
     "source": "explicit_owner_instruction_in_chat",
-    "note": "Proprietário solicitou promover a candidata homologada V1.1.1."
-  }
+    "note": "Proprietário autorizou incorporar Links Oficiais ao Gestor e homologar/oficializar o Gestor sem trocar os links operacionais existentes."
+  },
+  "previous_official_commit": "fa980eb74b42a1ffd044288e0f4216aeaed108a1"
 }

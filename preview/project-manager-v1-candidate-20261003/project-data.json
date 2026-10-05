@@ -1,21 +1,23 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1.1.1 • CANÔNICA HOMOLOGADA",
-    "status": "CANÔNICA HOMOLOGADA — BANCO MESTRE RECONCILIADO EM 04/10; RESTORE INTEGRAL AINDA EM VALIDAÇÃO",
-    "generated_at": "2026-10-04",
+    "version": "V1.1.2 • OFICIAL HOMOLOGADA",
+    "status": "OFICIAL HOMOLOGADA — LINKS OFICIAIS INCORPORADOS; CONTROLE DE VERSÃO PRESERVADO",
+    "generated_at": "2026-10-05",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
-    "branch": "cr-project-manager-v1-1-1-canonical-approved-20261003",
+    "branch": "cr-project-manager-v1-1-2-links-official-20261005",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
     "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
     "audit_snapshot": "2026-10-03",
     "audit_state": "Snapshot automático incorporado com 201 branches; atualização online do GitHub ocorre ao abrir o Gestor.",
     "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
-    "build": "CR-PM-V1.1.1-C0-CANONICAL-20261003",
+    "build": "CR-PM-V1.1.2-LINKS-OFFICIAL-20261005",
     "environment": "canonical",
     "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
     "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
-    "persistence": "Supabase cr_internal conectado por API candidata sanitizada; snapshot local permanece como fallback offline."
+    "persistence": "Supabase cr_internal conectado por API candidata sanitizada; snapshot local permanece como fallback offline.",
+    "previous_official_commit": "fa980eb74b42a1ffd044288e0f4216aeaed108a1",
+    "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_LINKS_OFFICIAL_20261005"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -78,9 +80,17 @@
       "id": "gestor",
       "name": "Gestor do Projeto",
       "layer": "Governança",
-      "status": "candidate",
-      "summary": "Cockpit superior do proprietário para governança, memória, versões, decisões e desenvolvimento do ecossistema APP CONSTRU-REI.",
-      "current": "V1 candidata • identidade oficial APP incorporada"
+      "status": "canonical",
+      "summary": "Cockpit superior do proprietário para governança, memória, versões, decisões e desenvolvimento do ecossistema APP CONSTRU-REI, com acesso ao diretório mestre de Links Oficiais.",
+      "current": "V1.1.2 oficial • Links Oficiais incorporados"
+    },
+    {
+      "id": "links_oficiais",
+      "name": "Links Oficiais",
+      "layer": "Governança",
+      "status": "canonical",
+      "summary": "Diretório mestre dos acessos homologados, com aliases públicos estáveis e destinos técnicos preservados.",
+      "current": "Identidade de Links v1.3 • oficial"
     },
     {
       "id": "central",
@@ -2462,6 +2472,16 @@
       "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=app",
       "source": "central-atendimento v151",
       "description": "Aplicação operacional atual."
+    },
+    {
+      "id": "links_oficiais",
+      "name": "Links Oficiais",
+      "kind": "Governança de acessos",
+      "status": "canonical",
+      "access": "MASTER",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/links-oficiais/",
+      "source": "LINK-IDENTITY-V1.3-20261005",
+      "description": "Diretório mestre dos acessos homologados da CONSTRU-REI."
     },
     {
       "id": "dashboard",
