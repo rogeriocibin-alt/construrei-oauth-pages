@@ -437,6 +437,27 @@
         "não é corrente"
       ],
       "note": "Somente rollback histórico; não usar como base de evolução."
+    },
+    {
+      "id": "meeting-r12-v5",
+      "product": "meeting",
+      "name": "Sala da Equipe R1.2 • identidade APP • Meet oficial",
+      "date": "2026-10-05",
+      "status": "operational",
+      "parent": "meeting-r12-v3",
+      "commit": "257f58af043fe71541c0db356ab137bc33f2e29f",
+      "branch": "main",
+      "checkpoint": "checkpoint-before-central-r12-route-alias-hotfix-20261005",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/google-meet-central/",
+      "gains": [
+        "Google Meet oficial como motor",
+        "WebRTC próprio desativado",
+        "identidade visual canônica do APP",
+        "diagnóstico de compatibilidade do aparelho",
+        "alias público publicado"
+      ],
+      "losses": [],
+      "note": "Runtime Edge sala-equipe-r12-candidate v5 ACTIVE. Alias público e Central/Gestor responderam HTTP 200 no notebook Rogerio-2022. Validação física final de câmera/microfone/compartilhamento no celular permanece gate humano."
     }
   ],
   "checkpoints": [
@@ -1085,8 +1106,8 @@
       "priority": "P2",
       "state": "review",
       "owner": "CR Assertivo",
-      "last_movement": "2026-10-02",
-      "next_action": "Revisar acessos principais, Meeting e documentação sem criar duplicidade de links.",
+      "last_movement": "2026-10-05",
+      "next_action": "Aliases públicos da Central e da Sala da Equipe estabilizados e publicados; manter revisão apenas de documentação/base técnica sem duplicar links. Meeting atual usa Google Meet oficial, sem WebRTC próprio.",
       "dependency": "Inventário técnico",
       "source": "Base Técnica / Documentação",
       "close_when": "Acessos essenciais testados, documentação coerente e referências estáveis.",
@@ -1100,8 +1121,8 @@
       "priority": "P1",
       "state": "review",
       "owner": "Rogério + CR Assertivo",
-      "last_movement": "2026-10-03",
-      "next_action": "Executar validação comparativa somente quando a candidata estiver pronta, evitando microvalidações constantes.",
+      "last_movement": "2026-10-05",
+      "next_action": "Notebook Rogerio-2022: Central, Sala da Equipe e Gestor responderam HTTP 200 e aliases apontam para os runtimes corretos. Falta apenas validação física final em celular/notebook dos controles nativos do Google Meet (câmera, microfone e compartilhamento), que dependem do navegador/app e permissões do aparelho.",
       "dependency": "Candidata estabilizada",
       "source": "Regra de homologação do projeto",
       "close_when": "Mesmo comportamento essencial validado em notebook e celular com checkpoint.",
@@ -1115,8 +1136,8 @@
       "priority": "P2",
       "state": "queue",
       "owner": "CR Assertivo",
-      "last_movement": "2026-10-03",
-      "next_action": "Preservar azul canônico, botões, hierarquia, legibilidade e responsividade sem redesenhar a lógica.",
+      "last_movement": "2026-10-05",
+      "next_action": "Sala da Equipe alinhada à identidade canônica do APP: fundo #eaf6fc, azul-marinho #031b46/#05265f, azul institucional #0877f9 e amarelo #ffc514 somente como acento. Preservar esse padrão sem redesenhar a lógica.",
       "dependency": "Base funcional estável",
       "source": "cr-blue-canonical-option-b-20260930",
       "close_when": "Identidade consistente nos módulos prioritários sem regressão funcional.",
@@ -1191,7 +1212,7 @@
       "state": "queue",
       "owner": "CR Assertivo",
       "last_movement": "2026-10-05",
-      "next_action": "Desenvolver em candidata isolada a integração oficial pelo Google Meet Add-ons SDK, mantendo o Meet como motor da videoconferência e sem reativar WebRTC P2P próprio.",
+      "next_action": "Manter em fila a integração oficial pelo Google Meet Add-ons SDK para experiência integrada futura. Não reativar a Central Call/WebRTC histórica; o Meet oficial permanece motor corrente.",
       "dependency": "Configuração Google Cloud / Workspace Add-ons e validação em celular + notebook.",
       "source": "Decisão do proprietário em 05/10/2026 • canonical_backlog CR-MEET-P1-ADDON-20261005",
       "close_when": "Add-on CONSTRU-REI validado no Meet, navegação integrada testada, sem regressão na Central/Gestor e promoção homologada.",
@@ -2658,11 +2679,11 @@
     "owner_visibility": "Toda promoção, candidata, canônica, regressão, homologação e mudança de versão relevante precisa deixar evidência no Gestor."
   },
   "release_meta": {
-    "version": "1.1.1",
-    "build": "CR-PM-V1.1.1-C0-CANONICAL-20261003",
+    "version": "1.1.2",
+    "build": "CR-PM-V1.1.2-H5-UX-NAV-OFFICIAL-20261005",
     "environment": "canonical",
-    "status": "canonical",
-    "branch": "cr-project-manager-v1-1-1-canonical-approved-20261003",
+    "status": "official_homologated",
+    "branch": "cr-project-manager-v1-1-2-h5-official-20261005",
     "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
     "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
     "update_mode": "same_url_atomic_pwa_bundle",
@@ -2680,7 +2701,9 @@
     },
     "ui_commit_tested": "543d368635891b64b203df6badec0cda43dced9e",
     "candidate_checkpoint": "CHECKPOINT_PM_V1_1_1_EXEC_DASH_20261003",
-    "last_tested_at": "2026-10-03T12:16:52-03:00"
+    "last_tested_at": "2026-10-03T12:16:52-03:00",
+    "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H5_OFFICIAL_20261005",
+    "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005"
   },
   "audits": [
     {
