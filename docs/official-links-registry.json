@@ -1,5 +1,5 @@
 {
-  "version": "LINK-IDENTITY-V1.1-20261005",
+  "version": "LINK-IDENTITY-V1.2-20261005",
   "status": "CANDIDATA CORRIGIDA PARA VALIDAÇÃO HUMANA",
   "policy": "Aliases amigáveis são a camada pública. Endpoints técnicos permanecem preservados como destinos canônicos; não renomear nem excluir endpoints internos.",
   "base_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages",
@@ -233,9 +233,9 @@
     {
       "group": "Conhecimento",
       "label": "Google Meet • Central",
-      "slug": "meeting",
-      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/meeting/",
-      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#meeting"
+      "slug": "google-meet-central",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/google-meet-central/",
+      "target": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-homologada-exec-r9-20261004/?v=meeting-r9#meeting"
     },
     {
       "group": "Técnico & Segurança",
