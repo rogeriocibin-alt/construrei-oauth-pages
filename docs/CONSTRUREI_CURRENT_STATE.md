@@ -209,3 +209,18 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Identidade de Links atualizada para **v1.3**, incluindo o Gestor no grupo Núcleo.
 - Regra: os aliases públicos existentes da Central, APP, Meeting, Wizy FLOW e Éder Agora foram preservados; nenhuma rota operacional da equipe foi trocada.
 - Central R9 + Agenda v5 permanecem congeladas na versão oficial anterior; esta promoção altera somente o Gestor/registro de links.
+
+
+## Hotfix Gestor V1.1.2 H1 — escopo estável / cache — 2026-10-05
+
+- Motivo: no celular, mesmo após desinstalar o PWA, a Home podia continuar exibindo o bundle anterior sem o card **Links Oficiais**.
+- Causa confirmada: o alias estável `/gestor-projeto/` redirecionava para `preview/project-manager-v1-candidate-20261003/`; o Service Worker/cache dessa pasta de preview podia continuar controlando a navegação.
+- Correção H1: `/gestor-projeto/` agora serve diretamente o bundle completo do Gestor, no próprio escopo estável.
+- Build: `CR-PM-V1.1.2-H1-STABLE-SCOPE-20261005`.
+- Checkpoint pré-hotfix: `checkpoint-gestor-v1-1-2-pre-stable-scope-hotfix-20261005` em `f9c8e442add5e909f2d73998993a8ac86e300cee`.
+- Checkpoint lógico: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H1_STABLE_SCOPE_20261005`.
+- O card **Links Oficiais** permanece na Home e aponta para `/links-oficiais/`.
+- Service Worker H1: cache próprio do escopo estável, ativação após instalação completa e estratégia network-first com fallback offline para navegação/arquivos principais.
+- Registro `official-links-registry.json` atualizado para apontar o Gestor ao runtime estável direto, não ao preview legado.
+- Central R9 + Agenda v5 e os demais aliases operacionais não foram alterados.
+- Validação humana no celular: **PENDENTE** após publicação.
