@@ -1,0 +1,23 @@
+{
+  "app": "Gestor do Projeto CONSTRU-REI",
+  "version": "1.1.2",
+  "build": "CR-PM-V1.1.2-H5-UX-NAV-CANDIDATE-20261005",
+  "environment": "candidate",
+  "release_status": "candidate_not_promoted",
+  "base_official": "CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005",
+  "checkpoint_before": "checkpoint-before-ux-navigation-review-20261005",
+  "changes": [
+    "Voltar disponível em todas as views e fecha primeiro drawers/contextos abertos.",
+    "Início retorna ao Cockpit e zera o histórico interno de navegação.",
+    "Dock móvel fixo: Voltar, Início, Atualizar, Menu.",
+    "Controles de Voltar/Início/Atualizar também disponíveis no desktop.",
+    "Atualizar reutiliza o mecanismo oficial de Service Worker e não exige desinstalar o PWA.",
+    "Chip de versão identifica a candidata como V1.1.2 • H5 UX."
+  ],
+  "gate": {
+    "mobile": "PENDING_OWNER",
+    "notebook": "PENDING_OWNER",
+    "pwa_update_button": "READY_FOR_TEST",
+    "promotion": "BLOCKED"
+  }
+}
