@@ -537,3 +537,19 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Aliases `/meeting/` e `/google-meet-central/` consolidados para o runtime direto da Sala.
 - Identidade de Links: **v1.3.2**.
 - Observação: a fila do GitHub Pages permanece separada do runtime crítico; falha ou atraso de Pages não deve mais gerar 404 na Central oficial.
+
+
+## Consolidação — Sala da Equipe v5 + validação dos links públicos — 2026-10-05
+
+- Varredura histórica do Meeting recuperou o checkpoint `backup/meeting-pre-google-meet-restore-20260928` e o arquivo `central/call.html`.
+- Evidência histórica: a reunião “dentro da Central” era a implementação própria **Central Call/WebRTC P2P**, com `getUserMedia`, `getDisplayMedia`, `RTCPeerConnection`, STUN e Supabase Realtime; o Google Meet já aparecia ali apenas como contingência.
+- Decisão antirregressão: **não restaurar a Central Call/WebRTC**. Preservar somente o diagnóstico de aparelho; Google Meet oficial continua sendo o motor corrente de videoconferência.
+- Sala da Equipe Edge `sala-equipe-r12-candidate`: **v5 ACTIVE**.
+- Build Sala: `CR-SALA-EQUIPE-R1.2-APP-IDENTITY-V5-20261005`.
+- Identidade visual alinhada ao APP canônico: fundo `#eaf6fc`, azul-marinho `#031b46/#05265f`, azul institucional `#0877f9`, amarelo `#ffc514` apenas como acento.
+- Diagnóstico de aparelho mantido na tela inicial para contexto seguro, câmera/microfone e compartilhamento suportado pelo navegador/app.
+- GitHub Pages: publicação do hotfix `257f58af043fe71541c0db356ab137bc33f2e29f` concluída com **success**.
+- Validação no notebook `Rogerio-2022`: aliases públicos `/central/`, `/google-meet-central/` e `/gestor-projeto/` responderam **HTTP 200**.
+- Conteúdo dos aliases conferido: `/central/` aponta para `centro-operacoes`; `/google-meet-central/` aponta para `sala-equipe-r12-candidate`; nenhum alias contém `Central Call` ou `WebRTC`.
+- Gestor H5 sincronizado com as ações de 05/10: PM-10, PM-11, PM-12 e PM-17 atualizados; versão Meeting R1.2 v5 registrada.
+- Gate remanescente: validação física final em celular e notebook dos controles nativos do Google Meet (câmera, microfone e compartilhamento), pois essas permissões pertencem ao navegador/app do aparelho.
