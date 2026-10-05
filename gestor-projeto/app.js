@@ -14,7 +14,7 @@ const VIEW_TITLES={
   audits:'Auditorias',governance:'Governança',search:'Busca'
 };
 
-const CURRENT_RELEASE={version:'1.1.2',build:'CR-PM-V1.1.2-H2-LINKS-VISIBLE-20261005',environment:'canonical'};
+const CURRENT_RELEASE={version:'1.1.2',build:'CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005',environment:'canonical'};
 const PM_API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
 const PM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
 const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
@@ -132,21 +132,18 @@ async function refreshProjectManagerLive(){
 }
 
 function renderOwnerHub(){
-  const items=arr(state.data.owner_access);
-  const central=items.find(x=>x.id==='central');
-  const rest=items.filter(x=>x.id!=='central');
+  const links=arr(state.data.owner_access).find(x=>x.id==='links_oficiais');
+  if(!links)return '';
   return `
-    <section class="owner-hub card">
-      <div class="card-head"><div><h3>Seu acesso único ao CONSTRU-REI</h3><p>Camada do proprietário/desenvolvedor. A equipe continua operando diretamente pela Central.</p></div><div class="spacer"></div><span class="badge live">PWA do proprietário</span></div>
-      ${central?`<button class="central-gateway external-btn" data-url="${esc(central.url)}">
-        <div class="gateway-mark"><img src="./pwa-icon.svg?v=20261005v112h2" alt="APP CONSTRU-REI"></div>
-        <div class="gateway-copy"><small>CENTRAL CONSTRU-REI</small><strong>Operação viva</strong><span>${esc(central.source)} • ${esc(central.access)}</span></div>
-        <div class="gateway-state"><span class="live-dot"></span><b>Entrar na Central</b><em>→</em></div>
-      </button>`:''}
-      <div class="owner-links">
-        ${rest.map(x=>`<button class="owner-link external-btn" data-url="${esc(x.url)}"><span class="owner-link-kind">${esc(x.kind)}</span><b>${esc(x.name)}</b><small>${esc(x.description)}</small><span class="owner-link-foot">${badge(x.status)}<em>Abrir ↗</em></span></button>`).join('')}
-      </div>
-      <div class="notice owner-rule"><b>Regra de sincronismo:</b> se APP, Central, Dashboard ou qualquer módulo evoluir e o Gestor não refletir essa evolução, a entrega ainda não está concluída.</div>
+    <section class="owner-hub owner-hub-compact">
+      <button class="links-gateway external-btn" data-url="${esc(links.url)}">
+        <span class="links-gateway-copy">
+          <small>ACESSOS HOMOLOGADOS</small>
+          <b>Central de Links</b>
+          <em>Todos os links oficiais organizados em um só lugar.</em>
+        </span>
+        <span class="links-gateway-action">Abrir ↗</span>
+      </button>
     </section>`;
 }
 
@@ -745,7 +742,7 @@ window.addEventListener('appinstalled',()=>{const b=$('#installPwaBtn'); if(b)b.
 
 async function init(){
   try{
-    const r=await fetch('./project-data.json?v=20261005v112h2',{cache:'no-store'});
+    const r=await fetch('./project-data.json?v=20261005v112h3',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     state.data=await r.json();
     renderAll();
@@ -773,7 +770,7 @@ async function init(){
       }
     };
     if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('./sw.js?v=20261005v112h2',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
+      navigator.serviceWorker.register('./sw.js?v=20261005v112h3',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
     }
 
     if(!('serviceWorker' in navigator)) checkReleaseUpdate();
