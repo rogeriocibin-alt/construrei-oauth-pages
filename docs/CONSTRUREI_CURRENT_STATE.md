@@ -676,3 +676,20 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - PDF inclui cabeçalho institucional, identificação do orçamento, cliente/endereço/referência, tabelas de serviços/produtos, totais, observações, validade, garantia e paginação CSS.
 - Commits do refinamento: `e43620fab247d5dc68f8c6afbbae91566295862d` e `1bacd5cf352cab5425c05ebfd81ee922499eab88`.
 - Próximo gate: validação visual de Rogério em notebook/celular e teste do PDF antes da promoção oficial.
+
+
+## Candidata F02 — ORÇA-REI Entrada Inteligente R3 — 2026-10-05
+
+- Status: **CANDIDATA / NÃO PROMOVIDA / AGUARDANDO VALIDAÇÃO HUMANA**.
+- UI candidata: `preview/f02-orca-rei-v1-r3-intake-20261005/`.
+- Build UI: `CR-F02-ORCA-REI-V1-R3-INTAKE-20261005`.
+- Edge candidata: `cr-flow-runtime-v2-orca-intake-candidate` **v3 ACTIVE**.
+- Build Edge: `CR-FLOW-RUNTIME-V2-ORCA-REI-V1-INTAKE-CANDIDATE-R3-20261005`.
+- Função: campo **ENTRADA INTELIGENTE** no topo do F02 para colar texto desorganizado, orçamento de IA terceira, vistoria, lista de serviços/materiais e observações.
+- Regra de fusão: contexto confirmado F00/F01 é preservado; entrada colada enriquece o mesmo caso e conflitos viram DIVERGENTE / A CONFERIR.
+- Parser validado tecnicamente com três cenários: texto livre, padrão GestãoClick multilinha e conflito de cabeçalho.
+- Matemática validada nos testes: 4×195 = 780; 2×680 = 1.360.
+- Conteúdo de IA terceira é tratado como fonte auxiliar, sem sobrescrita silenciosa.
+- Padrão transversal registrado em `docs/INTELLIGENT_INPUT_PATTERN_V1_20261005.md` para adoção gradual no APP e F00→F09.
+- Produção/F02 oficial permanece **inalterada** até validação de Rogério.
+- Gate de validação: testar no celular/notebook um caso real F02, aplicar entrada inteligente e conferir merge + PDF/GestãoClick antes de promoção.
