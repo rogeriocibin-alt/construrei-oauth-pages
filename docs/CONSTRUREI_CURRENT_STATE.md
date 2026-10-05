@@ -2,20 +2,20 @@
 
 > Fonte de verdade para retomada entre conversas. Não depender do histórico do chat para identificar a versão atual.
 
-## Estado atual — 2026-10-04
+## Estado atual — 2026-10-05
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Versão oficial atual: **Executivo R9 + Agenda Operacional v5 — OFICIAL**
-- Branch homologada: `central-oficial-r9-agenda-v5-20261005`
+- Versão oficial atual: **Executivo R9 + Agenda Operacional v5 + Identidade de Links v1.2 — OFICIAL**
+- Branch homologada: `central-oficial-r9-agenda-v5-links-v1-2-20261005`
 - Branch de origem validada: `cr-central-exec-r9-mobilefix-20261004`
 - Commit funcional R9: `b42c491dba5a60fa375c2f2609e26c660ebf892e`
 - Commit de produção congelada: `0e13035fb93813834a7c98021eeafa8ab4cec81a`
 - Checkpoint funcional: `CHECKPOINT_CENTRAL_EXEC_R9_MOBILEFIX_20261004`
-- Checkpoint homologado: `CHECKPOINT_CENTRAL_R9_AGENDA_V5_20261005`
+- Checkpoint homologado: `CHECKPOINT_CENTRAL_R9_AGENDA_V5_LINKS_V1_2_20261005`
 - Pasta de produção congelada: `production/central-homologada-exec-r9-20261004/`
 - Fonte viva de pendências: `cr-pendencias-executive-v2-candidate-20261004` v1
-- Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — R9 + Agenda v5**
+- Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — R9 + Agenda v5**; camada pública de Links v1.2 também **OFICIAL**
 - Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`
 - Destino HOME oficial: `production/central-homologada-exec-r9-20261004/`
 - Regra: não alterar a pasta de produção R9, a branch homologada nem o checkpoint homologado; evoluções futuras devem ocorrer em candidata isolada.
@@ -101,7 +101,7 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-05 — Identidade de Links v1.1 corrigida: `Pendências Wizy FLOW`, `Pendências Éder Agora` e Meeting apontando para a página homologada interna da Central (`#meeting`). R9 + Agenda v5 permanecem oficiais e congeladas.
+2026-10-05 — R9 + Agenda v5 + Identidade de Links v1.2 homologadas como conjunto oficial. `Pendências Wizy FLOW`, `Pendências Éder Agora` e `Google Meet • Central` usam aliases amigáveis; Meeting abre primeiro a página homologada interna da Central R9 (`#meeting`). GitHub Pages da v1.2 publicado com sucesso.
 
 ## Hotfix Agenda — identificação de equipe — 2026-10-05
 
@@ -154,12 +154,12 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Próxima frente isolada: **Identidade de Links Oficiais v1**, sem alterar a Central oficial até validação humana dos links.
 
 
-## Identidade de Links Oficiais v1 — candidata
+## Identidade de Links Oficiais v1.2 — OFICIAL
 
 - Data: 2026-10-05
-- Status: **CANDIDATA PARA VALIDAÇÃO HUMANA — NÃO PROMOVIDA AINDA PARA O REGISTRY INTERNO DA CENTRAL**
+- Status: **OFICIAL / HOMOLOGADA / CONGELADA**
 - Objetivo: substituir URLs de uso humano por aliases estáveis, claros e autoexplicativos, mantendo endpoints técnicos intactos.
-- Painel de validação: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/links-oficiais/`
+- Painel oficial: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/links-oficiais/`
 - Registro estruturado: `docs/official-links-registry.json`
 - Quantidade: **38 aliases amigáveis**
 - Exemplos:
@@ -171,8 +171,11 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
   - `/apresentacao/`
 - Regra arquitetural: **não renomear, apagar nem quebrar endpoints técnicos**. Os aliases são uma camada pública de identidade e redirecionam para destinos canônicos.
 - O caminho legado `/central/`, que continha uma Central estática antiga, foi convertido em alias da Central oficial atual para eliminar risco de acesso à versão obsoleta.
-- Próximo gate: Rogério testa os links no celular/notebook; somente após aprovação a Central passa a copiar/abrir os aliases amigáveis no catálogo de Homologação.
-- Checkpoint lógico: `CHECKPOINT_LINK_IDENTITY_V1_20261005`
+- Gate humano: **CONCLUÍDO** — Rogério autorizou a homologação em 05/10/2026 às 08:50.
+- GitHub Pages: publicação v1.2 confirmada com sucesso no HEAD `8dc210ea07d629f0a9ef09efaf838a17848b8b49`.
+- Branch oficial desta combinação: `central-oficial-r9-agenda-v5-links-v1-2-20261005`.
+- Checkpoint homologado: `CHECKPOINT_CENTRAL_R9_AGENDA_V5_LINKS_V1_2_20261005`.
+- Registro de homologação: `docs/HOMOLOGACAO_LINK_IDENTITY_V1_2_20261005.md`.
 
 
 ### Ajustes v1.1 — Wizy FLOW, Éder Agora e Meeting
@@ -182,3 +185,13 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - `/meeting/` — não aponta mais diretamente para `meet.google.com`; agora abre `centro-operacoes#meeting`, preservando a página de Meeting homologada dentro da Central.
 - Aliases legados `/wizy-flow/` e `/eder-agora/` foram mantidos como compatibilidade, redirecionando para os novos aliases.
 - Registro de links atualizado para `LINK-IDENTITY-V1.1-20261005`.
+
+
+### Ajustes v1.2 — Meeting homologado e promoção
+
+- `/google-meet-central/` é o alias humano oficial do Meeting.
+- `/meeting/` permanece como compatibilidade e aponta ao mesmo destino.
+- Ambos abrem `production/central-homologada-exec-r9-20261004/?v=meeting-r9#meeting` antes de qualquer acesso à sala externa.
+- O painel de Links Oficiais v1.2 e o registro estruturado passaram de candidata para **OFICIAL / HOMOLOGADA / CONGELADA**.
+- A Agenda v5 foi reconferida no Supabase e permanece ativa com hash `d283edaf9415b754ea18814d52941c26e16bcca5f0e5a4178b51049656ea028a`.
+- Nenhuma alteração adicional foi feita na interface visual R9 ou na lógica validada da Agenda v5 durante esta promoção.
