@@ -1,0 +1,25 @@
+{
+  "name": "Gestor do Projeto CONSTRU-REI",
+  "short_name": "Gestor CR APP",
+  "description": "Cockpit do proprietário do ecossistema APP CONSTRU-REI.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f8fc",
+  "theme_color": "#07185d",
+  "orientation": "any",
+  "lang": "pt-BR",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./pwa-icon.svg?v=20261005v112h1",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "./"
+}
