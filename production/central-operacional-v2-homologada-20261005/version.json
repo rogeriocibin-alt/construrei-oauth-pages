@@ -1,0 +1,21 @@
+{
+  "app": "Central Operacional CONSTRU-REI",
+  "version": "R9-OP-V2",
+  "build": "CR-CENTRAL-OPERATION-ONLY-V2-OFFICIAL-20261005",
+  "status": "OFFICIAL_HOMOLOGATED_FROZEN",
+  "architecture": "direct-page-no-iframe",
+  "source_candidate": "preview/central-operation-only-v2-direct-candidate-20261005/",
+  "base_assets": "production/central-homologada-exec-r9-20261004/",
+  "official_public_link": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/",
+  "stable_alias": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/",
+  "rollback": "production/central-homologada-exec-r9-20261004/",
+  "homologated_at": "2026-10-05",
+  "homologated_by": "Rogério",
+  "validation": {
+    "mobile": "PASS_OWNER_CONFIRMED",
+    "static_boundary": "PASS",
+    "direct_page_no_iframe": "PASS",
+    "notebook": "NOT_RETESTED_THIS_PROMOTION",
+    "owner_override_for_promotion": true
+  }
+}
