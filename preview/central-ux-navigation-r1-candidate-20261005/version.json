@@ -1,21 +1,22 @@
 {
   "product": "Central CONSTRU-REI",
-  "candidate": "UX Navigation R1.1",
-  "build": "CR-CENTRAL-OP-V2-UX-NAV-R1.1-CANDIDATE-20261005",
+  "candidate": "UX Navigation R1.2",
+  "build": "CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-ENGINE-CANDIDATE-20261005",
   "status": "CANDIDATE_NOT_PROMOTED",
   "base_official": "production/central-operacional-v2-homologada-20261005/",
+  "meeting_engine": "GOOGLE_MEET_HOMOLOGATED",
+  "legacy_webrtc": "REMOVED_FROM_PRIMARY_FLOW",
   "changes": [
-    "Mantém revisão R1: topbar limpo e navegação Voltar/Início/Atualizar/Menu.",
-    "Sala da Equipe bloqueia a sobrescrita recorrente do refinement-batch.js legado.",
-    "Todos os atalhos de reunião convergem para a mesma Sala da Equipe candidata clara.",
-    "Tela principal da Sala deixa de exibir Central Call/WebRTC/Realtime e compatibilidade como conteúdo principal.",
-    "Diagnóstico permanece disponível dentro da sala somente quando necessário.",
-    "Conhecimento & Treinamento remove nomenclaturas Academy/Base Técnica/Tecnologia do escopo operacional e explicita a fronteira com o Gestor."
+    "Mantém navegação R1.1: Voltar, Início, Atualizar e Menu.",
+    "Remove a Central Call WebRTC experimental do fluxo normal da equipe.",
+    "Sala da Equipe volta a usar o Google Meet homologado como motor real da reunião.",
+    "Câmera, microfone, participantes e compartilhamento deixam de depender da implementação P2P/STUN da Central.",
+    "O caminho /call/ passa a ser um lançador confiável para a mesma sala oficial do Meet."
   ],
   "gate": {
-    "mobile": "PENDING_OWNER_RETEST_R1_1",
+    "mobile": "PENDING_OWNER_RETEST_R1_2",
     "notebook": "PENDING_OWNER",
     "promotion": "BLOCKED"
   },
-  "checkpoint_before": "checkpoint-before-ux-navigation-review-20261005"
+  "checkpoint_before": "checkpoint-before-central-ux-r1-2-meet-engine-fix-20261005"
 }
