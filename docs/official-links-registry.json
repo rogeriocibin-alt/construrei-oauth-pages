@@ -292,6 +292,6 @@
     "meeting_rule": "Google Meet abre primeiro a página homologada dentro da Central R9 (#meeting), nunca o meet.google.com diretamente pelo alias oficial.",
     "compatibility": "Endpoints técnicos e aliases legados preservados; camada pública usa nomes amigáveis."
   },
-  "project_manager_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H1_STABLE_SCOPE_20261005",
-  "project_manager_build": "CR-PM-V1.1.2-H1-STABLE-SCOPE-20261005"
+  "project_manager_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H2_LINKS_VISIBLE_20261005",
+  "project_manager_build": "CR-PM-V1.1.2-H2-LINKS-VISIBLE-20261005"
 }
