@@ -1,24 +1,25 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1.1.2 H4 • OFICIAL HOMOLOGADA",
-    "status": "OFICIAL / HOMOLOGADA / CONGELADA — PWA INSTALÁVEL + CENTRAL DE LINKS EM BOTÃO ÚNICO",
+    "version": "V1.1.2 H5 • OFICIAL HOMOLOGADA",
+    "status": "OFICIAL / HOMOLOGADA / CONGELADA — UX DE NAVEGAÇÃO + PWA INSTALÁVEL + CENTRAL DE LINKS",
     "generated_at": "2026-10-05",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
-    "branch": "cr-project-manager-v1-1-2-h4-official-20261005",
+    "branch": "cr-project-manager-v1-1-2-h5-official-20261005",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
     "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
     "audit_snapshot": "2026-10-03",
     "audit_state": "Snapshot automático incorporado com 201 branches; atualização online do GitHub ocorre ao abrir o Gestor.",
     "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
-    "build": "CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005",
+    "build": "CR-PM-V1.1.2-H5-UX-NAV-OFFICIAL-20261005",
     "environment": "canonical",
     "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
     "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
     "persistence": "Supabase cr_internal conectado por API candidata sanitizada; snapshot local permanece como fallback offline.",
     "previous_official_commit": "fa980eb74b42a1ffd044288e0f4216aeaed108a1",
-    "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
-    "pwa_mobile_status": "PASS_OWNER_CONFIRMED"
+    "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H5_OFFICIAL_20261005",
+    "pwa_mobile_status": "PASS_OWNER_CONFIRMED",
+    "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -83,7 +84,7 @@
       "layer": "Governança",
       "status": "canonical",
       "summary": "Cockpit superior do proprietário para governança, memória, versões, decisões e desenvolvimento do ecossistema APP CONSTRU-REI, com acesso ao diretório mestre de Links Oficiais.",
-      "current": "V1.1.2 oficial • Links Oficiais incorporados"
+      "current": "V1.1.2 H5 UX • oficial"
     },
     {
       "id": "links_oficiais",
@@ -99,7 +100,7 @@
       "layer": "Produto gerenciado",
       "status": "canonical",
       "summary": "Camada executiva/gestão e ponto de acesso aos módulos.",
-      "current": "Canônica aprovada 01/10"
+      "current": "Central Operacional V2 + UX R1.2 • oficial"
     },
     {
       "id": "executive",
@@ -521,9 +522,9 @@
       "objective": "Entregar o cockpit visual que organiza memória, versões, decisões, frentes e direção do projeto.",
       "progress": 100,
       "owner": "CR Assertivo + Bio",
-      "last_advance": "V1.1.1 promovida a canônica homologada por decisão explícita do proprietário; continuidade/backup permanece como P0 aberto.",
-      "next_action": "Validar PWA instalado em notebook/celular e tratar P0 de continuidade/backup sem reabrir o redesign do Gestor.",
-      "dependency": "P0 de continuidade/backup e validação pós-promoção do PWA instalado.",
+      "last_advance": "H5 UX de navegação oficializada em 05/10/2026 com Voltar/Início/Atualizar/Menu e atualização no mesmo PWA.",
+      "next_action": "Manter monitoramento antirregressão; novas evoluções somente em candidata isolada.",
+      "dependency": "Nenhuma para a versão oficial H5.",
       "blocked": false,
       "age_days": 0
     },
@@ -1179,6 +1180,21 @@
       "dependency": "Destino PostgreSQL isolado/descartável",
       "source": "RESTORE_DRILL_20261004.txt — DB checksums PASS 3/3; Storage 4526; restore remoto amostral PASS 3/3",
       "close_when": "Banco integral restaurado em ambiente descartável, validado e ambiente de teste removido.",
+      "human_action": false,
+      "provenance": "current_explicit"
+    },
+    {
+      "id": "PM-17",
+      "title": "Google Meet Add-ons — integração oficial CONSTRU-REI",
+      "domain": "Desenvolvimento / Meeting",
+      "priority": "P1",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-05",
+      "next_action": "Desenvolver em candidata isolada a integração oficial pelo Google Meet Add-ons SDK, mantendo o Meet como motor da videoconferência e sem reativar WebRTC P2P próprio.",
+      "dependency": "Configuração Google Cloud / Workspace Add-ons e validação em celular + notebook.",
+      "source": "Decisão do proprietário em 05/10/2026 • canonical_backlog CR-MEET-P1-ADDON-20261005",
+      "close_when": "Add-on CONSTRU-REI validado no Meet, navegação integrada testada, sem regressão na Central/Gestor e promoção homologada.",
       "human_action": false,
       "provenance": "current_explicit"
     }
