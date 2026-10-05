@@ -660,3 +660,19 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Caso escola 76626: cenários de R$ 1.870 e R$ 2.230 validados; resultados coincidem com a regra financeira canônica.
 - Relatório técnico: `docs/agents/ORCA_REI_V1_IMPLEMENTATION_REPORT_20261005.md`.
 - Próximo gate: Rogério validar a candidata; somente então promover/congelar no F02 oficial.
+
+
+### ORÇA-REI V1 — refinamento visual + PDF profissional — 2026-10-05
+
+- Candidata mantida isolada: `preview/f02-orca-rei-v1-candidate-20261005/`.
+- F02 oficial permanece inalterado.
+- Layout alinhado à identidade homologada da Central: navy `#031b46`, azul institucional `#075bd8/#0875f5`, branco e dourado `#ffc400`.
+- Removida a mistura visual entre design system claro e cards escuros do protótipo.
+- Medidores internos convertidos para cards claros com acentos semânticos.
+- Preview GestãoClick convertido para documento claro e legível.
+- Adicionado botão **GERAR PDF PROFISSIONAL**.
+- PDF do cliente em formato A4, sem custos/margem/análise interna.
+- Identidade documental baseada nas regras canônicas do Parecer Técnico 710-26: `CONSTRU-REI`, `Manutenção e Reformas`, `MANUTENÇÃO • REFORMAS • DIAGNÓSTICO`, frase `Análise com prudência e evidência.` e rodapé `SOLUÇÕES HOJE. TRANQUILIDADE SEMPRE.`.
+- PDF inclui cabeçalho institucional, identificação do orçamento, cliente/endereço/referência, tabelas de serviços/produtos, totais, observações, validade, garantia e paginação CSS.
+- Commits do refinamento: `e43620fab247d5dc68f8c6afbbae91566295862d` e `1bacd5cf352cab5425c05ebfd81ee922499eab88`.
+- Próximo gate: validação visual de Rogério em notebook/celular e teste do PDF antes da promoção oficial.
