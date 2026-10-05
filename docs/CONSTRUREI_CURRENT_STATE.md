@@ -624,3 +624,22 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Payload registrado antes da limpeza: 226.182.446 bytes (Cofre Zero) + 4.632.974.850 bytes (WORK) = **4.859.157.296 bytes liberáveis/removidos**.
 - Regra antirregressão: manter **um único Scheduler ativo**. Qualquer alteração de executor, secrets, imagem ou horário exige novo run manual + run via Scheduler + verificação Drive antes de promoção.
 - Regra de continuidade: o notebook não participa da execução diária; serve apenas como console administrativo opcional.
+
+
+## ORÇA-REI V1 — Agente Orçamentista Oficial — 2026-10-05
+
+- Status: **CANÔNICO / APROVADO PARA IMPLEMENTAÇÃO**.
+- Papel: agente especialista de orçamento do **F02 • PREPARAR**.
+- Superior operacional: **Bio Gestor**.
+- Gate comercial final: **Rogério**.
+- Execução técnica: **CR Assertivo**.
+- Documento canônico: `docs/agents/ORCA_REI_V1.md`.
+- Handoff técnico: `docs/agents/ORCA_REI_V1_IMPLEMENTATION_HANDOFF_20261005.md`.
+- Issue de implementação: **#24 — [F02] Implementar ORÇA-REI V1 — Agente Orçamentista Oficial**.
+- Caso escola inicial: **Orçamento 76626 — Cleverson/Raquel — portas e esquadrias**.
+- Padrão externo vigente: escrita GestãoClick com `ORÇAMENTO Nº / SERVIÇOS / PRODUTOS / totais / OBSERVAÇÕES TÉCNICAS / VALIDADE / GARANTIA`.
+- Regra financeira inicial: 18,5% de encargos comerciais/fiscais + 30% de margem alvo são **parâmetros configuráveis**, não constantes eternas.
+- Fórmula geral: `preco_minimo = custo_direto / (1 - encargos - margem_alvo)`.
+- Regra de fronteira: cliente nunca recebe margem, lucro, custo real, meta de compra, meta de terceiro ou análise interna.
+- Regra anti-regressão: não criar arquitetura paralela; reutilizar F01 → F02 → F03 e preservar links/fluxos oficiais.
+- Próximo gate: implementação técnica + homologação do caso 76626 + orçamento simples + orçamento complexo + validação humana.
