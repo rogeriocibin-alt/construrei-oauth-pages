@@ -7,13 +7,13 @@
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
 - Versão oficial atual: **Central Operacional V2 + Agenda v5 + Identidade de Links v1.3 — OFICIAL**
-- Branch homologada: `central-oficial-r9-agenda-v5-links-v1-2-20261005`
-- Branch de origem validada: `cr-central-exec-r9-mobilefix-20261004`
-- Commit funcional R9: `b42c491dba5a60fa375c2f2609e26c660ebf892e`
-- Commit de produção congelada: `0e13035fb93813834a7c98021eeafa8ab4cec81a`
-- Checkpoint funcional: `CHECKPOINT_CENTRAL_EXEC_R9_MOBILEFIX_20261004`
-- Checkpoint homologado: `CHECKPOINT_CENTRAL_R9_AGENDA_V5_LINKS_V1_2_20261005`
-- Pasta de produção congelada: `production/central-homologada-exec-r9-20261004/`
+- Branch homologada: `central-operacional-v2-oficial-20261005`
+- Branch de origem validada: `main` • candidata isolada `preview/central-operation-only-v2-direct-candidate-20261005/`
+- Commit funcional V2: `59f22ad159a9695e82a60c5e11da8d93b66eca88`
+- Commit de produção congelada: `f5d246ccf1f65eaf9aac905c1e1dff19a691dc93`
+- Checkpoint funcional: `CHECKPOINT_CENTRAL_OPERATIONAL_V2_OFFICIAL_20261005`
+- Checkpoint homologado: `CHECKPOINT_CENTRAL_OPERATIONAL_V2_OFFICIAL_20261005`
+- Pasta de produção congelada: `production/central-operacional-v2-homologada-20261005/`
 - Fonte viva de pendências: `cr-pendencias-executive-v2-candidate-20261004` v1
 - Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — Central Operacional V2**; link público preservado.nks v1.2 também **OFICIAL**
 - Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`
