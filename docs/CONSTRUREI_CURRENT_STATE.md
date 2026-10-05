@@ -363,3 +363,24 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Link oficial e alias `/central/` permanecem exatamente os mesmos.
 - Verificação pós-deploy pelo conector Supabase: **PASS** — v280 ativa e HOME aponta para a produção V2 congelada.
 - A checagem HTTP externa não pôde ser executada neste runtime por indisponibilidade de resolução DNS; isso não altera a confirmação do deploy retornada pelo Supabase.
+
+
+## Backup / Cofre Zero — fechamento técnico — 2026-10-05
+
+- Status do piloto real: **PASS**.
+- Execução real: `DAILY_20261005-145033`.
+- Banco: `roles.sql`, `schema.sql` e `data.sql` exportados com sucesso pelo Supabase CLI.
+- Storage: **4.526 arquivos**, `rclone check` com **0 diferenças**.
+- Google Drive: `CONSTRUREI-BACKUP-AUTO/CURRENT`, **4.532 arquivos correspondentes**, **0 diferenças**.
+- Restore drill do conjunto de 05/10: **PASS**.
+- Prova de recuperação: os 3 dumps de banco e 3 amostras determinísticas de Storage foram baixados novamente do Google Drive e conferidos por SHA-256; todos os hashes foram idênticos aos arquivos de origem do backup.
+- Evidência local: `C:\CONSTRUREI-BACKUP-AUTO\RESTORE_DRILL_20261005.txt`.
+- Cofre Zero: **preservado / não sobrescrito**.
+- Docker Desktop: reinstalado/recuperado em `C:\Users\roger\AppData\Local\Programs\DockerDesktop\`, engine validado durante o piloto.
+- WSL/Docker: limite configurado em `.wslconfig` com `memory=1GB`, `swap=2GB` e `autoMemoryReclaim=gradual`, adequado ao notebook de 8 GB.
+- Preflight: gate de RAM mantido e calibrado para **0,75 GB livres**, sem remoção da proteção.
+- Agendamento oficial local: `CONSTRUREI - Backup Diario`, diário às **03:00**, chamando `SCRIPTS\daily-safe.ps1`.
+- Causa da colisão detectada: existiam duas tarefas de backup às 03:00. A tarefa legada `CONSTRUREI - Backup Automatico` não pôde ser desabilitada sem elevação administrativa; seu script foi neutralizado de forma reversível e o original foi preservado em `SCRIPTS\checkpoint-20261005\backup-construrei.pre-deprecate.ps1`.
+- `CONSTRUREI - Edge Functions Semanal` permanece separada às 04:30.
+- GitHub CLI local: sem sessão autenticada neste fechamento. **Nenhum GitHub Secret/Action de backup foi ativado** neste ciclo; a automação válida atual é a rotina local + Google Drive.
+- Regra: não declarar automação GitHub como concluída até existir autenticação e teste real de workflow/secrets.
