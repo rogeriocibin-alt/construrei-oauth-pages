@@ -6,19 +6,19 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Versão oficial atual: **Central Operacional V2 + Agenda v5 + Identidade de Links v1.3 — OFICIAL**
-- Branch homologada: `central-operacional-v2-oficial-20261005`
+- Versão oficial atual: **Central Operacional V2 + UX R1.2 + Agenda v5 + Identidade de Links v1.3 — OFICIAL**
+- Branch homologada: `central-operacional-v2-ux-r1-2-oficial-20261005`
 - Branch de origem validada: `main` • candidata isolada `preview/central-operation-only-v2-direct-candidate-20261005/`
-- Commit funcional V2: `59f22ad159a9695e82a60c5e11da8d93b66eca88`
-- Commit de produção congelada: `f5d246ccf1f65eaf9aac905c1e1dff19a691dc93`
-- Checkpoint funcional: `CHECKPOINT_CENTRAL_OPERATIONAL_V2_OFFICIAL_20261005`
-- Checkpoint homologado: `CHECKPOINT_CENTRAL_OPERATIONAL_V2_OFFICIAL_20261005`
-- Pasta de produção congelada: `production/central-operacional-v2-homologada-20261005/`
+- Commit funcional UX R1.2: `df3bfe574f638a1981330b2a0e9201c612056de6`
+- Commit de produção congelada: `bd90b23b02d1941078dc73fd7cff5fefc91bef5e`
+- Checkpoint funcional: `CHECKPOINT_CENTRAL_OPERATIONAL_V2_UX_R1_2_OFFICIAL_20261005`
+- Checkpoint homologado: `CHECKPOINT_CENTRAL_OPERATIONAL_V2_UX_R1_2_OFFICIAL_20261005`
+- Pasta de produção congelada: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`
 - Fonte viva de pendências: `cr-pendencias-executive-v2-candidate-20261004` v1
-- Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — Central Operacional V2**; link público preservado.nks v1.2 também **OFICIAL**
+- Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — Central Operacional V2 + UX R1.2**; link público preservado; Links v1.3 também **OFICIAL**
 - Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`
-- Destino HOME oficial: `production/central-operacional-v2-homologada-20261005/`
-- Regra: preservar a R9 como rollback; evoluções futuras da Central Operacional partem da V2 oficial em candidata isolada.
+- Destino HOME oficial: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`
+- Regra: preservar a Central Operacional V2 anterior como rollback imediato e a R9 como rollback secundário; evoluções futuras partem da UX R1.2 oficial em candidata isolada.
 
 ## Link oficial atual
 
@@ -453,3 +453,39 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Link de validação visual: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-ux-navigation-r1-candidate-20261005/`.
 - Proteção: `centro-operacoes` oficial, produção V2 e Gestor H4 permanecem intocados.
 - Gate humano: **PENDENTE** — retestar no celular após este hotfix antes de qualquer promoção.
+
+
+## Finalização — Central UX R1.2 + Gestor H5 — 2026-10-05
+
+### Central Operacional V2 + UX R1.2
+- Status: **OFICIAL / HOMOLOGADA / CONGELADA**.
+- Build: `CR-CENTRAL-OP-V2-UX-NAV-R1.2-OFFICIAL-20261005`.
+- Produção congelada: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Commit de congelamento final: `bd90b23b02d1941078dc73fd7cff5fefc91bef5e`.
+- Edge oficial `centro-operacoes`: **v281 ACTIVE**.
+- Hash Edge v281: `c3fcc6a262e5d01f9ba1ddb64c9e79cd3b6463d014e98e368a4c131415b9a8bb`.
+- Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`.
+- Alias preservado: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/`.
+- Escopo homologado: navegação Voltar/Início/Atualizar/Menu, limpeza dos controles inertes, escopo operacional de Conhecimento & Treinamento e Sala da Equipe usando o Google Meet oficial como motor.
+- A camada WebRTC P2P experimental permanece desativada.
+- Rollback imediato: `production/central-operacional-v2-homologada-20261005/`.
+- Checkpoint: `CHECKPOINT_CENTRAL_OPERATIONAL_V2_UX_R1_2_OFFICIAL_20261005`.
+
+### Gestor do Projeto H5
+- Status: **OFICIAL / HOMOLOGADO / CONGELADO**.
+- Build: `CR-PM-V1.1.2-H5-UX-NAV-OFFICIAL-20261005`.
+- Link estável preservado: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/`.
+- H5 incorpora Voltar/Início em todas as views, histórico interno de navegação, fechamento de drawer antes de voltar, dock móvel Voltar/Início/Atualizar/Menu e controles equivalentes no desktop.
+- Atualização continua no mesmo PWA; não é necessário criar novo link ou reinstalar por mudança de versão.
+- Rollback: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005`.
+- Checkpoint: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H5_OFFICIAL_20261005`.
+- Gate: promoção autorizada explicitamente pelo proprietário; notebook não foi retestado neste ciclo e permanece registrado como tal.
+
+### Pendência de desenvolvimento — Google Meet Add-ons
+- Registro persistente: `cr_internal.canonical_backlog_v1`.
+- Código: `CR-MEET-P1-ADDON-20261005`.
+- Prioridade: **P1**.
+- Status: **PENDENTE_DESENVOLVIMENTO**.
+- Também registrada no Gestor como `PM-17`.
+- Diretriz: desenvolver integração oficial pelo **Google Meet Add-ons SDK** em candidata isolada; manter o Google Meet como motor de videoconferência; não reativar a malha WebRTC P2P experimental.
+- Gate futuro: celular + notebook + homologação humana antes de promoção.
