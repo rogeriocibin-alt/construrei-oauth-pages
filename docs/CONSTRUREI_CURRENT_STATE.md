@@ -384,3 +384,34 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - `CONSTRUREI - Edge Functions Semanal` permanece separada às 04:30.
 - GitHub CLI local: sem sessão autenticada neste fechamento. **Nenhum GitHub Secret/Action de backup foi ativado** neste ciclo; a automação válida atual é a rotina local + Google Drive.
 - Regra: não declarar automação GitHub como concluída até existir autenticação e teste real de workflow/secrets.
+
+
+## Candidata UX — Central + Gestor — 2026-10-05
+
+### Objetivo
+Revisão de navegabilidade e operação sem redesign e sem alteração dos links oficiais.
+
+### Central Operacional — UX Navigation R1
+- Status: **CANDIDATE / NOT PROMOTED**.
+- Build: `CR-CENTRAL-OP-V2-UX-NAV-R1-CANDIDATE-20261005`.
+- Preview: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-ux-navigation-r1-candidate-20261005/`.
+- Sala da Equipe candidata: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-ux-navigation-r1-candidate-20261005/call/`.
+- Mudanças: pesquisa/sino inativos removidos da interface; perfil Rogério/Diretor passa a identificação estática; Início/Atualizar reais no topo; dock móvel Voltar/Início/Atualizar/Menu; painel residual Desenvolvimento/Saúde Técnica removido da Home operacional; Sala da Equipe ganha visual claro e diagnóstico recolhível; Conhecimento & Treinamento recebe leitura operacional.
+- Atualizar Central: a candidata usa cache-bust na própria URL; quando/SE promovida, o comportamento deverá consultar o endpoint canônico para buscar a versão vigente sem fechar/reabrir.
+- Auditoria estática: **PASS** — 14 módulos técnicos/governança continuam ausentes como sections/nav; pesquisa/sino/chevron inertes ausentes; scripts inline compilam sem erro.
+- Gate humano: celular + notebook **PENDENTE**.
+
+### Gestor do Projeto — H5 UX Navigation
+- Status: **CANDIDATE / NOT PROMOTED**.
+- Build: `CR-PM-V1.1.2-H5-UX-NAV-CANDIDATE-20261005`.
+- Preview: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/gestor-projeto-h5-ux-navigation-candidate-20261005/`.
+- Base preservada: H4 oficial `CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005`.
+- Mudanças: Voltar/Início em todas as views; histórico interno de navegação; drawer fecha antes de voltar; dock móvel Voltar/Início/Atualizar/Menu; ações equivalentes no desktop; Atualizar reutiliza o mecanismo existente de Service Worker/PWA; chip explícito `V1.1.2 • H5 UX`.
+- Auditoria estática: **PASS** — shell, stack, bindings, CSS do dock e SW H5 presentes; `app.js` compila sem erro.
+- Gate humano: celular + notebook **PENDENTE**.
+
+### Proteções
+- Central V2 oficial permanece congelada e intocada.
+- Gestor H4 oficial permanece congelado e intocado.
+- Nenhum link oficial foi alterado.
+- Checkpoint anterior: `checkpoint-before-ux-navigation-review-20261005`.
