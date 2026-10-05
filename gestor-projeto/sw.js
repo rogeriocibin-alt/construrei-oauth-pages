@@ -1,4 +1,4 @@
-const BUILD='CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005';
+const BUILD='CR-PM-V1.1.2-H5-UX-NAV-OFFICIAL-20261005';
 const CACHE='cr-project-manager-'+BUILD;
 const CORE=['./','./index.html','./styles.css','./executive-dashboard.css','./app.js','./executive-dashboard.js','./project-data.json','./infra-data.json','./manifest.webmanifest','./pwa-icon.svg','./pwa-icon-192.svg','./pwa-icon-512.svg'];
 const VERSION='./version.json';
