@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <meta name="cr-flow-code" content="F02">
-<meta name="cr-build" content="CR-F02-ORCA-REI-V1-R3-INTAKE-20261005">
+<meta name="cr-build" content="CR-F02-ORCA-REI-V1-R3-INTAKE-R2-20261005">
 <title>CONSTRU-REI • F02 • ORÇA-REI V1</title>
 <link rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-shell.css">
 <link rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-product-design-20260930.css">
@@ -225,11 +225,13 @@ function intakeTextPreview(d){
   if(d.header&&Object.keys(d.header).length){lines.push("CABEÇALHO RECONHECIDO");Object.keys(d.header).forEach(function(k){lines.push("• "+k.toUpperCase()+": "+d.header[k])});lines.push("")}
   if((d.services||[]).length){lines.push("SERVIÇOS");d.services.forEach(function(x,i){lines.push((i+1)+". "+x.name+" | QTD "+x.quantity+(x.unit?" "+x.unit:"")+" | "+(x.unit_value?brl(x.unit_value):"valor a conferir")+" | "+x.nature_value)});lines.push("")}
   if((d.products||[]).length){lines.push("PRODUTOS / MATERIAIS");d.products.forEach(function(x,i){lines.push((i+1)+". "+x.name+" | QTD "+x.quantity+(x.unit?" "+x.unit:"")+" | "+(x.unit_value?brl(x.unit_value):"valor a conferir")+" | "+x.nature_value)});lines.push("")}
-  if((d.technical_notes||[]).length){lines.push("OBSERVAÇÕES TÉCNICAS");d.technical_notes.forEach(function(x){lines.push("• "+x)})}
+  if((d.technical_notes||[]).length){lines.push("OBSERVAÇÕES TÉCNICAS");d.technical_notes.forEach(function(x){lines.push("• "+x)});lines.push("")}
+  if((d.visit_checklist||[]).length){lines.push("CHECKLIST DA VISITA");d.visit_checklist.forEach(function(x){lines.push("• "+x)})}
   return lines.join("\n")||"Nenhum item reconhecido.";
 }
 function showIntake(d){
-  lastIntake=d;$("intakeResult").classList.add("show");$("applyIntake").classList.remove("hidden");
+  lastIntake=d;$("intakeResult").classList.add("show");
+  if(d.apply_allowed===false){$("applyIntake").classList.add("hidden")}else{$("applyIntake").classList.remove("hidden")}
   $("intakeServices").textContent=(d.services||[]).length;$("intakeProducts").textContent=(d.products||[]).length;
   $("intakeConfidence").textContent=(d.confidence==null?"—":d.confidence+"%");
   $("intakeConflictsCount").textContent=(d.conflicts||[]).length;
@@ -260,6 +262,7 @@ function mergeIntakeItem(type,x){
 }
 function applyIntake(){
   if(!lastIntake)return;
+  if(lastIntake.apply_allowed===false){alert("Aplicação bloqueada: o conteúdo pertence a outro fluxo/caso. Abra o atendimento correto antes de aplicar.");return}
   var h=lastIntake.header||{};
   if(!$("client").value.trim()&&h.client)$("client").value=h.client;
   if(!$("address").value.trim()&&h.address)$("address").value=h.address;
