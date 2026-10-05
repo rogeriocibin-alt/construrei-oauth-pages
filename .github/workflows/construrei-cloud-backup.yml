@@ -2,9 +2,6 @@ name: CONSTRU-REI Cloud Backup
 
 on:
   workflow_dispatch:
-  schedule:
-    # 03:00 America/Sao_Paulo = 06:00 UTC while Brazil remains UTC-3.
-    - cron: "0 6 * * *"
 
 permissions:
   contents: read
