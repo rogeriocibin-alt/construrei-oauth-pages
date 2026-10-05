@@ -239,3 +239,16 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Checkpoint lógico: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H2_LINKS_VISIBLE_20261005`.
 - Central R9, Agenda v5, APP e demais rotas operacionais permanecem intocados.
 - Validação humana no celular: **PENDENTE**.
+
+
+## Hotfix Gestor V1.1.2 H3 — botão único da Central de Links — 2026-10-05
+
+- Solicitação: reduzir a área de acessos do Gestor, evitando uma grade extensa com todos os links.
+- Solução: a Home passa a exibir **um único botão compacto “Central de Links”**.
+- A lista completa permanece exclusivamente em `/links-oficiais/`, que continua sendo o diretório mestre homologado.
+- O botão duplicado de Links Oficiais no cabeçalho do Dashboard Executivo foi removido para manter apenas uma entrada.
+- Build: `CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005`.
+- Checkpoint de rollback: `checkpoint-gestor-v1-1-2-h2-before-single-links-button-20261005`.
+- Checkpoint lógico: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_SINGLE_LINKS_BUTTON_20261005`.
+- Central R9, Agenda v5, APP e destinos homologados permanecem inalterados.
+- Validação humana no celular: **PENDENTE**.
