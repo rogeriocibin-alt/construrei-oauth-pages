@@ -1,24 +1,24 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1.1.2 H3 • OFICIAL HOMOLOGADA",
-    "status": "OFICIAL / HOMOLOGADA / CONGELADA — CENTRAL DE LINKS EM BOTÃO ÚNICO",
+    "version": "V1.1.2 H4 • OFICIAL HOMOLOGADA",
+    "status": "OFICIAL / HOMOLOGADA / CONGELADA — PWA INSTALÁVEL + CENTRAL DE LINKS EM BOTÃO ÚNICO",
     "generated_at": "2026-10-05",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
-    "branch": "cr-project-manager-v1-1-2-h3-official-20261005",
+    "branch": "cr-project-manager-v1-1-2-h4-official-20261005",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
     "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
     "audit_snapshot": "2026-10-03",
     "audit_state": "Snapshot automático incorporado com 201 branches; atualização online do GitHub ocorre ao abrir o Gestor.",
     "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
-    "build": "CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005",
+    "build": "CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005",
     "environment": "canonical",
     "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
     "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
     "persistence": "Supabase cr_internal conectado por API candidata sanitizada; snapshot local permanece como fallback offline.",
     "previous_official_commit": "fa980eb74b42a1ffd044288e0f4216aeaed108a1",
-    "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_OFFICIAL_20261005",
-    "pwa_mobile_status": "READY_FOR_REINSTALL_AFTER_OWNER_APPROVAL"
+    "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
+    "pwa_mobile_status": "PASS_OWNER_CONFIRMED"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
