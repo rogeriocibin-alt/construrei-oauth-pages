@@ -1,0 +1,11 @@
+CONSTRU-REI — HOMOLOGAÇÃO CENTRAL OPERACIONAL V2
+Data: 2026-10-05
+Status: OFICIAL / HOMOLOGADA / CONGELADA
+Build: CR-CENTRAL-OPERATION-ONLY-V2-OFFICIAL-20261005
+Origem validada: preview/central-operation-only-v2-direct-candidate-20261005/
+Produção: production/central-operacional-v2-homologada-20261005/
+Link oficial preservado: https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/
+Alias preservado: https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/
+Rollback: production/central-homologada-exec-r9-20261004/
+Autorização: Rogério aprovou explicitamente a candidata V2 após teste móvel e autorizou homologação, oficialização e congelamento.
+Regra: nenhum link público oficial foi renomeado ou substituído.
