@@ -134,7 +134,7 @@
     },
     {
       "group": "Operação",
-      "label": "Pendências Wizy Flow",
+      "label": "Pendências Wizy FLOW",
       "slug": "pendencias-wizy-flow",
       "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/pendencias-wizy-flow/",
       "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#wizy"
