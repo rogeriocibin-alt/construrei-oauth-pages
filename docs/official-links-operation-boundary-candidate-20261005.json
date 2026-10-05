@@ -1,0 +1,105 @@
+{
+  "schema": "cr-link-boundary-override-v1",
+  "build": "LINK-IDENTITY-V1.4-CANDIDATE-OPERATION-BOUNDARY-20261005",
+  "status": "CANDIDATE / NOT PROMOTED",
+  "base_registry": "docs/official-links-registry.json",
+  "base_registry_version": "LINK-IDENTITY-V1.3-20261005",
+  "policy": "Somente os aliases listados aqui mudam de alçada na futura promoção. O registro oficial permanece inalterado até validação humana.",
+  "technical_destination": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/",
+  "central_operational_destination": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/",
+  "overrides": [
+    {
+      "slug": "homologacao",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "status-desenvolvimento",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "saude-sistema",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "ia-contexto",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "grc-gates",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "auditoria",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "releases",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "gaps",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "historico",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "htmls-validados",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "apis-schema",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "seguranca",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "diretoria-master",
+      "destination": "GESTOR_PROJETO"
+    },
+    {
+      "slug": "admin-tecnico",
+      "destination": "GESTOR_PROJETO"
+    }
+  ],
+  "labels": [
+    {
+      "slug": "documentacao",
+      "candidate_label": "Documentação Operacional",
+      "destination": "CENTRAL_OPERACIONAL"
+    }
+  ],
+  "preserved_operational": [
+    "central",
+    "app-construrei",
+    "gestao-financeira",
+    "f00-captura-inteligente",
+    "f01-atendimento",
+    "f02-orcamentos",
+    "f03-propostas-os",
+    "f04-agenda",
+    "f05-materiais-terceiros",
+    "f06-campo-evidencias",
+    "f07-qualidade-documentos",
+    "f08-financeiro-cobranca",
+    "f09-pos-venda-garantia",
+    "checklist-operacional",
+    "pendencias-app",
+    "pendencias-wizy-flow",
+    "pendencias-eder-agora",
+    "central-os",
+    "acervo-tecnico",
+    "academy",
+    "apresentacao",
+    "google-meet-central",
+    "sst"
+  ],
+  "promotion_gate": [
+    "validacao_celular",
+    "validacao_notebook",
+    "autorizacao_humana"
+  ]
+}
