@@ -1,6 +1,6 @@
 {
-  "version": "LINK-IDENTITY-V1-20261005",
-  "status": "CANDIDATA PARA VALIDAÇÃO HUMANA",
+  "version": "LINK-IDENTITY-V1.1-20261005",
+  "status": "CANDIDATA CORRIGIDA PARA VALIDAÇÃO HUMANA",
   "policy": "Aliases amigáveis são a camada pública. Endpoints técnicos permanecem preservados como destinos canônicos; não renomear nem excluir endpoints internos.",
   "base_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages",
   "created_at": "2026-10-05",
@@ -134,16 +134,16 @@
     },
     {
       "group": "Operação",
-      "label": "Wizy Flow",
-      "slug": "wizy-flow",
-      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/wizy-flow/",
+      "label": "Pendências Wizy Flow",
+      "slug": "pendencias-wizy-flow",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/pendencias-wizy-flow/",
       "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#wizy"
     },
     {
       "group": "Operação",
-      "label": "Éder • Agora",
-      "slug": "eder-agora",
-      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/eder-agora/",
+      "label": "Pendências Éder Agora",
+      "slug": "pendencias-eder-agora",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/pendencias-eder-agora/",
       "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#eder"
     },
     {
@@ -232,10 +232,10 @@
     },
     {
       "group": "Conhecimento",
-      "label": "Google Meet • Sala Principal",
+      "label": "Google Meet • Central",
       "slug": "meeting",
       "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/meeting/",
-      "target": "https://meet.google.com/xtw-rihq-jwi"
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#meeting"
     },
     {
       "group": "Técnico & Segurança",
