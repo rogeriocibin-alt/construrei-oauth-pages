@@ -14,7 +14,7 @@ const VIEW_TITLES={
   audits:'Auditorias',governance:'Governança',search:'Busca'
 };
 
-const CURRENT_RELEASE={version:'1.1.2',build:'CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005',environment:'canonical'};
+const CURRENT_RELEASE={version:'1.1.2',build:'CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005',environment:'canonical'};
 const PM_API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
 const PM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
 const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
@@ -742,7 +742,7 @@ window.addEventListener('appinstalled',()=>{const b=$('#installPwaBtn'); if(b)b.
 
 async function init(){
   try{
-    const r=await fetch('./project-data.json?v=20261005v112h3',{cache:'no-store'});
+    const r=await fetch('./project-data.json?v=20261005v112h4',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     state.data=await r.json();
     renderAll();
@@ -770,7 +770,7 @@ async function init(){
       }
     };
     if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('./sw.js?v=20261005v112h3',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
+      navigator.serviceWorker.register('./sw.js?v=20261005v112h4',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
     }
 
     if(!('serviceWorker' in navigator)) checkReleaseUpdate();
