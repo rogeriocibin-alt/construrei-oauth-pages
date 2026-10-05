@@ -4,7 +4,7 @@
   "policy": "Aliases amigáveis são a camada pública. Endpoints técnicos permanecem preservados como destinos canônicos; não renomear nem excluir endpoints internos.",
   "base_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages",
   "created_at": "2026-10-05",
-  "official_central_checkpoint": "CHECKPOINT_CENTRAL_R9_AGENDA_V5_20261005",
+  "official_central_checkpoint": "CHECKPOINT_CENTRAL_OPERATIONAL_V2_OFFICIAL_20261005",
   "links": [
     {
       "group": "Núcleo",
@@ -290,7 +290,9 @@
     "pages_build_head": "8dc210ea07d629f0a9ef09efaf838a17848b8b49",
     "pages_build_status": "success",
     "meeting_rule": "Google Meet abre primeiro a página homologada dentro da Central R9 (#meeting), nunca o meet.google.com diretamente pelo alias oficial.",
-    "compatibility": "Endpoints técnicos e aliases legados preservados; camada pública usa nomes amigáveis."
+    "compatibility": "Endpoints técnicos e aliases legados preservados; camada pública usa nomes amigáveis.",
+    "central_v2_owner_mobile_homologation": "PASS_OWNER_APPROVED",
+    "central_public_links_changed": false
   },
   "project_manager_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
   "project_manager_build": "CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005",
@@ -299,5 +301,7 @@
   "project_manager_official_commit": "59842d9db0360666ea63a814729bdbff6fb3abf0",
   "project_manager_official_branch": "cr-project-manager-v1-1-2-h4-official-20261005",
   "project_manager_checkpoint_branch": "checkpoint-project-manager-v1-1-2-h4-official-20261005",
-  "project_manager_validation": "PWA MOBILE PASS OWNER CONFIRMED"
+  "project_manager_validation": "PWA MOBILE PASS OWNER CONFIRMED",
+  "official_central_build": "CR-CENTRAL-OPERATION-ONLY-V2-OFFICIAL-20261005",
+  "official_central_production": "production/central-operacional-v2-homologada-20261005/"
 }
