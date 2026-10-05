@@ -3,14 +3,15 @@
   "version": "1.1.2",
   "build": "CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005",
   "environment": "canonical",
-  "release_status": "official_hotfix",
+  "release_status": "official_homologated",
   "released_at": "2026-10-05T12:18:00-03:00",
-  "branch": "main",
+  "branch": "cr-project-manager-v1-1-2-h3-official-20261005",
   "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
   "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
   "canonical_changed": true,
   "update_policy": "same_url_atomic_pwa_bundle",
   "changes": [
+    "HOMOLOGAÇÃO FINAL H3: versão do botão único Central de Links aprovada pelo proprietário e congelada como oficial.",
     "HOTFIX H3: a Home do Gestor exibe apenas um botão compacto Central de Links, em vez de renderizar todos os acessos homologados.",
     "HOTFIX H3: a lista completa de acessos permanece concentrada em /links-oficiais/.",
     "HOTFIX H3: removido o botão duplicado de Links Oficiais do cabeçalho executivo para manter uma única entrada.",
@@ -68,18 +69,19 @@
     "stable_scope_bundle": "PUBLISHED",
     "legacy_preview_redirect_removed": "PASS_STATIC",
     "cache_strategy": "NETWORK_FIRST_WITH_OFFLINE_FALLBACK",
-    "human_mobile_visual_confirmation": "PENDING",
+    "human_mobile_visual_confirmation": "PASS_OWNER_APPROVED",
     "owner_links_hub_visibility": "PASS_STATIC",
     "executive_links_button": "PASS_STATIC",
     "executive_version_label": "V1.1.2",
     "owner_links_mode": "SINGLE_BUTTON",
-    "duplicate_links_action_removed": "PASS_STATIC"
+    "duplicate_links_action_removed": "PASS_STATIC",
+    "pwa_reinstall_mobile": "READY"
   },
-  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_SINGLE_LINKS_BUTTON_20261005",
+  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_OFFICIAL_20261005",
   "owner_homologation": {
     "status": "APPROVED",
     "source": "explicit_owner_instruction_in_chat",
-    "note": "Proprietário autorizou incorporar Links Oficiais ao Gestor e homologar/oficializar o Gestor sem trocar os links operacionais existentes."
+    "note": "Proprietário aprovou a H3 com botão único Central de Links e solicitou oficialização antes de reinstalar o PWA no celular."
   },
   "previous_official_commit": "cac1006b7404c5202f5e5a25c5dadcb96b3d6539"
 }
