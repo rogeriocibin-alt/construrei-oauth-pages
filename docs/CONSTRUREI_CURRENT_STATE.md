@@ -296,3 +296,25 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Rollback oficial: H3 preservada em `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_OFFICIAL_20261005`.
 - Central R9, Agenda v5, APP e demais destinos permanecem preservados.
 - Registro de homologação: `docs/HOMOLOGACAO_GESTOR_V1_1_2_H4_20261005.md`.
+
+
+## Candidata isolada — Central Operacional × Gestor — 2026-10-05
+
+- Status: **CANDIDATE / NOT PROMOTED**.
+- Build: `CR-CENTRAL-OPERATION-ONLY-CANDIDATE-20261005`.
+- Preview: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-operation-only-candidate-20261005/`.
+- Base: R9 oficial congelada; pasta de produção permanece intocada.
+- Objetivo: a Central fica com a operação da empresa; governança, desenvolvimento e infraestrutura ficam no Gestor do Projeto.
+- Mapa candidato de aliases: `docs/official-links-operation-boundary-candidate-20261005.json`.
+- Documento de escopo/auditoria: `docs/CENTRAL_OPERATION_ONLY_CANDIDATE_20261005.md`.
+- Checkpoint pré-execução: `checkpoint-before-central-operation-only-20261005`.
+- Gate: validar celular + notebook antes de qualquer promoção.
+- Oficial vigente permanece inalterada durante esta candidata.
+
+## Regra de roteamento de agentes — obrigatória
+
+- **Bio / inteligência-orquestrador:** interpreta a solicitação, define escopo, prioridade, guardas, validação e direciona ao agente competente; não deve assumir execução técnica especializada quando houver agente técnico responsável.
+- **CR Assertivo:** execução técnica de código, infraestrutura, Git/Supabase, correções, deploy, candidata, checkpoint e tarefas de engenharia autorizadas.
+- **Bio Gestor:** operação F00–F09, orçamentos, textos operacionais, CRM e gestão de fluxo, sem assumir engenharia de infraestrutura.
+- Regra: o comando do proprietário deve ser roteado automaticamente por assunto, preservando alçadas e evitando que um agente execute atividade fora de sua competência.
+- Exceção: somente quando não existir agente/ferramenta responsável disponível, o orquestrador deve declarar a limitação em vez de simular que outro agente executou.
