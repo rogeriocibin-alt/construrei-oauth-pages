@@ -295,5 +295,8 @@
   "project_manager_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_OFFICIAL_20261005",
   "project_manager_build": "CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005",
   "project_manager_status": "OFICIAL / HOMOLOGADA / CONGELADA",
-  "project_manager_branch": "cr-project-manager-v1-1-2-h3-official-20261005"
+  "project_manager_branch": "cr-project-manager-v1-1-2-h3-official-20261005",
+  "project_manager_official_commit": "dce58ac5212af0d0564476367d099e3a9730d9de",
+  "project_manager_official_branch": "cr-project-manager-v1-1-2-h3-official-20261005",
+  "project_manager_checkpoint_branch": "checkpoint-project-manager-v1-1-2-h3-official-20261005"
 }
