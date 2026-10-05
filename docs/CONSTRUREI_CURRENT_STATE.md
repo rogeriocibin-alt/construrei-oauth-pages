@@ -6,16 +6,16 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Versão oficial atual: **Executivo R9 — medidores modernos + correção responsiva**
-- Branch homologada: `central-homologada-exec-r9-20261004`
+- Versão oficial atual: **Executivo R9 + Agenda Operacional v5 — OFICIAL**
+- Branch homologada: `central-oficial-r9-agenda-v5-20261005`
 - Branch de origem validada: `cr-central-exec-r9-mobilefix-20261004`
 - Commit funcional R9: `b42c491dba5a60fa375c2f2609e26c660ebf892e`
 - Commit de produção congelada: `0e13035fb93813834a7c98021eeafa8ab4cec81a`
 - Checkpoint funcional: `CHECKPOINT_CENTRAL_EXEC_R9_MOBILEFIX_20261004`
-- Checkpoint homologado: `CHECKPOINT_CENTRAL_EXEC_R9_HOMOLOGADA_20261004`
+- Checkpoint homologado: `CHECKPOINT_CENTRAL_R9_AGENDA_V5_20261005`
 - Pasta de produção congelada: `production/central-homologada-exec-r9-20261004/`
 - Fonte viva de pendências: `cr-pendencias-executive-v2-candidate-20261004` v1
-- Central oficial `centro-operacoes`: **HOMOLOGADA E PROMOVIDA — v279**
+- Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — R9 + Agenda v5**
 - Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`
 - Destino HOME oficial: `production/central-homologada-exec-r9-20261004/`
 - Regra: não alterar a pasta de produção R9, a branch homologada nem o checkpoint homologado; evoluções futuras devem ocorrer em candidata isolada.
@@ -101,7 +101,7 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-05 — Agenda v5 corrigida na causa raiz: `Reunião Diária` estava sendo classificada como `EXECUÇÃO` porque a descrição continha “ações executadas”. Agora reunião tem prioridade de classificação e `Reunião Diária` força `REUNIÃO` + `Toda a equipe`. Produção R9 permaneceu intocada.
+2026-10-05 — Interface R9 + Agenda Operacional v5 oficializadas e congeladas como referência corrente. Snapshot do Edge v5 salvo no repositório. Nova frente isolada aberta: Identidade de Links Oficiais v1.
 
 ## Hotfix Agenda — identificação de equipe — 2026-10-05
 
@@ -139,3 +139,16 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
   - quando não há nomes individuais, força `Toda a equipe`;
   - a regra vale igualmente para hoje, amanhã e futuras ocorrências recorrentes.
 - Nenhum arquivo visual da R9 foi alterado.
+
+
+## Oficialização — R9 + Agenda v5 — 2026-10-05
+
+- Status: **OFICIAL / HOMOLOGADA / CONGELADA**
+- Interface oficial preservada: `production/central-homologada-exec-r9-20261004/`
+- Agenda operacional oficial: Edge `cr-agenda-executive-v12-1-candidate-20261003` **v5**
+- BUILD Agenda: `CR-AGENDA-EXECUTIVE-V12.5-DAILY-MEETING-CLASSIFICATION-FIX-20261005`
+- Hash Edge Agenda v5: `d283edaf9415b754ea18814d52941c26e16bcca5f0e5a4178b51049656ea028a`
+- Snapshot da fonte: `snapshots/edge-functions/cr-agenda-executive-v12-1-candidate-20261003/v5/index.ts`
+- Checkpoint lógico: `CHECKPOINT_CENTRAL_R9_AGENDA_V5_20261005`
+- Regra: esta combinação de interface R9 + Agenda v5 passa a ser a referência oficial para rollback e continuidade.
+- Próxima frente isolada: **Identidade de Links Oficiais v1**, sem alterar a Central oficial até validação humana dos links.
