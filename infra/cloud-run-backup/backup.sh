@@ -6,10 +6,10 @@ RUN_ID="$(date -u +'%Y%m%d-%H%M%S')"
 WORK="$ROOT/WORK/DAILY_$RUN_ID"
 REMOTE="construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT"
 HISTORY="construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY/$RUN_ID"
-DB_URL="$(cat /secrets/db-url)"
+DB_URL="$(cat /secrets-db/db-url)"
 
 mkdir -p "$WORK/03_DATABASE" "$HOME/.config/rclone"
-cp /secrets/rclone.conf "$HOME/.config/rclone/rclone.conf"
+cp /secrets-rclone/rclone.conf "$HOME/.config/rclone/rclone.conf"
 chmod 600 "$HOME/.config/rclone/rclone.conf"
 
 rclone lsd construrei-drive: >/dev/null
