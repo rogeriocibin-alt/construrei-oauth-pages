@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05265f">
+<meta name="cr-build" content="CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-LAUNCHER-OFFICIAL-20261005">
+<title>CONSTRU-REI • Sala da Equipe</title>
+<style>
+:root{--navy:#031b46;--navy2:#05265f;--blue:#0877f9;--gold:#ffc514;--bg:#eef8fd;--line:#d5e7f2;--ink:#07165b;--text:#17315d}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(180deg,var(--bg),#f9fcfe);font:14px/1.45 Inter,system-ui,Segoe UI,Arial;color:var(--text);padding:14px}
+.wrap{max-width:760px;margin:0 auto}.top{display:flex;gap:8px;align-items:center;margin-bottom:12px}.top a,.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:850;text-decoration:none;cursor:pointer}
+.top a{background:#e5f1fb;color:#0a4aa7}.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 16px 42px rgba(6,40,86,.12);overflow:hidden}
+.hero{padding:24px;background:linear-gradient(120deg,var(--navy),var(--navy2) 62%,#6f5310);color:#fff}.ey{font-size:10px;font-weight:900;letter-spacing:.12em;color:#ffd83d}.hero h1{margin:7px 0 8px;font-size:28px}.hero p{margin:0;color:#dce9f5}
+.body{padding:20px}.ok{border:1px solid #bde6d1;background:#edf9f4;color:#176f4d;border-radius:12px;padding:12px;margin-bottom:14px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{background:linear-gradient(180deg,#1688ff,#075bd8);color:#fff;min-height:48px}.btn.gold{background:linear-gradient(180deg,#ffd52c,#ffc400);color:#15275e}.btn.secondary{background:#edf5fb;color:#0a4aa7;border:1px solid #cfe2f0}.note{margin-top:14px;color:#6a8298;font-size:12px}
+@media(max-width:600px){body{padding:9px}.hero{padding:18px}.hero h1{font-size:23px}.actions{grid-template-columns:1fr}.btn{width:100%}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><a href="../">← Voltar à Central</a></div>
+  <section class="card">
+    <div class="hero">
+      <div class="ey">SALA DA EQUIPE • OFICIAL</div>
+      <h1>Reunião CONSTRU-REI</h1>
+      <p>A Central direciona para a sala oficial da equipe. O motor de reunião volta a ser o Google Meet homologado.</p>
+    </div>
+    <div class="body">
+      <div class="ok"><b>Conectividade restaurada.</b> Câmera, microfone, participantes e compartilhamento de tela ficam sob o Google Meet, sem a camada WebRTC experimental da Central.</div>
+      <div class="actions">
+        <button class="btn gold" id="join">🎥 Entrar na Sala da Equipe</button>
+        <button class="btn" id="copy">⧉ Copiar link da sala</button>
+        <button class="btn secondary" id="refresh">↻ Atualizar</button>
+        <button class="btn secondary" id="back">← Voltar à Central</button>
+      </div>
+      <div class="note">A Central não solicita permissões de câmera ou microfone nesta tela. Ao entrar, o Google Meet assume a reunião e pode abrir no aplicativo instalado ou no navegador.</div>
+    </div>
+  </section>
+</main>
+<script>
+(function(){
+'use strict';
+const MEET='https://meet.google.com/xtw-rihq-jwi';
+document.getElementById('join').onclick=()=>location.assign(MEET);
+document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(MEET);document.getElementById('copy').textContent='✓ Link copiado'}catch(e){prompt('Copie o link da sala:',MEET)}};
+document.getElementById('refresh').onclick=()=>location.reload();
+document.getElementById('back').onclick=()=>location.assign('../');
+})();
+</script>
+</body>
+</html>
