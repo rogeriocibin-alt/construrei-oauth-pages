@@ -1,0 +1,183 @@
+name: CONSTRU-REI Cloud Backup
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 03:00 America/Sao_Paulo = 06:00 UTC while Brazil remains UTC-3.
+    - cron: "0 6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: construrei-cloud-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      PROJECT_REF: yspuaamokjbrosytqjpg
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+
+    steps:
+      - name: Validate required secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$SUPABASE_ACCESS_TOKEN" || { echo "Missing SUPABASE_ACCESS_TOKEN"; exit 2; }
+          test -n "$RCLONE_CONFIG_B64" || { echo "Missing RCLONE_CONFIG_B64"; exit 2; }
+
+      - name: Prepare tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -y
+          sudo apt-get install -y rclone
+          node --version
+          docker --version
+          rclone version | head -n 1
+
+      - name: Restore protected rclone configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone listremotes | grep -qx 'construrei-drive:'
+          rclone listremotes | grep -qx 'construrei-s3:'
+
+      - name: Prepare isolated workspace
+        id: prep
+        shell: bash
+        run: |
+          set -euo pipefail
+          RUN_ID="$(date -u +'%Y%m%d-%H%M%S')"
+          ROOT="$RUNNER_TEMP/CONSTRUREI-BACKUP-AUTO"
+          WORK="$ROOT/WORK/DAILY_$RUN_ID"
+          mkdir -p "$WORK/03_DATABASE" "$WORK/06_STORAGE" "$RUNNER_TEMP/supabase/.temp"
+          printf '%s\n' "$PROJECT_REF" > "$RUNNER_TEMP/supabase/.temp/project-ref"
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "root=$ROOT" >> "$GITHUB_OUTPUT"
+          echo "work=$WORK" >> "$GITHUB_OUTPUT"
+
+      - name: Connectivity preflight
+        working-directory: ${{ runner.temp }}/supabase
+        shell: bash
+        run: |
+          set -euo pipefail
+          rclone lsd construrei-drive: >/dev/null
+          rclone lsd construrei-s3: >/dev/null
+          npx --yes supabase@2.118.0 projects list >/dev/null
+
+      - name: Dump database roles
+        working-directory: ${{ runner.temp }}/supabase
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@2.118.0 db dump --linked --role-only \
+            -f "${{ steps.prep.outputs.work }}/03_DATABASE/roles.sql"
+
+      - name: Dump database schema
+        working-directory: ${{ runner.temp }}/supabase
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@2.118.0 db dump --linked \
+            -f "${{ steps.prep.outputs.work }}/03_DATABASE/schema.sql"
+
+      - name: Dump database data
+        working-directory: ${{ runner.temp }}/supabase
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@2.118.0 db dump --linked --data-only --use-copy \
+            -x storage.buckets_vectors -x storage.vector_indexes \
+            -f "${{ steps.prep.outputs.work }}/03_DATABASE/data.sql"
+
+      - name: Copy Supabase Storage
+        shell: bash
+        run: |
+          set -euo pipefail
+          rclone copy construrei-s3: "${{ steps.prep.outputs.work }}/06_STORAGE" --create-empty-src-dirs
+          rclone check construrei-s3: "${{ steps.prep.outputs.work }}/06_STORAGE"
+
+      - name: Create integrity manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "${{ steps.prep.outputs.work }}"
+          find 03_DATABASE 06_STORAGE -type f -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
+          DB_COUNT="$(find 03_DATABASE -type f | wc -l | tr -d ' ')"
+          STORAGE_COUNT="$(find 06_STORAGE -type f | wc -l | tr -d ' ')"
+          {
+            echo "CONSTRU-REI CLOUD BACKUP"
+            echo "UTC: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo "RUN_ID: ${{ steps.prep.outputs.run_id }}"
+            echo "DATABASE_FILES: $DB_COUNT"
+            echo "STORAGE_FILES: $STORAGE_COUNT"
+            echo "SOURCE_PROJECT: $PROJECT_REF"
+          } > BACKUP_STATUS.txt
+
+      - name: Publish to Google Drive with history
+        shell: bash
+        run: |
+          set -euo pipefail
+          RUN_ID="${{ steps.prep.outputs.run_id }}"
+          WORK="${{ steps.prep.outputs.work }}"
+          rclone sync "$WORK" construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT \
+            --backup-dir "construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY/$RUN_ID" \
+            --create-empty-src-dirs
+          rclone check "$WORK" construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT
+
+      - name: Restore drill from Google Drive
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORK="${{ steps.prep.outputs.work }}"
+          RESTORE="$RUNNER_TEMP/RESTORE-DRILL-${{ steps.prep.outputs.run_id }}"
+          REMOTE="construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT"
+          mkdir -p "$RESTORE/03_DATABASE"
+
+          rclone copy "$REMOTE/03_DATABASE" "$RESTORE/03_DATABASE" --create-empty-src-dirs
+
+          for f in roles.sql schema.sql data.sql; do
+            test "$(sha256sum "$WORK/03_DATABASE/$f" | awk '{print $1}')" = \
+                 "$(sha256sum "$RESTORE/03_DATABASE/$f" | awk '{print $1}')"
+          done
+
+          mapfile -d '' SAMPLES < <(find "$WORK/06_STORAGE" -type f -print0 | sort -z | head -z -n 3)
+          test "${#SAMPLES[@]}" -eq 3
+
+          i=0
+          for src in "${SAMPLES[@]}"; do
+            i=$((i+1))
+            rel="${src#"$WORK/06_STORAGE/"}"
+            dest="$RESTORE/storage-sample-$i"
+            rclone copyto "$REMOTE/06_STORAGE/$rel" "$dest"
+            test "$(sha256sum "$src" | awk '{print $1}')" = "$(sha256sum "$dest" | awk '{print $1}')"
+          done
+
+          {
+            echo "RESTORE_DRILL=PASS"
+            echo "DATABASE=3/3 SHA256 MATCH"
+            echo "STORAGE=3/3 SHA256 MATCH"
+            echo "UTC=$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          } | tee "$RESTORE/RESTORE_RESULT.txt"
+
+      - name: Final summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## CONSTRU-REI Cloud Backup"
+            echo ""
+            echo "- Run: ${{ steps.prep.outputs.run_id }}"
+            echo "- Project: $PROJECT_REF"
+            echo "- Google Drive destination: CONSTRUREI-BACKUP-AUTO/CURRENT"
+            echo "- History destination: CONSTRUREI-BACKUP-AUTO/HISTORY/${{ steps.prep.outputs.run_id }}"
+            echo "- Result: ${{ job.status }}"
+          } >> "$GITHUB_STEP_SUMMARY"
