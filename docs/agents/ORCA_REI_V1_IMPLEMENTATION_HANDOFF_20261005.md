@@ -123,3 +123,70 @@ Critérios do teste:
 ## Resultado esperado
 
 ORÇA-REI V1 operacional dentro do F02, com rastreabilidade, análise interna separada e gate de aprovação humana.
+
+## Entrada Inteligente — requisito incorporado ao F02
+
+Adicionar no topo da tela/composição do orçamento um campo **ENTRADA INTELIGENTE** para receber texto bruto colado pelo usuário.
+
+Casos aceitos:
+- texto bagunçado;
+- orçamento vindo de IA terceira;
+- rascunho de vistoria;
+- listas de mão de obra e materiais;
+- mensagens copiadas;
+- composições com quantidades e preços;
+- observações técnicas.
+
+### Contrato de processamento
+
+O parser/agente deve transformar a entrada em estrutura normalizada sem criar nova arquitetura:
+
+```text
+entrada_bruta
+  + contexto_do_caso_F00_F01
+  -> normalização
+  -> confrontação
+  -> composição_orçamentária
+  -> validação_matemática
+  -> proposta_GestãoClick
+  -> análise_interna_separada
+```
+
+Campos estruturados mínimos por item:
+- tipo: SERVIÇO | PRODUTO;
+- descrição;
+- quantidade;
+- unidade;
+- valor_unitário;
+- subtotal_calculado;
+- natureza_valor: VENDA | CUSTO | REFERÊNCIA | ESTIMADO | A_CONFERIR;
+- origem;
+- confiança;
+- observação/divergência.
+
+### Regra de precedência
+
+A entrada colada é fonte complementar. Não pode sobrescrever silenciosamente dado confirmado já herdado do F00/F01.
+
+Em conflito:
+- manter o dado de maior hierarquia;
+- registrar a divergência;
+- exigir conferência apenas se o conflito puder alterar materialmente escopo, preço, segurança, responsabilidade, prazo ou garantia.
+
+### UX mínima
+
+No cabeçalho do F02:
+- área ampla para colar conteúdo;
+- ação **PROCESSAR / ESTRUTURAR**;
+- prévia editável do resultado;
+- indicadores de itens A CONFERIR / DIVERGENTES;
+- nenhuma promoção automática para F03 sem gate humano.
+
+### Critérios adicionais de homologação
+
+1. Colar um texto desorganizado e gerar corretamente serviços, materiais, quantidades, valores e observações.
+2. Colar uma composição produzida por IA terceira e recalcular todos os subtotais/totais.
+3. Testar conflito entre dado confirmado do F00/F01 e texto colado; o confirmado deve prevalecer e a divergência deve aparecer.
+4. Testar valor sem natureza definida; o sistema deve marcar A CONFERIR, sem assumir custo ou venda.
+5. Confirmar que a saída externa continua no padrão GestãoClick e que nenhuma análise interna vaza ao cliente.
+
