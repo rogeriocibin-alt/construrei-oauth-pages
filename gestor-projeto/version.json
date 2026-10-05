@@ -1,16 +1,19 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
   "version": "1.1.2",
-  "build": "CR-PM-V1.1.2-H2-LINKS-VISIBLE-20261005",
+  "build": "CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005",
   "environment": "canonical",
   "release_status": "official_hotfix",
-  "released_at": "2026-10-05T12:14:00-03:00",
+  "released_at": "2026-10-05T12:18:00-03:00",
   "branch": "main",
   "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
   "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
   "canonical_changed": true,
   "update_policy": "same_url_atomic_pwa_bundle",
   "changes": [
+    "HOTFIX H3: a Home do Gestor exibe apenas um botão compacto Central de Links, em vez de renderizar todos os acessos homologados.",
+    "HOTFIX H3: a lista completa de acessos permanece concentrada em /links-oficiais/.",
+    "HOTFIX H3: removido o botão duplicado de Links Oficiais do cabeçalho executivo para manter uma única entrada.",
     "HOTFIX H2: corrigida regra CSS que escondia o bloco de acessos do proprietário no Dashboard Executivo.",
     "HOTFIX H2: Links Oficiais passa a aparecer na Home do Gestor e também como ação direta no cabeçalho executivo.",
     "HOTFIX H2: identificação interna do Dashboard Executivo alinhada de V1.1.1 para V1.1.2.",
@@ -40,7 +43,7 @@
     "API sanitizada persistente conectada ao PWA com JWT e fallback local.",
     "Gate do Ciclo 0 visível: promoção permanece bloqueada até continuidade e homologação."
   ],
-  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H1_STABLE_SCOPE_20261005",
+  "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H2_LINKS_VISIBLE_20261005",
   "candidate_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_LINKS_CANDIDATE_20261005",
   "last_tested_at": "2026-10-03T13:31:48-03:00",
   "promotion_gate": {
@@ -68,13 +71,15 @@
     "human_mobile_visual_confirmation": "PENDING",
     "owner_links_hub_visibility": "PASS_STATIC",
     "executive_links_button": "PASS_STATIC",
-    "executive_version_label": "V1.1.2"
+    "executive_version_label": "V1.1.2",
+    "owner_links_mode": "SINGLE_BUTTON",
+    "duplicate_links_action_removed": "PASS_STATIC"
   },
-  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H2_LINKS_VISIBLE_20261005",
+  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_SINGLE_LINKS_BUTTON_20261005",
   "owner_homologation": {
     "status": "APPROVED",
     "source": "explicit_owner_instruction_in_chat",
     "note": "Proprietário autorizou incorporar Links Oficiais ao Gestor e homologar/oficializar o Gestor sem trocar os links operacionais existentes."
   },
-  "previous_official_commit": "bec9cc373e9306dd99ce89d8ee6e2bf5fa3aa04d"
+  "previous_official_commit": "cac1006b7404c5202f5e5a25c5dadcb96b3d6539"
 }
