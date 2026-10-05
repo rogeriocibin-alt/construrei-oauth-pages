@@ -120,14 +120,16 @@ function render(payload){
   var recent=changes(d);
   var central=arr(d.owner_access).find(function(a){return a.id==='central';});
   var app=arr(d.owner_access).find(function(a){return a.id==='app';});
+  var links=arr(d.owner_access).find(function(a){return a.id==='links_oficiais';});
   var html=[];
 
   html.push('<section id="executiveDashboard" class="xd-root">');
   html.push('<section class="xd-hero"><div class="xd-hero-main"><div class="xd-kicker">GESTÃO EXECUTIVA • CANÔNICA HOMOLOGADA</div><h2>O projeto inteiro em uma tela.<br><span>Veja, decida e entre na ação.</span></h2><p>Estado, risco, capacidade, decisões e avanço comprovado primeiro. A camada técnica continua preservada nos níveis seguintes.</p><div class="xd-actions">');
   if(central)html.push('<button class="primary-btn xd-url" data-url="'+esc(central.url)+'">Abrir Central ↗</button>');
   if(app)html.push('<button class="soft-btn xd-url" data-url="'+esc(app.url)+'">Abrir APP ↗</button>');
+  if(links)html.push('<button class="soft-btn xd-url" data-url="'+esc(links.url)+'">Links Oficiais ↗</button>');
   html.push('<button class="soft-btn" data-view="pending">Pendências</button><button class="soft-btn" data-view="audits">Auditorias</button></div></div>');
-  html.push('<div class="xd-state"><small>ESTADO GERAL</small><div><span>Versão</span><b>V1.1.1 • CANÔNICA</b></div><div><span>Ambiente</span><b>Canônica homologada</b></div><div><span>Dados</span><b>'+(payload.liveOk?'LIVE • persistente':'FALLBACK • versionado')+'</b></div><div><span>Última leitura</span><b>'+esc(fmt(payload.generatedAt))+'</b></div><div class="xd-gate '+(String(gate).toUpperCase()==='BLOCKED'?'blocked':'ok')+'"><span>'+(String(gate).toUpperCase()==='BLOCKED'?'⛔':'✓')+'</span><p><small>GATE DE PROMOÇÃO</small><strong>'+esc(label(gate))+'</strong></p></div></div></section>');
+  html.push('<div class="xd-state"><small>ESTADO GERAL</small><div><span>Versão</span><b>V1.1.2 • CANÔNICA</b></div><div><span>Ambiente</span><b>Canônica homologada</b></div><div><span>Dados</span><b>'+(payload.liveOk?'LIVE • persistente':'FALLBACK • versionado')+'</b></div><div><span>Última leitura</span><b>'+esc(fmt(payload.generatedAt))+'</b></div><div class="xd-gate '+(String(gate).toUpperCase()==='BLOCKED'?'blocked':'ok')+'"><span>'+(String(gate).toUpperCase()==='BLOCKED'?'⛔':'✓')+'</span><p><small>GATE DE PROMOÇÃO</small><strong>'+esc(label(gate))+'</strong></p></div></div></section>');
 
   html.push('<div class="xd-section-head"><div><small>PROJETO EM NÚMEROS</small><h3>Tamanho, pressão e capacidade</h3></div><span>Clique para chegar ao detalhe.</span></div><section class="xd-metrics">');
   html.push(metric('Frentes ativas',x.active.length+'/2',x.queue.length+' na fila','▦','fronts',x.active.length>=2?'amber':'green'));
@@ -196,7 +198,7 @@ function render(payload){
 }
 async function load(){
   try{
-    var dataResp=await fetch('./project-data.json?v=20261003v111canon',{cache:'no-store'});
+    var dataResp=await fetch('./project-data.json?v=20261005v112h2',{cache:'no-store'});
     var data=await dataResp.json();
     var live=null,ok=false,generatedAt=data.meta&&data.meta.generated_at;
     try{
