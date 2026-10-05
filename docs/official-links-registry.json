@@ -1,0 +1,276 @@
+{
+  "version": "LINK-IDENTITY-V1-20261005",
+  "status": "CANDIDATA PARA VALIDAÇÃO HUMANA",
+  "policy": "Aliases amigáveis são a camada pública. Endpoints técnicos permanecem preservados como destinos canônicos; não renomear nem excluir endpoints internos.",
+  "base_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages",
+  "created_at": "2026-10-05",
+  "official_central_checkpoint": "CHECKPOINT_CENTRAL_R9_AGENDA_V5_20261005",
+  "links": [
+    {
+      "group": "Núcleo",
+      "label": "Central CONSTRU-REI",
+      "slug": "central",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes"
+    },
+    {
+      "group": "Núcleo",
+      "label": "APP CONSTRU-REI",
+      "slug": "app-construrei",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/app-construrei/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=app"
+    },
+    {
+      "group": "Núcleo",
+      "label": "Gestão Financeira • Dashboard Gerencial",
+      "slug": "gestao-financeira",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestao-financeira/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=centro-comando"
+    },
+    {
+      "group": "Núcleo",
+      "label": "Homologação",
+      "slug": "homologacao",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/homologacao/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#homolog"
+    },
+    {
+      "group": "Núcleo",
+      "label": "Status do Desenvolvimento",
+      "slug": "status-desenvolvimento",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/status-desenvolvimento/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#status"
+    },
+    {
+      "group": "Núcleo",
+      "label": "Saúde do Sistema",
+      "slug": "saude-sistema",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/saude-sistema/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=health"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F00 • Captura Inteligente",
+      "slug": "f00-captura-inteligente",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f00-captura-inteligente/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f00"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F01 • Atendimento & Qualificação",
+      "slug": "f01-atendimento",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f01-atendimento/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f01"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F02 • Cotação & Orçamento",
+      "slug": "f02-orcamentos",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f02-orcamentos/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f02"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F03 • Proposta & Ordem de Serviço",
+      "slug": "f03-propostas-os",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f03-propostas-os/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f03"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F04 • Agenda & Mobilização",
+      "slug": "f04-agenda",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f04-agenda/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f04"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F05 • Materiais & Terceiros",
+      "slug": "f05-materiais-terceiros",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f05-materiais-terceiros/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f05"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F06 • Campo & Evidências",
+      "slug": "f06-campo-evidencias",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f06-campo-evidencias/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f06"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F07 • Qualidade, Aceite & Documentos",
+      "slug": "f07-qualidade-documentos",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f07-qualidade-documentos/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f07"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F08 • NF, Cobrança & Resultado",
+      "slug": "f08-financeiro-cobranca",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f08-financeiro-cobranca/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f08"
+    },
+    {
+      "group": "Esteira F00–F09",
+      "label": "F09 • Pós-venda & Garantia",
+      "slug": "f09-pos-venda-garantia",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f09-pos-venda-garantia/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f09"
+    },
+    {
+      "group": "Operação",
+      "label": "Checklist Operacional",
+      "slug": "checklist-operacional",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/checklist-operacional/",
+      "target": "https://checklistobrasconstrurei.vercel.app"
+    },
+    {
+      "group": "Operação",
+      "label": "APP • Pendências",
+      "slug": "pendencias-app",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/pendencias-app/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#pendapp"
+    },
+    {
+      "group": "Operação",
+      "label": "Wizy Flow",
+      "slug": "wizy-flow",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/wizy-flow/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#wizy"
+    },
+    {
+      "group": "Operação",
+      "label": "Éder • Agora",
+      "slug": "eder-agora",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/eder-agora/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#eder"
+    },
+    {
+      "group": "Gestão & Inteligência",
+      "label": "IA & Contexto",
+      "slug": "ia-contexto",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/ia-contexto/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#context"
+    },
+    {
+      "group": "Gestão & Inteligência",
+      "label": "Central OS",
+      "slug": "central-os",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-os/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=os"
+    },
+    {
+      "group": "Gestão & Inteligência",
+      "label": "GRC / Gates",
+      "slug": "grc-gates",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/grc-gates/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=grc"
+    },
+    {
+      "group": "Gestão & Inteligência",
+      "label": "Auditoria / ADRs",
+      "slug": "auditoria",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/auditoria/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=audit"
+    },
+    {
+      "group": "Gestão & Inteligência",
+      "label": "Releases",
+      "slug": "releases",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/releases/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=releases"
+    },
+    {
+      "group": "Gestão & Inteligência",
+      "label": "Gaps",
+      "slug": "gaps",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/gaps/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=gaps"
+    },
+    {
+      "group": "Gestão & Inteligência",
+      "label": "Histórico / Snapshots",
+      "slug": "historico",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/historico/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#history"
+    },
+    {
+      "group": "Gestão & Inteligência",
+      "label": "HTMLs Validados",
+      "slug": "htmls-validados",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/htmls-validados/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=htmls"
+    },
+    {
+      "group": "Conhecimento",
+      "label": "Documentação Viva",
+      "slug": "documentacao",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/documentacao/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=docs"
+    },
+    {
+      "group": "Conhecimento",
+      "label": "Acervo Técnico",
+      "slug": "acervo-tecnico",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/acervo-tecnico/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=acervo"
+    },
+    {
+      "group": "Conhecimento",
+      "label": "CONSTRU-REI Academy",
+      "slug": "academy",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/academy/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=academy"
+    },
+    {
+      "group": "Conhecimento",
+      "label": "Apresentação Institucional",
+      "slug": "apresentacao",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/apresentacao/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=presentation"
+    },
+    {
+      "group": "Conhecimento",
+      "label": "Google Meet • Sala Principal",
+      "slug": "meeting",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/meeting/",
+      "target": "https://meet.google.com/xtw-rihq-jwi"
+    },
+    {
+      "group": "Técnico & Segurança",
+      "label": "Rogério • Diretor / Master",
+      "slug": "diretoria-master",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/diretoria-master/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=admin"
+    },
+    {
+      "group": "Técnico & Segurança",
+      "label": "Éder • Admin Técnico",
+      "slug": "admin-tecnico",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/admin-tecnico/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=technical"
+    },
+    {
+      "group": "Técnico & Segurança",
+      "label": "APIs / Schema",
+      "slug": "apis-schema",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/apis-schema/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=apis"
+    },
+    {
+      "group": "Técnico & Segurança",
+      "label": "Segurança",
+      "slug": "seguranca",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/seguranca/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#security"
+    },
+    {
+      "group": "Técnico & Segurança",
+      "label": "SST",
+      "slug": "sst",
+      "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/sst/",
+      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes#sst"
+    }
+  ]
+}
