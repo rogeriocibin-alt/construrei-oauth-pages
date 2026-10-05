@@ -252,3 +252,16 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Checkpoint lógico: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_SINGLE_LINKS_BUTTON_20261005`.
 - Central R9, Agenda v5, APP e destinos homologados permanecem inalterados.
 - Validação humana no celular: **PENDENTE**.
+
+
+## Oficialização final — Gestor V1.1.2 H3 — 2026-10-05
+
+- Status: **OFICIAL / HOMOLOGADA / CONGELADA**
+- Build: `CR-PM-V1.1.2-H3-SINGLE-LINKS-BUTTON-20261005`
+- Branch oficial: `cr-project-manager-v1-1-2-h3-official-20261005`
+- Checkpoint homologado: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_OFFICIAL_20261005`
+- Link estável: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/`
+- Gate humano: **CONCLUÍDO** — Rogério aprovou a H3 com botão único **Central de Links** e autorizou oficialização antes da reinstalação do PWA no celular.
+- Escopo congelado: Home compacta com um único botão para o diretório mestre `/links-oficiais/`; sem grade de acessos e sem botão duplicado no cabeçalho executivo.
+- Central R9, Agenda v5, APP e demais destinos permanecem preservados.
+- Registro de homologação: `docs/HOMOLOGACAO_GESTOR_V1_1_2_H3_20261005.md`.
