@@ -266,3 +266,17 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Escopo congelado: Home compacta com um único botão para o diretório mestre `/links-oficiais/`; sem grade de acessos e sem botão duplicado no cabeçalho executivo.
 - Central R9, Agenda v5, APP e demais destinos permanecem preservados.
 - Registro de homologação: `docs/HOMOLOGACAO_GESTOR_V1_1_2_H3_20261005.md`.
+
+
+## Hotfix Gestor V1.1.2 H4 — instalabilidade PWA no Chrome — 2026-10-05
+
+- Evidência: Chrome Android exibiu **“Não é possível instalar o app”** ao tentar instalar o Gestor.
+- A captura também mostrava o navegador em estado **Off-line**; a instalação WebAPK requer conectividade no momento da instalação.
+- Diagnóstico adicional: o manifesto H3 declarava somente um ícone SVG com `sizes: "any"`; os critérios do Chrome exigem ícones declarados em **192x192** e **512x512**.
+- Correção H4: manifesto passou a declarar ícones 192x192 e 512x512 explicitamente e `prefer_related_applications: false`.
+- Service Worker/cache atualizado para incluir os ícones de instalação.
+- Build: `CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005`.
+- Checkpoint anterior: `checkpoint-gestor-v1-1-2-h3-before-pwa-installability-fix-20261005`.
+- Checkpoint lógico: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_PWA_INSTALLABLE_20261005`.
+- Regra: H3 visual permanece congelada; esta é correção técnica exclusiva de instalabilidade.
+- Validação humana: **PENDENTE**, com Chrome online.
