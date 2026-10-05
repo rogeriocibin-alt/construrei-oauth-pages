@@ -439,3 +439,17 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Build: `CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-ENGINE-CANDIDATE-20261005`.
 - Checkpoint anterior: `checkpoint-before-central-ux-r1-2-meet-engine-fix-20261005`.
 - Central Operacional V2 oficial permanece **inalterada**; promoção da R1.2 continua bloqueada até validação humana.
+
+
+## Hotfix UX R1.2 H1 — entrega da candidata sem HTML bruto — 2026-10-05
+
+- Evidência móvel às 17:04: o endpoint Supabase da candidata `central-ux-r12-live-candidate` exibiu o HTML literal na tela em vez de renderizar a Central.
+- Diagnóstico: a falha está na camada de entrega do proxy Edge da candidata, não no aparelho e não na Central V2 oficial.
+- Correção H1: o Edge candidato deixa de retransmitir o HTML como corpo da resposta e passa a fazer **redirect HTTP 302** para a página candidata publicada no GitHub Pages, que já é o host estático canônico de validação visual.
+- O endpoint `/call/` continua direcionando para a sala Google Meet homologada.
+- Build: `CR-CENTRAL-OP-V2-UX-NAV-R1.2-REDIRECT-HOTFIX-20261005`.
+- Edge `central-ux-r12-live-candidate`: **v2 ACTIVE**.
+- Hash Supabase v2: `d7147f9d671fbd46b6039e0cfd0f58333f87a2219c0dede7509623f1fdbb4b03`.
+- Link de validação visual: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-ux-navigation-r1-candidate-20261005/`.
+- Proteção: `centro-operacoes` oficial, produção V2 e Gestor H4 permanecem intocados.
+- Gate humano: **PENDENTE** — retestar no celular após este hotfix antes de qualquer promoção.
