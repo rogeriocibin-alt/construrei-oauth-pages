@@ -101,7 +101,7 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-05 — Interface R9 + Agenda Operacional v5 oficializadas e congeladas como referência corrente. Snapshot do Edge v5 salvo no repositório. Nova frente isolada aberta: Identidade de Links Oficiais v1.
+2026-10-05 — R9 + Agenda v5 permanecem oficiais e congeladas. Identidade de Links Oficiais v1 publicada como camada candidata com 38 aliases legíveis; aguardando validação humana antes de promover os aliases para o registry interno da Central.
 
 ## Hotfix Agenda — identificação de equipe — 2026-10-05
 
@@ -152,3 +152,24 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Checkpoint lógico: `CHECKPOINT_CENTRAL_R9_AGENDA_V5_20261005`
 - Regra: esta combinação de interface R9 + Agenda v5 passa a ser a referência oficial para rollback e continuidade.
 - Próxima frente isolada: **Identidade de Links Oficiais v1**, sem alterar a Central oficial até validação humana dos links.
+
+
+## Identidade de Links Oficiais v1 — candidata
+
+- Data: 2026-10-05
+- Status: **CANDIDATA PARA VALIDAÇÃO HUMANA — NÃO PROMOVIDA AINDA PARA O REGISTRY INTERNO DA CENTRAL**
+- Objetivo: substituir URLs de uso humano por aliases estáveis, claros e autoexplicativos, mantendo endpoints técnicos intactos.
+- Painel de validação: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/links-oficiais/`
+- Registro estruturado: `docs/official-links-registry.json`
+- Quantidade: **38 aliases amigáveis**
+- Exemplos:
+  - `/central/`
+  - `/app-construrei/`
+  - `/checklist-operacional/`
+  - `/documentacao/`
+  - `/gestao-financeira/`
+  - `/apresentacao/`
+- Regra arquitetural: **não renomear, apagar nem quebrar endpoints técnicos**. Os aliases são uma camada pública de identidade e redirecionam para destinos canônicos.
+- O caminho legado `/central/`, que continha uma Central estática antiga, foi convertido em alias da Central oficial atual para eliminar risco de acesso à versão obsoleta.
+- Próximo gate: Rogério testa os links no celular/notebook; somente após aprovação a Central passa a copiar/abrir os aliases amigáveis no catálogo de Homologação.
+- Checkpoint lógico: `CHECKPOINT_LINK_IDENTITY_V1_20261005`
