@@ -288,6 +288,7 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Build: `CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005`
 - Branch oficial: `cr-project-manager-v1-1-2-h4-official-20261005`
 - Checkpoint homologado: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005`
+- Commit oficial congelado H4: `59842d9db0360666ea63a814729bdbff6fb3abf0`
 - Link estável: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/`
 - Gate humano: **CONCLUÍDO** — Rogério confirmou que a H4 está correta e autorizou finalizar o processo em 05/10/2026 às 13:25.
 - PWA móvel: **PASS / confirmado pelo proprietário**.
