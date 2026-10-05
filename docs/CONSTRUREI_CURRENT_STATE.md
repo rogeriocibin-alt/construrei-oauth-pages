@@ -101,7 +101,7 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 
 ## Última atualização
 
-2026-10-05 — R9 + Agenda v5 permanecem oficiais e congeladas. Identidade de Links Oficiais v1 publicada como camada candidata com 38 aliases legíveis; aguardando validação humana antes de promover os aliases para o registry interno da Central.
+2026-10-05 — Identidade de Links v1.1 corrigida: `Pendências Wizy FLOW`, `Pendências Éder Agora` e Meeting apontando para a página homologada interna da Central (`#meeting`). R9 + Agenda v5 permanecem oficiais e congeladas.
 
 ## Hotfix Agenda — identificação de equipe — 2026-10-05
 
@@ -173,3 +173,12 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - O caminho legado `/central/`, que continha uma Central estática antiga, foi convertido em alias da Central oficial atual para eliminar risco de acesso à versão obsoleta.
 - Próximo gate: Rogério testa os links no celular/notebook; somente após aprovação a Central passa a copiar/abrir os aliases amigáveis no catálogo de Homologação.
 - Checkpoint lógico: `CHECKPOINT_LINK_IDENTITY_V1_20261005`
+
+
+### Ajustes v1.1 — Wizy FLOW, Éder Agora e Meeting
+
+- `/pendencias-wizy-flow/` — nome oficial humano: **Pendências Wizy FLOW**.
+- `/pendencias-eder-agora/` — nome oficial humano: **Pendências Éder Agora**.
+- `/meeting/` — não aponta mais diretamente para `meet.google.com`; agora abre `centro-operacoes#meeting`, preservando a página de Meeting homologada dentro da Central.
+- Aliases legados `/wizy-flow/` e `/eder-agora/` foram mantidos como compatibilidade, redirecionando para os novos aliases.
+- Registro de links atualizado para `LINK-IDENTITY-V1.1-20261005`.
