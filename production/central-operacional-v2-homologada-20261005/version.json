@@ -17,5 +17,19 @@
     "direct_page_no_iframe": "PASS",
     "notebook": "NOT_RETESTED_THIS_PROMOTION",
     "owner_override_for_promotion": true
+  },
+  "edge_function": {
+    "slug": "centro-operacoes",
+    "version": 280,
+    "sha256": "13f46b7165db757865458f4fe5353be9b98453f5fe3ea34f7c4ac9d4c169509d",
+    "status": "ACTIVE"
+  },
+  "official_branch": "central-operacional-v2-oficial-20261005",
+  "checkpoint_branch": "checkpoint-central-operacional-v2-homologada-20261005",
+  "checkpoint": "CHECKPOINT_CENTRAL_OPERATIONAL_V2_OFFICIAL_20261005",
+  "post_promotion_verification": {
+    "edge_route": "PASS",
+    "github_pages_http": "NOT_VERIFIED_FROM_RUNTIME_DNS",
+    "note": "Edge source/version verified through Supabase connector."
   }
 }
