@@ -6,7 +6,7 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Versão oficial atual: **Central Operacional V2 + UX R1.2 + Agenda v5 + Identidade de Links v1.3 — OFICIAL**
+- Versão oficial atual: **Central Operacional V2 + UX R1.2 + Agenda v5 + Identidade de Links v1.3.1 — OFICIAL**
 - Branch homologada: `central-operacional-v2-ux-r1-2-oficial-20261005`
 - Branch de origem validada: `main` • candidata isolada `preview/central-operation-only-v2-direct-candidate-20261005/`
 - Commit funcional UX R1.2: `df3bfe574f638a1981330b2a0e9201c612056de6`
@@ -15,7 +15,7 @@
 - Checkpoint homologado: `CHECKPOINT_CENTRAL_OPERATIONAL_V2_UX_R1_2_OFFICIAL_20261005`
 - Pasta de produção congelada: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`
 - Fonte viva de pendências: `cr-pendencias-executive-v2-candidate-20261004` v1
-- Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — Central Operacional V2 + UX R1.2**; link público preservado; Links v1.3 também **OFICIAL**
+- Central oficial `centro-operacoes`: **HOMOLOGADA / OFICIAL — Central Operacional V2 + UX R1.2**; link público preservado; Links v1.3.1 também **OFICIAL**
 - Link oficial preservado: `https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes/`
 - Destino HOME oficial: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`
 - Regra: preservar a Central Operacional V2 anterior como rollback imediato e a R9 como rollback secundário; evoluções futuras partem da UX R1.2 oficial em candidata isolada.
@@ -504,3 +504,17 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Também registrada no Gestor como `PM-17`.
 - Diretriz: desenvolver integração oficial pelo **Google Meet Add-ons SDK** em candidata isolada; manter o Google Meet como motor de videoconferência; não reativar a malha WebRTC P2P experimental.
 - Gate futuro: celular + notebook + homologação humana antes de promoção.
+
+
+## Hotfix antirregressão — roteamento Central UX R1.2 + Sala da Equipe — 2026-10-05
+
+- Evidência visual do proprietário: o link oficial abriu a **Central Operacional V2 anterior**, exibindo o selo `OFICIAL V2`, dock sem `Atualizar` e a Sala da Equipe legada com `Central Call • WebRTC + Realtime`.
+- Causa confirmada: o Edge oficial `centro-operacoes` havia avançado para **v282** com `HOME` regressado para `production/central-operacional-v2-homologada-20261005/`, apesar de a UX R1.2 já estar homologada.
+- Correção aplicada: `centro-operacoes` **v283 ACTIVE**.
+- HOME corrigido para: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Build Edge: `CR-CENTRAL-OP-V2-UX-NAV-R1.2-OFFICIAL-20261005-ROUTE-HOTFIX`.
+- Hash Edge v283: `37d8173b09679cb802f2f3258b9fe8fc4fb49ed62be6c55169f1b1a13643ef34`.
+- Aliases `/google-meet-central/` e `/meeting/` corrigidos para abrir a **Sala da Equipe UX R1.2 homologada**, preservando a identidade azul-marinho + azul institucional + branco + amarelo.
+- Registro de links atualizado para **LINK-IDENTITY-V1.3.1-20261005**.
+- Checkpoint anterior: `checkpoint-before-central-r12-route-alias-hotfix-20261005`.
+- Nenhuma alteração em Agenda v5, APP, dados operacionais ou Gestor H5.
