@@ -1,0 +1,19 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Homologação F00→F09</title><style>body{margin:0;background:#071522;color:#eef6fb;font:14px system-ui}.w{max-width:1050px;margin:auto;padding:18px}.top,.row{background:#0c2336;border:1px solid #294b63;border-radius:14px;padding:14px;margin:10px 0}.row{display:grid;grid-template-columns:80px 1fr auto;gap:12px;align-items:center}.phase{font-size:22px;font-weight:900}.mut{color:#a9bdca}.btn{border:0;border-radius:9px;padding:10px 12px;font-weight:800;cursor:pointer}.open{background:#e6bd54}.pass{background:#3da879;color:white}.fail{background:#b74d4d;color:white}.state{font-weight:800}.actions{display:flex;gap:6px;flex-wrap:wrap}textarea{width:100%;box-sizing:border-box;background:#071522;color:#fff;border:1px solid #36586f;border-radius:8px;padding:8px;margin-top:8px}@media(max-width:700px){.row{grid-template-columns:55px 1fr}.actions{grid-column:1/-1}.phase{font-size:18px}}</style></head><body><main class="w"><section class="top"><h1>Homologação rápida • APP F00→F09</h1><p class="mut">Candidata isolada. PASS/REPROVAR fica somente neste navegador até ser exportado. Aprovação aqui não promove produção.</p><button class="btn open" onclick="exportar()">EXPORTAR RESULTADO</button></section><div id="rows"></div></main><script>
+const tests={
+F00:["Abrir/capturar chamado","Anexar evidência","Liberar para F01"],
+F01:["Abrir caso recebido","Confirmar dados sem redigitação","Marcar PRONTO F02 / handoff"],
+F02:["Receber Caso 360","Editar orçamento e snapshot","Liberar F03 sem duplicar"],
+F03:["Consumir orçamento","Registrar proposta/OS","Aprovar e avançar F04 uma única vez"],
+F04:["Programar execução","Confirmar responsável/prestador","Verificar Agenda Core"],
+F05:["Registrar materiais/prestador","Controlar uso/sobra/devolução","Avançar sem perder contexto"],
+F06:["Executar tarefas","Registrar evidências/aceite","Concluir execução"],
+F07:["Classificar ocorrência","Registrar ação/reinspeção","Separar retrabalho/garantia/novo escopo"],
+F08:["Conferir financeiro/documentos","Validar fechamento sem reabrir liquidado","Preparar NF"],
+F09:["Registrar aceite/relatório","Classificar pós-obra","Encerrar jornada"]
+}; const key="cr_homologacao_checklist_native_20261004",S=JSON.parse(localStorage.getItem(key)||"{}");
+function save(){localStorage.setItem(key,JSON.stringify(S));render()}
+function setS(f,s){S[f]=S[f]||{};S[f].status=s;S[f].at=new Date().toISOString();save()}
+function note(f,v){S[f]=S[f]||{};S[f].note=v;localStorage.setItem(key,JSON.stringify(S))}
+function render(){rows.innerHTML=Object.entries(tests).map(([f,t])=>'<section class="row"><div class="phase">'+f+'</div><div><div class="state">'+(S[f]?.status||"NÃO TESTADO")+'</div><div class="mut">'+t.map((x,i)=>(i+1)+". "+x).join(" • ")+'</div><textarea placeholder="Observação / gap encontrado" oninput="note(\''+f+'\',this.value)">'+(S[f]?.note||"")+'</textarea></div><div class="actions"><a class="btn open" href="./'+f.toLowerCase()+'/" target="_blank">ABRIR</a><button class="btn pass" onclick="setS(\''+f+'\',\'APROVADO LOCAL\')">PASSAR</button><button class="btn fail" onclick="setS(\''+f+'\',\'REPROVADO\')">REPROVAR</button></div></section>').join("")}
+function exportar(){const b=new Blob([JSON.stringify({candidate:"checklist-native-20261004",exported_at:new Date().toISOString(),results:S},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="homologacao-f00-f09-20261004.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+render();</script></body></html>
