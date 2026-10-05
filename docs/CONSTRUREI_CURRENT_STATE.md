@@ -415,3 +415,15 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Gestor H4 oficial permanece congelado e intocado.
 - Nenhum link oficial foi alterado.
 - Checkpoint anterior: `checkpoint-before-ux-navigation-review-20261005`.
+
+
+### Correção UX R1.1 — Sala da Equipe + Conhecimento — 2026-10-05
+- Evidência: print móvel mostrou a Sala da Equipe sendo sobrescrita após o carregamento por `production/central-homologada-exec-r9-20261004/refinement-batch.js`.
+- Causa confirmada: `patchMeeting()` legado executava em loop a cada 1200 ms e recolocava “Central Call • WebRTC + Realtime”, “Reunião dentro da própria Central” e o bloco de compatibilidade.
+- Correção: `#meeting` recebe lock `data-crr="ux-r1-lock"` para impedir a sobrescrita; guard adicional garante que qualquer reinjeção legada seja removida.
+- Todos os atalhos de reunião da candidata convergem para a mesma Sala da Equipe candidata: `preview/central-ux-navigation-r1-candidate-20261005/call/`.
+- Conhecimento passa a `Conhecimento & Treinamento` com escopo estritamente operacional; “Tecnologia” vira “Ferramentas Operacionais” e a engenharia permanece no Gestor.
+- Build: `CR-CENTRAL-OP-V2-UX-NAV-R1.1-CANDIDATE-20261005`.
+- Auditoria de sintaxe inline: **PASS**.
+- Gestor H5: **não alterado**; permanece candidato validado pelo proprietário nesta rodada.
+- Gate: novo reteste móvel da Central R1.1 pendente antes de qualquer promoção.
