@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="cr-build" content="CR-CENTRAL-OPERATION-ONLY-CANDIDATE-20261005">
+<title>CONSTRU-REI • Central Operacional • Candidata</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061a33}
+#centralFrame{border:0;width:100%;height:100%;display:block;background:#fff}
+#candidateBadge{position:fixed;right:10px;bottom:68px;z-index:2147483647;background:#07185d;color:white;border:1px solid rgba(255,255,255,.25);box-shadow:0 8px 24px rgba(0,0,0,.22);border-radius:999px;padding:7px 11px;font:800 11px/1.1 system-ui,sans-serif;letter-spacing:.04em}
+#candidateBadge b{color:#ffd54a}
+@media(max-width:720px){#candidateBadge{right:8px;bottom:62px;font-size:10px;padding:6px 9px}}
+</style>
+</head>
+<body>
+<iframe id="centralFrame" title="Central Operacional candidata"></iframe>
+<div id="candidateBadge"><b>CANDIDATA</b> • Central Operacional</div>
+<script>
+(function(){
+  'use strict';
+  const BASE='../../production/central-homologada-exec-r9-20261004/?v=operation-only-candidate-20261005';
+  const GESTOR='../../gestor-projeto/';
+  const TECH=new Set(['status','homolog','context','htmls','apis','grc','security','audit','releases','gaps','history','health','technical','admin']);
+  const frame=document.getElementById('centralFrame');
+  const req=new URLSearchParams(location.search).get('open') || location.hash.replace(/^#/,'');
+  if(TECH.has(String(req||'').toLowerCase())){
+    location.replace(GESTOR+'?origin=central-operation-only&area='+encodeURIComponent(req));
+    return;
+  }
+  frame.src=BASE;
+
+  function scrub(){
+    let w,d;
+    try{w=frame.contentWindow;d=frame.contentDocument}catch(e){return}
+    if(!w||!d)return;
+    const isTech=v=>TECH.has(String(v||'').trim().toLowerCase());
+    d.querySelectorAll('[data-page]').forEach(el=>{if(isTech(el.dataset.page))el.remove()});
+    d.querySelectorAll('[data-page-target]').forEach(el=>{if(isTech(el.dataset.pageTarget))el.remove()});
+    TECH.forEach(id=>{const el=d.getElementById(id);if(el)el.remove()});
+    d.querySelectorAll('.grp').forEach(g=>{
+      if(!g.querySelector('.nav'))g.remove();
+    });
+    const docs=d.getElementById('docs');
+    if(docs){
+      const h=docs.querySelector('h1'); if(h)h.textContent='Documentação Operacional';
+      const n=docs.querySelector('.notice');
+      if(n)n.innerHTML='<b>Documentação operacional.</b> Manuais, fluxos e referências usadas pela equipe permanecem aqui. Engenharia, arquitetura, releases, APIs e auditorias pertencem ao Gestor do Projeto.';
+      docs.querySelectorAll('[data-page-target="admin"],[data-page-target="technical"],[data-page-target="apis"]').forEach(x=>x.remove());
+    }
+    const ac=d.getElementById('acervo');
+    if(ac){
+      const p=ac.querySelector('p.mut'); if(p)p.textContent='Acervo de referência operacional preservado. Administração técnica e engenharia ficam no Gestor do Projeto.';
+      ac.querySelectorAll('button[onclick*="technical"]').forEach(x=>x.remove());
+    }
+    const original=w.go;
+    if(typeof original==='function'&&!original.__crOperationWrapped){
+      const wrapped=function(page){
+        if(isTech(page)){
+          top.location.assign(GESTOR+'?origin=central-operation-only&area='+encodeURIComponent(page));
+          return;
+        }
+        return original.apply(this,arguments);
+      };
+      wrapped.__crOperationWrapped=true;
+      w.go=wrapped;
+    }
+    if(!d.__crOperationClickBound){
+      d.__crOperationClickBound=true;
+      d.addEventListener('click',function(ev){
+        const el=ev.target.closest('[data-page],[data-page-target]');
+        if(!el)return;
+        const p=el.dataset.page||el.dataset.pageTarget;
+        if(isTech(p)){
+          ev.preventDefault();ev.stopImmediatePropagation();
+          top.location.assign(GESTOR+'?origin=central-operation-only&area='+encodeURIComponent(p));
+        }
+      },true);
+    }
+  }
+  frame.addEventListener('load',function(){
+    scrub();
+    try{new MutationObserver(scrub).observe(frame.contentDocument.documentElement,{childList:true,subtree:true})}catch(e){}
+    setTimeout(scrub,250);setTimeout(scrub,1200);setTimeout(scrub,2500);
+  });
+})();
+</script>
+</body>
+</html>
