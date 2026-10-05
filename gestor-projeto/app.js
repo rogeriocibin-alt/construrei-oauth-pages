@@ -14,7 +14,7 @@ const VIEW_TITLES={
   audits:'Auditorias',governance:'Governança',search:'Busca'
 };
 
-const CURRENT_RELEASE={version:'1.1.2',build:'CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005',environment:'canonical'};
+const CURRENT_RELEASE={version:'1.1.2',build:'CR-PM-V1.1.2-H5-UX-NAV-OFFICIAL-20261005',environment:'canonical'};
 const PM_API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
 const PM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
 const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
@@ -63,7 +63,10 @@ const histProduct=name=>{
   return 'project';
 };
 
+const CR_UX_STACK=[];let CR_UX_MUTE=false;
 function setView(view){
+  const prevView=state.view;
+  if(!CR_UX_MUTE&&prevView&&prevView!==view)CR_UX_STACK.push(prevView);
   state.view=view;
   $$('.view').forEach(x=>x.classList.remove('active'));
   const target=$('#view-'+view);
@@ -90,6 +93,21 @@ function closeDrawer(){
 }
 function openSidebar(){ $('#sidebar').classList.add('open'); $('#drawerBackdrop').classList.add('open'); }
 function closeSidebar(){ $('#sidebar').classList.remove('open'); if(!$('#drawer').classList.contains('open')) $('#drawerBackdrop').classList.remove('open'); }
+function crUxBack(){
+  if($('#drawer')?.classList.contains('open')){closeDrawer();return;}
+  const target=CR_UX_STACK.length?CR_UX_STACK.pop():'now';
+  CR_UX_MUTE=true;setView(target||'now');CR_UX_MUTE=false;
+}
+function crUxHome(){
+  closeDrawer();closeSidebar();CR_UX_STACK.length=0;
+  CR_UX_MUTE=true;setView('now');CR_UX_MUTE=false;
+}
+async function crUxRefresh(){
+  const ids=['managerRefreshBtn','managerDockRefresh'];
+  ids.forEach(id=>{const b=$('#'+id);if(b){b.disabled=true;b.classList.add('is-updating');}});
+  try{await updatePwaNow();}
+  finally{ids.forEach(id=>{const b=$('#'+id);if(b){b.disabled=false;b.classList.remove('is-updating');}});}
+}
 
 function metric(labelText,value,meta,icon,extra=''){
   return `<article class="metric ${extra}"><div class="metric-top"><span class="metric-label">${esc(labelText)}</span><span class="metric-icon">${esc(icon)}</span></div><div class="metric-value">${esc(value)}</div><small>${esc(meta)}</small></article>`;
@@ -121,10 +139,10 @@ async function refreshProjectManagerLive(){
     if(!body?.ok)throw new Error(body?.error||'snapshot inválido');
     state.pmLive=body;
     state.pmSync={ok:true,at:body.generated_at||new Date().toISOString()};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1.2 • CANÔNICA • LIVE';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1.2 • H5 OFICIAL • LIVE';
   }catch(err){
     state.pmSync={ok:false,at:new Date().toISOString(),error:String(err?.message||err)};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1.2 • CANÔNICA • FALLBACK';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.1.2 • H5 OFICIAL • FALLBACK';
   }
   renderNow();
   renderAudits();
@@ -519,7 +537,7 @@ function renderAudits(){
 
 function syncReleaseUi(meta=CURRENT_RELEASE){
   const chip=$('#versionChip');
-  if(chip) chip.textContent=`V${meta.version||CURRENT_RELEASE.version} • ${short(meta.build||CURRENT_RELEASE.build)}`;
+  if(chip) chip.textContent='V1.1.2 • H5 UX';
 }
 
 function releaseNotesHtml(meta){
@@ -742,13 +760,13 @@ window.addEventListener('appinstalled',()=>{const b=$('#installPwaBtn'); if(b)b.
 
 async function init(){
   try{
-    const r=await fetch('./project-data.json?v=20261005v112h4',{cache:'no-store'});
+    const r=await fetch('./project-data.json?v=20261005v112h5official',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     state.data=await r.json();
     renderAll();
     bindReleaseUi();
     syncReleaseUi(CURRENT_RELEASE);
-    setView('now');
+    CR_UX_MUTE=true;setView('now');CR_UX_MUTE=false;CR_UX_STACK.length=0;
     refreshLiveRepository();
     refreshProjectManagerLive();
     setInterval(refreshLiveRepository,300000);
@@ -758,6 +776,11 @@ async function init(){
     $('#drawerClose').onclick=closeDrawer;
     $('#drawerBackdrop').onclick=()=>{closeDrawer();closeSidebar();};
     $('#mobileMenu').onclick=()=>$('#sidebar').classList.contains('open')?closeSidebar():openSidebar();
+    const uxBind=(id,fn)=>{const b=$('#'+id);if(b)b.onclick=fn;};
+    uxBind('managerBackBtn',crUxBack);uxBind('managerDockBack',crUxBack);
+    uxBind('managerHomeBtn',crUxHome);uxBind('managerDockHome',crUxHome);
+    uxBind('managerRefreshBtn',crUxRefresh);uxBind('managerDockRefresh',crUxRefresh);
+    uxBind('managerDockMenu',()=>$('#sidebar').classList.contains('open')?closeSidebar():openSidebar());
     const installBtn=$('#installPwaBtn');
     if(installBtn) installBtn.onclick=async()=>{
       if(deferredInstallPrompt){
@@ -770,7 +793,7 @@ async function init(){
       }
     };
     if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('./sw.js?v=20261005v112h4',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
+      navigator.serviceWorker.register('./sw.js?v=20261005v112h5official',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
     }
 
     if(!('serviceWorker' in navigator)) checkReleaseUpdate();
