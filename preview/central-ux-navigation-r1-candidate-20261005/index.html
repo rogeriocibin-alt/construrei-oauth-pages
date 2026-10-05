@@ -76,7 +76,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
   .cr-mobile-dock{z-index:130!important}
 }
 @media(max-width:600px){.side{width:min(88vw,300px)!important;max-width:300px!important}.side .brand img{width:62px!important;height:62px!important;min-width:62px!important}}
-</style><style id="cr-p0-native-access-style">.cr-p0-list{display:grid;gap:10px}.cr-p0-item{border:1px solid #24455f;border-radius:14px;padding:12px;background:#071c31}.cr-p0-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cr-p0-full{grid-column:1/-1}.cr-p0-item h3{margin:0 0 6px}.cr-p0-meta{color:#91a7b8;font-size:12px;margin-bottom:8px}@media(max-width:700px){.cr-p0-row{grid-template-columns:1fr}.cr-p0-full{grid-column:auto}}</style><style id="cr-docs-dashboard-style">.cr-doc-filters{display:grid;grid-template-columns:minmax(220px,2fr) repeat(4,minmax(130px,1fr)) auto;gap:8px;margin-top:12px}.cr-doc-dash-card{border-color:#7a6427!important;background:linear-gradient(180deg,#172434,#101c28)!important}.cr-doc-dash-card .tag{color:#e3bd5b}.cr-doc-dash-card h3{margin:7px 0}.cr-doc-dash-card .actions{margin-top:10px}@media(max-width:1100px){.cr-doc-filters{grid-template-columns:1fr 1fr 1fr}}@media(max-width:700px){.cr-doc-filters{grid-template-columns:1fr}.cr-doc-filters .btn{width:100%}}</style><style id="cr-boot-resilience-style">.brand img,.hero img{object-fit:contain!important;object-position:center!important;height:auto!important;max-width:100%!important}.hero img{max-height:170px!important}.brand img{max-height:66px!important}.cr-load-note{margin:8px 0!important}</style><div hidden data-cr-boot-resilience="CR-BOOT-RESILIENCE-FAILSOFT-R128-20260912"></div><meta name="cr-build" content="CR-CENTRAL-OP-V2-UX-NAV-R1.1-CANDIDATE-20261005">
+</style><style id="cr-p0-native-access-style">.cr-p0-list{display:grid;gap:10px}.cr-p0-item{border:1px solid #24455f;border-radius:14px;padding:12px;background:#071c31}.cr-p0-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cr-p0-full{grid-column:1/-1}.cr-p0-item h3{margin:0 0 6px}.cr-p0-meta{color:#91a7b8;font-size:12px;margin-bottom:8px}@media(max-width:700px){.cr-p0-row{grid-template-columns:1fr}.cr-p0-full{grid-column:auto}}</style><style id="cr-docs-dashboard-style">.cr-doc-filters{display:grid;grid-template-columns:minmax(220px,2fr) repeat(4,minmax(130px,1fr)) auto;gap:8px;margin-top:12px}.cr-doc-dash-card{border-color:#7a6427!important;background:linear-gradient(180deg,#172434,#101c28)!important}.cr-doc-dash-card .tag{color:#e3bd5b}.cr-doc-dash-card h3{margin:7px 0}.cr-doc-dash-card .actions{margin-top:10px}@media(max-width:1100px){.cr-doc-filters{grid-template-columns:1fr 1fr 1fr}}@media(max-width:700px){.cr-doc-filters{grid-template-columns:1fr}.cr-doc-filters .btn{width:100%}}</style><style id="cr-boot-resilience-style">.brand img,.hero img{object-fit:contain!important;object-position:center!important;height:auto!important;max-width:100%!important}.hero img{max-height:170px!important}.brand img{max-height:66px!important}.cr-load-note{margin:8px 0!important}</style><div hidden data-cr-boot-resilience="CR-BOOT-RESILIENCE-FAILSOFT-R128-20260912"></div><meta name="cr-build" content="CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-ENGINE-CANDIDATE-20261005">
 <style id="cr-academy-unified">
 .crAcademyTracks{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
 .crAcademyTrack{background:linear-gradient(180deg,#0b2237,#081a2b);border:1px solid #294b65;border-radius:14px;padding:13px}
@@ -3575,7 +3575,7 @@ document.addEventListener('click',e=>{
 <script id="cr-ux-nav-r1-candidate-js">
 (function(){
 'use strict';
-var CALL_URL="https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-ux-navigation-r1-candidate-20261005/call/";
+var CALL_URL="https://meet.google.com/xtw-rihq-jwi";
 window.crOpenInternalMeeting=function(){location.assign(CALL_URL)};
 function goHome(){try{if(typeof window.go==='function')window.go('dashboard');else location.hash='dashboard'}catch(_){}}
 function refreshCentral(){
@@ -3596,7 +3596,7 @@ function polishMeeting(){
   }
   var card=document.getElementById('meetCard');if(!card)return;
   if(!card.dataset.uxReady){
-    card.innerHTML='<div class="tag">EQUIPE • COMUNICAÇÃO INTERNA</div><h2>Sala da Equipe CONSTRU-REI</h2><p class="mut">Áudio e vídeo em uma sala única. Diagnóstico do aparelho disponível somente quando necessário.</p><p class="notice good">Acesso da equipe pela Central. Google Meet permanece apenas como contingência.</p><div class="actions"><button class="btn gold" id="crUxOpenMeeting">Abrir Sala da Equipe</button><button class="btn" id="crUxCopyMeeting">Copiar link</button></div>';
+    card.innerHTML='<div class="tag">EQUIPE • SALA OFICIAL</div><h2>Sala da Equipe CONSTRU-REI</h2><p class="mut">Reunião da equipe pela sala oficial do Google Meet. A Central não intermedia câmera, microfone ou compartilhamento de tela.</p><p class="notice good">Sala oficial da equipe. Câmera, microfone e compartilhamento são gerenciados pelo Google Meet.</p><div class="actions"><button class="btn gold" id="crUxOpenMeeting">Abrir Sala da Equipe</button><button class="btn" id="crUxCopyMeeting">Copiar link</button></div>';
     card.dataset.uxReady='1';
   }
   var open=document.getElementById('crUxOpenMeeting');if(open)open.onclick=function(){location.assign(CALL_URL)};
@@ -3636,7 +3636,7 @@ var meet=document.getElementById('meetCard');if(meet)new MutationObserver(polish
 <script id="cr-ux-r1-meeting-legacy-guard">
 (function(){
 'use strict';
-var CALL_URL='https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-ux-navigation-r1-candidate-20261005/call/';
+var CALL_URL='https://meet.google.com/xtw-rihq-jwi';
 function enforce(){
  var p=document.getElementById('meeting');if(!p)return;
  p.dataset.crr='ux-r1-lock';
@@ -3644,7 +3644,7 @@ function enforce(){
    p.innerHTML='<h1>Sala da Equipe</h1><div id="meetCard" class="card"></div>';
  }
  var card=document.getElementById('meetCard');if(card&&!card.dataset.uxReady){
-   card.innerHTML='<div class="tag">EQUIPE • COMUNICAÇÃO INTERNA</div><h2>Sala da Equipe CONSTRU-REI</h2><p class="mut">Áudio e vídeo em uma sala única. Diagnóstico do aparelho disponível somente quando necessário.</p><p class="notice good">Acesso da equipe pela Central. Google Meet permanece apenas como contingência.</p><div class="actions"><button class="btn gold" id="crUxOpenMeeting">Abrir Sala da Equipe</button><button class="btn" id="crUxCopyMeeting">Copiar link</button></div>';
+   card.innerHTML='<div class="tag">EQUIPE • SALA OFICIAL</div><h2>Sala da Equipe CONSTRU-REI</h2><p class="mut">Reunião da equipe pela sala oficial do Google Meet. A Central não intermedia câmera, microfone ou compartilhamento de tela.</p><p class="notice good">Sala oficial da equipe. Câmera, microfone e compartilhamento são gerenciados pelo Google Meet.</p><div class="actions"><button class="btn gold" id="crUxOpenMeeting">Abrir Sala da Equipe</button><button class="btn" id="crUxCopyMeeting">Copiar link</button></div>';
    card.dataset.uxReady='1';
  }
  var open=document.getElementById('crUxOpenMeeting');if(open)open.onclick=function(){location.assign(CALL_URL)};
