@@ -296,8 +296,8 @@
   "project_manager_build": "CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005",
   "project_manager_status": "OFICIAL / HOMOLOGADA / CONGELADA",
   "project_manager_branch": "cr-project-manager-v1-1-2-h4-official-20261005",
-  "project_manager_official_commit": "dce58ac5212af0d0564476367d099e3a9730d9de",
-  "project_manager_official_branch": "cr-project-manager-v1-1-2-h3-official-20261005",
-  "project_manager_checkpoint_branch": "checkpoint-project-manager-v1-1-2-h3-official-20261005",
+  "project_manager_official_commit": "59842d9db0360666ea63a814729bdbff6fb3abf0",
+  "project_manager_official_branch": "cr-project-manager-v1-1-2-h4-official-20261005",
+  "project_manager_checkpoint_branch": "checkpoint-project-manager-v1-1-2-h4-official-20261005",
   "project_manager_validation": "PWA MOBILE PASS OWNER CONFIRMED"
 }
