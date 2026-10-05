@@ -643,3 +643,20 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Regra de fronteira: cliente nunca recebe margem, lucro, custo real, meta de compra, meta de terceiro ou análise interna.
 - Regra anti-regressão: não criar arquitetura paralela; reutilizar F01 → F02 → F03 e preservar links/fluxos oficiais.
 - Próximo gate: implementação técnica + homologação do caso 76626 + orçamento simples + orçamento complexo + validação humana.
+
+
+## ORÇA-REI V1 — implementação candidata — 2026-10-05
+
+- Status: **IMPLEMENTADO EM CANDIDATA / AGUARDA HOMOLOGAÇÃO HUMANA**.
+- F02 oficial permanece inalterado.
+- Frontend candidato: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/f02-orca-rei-v1-candidate-20261005/`.
+- Build frontend: `CR-F02-ORCA-REI-V1-CANDIDATE-20261005`.
+- Edge `cr-flow-runtime-v2`: **v12 ACTIVE**.
+- Build Edge: `CR-FLOW-RUNTIME-V2-ORCA-REI-V1-CANDIDATE-20261005`.
+- SHA Edge: `854bd62e1117e64435ed035c754c6e89a40105a5e1a8065a1dac4ec0dd411eaa`.
+- Snapshot: `snapshots/edge-functions/cr-flow-runtime-v2/v12/index.ts`.
+- Compatibilidade: F01 e F03 não foram modificados; orçamento legado continua funcionando porque o gate novo só é aplicado quando `orca_rei_v1=true`.
+- Capacidades novas: auditoria interna determinística, venda × custo, encargos/margem parametrizados, preço mínimo, confiança, risco, decisão, gate humano e override comercial explícito.
+- Caso escola 76626: cenários de R$ 1.870 e R$ 2.230 validados; resultados coincidem com a regra financeira canônica.
+- Relatório técnico: `docs/agents/ORCA_REI_V1_IMPLEMENTATION_REPORT_20261005.md`.
+- Próximo gate: Rogério validar a candidata; somente então promover/congelar no F02 oficial.
