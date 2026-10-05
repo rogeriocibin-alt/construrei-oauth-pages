@@ -1,0 +1,3163 @@
+{
+  "meta": {
+    "title": "Gestor do Projeto CONSTRU-REI",
+    "version": "V1.1.2 H4 • OFICIAL HOMOLOGADA",
+    "status": "OFICIAL / HOMOLOGADA / CONGELADA — PWA INSTALÁVEL + CENTRAL DE LINKS EM BOTÃO ÚNICO",
+    "generated_at": "2026-10-05",
+    "repository": "rogeriocibin-alt/construrei-oauth-pages",
+    "branch": "cr-project-manager-v1-1-2-h4-official-20261005",
+    "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
+    "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
+    "audit_snapshot": "2026-10-03",
+    "audit_state": "Snapshot automático incorporado com 201 branches; atualização online do GitHub ocorre ao abrir o Gestor.",
+    "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
+    "build": "CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005",
+    "environment": "canonical",
+    "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
+    "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
+    "persistence": "Supabase cr_internal conectado por API candidata sanitizada; snapshot local permanece como fallback offline.",
+    "previous_official_commit": "fa980eb74b42a1ffd044288e0f4216aeaed108a1",
+    "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
+    "pwa_mobile_status": "PASS_OWNER_CONFIRMED"
+  },
+  "governance": [
+    "Máximo de 2 frentes em execução simultaneamente.",
+    "Ideia não é frente ativa.",
+    "Candidata não é canônica.",
+    "Nenhuma hipótese de teste altera a última versão segura.",
+    "Entrega exige objetivo cumprido, teste, versão/checkpoint e decisão registrada.",
+    "Toda evolução parte de checkpoint aprovado e ocorre em candidata isolada.",
+    "Regressões e perdas permanecem visíveis no histórico.",
+    "Histórico não é apagado: versões substituídas viram referência de recuperação.",
+    "Uma fonte de verdade por produto.",
+    "Objetivo do projeto é concluir, homologar e entregar — não acumular desenvolvimento."
+  ],
+  "canonical_rules": [
+    {
+      "id": "r1",
+      "label": "Central oficial preservada durante candidatas executivas",
+      "status": "preserved",
+      "evidence": "Checkpoint V8 registra explicitamente: Central oficial não alterada."
+    },
+    {
+      "id": "r2",
+      "label": "APP oficial evolui somente por candidata isolada",
+      "status": "preserved",
+      "evidence": "FINAL_CHECKPOINT_APP_CONSTRUREI_20261001 define uma única baseline oficial e evolução isolada."
+    },
+    {
+      "id": "r3",
+      "label": "F00→F09 possui namespace canônico único",
+      "status": "preserved",
+      "evidence": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001."
+    },
+    {
+      "id": "r4",
+      "label": "Apresentação Viva preserva PDF, PowerPoint, dados vivos e Radar",
+      "status": "preserved",
+      "evidence": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002."
+    },
+    {
+      "id": "r5",
+      "label": "Versões executivas V9/V10/V11 permanecem candidatas até homologação explícita",
+      "status": "preserved",
+      "evidence": "Branches/checkpoints e loaders publicados como candidate/preview."
+    },
+    {
+      "id": "r6",
+      "label": "No máximo duas frentes ativas",
+      "status": "preserved",
+      "evidence": "Regra de governança adotada pelo Gestor V1; nesta carga há uma frente ativa."
+    },
+    {
+      "id": "r7",
+      "label": "Banco Mestre persistente do Gestor já conectado",
+      "status": "partial",
+      "evidence": "Modelo persistente V1.1 criado em cr_internal; PWA ainda usa snapshot versionado como fallback até API autenticada do owner. Não declarar conexão completa antes do teste."
+    }
+  ],
+  "products": [
+    {
+      "id": "gestor",
+      "name": "Gestor do Projeto",
+      "layer": "Governança",
+      "status": "canonical",
+      "summary": "Cockpit superior do proprietário para governança, memória, versões, decisões e desenvolvimento do ecossistema APP CONSTRU-REI, com acesso ao diretório mestre de Links Oficiais.",
+      "current": "V1.1.2 oficial • Links Oficiais incorporados"
+    },
+    {
+      "id": "links_oficiais",
+      "name": "Links Oficiais",
+      "layer": "Governança",
+      "status": "canonical",
+      "summary": "Diretório mestre dos acessos homologados, com aliases públicos estáveis e destinos técnicos preservados.",
+      "current": "Identidade de Links v1.3 • oficial"
+    },
+    {
+      "id": "central",
+      "name": "Central CONSTRU-REI",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "Camada executiva/gestão e ponto de acesso aos módulos.",
+      "current": "Canônica aprovada 01/10"
+    },
+    {
+      "id": "executive",
+      "name": "Dashboard Executivo",
+      "layer": "Produto gerenciado",
+      "status": "candidate",
+      "summary": "Cadeia experimental/aprovada V6→V11 sem promoção automática da Central oficial.",
+      "current": "V11 Premium candidata"
+    },
+    {
+      "id": "app",
+      "name": "APP CONSTRU-REI",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "Produto operacional com baseline oficial protegida.",
+      "current": "Baseline oficial 01/10 + candidatas V8→V11"
+    },
+    {
+      "id": "flows",
+      "name": "Esteira F00→F09",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "Jornada operacional consolidada em namespace canônico único.",
+      "current": "F00→F09 homologado 01/10"
+    },
+    {
+      "id": "agenda",
+      "name": "Agenda / Google Calendar",
+      "layer": "Integração",
+      "status": "candidate",
+      "summary": "Agenda executiva evoluiu de bridge/Trello para Google Calendar na V9.",
+      "current": "Google Agenda V9 candidata"
+    },
+    {
+      "id": "presentation",
+      "name": "Apresentação Executiva Viva",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "20 páginas, dados vivos, Radar Macro, PDF e PowerPoint.",
+      "current": "Canônica 02/10"
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard Gerencial V4",
+      "layer": "Produto gerenciado",
+      "status": "canonical",
+      "summary": "Painel gerencial preservado como fonte de leitura.",
+      "current": "V4 preservado"
+    },
+    {
+      "id": "academy",
+      "name": "Academy",
+      "layer": "Produto gerenciado",
+      "status": "review",
+      "summary": "Módulo existente; revisão visual/conteúdo permanece pendente.",
+      "current": "Em revisão"
+    },
+    {
+      "id": "docs",
+      "name": "Documentação",
+      "layer": "Produto gerenciado",
+      "status": "review",
+      "summary": "Base documental preservada; revisão de consistência visual prevista.",
+      "current": "Preservada"
+    },
+    {
+      "id": "trello",
+      "name": "Trello",
+      "layer": "Fonte operacional",
+      "status": "live",
+      "summary": "Fonte de cards e parte da agenda/monitoramento operacional.",
+      "current": "Leitura operacional"
+    },
+    {
+      "id": "gestaoclick",
+      "name": "GestãoClick",
+      "layer": "Fonte operacional",
+      "status": "live",
+      "summary": "Fonte para orçamentos, ordens de serviço e conciliações.",
+      "current": "Leitura operacional"
+    },
+    {
+      "id": "supabase",
+      "name": "Supabase",
+      "layer": "Infraestrutura",
+      "status": "live",
+      "summary": "Edge Functions, runtimes e APIs da Central.",
+      "current": "Infraestrutura ativa"
+    }
+  ],
+  "versions": [
+    {
+      "id": "central-canonical-20261001",
+      "product": "central",
+      "name": "Central Canônica Aprovada 01/10",
+      "date": "2026-10-01",
+      "status": "canonical",
+      "parent": "recuperação/identidade anterior",
+      "commit": "92ef8f27d71ac176abc6452df165a048c4405d60",
+      "branch": "cr-central-canonical-approved-20261001",
+      "checkpoint": "CHECKPOINT_CENTRAL_CANONICAL_APPROVED_20261001",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-approved-router-candidate-20261001/",
+      "gains": [
+        "HOME aprovada",
+        "roteamento aprovado",
+        "base oficial segura"
+      ],
+      "losses": [],
+      "note": "Referência oficial da Central; candidatas executivas posteriores não implicam promoção automática."
+    },
+    {
+      "id": "exec-v6",
+      "product": "executive",
+      "name": "Executiva V6 Aprovada",
+      "date": "2026-10-02",
+      "status": "homologated",
+      "parent": "V5 executiva estática",
+      "commit": "43edad3801f5e38cf2604b82dc45be33aff3bc29",
+      "branch": "cr-central-executive-v6-canonical-approved-20261002",
+      "checkpoint": "CHECKPOINT_CENTRAL_EXECUTIVE_V6_APPROVED_20261002",
+      "url": "",
+      "gains": [
+        "baseline executiva aprovada"
+      ],
+      "losses": [],
+      "note": "Checkpoint V8 confirma que a V6 permaneceu congelada como base aprovada."
+    },
+    {
+      "id": "exec-v7",
+      "product": "executive",
+      "name": "Executiva V7 Agenda Bridge",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "exec-v6",
+      "commit": "1ac6a831db51ffd0eb2103e3866e531bedea6ae3",
+      "branch": "cr-central-executive-v7-agenda-bridge-candidate-20261002",
+      "checkpoint": "CHECKPOINT_CENTRAL_EXECUTIVE_V7_AGENDA_BRIDGE_20261002",
+      "url": "",
+      "gains": [
+        "ponte de agenda"
+      ],
+      "losses": [],
+      "note": "Etapa de integração entre a baseline executiva e agenda viva."
+    },
+    {
+      "id": "exec-v8",
+      "product": "executive",
+      "name": "Executiva V8 Agenda Viva",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "exec-v7",
+      "commit": "caeb85fd5eb747911ab071c57ad2801542d25b61",
+      "branch": "cr-central-executive-v8-live-agenda-candidate-20261002",
+      "checkpoint": "CHECKPOINT_CENTRAL_EXECUTIVE_V8_LIVE_AGENDA_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-executive-v8-live-agenda-candidate-20261002/",
+      "gains": [
+        "Agenda Viva por dados Trello",
+        "conciliação GestãoClick",
+        "zero confiável quando fonte responde"
+      ],
+      "losses": [],
+      "note": "Checkpoint registra 182 cards com data operacional e 109 conciliados; produção permaneceu intocada."
+    },
+    {
+      "id": "exec-v9",
+      "product": "executive",
+      "name": "Executiva V9 Google Agenda",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "exec-v8",
+      "commit": "3571b14a01036ccabb5dea7e8026cdbfcb1510ad",
+      "branch": "cr-central-executive-v9-google-agenda-candidate-20261002",
+      "checkpoint": "CHECKPOINT_CR_EXECUTIVE_V9_GOOGLE_AGENDA_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-executive-v9-google-agenda-candidate-20261002/",
+      "gains": [
+        "Google Calendar como fonte oficial de compromissos",
+        "conciliação Trello/GestãoClick"
+      ],
+      "losses": [],
+      "note": "V9 é pacote de Agenda Google sobre a cadeia executiva; não contém sozinha todos os refinamentos posteriores."
+    },
+    {
+      "id": "exec-v10",
+      "product": "executive",
+      "name": "Executiva V10 Executive Model",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "exec-v9",
+      "commit": "987014fa463c8fbb398241a4b57d27fe70a2f8a4",
+      "branch": "",
+      "checkpoint": "CHECKPOINT_V10_MENU_FIXED_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-executive-v10-menu-fixed-candidate-20261002/",
+      "gains": [
+        "layout executivo",
+        "KPIs",
+        "ações prioritárias",
+        "saúde técnica",
+        "esteira F00→F09",
+        "menu corrigido"
+      ],
+      "losses": [],
+      "note": "Mantém o script da V9 Google Agenda e adiciona modelo executivo V10."
+    },
+    {
+      "id": "exec-v11",
+      "product": "executive",
+      "name": "Executiva V11 Premium Detail",
+      "date": "2026-10-03",
+      "status": "candidate",
+      "parent": "exec-v10",
+      "commit": "52b6833cd60bc6541ae30884e9d9edf5c17f6c38",
+      "branch": "",
+      "checkpoint": "CHECKPOINT_V11_PREMIUM_RESOLVED_20261003",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/central-executive-v11-premium-detail-candidate-20261003/",
+      "gains": [
+        "refinamento premium",
+        "correção de loop DOM",
+        "saúde da agenda ligada ao Google Calendar vivo"
+      ],
+      "losses": [],
+      "note": "Candidata superior da cadeia visual executiva; não é automaticamente a Central canônica."
+    },
+    {
+      "id": "app-official",
+      "product": "app",
+      "name": "APP Baseline Oficial 01/10",
+      "date": "2026-10-01",
+      "status": "canonical",
+      "parent": "APP anterior",
+      "commit": "",
+      "branch": "",
+      "checkpoint": "FINAL_CHECKPOINT_APP_CONSTRUREI_20261001",
+      "url": "",
+      "gains": [
+        "baseline única oficial",
+        "proteção arquitetural",
+        "política forward-only"
+      ],
+      "losses": [],
+      "note": "production/app-canonical-20261001/index.html; futuras mudanças devem ocorrer em candidatas isoladas."
+    },
+    {
+      "id": "app-v9",
+      "product": "app",
+      "name": "APP V9 Reconciliação",
+      "date": "2026-10-02",
+      "status": "candidate",
+      "parent": "app-official",
+      "commit": "6981717971251f444c581d388da68cbc0b913ae8",
+      "branch": "cr-app-gabi-v9-reconciliation-ui-20261002",
+      "checkpoint": "CHECKPOINT_APP_GABI_V9_RECONCILIATION_20261002",
+      "url": "",
+      "gains": [
+        "reconciliação incremental"
+      ],
+      "losses": [],
+      "note": "Candidata incremental do APP."
+    },
+    {
+      "id": "app-v11",
+      "product": "app",
+      "name": "APP V11 F01 CRM / Mobile",
+      "date": "2026-10-03",
+      "status": "candidate",
+      "parent": "app-v9",
+      "commit": "ae2e8e9e17f4a1b2d63af4a845c1749f3800c51f",
+      "branch": "cr-app-f01-ux-v11-mobile-fix-20261002",
+      "checkpoint": "CHECKPOINT_APP_GABI_V11_ATENDIMENTO_GABRIELLY_20261003",
+      "url": "",
+      "gains": [
+        "F01 orientado à próxima ação",
+        "foco mobile",
+        "normalização de rótulos"
+      ],
+      "losses": [],
+      "note": "Mantém o motor V9 do APP e evolui UX do F01."
+    },
+    {
+      "id": "flows-01",
+      "product": "flows",
+      "name": "F00→F09 Canônico",
+      "date": "2026-10-01",
+      "status": "canonical",
+      "parent": "previews individuais F00→F09",
+      "commit": "11df60c4866aa6bd946e6dedee0f1b4512b80246",
+      "branch": "cr-full-flow-f00-f09-central-promotion-20261001",
+      "checkpoint": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
+      "url": "",
+      "gains": [
+        "produto operacional único",
+        "namespace canônico",
+        "shell compartilhado"
+      ],
+      "losses": [],
+      "note": "Checkpoint determina não reconstruir fases individualmente e não misturar versões históricas."
+    },
+    {
+      "id": "presentation-20p",
+      "product": "presentation",
+      "name": "Apresentação Executiva Viva 20p",
+      "date": "2026-10-02",
+      "status": "canonical",
+      "parent": "presentation-38p",
+      "commit": "93816fbe52ecba8270a732cb80b3a20b05621888",
+      "branch": "cr-presentation-executive-viva-canonical-20261002",
+      "checkpoint": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/presentation.html?rev=93816fbe",
+      "gains": [
+        "20 páginas executivas",
+        "Radar Macro",
+        "dados vivos",
+        "PDF",
+        "PowerPoint",
+        "auto-years"
+      ],
+      "losses": [],
+      "note": "Homologada, canônica e congelada."
+    },
+    {
+      "id": "presentation-38p",
+      "product": "presentation",
+      "name": "Apresentação histórica 38p",
+      "date": "2026-09-30",
+      "status": "archived",
+      "parent": "",
+      "commit": "",
+      "branch": "",
+      "checkpoint": "CHECKPOINT_PRE_PRESENTATION_EXECUTIVE_CANONICAL_PROMOTION_20261002",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/archive/presentation-live-38p-20260930/",
+      "gains": [
+        "rollback histórico"
+      ],
+      "losses": [
+        "não é corrente"
+      ],
+      "note": "Somente rollback histórico; não usar como base de evolução."
+    }
+  ],
+  "checkpoints": [
+    {
+      "name": "CHECKPOINT_CENTRAL_CANONICAL_APPROVED_20261001",
+      "date": "2026-10-01",
+      "commit": "92ef8f27d71ac176abc6452df165a048c4405d60",
+      "role": "Central oficial aprovada"
+    },
+    {
+      "name": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
+      "date": "2026-10-01",
+      "commit": "11df60c4866aa6bd946e6dedee0f1b4512b80246",
+      "role": "Esteira F00→F09 canônica"
+    },
+    {
+      "name": "CHECKPOINT_APP_CANONICAL_PROMOTED_20261001",
+      "date": "2026-10-01",
+      "commit": "4f29a684d80bbb2f945936d4b6444e81418b0d7a",
+      "role": "APP baseline oficial"
+    },
+    {
+      "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V6_APPROVED_20261002",
+      "date": "2026-10-02",
+      "commit": "43edad3801f5e38cf2604b82dc45be33aff3bc29",
+      "role": "Baseline executiva V6 aprovada"
+    },
+    {
+      "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V7_AGENDA_BRIDGE_20261002",
+      "date": "2026-10-02",
+      "commit": "1ac6a831db51ffd0eb2103e3866e531bedea6ae3",
+      "role": "Agenda Bridge V7"
+    },
+    {
+      "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V8_LIVE_AGENDA_20261002",
+      "date": "2026-10-02",
+      "commit": "caeb85fd5eb747911ab071c57ad2801542d25b61",
+      "role": "Agenda Viva V8"
+    },
+    {
+      "name": "CHECKPOINT_CR_EXECUTIVE_V9_GOOGLE_AGENDA_20261002",
+      "date": "2026-10-02",
+      "commit": "773cfe0a0dc52b6e8e2b297385e90cb6b2550eb7",
+      "role": "Google Agenda V9"
+    },
+    {
+      "name": "CHECKPOINT_V10_EXECUTIVE_MODEL_CANDIDATE_20261002",
+      "date": "2026-10-02",
+      "commit": "16de62fd1b273b380891681f71db94b50641375c",
+      "role": "Executive Model V10"
+    },
+    {
+      "name": "CHECKPOINT_V10_MENU_FIXED_20261002",
+      "date": "2026-10-02",
+      "commit": "987014fa463c8fbb398241a4b57d27fe70a2f8a4",
+      "role": "V10 menu corrigido"
+    },
+    {
+      "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002",
+      "date": "2026-10-02",
+      "commit": "08079cca98673fd505777a99675e6091021adb46",
+      "role": "Apresentação Viva canônica"
+    },
+    {
+      "name": "CHECKPOINT_V11_PREMIUM_RESOLVED_20261003",
+      "date": "2026-10-03",
+      "commit": "52b6833cd60bc6541ae30884e9d9edf5c17f6c38",
+      "role": "V11 Premium candidata resolvida"
+    },
+    {
+      "name": "CHECKPOINT_APP_GABI_V11_ATENDIMENTO_GABRIELLY_20261003",
+      "date": "2026-10-03",
+      "commit": "ae2e8e9e17f4a1b2d63af4a845c1749f3800c51f",
+      "role": "APP V11 atendimento/F01"
+    }
+  ],
+  "fronts": [
+    {
+      "id": "front-gestor-v1",
+      "name": "Gestor do Projeto CONSTRU-REI — V1",
+      "status": "completed",
+      "priority": "P0",
+      "objective": "Entregar o cockpit visual que organiza memória, versões, decisões, frentes e direção do projeto.",
+      "progress": 100,
+      "owner": "CR Assertivo + Bio",
+      "last_advance": "V1.1.1 promovida a canônica homologada por decisão explícita do proprietário; continuidade/backup permanece como P0 aberto.",
+      "next_action": "Validar PWA instalado em notebook/celular e tratar P0 de continuidade/backup sem reabrir o redesign do Gestor.",
+      "dependency": "P0 de continuidade/backup e validação pós-promoção do PWA instalado.",
+      "blocked": false,
+      "age_days": 0
+    },
+    {
+      "id": "front-central-exec",
+      "name": "Central Executiva V9→V11",
+      "status": "completed",
+      "priority": "P1",
+      "objective": "Consolidar qual candidata executiva deve seguir para homologação sem confundir pacote V9 com cadeia V10/V11.",
+      "progress": 100,
+      "owner": "CR Assertivo",
+      "last_advance": "Central Executiva/Agenda homologada explicitamente pelo proprietário em 04/10/2026.",
+      "next_action": "Somente monitoramento antirregressão.",
+      "dependency": "Nenhuma",
+      "blocked": false,
+      "age_days": 0
+    },
+    {
+      "id": "front-app-f01",
+      "name": "APP — F01 CRM action-first",
+      "status": "queue",
+      "priority": "P1",
+      "objective": "Evoluir atendimento/F01 sem romper baseline oficial do APP.",
+      "progress": 70,
+      "owner": "CR Assertivo",
+      "last_advance": "V11 mobile/foco F01 criada.",
+      "next_action": "Retomar somente após fechar uma vaga de execução.",
+      "dependency": "Limite de duas frentes.",
+      "blocked": false,
+      "age_days": 1
+    },
+    {
+      "id": "front-academy",
+      "name": "Academy — revisão visual e conteúdo",
+      "status": "queue",
+      "priority": "P2",
+      "objective": "Revisar consistência e versão do conteúdo.",
+      "progress": 15,
+      "owner": "Bio + CR Assertivo",
+      "last_advance": "Reclassificada em 04/10/2026 como backlog sem ação do Rogério.",
+      "next_action": "Auditar quando houver vaga; não abrir terceira frente.",
+      "dependency": "Fila / limite de 2 frentes",
+      "blocked": false,
+      "age_days": 2
+    },
+    {
+      "id": "front-docs",
+      "name": "Documentação — consistência visual",
+      "status": "queue",
+      "priority": "P2",
+      "objective": "Revisar consistência visual sem alterar conteúdo canônico.",
+      "progress": 25,
+      "owner": "A definir",
+      "last_advance": "Auditoria visual registrada.",
+      "next_action": "Retomar após frentes prioritárias.",
+      "dependency": "Fila",
+      "blocked": false,
+      "age_days": 2
+    }
+  ],
+  "decisions": [
+    {
+      "id": "d1",
+      "date": "2026-10-01",
+      "title": "Central canônica protegida",
+      "status": "confirmed",
+      "decision": "Evoluções devem ocorrer em candidata isolada; canônica não é ambiente de teste.",
+      "reason": "Evitar regressões e permitir rollback objetivo.",
+      "impact": [
+        "central",
+        "executive",
+        "app",
+        "flows"
+      ],
+      "evidence": "Checkpoint/branches canônicos do repositório."
+    },
+    {
+      "id": "d2",
+      "date": "2026-10-01",
+      "title": "F00→F09 como produto único",
+      "status": "confirmed",
+      "decision": "A jornada completa é uma única fonte canônica; não reconstruir fases individualmente.",
+      "reason": "Evitar mistura de versões históricas e divergência de shell.",
+      "impact": [
+        "flows",
+        "app",
+        "central"
+      ],
+      "evidence": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001."
+    },
+    {
+      "id": "d3",
+      "date": "2026-10-02",
+      "title": "Apresentação Viva 20p é canônica",
+      "status": "confirmed",
+      "decision": "20 páginas, Radar Macro, PDF + PowerPoint e dados vivos formam a baseline corrente.",
+      "reason": "Homologação explícita e checkpoint de promoção.",
+      "impact": [
+        "presentation"
+      ],
+      "evidence": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002."
+    },
+    {
+      "id": "d4",
+      "date": "2026-10-03",
+      "title": "Gestor do Projeto acima da Central",
+      "status": "confirmed",
+      "decision": "Gestor passa a ser camada de governança; Central e demais módulos são produtos gerenciados.",
+      "reason": "Retirar dependência da memória humana e organizar direção/entrega.",
+      "impact": [
+        "gestor",
+        "central",
+        "app",
+        "executive"
+      ],
+      "evidence": "Decisão explícita do Rogério nesta frente."
+    },
+    {
+      "id": "d5",
+      "date": "2026-10-03",
+      "title": "Limite de duas frentes ativas",
+      "status": "confirmed",
+      "decision": "Terceira demanda entra em fila até conclusão, pausa formal ou encerramento de uma frente.",
+      "reason": "Reduzir dispersão e aumentar taxa de entrega.",
+      "impact": [
+        "gestor"
+      ],
+      "evidence": "Regra de governança aprovada para o Gestor."
+    },
+    {
+      "id": "d6",
+      "date": "2026-10-03",
+      "title": "Gestor V1 evolui no mesmo link com checkpoint preservado",
+      "status": "confirmed",
+      "decision": "Não criar uma sucessão desnecessária de links para esta evolução; preservar a V1 anterior em checkpoint e desenvolver o mesmo endereço como Gestor Vivo.",
+      "reason": "Reduzir dispersão, manter acesso imediato e preservar rollback verificável.",
+      "impact": [
+        "gestor"
+      ],
+      "evidence": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003"
+    },
+    {
+      "id": "d7",
+      "date": "2026-10-03",
+      "title": "Pendências do projeto são objetos vivos",
+      "status": "confirmed",
+      "decision": "Medição, idade, prioridade, próxima ação e conclusão devem ser calculadas/atualizadas sem depender da memória ou edição manual do Owner.",
+      "reason": "Evitar projetos-monstro, pendências esquecidas e itens já concluídos ainda tratados como abertos.",
+      "impact": [
+        "gestor"
+      ],
+      "evidence": "Decisão explícita do Rogério em 03/10/2026."
+    },
+    {
+      "id": "d8",
+      "date": "2026-10-03",
+      "title": "Gestor assume a marca oficial do APP CONSTRU-REI",
+      "status": "confirmed",
+      "decision": "O Gestor do Projeto usa a logo oficial do APP CONSTRU-REI como marca visual do ecossistema, mantendo o Gestor como camada superior do proprietário e a Central/APP como camada operacional.",
+      "reason": "Eliminar divergência visual e deixar explícita a ligação exclusiva do projeto ao APP CONSTRU-REI.",
+      "impact": [
+        "gestor",
+        "pwa",
+        "central-gateway"
+      ],
+      "evidence": "Logo oficial incorporada ao mesmo PWA em 03/10/2026."
+    }
+  ],
+  "demands": [
+    {
+      "id": "q1",
+      "title": "Conectar Banco Mestre persistente ao Gestor",
+      "state": "approved_queue",
+      "priority": "P1",
+      "note": "Somente depois da validação visual/arquitetural da V1."
+    },
+    {
+      "id": "q2",
+      "title": "Automatizar ingestão de branches/commits/checkpoints",
+      "state": "analysis",
+      "priority": "P1",
+      "note": "Transformar auditoria manual inicial em atualização viva."
+    },
+    {
+      "id": "q3",
+      "title": "Modo apresentação executivo do Gestor",
+      "state": "executing",
+      "priority": "P0",
+      "note": "Incluído na V1."
+    },
+    {
+      "id": "q4",
+      "title": "Comparador automático de versões",
+      "state": "approved_queue",
+      "priority": "P1",
+      "note": "Comparar ganho/perda e risco antes de homologar candidata."
+    }
+  ],
+  "milestones": [
+    {
+      "date": "2026-09-29",
+      "type": "recovery",
+      "title": "Recuperação/canonização da Central",
+      "detail": "Branches central-canonical-recovered-20260929 e central-canonical-afternoon-20260929 registram fase de recuperação.",
+      "confidence": "verified_branch"
+    },
+    {
+      "date": "2026-09-30",
+      "type": "identity",
+      "title": "Retorno à identidade azul canônica",
+      "detail": "Branch cr-blue-canonical-option-b-20260930 e checkpoints de identidade registram retomada visual.",
+      "confidence": "verified_branch"
+    },
+    {
+      "date": "2026-10-01",
+      "type": "canonical",
+      "title": "Central canônica aprovada",
+      "detail": "Checkpoint/branch apontam para commit 92ef8f27…",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-01",
+      "type": "canonical",
+      "title": "F00→F09 homologado como um único produto",
+      "detail": "Namespace production/flow-canonical-20261001 e checkpoint de homologação.",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-01",
+      "type": "canonical",
+      "title": "APP oficial consolidado",
+      "detail": "Baseline única protegida por política forward-only.",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "version",
+      "title": "Executiva V6 aprovada",
+      "detail": "Baseline executiva congelada no commit 43edad38…",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "integration",
+      "title": "V7/V8 evoluem Agenda",
+      "detail": "Agenda Bridge e Agenda Viva com Trello + GestãoClick.",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "integration",
+      "title": "V9 incorpora Google Agenda",
+      "detail": "Google Calendar passa a compor a cadeia executiva.",
+      "confidence": "verified_commit"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "version",
+      "title": "V10 cria modelo executivo",
+      "detail": "KPIs, ações prioritárias, saúde técnica, esteira e refinamento do menu.",
+      "confidence": "verified_commit"
+    },
+    {
+      "date": "2026-10-02",
+      "type": "canonical",
+      "title": "Apresentação Executiva Viva homologada",
+      "detail": "20 páginas, Radar Macro, dados vivos, PDF e PowerPoint.",
+      "confidence": "verified"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "version",
+      "title": "V11 Premium Detail",
+      "detail": "Refinamento premium e correções da Agenda viva.",
+      "confidence": "verified_commit"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "governance",
+      "title": "Nasce o Gestor do Projeto",
+      "detail": "Projeto passa a ter cockpit superior de governança e memória.",
+      "confidence": "explicit_decision"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "governance",
+      "title": "Gestor V1 passa a Gestão Viva no mesmo link",
+      "detail": "Checkpoint anterior preservado; entram Radar de Pendências, envelhecimento, ações do Owner e Histórico Vivo indexado por referências leves.",
+      "confidence": "explicit_decision"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "governance",
+      "title": "Marca oficial APP CONSTRU-REI incorporada ao Gestor",
+      "detail": "Sidebar, cabeçalho, acesso à Central e ícone do PWA passam a usar a mesma fonte oficial de marca.",
+      "confidence": "verified_commit"
+    },
+    {
+      "date": "2026-10-03",
+      "type": "promotion",
+      "title": "Gestor V1.1.1 promovido a canônico homologado",
+      "detail": "Promoção autorizada explicitamente pelo proprietário. O mesmo PWA/endereço foi preservado; backup/continuidade e validações do PWA instalado permanecem abertas.",
+      "confidence": "owner_homologated"
+    }
+  ],
+  "recoverables": [
+    {
+      "id": "rec1",
+      "title": "Apresentação histórica 38 páginas",
+      "status": "archived_safe",
+      "existed_in": "archive/presentation-live-38p-20260930",
+      "disappeared": "Substituída pela canônica 20p",
+      "value": "Rollback histórico e comparação de conteúdo.",
+      "recommendation": "Não restaurar como corrente; usar somente para recuperação pontual/consulta.",
+      "risk": "high_if_promoted"
+    },
+    {
+      "id": "rec2",
+      "title": "Agenda Viva V8 baseada em Trello",
+      "status": "superseded",
+      "existed_in": "Executiva V8",
+      "disappeared": "Evolução para Google Agenda V9",
+      "value": "Referência técnica de conciliação Trello/GestãoClick.",
+      "recommendation": "Preservar como alternativa histórica; não substituir Google Agenda sem decisão explícita.",
+      "risk": "medium"
+    },
+    {
+      "id": "rec3",
+      "title": "Google Meet embutido na Central",
+      "status": "unconfirmed",
+      "existed_in": "Relato de validações anteriores",
+      "disappeared": "Não confirmado no levantamento inicial do repositório",
+      "value": "Possível função útil para reuniões dentro da Central.",
+      "recommendation": "Localizar evidência técnica antes de classificar como recuperável.",
+      "risk": "unknown"
+    }
+  ],
+  "decision_readiness": {
+    "title": "Homologar uma candidata executiva acima da V6",
+    "checks": [
+      {
+        "label": "Última baseline aprovada identificada",
+        "done": true
+      },
+      {
+        "label": "Cadeia V9→V10→V11 identificada",
+        "done": true
+      },
+      {
+        "label": "Produção oficial preservada",
+        "done": true
+      },
+      {
+        "label": "Validação comparativa humana da candidata final",
+        "done": false
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "priority": "P0",
+      "title": "Validar o Gestor V1 antes de abrir novas frentes",
+      "rationale": "O próprio mecanismo de governança precisa virar fonte de orientação antes de ampliar o volume de desenvolvimento."
+    },
+    {
+      "priority": "P1",
+      "title": "Não promover V11 só por ser numericamente mais nova",
+      "rationale": "V11 é candidata da cadeia executiva; a Central oficial continua protegida até homologação explícita."
+    },
+    {
+      "priority": "P1",
+      "title": "Transformar esta auditoria estática em ingestão automática",
+      "rationale": "Depois da validação visual, branches, commits e checkpoints devem alimentar o Banco Mestre sem atualização manual."
+    }
+  ],
+  "unconfirmed": [
+    "Histórico anterior às evidências localizadas no repositório em 29/09/2026 ainda não foi reconstruído nesta V1.",
+    "Motivos detalhados de todas as versões históricas não estão documentados em um único artefato; devem ser enriquecidos por checkpoints e conversas antigas.",
+    "Google Meet embutido: existência funcional anterior foi relatada, mas a implementação exata ainda precisa ser localizada no repositório.",
+    "Alguns branches/checkpoints possuem nomes claros, porém ainda não tiveram seu conteúdo documental individual lido nesta primeira carga."
+  ],
+  "repository_audit": {
+    "total_branches": 201,
+    "checkpoint_branches": 99,
+    "central_branches": 45,
+    "app_branches": 47,
+    "presentation_branches": 14,
+    "candidate_branches": 45,
+    "canonical_branches": 52,
+    "approved_or_homologated_branches": 26,
+    "v9_refs": 7,
+    "v10_refs": 5,
+    "v11_refs": 8,
+    "base_main_commit": "aa693dea4b809a24ea01649b1f88525c2af077d5",
+    "warnings": [
+      {
+        "severity": "attention",
+        "ref": "CHECKPOINT_V9_GOOGLE_AGENDA_VALIDATED_20261003",
+        "title": "Checkpoint V9 validado apresenta deriva de ponteiro",
+        "detail": "O ref atualmente aponta para ae2e8e9… (APP V11 mobile), enquanto os checkpoints técnicos dedicados da Executiva V9 permanecem em 773cfe0… (Google Agenda), 88e106c… (service secret) e 377e112… (sidebar refinada). Não usar o nome VALIDATED isoladamente como evidência da V9 até saneamento."
+      },
+      {
+        "severity": "attention",
+        "ref": "governança",
+        "title": "Volume histórico exige fonte de verdade explícita",
+        "detail": "A auditoria encontrou 197 branches e 95 refs com nome de checkpoint. O Gestor passa a resumir o estado corrente sem apagar a trilha histórica."
+      }
+    ]
+  },
+  "operating_principles": [
+    "Se uma informação depende da memória do Rogério para continuar existindo, a gestão está incompleta.",
+    "Toda pendência do projeto precisa de fonte, estado, prioridade, última movimentação, próximo passo, dependência e critério objetivo de conclusão.",
+    "Medição e envelhecimento são automáticos; ação humana só aparece quando realmente exige decisão do Owner.",
+    "Concluído precisa ser detectável e permanecer no histórico, não desaparecer.",
+    "Histórico é referência leve: links, branches, commits, checkpoints e decisões — arquivos pesados ficam na origem.",
+    "Máximo de 2 frentes em execução simultaneamente; fila não consome capacidade."
+  ],
+  "project_pending": [
+    {
+      "id": "PM-01",
+      "title": "Central Executiva + Agenda + indicadores",
+      "domain": "Central",
+      "priority": "P0",
+      "state": "completed",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-04",
+      "next_action": "Homologação concluída; manter monitoramento antirregressão sem reabrir a frente.",
+      "dependency": "Nenhuma pendência de homologação",
+      "source": "Homologação explícita do proprietário em 04/10/2026 + cadeia executiva/Agenda validada",
+      "close_when": "Concluído — homologação explícita registrada.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-02",
+      "title": "APP Atendimento Gabrielly / F01",
+      "domain": "APP",
+      "priority": "P1",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-03",
+      "next_action": "Retomar F01 action-first sem romper a baseline oficial do APP.",
+      "dependency": "Vaga de execução",
+      "source": "CHECKPOINT_APP_GABI_V11_ATENDIMENTO_GABRIELLY_20261003",
+      "close_when": "Fluxo F01 validado em mobile/desktop e checkpoint homologado.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-03",
+      "title": "F00→F09 / coerência F00→F01",
+      "domain": "Fluxos",
+      "priority": "P1",
+      "state": "review",
+      "owner": "Bio + CR Assertivo",
+      "last_movement": "2026-10-02",
+      "next_action": "Auditar transição F00→F01 e manter jornada canônica única, sem links externos quebrando o atendimento.",
+      "dependency": "Evidência funcional da esteira",
+      "source": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
+      "close_when": "Transição ponta a ponta revisada e sem regressão do namespace canônico.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-04",
+      "title": "Banco Mestre / Gestor do Projeto vivo",
+      "domain": "Gestor",
+      "priority": "P0",
+      "state": "completed",
+      "owner": "Bio + CR Assertivo",
+      "last_movement": "2026-10-04",
+      "next_action": "Manter o Gestor vivo e atualizar o Banco Mestre por evidência.",
+      "dependency": "Nenhuma para operação atual",
+      "source": "Gestor V1.1.1 canônico homologado e operacional em 04/10/2026",
+      "close_when": "Concluído — Gestor canônico operacional.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-05",
+      "title": "Pendências Vivas — histórico e edição controlada",
+      "domain": "Gestor",
+      "priority": "P1",
+      "state": "review",
+      "owner": "Bio",
+      "last_movement": "2026-10-02",
+      "next_action": "Manter histórico de mudanças, conclusão detectável e trilha de decisões.",
+      "dependency": "Banco Mestre",
+      "source": "CHECKPOINT_PENDENCIAS_VIVAS_V2_CANDIDATE_20261002",
+      "close_when": "Cada pendência possuir ciclo detecta→mede→propõe→acompanha→fecha com histórico.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-06",
+      "title": "Hoje na Operação com dados reais",
+      "domain": "Central",
+      "priority": "P1",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-02",
+      "next_action": "Consolidar Serviços em Andamento, Aguardando Pagamento, Visitas, Orçamentos, Agenda de amanhã e Pendências de ontem com fontes reais.",
+      "dependency": "Fontes operacionais confiáveis",
+      "source": "cr-hoje-operacao-candidate-20261001",
+      "close_when": "Cards executivos refletem dados reais, clicáveis e rastreáveis até a origem.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-07",
+      "title": "GestãoClick + Agenda + Trello — fontes vivas",
+      "domain": "Integrações",
+      "priority": "P1",
+      "state": "completed",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-04",
+      "next_action": "Manter monitoramento das fontes e tratar somente regressões novas.",
+      "dependency": "Nenhuma pendência de homologação",
+      "source": "Homologação explícita do proprietário em 04/10/2026 + evidência técnica Google Calendar/Trello/GestãoClick",
+      "close_when": "Concluído — fontes vivas homologadas.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-08",
+      "title": "Saúde Técnica real",
+      "domain": "Desenvolvimento",
+      "priority": "P1",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-02",
+      "next_action": "Exibir telemetria de API, banco, integrações, latência, última verificação, ambiente e versão.",
+      "dependency": "Endpoints de saúde/telemetria",
+      "source": "Desenvolvimento / Saúde Técnica",
+      "close_when": "Saúde deixa de ser decoração e passa a refletir sinais reais com timestamp.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-09",
+      "title": "Financeiro / Acertos",
+      "domain": "Financeiro",
+      "priority": "P1",
+      "state": "completed",
+      "owner": "Bio + financeiro",
+      "last_movement": "2026-10-04",
+      "next_action": "Operação mantida; divergência histórica fica apenas como auditoria de legado, sem bloquear o módulo.",
+      "dependency": "Nenhuma para operação corrente",
+      "source": "Validação explícita do proprietário em 04/10/2026: Financeiro/Acertos funcionando muito bem",
+      "close_when": "Concluído para operação corrente; auditoria histórica não bloqueante.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-10",
+      "title": "Acessos / Meeting / Documentação / Base Técnica",
+      "domain": "Base Técnica",
+      "priority": "P2",
+      "state": "review",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-02",
+      "next_action": "Revisar acessos principais, Meeting e documentação sem criar duplicidade de links.",
+      "dependency": "Inventário técnico",
+      "source": "Base Técnica / Documentação",
+      "close_when": "Acessos essenciais testados, documentação coerente e referências estáveis.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-11",
+      "title": "Homologação notebook + celular",
+      "domain": "Qualidade",
+      "priority": "P1",
+      "state": "review",
+      "owner": "Rogério + CR Assertivo",
+      "last_movement": "2026-10-03",
+      "next_action": "Executar validação comparativa somente quando a candidata estiver pronta, evitando microvalidações constantes.",
+      "dependency": "Candidata estabilizada",
+      "source": "Regra de homologação do projeto",
+      "close_when": "Mesmo comportamento essencial validado em notebook e celular com checkpoint.",
+      "human_action": true,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-12",
+      "title": "Identidade visual / acabamento premium da Central",
+      "domain": "Visual",
+      "priority": "P2",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-03",
+      "next_action": "Preservar azul canônico, botões, hierarquia, legibilidade e responsividade sem redesenhar a lógica.",
+      "dependency": "Base funcional estável",
+      "source": "cr-blue-canonical-option-b-20260930",
+      "close_when": "Identidade consistente nos módulos prioritários sem regressão funcional.",
+      "human_action": false,
+      "provenance": "legacy_recovered"
+    },
+    {
+      "id": "PM-13",
+      "title": "Academy — revisão visual e conteúdo",
+      "domain": "Academy",
+      "priority": "P2",
+      "state": "queue",
+      "owner": "Bio + CR Assertivo",
+      "last_movement": "2026-10-04",
+      "next_action": "Backlog sem ação do Rogério; auditar conteúdo/visual somente quando houver vaga, sem abrir terceira frente.",
+      "dependency": "Backlog / limite de 2 frentes",
+      "source": "Reclassificação de governança em 04/10/2026",
+      "close_when": "Conteúdo e apresentação revisados, versionados e aprovados.",
+      "human_action": false,
+      "provenance": "current_explicit"
+    },
+    {
+      "id": "PM-14",
+      "title": "Memorial histórico / genealogia completa do projeto",
+      "domain": "Histórico",
+      "priority": "P1",
+      "state": "in_progress_support",
+      "owner": "Bio + Gestor",
+      "last_movement": "2026-10-03",
+      "next_action": "Indexar automaticamente branches/checkpoints/commits e organizar por produto, data e papel.",
+      "dependency": "Repositório e conversas históricas verificáveis",
+      "source": "GitHub + decisões registradas",
+      "close_when": "Cobertura histórica navegável e mensurada, com itens sem evidência explicitamente marcados.",
+      "human_action": false,
+      "provenance": "current_explicit"
+    },
+    {
+      "id": "PM-15",
+      "title": "Reconciliação dos 3 itens legados ainda sem nome seguro",
+      "domain": "Banco Mestre legado",
+      "priority": "P2",
+      "state": "queue",
+      "owner": "Bio",
+      "last_movement": "2026-10-04",
+      "next_action": "Reconciliação técnica automática do legado; se não houver evidência documental dos 3 itens, remover a inconsistência sem inventar pendências.",
+      "dependency": "Evidência histórica verificável",
+      "source": "Reclassificação técnica do Banco Mestre em 04/10/2026",
+      "close_when": "Os 3 nomes, origens e critérios originais forem recuperados com evidência.",
+      "human_action": false,
+      "provenance": "legacy_unconfirmed"
+    },
+    {
+      "id": "PM-16",
+      "title": "Continuidade — restore integral em ambiente descartável",
+      "domain": "Infraestrutura",
+      "priority": "P1",
+      "state": "review",
+      "owner": "Bio + CR Assertivo",
+      "last_movement": "2026-10-04",
+      "next_action": "Executar reconstrução integral do PostgreSQL em destino isolado/descartável e registrar evidência; produção e Cofre Zero intocados.",
+      "dependency": "Destino PostgreSQL isolado/descartável",
+      "source": "RESTORE_DRILL_20261004.txt — DB checksums PASS 3/3; Storage 4526; restore remoto amostral PASS 3/3",
+      "close_when": "Banco integral restaurado em ambiente descartável, validado e ambiente de teste removido.",
+      "human_action": false,
+      "provenance": "current_explicit"
+    }
+  ],
+  "history_catalog": {
+    "snapshot_at": "2026-10-03",
+    "repository": "rogeriocibin-alt/construrei-oauth-pages",
+    "total_refs": 201,
+    "earliest_date": "2026-09-27",
+    "latest_date": "2026-10-03",
+    "by_kind": {
+      "checkpoint": 99,
+      "safety": 13,
+      "candidate": 23,
+      "canonical": 31,
+      "development": 31,
+      "recovery": 3,
+      "main": 1
+    },
+    "by_product": {
+      "app": 47,
+      "executive": 23,
+      "central": 45,
+      "flows": 36,
+      "project": 35,
+      "presentation": 14,
+      "gestor": 1
+    },
+    "coverage_note": "Snapshot leve do repositório. O navegador tenta atualizar esta lista diretamente do GitHub ao abrir o Gestor; se a consulta falhar, usa este snapshot.",
+    "branches": [
+      {
+        "name": "CHECKPOINT_APP_CANDIDATE_CENTRAL_IDENTITY_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_CANONICAL_PROMOTED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_OPERATIONAL_HARDENING_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V8_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V9_RECONCILIATION_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V10_BEFORE_F01_UX_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V11_ATENDIMENTO_GABRIELLY_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V11_F01_CRM_UX_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_GABI_V11_PRE_MOBILE_FIX_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_OFFICIAL_CANDIDATE_FUSION_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_APP_VISUAL_ARCHITECTURE_LOCKED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_CANONICAL_APPROVED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V6_APPROVED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V7_AGENDA_BRIDGE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_EXECUTIVE_V8_LIVE_AGENDA_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_CENTRAL_SIDEBAR_HOMOLOGATED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_CHECKLIST_DASHBOARD_CANONICAL_FINAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_CR_EXECUTIVE_V9_GOOGLE_AGENDA_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_DASHBOARD_FULL_LIGHT_CANONICAL_FINAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_F00_INTEGRATED_CENTRAL_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F00_LOGIC_RECOVERY_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F00_SLOT_CANONICAL_PROMOTED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F01_CANONICAL_PROMOTED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F01_DELIVERY_FIXED_HOMOLOGATED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_F01_VISUAL_UNIFICATION_WITH_F00_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_FLOW_VISUAL_ARCHITECTURE_LOCKED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_GLOBAL_VISUAL_EQUALIZATION_FINAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_GLOBAL_VISUAL_NORMALIZED_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_HOMOLOGACAO_COLOR_MATCH_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_HOMOLOGACAO_LINK_REGISTRY_CANDIDATE_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_IDENTITY_VISUAL_CANONICAL_FINAL_GUARDED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_IDENTITY_VISUAL_CANONICAL_GUARDED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_IDENTITY_VISUAL_CANONICAL_HOMOLOGATED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_INTERNAL_UI_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_MISSAO_CENTRAL_ENCERRADA_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "CHECKPOINT_NO_REGRESSION_FLOW_LOCK_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PENDENCIAS_VIVAS_V2_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_POST_F00_SLOT_CANONICAL_FIX_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_POST_F01_CANONICAL_EVOLUTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_POST_F01_SINGLE_CANONICAL_DELIVERY_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_APP_APPROVED_PROMOTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "CHECKPOINT_PRE_CHECKLIST_DASHBOARD_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_PRE_DASHBOARD_FULL_LIGHT_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F00_SLOT_CANONICAL_FIX_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F01_CANONICAL_EVOLUTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F01_DELIVERY_FIX_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F01_SINGLE_CANONICAL_DELIVERY_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_F01_VISUAL_UNIFICATION_WITH_F00_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_FULL_FLOW_F00_F09_PROMOTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_GLOBAL_VISUAL_EQUALIZATION_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_GLOBAL_VISUAL_NORMALIZATION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_HOMOLOGACAO_COLOR_MATCH_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_HOMOLOGACAO_FINAL_PROMOTION_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_HOMOLOGACAO_FULL_LINK_REGISTRY_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_HOMOLOGACAO_UI_REFINEMENT_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_INTERNAL_UI_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_INTERNAL_UI_MAIN_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PRESENTATION_EXECUTIVE_CANONICAL_PROMOTION_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PRESENTATION_EXECUTIVE_REBUILD_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PRESENTATION_MACRO_PUBLISH_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PROMOTION_F00_SLOT_CANONICAL_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRE_PROMOTION_F01_CANONICAL_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_BEFORE_EXECUTIVE_REBUILD_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_MACRO_LIVE_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_V2_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_HOMOLOGADA_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "presentation"
+      },
+      {
+        "name": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PROJECT_MANAGER_V1_CANDIDATE_20261003_FINAL",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PROJECT_MANAGER_V1_CANDIDATE_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_PROJECT_MANAGER_V1_PUBLISHED_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "CHECKPOINT_V9_GOOGLE_AGENDA_READY_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V9_GOOGLE_AGENDA_VALIDATED_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V9_SIDEBAR_REFINED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V10_DENSITY_100PCT_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V10_EXECUTIVE_MODEL_CANDIDATE_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V10_MENU_FIXED_20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V11_PREMIUM_DETAIL_CANDIDATE_20261003_B",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V11_PREMIUM_DETAIL_CANDIDATE_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "CHECKPOINT_V11_PREMIUM_RESOLVED_20261003",
+        "date": "2026-10-03",
+        "kind": "checkpoint",
+        "product": "executive"
+      },
+      {
+        "name": "FINAL_CHECKPOINT_APP_CONSTRUREI_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "FINAL_CHECKPOINT_CONSTRUREI_FLOW_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "flows"
+      },
+      {
+        "name": "FINAL_CHECKPOINT_HOMOLOGACAO_CANONICAL_20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "backup/central-before-afternoon-restore-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "backup/central-before-recovery-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "backup/central-before-shell-repair-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "backup/central-call-pre-screenfix-20260928-1843",
+        "date": "2026-09-28",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "backup/meeting-pre-google-meet-restore-20260928",
+        "date": "2026-09-28",
+        "kind": "safety",
+        "product": "project"
+      },
+      {
+        "name": "candidate/central-performance-20260929",
+        "date": "2026-09-29",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "central-before-pagey-independence-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-canonical-afternoon-20260929",
+        "date": "2026-09-29",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "central-canonical-recovered-20260929",
+        "date": "2026-09-29",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "central-homologada-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "central-pre-external-quarantine-20260929-2158",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-pre-final-recovery-20260929",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-pre-restore-20260929-2140",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-pre-v2-menu-recovery-20260929-2250",
+        "date": "2026-09-29",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "central-recovery-candidate-20260929-2300",
+        "date": "2026-09-29",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/app-candidate-approved-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/app-gabi-pre-operational-hardening-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/app-pre-v766-recovery-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/app-pre-visual-canonical-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/central-mission-closed-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-official-pre-sidebar-distribution-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-pre-cirurgical-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-pre-menu-canonical-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-pre-sidebar-refinement-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/central-sidebar-refinement-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "checkpoint/pre-app-central-identity-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint/pre-app-official-candidate-fusion-20261002",
+        "date": "2026-10-02",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "checkpoint-pre-identity-20260930",
+        "date": "2026-09-30",
+        "kind": "checkpoint",
+        "product": "central"
+      },
+      {
+        "name": "cr-app-approved-promotion-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-audited-central-alignment-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-baseline-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-candidate-central-identity-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-canonical-locked-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-canonical-real-identity-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-f01-embedded-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-f01-ux-v11-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-f01-ux-v11-mobile-fix-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-final-checkpoint-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-functional-next-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-gabi-engine-v8-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-gabi-operational-hardening-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-gabi-v9-reconciliation-ui-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-identity-candidate-20260930",
+        "date": "2026-09-30",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-lock-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-new-central-identity-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-official-candidate-fusion-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-v766-functional-canonical-20260930",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-v766-visual-candidate-20260930",
+        "date": "2026-09-30",
+        "kind": "candidate",
+        "product": "app"
+      },
+      {
+        "name": "cr-app-visual-canonical-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-blue-canonical-option-b-20260930",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-central-canonical-approved-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-central-canonical-links-only-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-executive-v6-canonical-approved-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "cr-central-executive-v6-next-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-executive-v7-agenda-bridge-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-executive-v8-live-agenda-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-executive-v9-google-agenda-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-executive-v10-model-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-central-global-link-audit-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-next-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-official-router-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-responsive-final-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-sidebar-fill-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "cr-central-sidebar-refinement-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-docs-status-visual-canonical-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-executive-readonly-v4-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-executive-static-v5-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "executive"
+      },
+      {
+        "name": "cr-f00-central-integration-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f00-f09-canonical-ui-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f00-logic-recovery-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f00-slot-canonical-fix-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f01-canonical-evolution-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f01-canonical-promotion-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f01-single-canonical-delivery-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "flows"
+      },
+      {
+        "name": "cr-f01-visual-unification-with-f00-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-final-checkpoint-20261001",
+        "date": "2026-10-01",
+        "kind": "checkpoint",
+        "product": "project"
+      },
+      {
+        "name": "cr-flow-functional-next-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-flow-governance-lock-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-flow-no-regression-lock-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-flow-no-regression-locked-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-flow-visual-architecture-locked-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-full-flow-f00-f09-central-promotion-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-full-flow-next-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "flows"
+      },
+      {
+        "name": "cr-global-access-ui-canonical-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-global-visual-normalization-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "project"
+      },
+      {
+        "name": "cr-hoje-operacao-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "candidate",
+        "product": "project"
+      },
+      {
+        "name": "cr-home-canonical-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "cr-home-canonical-frozen-20260930",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "cr-home-reference-candidate-20260930",
+        "date": "2026-09-30",
+        "kind": "candidate",
+        "product": "central"
+      },
+      {
+        "name": "cr-home-reference-rebuild-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-home-sane-p0-20261001",
+        "date": "2026-10-01",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-homologacao-canonical-locked-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-homologacao-color-match-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-homologacao-final-promotion-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-homologacao-links-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-homologacao-ui-candidate-20261001",
+        "date": "2026-10-01",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-identity-canonical-20260930-v1",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "central"
+      },
+      {
+        "name": "cr-identity-reference-v2-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "cr-pendencias-vivas-candidate-20261002",
+        "date": "2026-10-02",
+        "kind": "candidate",
+        "product": "project"
+      },
+      {
+        "name": "cr-presentation-executive-macro-live-20261002",
+        "date": "2026-10-02",
+        "kind": "development",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-presentation-executive-viva-canonical-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-presentation-executive-viva-canonical-final-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-presentation-executive-viva-homologada-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-presentation-pre-executive-viva-promotion-20261002",
+        "date": "2026-10-02",
+        "kind": "safety",
+        "product": "presentation"
+      },
+      {
+        "name": "cr-project-manager-v1-candidate-20261003",
+        "date": "2026-10-03",
+        "kind": "candidate",
+        "product": "gestor"
+      },
+      {
+        "name": "cr-remaining-color-canonical-20261002",
+        "date": "2026-10-02",
+        "kind": "canonical",
+        "product": "project"
+      },
+      {
+        "name": "cr-v4-visual-equalization-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "project"
+      },
+      {
+        "name": "fix/app-v766-boot-sync-recovery-20260930",
+        "date": "2026-09-30",
+        "kind": "recovery",
+        "product": "app"
+      },
+      {
+        "name": "fix/app-v766-cloud-origin-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "app"
+      },
+      {
+        "name": "fix/app-visual-canonical-recovery-20260930",
+        "date": "2026-09-30",
+        "kind": "canonical",
+        "product": "app"
+      },
+      {
+        "name": "fix/central-call-media-decoupling-20260928",
+        "date": "2026-09-28",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "fix/central-menu-documentacao-unica-20260930",
+        "date": "2026-09-30",
+        "kind": "development",
+        "product": "central"
+      },
+      {
+        "name": "freeze/central-canonical-92ef8f27",
+        "date": "",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "freeze/central-renderer-golden-2026-09-27",
+        "date": "2026-09-27",
+        "kind": "safety",
+        "product": "central"
+      },
+      {
+        "name": "main",
+        "date": "",
+        "kind": "main",
+        "product": "project"
+      },
+      {
+        "name": "recovery/central-good-20260929",
+        "date": "2026-09-29",
+        "kind": "recovery",
+        "product": "central"
+      },
+      {
+        "name": "restore/presentation-live-38p-20260930",
+        "date": "2026-09-30",
+        "kind": "recovery",
+        "product": "presentation"
+      }
+    ]
+  },
+  "live_sources": [
+    {
+      "id": "github",
+      "name": "GitHub — branches/checkpoints/commits",
+      "mode": "direct_connector",
+      "status": "live",
+      "purpose": "Genealogia, versões, checkpoints e atualização do histórico."
+    },
+    {
+      "id": "project_data",
+      "name": "Snapshot versionado do Gestor",
+      "mode": "pwa_fallback",
+      "status": "live",
+      "purpose": "Fallback coerente/offline; não substitui persistência transacional."
+    },
+    {
+      "id": "supabase",
+      "name": "Persistência superior V1.1",
+      "mode": "internal_persistent_model",
+      "status": "live",
+      "purpose": "Auditorias, releases, fontes, reconciliações, métricas, automações e eventos; leitura pública não exposta."
+    }
+  ],
+  "owner_architecture": {
+    "updated_at": "2026-10-03",
+    "principle": "Um único PWA para o proprietário; a equipe continua operando pela Central.",
+    "owner_entry": "Gestor do Projeto CONSTRU-REI",
+    "team_entry": "Central CONSTRU-REI",
+    "rules": [
+      "O Gestor é a camada do proprietário/desenvolvedor e deve refletir o estado vivo dos produtos.",
+      "A Central permanece a camada operacional da equipe.",
+      "Nenhum produto pode evoluir sem sua versão, status ou evidência aparecer no Gestor.",
+      "Links operacionais vêm do registro canônico; não duplicar Central nem criar cópias paralelas.",
+      "Histórico e checkpoints permanecem preservados por referência, sem poluir a navegação diária."
+    ]
+  },
+  "owner_access": [
+    {
+      "id": "central",
+      "name": "Central CONSTRU-REI",
+      "kind": "Núcleo operacional",
+      "status": "canonical",
+      "access": "MASTER",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes",
+      "source": "centro-operacoes v274",
+      "description": "Ambiente operacional da equipe e porta de entrada para a operação."
+    },
+    {
+      "id": "app",
+      "name": "APP CONSTRU-REI",
+      "kind": "Aplicativo operacional",
+      "status": "canonical",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=app",
+      "source": "central-atendimento v151",
+      "description": "Aplicação operacional atual."
+    },
+    {
+      "id": "links_oficiais",
+      "name": "Links Oficiais",
+      "kind": "Governança de acessos",
+      "status": "canonical",
+      "access": "MASTER",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/links-oficiais/",
+      "source": "LINK-IDENTITY-V1.3-20261005",
+      "description": "Diretório mestre dos acessos homologados da CONSTRU-REI."
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard Gerencial",
+      "kind": "Gestão",
+      "status": "canonical",
+      "access": "MASTER",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=centro-comando",
+      "source": "runtime canônico / director_command",
+      "description": "Visão gerencial consolidada."
+    },
+    {
+      "id": "academy",
+      "name": "CONSTRU-REI Academy",
+      "kind": "Conhecimento",
+      "status": "review",
+      "access": "INTERNO",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=academy",
+      "source": "runtime canônico / academy",
+      "description": "Treinamento e conhecimento."
+    },
+    {
+      "id": "docs",
+      "name": "Documentação Viva",
+      "kind": "Conhecimento",
+      "status": "review",
+      "access": "CHAVE",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=docs",
+      "source": "centro-operacoes / knowledge",
+      "description": "Documentação e referência técnica."
+    },
+    {
+      "id": "presentation",
+      "name": "Apresentação Institucional",
+      "kind": "Conhecimento",
+      "status": "canonical",
+      "access": "INTERNO",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=presentation",
+      "source": "runtime canônico / presentation",
+      "description": "Apresentação viva do projeto."
+    },
+    {
+      "id": "health",
+      "name": "Saúde do Sistema",
+      "kind": "Tecnologia",
+      "status": "live",
+      "access": "INTERNO",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=health",
+      "source": "centro-operacoes",
+      "description": "Saúde e telemetria do ambiente."
+    },
+    {
+      "id": "f00",
+      "name": "F00 • Captador Inteligente",
+      "kind": "Esteira Operacional",
+      "status": "live",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f00",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f01",
+      "name": "F01 • Atendimento & Qualificação",
+      "kind": "Esteira Operacional",
+      "status": "live",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f01",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f02",
+      "name": "F02 • Cotação & Orçamento",
+      "kind": "Esteira Operacional",
+      "status": "live",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f02",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f03",
+      "name": "F03 • Proposta & Ordem de Serviço",
+      "kind": "Esteira Operacional",
+      "status": "live",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f03",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f04",
+      "name": "F04 • Agenda & Mobilização",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f04",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f05",
+      "name": "F05 • Materiais & Terceiros",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f05",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f06",
+      "name": "F06 • Campo & Evidências",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f06",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f07",
+      "name": "F07 • Qualidade, Aceite & Documentos",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f07",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f08",
+      "name": "F08 • NF, Cobrança & Resultado",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f08",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    },
+    {
+      "id": "f09",
+      "name": "F09 • Pós-venda & Garantia",
+      "kind": "Esteira Operacional",
+      "status": "homologation",
+      "access": "OPERACIONAL",
+      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f09",
+      "source": "central-atendimento v151",
+      "description": "Módulo da esteira operacional."
+    }
+  ],
+  "live_product_policy": {
+    "source_of_truth": "HOMOLOGACAO_LINK_REGISTRY_AUDIT_20261001.md + repositório GitHub",
+    "refresh_behavior": "O Gestor atualiza histórico do repositório automaticamente e exibe os destinos operacionais a partir do registro canônico incorporado.",
+    "anti_stale_rule": "Se um produto mudar e o Gestor não refletir a mudança, a entrega não deve ser considerada concluída.",
+    "owner_visibility": "Toda promoção, candidata, canônica, regressão, homologação e mudança de versão relevante precisa deixar evidência no Gestor."
+  },
+  "release_meta": {
+    "version": "1.1.1",
+    "build": "CR-PM-V1.1.1-C0-CANONICAL-20261003",
+    "environment": "canonical",
+    "status": "canonical",
+    "branch": "cr-project-manager-v1-1-1-canonical-approved-20261003",
+    "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
+    "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
+    "update_mode": "same_url_atomic_pwa_bundle",
+    "canonical_changed": true,
+    "promotion_gate": {
+      "decision": "PROMOTED_OWNER_APPROVED_WITH_OPEN_P0",
+      "reason": "Homologação explícita do proprietário; continuidade/backup e validação do PWA instalado permanecem abertas.",
+      "blockers": [
+        "C0-B01",
+        "C0-H01",
+        "C0-H02"
+      ],
+      "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_PRE_CANONICAL_PROMOTION_20261003",
+      "canonical_changed": true
+    },
+    "ui_commit_tested": "543d368635891b64b203df6badec0cda43dced9e",
+    "candidate_checkpoint": "CHECKPOINT_PM_V1_1_1_EXEC_DASH_20261003",
+    "last_tested_at": "2026-10-03T12:16:52-03:00"
+  },
+  "audits": [
+    {
+      "id": "AUD-001",
+      "number": 1,
+      "title": "Auditoria 001 — Project Manager CONSTRU-REI — V1 Gestão Viva",
+      "date": "2026-10-03",
+      "type": "external_product_governance_audit",
+      "product": "gestor",
+      "version": "V1",
+      "build": "c0f8298e",
+      "status": "implementation_planned",
+      "auditor": "Auditoria externa fornecida pelo proprietário",
+      "scope": "Gestão de projetos, governança de produto, operação, negócios, risco, automação e visibilidade executiva.",
+      "summary": "Fundação forte de governança; evolução necessária para verdade persistente, reconciliação, gates, continuidade e resultado de negócio.",
+      "original_evidence": {
+        "file": "Auditoria_do_Project_Manager_CONSTRU-REI.pdf",
+        "library_file_id": "libfile_8027b520cbf8819192ffc862272b40f9",
+        "sha256": "c91dca4cbdb48c22ea3543e6e5aa947a54019a3f92eefac4cdb206817c960c26"
+      },
+      "findings_total": 25,
+      "storage": "Supabase cr_internal.pm_audits_v1 / pm_audit_findings_v1"
+    }
+  ],
+  "audit_findings": [
+    {
+      "id": "AUD-001-F01",
+      "audit_id": "AUD-001",
+      "code": "P0-01",
+      "title": "Reconciliar contadores críticos",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F02",
+      "audit_id": "AUD-001",
+      "code": "P0-02",
+      "title": "Sanear deriva do checkpoint V9",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-01"
+    },
+    {
+      "id": "AUD-001-F03",
+      "audit_id": "AUD-001",
+      "code": "P0-03",
+      "title": "Conectar Banco Mestre persistente",
+      "severity": "high",
+      "status": "retest",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F04",
+      "audit_id": "AUD-001",
+      "code": "P0-04",
+      "title": "Criar matriz de fontes e sincronismo",
+      "severity": "high",
+      "status": "retest",
+      "implementation_item": "PM-07"
+    },
+    {
+      "id": "AUD-001-F05",
+      "audit_id": "AUD-001",
+      "code": "P0-05",
+      "title": "Tratar backup falhando como incidente",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-08"
+    },
+    {
+      "id": "AUD-001-F06",
+      "audit_id": "AUD-001",
+      "code": "P0-06",
+      "title": "Revisar superfície de segurança Supabase",
+      "severity": "high",
+      "status": "planned",
+      "implementation_item": "PM-08"
+    },
+    {
+      "id": "AUD-001-F07",
+      "audit_id": "AUD-001",
+      "code": "P0-07",
+      "title": "Gate real de promoção",
+      "severity": "high",
+      "status": "in_progress",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F08",
+      "audit_id": "AUD-001",
+      "code": "P0-08",
+      "title": "Separar avanço material de edição",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-05"
+    },
+    {
+      "id": "AUD-001-F09",
+      "audit_id": "AUD-001",
+      "code": "P1-01",
+      "title": "Camada financeira e resultado de negócio",
+      "severity": "high",
+      "status": "planned",
+      "implementation_item": "PM-09"
+    },
+    {
+      "id": "AUD-001-F10",
+      "audit_id": "AUD-001",
+      "code": "P1-02",
+      "title": "Dependências explícitas entre pendências",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-05"
+    },
+    {
+      "id": "AUD-001-F11",
+      "audit_id": "AUD-001",
+      "code": "P1-03",
+      "title": "Valor, risco, esforço, prazo e impacto por frente",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F12",
+      "audit_id": "AUD-001",
+      "code": "P1-04",
+      "title": "Alertas automáticos relevantes",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F13",
+      "audit_id": "AUD-001",
+      "code": "P1-05",
+      "title": "Máquina de estados auditável",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-05"
+    },
+    {
+      "id": "AUD-001-F14",
+      "audit_id": "AUD-001",
+      "code": "P1-06",
+      "title": "Dicionário de métricas acessível",
+      "severity": "medium",
+      "status": "retest",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F15",
+      "audit_id": "AUD-001",
+      "code": "P1-07",
+      "title": "Topo com sincronismo e falhas de fonte",
+      "severity": "medium",
+      "status": "retest",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F16",
+      "audit_id": "AUD-001",
+      "code": "P1-08",
+      "title": "Tela mudou desde a última visita",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-14"
+    },
+    {
+      "id": "AUD-001-F17",
+      "audit_id": "AUD-001",
+      "code": "P2-01",
+      "title": "Busca semântica executiva",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-14"
+    },
+    {
+      "id": "AUD-001-F18",
+      "audit_id": "AUD-001",
+      "code": "P2-02",
+      "title": "Simulação de cenários",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F19",
+      "audit_id": "AUD-001",
+      "code": "P2-03",
+      "title": "Score de prontidão por produto",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F20",
+      "audit_id": "AUD-001",
+      "code": "P2-04",
+      "title": "Previsões de atraso, caixa e capacidade",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-09"
+    },
+    {
+      "id": "AUD-001-F21",
+      "audit_id": "AUD-001",
+      "code": "P2-05",
+      "title": "Relatórios diário e semanal",
+      "severity": "low",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F22",
+      "audit_id": "AUD-001",
+      "code": "P2-06",
+      "title": "Matriz de papéis e permissões por camada",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-10"
+    },
+    {
+      "id": "AUD-001-F23",
+      "audit_id": "AUD-001",
+      "code": "P2-07",
+      "title": "Retenção e classificação de dados sensíveis",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-10"
+    },
+    {
+      "id": "AUD-001-F24",
+      "audit_id": "AUD-001",
+      "code": "CTRL-01",
+      "title": "Enforcement do limite de duas frentes",
+      "severity": "high",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    },
+    {
+      "id": "AUD-001-F25",
+      "audit_id": "AUD-001",
+      "code": "DOD-01",
+      "title": "Definition of Done visível por frente",
+      "severity": "medium",
+      "status": "planned",
+      "implementation_item": "PM-04"
+    }
+  ],
+  "source_matrix": [
+    {
+      "id": "SRC-GITHUB",
+      "name": "GitHub",
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "agora",
+      "note": "Leitura direta do repositório/refs."
+    },
+    {
+      "id": "SRC-SUPABASE",
+      "name": "Supabase",
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "agora",
+      "note": "Projeto ACTIVE_HEALTHY; persistência V1.1 criada."
+    },
+    {
+      "id": "SRC-CENTRAL",
+      "name": "Central CONSTRU-REI",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "—",
+      "note": "Checkpoint conhecido; runtime não revalidado neste ciclo."
+    },
+    {
+      "id": "SRC-APP",
+      "name": "APP CONSTRU-REI",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "—",
+      "note": "Baseline conhecida; runtime não revalidado neste ciclo."
+    },
+    {
+      "id": "SRC-TRELLO",
+      "name": "Trello",
+      "status": "stale",
+      "confidence": "medium",
+      "last_read": "27/09",
+      "note": "Cofre Zero anterior; exige leitura atual para decisões."
+    },
+    {
+      "id": "SRC-GESTAOCLICK",
+      "name": "GestãoClick",
+      "status": "stale",
+      "confidence": "medium",
+      "last_read": "28/09",
+      "note": "Cofre Zero anterior; exige leitura atual para decisões."
+    },
+    {
+      "id": "SRC-GCAL",
+      "name": "Google Calendar",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "—",
+      "note": "Integração V9 conhecida; não reconsultada neste ciclo."
+    },
+    {
+      "id": "SRC-NETLIFY",
+      "name": "Netlify",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "03/10 snapshot",
+      "note": "Inventário anterior conhecido; revalidação pendente."
+    },
+    {
+      "id": "SRC-VERCEL",
+      "name": "Vercel",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "03/10 snapshot",
+      "note": "0 projetos no último inventário."
+    },
+    {
+      "id": "SRC-PWA",
+      "name": "PWA Gestor",
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "código atual",
+      "note": "Manifest/SW confirmados; teste instalado ainda pendente."
+    },
+    {
+      "id": "SRC-BANCO-MESTRE",
+      "name": "Banco Mestre",
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "agora",
+      "note": "Dataset e motor persistente conciliados progressivamente."
+    },
+    {
+      "id": "SRC-BACKUP",
+      "name": "Backups automáticos",
+      "status": "error",
+      "confidence": "high",
+      "last_read": "03/10",
+      "note": "Falhas 01–03/10 registradas; incidente aberto."
+    },
+    {
+      "id": "SRC-COFRE-ZERO",
+      "name": "Cofre Zero",
+      "status": "stale",
+      "confidence": "high",
+      "last_read": "28/09",
+      "note": "Última execução persistente completa localizada."
+    }
+  ],
+  "reconciliations": [
+    {
+      "id": "REC-V9-POINTER-20261003",
+      "title": "Deriva do ponteiro V9",
+      "status": "investigating",
+      "difference": "VALIDATED aponta para APP V11; V9 técnico dedicado aponta para 773cfe0…",
+      "next_action": "Preservar histórico e criar evidência saneada, sem reescrever silenciosamente o ref."
+    },
+    {
+      "id": "REC-FIN-ROGERIO-20260929",
+      "title": "Acertos Rogério — Central × Trello",
+      "status": "open",
+      "difference": "R$ 570,02",
+      "next_action": "Conciliar lançamento a lançamento; não somar nem promediar fontes."
+    }
+  ],
+  "cycle0": {
+    "status": "canonical_homologated_with_open_p0",
+    "baseline": {
+      "commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
+      "checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003"
+    },
+    "canonical_changed": true,
+    "persistence": {
+      "migration": "project_manager_cycle0_persistence_v1",
+      "schema": "cr_internal",
+      "new_entities": 10
+    },
+    "audit": {
+      "id": "AUD-001",
+      "findings": 25,
+      "original_sha256": "c91dca4cbdb48c22ea3543e6e5aa947a54019a3f92eefac4cdb206817c960c26"
+    },
+    "stop_gate": "Não avançar ao próximo pacote P0 até testes estáticos, segurança pós-migração, checkpoint final e teste humano do PWA instalado/desktop/celular.",
+    "validation": {
+      "automated": [
+        {
+          "id": "C0-T01",
+          "label": "Sintaxe app.js",
+          "status": "PASS",
+          "evidence": "V8 compile/new Function sobre o arquivo exato da branch candidata."
+        },
+        {
+          "id": "C0-T02",
+          "label": "Sintaxe sw.js",
+          "status": "PASS",
+          "evidence": "V8 compile/new Function sobre o Service Worker exato da branch candidata."
+        },
+        {
+          "id": "C0-T03",
+          "label": "Referências DOM",
+          "status": "PASS",
+          "evidence": "33 IDs utilizados pelo app.js; 0 ausentes no index.html."
+        },
+        {
+          "id": "C0-T04",
+          "label": "Contrato persistente",
+          "status": "PASS",
+          "evidence": "cr_project_manager_snapshot_v1() retornou CR_PROJECT_MANAGER_SNAPSHOT_V1."
+        },
+        {
+          "id": "C0-T05",
+          "label": "API autenticada",
+          "status": "PASS",
+          "evidence": "Edge Function candidata retornou HTTP 200 com anon JWT válido."
+        },
+        {
+          "id": "C0-T06",
+          "label": "API sem autenticação",
+          "status": "PASS",
+          "evidence": "Requisição sem Authorization retornou HTTP 401."
+        },
+        {
+          "id": "C0-T07",
+          "label": "Privacidade do snapshot",
+          "status": "PASS",
+          "evidence": "sanitized=true; contains_secrets=false; contains_raw_financial_values=false."
+        },
+        {
+          "id": "C0-T08",
+          "label": "ACL das tabelas internas",
+          "status": "PASS",
+          "evidence": "anon/authenticated sem SELECT; service_role com SELECT; RLS habilitado."
+        },
+        {
+          "id": "C0-T09",
+          "label": "RPC mínima",
+          "status": "PASS",
+          "evidence": "SECURITY INVOKER; EXECUTE somente service_role; search_path fixo."
+        },
+        {
+          "id": "C0-T10",
+          "label": "PWA bundle versionado",
+          "status": "PASS",
+          "evidence": "manifest standalone + version.json + Service Worker com bundle completo e rollback preservado."
+        }
+      ],
+      "pending": [
+        {
+          "id": "C0-H01",
+          "label": "PWA instalado no notebook",
+          "status": "PENDING_HUMAN",
+          "evidence": "Precisa validar atualização no app instalado real."
+        },
+        {
+          "id": "C0-H02",
+          "label": "PWA instalado no celular",
+          "status": "PENDING_HUMAN",
+          "evidence": "Precisa validar atualização e responsividade no app instalado real."
+        },
+        {
+          "id": "C0-H03",
+          "label": "Homologação do proprietário",
+          "status": "PASS_OWNER_APPROVED",
+          "evidence": "Homologação explícita do proprietário registrada em 03/10/2026."
+        },
+        {
+          "id": "C0-B01",
+          "label": "Backup recente / restauração",
+          "status": "BLOCKED",
+          "evidence": "Falhas 01–03/10 registradas; nova execução/restauração comprovada ainda ausente."
+        }
+      ],
+      "last_tested_at": "2026-10-03T12:16:52-03:00"
+    },
+    "promotion_gate": {
+      "decision": "PROMOTED_OWNER_APPROVED_WITH_OPEN_P0",
+      "reason": "Proprietário homologou e autorizou a promoção. P0 de continuidade e testes do PWA instalado continuam pendentes.",
+      "blockers": [
+        "C0-B01",
+        "C0-H01",
+        "C0-H02"
+      ],
+      "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_PRE_CANONICAL_PROMOTION_20261003",
+      "canonical_changed": true
+    },
+    "reconciled_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_RECONCILED_20261003"
+  }
+}
