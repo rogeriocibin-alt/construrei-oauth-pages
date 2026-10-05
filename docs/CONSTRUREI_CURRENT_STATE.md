@@ -280,3 +280,18 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Checkpoint lógico: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_PWA_INSTALLABLE_20261005`.
 - Regra: H3 visual permanece congelada; esta é correção técnica exclusiva de instalabilidade.
 - Validação humana: **PENDENTE**, com Chrome online.
+
+
+## Oficialização final — Gestor V1.1.2 H4 — 2026-10-05
+
+- Status: **OFICIAL / HOMOLOGADA / CONGELADA**
+- Build: `CR-PM-V1.1.2-H4-PWA-INSTALLABLE-20261005`
+- Branch oficial: `cr-project-manager-v1-1-2-h4-official-20261005`
+- Checkpoint homologado: `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005`
+- Link estável: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/`
+- Gate humano: **CONCLUÍDO** — Rogério confirmou que a H4 está correta e autorizou finalizar o processo em 05/10/2026 às 13:25.
+- PWA móvel: **PASS / confirmado pelo proprietário**.
+- Escopo congelado: H3 visual (botão único **Central de Links**) + correção H4 de instalabilidade (manifesto/ícones/Service Worker).
+- Rollback oficial: H3 preservada em `CHECKPOINT_PROJECT_MANAGER_V1_1_2_H3_OFFICIAL_20261005`.
+- Central R9, Agenda v5, APP e demais destinos permanecem preservados.
+- Registro de homologação: `docs/HOMOLOGACAO_GESTOR_V1_1_2_H4_20261005.md`.
