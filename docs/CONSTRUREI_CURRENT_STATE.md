@@ -384,7 +384,7 @@ Sempre que houver nova candidata, homologação, promoção, rollback ou checkpo
 - Produção Supabase/Central/APP: **não alterada** durante o restore drill.
 - Laboratório temporário: container e cópia restaurada removidos após validação.
 
-### Agendamento canônico consolidado
+### Agendamento canônico consolidado — HISTÓRICO / SUBSTITUÍDO PELO CLOUD RUN
 
 - Tarefa oficial: **CONSTRUREI - Backup Automatico**.
 - Cadência: **diária às 03:00**.
@@ -598,3 +598,29 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
   - evento de homologação da baseline e evento do gate F00→F09 registrados;
   - incidente histórico de backup preservado como append-only e recebeu uma nova **MEDIDA_CORRETIVA** de fechamento, sem reescrever a evidência antiga.
 - Regra antirregressão: **qualquer evolução posterior deve nascer de candidata isolada e não pode substituir esta baseline sem novo gate humano explícito**.
+
+
+## Backup em nuvem oficial — Google Cloud Run — 2026-10-05
+
+- Status: **OFICIAL / VALIDADO / INDEPENDENTE DO NOTEBOOK**.
+- Projeto Google Cloud: `app-construrei`.
+- Região: `southamerica-east1`.
+- Cloud Run Job oficial: `construrei-backup`.
+- Imagem oficial: `southamerica-east1-docker.pkg.dev/app-construrei/construrei-backup/backup:20261005-v1`.
+- Digest da imagem validada: `sha256:2528a5b5ca208a2c6b3580aa1a081e5a7a57a6351828e570702453eecc551ff7`.
+- Service Account oficial: `construrei-backup@app-construrei.iam.gserviceaccount.com`.
+- Secrets oficiais: `construrei-db-url` e `construrei-rclone-config`, ambos no Google Secret Manager.
+- Scheduler oficial: `construrei-backup-diario`.
+- Cadência: **03:00 America/Sao_Paulo**, diário.
+- Primeiro run manual validado: `construrei-backup-pgpmf` — **SUCCESS** em 4m59s.
+- Run disparado pelo próprio Scheduler: `construrei-backup-xzzld` — **SUCCESS** em 4m53s.
+- Drive CURRENT após validação: **4.531 arquivos**, **4.526 arquivos de Storage**, banco com `roles.sql`, `schema.sql` e `data.sql`.
+- Restore drill: embutido no job; ambos os runs SUCCESS implicam hashes de banco + 3 amostras de Storage conferidos antes de exit 0.
+- GitHub Actions: **fallback manual בלבד**; agendamento diário removido para evitar duplicidade.
+- Job legado `construrei-cloud-backup`: preservado apenas como rollback técnico.
+- Scheduler legado `construrei-cloud-backup-daily`: **PAUSADO**; não executa automaticamente.
+- Backup local Windows: **DESATIVADO / NO-OP**; `daily-safe.ps1` apenas registra que o backup oficial está na nuvem.
+- Payload local pesado: `C:\CONSTRUREI-COFRE-ZERO` e `C:\CONSTRUREI-BACKUP-AUTO\WORK` já removidos após validação externa. `CURRENT`, `HISTORY` e `RESTORE-DRILL` locais estão vazios.
+- Payload registrado antes da limpeza: 226.182.446 bytes (Cofre Zero) + 4.632.974.850 bytes (WORK) = **4.859.157.296 bytes liberáveis/removidos**.
+- Regra antirregressão: manter **um único Scheduler ativo**. Qualquer alteração de executor, secrets, imagem ou horário exige novo run manual + run via Scheduler + verificação Drive antes de promoção.
+- Regra de continuidade: o notebook não participa da execução diária; serve apenas como console administrativo opcional.
