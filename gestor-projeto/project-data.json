@@ -1,8 +1,8 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1.1.2 H5 • OFICIAL HOMOLOGADA",
-    "status": "OFICIAL / HOMOLOGADA / CONGELADA — UX DE NAVEGAÇÃO + PWA INSTALÁVEL + CENTRAL DE LINKS",
+    "version": "V1.1.2 H5 • OFICIAL HOMOLOGADA • BASELINE CONGELADA 05/10",
+    "status": "OFICIAL / HOMOLOGADA / CONGELADA — BASELINE ANTIRREGRESSÃO APROVADA EM 05/10/2026",
     "generated_at": "2026-10-05",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "cr-project-manager-v1-1-2-h5-official-20261005",
@@ -19,7 +19,12 @@
     "previous_official_commit": "fa980eb74b42a1ffd044288e0f4216aeaed108a1",
     "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H5_OFFICIAL_20261005",
     "pwa_mobile_status": "PASS_OWNER_CONFIRMED",
-    "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005"
+    "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
+    "reconciled_at": "2026-10-05T18:55:00-03:00",
+    "owner_validation": "PASS_OWNER_APPROVED",
+    "current_baseline": "Central Operacional V2 + UX R1.2 HTML Hotfix H1 • Sala da Equipe v6 • Gestor H5",
+    "baseline_freeze_checkpoint": "CHECKPOINT_CONSTRUREI_BASELINE_FINAL_APPROVED_20261005_1855",
+    "baseline_freeze_branch": "cr-construrei-baseline-final-approved-20261005"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -84,7 +89,7 @@
       "layer": "Governança",
       "status": "canonical",
       "summary": "Cockpit superior do proprietário para governança, memória, versões, decisões e desenvolvimento do ecossistema APP CONSTRU-REI, com acesso ao diretório mestre de Links Oficiais.",
-      "current": "V1.1.2 H5 UX • oficial"
+      "current": "V1.1.2 H5 UX • oficial congelado"
     },
     {
       "id": "links_oficiais",
@@ -100,7 +105,7 @@
       "layer": "Produto gerenciado",
       "status": "canonical",
       "summary": "Camada executiva/gestão e ponto de acesso aos módulos.",
-      "current": "Central Operacional V2 + UX R1.2 • oficial"
+      "current": "Central Operacional V2 + UX R1.2 • HTML Hotfix H1 • oficial congelada"
     },
     {
       "id": "executive",
@@ -116,7 +121,7 @@
       "layer": "Produto gerenciado",
       "status": "canonical",
       "summary": "Produto operacional com baseline oficial protegida.",
-      "current": "Baseline oficial 01/10 + candidatas V8→V11"
+      "current": "Baseline oficial preservada • acesso técnico validado em 05/10 • fluxos F00→F09 aguardam validação humana"
     },
     {
       "id": "flows",
@@ -124,7 +129,7 @@
       "layer": "Produto gerenciado",
       "status": "canonical",
       "summary": "Jornada operacional consolidada em namespace canônico único.",
-      "current": "F00→F09 homologado 01/10"
+      "current": "F00→F09 tecnicamente disponível • validação operacional do proprietário pendente"
     },
     {
       "id": "agenda",
@@ -458,6 +463,26 @@
       ],
       "losses": [],
       "note": "Runtime Edge sala-equipe-r12-candidate v5 ACTIVE. Alias público e Central/Gestor responderam HTTP 200 no notebook Rogerio-2022. Validação física final de câmera/microfone/compartilhamento no celular permanece gate humano."
+    },
+    {
+      "id": "central-r12-html-hotfix-h1-freeze-20261005",
+      "product": "central",
+      "name": "Central UX R1.2 • HTML Hotfix H1 • Baseline Final",
+      "date": "2026-10-05",
+      "status": "canonical",
+      "parent": "Central Operacional V2 + UX R1.2",
+      "commit": "37f4f4da6c229479733188d5aa692602f4b12490",
+      "branch": "cr-construrei-baseline-final-approved-20261005",
+      "checkpoint": "CHECKPOINT_CONSTRUREI_BASELINE_FINAL_APPROVED_20261005_1855",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/",
+      "gains": [
+        "HTML renderizado corretamente",
+        "links preservados",
+        "Sala da Equipe estável",
+        "baseline antirregressão congelada"
+      ],
+      "losses": [],
+      "note": "Aprovada explicitamente pelo proprietário em 05/10/2026 às 18:55."
     }
   ],
   "checkpoints": [
@@ -543,9 +568,9 @@
       "objective": "Entregar o cockpit visual que organiza memória, versões, decisões, frentes e direção do projeto.",
       "progress": 100,
       "owner": "CR Assertivo + Bio",
-      "last_advance": "H5 UX de navegação oficializada em 05/10/2026 com Voltar/Início/Atualizar/Menu e atualização no mesmo PWA.",
-      "next_action": "Manter monitoramento antirregressão; novas evoluções somente em candidata isolada.",
-      "dependency": "Nenhuma para a versão oficial H5.",
+      "last_advance": "Gestor H5 reconciliado e incluído na baseline congelada aprovada em 05/10/2026.",
+      "next_action": "Manter somente monitoramento antirregressão; qualquer evolução deve nascer em candidata isolada.",
+      "dependency": "Nenhuma para a baseline atual.",
       "blocked": false,
       "age_days": 0
     },
@@ -557,23 +582,23 @@
       "objective": "Consolidar qual candidata executiva deve seguir para homologação sem confundir pacote V9 com cadeia V10/V11.",
       "progress": 100,
       "owner": "CR Assertivo",
-      "last_advance": "Central Executiva/Agenda homologada explicitamente pelo proprietário em 04/10/2026.",
-      "next_action": "Somente monitoramento antirregressão.",
-      "dependency": "Nenhuma",
+      "last_advance": "Central UX R1.2 + correção de entrega HTML + Sala da Equipe aprovadas pelo proprietário e congeladas como padrão.",
+      "next_action": "Somente monitoramento antirregressão e correções por candidata isolada.",
+      "dependency": "Nenhuma para a baseline atual.",
       "blocked": false,
       "age_days": 0
     },
     {
       "id": "front-app-f01",
       "name": "APP — F01 CRM action-first",
-      "status": "queue",
+      "status": "awaiting_owner_validation",
       "priority": "P1",
       "objective": "Evoluir atendimento/F01 sem romper baseline oficial do APP.",
-      "progress": 70,
+      "progress": 85,
       "owner": "CR Assertivo",
-      "last_advance": "V11 mobile/foco F01 criada.",
-      "next_action": "Retomar somente após fechar uma vaga de execução.",
-      "dependency": "Limite de duas frentes.",
+      "last_advance": "APP e aliases F00/F01/F09 responderam HTTP 200; validação operacional humana da esteira F00→F09 continua pendente por decisão do proprietário.",
+      "next_action": "Rogério validar a esteira F00→F09 ponta a ponta; não promover novas alterações de fluxo antes desse gate.",
+      "dependency": "Validação humana do proprietário — F00→F09.",
       "blocked": false,
       "age_days": 1
     },
@@ -712,6 +737,23 @@
         "central-gateway"
       ],
       "evidence": "Logo oficial incorporada ao mesmo PWA em 03/10/2026."
+    },
+    {
+      "id": "d9",
+      "date": "2026-10-05",
+      "title": "Baseline final 05/10 congelada e antirregressão",
+      "status": "confirmed",
+      "decision": "Central UX R1.2 com hotfix de HTML, Sala da Equipe, Gestor H5 e links atuais tornam-se o padrão congelado. O único gate de validação do proprietário mantido em aberto é a esteira F00→F09.",
+      "reason": "Aprovação explícita do proprietário após correção da entrega HTML e pedido de evitar novas regressões.",
+      "impact": [
+        "central",
+        "meeting",
+        "gestor",
+        "links",
+        "app",
+        "flows"
+      ],
+      "evidence": "CHECKPOINT_CONSTRUREI_BASELINE_FINAL_APPROVED_20261005_1855"
     }
   ],
   "demands": [
@@ -849,6 +891,13 @@
       "title": "Gestor V1.1.1 promovido a canônico homologado",
       "detail": "Promoção autorizada explicitamente pelo proprietário. O mesmo PWA/endereço foi preservado; backup/continuidade e validações do PWA instalado permanecem abertas.",
       "confidence": "owner_homologated"
+    },
+    {
+      "date": "2026-10-05",
+      "type": "canonical",
+      "title": "Baseline final 05/10 homologada e congelada",
+      "detail": "Central UX R1.2 HTML Hotfix H1 + Sala da Equipe v6 + Gestor H5 + links estáveis; único gate do proprietário em aberto: F00→F09.",
+      "confidence": "owner_homologated"
     }
   ],
   "recoverables": [
@@ -924,7 +973,6 @@
   "unconfirmed": [
     "Histórico anterior às evidências localizadas no repositório em 29/09/2026 ainda não foi reconstruído nesta V1.",
     "Motivos detalhados de todas as versões históricas não estão documentados em um único artefato; devem ser enriquecidos por checkpoints e conversas antigas.",
-    "Google Meet embutido: existência funcional anterior foi relatada, mas a implementação exata ainda precisa ser localizada no repositório.",
     "Alguns branches/checkpoints possuem nomes claros, porém ainda não tiveram seu conteúdo documental individual lido nesta primeira carga."
   ],
   "repository_audit": {
@@ -984,30 +1032,30 @@
       "title": "APP Atendimento Gabrielly / F01",
       "domain": "APP",
       "priority": "P1",
-      "state": "queue",
+      "state": "awaiting_owner_validation",
       "owner": "CR Assertivo",
-      "last_movement": "2026-10-03",
-      "next_action": "Retomar F01 action-first sem romper a baseline oficial do APP.",
-      "dependency": "Vaga de execução",
-      "source": "CHECKPOINT_APP_GABI_V11_ATENDIMENTO_GABRIELLY_20261003",
-      "close_when": "Fluxo F01 validado em mobile/desktop e checkpoint homologado.",
-      "human_action": false,
-      "provenance": "legacy_recovered"
+      "last_movement": "2026-10-05",
+      "next_action": "Rogério validar F01 dentro da esteira F00→F09 no celular e notebook, sem alterar a baseline antes do gate.",
+      "dependency": "Validação humana do proprietário — F00→F09",
+      "source": "APP/aliases responderam HTTP 200 em 05/10/2026; validação operacional ainda declarada pendente pelo proprietário.",
+      "close_when": "F01 e continuidade da esteira validados pelo proprietário.",
+      "human_action": true,
+      "provenance": "current_explicit"
     },
     {
       "id": "PM-03",
       "title": "F00→F09 / coerência F00→F01",
       "domain": "Fluxos",
       "priority": "P1",
-      "state": "review",
+      "state": "awaiting_owner_validation",
       "owner": "Bio + CR Assertivo",
-      "last_movement": "2026-10-02",
-      "next_action": "Auditar transição F00→F01 e manter jornada canônica única, sem links externos quebrando o atendimento.",
-      "dependency": "Evidência funcional da esteira",
-      "source": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
-      "close_when": "Transição ponta a ponta revisada e sem regressão do namespace canônico.",
-      "human_action": false,
-      "provenance": "legacy_recovered"
+      "last_movement": "2026-10-05",
+      "next_action": "Executar a validação humana ponta a ponta F00→F09. Este é o único bloco de validação do proprietário mantido em aberto na baseline atual.",
+      "dependency": "Validação humana do proprietário",
+      "source": "Declaração explícita do proprietário em 05/10/2026: F00 em diante ainda precisa ser validado.",
+      "close_when": "Rogério validar F00→F09 ponta a ponta e autorizar fechamento.",
+      "human_action": true,
+      "provenance": "current_explicit"
     },
     {
       "id": "PM-04",
@@ -1029,30 +1077,30 @@
       "title": "Pendências Vivas — histórico e edição controlada",
       "domain": "Gestor",
       "priority": "P1",
-      "state": "review",
+      "state": "completed",
       "owner": "Bio",
-      "last_movement": "2026-10-02",
-      "next_action": "Manter histórico de mudanças, conclusão detectável e trilha de decisões.",
-      "dependency": "Banco Mestre",
-      "source": "CHECKPOINT_PENDENCIAS_VIVAS_V2_CANDIDATE_20261002",
-      "close_when": "Cada pendência possuir ciclo detecta→mede→propõe→acompanha→fecha com histórico.",
+      "last_movement": "2026-10-05",
+      "next_action": "Manter trilha automática e tratar apenas novas regressões.",
+      "dependency": "Nenhuma",
+      "source": "Registro vivo ativo: APP/SISTEMA automático; WIZY e ÉDER manuais; trilha preservada no Gestor.",
+      "close_when": "Concluído para o escopo atual; reabrir somente por regressão.",
       "human_action": false,
-      "provenance": "legacy_recovered"
+      "provenance": "current_explicit"
     },
     {
       "id": "PM-06",
       "title": "Hoje na Operação com dados reais",
       "domain": "Central",
       "priority": "P1",
-      "state": "queue",
+      "state": "completed",
       "owner": "CR Assertivo",
-      "last_movement": "2026-10-02",
-      "next_action": "Consolidar Serviços em Andamento, Aguardando Pagamento, Visitas, Orçamentos, Agenda de amanhã e Pendências de ontem com fontes reais.",
-      "dependency": "Fontes operacionais confiáveis",
-      "source": "cr-hoje-operacao-candidate-20261001",
-      "close_when": "Cards executivos refletem dados reais, clicáveis e rastreáveis até a origem.",
+      "last_movement": "2026-10-05",
+      "next_action": "Manter dados operacionais e monitorar regressões de fonte.",
+      "dependency": "Nenhuma para a baseline atual",
+      "source": "Central atual aprovada pelo proprietário em 05/10/2026; Agenda v5 e indicadores consolidados.",
+      "close_when": "Concluído para a baseline atual.",
       "human_action": false,
-      "provenance": "legacy_recovered"
+      "provenance": "current_explicit"
     },
     {
       "id": "PM-07",
@@ -1104,45 +1152,45 @@
       "title": "Acessos / Meeting / Documentação / Base Técnica",
       "domain": "Base Técnica",
       "priority": "P2",
-      "state": "review",
+      "state": "completed",
       "owner": "CR Assertivo",
       "last_movement": "2026-10-05",
-      "next_action": "Aliases públicos da Central e da Sala da Equipe estabilizados e publicados; manter revisão apenas de documentação/base técnica sem duplicar links. Meeting atual usa Google Meet oficial, sem WebRTC próprio.",
-      "dependency": "Inventário técnico",
-      "source": "Base Técnica / Documentação",
-      "close_when": "Acessos essenciais testados, documentação coerente e referências estáveis.",
+      "next_action": "Manter acessos estáveis. Evolução Google Meet Add-ons permanece separada em PM-17.",
+      "dependency": "Nenhuma para o funcionamento atual",
+      "source": "Central, Sala da Equipe e Gestor aprovados; HTML renderizado corretamente; aliases estáveis.",
+      "close_when": "Concluído para a baseline atual.",
       "human_action": false,
-      "provenance": "legacy_recovered"
+      "provenance": "current_explicit"
     },
     {
       "id": "PM-11",
       "title": "Homologação notebook + celular",
       "domain": "Qualidade",
       "priority": "P1",
-      "state": "review",
+      "state": "completed",
       "owner": "Rogério + CR Assertivo",
       "last_movement": "2026-10-05",
-      "next_action": "Notebook Rogerio-2022: Central, Sala da Equipe e Gestor responderam HTTP 200 e aliases apontam para os runtimes corretos. Falta apenas validação física final em celular/notebook dos controles nativos do Google Meet (câmera, microfone e compartilhamento), que dependem do navegador/app e permissões do aparelho.",
-      "dependency": "Candidata estabilizada",
-      "source": "Regra de homologação do projeto",
-      "close_when": "Mesmo comportamento essencial validado em notebook e celular com checkpoint.",
-      "human_action": true,
-      "provenance": "legacy_recovered"
+      "next_action": "Nenhuma para a baseline atual; repetir gate apenas em futura candidata.",
+      "dependency": "Nenhuma",
+      "source": "Aprovação explícita do proprietário após correção do HTML; notebook respondeu HTTP 200 e interface renderizada.",
+      "close_when": "Concluído — gate humano da baseline atual aprovado.",
+      "human_action": false,
+      "provenance": "current_explicit"
     },
     {
       "id": "PM-12",
       "title": "Identidade visual / acabamento premium da Central",
       "domain": "Visual",
       "priority": "P2",
-      "state": "queue",
+      "state": "completed",
       "owner": "CR Assertivo",
       "last_movement": "2026-10-05",
-      "next_action": "Sala da Equipe alinhada à identidade canônica do APP: fundo #eaf6fc, azul-marinho #031b46/#05265f, azul institucional #0877f9 e amarelo #ffc514 somente como acento. Preservar esse padrão sem redesenhar a lógica.",
-      "dependency": "Base funcional estável",
-      "source": "cr-blue-canonical-option-b-20260930",
-      "close_when": "Identidade consistente nos módulos prioritários sem regressão funcional.",
+      "next_action": "Preservar identidade canônica; mudanças visuais futuras somente em candidata isolada.",
+      "dependency": "Nenhuma",
+      "source": "Sala/Central aprovadas na identidade do APP em 05/10/2026.",
+      "close_when": "Concluído — identidade da baseline atual aprovada.",
       "human_action": false,
-      "provenance": "legacy_recovered"
+      "provenance": "current_explicit"
     },
     {
       "id": "PM-13",
@@ -1194,13 +1242,13 @@
       "title": "Continuidade — restore integral em ambiente descartável",
       "domain": "Infraestrutura",
       "priority": "P1",
-      "state": "review",
+      "state": "completed",
       "owner": "Bio + CR Assertivo",
-      "last_movement": "2026-10-04",
-      "next_action": "Executar reconstrução integral do PostgreSQL em destino isolado/descartável e registrar evidência; produção e Cofre Zero intocados.",
-      "dependency": "Destino PostgreSQL isolado/descartável",
-      "source": "RESTORE_DRILL_20261004.txt — DB checksums PASS 3/3; Storage 4526; restore remoto amostral PASS 3/3",
-      "close_when": "Banco integral restaurado em ambiente descartável, validado e ambiente de teste removido.",
+      "last_movement": "2026-10-05",
+      "next_action": "Manter backup diário e repetir restore drill conforme política de continuidade.",
+      "dependency": "Nenhuma para a baseline atual",
+      "source": "Restore drill integral aprovado em 05/10/2026; DB e Storage restaurados/validados em ambiente isolado.",
+      "close_when": "Concluído — restore integral comprovado e laboratório removido.",
       "human_action": false,
       "provenance": "current_explicit"
     },
@@ -1212,10 +1260,10 @@
       "state": "queue",
       "owner": "CR Assertivo",
       "last_movement": "2026-10-05",
-      "next_action": "Manter em fila a integração oficial pelo Google Meet Add-ons SDK para experiência integrada futura. Não reativar a Central Call/WebRTC histórica; o Meet oficial permanece motor corrente.",
-      "dependency": "Configuração Google Cloud / Workspace Add-ons e validação em celular + notebook.",
-      "source": "Decisão do proprietário em 05/10/2026 • canonical_backlog CR-MEET-P1-ADDON-20261005",
-      "close_when": "Add-on CONSTRU-REI validado no Meet, navegação integrada testada, sem regressão na Central/Gestor e promoção homologada.",
+      "next_action": "Desenvolver Google Meet Add-ons SDK apenas como evolução futura em candidata isolada; não bloqueia a Sala atual.",
+      "dependency": "Google Cloud / Workspace Add-ons + gate futuro celular/notebook",
+      "source": "Backlog canônico CR-MEET-P1-ADDON-20261005; baseline atual usa Google Meet oficial.",
+      "close_when": "Add-on futuro homologado sem regressão.",
       "human_action": false,
       "provenance": "current_explicit"
     }
@@ -2682,28 +2730,27 @@
     "version": "1.1.2",
     "build": "CR-PM-V1.1.2-H5-UX-NAV-OFFICIAL-20261005",
     "environment": "canonical",
-    "status": "official_homologated",
+    "status": "official_homologated_frozen",
     "branch": "cr-project-manager-v1-1-2-h5-official-20261005",
     "baseline_commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
     "baseline_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003",
     "update_mode": "same_url_atomic_pwa_bundle",
     "canonical_changed": true,
     "promotion_gate": {
-      "decision": "PROMOTED_OWNER_APPROVED_WITH_OPEN_P0",
-      "reason": "Homologação explícita do proprietário; continuidade/backup e validação do PWA instalado permanecem abertas.",
-      "blockers": [
-        "C0-B01",
-        "C0-H01",
-        "C0-H02"
-      ],
-      "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_PRE_CANONICAL_PROMOTION_20261003",
+      "decision": "PASS_OWNER_APPROVED_CURRENT_BASELINE",
+      "reason": "Baseline atual aprovada e congelada; pendência F00→F09 é gate de fluxo futuro e não bloqueia o Gestor/Central atuais.",
+      "blockers": [],
+      "rollback": "checkpoint-before-final-baseline-reconcile-20261005",
       "canonical_changed": true
     },
     "ui_commit_tested": "543d368635891b64b203df6badec0cda43dced9e",
     "candidate_checkpoint": "CHECKPOINT_PM_V1_1_1_EXEC_DASH_20261003",
     "last_tested_at": "2026-10-03T12:16:52-03:00",
     "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H5_OFFICIAL_20261005",
-    "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005"
+    "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
+    "baseline_freeze_checkpoint": "CHECKPOINT_CONSTRUREI_BASELINE_FINAL_APPROVED_20261005_1855",
+    "baseline_freeze_branch": "cr-construrei-baseline-final-approved-20261005",
+    "owner_approval_at": "2026-10-05T18:55:00-03:00"
   },
   "audits": [
     {
@@ -2961,32 +3008,32 @@
       "name": "GitHub",
       "status": "healthy",
       "confidence": "high",
-      "last_read": "agora",
-      "note": "Leitura direta do repositório/refs."
+      "last_read": "05/10 18:55",
+      "note": "Repositório e checkpoints reconciliados na baseline final aprovada."
     },
     {
       "id": "SRC-SUPABASE",
       "name": "Supabase",
       "status": "healthy",
       "confidence": "high",
-      "last_read": "agora",
-      "note": "Projeto ACTIVE_HEALTHY; persistência V1.1 criada."
+      "last_read": "05/10 18:55",
+      "note": "Central v286 e Sala v6 ativas; entrega HTML corrigida."
     },
     {
       "id": "SRC-CENTRAL",
       "name": "Central CONSTRU-REI",
-      "status": "not_confirmed",
-      "confidence": "medium",
-      "last_read": "—",
-      "note": "Checkpoint conhecido; runtime não revalidado neste ciclo."
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "05/10 18:55",
+      "note": "Alias e endpoint oficial validados em HTTP 200 com text/html; owner approved."
     },
     {
       "id": "SRC-APP",
       "name": "APP CONSTRU-REI",
-      "status": "not_confirmed",
-      "confidence": "medium",
-      "last_read": "—",
-      "note": "Baseline conhecida; runtime não revalidado neste ciclo."
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "05/10 18:55",
+      "note": "Alias APP respondeu HTTP 200. Validação funcional da esteira F00→F09 permanece separada e pendente do proprietário."
     },
     {
       "id": "SRC-TRELLO",
@@ -3007,10 +3054,10 @@
     {
       "id": "SRC-GCAL",
       "name": "Google Calendar",
-      "status": "not_confirmed",
-      "confidence": "medium",
-      "last_read": "—",
-      "note": "Integração V9 conhecida; não reconsultada neste ciclo."
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "05/10",
+      "note": "Agenda v5 permanece oficial/homologada; esta reconciliação usa evidência de homologação, não uma nova leitura independente do calendário."
     },
     {
       "id": "SRC-NETLIFY",
@@ -3031,34 +3078,34 @@
     {
       "id": "SRC-PWA",
       "name": "PWA Gestor",
-      "status": "not_confirmed",
-      "confidence": "medium",
-      "last_read": "código atual",
-      "note": "Manifest/SW confirmados; teste instalado ainda pendente."
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "05/10",
+      "note": "Gestor H5 oficial e aprovado; PWA preservado no mesmo link."
     },
     {
       "id": "SRC-BANCO-MESTRE",
       "name": "Banco Mestre",
       "status": "healthy",
       "confidence": "high",
-      "last_read": "agora",
-      "note": "Dataset e motor persistente conciliados progressivamente."
+      "last_read": "05/10 18:55",
+      "note": "Pendências reconciliadas com a baseline aprovada; única validação do proprietário em aberto: F00→F09."
     },
     {
       "id": "SRC-BACKUP",
       "name": "Backups automáticos",
-      "status": "error",
+      "status": "healthy",
       "confidence": "high",
-      "last_read": "03/10",
-      "note": "Falhas 01–03/10 registradas; incidente aberto."
+      "last_read": "05/10",
+      "note": "Backup automático + restore drill integral aprovados em 05/10/2026."
     },
     {
       "id": "SRC-COFRE-ZERO",
       "name": "Cofre Zero",
-      "status": "stale",
+      "status": "healthy",
       "confidence": "high",
-      "last_read": "28/09",
-      "note": "Última execução persistente completa localizada."
+      "last_read": "05/10",
+      "note": "Cofre Zero preservado; restore físico Storage e banco validados em 05/10/2026."
     }
   ],
   "reconciliations": [
@@ -3078,7 +3125,7 @@
     }
   ],
   "cycle0": {
-    "status": "canonical_homologated_with_open_p0",
+    "status": "canonical_homologated_frozen",
     "baseline": {
       "commit": "ab91e314609f7b53fb5cff0b153373803777fc6f",
       "checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_BASELINE_20261003"
@@ -3162,14 +3209,14 @@
         {
           "id": "C0-H01",
           "label": "PWA instalado no notebook",
-          "status": "PENDING_HUMAN",
-          "evidence": "Precisa validar atualização no app instalado real."
+          "status": "PASS_OWNER_APPROVED",
+          "evidence": "Gestor H5 e navegação oficial aprovados; baseline congelada em 05/10/2026."
         },
         {
           "id": "C0-H02",
           "label": "PWA instalado no celular",
-          "status": "PENDING_HUMAN",
-          "evidence": "Precisa validar atualização e responsividade no app instalado real."
+          "status": "PASS_OWNER_APPROVED",
+          "evidence": "PWA móvel H4/H5 aprovado em ciclos de 05/10/2026."
         },
         {
           "id": "C0-H03",
@@ -3180,20 +3227,16 @@
         {
           "id": "C0-B01",
           "label": "Backup recente / restauração",
-          "status": "BLOCKED",
-          "evidence": "Falhas 01–03/10 registradas; nova execução/restauração comprovada ainda ausente."
+          "status": "PASS",
+          "evidence": "Backup automático e restore drill integral aprovados em 05/10/2026."
         }
       ],
       "last_tested_at": "2026-10-03T12:16:52-03:00"
     },
     "promotion_gate": {
-      "decision": "PROMOTED_OWNER_APPROVED_WITH_OPEN_P0",
-      "reason": "Proprietário homologou e autorizou a promoção. P0 de continuidade e testes do PWA instalado continuam pendentes.",
-      "blockers": [
-        "C0-B01",
-        "C0-H01",
-        "C0-H02"
-      ],
+      "decision": "PASS_OWNER_APPROVED",
+      "reason": "Owner aprovou baseline atual; backup/restore e PWA já validados em ciclos posteriores.",
+      "blockers": [],
       "rollback": "CHECKPOINT_PROJECT_MANAGER_V1_1_1_PRE_CANONICAL_PROMOTION_20261003",
       "canonical_changed": true
     },
