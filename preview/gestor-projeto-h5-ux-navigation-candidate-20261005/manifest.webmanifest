@@ -1,0 +1,38 @@
+{
+  "name": "Gestor do Projeto CONSTRU-REI • H5 UX Candidata",
+  "short_name": "Gestor CR H5 UX",
+  "description": "Candidata H5 de navegação do Gestor do Projeto CONSTRU-REI.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f8fc",
+  "theme_color": "#07185d",
+  "orientation": "any",
+  "lang": "pt-BR",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./pwa-icon-192.svg?v=20261005v112h5ux",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./pwa-icon-512.svg?v=20261005v112h5ux",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./pwa-icon-512.svg?v=20261005v112h5ux",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "./",
+  "prefer_related_applications": false
+}
