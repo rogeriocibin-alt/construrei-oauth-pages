@@ -6,7 +6,7 @@
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Versão oficial atual: **Central Operacional V2 + UX R1.2 + Agenda v5 + Identidade de Links v1.3.2 — OFICIAL**
+- Versão oficial atual: **Central Operacional V2 + UX R1.2 + Agenda v5 + Identidade de Links v1.3.3 — OFICIAL / HOMOLOGADA / CONGELADA**
 - Branch homologada: `central-operacional-v2-ux-r1-2-oficial-20261005`
 - Branch de origem validada: `main` • candidata isolada `preview/central-operation-only-v2-direct-candidate-20261005/`
 - Commit funcional UX R1.2: `df3bfe574f638a1981330b2a0e9201c612056de6`
@@ -566,3 +566,35 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Validação automática no notebook Rogerio-2022: **PASS 4/4** — alias da Central, alias da Sala, endpoint Supabase da Central e endpoint Supabase da Sala terminaram em HTTP 200, `text/html`, sem `text/plain`.
 - Links públicos preservados: `/central/` e `/google-meet-central/`.
 - Nenhuma lógica da Agenda v5, APP, dados operacionais ou Gestor H5 foi alterada.
+
+
+## Baseline final aprovada + reconciliação do Gestor — 2026-10-05 18:55
+
+- Decisão do proprietário: **APROVADO / HOMOLOGAR / SALVAR / CONGELAR / DEIXAR COMO PADRÃO**.
+- Checkpoint canônico: `CHECKPOINT_CONSTRUREI_BASELINE_FINAL_APPROVED_20261005_1855`.
+- Branch oficial congelada: `cr-construrei-baseline-final-approved-20261005`.
+- Rollback pré-reconciliação: `checkpoint-before-final-baseline-reconcile-20261005`.
+- Central oficial preservada no mesmo link público.
+- Central runtime: `centro-operacoes` **v286 ACTIVE** • build `CR-CENTRAL-OP-V2-UX-R1.2-OFFICIAL-PAGES-REDIRECT-H1-20261005` • hash `40d4ebbcfbb03edcaac7e22cf767429bf2f66873f44d88c0acb77f80394ed82e`.
+- Sala da Equipe: `sala-equipe-r12-candidate` **v6 ACTIVE** • build `CR-SALA-EQUIPE-R1.2-APP-IDENTITY-V6-PAGES-REDIRECT-20261005` • hash `d0f07da807325463ccfd17c0dd837be7cb7108d3e8705d70cb15ad659942e8b3`.
+- Snapshots dos dois Edge Functions foram salvos no repositório em `snapshots/edge-functions/`.
+- Links públicos continuam estáveis: `/central/`, `/google-meet-central/`, `/gestor-projeto/` e `/app-construrei/`.
+- Identidade de Links passa a **v1.3.3**, sem troca de URLs públicas.
+- Gestor do Projeto / Banco Mestre reconciliado:
+  - PM-05 Pendências Vivas: **CONCLUÍDO no escopo atual**;
+  - PM-06 Hoje na Operação: **CONCLUÍDO no escopo atual**;
+  - PM-10 Acessos/Meeting/Base Técnica: **CONCLUÍDO no escopo atual**; evolução Meet Add-ons continua separada em PM-17;
+  - PM-11 Homologação da baseline atual: **CONCLUÍDA / OWNER APPROVED**;
+  - PM-12 Identidade visual: **CONCLUÍDA**;
+  - PM-16 Backup/restore integral: **CONCLUÍDO / RESTORE DRILL PASS**;
+  - PM-17 Google Meet Add-ons: **BACKLOG FUTURO**, não bloqueia a Sala atual.
+- Único gate de validação do proprietário explicitamente mantido em aberto: **F00→F09**.
+  - PM-02 APP/F01: **AGUARDANDO VALIDAÇÃO DO ROGÉRIO**;
+  - PM-03 F00→F09: **AGUARDANDO VALIDAÇÃO DO ROGÉRIO**.
+- Banco Mestre persistente / Supabase atualizado:
+  - fontes Central, APP, PWA, Backup, Cofre Zero, Banco Mestre, GitHub e Supabase reconciliadas;
+  - itens de backup legados atualizados para concluídos/validados;
+  - itens F00/F01/F04 mantidos aguardando validação humana;
+  - evento de homologação da baseline e evento do gate F00→F09 registrados;
+  - incidente histórico de backup preservado como append-only e recebeu uma nova **MEDIDA_CORRETIVA** de fechamento, sem reescrever a evidência antiga.
+- Regra antirregressão: **qualquer evolução posterior deve nascer de candidata isolada e não pode substituir esta baseline sem novo gate humano explícito**.
