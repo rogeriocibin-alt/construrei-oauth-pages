@@ -792,11 +792,8 @@ async function init(){
         openDrawer('Instalar Gestor','PWA','<div class="detail-block"><b>Instalação</b><p>Use o menu do navegador e escolha “Adicionar à tela inicial” ou “Instalar app”. O Gestor usa este mesmo endereço.</p></div>');
       }
     };
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('./sw.js?v=20261005v112h5official',{updateViaCache:'none'}).then(async reg=>{await reg.update().catch(()=>{});await checkReleaseUpdate();}).catch(()=>checkReleaseUpdate());
-    }
-
-    if(!('serviceWorker' in navigator)) checkReleaseUpdate();
+    // Candidata isolada: não registrar Service Worker para não disputar cache/PWA com o Gestor oficial.
+    checkReleaseUpdate();
 
     $('#presentationBtn').onclick=()=>{
       document.body.classList.toggle('presentation');
