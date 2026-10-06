@@ -1,0 +1,14 @@
+/* Team Identity V1 — candidata isolada. Mantém a Central oficial intacta. */
+.cr-profile .cr-avatar.cr-human-profile{overflow:hidden;border:2px solid #ffc514;background:#0b356c;box-shadow:0 0 0 2px rgba(255,197,20,.12)}
+.cr-profile .cr-avatar.cr-human-profile img{width:100%;height:100%;object-fit:cover}
+.cr-team-roster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.cr-team-person{display:flex;align-items:center;gap:8px;min-width:0;padding:7px;border:1px solid #dce8f3;background:#f8fbfe;border-radius:12px}
+.cr-team-person img{width:48px;height:48px;flex:none;object-fit:cover;border-radius:10px;border:1px solid rgba(2,45,91,.12)}
+.cr-team-person b{display:block;color:#0c315f;font-size:9px}.cr-team-person small{display:block;color:#708399;font-size:7px;margin-top:2px;line-height:1.25}
+.cr-agenda-team-avatars{display:flex;align-items:center;margin:0 0 5px 1px;min-height:24px}
+.cr-agenda-team-avatars img{width:25px;height:25px;object-fit:cover;border-radius:50%;border:2px solid #ffc514;background:#0b356c;box-shadow:0 0 0 1px #fff;margin-left:-5px}
+.cr-agenda-team-avatars img:first-child{margin-left:0}
+.cr-page-human{display:inline-flex;align-items:center;gap:8px;margin:0 0 10px;padding:6px 9px;border:1px solid #dce8f3;border-radius:12px;background:#fff}
+.cr-page-human img{width:36px;height:36px;object-fit:cover;border-radius:50%;border:2px solid #ffc514}.cr-page-human b{display:block;font-size:9px;color:#0c315f}.cr-page-human small{display:block;font-size:7px;color:#6f8194}
+@media(max-width:760px){.cr-team-roster{grid-template-columns:1fr 1fr}.cr-team-person img{width:44px;height:44px}}
+@media(max-width:420px){.cr-team-roster{grid-template-columns:1fr}.cr-team-person{padding:6px}.cr-agenda-team-avatars img{width:28px;height:28px}}
