@@ -829,3 +829,13 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Em caso de falha da imagem, o sistema bloqueia a impressão em vez de gerar PDF com logo quebrada.
 - Mantidos: matemática canônica, subtotais por seção, total geral, cabeçalho/rodapé premium, Caso Escola 766-26 e Entrada Inteligente.
 - F02 oficial de produção permanece inalterado até validação desta candidata.
+
+
+### F02 ORÇA-REI R9 — logo rasterizada para impressão — 2026-10-05
+- Status: **CANDIDATA / AGUARDANDO VALIDAÇÃO HUMANA**.
+- Commit: `82993270ba403151d52ee57351ebbc81eeb69fd2`.
+- Build: `CR-F02-ORCA-REI-V1-R9-LOGO-RASTERIZED-20261005`.
+- Correção exclusiva da logo: antes de montar o documento, o navegador decodifica a logo corporativa no contexto principal, rasteriza em Canvas e gera PNG; somente o PNG validado é enviado à janela de impressão.
+- A impressão exige imagem completa com `naturalWidth > 0` e `naturalHeight > 0`; caso contrário o PDF é bloqueado, evitando documento com logo quebrada.
+- Todo o restante do R7/R8 foi preservado: layout premium, matemática, Campo Inteligente e Caso Escola 766-26.
+- F02 oficial continua inalterado.
