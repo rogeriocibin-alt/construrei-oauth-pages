@@ -1,0 +1,14 @@
+/* Team Identity V2 — oficial. Pessoas reais != agentes digitais. Retratos humanos != avatares de agentes. */
+.cr-human-team{display:grid;gap:10px;background:linear-gradient(135deg,#031b46,#073a88 62%,#0877f9);border-radius:20px;padding:16px;color:#fff;box-shadow:0 14px 32px rgba(3,27,70,.12)}
+.cr-human-team-head{display:flex;align-items:end;justify-content:space-between;gap:12px}
+.cr-human-team-head small{display:block;font-size:8px;font-weight:900;letter-spacing:.14em;color:#8be0ff}
+.cr-human-team-head h3{margin:3px 0 0;font-size:18px;color:#fff}
+.cr-human-team-head span{font-size:8px;color:#c8def8;text-align:right}
+.cr-human-team-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.cr-human-card{display:flex;align-items:center;gap:9px;min-width:0;padding:9px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:14px}
+.cr-human-card img{width:54px;height:54px;flex:none;object-fit:cover;border-radius:50%;border:2px solid #ffc514;box-shadow:0 0 0 2px rgba(255,255,255,.12)}
+.cr-human-card b{display:block;font-size:10px;color:#fff}
+.cr-human-card small{display:block;margin-top:2px;font-size:7px;line-height:1.35;color:#cfe5ff}
+.cr-human-note{font-size:7.5px;color:#bcd7f6;line-height:1.45}
+@media(max-width:900px){.cr-human-team-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.cr-human-team{padding:13px}.cr-human-team-grid{grid-template-columns:1fr}.cr-human-card img{width:50px;height:50px}.cr-human-team-head span{display:none}}
