@@ -929,7 +929,7 @@ details.box[open]{border-color:#bfd7e8!important}
 
 /* Shell logo compatibility fix: render official APP logo as replaced content */
 .cr-brand:before{
-  content:url("https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/brand/construrei-app-v1/app-icon-192.png?v=brand-v1")!important;
+  content:url("https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/brand/construrei-app-v2/app-icon-192.png?v=brand-v2")!important;
   display:block!important;
   width:32px!important;
   height:32px!important;
@@ -1323,4 +1323,21 @@ body[data-cr-route-env="canonical"] .cr-flowlink.current{outline:1px solid rgba(
 }
 @media(max-width:600px){
   .cr-brand-logo{width:27px!important;height:27px!important;flex-basis:27px!important;margin-right:6px!important}
+}
+
+/* BRAND PLACEMENT V2 — FLOW SHELL */
+.cr-brand:before{content:none!important;display:none!important}
+.cr-brand-logo{
+ width:172px!important;height:42px!important;flex:0 0 172px!important;margin-right:0!important;
+ border-radius:0!important;background:transparent!important;padding:0!important;box-shadow:none!important;
+ object-fit:contain!important;
+}
+.cr-brand{gap:0!important}
+@media (min-width:1280px) and (max-width:1599px){
+ .cr-brand-logo{width:158px!important;height:38px!important;flex-basis:158px!important}
+}
+@media(max-width:600px){
+ .cr-brand-logo{width:132px!important;height:33px!important;flex-basis:132px!important;margin-right:0!important}
+ .cr-shelltop{gap:8px!important}
+ .cr-phase{padding-left:8px!important}
 }
