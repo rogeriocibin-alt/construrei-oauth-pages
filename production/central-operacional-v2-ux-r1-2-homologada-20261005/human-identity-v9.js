@@ -97,7 +97,7 @@ function owner(id){
  const old=page.querySelector(':scope > .cr-human-owner');if(!keys.length){if(old)old.remove();return}
  const h=page.querySelector(':scope > h1')||page.querySelector('h1');if(!h)return;
  let d=old;if(!d){d=document.createElement('div');d.className='cr-human-owner';d.dataset.ownerFor=id;h.insertAdjacentElement('afterend',d)}
- d.innerHTML=ownerHtml(keys);
+ const sig=keys.join('|');if(d.dataset.sig!==sig){d.dataset.sig=sig;d.innerHTML=ownerHtml(keys)}
 }
 function removeDashboardRoster(){
  document.querySelectorAll('[data-cr-dashboard-team],.cr-dashboard-team').forEach(x=>x.remove());
@@ -124,14 +124,14 @@ function academy(){
   const b=card.querySelector('b');if(!b)return;const keys=TRACK_OWNER[b.textContent.trim()]||[];
   let box=card.querySelector('.cr-academy-owners');if(!keys.length){if(box)box.remove();return}
   if(!box){box=document.createElement('div');box.className='cr-academy-owners';card.appendChild(box)}
-  box.innerHTML=keys.map(k=>PEOPLE[k]).filter(Boolean).map(p=>img(p)).join('');
+  const sig=keys.join('|');if(box.dataset.sig!==sig){box.dataset.sig=sig;box.innerHTML=keys.map(k=>PEOPLE[k]).filter(Boolean).map(p=>img(p)).join('')}
  });
 }
 function quickAccess(){
  const panel=document.querySelector('#dashboard .cr-operation-panel .cr-panel-head');if(!panel)return;
  let box=document.getElementById('crBizQuick');
  if(!box){box=document.createElement('div');box.id='crBizQuick';box.className='cr-biz-quick';panel.appendChild(box)}
- const sig='v14-five-apps-official-20261006';
+ const sig='v15-five-apps-official-20261006';
  if(box.dataset.sig===sig)return;
  box.dataset.sig=sig;
  box.innerHTML=
@@ -192,10 +192,11 @@ function loadRegistry(){
   mount();
  }).catch(()=>mount());
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{mount();loadRegistry();setTimeout(mount,250);setTimeout(mount,900)},{once:true});
-else{mount();loadRegistry();setTimeout(mount,250);setTimeout(mount,900)}
-document.addEventListener('click',e=>{if(e.target.closest('[data-page],[data-page-target],#crTopBack,#crBackBtn,#crHomeBtn'))setTimeout(mount,50)},true);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{mount();loadRegistry();setTimeout(mount,250);setTimeout(mount,900);setTimeout(mount,2500);setTimeout(mount,5000)},{once:true});
+else{mount();loadRegistry();setTimeout(mount,250);setTimeout(mount,900);setTimeout(mount,2500);setTimeout(mount,5000)}
+document.addEventListener('click',e=>{if(e.target.closest('[data-page],[data-page-target],#crTopBack,#crBackBtn,#crHomeBtn')){setTimeout(mount,50);setTimeout(mount,600)}},true);
 const ah=document.getElementById('crAgendaRows');if(ah){let t;new MutationObserver(()=>{clearTimeout(t);t=setTimeout(agenda,35)}).observe(ah,{childList:true,subtree:true})}
-new MutationObserver(()=>{setTimeout(mount,30)}).observe(document.documentElement,{childList:true,subtree:true});
+const dh=document.getElementById('docsTable');if(dh){let t;new MutationObserver(()=>{clearTimeout(t);t=setTimeout(docsOwners,35)}).observe(dh,{childList:true,subtree:true})}
+const ph=document.getElementById('boardSummary');if(ph){let t;new MutationObserver(()=>{clearTimeout(t);t=setTimeout(pendingCards,35)}).observe(ph,{childList:true,subtree:true})}
 window.addEventListener('focus',()=>setTimeout(mount,50));
 })();
