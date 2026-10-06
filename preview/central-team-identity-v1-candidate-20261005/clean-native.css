@@ -1,0 +1,975 @@
+/* CLEAN NATIVE CANDIDATE
+   Visual rules copied from owner-confirmed baseline 0dbc58985197.
+   Dynamic ownership moved to one controller; no observer-based repaint. */
+/* Candidate-only overlay. Homologated shell/menu/hero remain untouched. */.cr-inc-state{grid-column:1/-1;padding:14px;border:1px dashed #b9cee0;border-radius:9px;background:#f8fbfd;color:#526b85;font-size:10px}#quick.cr-inc-agenda{grid-template-columns:repeat(4,minmax(0,1fr))}.cr-inc-agenda-card{padding-right:10px!important}.cr-inc-agenda-card h3{padding-right:0!important}.cr-inc-badge{display:inline-flex;margin-top:7px;padding:3px 6px;border-radius:999px;font-size:7px;font-weight:850;background:#e8f7ef;color:#087342}.cr-inc-badge.warn{background:#fff4df;color:#9a6200}#flowHome.cr-inc-flow{grid-template-columns:repeat(6,minmax(0,1fr));overflow-x:auto}.cr-inc-status{border-top:3px solid var(--status)!important}.cr-inc-statusbar{height:4px;border-radius:999px;background:#edf3f7;margin-top:auto;overflow:hidden}.cr-inc-statusbar i{display:block;width:100%;height:100%;background:var(--status)}.cr-inc-pending{grid-column:1/-1!important}@media(max-width:980px){#quick.cr-inc-agenda,#flowHome.cr-inc-flow{display:flex!important;overflow-x:auto!important}.cr-inc-agenda-card{flex:0 0 250px!important}.cr-inc-status{flex:0 0 170px!important}}@media(max-width:600px){.cr-inc-agenda-card{flex-basis:86vw!important}.cr-inc-status{flex-basis:68vw!important}}
+/* P0-01 — executive header only; no navigation or downstream component changes */
+.cr-executive-header{min-height:150px!important}
+.cr-executive-header .cr-hero-main{justify-content:center!important;padding-top:20px!important;padding-bottom:20px!important}
+.cr-executive-header .cr-hero-main h1{margin:4px 0 6px!important}
+.cr-executive-tagline{margin:0!important;max-width:650px;color:#eef7ff;font-size:15px;line-height:1.35;font-weight:600}
+.cr-executive-update{display:flex;align-items:center;gap:7px;margin-top:12px;color:#cfe3f8;font-size:10px;font-weight:700}
+.cr-executive-visual{min-height:150px!important}
+@media(max-width:760px){.cr-executive-header{min-height:126px!important}.cr-executive-header .cr-hero-main{padding:16px 18px!important}.cr-executive-header .cr-hero-main h1{font-size:28px!important;line-height:1.05!important}.cr-executive-tagline{font-size:12px!important;max-width:95%}.cr-executive-update{font-size:9px;margin-top:9px}.cr-executive-header .cr-hero-visual{display:none!important}}
+
+
+/* P0-04 — approved executive cover. Candidate only. */
+.cr-executive-header{position:relative!important;overflow:hidden!important;min-height:clamp(170px,20vw,250px)!important;background:linear-gradient(90deg,rgba(4,24,50,.90) 0%,rgba(4,30,62,.72) 36%,rgba(4,25,51,.20) 68%,rgba(3,19,40,.12) 100%),url("https://raw.githubusercontent.com/rogeriocibin-alt/construrei-oauth-pages/0dbc589851971eed4cb7863f2073eb6588191549/preview/central-incorporacao-3-12-candidate-20261003/assets/capa-executiva-construrei-20261003.webp") center center/cover no-repeat!important}
+.cr-executive-header:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(3,19,40,.03),rgba(3,19,40,.24));z-index:0}
+.cr-executive-header .cr-hero-main{position:relative;z-index:2;max-width:760px;text-shadow:0 2px 18px rgba(0,0,0,.36)}
+.cr-executive-header .cr-hero-visual{position:relative;z-index:2;background:transparent!important}
+.cr-executive-header .cr-skyline{display:none!important}
+@media(max-width:760px){.cr-executive-header{min-height:158px!important;background-position:58% center!important}.cr-executive-header .cr-hero-main{padding:18px!important;background:linear-gradient(90deg,rgba(3,23,49,.86),rgba(3,23,49,.46) 68%,transparent)!important}.cr-executive-header .cr-hero-visual{display:none!important}}
+
+/* Stable first paint: final components exist before live data arrives. */
+.cr-native-loading{grid-column:1/-1;padding:14px;border:1px dashed #b9cee0;border-radius:9px;background:#f8fbfd;color:#526b85;font-size:10px}
+html[data-cr-native-state="loading"] #dashboard .cr-home-panel{contain:layout paint style}
+
+/* LIVE MATURITY COCKPIT — recovered from approved historical candidate; audit is non-blocking */
+#dashboard .cr-bottom-grid{grid-template-columns:1fr!important}
+#dashboard .cr-pending-panel,#dashboard .cr-maturity-live,#dashboard .cr-health-panel{grid-column:1/-1!important}
+.cr-maturity-live{position:relative;overflow:hidden;background:linear-gradient(135deg,#f8fbff 0%,#eef6ff 55%,#fff8e3 100%)!important;border:1px solid #c9dced!important}
+.cr-maturity-live:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-100px;top:-150px;background:radial-gradient(circle,rgba(232,181,50,.23),rgba(232,181,50,0) 68%);pointer-events:none}
+.cr-ml-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.cr-ml-title{display:flex;align-items:center;gap:8px}.cr-ml-title strong{font-size:14px;color:#07165b}.cr-ml-title i{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(145deg,#073b82,#0c6bc4);color:#ffd86a;font-style:normal}.cr-ml-sub{font-size:7px;color:#5b7895}.cr-ml-live{font-size:8px;font-weight:900;letter-spacing:.04em;padding:5px 8px;border-radius:999px;background:#fff3d6;color:#8b6412;border:1px solid #ead89a}
+.cr-ml-main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:8px}.cr-ml-gauge{--p:0;--tone:#d8a72d;display:grid;grid-template-columns:72px 1fr;gap:9px;align-items:center;padding:9px;border-radius:14px;background:rgba(255,255,255,.92);border:1px solid #d8e5f2;box-shadow:0 5px 15px rgba(14,60,112,.06)}.cr-ml-ring{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--tone) calc(var(--p)*1%),#e7edf4 0);position:relative}.cr-ml-ring:after{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff}.cr-ml-ring b{position:relative;z-index:1;font-size:17px;color:#07165b}.cr-ml-gauge h3{font-size:11px;margin:0 0 3px;color:#07165b}.cr-ml-gauge p{font-size:7.5px;line-height:1.2;margin:0;color:#4d7092}
+.cr-ml-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.cr-ml-card{--tone:#d8a72d;padding:8px;border-radius:11px;background:#fff;border:1px solid #dbe6f1;box-shadow:0 3px 10px rgba(14,60,112,.04)}.cr-ml-row{display:flex;justify-content:space-between;gap:6px;align-items:flex-start}.cr-ml-row span{font-size:8px;font-weight:800;color:#173d67;line-height:1.1}.cr-ml-row b{font-size:11px;color:var(--tone)}.cr-ml-track{height:6px;margin:6px 0 4px;background:#e7edf4;border-radius:99px;overflow:hidden}.cr-ml-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--tone),#f0c34e);border-radius:99px;transition:width .7s ease}.cr-ml-card small{font-size:6.7px;color:#64819d;line-height:1.15}.cr-ml-foot{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:8px;padding:7px 9px;border-radius:10px;background:linear-gradient(90deg,#082f67,#0b579e);color:#fff;font-size:7.5px}.cr-ml-foot b{color:#ffd86a}.cr-ml-source{opacity:.86;text-align:right}
+#dashboard .cr-health-panel{padding:7px!important}#dashboard .cr-health-panel .cr-panel-head{min-height:24px!important;margin-bottom:4px!important}#dashboard .cr-health-panel .cr-panel-title h2{font-size:10.5px!important}#dashboard .cr-health-panel .cr-panel-icon{width:22px!important;height:22px!important;font-size:10px!important}#dashboard .cr-health-panel .cr-health-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:4px!important}#dashboard .cr-health-panel .cr-health-card{padding:4px 6px!important;min-height:0!important}#dashboard .cr-health-panel .cr-health-label{font-size:6.4px!important}#dashboard .cr-health-panel .cr-health-value{font-size:9.5px!important}#dashboard .cr-health-panel .cr-health-sub{font-size:6px!important}
+@media(max-width:700px){.cr-ml-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cr-ml-main{grid-template-columns:1fr}.cr-ml-gauge{grid-template-columns:64px 1fr}.cr-ml-ring{width:58px;height:58px}#dashboard .cr-health-panel .cr-health-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:420px){.cr-ml-grid{grid-template-columns:1fr 1fr}.cr-ml-title strong{font-size:11px}.cr-ml-source{display:none}}
+
+
+/* 2026-10-04 • dashboard source simplification + restored pending cards */
+#dashboard .cr-pending-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+#dashboard .cr-live-pending{
+  min-height:138px!important;
+  grid-template-columns:42px 1fr!important;
+  grid-template-rows:1fr auto!important;
+  column-gap:9px!important;
+  padding:10px!important;
+  border-left:3px solid #075bd8!important;
+}
+#dashboard .cr-live-pending.purple{border-left-color:#7f42c9!important}
+#dashboard .cr-live-pending.amber{border-left-color:#cfa33c!important}
+#dashboard .cr-live-pending .cr-pending-icon{
+  width:40px!important;height:40px!important;font-size:18px!important;
+}
+#dashboard .cr-live-pending .cr-pending-copy h3{
+  font-size:11px!important;line-height:1.08!important;
+}
+#dashboard .cr-live-pending .cr-pending-total{
+  font-size:28px!important;margin:3px 0!important;
+}
+#dashboard .cr-live-pending .cr-pending-lines{
+  font-size:8px!important;line-height:1.15!important;gap:2px!important;
+}
+#dashboard .cr-live-pending>.btn{
+  grid-column:1/-1!important;
+  width:100%!important;
+  min-height:34px!important;
+  margin-top:7px!important;
+  font-size:9px!important;
+}
+
+/* Coarse-pointer/mobile browser safeguard.
+   Also applies when Android is using a desktop-like 980px layout viewport. */
+@media (hover:none) and (pointer:coarse) and (max-width:1100px){
+  .content{padding-left:10px!important;padding-right:10px!important}
+  #dashboard .cr-kpi-grid{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    overflow:visible!important;
+    gap:9px!important;
+    padding:0 9px 9px!important;
+  }
+  #dashboard .cr-kpi-grid .cr-op-card{
+    flex:none!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:128px!important;
+    padding:10px!important;
+  }
+  #dashboard .cr-kpi-grid .cr-op-label{font-size:12px!important}
+  #dashboard .cr-kpi-grid .cr-op-value{font-size:30px!important}
+  #dashboard .cr-kpi-grid .cr-op-detail{font-size:9px!important}
+  #dashboard .cr-kpi-grid .cr-op-status{font-size:9px!important}
+
+  #dashboard .cr-pending-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    overflow:visible!important;
+    padding:0 9px 9px!important;
+    gap:9px!important;
+  }
+  #dashboard .cr-pending-grid .cr-pending-card{
+    flex:none!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:150px!important;
+  }
+  #dashboard .cr-live-pending .cr-pending-copy h3{font-size:13px!important}
+  #dashboard .cr-live-pending .cr-pending-total{font-size:32px!important}
+  #dashboard .cr-live-pending .cr-pending-lines{font-size:10px!important}
+  #dashboard .cr-live-pending>.btn{min-height:42px!important;font-size:11px!important}
+
+  #crMaturityLive .cr-ml-title strong{font-size:14px!important}
+  #crMaturityLive .cr-ml-sub{font-size:10px!important}
+  #crMaturityLive .cr-ml-main{grid-template-columns:1fr!important}
+  #crMaturityLive .cr-ml-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #crMaturityLive .cr-ml-card{padding:11px!important}
+  #crMaturityLive .cr-ml-row span{font-size:10px!important}
+  #crMaturityLive .cr-ml-card small{font-size:8.5px!important;min-height:0!important}
+}
+@media (hover:none) and (pointer:coarse) and (max-width:600px){
+  #dashboard .cr-kpi-grid{grid-template-columns:1fr!important}
+  #crMaturityLive .cr-ml-grid{grid-template-columns:1fr!important}
+}
+
+
+/* CR GC BARS + MATURITY PALETTE V1 • 2026-10-04
+   Candidate-only visual refinement: lighter maturity palette + live GestãoClick status bars. */
+#dashboard .cr-maturity-live{
+  background:linear-gradient(135deg,#fbfdff 0%,#eef7ff 58%,#f0fbfa 100%)!important;
+  border-color:#c7dceb!important;
+}
+#dashboard .cr-maturity-live:before{
+  background:radial-gradient(circle,rgba(20,125,225,.13),rgba(20,178,165,.05) 45%,rgba(20,178,165,0) 70%)!important;
+}
+#dashboard .cr-ml-title i{
+  background:linear-gradient(145deg,#0b68c9,#1489e6)!important;
+  color:#fff!important;
+  box-shadow:0 5px 14px rgba(20,125,225,.18)!important;
+}
+#dashboard .cr-ml-gauge{
+  --tone:#147de1;
+  background:rgba(255,255,255,.96)!important;
+  border-color:#d6e5f1!important;
+  box-shadow:0 5px 16px rgba(14,60,112,.055)!important;
+}
+#dashboard #crMlGeneral{--tone:#147de1}
+#dashboard #crMlAutonomy{--tone:#14b2a5}
+#dashboard .cr-ml-ring{
+  box-shadow:inset 0 0 0 1px rgba(18,64,112,.03)!important;
+}
+#dashboard .cr-ml-ring:after{background:#fff!important}
+#dashboard .cr-ml-level{
+  display:inline-flex;
+  margin-top:5px;
+  padding:3px 7px;
+  border-radius:999px;
+  background:#edf6ff;
+  border:1px solid #cde3f6;
+  color:#1967ad;
+  font-size:6.7px;
+  font-weight:900;
+  letter-spacing:.035em;
+}
+#dashboard #crMlAutonomy .cr-ml-level{
+  background:#e9f9f6;
+  border-color:#c8eee8;
+  color:#0a8177;
+}
+#dashboard .cr-ml-card{
+  background:#fff!important;
+  border-color:#d8e5ef!important;
+  box-shadow:0 3px 10px rgba(14,60,112,.035)!important;
+}
+#dashboard .cr-ml-track{
+  background:#e9eff4!important;
+}
+#dashboard .cr-ml-track i{
+  background:var(--tone)!important;
+  box-shadow:none!important;
+}
+#dashboard .cr-ml-foot{
+  background:linear-gradient(90deg,#0b58a7,#147de1 58%,#128b91)!important;
+}
+#dashboard .cr-ml-foot b{color:#d7f6f1!important}
+
+/* GestãoClick budget/status executive card */
+#dashboard .cr-budget-status{
+  grid-column:1/-1!important;
+  position:relative;
+  overflow:hidden;
+  padding:11px!important;
+  background:linear-gradient(180deg,#ffffff 0%,#f7fbfe 100%)!important;
+  border:1px solid #cbdfea!important;
+  box-shadow:0 7px 20px rgba(18,69,112,.065)!important;
+}
+#dashboard .cr-budget-status:before{
+  content:"";
+  position:absolute;
+  width:220px;height:220px;border-radius:50%;
+  right:-105px;top:-145px;
+  background:radial-gradient(circle,rgba(106,82,215,.10),rgba(20,125,225,.04) 48%,transparent 70%);
+  pointer-events:none;
+}
+#dashboard .cr-budget-head{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  position:relative;
+  z-index:1;
+  margin-bottom:8px;
+}
+#dashboard .cr-budget-title{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+}
+#dashboard .cr-budget-icon{
+  width:30px;height:30px;flex:0 0 30px;
+  border-radius:9px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#6c55db,#4d72df);
+  color:#fff;
+  font-size:14px;
+  box-shadow:0 5px 14px rgba(94,83,211,.18);
+}
+#dashboard .cr-budget-title strong{
+  display:block;
+  color:#07165b;
+  font-size:13px;
+  letter-spacing:.005em;
+}
+#dashboard .cr-budget-sub{
+  color:#6c8298;
+  font-size:7.5px;
+  margin-top:1px;
+}
+#dashboard .cr-budget-meta{
+  margin-left:auto;
+  color:#4f708f;
+  font-size:7px;
+  text-align:right;
+  white-space:nowrap;
+}
+#dashboard .cr-budget-rows{
+  display:grid;
+  gap:3px;
+  position:relative;
+  z-index:1;
+}
+#dashboard .cr-budget-row{
+  display:grid;
+  grid-template-columns:9px minmax(145px,.9fr) minmax(180px,2.4fr) 34px;
+  align-items:center;
+  gap:8px;
+  min-height:29px;
+  padding:4px 8px;
+  border-radius:9px;
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(207,224,237,.72);
+}
+#dashboard .cr-budget-dot{
+  width:8px;height:8px;border-radius:50%;
+  display:block;
+  background:var(--budget-color,#2e86ed);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--budget-color,#2e86ed) 12%,transparent);
+}
+#dashboard .cr-budget-name{
+  min-width:0;
+  color:#16365d;
+  font-size:8.5px;
+  font-weight:800;
+  line-height:1.12;
+}
+#dashboard .cr-budget-track{
+  height:7px;
+  overflow:hidden;
+  border-radius:999px;
+  background:#e6edf3;
+}
+#dashboard .cr-budget-track>i{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:var(--budget-color,#2e86ed);
+  transition:width .55s ease;
+}
+#dashboard .cr-budget-count{
+  text-align:right;
+  color:#07165b;
+  font-size:12px;
+  font-variant-numeric:tabular-nums;
+}
+#dashboard .cr-budget-unavailable{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  padding:13px;
+  border:1px dashed #c7dce9;
+  border-radius:10px;
+  background:#f7fbfe;
+  color:#597691;
+  font-size:8px;
+}
+#dashboard .cr-budget-unavailable b{color:#173d67;font-size:9px}
+#dashboard .cr-budget-skeleton{display:grid;gap:4px}
+#dashboard .cr-budget-sk-row{
+  display:grid;
+  grid-template-columns:9px minmax(120px,.9fr) minmax(180px,2.4fr) 30px;
+  gap:8px;
+  align-items:center;
+  padding:6px 8px;
+}
+#dashboard .cr-budget-sk-row i,
+#dashboard .cr-budget-sk-row span,
+#dashboard .cr-budget-sk-row b{
+  display:block;
+  height:7px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#e8eff5,#f5f9fc,#e8eff5);
+  background-size:220% 100%;
+  animation:crBudgetPulse 1.25s linear infinite;
+}
+#dashboard .cr-budget-sk-row i{width:8px;height:8px}
+#dashboard .cr-budget-sk-row b{width:22px;justify-self:end}
+@keyframes crBudgetPulse{to{background-position:-220% 0}}
+
+@media(max-width:700px){
+  #dashboard .cr-budget-status{padding:10px!important}
+  #dashboard .cr-budget-head{align-items:flex-start}
+  #dashboard .cr-budget-meta{font-size:6.5px;white-space:normal;max-width:120px}
+  #dashboard .cr-budget-row{
+    grid-template-columns:9px minmax(120px,1fr) minmax(100px,1.35fr) 32px;
+    gap:6px;
+    min-height:31px;
+    padding:5px 7px;
+  }
+  #dashboard .cr-budget-name{font-size:8.4px}
+  #dashboard .cr-budget-count{font-size:11px}
+}
+@media (hover:none) and (pointer:coarse) and (max-width:1100px){
+  #dashboard .cr-budget-status{padding:12px!important}
+  #dashboard .cr-budget-title strong{font-size:14px}
+  #dashboard .cr-budget-sub{font-size:10px}
+  #dashboard .cr-budget-meta{font-size:9px}
+  #dashboard .cr-budget-row{
+    grid-template-columns:10px minmax(125px,1fr) minmax(100px,1.45fr) 38px;
+    min-height:38px;
+    gap:8px;
+    padding:6px 8px;
+  }
+  #dashboard .cr-budget-dot{width:9px;height:9px}
+  #dashboard .cr-budget-name{font-size:10.5px}
+  #dashboard .cr-budget-track{height:8px}
+  #dashboard .cr-budget-count{font-size:13px}
+  #dashboard .cr-ml-track i{background:var(--tone)!important}
+}
+@media(max-width:420px){
+  #dashboard .cr-budget-head{display:grid;grid-template-columns:1fr}
+  #dashboard .cr-budget-meta{margin-left:39px;max-width:none;text-align:left}
+  #dashboard .cr-budget-row{
+    grid-template-columns:9px minmax(104px,1fr) minmax(78px,1.15fr) 31px;
+    gap:6px;
+  }
+}
+
+
+/* CORRECTIONS LOCK V1 • 2026-10-04
+   Scope: agenda restored, unique GestãoClick status rows, circular gauges in APP logo palette.
+   No shell/menu/router changes. */
+
+/* Circular maturity meters — APP CONSTRU-REI logo palette, no white/transparent center. */
+#dashboard #crMlGeneral{--tone:#0b68c9!important}
+#dashboard #crMlAutonomy{--tone:#159bd7!important}
+#dashboard #crMlGeneral .cr-ml-ring,
+#dashboard #crMlAutonomy .cr-ml-ring{
+  background:conic-gradient(var(--tone) calc(var(--p)*1%),#dfe9f2 0)!important;
+  box-shadow:0 7px 18px rgba(7,76,154,.18),inset 0 0 0 1px rgba(5,45,110,.06)!important;
+}
+#dashboard #crMlGeneral .cr-ml-ring:after{
+  background:linear-gradient(145deg,#073b82 0%,#0b68c9 58%,#178bd8 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14)!important;
+}
+#dashboard #crMlAutonomy .cr-ml-ring:after{
+  background:linear-gradient(145deg,#0756a7 0%,#1287cf 55%,#19addf 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14)!important;
+}
+#dashboard #crMlGeneral .cr-ml-ring b,
+#dashboard #crMlAutonomy .cr-ml-ring b{
+  color:#fff!important;
+  text-shadow:0 1px 2px rgba(2,32,74,.32)!important;
+}
+#dashboard #crMlGeneral .cr-ml-level{
+  background:#eaf4ff!important;border-color:#c8e0f6!important;color:#0b5eaf!important
+}
+#dashboard #crMlAutonomy .cr-ml-level{
+  background:#e9f7fd!important;border-color:#c7e9f5!important;color:#087da9!important
+}
+
+/* Lightweight Agenda de Hoje — returns schedule visibility without restoring the old Agenda Management module. */
+#dashboard .cr-agenda-today{
+  grid-column:1/-1!important;
+  position:relative;
+  overflow:hidden;
+  padding:11px!important;
+  background:linear-gradient(180deg,#ffffff 0%,#f6fbff 100%)!important;
+  border:1px solid #c9dfef!important;
+  box-shadow:0 7px 20px rgba(18,69,112,.06)!important;
+}
+#dashboard .cr-agenda-today:before{
+  content:"";
+  position:absolute;
+  width:190px;height:190px;border-radius:50%;
+  right:-90px;top:-125px;
+  background:radial-gradient(circle,rgba(21,155,215,.13),rgba(11,104,201,.03) 52%,transparent 72%);
+  pointer-events:none;
+}
+#dashboard .cr-agenda-head{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  position:relative;
+  z-index:1;
+  margin-bottom:8px;
+}
+#dashboard .cr-agenda-title{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+}
+#dashboard .cr-agenda-icon{
+  width:30px;height:30px;flex:0 0 30px;
+  border-radius:9px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#0b68c9,#159bd7);
+  color:#fff;
+  font-size:14px;
+  box-shadow:0 5px 14px rgba(11,104,201,.18);
+}
+#dashboard .cr-agenda-title strong{
+  display:block;
+  color:#07165b;
+  font-size:13px;
+  letter-spacing:.005em;
+}
+#dashboard .cr-agenda-sub{
+  color:#6a8298;
+  font-size:7.5px;
+  margin-top:1px;
+}
+#dashboard .cr-agenda-meta{
+  margin-left:auto;
+  color:#4f708f;
+  font-size:7px;
+  text-align:right;
+  white-space:nowrap;
+}
+#dashboard .cr-agenda-rows{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:5px;
+  position:relative;
+  z-index:1;
+}
+#dashboard .cr-agenda-row{
+  display:grid;
+  grid-template-columns:56px minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+  min-height:54px;
+  padding:7px 9px;
+  border-radius:10px;
+  background:#fff;
+  border:1px solid #d8e6f0;
+  box-shadow:0 2px 8px rgba(18,69,112,.035);
+}
+#dashboard .cr-agenda-time{
+  font-size:14px;
+  line-height:1;
+  font-weight:950;
+  color:#0b68c9;
+  font-variant-numeric:tabular-nums;
+}
+#dashboard .cr-agenda-main{
+  min-width:0;
+  display:grid;
+  gap:1px;
+}
+#dashboard .cr-agenda-main strong{
+  color:#102f56;
+  font-size:9.5px;
+  line-height:1.1;
+  white-space:normal;
+}
+#dashboard .cr-agenda-main span{
+  color:#0a6cb9;
+  font-size:8px;
+  font-weight:850;
+  line-height:1.1;
+}
+#dashboard .cr-agenda-main small{
+  color:#6a8197;
+  font-size:7.2px;
+  line-height:1.15;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#dashboard .cr-agenda-kind{
+  align-self:center;
+  padding:4px 6px;
+  border-radius:999px;
+  background:#eaf5fd;
+  border:1px solid #cfe7f5;
+  color:#1773ae;
+  font-size:6.5px;
+  font-weight:900;
+  white-space:nowrap;
+}
+#dashboard .cr-agenda-empty,
+#dashboard .cr-agenda-unavailable{
+  grid-column:1/-1;
+  padding:14px;
+  border:1px dashed #c7dce9;
+  border-radius:10px;
+  background:#f8fbfe;
+  color:#597691;
+  font-size:8px;
+}
+#dashboard .cr-agenda-unavailable{
+  display:flex;flex-direction:column;gap:2px
+}
+#dashboard .cr-agenda-unavailable b{color:#173d67;font-size:9px}
+#dashboard .cr-agenda-skeleton{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+}
+#dashboard .cr-agenda-skeleton i{
+  display:block;
+  height:54px;
+  border-radius:10px;
+  background:linear-gradient(90deg,#e8eff5,#f7fbfd,#e8eff5);
+  background-size:220% 100%;
+  animation:crAgendaPulse 1.25s linear infinite;
+}
+@keyframes crAgendaPulse{to{background-position:-220% 0}}
+
+@media(max-width:700px){
+  #dashboard .cr-agenda-today{padding:10px!important}
+  #dashboard .cr-agenda-head{align-items:flex-start}
+  #dashboard .cr-agenda-meta{font-size:6.5px;white-space:normal;max-width:125px}
+  #dashboard .cr-agenda-rows{grid-template-columns:1fr}
+  #dashboard .cr-agenda-row{grid-template-columns:52px minmax(0,1fr) auto;min-height:58px}
+  #dashboard .cr-agenda-time{font-size:13px}
+}
+@media (hover:none) and (pointer:coarse) and (max-width:1100px){
+  #dashboard .cr-agenda-today{padding:12px!important}
+  #dashboard .cr-agenda-title strong{font-size:14px}
+  #dashboard .cr-agenda-sub{font-size:10px}
+  #dashboard .cr-agenda-meta{font-size:9px}
+  #dashboard .cr-agenda-rows{grid-template-columns:1fr}
+  #dashboard .cr-agenda-row{min-height:68px;grid-template-columns:58px minmax(0,1fr) auto;padding:9px 10px}
+  #dashboard .cr-agenda-time{font-size:15px}
+  #dashboard .cr-agenda-main strong{font-size:11px}
+  #dashboard .cr-agenda-main span{font-size:9.5px}
+  #dashboard .cr-agenda-main small{font-size:8.5px}
+  #dashboard .cr-agenda-kind{font-size:7.5px}
+}
+@media(max-width:420px){
+  #dashboard .cr-agenda-head{display:grid;grid-template-columns:1fr}
+  #dashboard .cr-agenda-meta{margin-left:39px;max-width:none;text-align:left}
+  #dashboard .cr-agenda-row{grid-template-columns:50px minmax(0,1fr)}
+  #dashboard .cr-agenda-kind{grid-column:2;justify-self:start;margin-top:2px}
+  #dashboard .cr-agenda-main small{white-space:normal}
+}
+
+
+/* FINAL HERO ART + MOBILE GLITCH CLEANUP • 2026-10-04
+   Owner-approved construction/renovation visual. No routing or data changes. */
+#dashboard>.cr-executive-header{
+  background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important;
+  border-color:rgba(255,196,0,.32)!important;
+}
+#dashboard>.cr-executive-header .cr-hero-main{
+  position:relative!important;
+  z-index:2!important;
+  background:linear-gradient(90deg,rgba(3,27,70,.96) 0%,rgba(4,40,92,.84) 76%,rgba(4,40,92,.28) 100%)!important;
+}
+#dashboard>.cr-executive-header .cr-hero-visual{
+  display:block!important;
+  position:relative!important;
+  min-height:clamp(170px,20vw,250px)!important;
+  background:
+    linear-gradient(90deg,rgba(4,35,80,.24),rgba(4,35,80,0) 28%),
+    url("./assets/hero-executivo-reformas-20261004.webp") center right/cover no-repeat!important;
+  overflow:hidden!important;
+}
+#dashboard>.cr-executive-header .cr-hero-visual>*{display:none!important}
+#dashboard>.cr-executive-header .cr-hero-visual:before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  background:linear-gradient(90deg,rgba(3,27,70,.36) 0%,rgba(3,27,70,.04) 36%,transparent 70%)!important;
+  pointer-events:none!important;
+}
+#dashboard>.cr-executive-header .cr-hero-visual:after{display:none!important}
+
+@media(max-width:980px){
+  #dashboard>.cr-executive-header{
+    grid-template-columns:1fr!important;
+    background:
+      linear-gradient(90deg,rgba(3,24,58,.98) 0%,rgba(3,32,75,.92) 52%,rgba(3,30,70,.42) 75%,rgba(3,23,55,.12) 100%),
+      url("./assets/hero-executivo-reformas-20261004.webp") right center/auto 100% no-repeat!important;
+  }
+  #dashboard>.cr-executive-header .cr-hero-main{
+    width:100%!important;
+    min-width:0!important;
+    max-width:74%!important;
+    background:transparent!important;
+  }
+  #dashboard>.cr-executive-header .cr-hero-visual{display:none!important}
+}
+@media(max-width:600px){
+  #dashboard>.cr-executive-header{
+    min-height:158px!important;
+    background:
+      linear-gradient(90deg,rgba(3,24,58,.99) 0%,rgba(3,32,75,.94) 56%,rgba(3,30,70,.56) 73%,rgba(3,23,55,.18) 100%),
+      url("./assets/hero-executivo-reformas-20261004.webp") right center/auto 100% no-repeat!important;
+  }
+  #dashboard>.cr-executive-header .cr-hero-main{
+    max-width:78%!important;
+    padding:18px!important;
+  }
+  #dashboard>.cr-executive-header .cr-executive-tagline{max-width:100%!important}
+}
+
+
+/* FINAL FULL-WIDTH HERO BACKGROUND • 2026-10-04
+   Owner-approved panorama fills the ENTIRE Gestão Executiva field.
+   Live HTML text is layered above it; the old split/right-column visual is disabled. */
+#dashboard>.cr-home-hero.cr-executive-header{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  display:block!important;
+  min-height:clamp(190px,22vw,300px)!important;
+  border:1px solid rgba(255,196,0,.35)!important;
+  border-radius:14px!important;
+  background-color:#031b46!important;
+  background-image:
+    linear-gradient(90deg,rgba(2,15,39,.88) 0%,rgba(3,24,60,.76) 34%,rgba(3,31,72,.48) 55%,rgba(3,27,61,.13) 82%,rgba(3,22,50,.04) 100%),
+    var(--cr-approved-hero,linear-gradient(112deg,#031b46 0%,#06428d 55%,#08275f 100%))!important;
+  background-position:center center,center center!important;
+  background-size:cover,cover!important;
+  background-repeat:no-repeat,no-repeat!important;
+  box-shadow:0 12px 30px rgba(8,45,88,.16)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header:before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  pointer-events:none!important;
+  background:
+    linear-gradient(90deg,rgba(1,13,35,.44) 0%,rgba(2,19,48,.20) 43%,rgba(2,22,51,.04) 72%,transparent 100%),
+    linear-gradient(180deg,rgba(2,14,34,.04),rgba(2,15,36,.18))!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header:after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:1!important;
+  pointer-events:none!important;
+  background:radial-gradient(circle at 26% 48%,rgba(4,43,94,.06),rgba(2,17,43,0) 48%)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+  position:relative!important;
+  z-index:2!important;
+  width:min(760px,72%)!important;
+  max-width:72%!important;
+  min-height:clamp(190px,22vw,300px)!important;
+  padding:clamp(22px,3.1vw,44px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  background:transparent!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.62)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-visual{
+  display:none!important;
+  visibility:hidden!important;
+  width:0!important;
+  height:0!important;
+  min-height:0!important;
+  pointer-events:none!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main .ey{
+  margin:0 0 7px!important;
+  color:#ffd43b!important;
+  font-size:clamp(9px,1vw,13px)!important;
+  line-height:1.1!important;
+  font-weight:900!important;
+  letter-spacing:.13em!important;
+  text-transform:uppercase!important;
+  text-shadow:0 2px 8px rgba(0,0,0,.55)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1{
+  margin:0 0 10px!important;
+  color:#fff!important;
+  font-size:clamp(30px,3.8vw,58px)!important;
+  line-height:.98!important;
+  font-weight:850!important;
+  letter-spacing:-.035em!important;
+  text-shadow:0 3px 18px rgba(0,0,0,.62)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1 span{
+  color:#ffd21d!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-executive-tagline{
+  margin:0!important;
+  max-width:680px!important;
+  color:#f7fbff!important;
+  font-size:clamp(12px,1.35vw,19px)!important;
+  line-height:1.38!important;
+  font-weight:600!important;
+  text-shadow:0 2px 12px rgba(0,0,0,.72)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-executive-update{
+  margin-top:14px!important;
+  color:#edf7ff!important;
+  font-size:clamp(9px,1vw,13px)!important;
+  font-weight:750!important;
+  text-shadow:0 2px 10px rgba(0,0,0,.7)!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-executive-update .cr-live-dot{
+  background:#12c97a!important;
+  box-shadow:0 0 0 4px rgba(18,201,122,.14),0 0 14px rgba(18,201,122,.30)!important;
+}
+
+@media(max-width:980px){
+  #dashboard>.cr-home-hero.cr-executive-header{
+    min-height:245px!important;
+    background-position:center center,58% center!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+    width:min(680px,78%)!important;
+    max-width:78%!important;
+    min-height:245px!important;
+    padding:24px!important;
+  }
+}
+@media(max-width:600px){
+  #dashboard>.cr-home-hero.cr-executive-header{
+    min-height:250px!important;
+    border-radius:12px!important;
+    background-image:
+      linear-gradient(90deg,rgba(2,16,41,.94) 0%,rgba(3,25,61,.84) 43%,rgba(3,30,70,.54) 66%,rgba(3,26,61,.20) 88%,rgba(3,22,50,.08) 100%),
+      var(--cr-approved-hero,linear-gradient(112deg,#031b46 0%,#06428d 55%,#08275f 100%))!important;
+    background-position:center center,63% center!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+    width:84%!important;
+    max-width:84%!important;
+    min-height:250px!important;
+    padding:22px 18px!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1{
+    font-size:34px!important;
+    line-height:.96!important;
+    max-width:100%!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main h1 span{
+    display:block!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-executive-tagline{
+    max-width:100%!important;
+    font-size:12px!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-executive-update{
+    font-size:9px!important;
+    margin-top:13px!important;
+  }
+}
+
+
+/* FINAL ASSET LOAD FIX • 2026-10-04
+   Use the approved panorama as the actual background, not a fallback gradient. */
+#dashboard>.cr-home-hero.cr-executive-header{
+  background-image:
+    linear-gradient(90deg,rgba(2,15,39,.86) 0%,rgba(3,24,60,.72) 34%,rgba(3,31,72,.44) 55%,rgba(3,27,61,.10) 82%,rgba(3,22,50,.02) 100%),
+    url("./assets/hero-executivo-full-bg-approved-20261004-v2.webp")!important;
+  background-position:center center,center center!important;
+  background-size:cover,cover!important;
+  background-repeat:no-repeat,no-repeat!important;
+}
+@media(max-width:600px){
+  #dashboard>.cr-home-hero.cr-executive-header{
+    background-image:
+      linear-gradient(90deg,rgba(2,16,41,.93) 0%,rgba(3,25,61,.82) 43%,rgba(3,30,70,.50) 66%,rgba(3,26,61,.16) 88%,rgba(3,22,50,.05) 100%),
+      url("./assets/hero-executivo-full-bg-approved-20261004-v2.webp")!important;
+    background-position:center center,63% center!important;
+    background-size:cover,cover!important;
+  }
+}
+
+
+/* EXACT APPROVED CONSTRUCTION PANORAMA • FINAL */
+#dashboard>.cr-home-hero.cr-executive-header{
+  background-color:#031b46!important;
+  background-image:
+    linear-gradient(90deg,rgba(2,16,42,.78) 0%,rgba(3,28,66,.54) 34%,rgba(3,34,76,.22) 58%,rgba(3,26,60,.04) 82%,rgba(3,20,46,0) 100%),
+    url("./assets/hero-executivo-exato-aprovado-20261004.webp")!important;
+  background-position:center center,center center!important;
+  background-size:cover,cover!important;
+  background-repeat:no-repeat,no-repeat!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header:before{
+  background:linear-gradient(180deg,rgba(0,15,40,.02),rgba(0,15,40,.08))!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header:after{background:none!important}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+  position:relative!important;
+  z-index:2!important;
+  width:min(760px,70%)!important;
+  max-width:70%!important;
+  background:transparent!important;
+}
+#dashboard>.cr-home-hero.cr-executive-header .cr-hero-visual{
+  display:none!important;
+  visibility:hidden!important;
+}
+@media(max-width:600px){
+  #dashboard>.cr-home-hero.cr-executive-header{
+    min-height:250px!important;
+    background-image:
+      linear-gradient(90deg,rgba(2,16,42,.84) 0%,rgba(3,28,66,.62) 38%,rgba(3,34,76,.27) 62%,rgba(3,26,60,.05) 84%,rgba(3,20,46,0) 100%),
+      url("./assets/hero-executivo-exato-aprovado-20261004.webp")!important;
+    background-position:center center,center center!important;
+    background-size:cover,cover!important;
+  }
+  #dashboard>.cr-home-hero.cr-executive-header .cr-hero-main{
+    width:82%!important;
+    max-width:82%!important;
+    padding:20px 18px!important;
+  }
+}
+
+
+/* EXECUTIVE PENDING PANEL R7 • 2026-10-04
+   Compact live board + execution meter. Candidate only. */
+#dashboard .cr-pending-grid{
+  display:block!important;
+  padding:0 9px 9px!important;
+}
+#dashboard .cr-exec-meter{
+  --exec:0;
+  display:grid;
+  grid-template-columns:92px minmax(0,1fr);
+  gap:13px;
+  align-items:center;
+  padding:12px;
+  margin-bottom:8px;
+  border:1px solid #c8deee;
+  border-radius:14px;
+  background:linear-gradient(135deg,#f9fcff 0%,#edf7ff 58%,#eefaf8 100%);
+  box-shadow:0 6px 18px rgba(18,69,112,.055);
+}
+#dashboard .cr-exec-ring{
+  width:82px;height:82px;border-radius:50%;
+  display:grid;place-items:center;
+  position:relative;
+  background:conic-gradient(#1187e7 calc(var(--exec)*1%),#13ad9d calc(var(--exec)*1%),#e3edf4 0);
+  box-shadow:inset 0 0 0 1px rgba(10,66,118,.04);
+}
+#dashboard .cr-exec-ring:after{
+  content:"";position:absolute;inset:8px;border-radius:50%;background:#fff;
+  box-shadow:0 2px 8px rgba(16,73,118,.06);
+}
+#dashboard .cr-exec-ring b,#dashboard .cr-exec-ring small{
+  position:relative;z-index:1;display:block;text-align:center;
+}
+#dashboard .cr-exec-ring b{font-size:20px;line-height:1;color:#07165b}
+#dashboard .cr-exec-ring small{font-size:6.8px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#5e7992;margin-top:3px}
+#dashboard .cr-exec-copy{min-width:0}
+#dashboard .cr-exec-kicker{font-size:7px;font-weight:950;letter-spacing:.08em;color:#0b71ca;margin-bottom:2px}
+#dashboard .cr-exec-copy h3{margin:0;color:#07165b;font-size:13px;line-height:1.1}
+#dashboard .cr-exec-copy p{margin:3px 0 7px;color:#5d7690;font-size:7.5px}
+#dashboard .cr-exec-stats{display:flex;gap:5px;flex-wrap:wrap}
+#dashboard .cr-exec-stats span{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:4px 7px;border-radius:999px;
+  background:#fff;border:1px solid #d9e7f1;
+  color:#506d88;font-size:7px;font-weight:800;
+}
+#dashboard .cr-exec-stats span b{color:#143f68;font-size:8px}
+#dashboard .cr-exec-stats span.bad{background:#fff0f1;border-color:#f1c9cd;color:#a43f49}
+#dashboard .cr-exec-stats span.ok{background:#edf9f3;border-color:#caebdc;color:#237754}
+#dashboard .cr-exec-foot{margin-top:6px;color:#6f879c;font-size:6.8px;font-weight:700}
+
+#dashboard .cr-pending-mini-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+}
+#dashboard .cr-pending-mini{
+  width:100%;min-width:0;
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr) auto;
+  gap:8px;align-items:center;
+  padding:9px 10px;
+  border:1px solid #d4e4ef;
+  border-left:3px solid #0b7ddd;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 4px 12px rgba(18,69,112,.045);
+  text-align:left;
+  cursor:pointer;
+  color:inherit;
+}
+#dashboard .cr-pending-mini.purple{border-left-color:#7f4bc7}
+#dashboard .cr-pending-mini.amber{border-left-color:#c99d2e}
+#dashboard .cr-pm-icon{
+  width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  background:#eaf5fd;color:#0871c5;font-size:13px;font-weight:900;
+}
+#dashboard .cr-pending-mini.purple .cr-pm-icon{background:#f1eafe;color:#7442bd}
+#dashboard .cr-pending-mini.amber .cr-pm-icon{background:#fff5dc;color:#9c7218}
+#dashboard .cr-pm-main{min-width:0}
+#dashboard .cr-pm-top{display:flex;align-items:baseline;gap:7px}
+#dashboard .cr-pm-top b{font-size:10px;color:#112d58}
+#dashboard .cr-pm-top strong{font-size:18px;color:#07165b;line-height:1}
+#dashboard .cr-pm-meta{
+  display:flex;align-items:center;gap:3px;flex-wrap:wrap;
+  margin-top:4px;color:#637d94;font-size:6.6px;line-height:1.15;
+}
+#dashboard .cr-pm-meta i{width:5px;height:5px;border-radius:50%;display:inline-block;margin-left:2px}
+#dashboard .cr-pm-meta i.bad{background:#e84458}
+#dashboard .cr-pm-meta i.warn{background:#f0aa21}
+#dashboard .cr-pm-meta i.ok{background:#23aa6d}
+#dashboard .cr-pm-meta i.run{background:#2b87dd}
+#dashboard .cr-pm-open{font-size:7px;font-weight:900;color:#0b6fc5;white-space:nowrap}
+#dashboard .cr-pending-compact-loading{
+  padding:12px;border:1px dashed #b9cee0;border-radius:11px;
+  background:#f8fbfd;color:#526b85;font-size:9px;
+}
+
+@media(max-width:760px){
+  #dashboard .cr-exec-meter{grid-template-columns:76px minmax(0,1fr);padding:10px;gap:10px}
+  #dashboard .cr-exec-ring{width:70px;height:70px}
+  #dashboard .cr-exec-ring b{font-size:18px}
+  #dashboard .cr-exec-copy h3{font-size:11px}
+  #dashboard .cr-exec-copy p{font-size:7px}
+  #dashboard .cr-pending-mini-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  #dashboard .cr-pending-mini{grid-template-columns:26px minmax(0,1fr);padding:8px 7px;gap:6px}
+  #dashboard .cr-pm-icon{width:26px;height:26px;font-size:11px}
+  #dashboard .cr-pm-open{display:none}
+  #dashboard .cr-pm-top{gap:5px}
+  #dashboard .cr-pm-top b{font-size:9px}
+  #dashboard .cr-pm-top strong{font-size:16px}
+  #dashboard .cr-pm-meta{font-size:5.8px}
+}
+@media(max-width:520px){
+  #dashboard .cr-pending-mini-grid{grid-template-columns:1fr}
+  #dashboard .cr-pending-mini{grid-template-columns:28px minmax(0,1fr) auto}
+  #dashboard .cr-pm-open{display:block}
+}

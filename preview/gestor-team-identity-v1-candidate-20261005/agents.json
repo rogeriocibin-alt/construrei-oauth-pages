@@ -1,0 +1,151 @@
+{
+  "build": "CR-PM-V1.2-AGENT-HUB-V1-OFFICIAL-20261005",
+  "status": "OFFICIAL_HOMOLOGATED",
+  "checkpoint": "checkpoint-before-agent-hub-v1-20261005",
+  "updated_at": "2026-10-05T22:15:00-03:00",
+  "active_action": {
+    "agent": "CR_ASSERTIVO",
+    "state": "CONCLUÍDO",
+    "action": "Agent Hub V1 homologado e integrado ao Gestor do Projeto",
+    "handoff": [
+      "BIO",
+      "CR_ASSERTIVO"
+    ]
+  },
+  "agents": [
+    {
+      "code": "BIO",
+      "name": "BIO",
+      "role": "Orquestrador Mestre",
+      "level": 90,
+      "status": "CANÔNICO",
+      "mode": "ORCHESTRATE",
+      "escalation": "ROGERIO_MASTER",
+      "avatar": "orchestrator",
+      "summary": "Classifica intenção, risco e alçada; delega ao especialista e consolida o resultado.",
+      "knowledge": "CANÔNICO EXISTENTE",
+      "proof": "REGRA CANÔNICA ATIVA"
+    },
+    {
+      "code": "CR_ASSERTIVO",
+      "name": "CR Assertivo",
+      "role": "Executor Técnico",
+      "level": 70,
+      "status": "CANÔNICO",
+      "mode": "TECHNICAL_CONTROLLED",
+      "escalation": "BIO",
+      "avatar": "engineer",
+      "summary": "Código, integrações, Supabase, testes, candidata, publicação controlada e rollback.",
+      "knowledge": "CANÔNICO EXISTENTE",
+      "proof": "REGRA CANÔNICA ATIVA"
+    },
+    {
+      "code": "BIO_GESTOR",
+      "name": "BIO Gestor",
+      "role": "Inteligência Gerencial",
+      "level": 60,
+      "status": "CANÔNICO",
+      "mode": "READ_ONLY",
+      "escalation": "BIO",
+      "avatar": "manager",
+      "summary": "Agenda, Click, Trello, F00–F09, pendências e análise gerencial; READ_ONLY por padrão.",
+      "knowledge": "CANÔNICO EXISTENTE",
+      "proof": "REGRA CANÔNICA ATIVA"
+    },
+    {
+      "code": "INFRA_REI",
+      "name": "Infra REI",
+      "role": "Guardião de Continuidade",
+      "level": 50,
+      "status": "ONBOARDING",
+      "mode": "MONITOR_READ_ONLY",
+      "escalation": "CR_ASSERTIVO",
+      "avatar": "guardian",
+      "summary": "Saúde, backup, restore, checkpoints e incidentes; mudanças estruturais sob CR Assertivo.",
+      "knowledge": "KNOW-HOW CANON V1 VINCULADO",
+      "proof": "PROVA DE ONBOARDING PENDENTE"
+    },
+    {
+      "code": "ORCA_REI",
+      "name": "ORÇA-REI",
+      "role": "Especialista de Orçamentos",
+      "level": 45,
+      "status": "CANDIDATO R6",
+      "mode": "SCOPED_F02",
+      "escalation": "BIO_GESTOR",
+      "avatar": "estimator",
+      "summary": "F02, padrão GestãoClick, orçamento, matemática auditável, PDF e gate humano comercial.",
+      "knowledge": "ESPECIALIDADE DOCUMENTADA",
+      "proof": "HOMOLOGAÇÃO HUMANA PENDENTE"
+    },
+    {
+      "code": "FINANCEIRO_REI",
+      "name": "Financeiro REI",
+      "role": "Inteligência Financeira",
+      "level": 40,
+      "status": "ONBOARDING",
+      "mode": "FINANCIAL_GOVERNED",
+      "escalation": "BIO",
+      "avatar": "finance",
+      "summary": "Receitas, custos, lucro, margem, rateio, capital de giro, conciliação e divergências.",
+      "knowledge": "KNOW-HOW CANON V1 VINCULADO",
+      "proof": "PROVA DE ONBOARDING PENDENTE"
+    },
+    {
+      "code": "GABI_FLOW",
+      "name": "Gabi Flow",
+      "role": "Atendimento e Triagem",
+      "level": 35,
+      "status": "ONBOARDING",
+      "mode": "SCOPED_TRIAGE",
+      "escalation": "BIO_GESTOR",
+      "avatar": "service",
+      "summary": "Entrada, coleta, triagem, contexto mínimo e preparação para F00/F01.",
+      "knowledge": "KNOW-HOW CANON V1 VINCULADO",
+      "proof": "PROVA DE ONBOARDING PENDENTE"
+    }
+  ],
+  "rules": [
+    "Rogério é autoridade Master final.",
+    "BIO roteia; especialistas executam dentro da própria alçada.",
+    "CR Assertivo protege mudanças técnicas com teste, evidência e rollback.",
+    "BIO Gestor é READ_ONLY por padrão.",
+    "Avatar + nome + função + ação + estado são obrigatórios em ações visíveis.",
+    "Visibilidade não amplia alçada.",
+    "Cadastro não equivale a homologação.",
+    "Onboarding Know-How Canon V1 é obrigatório antes de homologação."
+  ],
+  "tests": [
+    {
+      "id": "T1",
+      "title": "ORÇA-REI tenta alterar código",
+      "expected": "BLOQUEAR → CR ASSERTIVO"
+    },
+    {
+      "id": "T2",
+      "title": "CR Assertivo recebe pedido de preço comercial",
+      "expected": "REDIRECIONAR → ORÇA-REI"
+    },
+    {
+      "id": "T3",
+      "title": "BIO recebe tarefa técnica",
+      "expected": "DELEGAR → CR ASSERTIVO"
+    },
+    {
+      "id": "T4",
+      "title": "Financeiro REI tenta alterar Central",
+      "expected": "BLOQUEAR → CR ASSERTIVO"
+    },
+    {
+      "id": "T5",
+      "title": "BIO Gestor tenta escrever operação sem autorização",
+      "expected": "BLOQUEAR / ESCALAR → BIO"
+    },
+    {
+      "id": "T6",
+      "title": "Infra REI detecta falha de backup",
+      "expected": "ANALISAR → ESCALAR execução → CR ASSERTIVO"
+    }
+  ],
+  "hub_status": "OFICIAL / HOMOLOGADO / CONGELADO"
+}
