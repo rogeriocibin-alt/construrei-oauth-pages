@@ -693,3 +693,15 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Padrão transversal registrado em `docs/INTELLIGENT_INPUT_PATTERN_V1_20261005.md` para adoção gradual no APP e F00→F09.
 - Produção/F02 oficial permanece **inalterada** até validação de Rogério.
 - Gate de validação: testar no celular/notebook um caso real F02, aplicar entrada inteligente e conferir merge + PDF/GestãoClick antes de promoção.
+
+
+### F02 ORÇA-REI R4 — correção de identidade/PDF — 2026-10-05
+- Candidata: `preview/f02-orca-rei-v1-r3-intake-20261005/`
+- Commit: `41b70a8f931187f88da24f69a0c476a0e84963ac`
+- Build: `CR-F02-ORCA-REI-V1-R4-PDF-CORPORATE-20261005`
+- Logo de documento corrigida: usar **logo corporativa horizontal CONSTRU-REI**; a logo redonda permanece exclusiva do APP.
+- Fonte do ativo corporativo validada: Edge `construrei-logo`, asset padrão `construrei-logo` (não `asset=app`).
+- Cabeçalho jurídico preservado: BOOM NEGÓCIOS LTDA, CNPJ 32.329.721/0001-36, endereço/CEP e contatos oficiais.
+- PDF: removida paginação CSS inválida `Página 0 de 0`; rodapé passou para fluxo normal para não invadir observações; blocos de observações, totais e termos protegidos contra quebra ruim; impressão espera a logo carregar.
+- Caso Escola 766-26 permanece gabarito de homologação.
+- F02 oficial em `production/flow-canonical-20261001/f02/` permanece inalterado até validação humana desta candidata.
