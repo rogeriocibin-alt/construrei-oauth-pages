@@ -489,11 +489,11 @@
       "product": "central",
       "name": "Identidade Humana Contextual V3 • Central + Gestor + Apresentação",
       "date": "2026-10-06",
-      "status": "candidate",
+      "status": "canonical",
       "parent": "human-identity-context-v2-20261006",
       "commit": "",
       "branch": "cr-avatar-link-sync-v3-20261006",
-      "checkpoint": "PENDING_PROMOTION",
+      "checkpoint": "CHECKPOINT_AVATAR_LINK_SYNC_V3_OFFICIAL_20261006",
       "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/",
       "gains": [
         "equipe visível na Central sem substituir a logo",
@@ -501,7 +501,7 @@
         "Apresentação Viva sincronizada no mesmo link"
       ],
       "losses": [],
-      "note": "Pacote de correção de drift de links e identidade visual humana entre PWA, Central e apresentação."
+      "note": "Pacote oficial de correção de drift entre Gestor PWA, aliases, Central e Apresentação Viva. Promoção no mesmo URL, sem criar arquitetura paralela."
     }
   ],
   "checkpoints": [
