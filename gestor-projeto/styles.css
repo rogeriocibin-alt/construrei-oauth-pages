@@ -329,11 +329,56 @@ button{cursor:pointer}
   content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
   background:
     linear-gradient(90deg,rgba(4,23,45,.93) 0%,rgba(7,24,93,.76) 43%,rgba(7,24,93,.18) 100%),
-    url("../assets/brand/construrei-app-v1/banner-gestor.webp?v=brand-v1") center right/cover no-repeat;
+    url("../assets/brand/construrei-app-v2/banner-gestor.webp?v=brand-v2") center right/cover no-repeat;
 }
 #view-now>.hero .hero-grid{position:relative;z-index:2}
 @media(max-width:720px){
   #view-now>.hero:before{background:
     linear-gradient(180deg,rgba(4,23,45,.84),rgba(7,24,93,.72)),
-    url("../assets/brand/construrei-app-v1/banner-gestor.webp?v=brand-v1") 66% center/cover no-repeat}
+    url("../assets/brand/construrei-app-v2/banner-gestor.webp?v=brand-v2") 66% center/cover no-repeat}
+}
+
+/* BRAND PLACEMENT V2 — correct art roles */
+.sidebar .brand{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:7px!important;padding:15px 14px 17px!important}
+.sidebar .brand-logo{width:205px!important;height:auto!important;max-width:100%!important;border-radius:0!important;background:transparent!important;padding:0!important;box-shadow:none!important;object-fit:contain!important}
+.sidebar .brand>div{padding-left:2px!important}
+.sidebar .brand>div strong{display:none!important}
+.sidebar .brand>div span{font-size:11px!important;font-weight:850!important;letter-spacing:.03em!important;color:#dcecff!important}
+.topbar-brand img{width:38px!important;height:38px!important;border-radius:50%!important;background:#071a35!important;object-fit:cover!important;padding:0!important}
+.topbar-brand b{font-size:11px!important}.topbar-brand small{font-size:8.5px!important}
+
+/* 09 BANNER — GESTOR DO PROJETO */
+#view-now>.hero{
+ min-height:245px!important;padding:0!important;background:url("../assets/brand/construrei-app-v2/banner-gestor.webp?v=brand-v2") center/cover no-repeat!important;
+}
+#view-now>.hero:before{display:none!important}
+#view-now>.hero:after{display:none!important}
+#view-now>.hero .hero-grid{min-height:245px!important;padding:18px!important;display:flex!important;align-items:flex-end!important;justify-content:flex-end!important}
+#view-now>.hero .hero-grid>div:first-child{display:none!important}
+#view-now>.hero .hero-status{margin-left:auto!important;background:rgba(3,20,53,.76)!important;backdrop-filter:blur(8px)!important;border-color:rgba(255,255,255,.22)!important}
+
+/* 11 CAPA PARA MÓDULOS / PROJETOS */
+#view-products .page-intro{
+ min-height:210px!important;padding:24px!important;border-radius:18px!important;display:flex!important;align-items:flex-end!important;
+ background:
+  linear-gradient(90deg,rgba(4,23,45,.18),rgba(4,23,45,.02)),
+  url("../assets/brand/construrei-app-v2/module-projects-cover.webp?v=brand-v2") center/cover no-repeat!important;
+ box-shadow:0 16px 40px rgba(7,24,93,.14)!important;overflow:hidden!important;
+}
+#view-products .page-intro h2,#view-products .page-intro p{display:none!important}
+
+/* 07 ÍCONES DE MÓDULO — apenas onde o significado é inequívoco */
+.nav-btn[data-view="fronts"] .ico{background-image:url("../assets/brand/construrei-app-v2/module-obras.png?v=brand-v2")}
+.nav-btn[data-view="products"] .ico{background-image:url("../assets/brand/construrei-app-v2/module-projects.png?v=brand-v2")}
+.nav-btn[data-view="agents"] .ico{background-image:url("../assets/brand/construrei-app-v2/module-equipe.png?v=brand-v2")}
+.nav-btn[data-view="governance"] .ico,.nav-btn[data-view="infrastructure"] .ico{background-image:url("../assets/brand/construrei-app-v2/module-configuracoes.png?v=brand-v2")}
+.nav-btn[data-view="fronts"] .ico,.nav-btn[data-view="products"] .ico,.nav-btn[data-view="agents"] .ico,.nav-btn[data-view="governance"] .ico,.nav-btn[data-view="infrastructure"] .ico{
+ background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;color:transparent!important;
+ border-radius:8px!important;width:28px!important;height:28px!important;flex:0 0 28px!important;
+}
+@media(max-width:760px){
+ .sidebar .brand-logo{width:180px!important}
+ #view-now>.hero{min-height:190px!important;background-position:53% center!important}
+ #view-now>.hero .hero-grid{min-height:190px!important;padding:10px!important}
+ #view-products .page-intro{min-height:160px!important;background-position:55% center!important}
 }
