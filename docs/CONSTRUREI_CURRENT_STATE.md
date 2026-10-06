@@ -810,3 +810,12 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Central, APP e F00→F09 não foram alterados nesta promoção.
 - GitHub Pages da homologação: **SUCCESS** — run `37398083013` sobre o state commit `61b34c494094721f961ab7642c77a788a7fdc6a7`.
 - Rollback imediato: branch `checkpoint-gestor-h5-before-agent-hub-v1-20261005`.
+
+
+### F02 ORÇA-REI R7 — PDF premium canônico — 2026-10-05
+- Status: CANDIDATA / aguardando validação humana.
+- Commit: `7c13e349df7426dd6827f204d53025b91e92c3e2`.
+- Build: `CR-F02-ORCA-REI-V1-R7-PDF-PREMIUM-CANONICAL-20261005`.
+- Correções: cabeçalho premium, hierarquia comercial, subtotais fora da tabela sem quebra, títulos de serviços mais limpos, fornecimento de portas explicitamente separado na descrição, rodapé institucional, matemática preservada e auditável.
+- Caso Escola 766-26 validado matematicamente: Serviços R$ 2.140,00 + Produtos/Materiais R$ 1.543,00 = Total R$ 3.683,00.
+- Produção `production/flow-canonical-20261001/f02/` permanece inalterada até validação.
