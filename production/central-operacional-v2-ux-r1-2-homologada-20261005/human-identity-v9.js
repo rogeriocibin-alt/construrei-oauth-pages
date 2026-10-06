@@ -124,7 +124,20 @@ function quickAccess(){
 function topNav(){
  const menu=document.querySelector('.top .menu');if(menu)menu.classList.add('cr-menu-responsive-only');
  const back=document.getElementById('crTopBack');
- if(back){back.title='Voltar ao módulo anterior / Gestor do Projeto';back.setAttribute('aria-label','Voltar')}
+ if(!back)return;
+ back.title='Voltar ao módulo anterior / Gestor do Projeto';back.setAttribute('aria-label','Voltar');
+ back.onclick=function(){
+  try{
+   const p=new URLSearchParams(location.search),origin=String(p.get('origin')||'').toLowerCase();
+   const ref=String(document.referrer||'').toLowerCase();
+   if(origin.includes('gestor')||ref.includes('/gestor-projeto/')){
+    location.assign('https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/');return;
+   }
+   if(typeof window.crCanonicalBack==='function'){window.crCanonicalBack();return}
+   if(history.length>1){history.back();return}
+   if(typeof window.go==='function')window.go('dashboard');
+  }catch(_){if(typeof window.go==='function')window.go('dashboard')}
+ };
 }
 function prune(){
  document.querySelectorAll('.grp').forEach(g=>{if(!g.querySelector('.nav'))g.remove()});
