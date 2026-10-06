@@ -17,6 +17,11 @@
  if(!/^F0[0-9]$/.test(code))return;
  document.body.dataset.crFlow=code;
  document.body.dataset.crRouteEnv="canonical";
+ if(!document.getElementById("crBrandHeadV1")){
+   const marker=document.createElement("meta");marker.id="crBrandHeadV1";marker.name="cr-brand";marker.content="CR-BRAND-CANONICAL-V1-20261006";document.head.appendChild(marker);
+   const f32=document.createElement("link");f32.rel="icon";f32.type="image/png";f32.sizes="32x32";f32.href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/brand/construrei-app-v1/favicon-32.png?v=brand-v1";document.head.appendChild(f32);
+   const apple=document.createElement("link");apple.rel="apple-touch-icon";apple.sizes="180x180";apple.href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/brand/construrei-app-v1/apple-touch-icon.png?v=brand-v1";document.head.appendChild(apple);
+ }
 
  const current=Number(code.slice(1));
  const [title,mission]=missions[code]||[code,""];
@@ -41,7 +46,7 @@
 
  const bar=document.createElement("div");
  bar.className="cr-shellbar";
- bar.innerHTML='<div class="cr-shelltop"><a class="cr-brand cr-brand-home" href="'+central+'" aria-label="Voltar à Central"><img class="cr-brand-logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&rev=app-identity-canonical-20260930" alt="CONSTRU-REI"><span class="constru">CONSTRU</span><span class="rei">REI</span></a><div class="cr-phase"><b>'+code+' — '+title+'</b><span>'+mission+'</span></div></div><nav class="cr-flownav" aria-label="Fluxos F00 a F09">'+links+'</nav><div class="cr-shell-note">Um chamado • um número • uma fase responsável por vez</div>';
+ bar.innerHTML='<div class="cr-shelltop"><a class="cr-brand cr-brand-home" href="'+central+'" aria-label="Voltar à Central"><img class="cr-brand-logo" src="https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/brand/construrei-app-v1/app-icon-192.png?v=brand-v1" alt="CONSTRU-REI"><span class="constru">CONSTRU</span><span class="rei">REI</span></a><div class="cr-phase"><b>'+code+' — '+title+'</b><span>'+mission+'</span></div></div><nav class="cr-flownav" aria-label="Fluxos F00 a F09">'+links+'</nav><div class="cr-shell-note">Um chamado • um número • uma fase responsável por vez</div>';
  document.body.prepend(bar);
 
  // Keep all visible flow links inside the canonical production universe.
