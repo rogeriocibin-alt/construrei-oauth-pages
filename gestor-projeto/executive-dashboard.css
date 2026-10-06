@@ -83,3 +83,11 @@ box-shadow:0 22px 48px rgba(7,24,93,.18)}
   .xd-root .card-head{padding:13px}.xd-attention{padding:0 9px 9px}.xd-att-item{padding:9px;grid-template-columns:29px 1fr 12px}.xd-att-icon{width:27px;height:27px}
   .xd-access-grid{grid-template-columns:1fr}
 }
+
+/* BRAND CANONICAL V1 */
+#executiveDashboard .xd-hero{position:relative;overflow:hidden;isolation:isolate}
+#executiveDashboard .xd-hero:before{
+ content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.22;
+ background:url("../assets/brand/construrei-app-v1/banner-gestor.webp?v=brand-v1") center right/cover no-repeat;
+}
+#executiveDashboard .xd-hero>*{position:relative;z-index:1}

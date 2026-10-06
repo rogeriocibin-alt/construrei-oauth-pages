@@ -1,0 +1,23 @@
+{
+  "id": "CR-BRAND-CANONICAL-V1-20261006",
+  "status": "CANDIDATE",
+  "source": "CONSTRU_REI_APP_KIT_IMAGENS_V1",
+  "canonical_base": "/construrei-oauth-pages/assets/brand/construrei-app-v1/",
+  "assets": {
+    "logo_horizontal": "logo-horizontal.webp",
+    "emblem": "emblema.webp",
+    "app_icon_192": "app-icon-192.png",
+    "app_icon_512": "app-icon-512.png",
+    "apple_touch": "apple-touch-icon.png",
+    "favicon_16": "favicon-16.png",
+    "favicon_32": "favicon-32.png",
+    "banner_central": "banner-central.webp",
+    "banner_gestor": "banner-gestor.webp"
+  },
+  "rules": {
+    "single_source_of_truth": true,
+    "human_avatar_distinct_from_system_avatar": true,
+    "do_not_change_business_logic": true,
+    "preserve_official_links": true
+  }
+}
