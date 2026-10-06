@@ -976,3 +976,25 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Build Central V5: `bad76ce00f4818e6b1cb6342a5aa218144646126` • GitHub Pages run `37407234029` = **SUCCESS**.
 - Checkpoint pré-promoção do Gestor: `checkpoint-before-gestor-team-identity-v2-promotion-20261005`.
 - Regra antirregressão: Sala da Equipe e Apresentação não devem ser modificadas por correções da Central; Central não deve herdar menu de preview antiga; Gestor não deve perder a equipe humana após rerender do Agent Hub.
+
+
+## Financeiro REI V1 — homologação canônica — 2026-10-06
+
+- Status: **OFICIAL / HOMOLOGADO / ATIVO**
+- Agente: `FINANCEIRO_REI`
+- Build: `CR-FINANCEIRO-REI-V1-OFFICIAL-20261006`
+- Gestor humano direto: **Rogério / Diretoria Master**
+- Roteamento automático financeiro: **ATIVO**
+- BIO: orquestra/roteia/consolida; **não executa especialidade financeira**.
+- CR Assertivo: executa apenas a camada técnica após handoff; **não define nem altera regra financeira**.
+- Ágata: **fora da equipe ativa**; sem responsabilidade, aprovação ou alçada financeira atual. Registros históricos permanecem apenas como evidência quando aplicável.
+- Manual canônico: `docs/agents/FINANCEIRO_REI_V1.md`
+- Relatório de onboarding: `docs/agents/FINANCEIRO_REI_V1_ONBOARDING_REPORT_20261006.md`
+- Registro de agentes: `docs/AGENTS_REGISTRY.md`
+- Testes de onboarding: `agents/onboarding-tests.json`
+- Branch de trabalho: `cr-financeiro-rei-v1-official-20261006`
+- PR homologada: **#27**
+- Commit promovido em `main`: `b19b3f472ea8bc9ce2d65698a8d0eeb02b28317b`
+- Checkpoint: `CHECKPOINT_FINANCEIRO_REI_V1_OFFICIAL_20261006`
+- Caso matemático de referência 447-26: lucro R$ 599,95; margem 39,21%; rateio reconciliado a centavos com residual de arredondamento absorvido no Capital de Giro.
+- Gate humano: **PASS_EXPLICIT_OWNER_APPROVAL** — Rogério determinou o fechamento do onboarding e a promoção do agente em 06/10/2026.
