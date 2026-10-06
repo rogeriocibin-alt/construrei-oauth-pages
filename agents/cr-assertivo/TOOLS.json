@@ -1,0 +1,15 @@
+{
+  "agent_code": "CR_ASSERTIVO",
+  "note": "Catálogo de domínios de ferramenta/capacidade. Não implica conexão, credencial ou runtime ativo.",
+  "capability_domains": [
+    "código",
+    "GitHub",
+    "Supabase",
+    "integrações",
+    "testes",
+    "deploy controlado",
+    "rollback"
+  ],
+  "execution_rule": "Usar somente ferramentas conectadas/autorizadas e dentro da alçada do agente.",
+  "public_client_rule": "Não expor chaves privilegiadas, tokens ou credenciais em HTML/JS público."
+}
