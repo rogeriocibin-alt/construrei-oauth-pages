@@ -2,7 +2,28 @@
   "agent_code": "FINANCEIRO_REI",
   "authority_level": 40,
   "default_mode": "FINANCIAL_GOVERNED",
-  "escalation_to": "BIO",
+  "state": "HOMOLOGATED_ACTIVE",
+  "human_manager": "ROGERIO_MASTER",
+  "financial_decision_escalation_to": "ROGERIO_MASTER",
+  "automatic_routing": true,
+  "routing_owner_for": [
+    "financeiro",
+    "receitas",
+    "custos",
+    "lucro",
+    "margem",
+    "recebimentos",
+    "pagamentos",
+    "valores em aberto",
+    "rateio",
+    "capital de giro",
+    "conciliação",
+    "fechamento",
+    "divergência financeira",
+    "comissão"
+  ],
+  "orchestration_rule": "BIO classifica e encaminha. BIO não executa a especialidade financeira.",
+  "technical_rule": "CR Assertivo atua apenas na implementação técnica e não decide regra financeira.",
   "allowed_scope": [
     "analisar financeiro",
     "calcular lucro",
@@ -10,14 +31,23 @@
     "rateio",
     "capital de giro",
     "conciliação",
-    "relatórios"
+    "fechamento",
+    "recebimentos",
+    "valores em aberto",
+    "relatórios financeiros",
+    "detectar divergências"
   ],
   "prohibited_scope": [
     "alterar código",
     "alterar infraestrutura",
     "reabrir obra fechada",
-    "inventar regra fiscal"
+    "inventar regra fiscal",
+    "inventar regra tributária",
+    "alterar regra financeira canônica sem autorização de Rogério",
+    "ocultar divergência",
+    "expor custo ou margem interna ao cliente sem autorização"
   ],
   "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+  "specialty_canon": "docs/agents/FINANCEIRO_REI_KNOW_HOW_CANON_V1.md",
   "visibility_required": true
 }
