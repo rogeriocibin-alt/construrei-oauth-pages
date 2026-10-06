@@ -861,3 +861,20 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Validação específica: logo corporativa correta no PDF, layout premium aprovado nesta etapa, matemática/subtotais/total preservados.
 - Regra: **não promover automaticamente para produção**; manter F02 oficial congelado até próxima rodada/homologação.
 - Próxima frente definida para 2026-10-06: criar campo de anexos com links para fotos, vídeos, arquivos e documentos; avaliar modelos inteligentes de vistoria e visualização inline dentro da própria tela em celular e desktop.
+
+
+## Team Identity V1 — personificação da equipe — 2026-10-05
+
+- Status: **CANDIDATA / NÃO PROMOVIDA / AGUARDANDO VALIDAÇÃO HUMANA**.
+- Objetivo: usar as artes de Rogério, Éder, Gabrielly e Fabrício como identidade visual das **pessoas reais da equipe**, preservando os avatares próprios dos agentes digitais.
+- Checkpoint pré-implementação: `checkpoint-before-team-identity-v1-20261005`.
+- Assets completos: `assets/team/{rogerio,eder,gabrielly,fabricio}.webp`.
+- Assets leves de avatar: `assets/team/{rogerio,eder,gabrielly,fabricio}-face.webp`.
+- Gestor candidato: `preview/gestor-team-identity-v1-candidate-20261005/`.
+- Central candidata: `preview/central-team-identity-v1-candidate-20261005/`.
+- Gestor: painel **Equipe Humana • Identidade Operacional** incluído em Agentes & Automações, separado da equipe digital.
+- Central: perfil de Rogério no cabeçalho, roster da Sala da Equipe, miniavatares na Agenda quando o responsável é identificado e identificação visual nas áreas Rogério/Éder.
+- Regra canônica: **foto humana = pessoa; avatar do Agent Hub = agente digital**. Não misturar alçadas ou identidades.
+- Documento: `docs/TEAM_IDENTITY_V1_20261005.md`.
+- Central oficial e Gestor oficial permanecem **INALTERADOS** até o gate humano.
+- Próximo gate: testar notebook + celular; com aprovação explícita, promover aos caminhos oficiais mantendo os links estáveis, congelar e registrar checkpoint final.
