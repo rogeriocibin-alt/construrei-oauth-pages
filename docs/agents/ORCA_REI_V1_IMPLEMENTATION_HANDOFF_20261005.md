@@ -190,3 +190,28 @@ No cabeçalho do F02:
 4. Testar valor sem natureza definida; o sistema deve marcar A CONFERIR, sem assumir custo ou venda.
 5. Confirmar que a saída externa continua no padrão GestãoClick e que nenhuma análise interna vaza ao cliente.
 
+## Aprendizado automático — requisito incorporado
+
+A implementação do ORÇA-REI deve separar **versão de software** de **memória operacional**.
+
+### Comportamento obrigatório
+
+- capturar automaticamente o orçamento final quando o F02 for liberado para F03 após gate humano;
+- registrar automaticamente a proposta quando o F03 for aprovada pelo cliente;
+- manter eventos de aprendizagem append-only e padrões agregados;
+- consultar padrões aprendidos na Entrada Inteligente e devolver referências históricas como apoio;
+- nunca substituir silenciosamente o valor atual pelo valor histórico;
+- não exigir publicação de nova versão apenas para incorporar novos casos validados;
+- manter configuração de aprendizado ativa/pausada em dado persistente;
+- impedir acesso direto anônimo às tabelas de aprendizagem;
+- preservar rastreabilidade e idempotência.
+
+### Critérios adicionais de homologação
+
+1. liberar um orçamento revisado do F02 para F03 e confirmar geração automática de evento/padrão;
+2. aprovar a proposta no F03 e confirmar incremento do histórico aprovado pelo cliente;
+3. reprocessar item equivalente e confirmar que o F02 apresenta referência histórica sem alterar automaticamente o preço;
+4. repetir o mesmo evento e confirmar idempotência;
+5. confirmar que rascunho, Entrada Inteligente bruta e IA terceira não viram verdade aprendida;
+6. confirmar que novas amostras entram sem redeploy;
+7. confirmar que regras canônicas continuam imutáveis sem gate humano.
