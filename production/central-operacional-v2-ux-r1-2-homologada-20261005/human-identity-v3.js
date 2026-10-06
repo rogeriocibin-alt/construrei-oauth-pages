@@ -29,21 +29,26 @@ function ensureProfile(){
  const w=document.querySelector('.cr-profile.cr-profile-static .cr-avatar')||document.querySelector('.cr-profile .cr-avatar');
  const img=w&&w.querySelector('img');if(!w||!img)return;
  w.classList.add('cr-human-profile');
- if(!/rogerio-face\.webp(?:\?|$)/.test(img.src)){img.src=PEOPLE.rogerio.face+'?v=3';img.alt='Rogério • Diretor CONSTRU-REI';}
- const profile=w.closest('.cr-profile');if(profile){profile.setAttribute('aria-label','Rogério • Diretor');profile.style.display='flex';}
+ if(!/rogerio-face\.webp(?:\?|$)/.test(img.src)){img.src=PEOPLE.rogerio.face+'?v=31';img.alt='Rogério • Diretor CONSTRU-REI';}
+ const profile=w.closest('.cr-profile');if(profile){profile.setAttribute('aria-label','Rogério • Diretor');profile.style.setProperty('display','flex','important');profile.style.setProperty('visibility','visible','important');}
+ w.style.setProperty('display','inline-flex','important');
 }
 function ensureAgenda(){
- document.querySelectorAll('#crAgendaRows .cr-agenda-row').forEach(r=>{
-   const main=r.querySelector('.cr-agenda-main');if(!main)return;
+ const rows=[...document.querySelectorAll('#crAgendaRows .cr-agenda-row')];
+ rows.forEach(r=>{
+   const main=r.querySelector('.cr-agenda-main')||r;
    const strong=main.querySelector('strong');
-   let box=main.querySelector('.cr-agenda-team-avatars');
-   const ps=detect((strong?strong.textContent+' ':'')+r.textContent);
+   let box=r.querySelector('.cr-agenda-team-avatars');
+   const source=[strong?.textContent||'',main.textContent||'',r.getAttribute('data-cr-team')||'',r.getAttribute('aria-label')||''].join(' ');
+   const ps=detect(source);
    if(!ps.length){if(box)box.remove();return;}
    const sig=ps.map(p=>p.name).join('|');
    if(box&&box.dataset.sig===sig)return;
-   if(!box){box=document.createElement('div');box.className='cr-agenda-team-avatars';(strong||main.firstChild)?main.insertBefore(box,strong||main.firstChild):main.appendChild(box);}
+   if(!box){box=document.createElement('div');box.className='cr-agenda-team-avatars';}
    box.dataset.sig=sig;
-   box.innerHTML=ps.map(p=>'<img src="'+p.face+'?v=3" alt="'+esc(p.name)+'" title="'+esc(p.name)+'" loading="lazy">').join('');
+   box.setAttribute('aria-label','Equipe responsável: '+ps.map(p=>p.name).join(', '));
+   box.innerHTML=ps.map(p=>'<img src="'+p.face+'?v=31" alt="'+esc(p.name)+'" title="'+esc(p.name)+'" loading="eager">').join('');
+   if(strong&&strong.parentElement===main)main.insertBefore(box,strong);else if(main.firstChild)main.insertBefore(box,main.firstChild);else main.appendChild(box);
  });
 }
 function ownerHtml(keys){
@@ -74,20 +79,15 @@ function localGo(id){
  const s=document.getElementById('side');if(s)s.classList.remove('open');window.scrollTo(0,0);
  setTimeout(mount,20);
 }
-function interceptAuth(e){
- const el=e.target.closest('[data-page="technical"],[data-page="admin"]');if(!el)return;
- const id=el.getAttribute('data-page');if(!document.getElementById(id))return;
- e.preventDefault();e.stopImmediatePropagation();localGo(id);
-}
 function mount(){
  document.querySelectorAll('.cr-page-human').forEach(x=>x.remove());
  ensureProfile();ensureAgenda();ensureMeeting();ensureAuthNav();ensureSentinel();
  Object.keys(PAGE_OWNERS).forEach(ensureOwner);
 }
-document.addEventListener('click',interceptAuth,true);
 let pending=false;function schedule(){if(pending)return;pending=true;requestAnimationFrame(()=>{pending=false;mount();});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule);else schedule();
 new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
 ['hashchange','popstate','focus'].forEach(ev=>addEventListener(ev,schedule));
-setInterval(mount,1800);
+const agendaHost=document.getElementById('crAgendaRows');if(agendaHost)new MutationObserver(()=>setTimeout(mount,25)).observe(agendaHost,{childList:true,subtree:true});
+setTimeout(mount,120);setTimeout(mount,450);setTimeout(mount,1200);setInterval(mount,2200);
 })();
