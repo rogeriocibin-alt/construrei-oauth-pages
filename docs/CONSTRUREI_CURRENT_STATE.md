@@ -998,3 +998,24 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Checkpoint: `CHECKPOINT_FINANCEIRO_REI_V1_OFFICIAL_20261006`
 - Caso matemático de referência 447-26: lucro R$ 599,95; margem 39,21%; rateio reconciliado a centavos com residual de arredondamento absorvido no Capital de Giro.
 - Gate humano: **PASS_EXPLICIT_OWNER_APPROVAL** — Rogério determinou o fechamento do onboarding e a promoção do agente em 06/10/2026.
+
+
+## Identidade Humana Canônica V1 — 2026-10-06
+
+- Status: **IMPLEMENTADA / AUDITADA / EM PROMOÇÃO**.
+- Objetivo: tornar os retratos de Rogério, Éder, Gabrielly e Fabrício uma regra transversal do projeto, não um recurso isolado da Central ou do Gestor.
+- Fonte única: `assets/team/team-registry.json`.
+- Shared runtime APP/F00–F09: `assets/team/human-identity-canon-v1.js/css`.
+- Central: **Human Identity V6**, preservando a arquitetura atual e evitando MutationObserver global.
+- Mapa humano reativado: Gabrielly em APP/Pendências; Fabrício em Checklist/SST; Éder em Wizy/Éder/Técnico; Rogério em Diretoria; combinações em Documentação/Academy/OS.
+- Agenda: miniavatares dinâmicos por responsável permanecem ativos.
+- Gestor: **Human Context V1** exibe equipe no topo e contexto Rogério/Éder em `area=admin/technical`, mantendo Team Identity V2 do Agent Hub.
+- APP + F00–F09: **11/11** superfícies canônicas carregam o componente compartilhado da equipe humana.
+- `/apresentacao/`: passa a abrir diretamente a Apresentação Viva com os quatro retratos.
+- `/google-meet-central/`: passa a abrir diretamente a Sala da Equipe com os quatro retratos.
+- `/links-oficiais/`: passa a ler o registro canônico e exibir avatares nos cards humanos.
+- Links Registry: **v1.4 Human Identity**.
+- Auditoria: `docs/HUMAN_IDENTITY_CANON_V1_20261006.md`.
+- PR: **#28**.
+- Branch: `cr-human-identity-canon-v1-20261006`.
+- Regra antirregressão: não duplicar retratos, não promover previews antigas inteiras e não reintroduzir observers globais concorrentes na Central.
