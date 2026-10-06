@@ -39,7 +39,7 @@ function renderMetrics(d){
 }
 function statusClass(s){return /ONBOARDING/.test(s)?'onboarding':/CANDIDATO/.test(s)?'candidate':''}
 function renderAgents(d){
- $('#agents').innerHTML=d.agents.map(a=>`<article class="agent-card" data-agent="${esc(a.code)}"><div class="avatar">${avatarSvg(a.avatar,a.name)}</div><div class="agent-main"><div class="agent-top"><small>NÍVEL ${a.level}</small><span class="tag ${statusClass(a.status)}">${esc(a.status)}</span></div><h3>${esc(a.name)}</h3><div class="role">${esc(a.role)} • ${esc(a.mode)}</div><p>${esc(a.summary)}</p><div class="agent-foot"><div class="progress"><i style="width:${a.training}%"></i></div><span class="pct">Know-how ${a.training}%</span></div></div></article>`).join('');
+ $('#agents').innerHTML=d.agents.map(a=>`<article class="agent-card" data-agent="${esc(a.code)}"><div class="avatar">${avatarSvg(a.avatar,a.name)}</div><div class="agent-main"><div class="agent-top"><small>NÍVEL ${a.level}</small><span class="tag ${statusClass(a.status)}">${esc(a.status)}</span></div><h3>${esc(a.name)}</h3><div class="role">${esc(a.role)} • ${esc(a.mode)}</div><p>${esc(a.summary)}</p><div class="agent-foot"><span class="tag">${esc(a.knowledge)}</span><span class="pct">${esc(a.proof)}</span></div></div></article>`).join('');
  document.querySelectorAll('.agent-card').forEach(el=>el.onclick=()=>openAgent(d.agents.find(a=>a.code===el.dataset.agent)));
 }
 function renderHierarchy(d){
@@ -53,7 +53,7 @@ function renderTests(tests){
  };
 }
 function openAgent(a){
- $('#modalBody').innerHTML=`<div class="modal-profile"><div class="avatar">${avatarSvg(a.avatar,a.name)}</div><div><small>AGENTE CONSTRU-REI</small><h2>${esc(a.name)}</h2><p>${esc(a.role)}</p></div></div><div class="kv"><div><small>ALÇADA</small><b>Nível ${a.level}</b></div><div><small>ESTADO</small><b>${esc(a.status)}</b></div><div><small>MODO</small><b>${esc(a.mode)}</b></div><div><small>ESCALA PARA</small><b>${esc(a.escalation)}</b></div></div><h3>Missão</h3><p>${esc(a.summary)}</p><h3>Onboarding</h3><p>Know-How CONSTRU-REI: <b>${a.training}%</b>. Cadastro/visibilidade não equivale a homologação; o agente precisa passar por prova de conhecimento, alçada, caso real, handoff e segurança.</p>`;
+ $('#modalBody').innerHTML=`<div class="modal-profile"><div class="avatar">${avatarSvg(a.avatar,a.name)}</div><div><small>AGENTE CONSTRU-REI</small><h2>${esc(a.name)}</h2><p>${esc(a.role)}</p></div></div><div class="kv"><div><small>ALÇADA</small><b>Nível ${a.level}</b></div><div><small>ESTADO</small><b>${esc(a.status)}</b></div><div><small>MODO</small><b>${esc(a.mode)}</b></div><div><small>ESCALA PARA</small><b>${esc(a.escalation)}</b></div></div><h3>Missão</h3><p>${esc(a.summary)}</p><h3>Onboarding</h3><p>Know-How: <b>${esc(a.knowledge)}</b>. Prova: <b>${esc(a.proof)}</b>. Cadastro/visibilidade não equivale a homologação; o agente precisa passar por prova de conhecimento, alçada, caso real, handoff e segurança.</p>`;
  $('#modal').classList.add('open');$('#modal').setAttribute('aria-hidden','false');
 }
 $('#modalClose').onclick=()=>{$('#modal').classList.remove('open');$('#modal').setAttribute('aria-hidden','true')};
