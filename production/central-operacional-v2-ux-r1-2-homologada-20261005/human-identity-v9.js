@@ -137,7 +137,7 @@ function quickAccess(){
  box.innerHTML=
   '<a href="'+LINKS.cora+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn cora" title="Abrir Cora"><span class="cr-biz-logo"><img src="https://comunidade.cora.com.br/wp-content/uploads/2022/08/cora-logo.svg" alt="Cora"></span><small>Cora</small></a>'+
   '<a href="'+LINKS.trello+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn trello" title="Abrir Trello • Gestão de Obras 2026"><span class="cr-biz-logo"><img src="https://trello.com/favicon.ico" alt="Trello"></span><small>Trello</small></a>'+
-  '<a href="'+LINKS.gestaoclick+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn gc" title="Abrir GestãoClick"><span class="cr-biz-logo"><img src="https://gestaoclick.com.br/favicon.ico" alt="GestãoClick"></span><small>GestãoClick</small></a>'+
+  '<a href="'+LINKS.gestaoclick+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn gc" title="Abrir GestãoClick"><span class="cr-biz-logo"><img src="https://www.google.com/s2/favicons?domain=gestaoclick.com.br&sz=64" alt="GestãoClick"></span><small>GestãoClick</small></a>'+
   '<a href="'+LINKS.wizy+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn wizy" title="Abrir Wizy Flow"><span class="cr-biz-logo"><img src="https://app.wizyflow.com.br/favicon.ico" alt="Wizy Flow"></span><small>Wizy Flow</small></a>'+
   '<a href="'+LINKS.gmail+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn gmail" title="Abrir Gmail CONSTRU-REI"><span class="cr-biz-logo"><img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail"></span><small>Gmail</small></a>';
 }
