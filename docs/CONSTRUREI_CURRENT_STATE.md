@@ -1153,3 +1153,21 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Commit de runtime validado: `55a19f60d4a570fb163beb0b4f12abed50bece61`.
 - GitHub Pages run: `37531618493` — **SUCCESS**.
 - Validação no Opera: botão GestãoClick presente, destino correto e imagem carregada.
+
+
+## Identidade Visual Canônica CONSTRU-REI APP V1 — 2026-10-06
+
+- Status: **OFICIAL / HOMOLOGADA / PUBLICADA / CONGELADA COMO BASE VISUAL V1**.
+- Fonte única de marca: `assets/brand/construrei-app-v1/`.
+- PR: **#36**.
+- Merge principal: `19d2993fa7e766c4580c4d99c161ca35b3994dbb`.
+- Pages run da promoção: `37540846696` — **SUCCESS**.
+- Central: favicon, Apple Touch, APP icon/emblema e banner da Central integrados sem alterar dados, links ou lógica.
+- Gestor: app icon, favicon, Apple Touch, banner, manifest PWA e service worker integrados; cache rotacionado.
+- APP ativo: entrada e superfície atual alinhadas ao kit canônico.
+- F00→F09: shell compartilhado aponta para o mesmo app icon canônico e injeta favicon/Apple Touch.
+- Apresentação: identidade canônica aplicada e equipe humana da página 02 preservada.
+- Supabase `construrei-logo`: versão 29 passa a servir a identidade canônica para referências legadas, preservando a URL pública existente.
+- Hotfix final da Central para última referência legada: `183cf638512775ee407becbba7a9517e22f840cc`.
+- Checkpoint: `docs/CHECKPOINT_BRAND_CANONICAL_V1_20261006.md`.
+- Regra antirregressão: novas superfícies usam `assets/brand/construrei-app-v1/`; não duplicar logos por produto; avatar humano e avatar institucional permanecem conceitos distintos.
