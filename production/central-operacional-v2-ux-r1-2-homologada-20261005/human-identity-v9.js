@@ -2,7 +2,7 @@
 if(window.__CR_HUMAN_IDENTITY_V9)return;window.__CR_HUMAN_IDENTITY_V9=true;
 const ROOT='https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/';
 const REG=ROOT+'team-registry.json?v=20261006-context-v3';
-const LOGO='https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/brand/construrei-app-v1/app-icon-512.png?v=brand-v1';
+const LOGO='https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/brand/construrei-app-v2/emblema.png?v=brand-v2';
 const LINKS={
  trello:'https://trello.com/b/qI0r9MT8/gest%C3%A3o-de-obras-2026',
  gestaoclick:'https://gestaoclick.com/inicio',
