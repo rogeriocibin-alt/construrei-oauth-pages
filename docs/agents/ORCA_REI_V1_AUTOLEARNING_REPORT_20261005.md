@@ -63,12 +63,13 @@ Edge Function: `cr-flow-runtime-v2-orca-intake-candidate`
 Versão: **v6 ACTIVE**  
 Build: `CR-FLOW-RUNTIME-V2-ORCA-REI-V1-INTAKE-CANDIDATE-R6-AUTOLEARNING-20261005`  
 SHA Supabase: `ed8d17614b2e24fcf5a1596717deec55fc46349909f3fe096d9f553bf24ea8dd`
+Snapshot Edge: `snapshots/edge-functions/cr-flow-runtime-v2-orca-intake-candidate/v6/index.ts`
 
 ## Frontend candidato
 
-`preview/f02-orca-rei-v1-r5-autolearning-20261005/`
+`preview/f02-orca-rei-v1-r6-autolearning-20261005/`
 
-Build: `CR-F02-ORCA-REI-V1-R5-AUTOLEARNING-20261005`
+Build: `CR-F02-ORCA-REI-V1-R6-AUTOLEARNING-PREMIUM-20261005`
 
 A tela informa:
 - **Aprendizado automático • ATIVO**;
