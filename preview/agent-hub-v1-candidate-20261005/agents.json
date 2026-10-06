@@ -2,7 +2,7 @@
   "build": "CR-AGENT-HUB-V1-CANDIDATE-20261005",
   "status": "CANDIDATE",
   "checkpoint": "checkpoint-before-agent-hub-v1-20261005",
-  "updated_at": "2026-10-05T21:45:00-03:00",
+  "updated_at": "2026-10-05T21:55:00-03:00",
   "active_action": {
     "agent": "CR_ASSERTIVO",
     "state": "VALIDANDO",
@@ -21,9 +21,10 @@
       "status": "CANÔNICO",
       "mode": "ORCHESTRATE",
       "escalation": "ROGERIO_MASTER",
-      "training": 100,
       "avatar": "orchestrator",
-      "summary": "Classifica intenção, risco e alçada; delega ao especialista e consolida o resultado."
+      "summary": "Classifica intenção, risco e alçada; delega ao especialista e consolida o resultado.",
+      "knowledge": "CANÔNICO EXISTENTE",
+      "proof": "REGRA CANÔNICA ATIVA"
     },
     {
       "code": "CR_ASSERTIVO",
@@ -33,9 +34,10 @@
       "status": "CANÔNICO",
       "mode": "TECHNICAL_CONTROLLED",
       "escalation": "BIO",
-      "training": 100,
       "avatar": "engineer",
-      "summary": "Código, integrações, Supabase, testes, candidata, publicação controlada e rollback."
+      "summary": "Código, integrações, Supabase, testes, candidata, publicação controlada e rollback.",
+      "knowledge": "CANÔNICO EXISTENTE",
+      "proof": "REGRA CANÔNICA ATIVA"
     },
     {
       "code": "BIO_GESTOR",
@@ -45,9 +47,10 @@
       "status": "CANÔNICO",
       "mode": "READ_ONLY",
       "escalation": "BIO",
-      "training": 100,
       "avatar": "manager",
-      "summary": "Agenda, Click, Trello, F00–F09, pendências e análise gerencial; READ_ONLY por padrão."
+      "summary": "Agenda, Click, Trello, F00–F09, pendências e análise gerencial; READ_ONLY por padrão.",
+      "knowledge": "CANÔNICO EXISTENTE",
+      "proof": "REGRA CANÔNICA ATIVA"
     },
     {
       "code": "INFRA_REI",
@@ -57,9 +60,10 @@
       "status": "ONBOARDING",
       "mode": "MONITOR_READ_ONLY",
       "escalation": "CR_ASSERTIVO",
-      "training": 78,
       "avatar": "guardian",
-      "summary": "Saúde, backup, restore, checkpoints e incidentes; mudanças estruturais sob CR Assertivo."
+      "summary": "Saúde, backup, restore, checkpoints e incidentes; mudanças estruturais sob CR Assertivo.",
+      "knowledge": "KNOW-HOW CANON V1 VINCULADO",
+      "proof": "PROVA DE ONBOARDING PENDENTE"
     },
     {
       "code": "ORCA_REI",
@@ -69,9 +73,10 @@
       "status": "CANDIDATO R6",
       "mode": "SCOPED_F02",
       "escalation": "BIO_GESTOR",
-      "training": 92,
       "avatar": "estimator",
-      "summary": "F02, padrão GestãoClick, orçamento, matemática auditável, PDF e gate humano comercial."
+      "summary": "F02, padrão GestãoClick, orçamento, matemática auditável, PDF e gate humano comercial.",
+      "knowledge": "ESPECIALIDADE DOCUMENTADA",
+      "proof": "HOMOLOGAÇÃO HUMANA PENDENTE"
     },
     {
       "code": "FINANCEIRO_REI",
@@ -81,9 +86,10 @@
       "status": "ONBOARDING",
       "mode": "FINANCIAL_GOVERNED",
       "escalation": "BIO",
-      "training": 74,
       "avatar": "finance",
-      "summary": "Receitas, custos, lucro, margem, rateio, capital de giro, conciliação e divergências."
+      "summary": "Receitas, custos, lucro, margem, rateio, capital de giro, conciliação e divergências.",
+      "knowledge": "KNOW-HOW CANON V1 VINCULADO",
+      "proof": "PROVA DE ONBOARDING PENDENTE"
     },
     {
       "code": "GABI_FLOW",
@@ -93,9 +99,10 @@
       "status": "ONBOARDING",
       "mode": "SCOPED_TRIAGE",
       "escalation": "BIO_GESTOR",
-      "training": 76,
       "avatar": "service",
-      "summary": "Entrada, coleta, triagem, contexto mínimo e preparação para F00/F01."
+      "summary": "Entrada, coleta, triagem, contexto mínimo e preparação para F00/F01.",
+      "knowledge": "KNOW-HOW CANON V1 VINCULADO",
+      "proof": "PROVA DE ONBOARDING PENDENTE"
     }
   ],
   "rules": [
