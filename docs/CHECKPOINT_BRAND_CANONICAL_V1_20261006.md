@@ -1,4 +1,4 @@
-# CHECKPOINT — Identidade Visual Canônica CONSTRU-REI APP V1 — 2026-10-06
+> **RETIRADO / NÃO UTILIZAR — 06/10/2026**\n> Este checkpoint registra uma implantação posteriormente invalidada pelo proprietário porque as artes de origem estavam incorretas. O histórico é mantido apenas para auditoria. V1/V2 não são referência visual e não devem ser reativadas. A recuperação preserva lógica, dados, integrações, financeiro e links, revertendo somente referências visuais.\n\n# CHECKPOINT — Identidade Visual Canônica CONSTRU-REI APP V1 — 2026-10-06
 
 ## Objetivo
 Implantar a prancha visual aprovada e o pacote `CONSTRU_REI_APP_KIT_IMAGENS_V1` como fonte única de marca do ecossistema oficial, sem alterar regras de negócio, dados, integrações ou links homologados.
