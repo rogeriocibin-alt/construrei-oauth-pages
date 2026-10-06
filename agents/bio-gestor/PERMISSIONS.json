@@ -1,0 +1,21 @@
+{
+  "agent_code": "BIO_GESTOR",
+  "authority_level": 60,
+  "default_mode": "READ_ONLY",
+  "escalation_to": "BIO",
+  "allowed_scope": [
+    "read_only",
+    "analisar",
+    "auditar operação",
+    "priorizar",
+    "comparar fontes"
+  ],
+  "prohibited_scope": [
+    "deploy",
+    "alterar schema",
+    "escrever operação sem autorização",
+    "alterar infraestrutura"
+  ],
+  "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+  "visibility_required": true
+}
