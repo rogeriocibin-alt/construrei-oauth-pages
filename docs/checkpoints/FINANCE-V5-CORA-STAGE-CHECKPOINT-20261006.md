@@ -55,3 +55,12 @@
 - Conclusão: não há evidência de erro de formatação ou de chave privada incompatível com o certificado.
 - Como o Client ID também corresponde à credencial Stage ativa exibida no Cora Web, o bloqueio `invalid_client` passa a apontar para associação/provisionamento da credencial no lado Cora ou uso de um par válido pertencente a outra emissão Stage.
 - A interface Cora Web atualmente exibe a credencial como ativa, emitida em 06/10/26, mas também apresenta um aviso de falha: “Não conseguimos gerar sua credencial”, com opção “Tentar novamente”.
+
+
+## Confirmação visual e novo reteste
+- Cora Web exibiu a credencial de ambiente de teste como **Ativa**, emitida em 06/10/26 e com vencimento em 06/10/27.
+- O aviso temporário “Não conseguimos gerar sua credencial” não aparece mais na tela enviada pelo Rogério.
+- Após essa confirmação visual, a autenticação Stage foi repetida.
+- Resultado permaneceu: HTTP 400, `invalid_client`, sem token.
+- Assim, a hipótese de simples atraso visual/erro transitório de geração ficou enfraquecida.
+- Antes de qualquer revogação, manter Produção intocada e tratar a reemissão apenas como ação Stage explícita.
