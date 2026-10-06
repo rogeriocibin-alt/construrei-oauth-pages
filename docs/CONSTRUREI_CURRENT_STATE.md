@@ -945,3 +945,15 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Navegação de `technical/admin` permanece local; removidos do lazy load de desenvolvimento. `technical-console` recebeu timeout de 8 s para sessão antiga/API lenta não aparentar congelamento.
 - Verificação: nenhuma referência V2/V3 permanece no `index.html`; V4 CSS/JS ativos; sintaxe V4 OK; todos os arquivos relativos referenciados pelo HTML existem.
 - Build: `96c93389a3e643ac49e0749c36b79ce6ba448e87` • GitHub Pages run `37406548611` = **SUCCESS**.
+
+
+## Recuperação visual aprovada — Central V5 + Gestor Team Identity V2 — 2026-10-05
+
+- Referência visual aprovada pelo Rogério para a Central: `preview/central-team-identity-v1-candidate-20261005/`, especialmente perfil humano do Rogério no topo e miniavatares na Agenda. O menu lateral dessa candidata é legado/regredido e **não deve ser promovido**.
+- Central oficial: identidade humana portada da candidata para o shell/menu oficial através de `human-identity-v5.js/css`; menu oficial foi comparado antes/depois e permaneceu byte-a-byte inalterado durante a ativação V5.
+- Central V5 build: `bad76ce00f4818e6b1cb6342a5aa218144646126` • Pages run `37407234029` = **SUCCESS**.
+- Regra de merge: **VISUAL/IDENTIDADE da candidata aprovada + MENU/NAVEGAÇÃO da versão oficial homologada**. Não substituir a Central inteira por uma preview antiga.
+- Gestor candidato: a seção “Equipe Humana • Identidade Operacional” foi tornada nativa dentro do render do Agent Hub, eliminando a injeção separada por MutationObserver que podia desaparecer após rerender/cache.
+- Gestor Team Identity V2 candidato: `preview/gestor-team-identity-v1-candidate-20261005/`; build `c2c713c751c0ea91668967dd8e2dc2a6a0948eae` • Pages run `37407437236` = **SUCCESS**.
+- No Gestor, `team-identity-v1.js` deixou de ser carregado; a equipe humana agora nasce junto do Agent Hub e preserva a distinção pessoa real ≠ agente digital.
+- Sala da Equipe `/call/` e Apresentação Viva `/presentation/` permanecem referências aprovadas e não foram alteradas por esta recuperação.
