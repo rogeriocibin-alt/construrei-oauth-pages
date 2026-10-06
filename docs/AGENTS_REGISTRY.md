@@ -1,7 +1,7 @@
 # CONSTRU-REI — REGISTRO CANÔNICO DE AGENTES
 
 Atualização: 05/10/2026
-Versão: **AGENT-HUB-V1-CANDIDATE**
+Versão: **AGENT-HUB-V1 — OFICIAL / HOMOLOGADO**
 
 | Agente | Papel | Alçada | Estado atual | Escalonamento |
 |---|---|---|---|---|
@@ -33,3 +33,11 @@ Todos os agentes devem estudar e ser testados contra:
 `docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md`
 
 Cadastro não equivale a homologação.
+
+
+## Agent Hub V1 — homologação
+
+- Módulo de governança: **OFICIAL / HOMOLOGADO / CONGELADO**.
+- Build do Gestor: `CR-PM-V1.2-AGENT-HUB-V1-OFFICIAL-20261005`.
+- A homologação do Hub **não altera automaticamente o estado individual dos agentes**.
+- ORÇA-REI continua candidato e Gabi Flow / Financeiro REI / Infra REI continuam em onboarding até prova específica.

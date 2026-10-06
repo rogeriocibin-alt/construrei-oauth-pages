@@ -784,3 +784,28 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Regra: `TOOLS.json` descreve domínios/capacidades e não implica conexão, credencial ou runtime instalado.
 - Formação: todos referenciam `docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md`.
 - Status permanece de candidata/onboarding; nenhum novo agente foi promovido automaticamente para HOMOLOGADO.
+
+
+## Homologação — Gestor V1.2 + Agent Hub V1 — 2026-10-05
+
+- Status: **OFICIAL / HOMOLOGADA / CONGELADA / PROMOVIDA**.
+- Build: `CR-PM-V1.2-AGENT-HUB-V1-OFFICIAL-20261005`.
+- Link oficial preservado: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/`.
+- Commit de promoção: `ada752abd21d1796008cc9c2b32f378dfe8efe6c`.
+- Branch oficial: `cr-project-manager-v1-2-agent-hub-v1-official-20261005`.
+- Checkpoint pré-promoção: `checkpoint-gestor-h5-before-agent-hub-v1-20261005`.
+- Checkpoint lógico: `CHECKPOINT_PROJECT_MANAGER_V1_2_AGENT_HUB_V1_OFFICIAL_20261005`.
+- Produção congelada: `production/gestor-project-v1-2-agent-hub-v1-homologado-20261005/`.
+- Gate humano: **CONCLUÍDO** — Rogério autorizou explicitamente homologar, atualizar no Gestor do Projeto e finalizar.
+- Escopo oficializado:
+  - aba **Agentes & Automações** dentro do Gestor;
+  - avatares/bonecos identificáveis;
+  - hierarquia e alçadas visíveis;
+  - Know-How Canon V1;
+  - BIO + CR Assertivo como responsáveis pelo onboarding;
+  - manifestos individuais em `/agents`;
+  - distinção entre agente, motor e automação.
+- Integridade: o painel usa **última ação registrada** quando não existe execução viva confirmada e os testes de alçada são exibidos como gates canônicos, sem simular execução.
+- Estados individuais preservados: ORÇA-REI permanece candidato; Gabi Flow, Financeiro REI e Infra REI permanecem em onboarding até seus próprios gates.
+- Central, APP e F00→F09 não foram alterados nesta promoção.
+- Rollback imediato: branch `checkpoint-gestor-h5-before-agent-hub-v1-20261005`.
