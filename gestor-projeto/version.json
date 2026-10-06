@@ -1,17 +1,19 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
   "version": "1.2.2",
-  "build": "CR-PM-V1.2.2-BRAND-CANONICAL-V1-OFFICIAL-20261006",
+  "build": "CR-PM-V1.2.2-BRAND-PLACEMENT-V2-20261006",
   "environment": "canonical",
-  "release_status": "official_homologated",
+  "release_status": "candidate_ready_for_homologation",
   "base_official": "CR-PM-V1.2.1-FINANCEIRO-REI-V1-OFFICIAL-20261006",
   "checkpoint_before": "26bb2b151b4e1127ed117f10c459204838215ba8",
   "changes": [
-    "Identidade visual CONSTRU-REI APP V1 centralizada em assets/brand/construrei-app-v1/.",
-    "Gestor passou a usar app icon, favicon e Apple Touch canônicos.",
-    "Manifest PWA usa PNGs canônicos 192x192 e 512x512; cache do service worker foi rotacionado.",
-    "Banner oficial do Gestor aplicado como camada visual, preservando dados, governança e navegação.",
-    "Central, APP, F00–F09 e Apresentação compartilham a mesma fonte de marca."
+    "Logotipo horizontal aplicado aos cabeçalhos onde a marca precisa ser lida por extenso.",
+    "Emblema e Avatar do Sistema usados apenas em contextos institucionais/compactos.",
+    "Ícone APP reservado ao PWA/mobile; favicon simplificado reservado ao navegador.",
+    "Banner oficial do Gestor aplicado ao hero executivo.",
+    "Capa Projetos aplicada à área Produtos/Projetos.",
+    "Ícones de módulos usados somente nos contextos semanticamente correspondentes.",
+    "Cache PWA rotacionado para a identidade visual V2."
   ],
   "gate": {
     "source_review": "PASS",
@@ -26,14 +28,14 @@
     "promotion": "AUTHORIZED_BY_OWNER_REQUEST"
   },
   "released_at": "2026-10-06T12:00:00-03:00",
-  "branch": "cr-brand-canonical-v1-20261006",
-  "canonical_changed": true,
+  "branch": "cr-brand-placement-v2-20261006",
+  "canonical_changed": false,
   "update_policy": "same_url_pwa_cache_rotation_and_alias_sync",
   "rollback": "26bb2b151b4e1127ed117f10c459204838215ba8",
-  "canonical_checkpoint": "CHECKPOINT_BRAND_CANONICAL_V1_20261006",
+  "canonical_checkpoint": "CHECKPOINT_BRAND_PLACEMENT_V2_20261006",
   "owner_homologation": {
-    "status": "OWNER_AUTHORIZED_FULL_IMPLEMENTATION",
+    "status": "IN_PROGRESS",
     "source": "explicit_owner_instruction_in_chat",
-    "note": "Rogério autorizou executar o necessário para implementação correta e inteligente da nova identidade."
+    "note": "Rogério determinou colocar cada arte no devido lugar e corrigir a função de logo, emblema, APP icon, favicon, banners e demais elementos."
   }
 }
