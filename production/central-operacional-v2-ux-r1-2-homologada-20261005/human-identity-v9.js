@@ -7,7 +7,8 @@ const LINKS={
  trello:'https://trello.com/b/qI0r9MT8/gest%C3%A3o-de-obras-2026',
  gestaoclick:'https://gestaoclick.com/inicio',
  cora:'https://app.cora.com.br',
- easyflow:'https://rogeriocibin-alt.github.io/construrei-oauth-pages/wizy-flow/'
+ wizy:'https://app.wizyflow.com.br',
+ gmail:'https://mail.google.com/mail/u/?authuser=contatoconstrurei@gmail.com#inbox'
 };
 let PEOPLE={
  rogerio:{name:'Rogério',role:'Diretor • visão, decisão e governança',face:ROOT+'rogerio-face.webp?v=9'},
@@ -130,14 +131,27 @@ function quickAccess(){
  const panel=document.querySelector('#dashboard .cr-operation-panel .cr-panel-head');if(!panel)return;
  let box=document.getElementById('crBizQuick');
  if(!box){box=document.createElement('div');box.id='crBizQuick';box.className='cr-biz-quick';panel.appendChild(box)}
- const sig='v13-four-apps-stable-20261006';
+ const sig='v14-five-apps-official-20261006';
  if(box.dataset.sig===sig)return;
  box.dataset.sig=sig;
  box.innerHTML=
   '<a href="'+LINKS.cora+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn cora" title="Abrir Cora"><span class="cr-biz-logo"><img src="https://comunidade.cora.com.br/wp-content/uploads/2022/08/cora-logo.svg" alt="Cora"></span><small>Cora</small></a>'+
   '<a href="'+LINKS.trello+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn trello" title="Abrir Trello • Gestão de Obras 2026"><span class="cr-biz-logo"><img src="https://trello.com/favicon.ico" alt="Trello"></span><small>Trello</small></a>'+
-  '<a href="'+LINKS.gestaoclick+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn gc" title="Abrir GestãoClick"><span class="cr-biz-logo"><span aria-hidden="true">GC</span></span><small>GestãoClick</small></a>'+
-  '<a href="'+LINKS.easyflow+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn easyflow" title="Abrir Easy Flow"><span class="cr-biz-logo"><span aria-hidden="true">EF</span></span><small>Easy Flow</small></a>';
+  '<a href="'+LINKS.gestaoclick+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn gc" title="Abrir GestãoClick"><span class="cr-biz-logo"><img src="https://gestaoclick.com.br/favicon.ico" alt="GestãoClick"></span><small>GestãoClick</small></a>'+
+  '<a href="'+LINKS.wizy+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn wizy" title="Abrir Wizy Flow"><span class="cr-biz-logo"><img src="https://app.wizyflow.com.br/favicon.ico" alt="Wizy Flow"></span><small>Wizy Flow</small></a>'+
+  '<a href="'+LINKS.gmail+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn gmail" title="Abrir Gmail CONSTRU-REI"><span class="cr-biz-logo"><img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" alt="Gmail"></span><small>Gmail</small></a>';
+}
+function docsOwners(){
+ const host=document.getElementById('docsTable');if(!host)return;
+ host.querySelectorAll('tbody tr').forEach(tr=>{
+  const td=tr.children&&tr.children[6];if(!td)return;
+  const raw=(td.textContent||'').trim();if(!raw)return;
+  const ps=picks(raw);if(!ps.length)return;
+  if(td.querySelector('.cr-doc-owner-avatar'))return;
+  const wrap=document.createElement('span');wrap.className='cr-doc-owner';
+  wrap.innerHTML=ps.map(p=>img(p,'cr-doc-owner-avatar')).join('')+'<span>'+esc(raw)+'</span>';
+  td.textContent='';td.appendChild(wrap);
+ });
 }
 function topNav(){
  const menu=document.querySelector('.top .menu');if(menu)menu.classList.add('cr-menu-responsive-only');
@@ -161,7 +175,7 @@ function prune(){
  document.querySelectorAll('.grp').forEach(g=>{if(!g.querySelector('.nav'))g.remove()});
 }
 function mount(){
- prune();appBrand();removeDashboardRoster();topNav();notification();agenda();quickAccess();pendingCards();
+ prune();appBrand();removeDashboardRoster();topNav();notification();agenda();quickAccess();pendingCards();docsOwners();
  Object.keys(OWNER).forEach(owner);roster();nav();academy();
 }
 function loadRegistry(){
