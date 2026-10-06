@@ -1095,3 +1095,26 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Apresentação Institucional: restaurar a versão moderna/limpa previamente aprovada, com Rogério, Éder, Gabrielly e Fabrício na segunda página.
 - Escopo desta execução permanece fechado nesses pontos; nova batelada de melhorias fica para frente futura.
 - Regra anti-regressão: não criar novo link nem nova arquitetura; corrigir e consolidar tudo na Central homologada de 05/10, mantendo versões antigas apenas como histórico.
+
+
+## CHECKPOINT DE CONTINUIDADE — 2026-10-06 16:30 BRT
+- Central canônica ativa: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Apresentação Institucional: **RECUPERADA / VALIDADA NO OPERA**.
+  - O link correto foi confirmado dentro da própria pasta de 05/10: `presentation/`.
+  - Conteúdo validado: primeira página “Da operação real a um sistema inteligente.”; segunda página “Quem conduz a operação.”.
+  - Avatares confirmados na apresentação: Rogério, Éder, Gabrielly e Fabrício.
+  - A Central foi reforçada para apontar diretamente para essa apresentação local, evitando retorno para a apresentação antiga.
+  - Commit da fixação direta da apresentação: `4656e010982fe2d5711b6c24eae4afe2c8a1f566`.
+  - Rogério confirmou visualmente em chamada: “essa mesmo”.
+  - Decisão: **não melhorar a apresentação agora**; melhorias ficam para uma fase futura. O objetivo desta fase era recuperar o acesso correto.
+- Pacote estrutural já aplicado anteriormente nesta mesma frente:
+  - isolamento da Central 05/10 em relação ao `base` antigo de 04/10;
+  - saneamento inicial da Documentação Operacional;
+  - quatro acessos principais em ordem prevista: Cora → Trello → GestãoClick → Easy Flow.
+  - Commits relacionados: `c2c8cb39be9b65eb56f37af5b619c7f50e42af99` e `a33eafd0f8b6b4c1885bcd59f1b06f522882eac1`.
+- Pendências restantes desta fase, e somente estas:
+  1. **Documentação Operacional**: ainda há parte travada; concluir o destravamento e garantir conteúdo somente operacional/APP/F00–F09, com itens de desenvolvimento no Gestor do Projeto.
+  2. **Easy Flow**: concluir o botão/acesso ao lado do GestãoClick, preservando a ordem Cora → Trello → GestãoClick → Easy Flow e finalizando o ativo visual.
+- GestãoClick: correções de estabilidade dos acessos rápidos já foram aplicadas; qualquer validação final deve ser feita na Central publicada, sem criar novo link.
+- Regra anti-regressão: não criar nova arquitetura, não criar nova Central paralela e não reintroduzir dependências vivas de versões antigas. Continuar exclusivamente sobre o link homologado de 05/10.
+- Escopo após este checkpoint: concluir Documentação Operacional + Easy Flow e então encerrar esta fase.
