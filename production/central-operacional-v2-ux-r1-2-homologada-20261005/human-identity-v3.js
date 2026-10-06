@@ -80,6 +80,7 @@ function interceptAuth(e){
  e.preventDefault();e.stopImmediatePropagation();localGo(id);
 }
 function mount(){
+ document.querySelectorAll('.cr-page-human').forEach(x=>x.remove());
  ensureProfile();ensureAgenda();ensureMeeting();ensureAuthNav();ensureSentinel();
  Object.keys(PAGE_OWNERS).forEach(ensureOwner);
 }
