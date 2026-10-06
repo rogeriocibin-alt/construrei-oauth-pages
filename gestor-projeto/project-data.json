@@ -105,7 +105,7 @@
       "layer": "Produto gerenciado",
       "status": "canonical",
       "summary": "Camada executiva/gestão e ponto de acesso aos módulos.",
-      "current": "Central Operacional V2 + UX R1.2 • HTML Hotfix H1 • oficial congelada"
+      "current": "Central Operacional V2 + UX R1.2 • Human Identity Context V3/V8 • oficial"
     },
     {
       "id": "executive",
@@ -145,7 +145,7 @@
       "layer": "Produto gerenciado",
       "status": "canonical",
       "summary": "20 páginas, dados vivos, Radar Macro, PDF e PowerPoint.",
-      "current": "Canônica 02/10"
+      "current": "Atualizada 06/10 • equipe humana + Agent Hub/Financeiro REI • dados vivos"
     },
     {
       "id": "dashboard",
@@ -483,6 +483,25 @@
       ],
       "losses": [],
       "note": "Aprovada explicitamente pelo proprietário em 05/10/2026 às 18:55."
+    },
+    {
+      "id": "human-identity-context-v3-20261006",
+      "product": "central",
+      "name": "Identidade Humana Contextual V3 • Central + Gestor + Apresentação",
+      "date": "2026-10-06",
+      "status": "canonical",
+      "parent": "human-identity-context-v2-20261006",
+      "commit": "",
+      "branch": "cr-avatar-link-sync-v3-20261006",
+      "checkpoint": "CHECKPOINT_AVATAR_LINK_SYNC_V3_OFFICIAL_20261006",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/",
+      "gains": [
+        "equipe visível na Central sem substituir a logo",
+        "links do Gestor apontam para aliases canônicos",
+        "Apresentação Viva sincronizada no mesmo link"
+      ],
+      "losses": [],
+      "note": "Pacote oficial de correção de drift entre Gestor PWA, aliases, Central e Apresentação Viva. Promoção no mesmo URL, sem criar arquitetura paralela."
     }
   ],
   "checkpoints": [
@@ -2545,9 +2564,9 @@
       "kind": "Núcleo operacional",
       "status": "canonical",
       "access": "MASTER",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes",
-      "source": "centro-operacoes v274",
-      "description": "Ambiente operacional da equipe e porta de entrada para a operação."
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/central/",
+      "source": "GitHub Pages alias canônico /central/ → Central UX R1.2 + Human Identity V8",
+      "description": "Ambiente operacional da equipe, com identidade humana contextual e agenda viva."
     },
     {
       "id": "app",
@@ -2555,7 +2574,7 @@
       "kind": "Aplicativo operacional",
       "status": "canonical",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=app",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/app-construrei/",
       "source": "central-atendimento v151",
       "description": "Aplicação operacional atual."
     },
@@ -2585,7 +2604,7 @@
       "kind": "Conhecimento",
       "status": "review",
       "access": "INTERNO",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=academy",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/academy/",
       "source": "runtime canônico / academy",
       "description": "Treinamento e conhecimento."
     },
@@ -2601,13 +2620,13 @@
     },
     {
       "id": "presentation",
-      "name": "Apresentação Institucional",
+      "name": "Apresentação Executiva Viva",
       "kind": "Conhecimento",
       "status": "canonical",
       "access": "INTERNO",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=presentation",
-      "source": "runtime canônico / presentation",
-      "description": "Apresentação viva do projeto."
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/apresentacao/",
+      "source": "GitHub Pages alias canônico /apresentacao/ • atualização 06/10",
+      "description": "Apresentação viva com equipe humana, dados vivos e arquitetura de agentes atualizada."
     },
     {
       "id": "health",
@@ -2615,7 +2634,7 @@
       "kind": "Tecnologia",
       "status": "live",
       "access": "INTERNO",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=health",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/saude-sistema/",
       "source": "centro-operacoes",
       "description": "Saúde e telemetria do ambiente."
     },
@@ -2625,7 +2644,7 @@
       "kind": "Esteira Operacional",
       "status": "live",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f00",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f00-captura-inteligente/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     },
@@ -2635,7 +2654,7 @@
       "kind": "Esteira Operacional",
       "status": "live",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f01",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f01-atendimento/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     },
@@ -2645,7 +2664,7 @@
       "kind": "Esteira Operacional",
       "status": "live",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f02",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f02-orcamentos/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     },
@@ -2655,7 +2674,7 @@
       "kind": "Esteira Operacional",
       "status": "live",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f03",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f03-propostas-os/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     },
@@ -2665,7 +2684,7 @@
       "kind": "Esteira Operacional",
       "status": "homologation",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f04",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f04-agenda/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     },
@@ -2675,7 +2694,7 @@
       "kind": "Esteira Operacional",
       "status": "homologation",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f05",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f05-materiais-terceiros/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     },
@@ -2685,7 +2704,7 @@
       "kind": "Esteira Operacional",
       "status": "homologation",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f06",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f06-campo-evidencias/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     },
@@ -2695,7 +2714,7 @@
       "kind": "Esteira Operacional",
       "status": "homologation",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f07",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f07-qualidade-documentos/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     },
@@ -2705,7 +2724,7 @@
       "kind": "Esteira Operacional",
       "status": "homologation",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f08",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f08-financeiro-cobranca/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     },
@@ -2715,7 +2734,7 @@
       "kind": "Esteira Operacional",
       "status": "homologation",
       "access": "OPERACIONAL",
-      "url": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento?mode=f09",
+      "url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/f09-pos-venda-garantia/",
       "source": "central-atendimento v151",
       "description": "Módulo da esteira operacional."
     }
