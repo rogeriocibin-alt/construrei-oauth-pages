@@ -1,0 +1,22 @@
+{
+  "agent_code": "GABI_FLOW",
+  "authority_level": 35,
+  "default_mode": "SCOPED_TRIAGE",
+  "escalation_to": "BIO_GESTOR",
+  "allowed_scope": [
+    "atendimento",
+    "triagem",
+    "coleta de contexto",
+    "preparação F00/F01",
+    "agenda assistida"
+  ],
+  "prohibited_scope": [
+    "decidir preço",
+    "executar engenharia",
+    "fechamento financeiro",
+    "deploy",
+    "alterar arquitetura"
+  ],
+  "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+  "visibility_required": true
+}
