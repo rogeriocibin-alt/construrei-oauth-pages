@@ -1140,3 +1140,16 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Alias `/documentacao/` direciona para a Documentação Operacional da Central.
 - Apresentação Institucional oficial preservada em `production/central-operacional-v2-ux-r1-2-homologada-20261005/presentation/`; versão moderna confirmada com Rogério, Éder, Gabrielly e Fabrício na página 02.
 - Regra antirregressão: não reintroduzir MutationObserver global na camada de identidade humana; observers devem ser locais e idempotentes.
+
+
+## Hotfix final — logo GestãoClick — 2026-10-06
+
+- Status: **HOMOLOGADO / FINALIZADO**.
+- Escopo alterado: **somente a imagem do botão GestãoClick na Central Executiva**.
+- Link e comportamento do GestãoClick preservados: `https://gestaoclick.com/inicio`.
+- Fonte visual estabilizada via favicon do domínio oficial.
+- Demais botões, layout, documentação, apresentação, navegação e integrações: **inalterados**.
+- PR: **#35**.
+- Commit de runtime validado: `55a19f60d4a570fb163beb0b4f12abed50bece61`.
+- GitHub Pages run: `37531618493` — **SUCCESS**.
+- Validação no Opera: botão GestãoClick presente, destino correto e imagem carregada.
