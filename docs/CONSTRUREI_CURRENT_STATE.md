@@ -771,3 +771,13 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - ORÇA-REI permanece **CANDIDATO**, sem promoção automática do F02.
 - Central, APP e F00→F09 oficiais permanecem **INALTERADOS**.
 - Próximo gate: Rogério testar a candidata no notebook/celular; somente após aprovação integrar o módulo ao Gestor oficial mantendo o link estável.
+
+
+### Materialização dos agentes — Agent Hub V1
+
+- Estrutura raiz `/agents` criada com manifestos auditáveis para BIO, CR Assertivo, BIO Gestor, ORÇA-REI, Gabi Flow, Financeiro REI e Infra REI.
+- Cada agente possui `AGENT.md`, `PROMPT.md`, `PERMISSIONS.json`, `TOOLS.json` e `VERSION.json`.
+- Testes bloqueantes comuns: `agents/onboarding-tests.json`.
+- Regra: `TOOLS.json` descreve domínios/capacidades e não implica conexão, credencial ou runtime instalado.
+- Formação: todos referenciam `docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md`.
+- Status permanece de candidata/onboarding; nenhum novo agente foi promovido automaticamente para HOMOLOGADO.
