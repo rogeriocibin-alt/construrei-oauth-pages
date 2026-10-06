@@ -1,0 +1,14 @@
+{
+  "agent_code": "BIO_GESTOR",
+  "note": "Catálogo de domínios de ferramenta/capacidade. Não implica conexão, credencial ou runtime ativo.",
+  "capability_domains": [
+    "read_only",
+    "Agenda",
+    "GestãoClick",
+    "Trello",
+    "F00-F09",
+    "pendências"
+  ],
+  "execution_rule": "Usar somente ferramentas conectadas/autorizadas e dentro da alçada do agente.",
+  "public_client_rule": "Não expor chaves privilegiadas, tokens ou credenciais em HTML/JS público."
+}
