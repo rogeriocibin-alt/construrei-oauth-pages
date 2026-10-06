@@ -752,8 +752,11 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 
 - Status: **CANDIDATA / NÃO PROMOVIDA / AGUARDANDO VALIDAÇÃO HUMANA**.
 - Objetivo: tornar os agentes CONSTRU-REI visíveis no Gestor, preservar hierarquia/alçadas e exibir avatar + nome + função + ação + estado em toda ação relevante.
-- Checkpoint pré-implementação: `checkpoint-before-agent-hub-v1-20261005`.
+- Checkpoint pré-implementação exato: `checkpoint-before-agent-hub-v1-20261005-r2` → `2e6acf489c50a5fa9a96b7fd7f74c9b97231c8ea`.
 - Build candidata: `CR-AGENT-HUB-V1-CANDIDATE-20261005`.
+- Branch candidata: `cr-agent-hub-v1-candidate-20261005`.
+- Commit inicial da candidata: `85e710b6ff2715cd356adfe4ead6390f80477c78`.
+- GitHub Pages do commit inicial: **SUCCESS** (run 37396369691).
 - Preview público: `preview/agent-hub-v1-candidate-20261005/`.
 - Registro canônico: `docs/AGENTS_REGISTRY.md`.
 - Núcleo de onboarding: `docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md`.
