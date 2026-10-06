@@ -1,6 +1,6 @@
 {
-  "version": "LINK-IDENTITY-V1.3.3-20261005",
-  "status": "OFICIAL / HOMOLOGADA / CONGELADA — BASELINE FINAL 05/10",
+  "version": "LINK-IDENTITY-V1.4-HUMAN-IDENTITY-20261006",
+  "status": "OFICIAL / HOMOLOGADA / CANÔNICA — IDENTIDADE HUMANA V1",
   "policy": "Aliases amigáveis são a camada pública. Endpoints técnicos permanecem preservados como destinos canônicos; não renomear nem excluir endpoints internos.",
   "base_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages",
   "created_at": "2026-10-05",
@@ -236,14 +236,14 @@
       "label": "Apresentação Institucional",
       "slug": "apresentacao",
       "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/apresentacao/",
-      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes?open=presentation"
+      "target": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/presentation/"
     },
     {
       "group": "Conhecimento",
       "label": "Google Meet • Central",
       "slug": "google-meet-central",
       "public_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/google-meet-central/",
-      "target": "https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/sala-equipe-r12-candidate"
+      "target": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/call/"
     },
     {
       "group": "Técnico & Segurança",
@@ -328,5 +328,6 @@
     "build": "CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-LAUNCHER-DIRECT-20261005",
     "ui": "R1.2 homologated",
     "legacy_webrtc": false
-  }
+  },
+  "human_identity_registry": "assets/team/team-registry.json"
 }
