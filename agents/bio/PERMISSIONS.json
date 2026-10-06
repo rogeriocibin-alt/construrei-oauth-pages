@@ -1,0 +1,19 @@
+{
+  "agent_code": "BIO",
+  "authority_level": 90,
+  "default_mode": "ORCHESTRATE",
+  "escalation_to": "ROGERIO_MASTER",
+  "allowed_scope": [
+    "classificar",
+    "rotear",
+    "coordenar",
+    "consolidar",
+    "escalar"
+  ],
+  "prohibited_scope": [
+    "executar especialidade existente silenciosamente",
+    "declarar execução sem evidência",
+    "ampliar alçada própria"
+  ],
+  "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md"
+}
