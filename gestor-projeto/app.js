@@ -14,7 +14,7 @@ const VIEW_TITLES={
   audits:'Auditorias',governance:'Governança',search:'Busca'
 };
 
-const CURRENT_RELEASE={version:'1.2.2',build:'CR-PM-V1.2.2-AVATAR-LINK-SYNC-V3-OFFICIAL-20261006',environment:'canonical'};
+const CURRENT_RELEASE={version:'1.2.2',build:'CR-PM-V1.2.2-BRAND-PLACEMENT-V2-20261006',environment:'canonical'};
 const PM_API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
 const PM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
 const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
