@@ -88,6 +88,33 @@ box-shadow:0 22px 48px rgba(7,24,93,.18)}
 #executiveDashboard .xd-hero{position:relative;overflow:hidden;isolation:isolate}
 #executiveDashboard .xd-hero:before{
  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.22;
- background:url("../assets/brand/construrei-app-v1/banner-gestor.webp?v=brand-v1") center right/cover no-repeat;
+ background:url("../assets/brand/construrei-app-v2/banner-gestor.webp?v=brand-v2") center right/cover no-repeat;
 }
 #executiveDashboard .xd-hero>*{position:relative;z-index:1}
+
+/* BRAND PLACEMENT V2 — EXECUTIVE HERO */
+#executiveDashboard .xd-hero{
+ min-height:260px!important;padding:0!important;
+ background:url("../assets/brand/construrei-app-v2/banner-gestor.webp?v=brand-v2") center/cover no-repeat!important;
+}
+#executiveDashboard .xd-hero:before{display:none!important}
+#executiveDashboard .xd-hero-main{
+ min-height:260px!important;position:relative!important;padding:0!important;background:none!important;
+}
+#executiveDashboard .xd-hero-main>.xd-kicker,
+#executiveDashboard .xd-hero-main>h2,
+#executiveDashboard .xd-hero-main>p{display:none!important}
+#executiveDashboard .xd-actions{
+ position:absolute!important;left:22px!important;bottom:18px!important;z-index:3!important;
+ padding:8px!important;border:1px solid rgba(255,255,255,.18)!important;border-radius:12px!important;
+ background:rgba(3,20,53,.70)!important;backdrop-filter:blur(8px)!important;
+}
+#executiveDashboard .xd-state{
+ margin:16px!important;background:rgba(3,20,53,.79)!important;backdrop-filter:blur(10px)!important;border-color:rgba(255,255,255,.20)!important;
+}
+@media(max-width:860px){
+ #executiveDashboard .xd-hero{min-height:220px!important;background-position:52% center!important}
+ #executiveDashboard .xd-hero-main{min-height:220px!important}
+ #executiveDashboard .xd-actions{left:10px!important;bottom:10px!important}
+ #executiveDashboard .xd-state{margin:10px!important}
+}
