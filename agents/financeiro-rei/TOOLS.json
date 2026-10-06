@@ -1,0 +1,14 @@
+{
+  "agent_code": "FINANCEIRO_REI",
+  "note": "Catálogo de domínios de ferramenta/capacidade. Não implica conexão, credencial ou runtime ativo.",
+  "capability_domains": [
+    "custos",
+    "receitas",
+    "lucro",
+    "margem",
+    "rateio",
+    "capital de giro"
+  ],
+  "execution_rule": "Usar somente ferramentas conectadas/autorizadas e dentro da alçada do agente.",
+  "public_client_rule": "Não expor chaves privilegiadas, tokens ou credenciais em HTML/JS público."
+}
