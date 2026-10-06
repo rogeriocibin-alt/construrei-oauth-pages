@@ -757,7 +757,8 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Branch candidata: `cr-agent-hub-v1-candidate-20261005`.
 - Commit inicial da candidata: `85e710b6ff2715cd356adfe4ead6390f80477c78`.
 - GitHub Pages do commit inicial: **SUCCESS** (run 37396369691).
-- Protótipo de componente: `preview/agent-hub-v1-candidate-20261005/`.\n- **Candidata correta integrada ao Gestor H5:** `preview/gestor-agent-hub-v1-candidate-20261005/`.
+- Protótipo de componente: `preview/agent-hub-v1-candidate-20261005/`.
+- **Candidata correta integrada ao Gestor H5:** `preview/gestor-agent-hub-v1-candidate-20261005/`.
 - Registro canônico: `docs/AGENTS_REGISTRY.md`.
 - Núcleo de onboarding: `docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md`.
 - Banco reutilizado, sem duplicar governança:
@@ -769,7 +770,9 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Onboarding obrigatório: BIO + CR Assertivo instruem/testam cada agente no KNOW-HOW da empresa antes de VALIDADO/HOMOLOGADO.
 - BIO Gestor preservado como **READ_ONLY por padrão**, conforme regra canônica anterior.
 - ORÇA-REI permanece **CANDIDATO**, sem promoção automática do F02.
-- Commit de integração no Gestor candidato: `0c15b558809e2ba0fea668c2b559c4430e51b25b`.\n- A candidata copia a baseline H5 e adiciona apenas a aba `Agentes & Automações`, o indicador global de agente ativo e os assets do Agent Hub; Service Worker da candidata não é registrado para evitar interferência no PWA oficial.\n- Central, APP, Gestor oficial e F00→F09 oficiais permanecem **INALTERADOS**.
+- Commit de integração no Gestor candidato: `0c15b558809e2ba0fea668c2b559c4430e51b25b`.
+- A candidata copia a baseline H5 e adiciona apenas a aba `Agentes & Automações`, o indicador global de agente ativo e os assets do Agent Hub; Service Worker da candidata não é registrado para evitar interferência no PWA oficial.
+- Central, APP, Gestor oficial e F00→F09 oficiais permanecem **INALTERADOS**.
 - Próximo gate: Rogério testar a candidata no notebook/celular; somente após aprovação integrar o módulo ao Gestor oficial mantendo o link estável.
 
 
