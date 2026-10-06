@@ -895,3 +895,24 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Slide 02 agora apresenta os 4 membros em composição profissional com papel/responsabilidade, mantendo a tese “pessoas antes da tecnologia”.
 - Central e Apresentação mantêm o mesmo link-base; não foi criada arquitetura paralela.
 - Rollback imediato: branch `checkpoint-central-team-identity-v2-before-20261005`.
+
+
+## Correção Human Identity V3 — Central oficial — 2026-10-05
+
+- Estado: **IMPLEMENTADO NO LINK OFICIAL / GITHUB PAGES SUCCESS / AGUARDANDO GATE VISUAL FINAL DE ROGÉRIO**.
+- Link oficial preservado: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Motivo da correção: regressão de identidade humana na Central principal; Apresentação Viva e Sala da Equipe já estavam aprovadas e foram preservadas.
+- Checkpoint pré-correção: `checkpoint-central-human-identity-v3-before-20261005` → `b2a640721756aaa4aa3d7569803a15f603ce50f4`.
+- Commit funcional principal: `2f3aa860aa2f8180b144b66954cf8e9f4ef991b4`.
+- Commit anti-duplicidade/persistência: `7ff48cee281dd1ff0f7b1955831ee626cf5f3eeb`.
+- GitHub Pages: **SUCCESS** — run `37405199521`.
+- Checkpoint pós-implementação: `checkpoint-central-human-identity-v3-implemented-20261005` → `7ff48cee281dd1ff0f7b1955831ee626cf5f3eeb`.
+- Restaurado no header: foto de Rogério como Diretor, inclusive com tratamento responsivo em telas menores.
+- Restaurado na Agenda: miniavatares persistentes de Rogério, Éder, Gabrielly/Gabi e Fabrício após re-render, atualização de dados e navegação.
+- Restaurado em áreas operacionais: chips humanos por responsabilidade (Gabrielly em APP/Pendências; Fabrício em Checklist/SST; Éder em Wizy/Éder/Área Técnica; Rogério em Diretoria; combinações em Documentação/Academy/OS).
+- Restaurados no menu e DOM os acessos **Éder — Admin Técnico** e **Rogério — Diretor**, reaproveitando a lógica de autenticação já existente; não foi criada nova arquitetura.
+- Ajustada a fronteira operacional: `technical` e `admin` deixam de ser removidos pelo saneamento da Central; demais áreas de engenharia/desenvolvimento continuam no Gestor do Projeto.
+- Camada anti-regressão: `human-identity-v3.js/css`, com remount por MutationObserver, navegação, foco, rerender e intervalo leve.
+- Apresentação Viva: **preservada sem alteração nesta correção**.
+- Sala da Equipe: **preservada sem alteração nesta correção**.
+- Validação final exigida: Rogério conferir visualmente notebook + celular; só então marcar como VALIDADO/HOMOLOGADO DEFINITIVO.
