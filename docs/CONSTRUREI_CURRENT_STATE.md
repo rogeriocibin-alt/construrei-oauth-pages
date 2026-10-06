@@ -916,3 +916,18 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Apresentação Viva: **preservada sem alteração nesta correção**.
 - Sala da Equipe: **preservada sem alteração nesta correção**.
 - Validação final exigida: Rogério conferir visualmente notebook + celular; só então marcar como VALIDADO/HOMOLOGADO DEFINITIVO.
+
+
+## Correção pericial Central Human Identity V3.1 — 2026-10-05
+
+- Estado: **CORRIGIDO E PUBLICADO / AGUARDANDO GATE VISUAL DO ROGÉRIO**.
+- Link oficial preservado: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Causa raiz confirmada #1: o `index.html` da Central oficial referenciava arquivos locais que não existiam dentro da pasta homologada (`clean-native.js/css`, `agenda-smart-text-r6.js`, `executive-meters-r8.css`, `refinement-batch.css`, `version.json`). O navegador recebia 404 nesses recursos; por isso a Agenda não montava as linhas `.cr-agenda-row/.cr-agenda-main` e os miniavatares não tinham DOM onde ser aplicados.
+- Causa raiz confirmada #2: ao clicar `technical/admin`, o listener lazy ainda disparava `crLoadDev(false)` com timeout de até 22 s e posterior `render()`, enquanto a navegação local da identidade também era executada. Isso criava disputa de handlers/rerender e sensação de travamento.
+- Correção estrutural: dependências homologadas copiadas da candidata validada para a pasta oficial; todos os refs relativos atuais foram verificados e existem.
+- Correção de navegação: `technical/admin` removidos do carregamento lazy de desenvolvimento; navegação volta a usar o `go()` local já existente, sem interceptor paralelo.
+- Correção de identidade: `human-identity-v3.js` atualizado para V3.1; perfil do Rogério usa `display:flex !important` via estilo inline para vencer regras mobile antigas; Agenda usa detecção robusta de responsáveis e observer específico no host da Agenda.
+- Verificação estática: sintaxe JS OK para `clean-native.js`, `agenda-smart-text-r6.js`, `team-identity-v2.js` e `human-identity-v3.js`.
+- Verificação de dependências: todos os `src/href ./...` atuais do `index.html` retornam arquivo existente no repositório.
+- GitHub Pages: **SUCCESS**, run `37405881620`, commit `e026992e3b092cd9ba7286a976822bf3d2157105`.
+- Sala da Equipe e Apresentação Viva não foram alteradas nesta correção.
