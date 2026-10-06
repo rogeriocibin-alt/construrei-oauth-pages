@@ -328,3 +328,81 @@ Depois do processamento, o usuário deve receber uma composição editável já 
 
 Nenhum conteúdo colado pode apagar silenciosamente informação canônica já vinculada ao caso.
 
+## 25. Aprendizado automático e contínuo
+
+O ORÇA-REI deve operar com **código estável + conhecimento vivo**. O aprendizado operacional não depende de nova publicação, novo HTML ou nova versão do agente a cada correção.
+
+### 25.1 Regra central
+
+**Aprender automaticamente não significa autoalterar as regras canônicas.**
+
+O ORÇA-REI pode atualizar automaticamente seu histórico operacional, referências e padrões aprendidos, mas não pode sozinho:
+- mudar fórmula financeira;
+- alterar percentuais empresariais globais;
+- reescrever regras canônicas;
+- eliminar gates humanos;
+- transformar hipótese em fato;
+- promover preço histórico a preço obrigatório;
+- modificar código ou arquitetura em produção.
+
+Mudanças de regra continuam sujeitas à governança Bio Gestor / CR Assertivo / Rogério.
+
+### 25.2 Eventos que alimentam o aprendizado
+
+Entram automaticamente no aprendizado:
+1. orçamento F02 efetivamente liberado para F03 após revisão humana;
+2. proposta F03 aprovada pelo cliente;
+3. futuramente, resultado real de execução/fechamento F08/F09 quando os custos realizados estiverem disponíveis e validados;
+4. correção humana explícita registrada como correção canônica.
+
+Não entram como verdade aprendida:
+- rascunho não aprovado;
+- texto bruto da Entrada Inteligente;
+- orçamento de IA terceira;
+- valor sem natureza confirmada;
+- hipótese;
+- divergência ainda não resolvida;
+- orçamento recusado como se fosse referência de preço aceita.
+
+### 25.3 Memória operacional
+
+O aprendizado usa duas camadas:
+- **eventos append-only**, preservando origem, caso, estágio, ator e valores;
+- **padrões agregados**, com quantidade de amostras, média histórica revisada, média aceita pelo cliente, faixa observada e confiança.
+
+Cada nova ocorrência validada atualiza essas referências automaticamente.
+
+### 25.4 Uso nos próximos orçamentos
+
+Ao reconhecer serviço ou produto já visto, o ORÇA-REI pode consultar o histórico CONSTRU-REI e apresentar referência aprendida com:
+- número de casos revisados;
+- número de casos aprovados pelo cliente;
+- média unitária revisada;
+- média unitária aprovada pelo cliente;
+- faixa histórica quando existente;
+- último caso de origem;
+- confiança.
+
+Esse histórico é **consultivo**. Nunca pode sobrescrever silenciosamente quantidade, custo, preço, escopo ou evidência atual.
+
+### 25.5 Regra antideriva
+
+O agente deve privilegiar nesta ordem:
+1. evidência atual do caso;
+2. regra canônica;
+3. correção humana validada;
+4. histórico aprovado pelo cliente;
+5. histórico revisado internamente;
+6. estimativa.
+
+Uma única ocorrência nunca se transforma automaticamente em regra geral.
+
+### 25.6 Atualização sem republicação
+
+Novos aprendizados são persistidos em banco e consultados em tempo de execução. Portanto, a entrada de um novo caso validado **não exige redeploy do Edge, nova versão do F02 ou atualização manual do aplicativo**.
+
+A aplicação só precisa ser versionada novamente quando houver mudança real de lógica, interface, segurança, contrato ou regra canônica.
+
+### 25.7 Frase de controle do aprendizado
+
+“Aprender com o que foi validado, lembrar de onde veio, sugerir sem sobrescrever e nunca mudar regra canônica sozinho.”
