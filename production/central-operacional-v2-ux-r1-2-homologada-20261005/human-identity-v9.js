@@ -47,7 +47,7 @@ function notification(){
  b.classList.add('cr-notify-btn');b.innerHTML='🔔<span class="cr-notify-badge" hidden>1</span>';
  b.setAttribute('aria-label','Notificações da agenda');b.title='Abrir agenda e notificações';b.onclick=openAgenda;
  const now=new Date(),nm=now.getHours()*60+now.getMinutes();let best=null;
- document.querySelectorAll('#crAgendaRows .cr-agenda-row').forEach(row=>{
+ document.querySelectorAll('#crAgendaRows .cr-agenda-row,#crAgendaRows>article,#crAgendaRows>div:not(.cr-agenda-skeleton)').forEach(row=>{
   const m=(row.textContent||'').match(/(?:^|\s)([01]?\d|2[0-3]):([0-5]\d)(?:\s|$)/);if(!m)return;
   const diff=(Number(m[1])*60+Number(m[2]))-nm;if(diff>=0&&(best==null||diff<best))best=diff;
  });
@@ -73,6 +73,18 @@ function agenda(){
   if(box.dataset.sig!==sig){box.dataset.sig=sig;box.setAttribute('aria-label','Equipe responsável: '+ps.map(p=>p.name).join(', '));box.innerHTML=ps.map(p=>img(p)).join('')}
   if(!box.isConnected){if(strong&&strong.parentElement===main)main.insertBefore(box,strong);else main.prepend(box)}
  });notification();
+}
+function pendingCards(){
+ const host=document.getElementById('boardSummary');if(!host)return;
+ host.querySelectorAll('.cr-pending-card,button,article').forEach(card=>{
+  const t=norm(card.textContent||'');let key=null;
+  if(/\beder\b/.test(t))key='eder';else if(/\bwizy\b/.test(t))key='eder';else if(/\bapp\b/.test(t))key='rogerio';
+  const old=card.querySelector('.cr-pending-owner-avatar');if(!key){if(old)old.remove();return}
+  const p=PEOPLE[key];if(!p)return;
+  if(old){if(old.src!==p.face)old.src=p.face;return}
+  const im=document.createElement('img');im.className='cr-pending-owner-avatar';im.src=p.face;im.alt=p.name;im.title=p.name+' • '+p.role;
+  const icon=card.querySelector('.cr-pending-icon');if(icon&&icon.parentElement===card)card.insertBefore(im,icon.nextSibling);else card.prepend(im);
+ });
 }
 function ownerHtml(keys){
  const ps=keys.map(k=>PEOPLE[k]).filter(Boolean);if(!ps.length)return '';
@@ -143,7 +155,7 @@ function prune(){
  document.querySelectorAll('.grp').forEach(g=>{if(!g.querySelector('.nav'))g.remove()});
 }
 function mount(){
- prune();appBrand();removeDashboardRoster();topNav();notification();agenda();quickAccess();
+ prune();appBrand();removeDashboardRoster();topNav();notification();agenda();quickAccess();pendingCards();
  Object.keys(OWNER).forEach(owner);roster();nav();academy();
 }
 function loadRegistry(){
