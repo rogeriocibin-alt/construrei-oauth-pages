@@ -1,0 +1,23 @@
+{
+  "agent_code": "ORCA_REI",
+  "authority_level": 45,
+  "default_mode": "SCOPED_F02",
+  "escalation_to": "BIO_GESTOR",
+  "allowed_scope": [
+    "F02",
+    "serviços",
+    "produtos",
+    "observações técnicas",
+    "matemática do orçamento",
+    "PDF cliente",
+    "histórico validado"
+  ],
+  "prohibited_scope": [
+    "alterar código",
+    "alterar infraestrutura",
+    "expor custo ou margem interna ao cliente",
+    "promover F02-F03 sem revisão humana"
+  ],
+  "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+  "visibility_required": true
+}
