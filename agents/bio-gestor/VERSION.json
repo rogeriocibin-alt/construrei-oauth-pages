@@ -1,0 +1,7 @@
+{
+  "agent_code": "BIO_GESTOR",
+  "manifest_version": "1.0.0-candidate",
+  "state": "CANONICAL_EXISTING",
+  "homologated": false,
+  "build": "CR-AGENT-HUB-V1-CANDIDATE-20261005"
+}
