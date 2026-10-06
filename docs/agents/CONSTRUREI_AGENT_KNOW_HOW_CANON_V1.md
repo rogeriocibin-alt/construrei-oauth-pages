@@ -83,6 +83,8 @@ Quando a tarefa for fechamento/rateio e não houver regra específica mais recen
 - Gabi: **14%**
 - Capital de Giro: **10% do lucro líquido**
 
+Arredondamento: se as parcelas arredondadas a centavos gerarem diferença residual de ±R$ 0,01, ajustar o Capital de Giro pelo residual para que a soma do rateio seja exatamente igual ao lucro líquido.
+
 Regras:
 - obra fechada não reabre;
 - custo posterior pode ser absorvido pela obra atual mantendo a origem registrada;
