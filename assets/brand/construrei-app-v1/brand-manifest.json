@@ -1,6 +1,6 @@
 {
   "id": "CR-BRAND-CANONICAL-V1-20261006",
-  "status": "OFFICIAL_HOMOLOGATED",
+  "status": "WITHDRAWN_WRONG_SOURCE_ART_DO_NOT_USE",
   "source": "CONSTRU_REI_APP_KIT_IMAGENS_V1",
   "canonical_base": "/construrei-oauth-pages/assets/brand/construrei-app-v1/",
   "assets": {
@@ -24,5 +24,9 @@
   "pr": 36,
   "merge_commit": "19d2993fa7e766c4580c4d99c161ca35b3994dbb",
   "pages_run": 37540846696,
-  "supabase_logo_function_version": 29
-}
+  "supabase_logo_function_version": 29,
+  "active": false,
+  "withdrawn_at": "2026-10-06",
+  "withdrawal_reason": "Artes de origem fornecidas incorretamente; identidade V1/V2 desativada sem rollback funcional.",
+  "recovery_rule": "Use a identidade visual imediatamente anterior ao Brand Canonical V1. Não referenciar construrei-app-v1 ou construrei-app-v2 até novo kit ser validado."
+}\n
