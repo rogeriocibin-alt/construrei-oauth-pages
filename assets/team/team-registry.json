@@ -1,0 +1,174 @@
+{
+  "version": "CR-HUMAN-IDENTITY-CANON-V1-20261006",
+  "status": "CANONICO_ATIVO",
+  "base_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages",
+  "policy": "Pessoa real representada = retrato + nome + função. F00-F09 usam cluster da equipe; Agenda usa responsáveis dinâmicos; agente digital permanece visualmente separado.",
+  "people": {
+    "rogerio": {
+      "name": "Rogério",
+      "role": "Diretor • visão, decisão e governança",
+      "short_role": "Diretor",
+      "portrait": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/rogerio.webp",
+      "face": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/rogerio-face.webp",
+      "aliases": [
+        "rogerio",
+        "rogério"
+      ]
+    },
+    "eder": {
+      "name": "Éder",
+      "role": "Admin Técnico • operação técnica e controle",
+      "short_role": "Admin Técnico",
+      "portrait": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/eder.webp",
+      "face": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/eder-face.webp",
+      "aliases": [
+        "eder",
+        "éder"
+      ]
+    },
+    "gabrielly": {
+      "name": "Gabrielly",
+      "role": "Atendimento • triagem e comunicação",
+      "short_role": "Atendimento",
+      "portrait": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/gabrielly.webp",
+      "face": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/gabrielly-face.webp",
+      "aliases": [
+        "gabrielly",
+        "gabi"
+      ]
+    },
+    "fabricio": {
+      "name": "Fabrício",
+      "role": "Execução • campo, qualidade e entrega",
+      "short_role": "Execução",
+      "portrait": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/fabricio.webp",
+      "face": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/fabricio-face.webp",
+      "aliases": [
+        "fabricio",
+        "fabrício"
+      ]
+    }
+  },
+  "page_contexts": {
+    "app": [
+      "gabrielly"
+    ],
+    "pendapp": [
+      "gabrielly"
+    ],
+    "checklist": [
+      "fabricio"
+    ],
+    "sst": [
+      "fabricio"
+    ],
+    "wizy": [
+      "eder"
+    ],
+    "eder": [
+      "eder"
+    ],
+    "technical": [
+      "eder"
+    ],
+    "admin": [
+      "rogerio"
+    ],
+    "docs": [
+      "rogerio",
+      "eder"
+    ],
+    "academy": [
+      "eder",
+      "gabrielly"
+    ],
+    "os": [
+      "eder",
+      "fabricio"
+    ],
+    "meeting": [
+      "rogerio",
+      "eder",
+      "gabrielly",
+      "fabricio"
+    ],
+    "presentation": [
+      "rogerio",
+      "eder",
+      "gabrielly",
+      "fabricio"
+    ]
+  },
+  "link_contexts": {
+    "central": [
+      "rogerio",
+      "eder",
+      "gabrielly",
+      "fabricio"
+    ],
+    "gestor-projeto": [
+      "rogerio",
+      "eder",
+      "gabrielly",
+      "fabricio"
+    ],
+    "app-construrei": [
+      "gabrielly"
+    ],
+    "f00-captura-inteligente": "team",
+    "f01-atendimento": "team",
+    "f02-orcamentos": "team",
+    "f03-propostas-os": "team",
+    "f04-agenda": "team",
+    "f05-materiais-terceiros": "team",
+    "f06-campo-evidencias": "team",
+    "f07-qualidade-documentos": "team",
+    "f08-financeiro-cobranca": "team",
+    "f09-pos-venda-garantia": "team",
+    "checklist-operacional": [
+      "fabricio"
+    ],
+    "pendencias-app": [
+      "gabrielly"
+    ],
+    "pendencias-wizy-flow": [
+      "eder"
+    ],
+    "pendencias-eder-agora": [
+      "eder"
+    ],
+    "central-os": [
+      "eder",
+      "fabricio"
+    ],
+    "documentacao": [
+      "rogerio",
+      "eder"
+    ],
+    "academy": [
+      "eder",
+      "gabrielly"
+    ],
+    "apresentacao": [
+      "rogerio",
+      "eder",
+      "gabrielly",
+      "fabricio"
+    ],
+    "google-meet-central": [
+      "rogerio",
+      "eder",
+      "gabrielly",
+      "fabricio"
+    ],
+    "diretoria-master": [
+      "rogerio"
+    ],
+    "admin-tecnico": [
+      "eder"
+    ],
+    "sst": [
+      "fabricio"
+    ]
+  }
+}
