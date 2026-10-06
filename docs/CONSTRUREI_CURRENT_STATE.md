@@ -957,3 +957,22 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Gestor Team Identity V2 candidato: `preview/gestor-team-identity-v1-candidate-20261005/`; build `c2c713c751c0ea91668967dd8e2dc2a6a0948eae` • Pages run `37407437236` = **SUCCESS**.
 - No Gestor, `team-identity-v1.js` deixou de ser carregado; a equipe humana agora nasce junto do Agent Hub e preserva a distinção pessoa real ≠ agente digital.
 - Sala da Equipe `/call/` e Apresentação Viva `/presentation/` permanecem referências aprovadas e não foram alteradas por esta recuperação.
+
+
+## FECHAMENTO — Identidade Humana Central + Gestor — 2026-10-05
+
+- Estado: **FINALIZADO / OFICIALIZADO / CONGELADO** conforme referências visuais aprovadas pelo Rogério.
+- Regra definitiva de recuperação: **não promover previews inteiras**. Reaproveitar apenas o componente visual validado e manter shell, menu, rotas e arquitetura oficiais.
+- Central oficial preservada no link estável: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Central Human Identity V5: perfil humano do Rogério no topo + miniavatares da equipe na Agenda + identidade humana nas áreas Rogério/Éder. Menu lateral oficial foi preservado durante a ativação V5.
+- Referência visual histórica da Central: `preview/central-team-identity-v1-candidate-20261005/` — usar somente como referência dos retratos/miniavatares; **menu dessa preview é legado e não deve voltar**.
+- Apresentação Viva aprovada e congelada: `production/central-operacional-v2-ux-r1-2-homologada-20261005/presentation/`.
+- Sala da Equipe aprovada e congelada: `production/central-operacional-v2-ux-r1-2-homologada-20261005/call/`.
+- Gestor oficial preservado no link estável: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/`.
+- Gestor Team Identity V2 promovido ao oficial: a seção **Equipe Humana • Identidade Operacional** agora nasce nativamente dentro do render do Agent Hub. Não depende mais de MutationObserver/injeção externa para existir.
+- Caminhos de assets do Gestor oficial ajustados de preview (`../../assets/team/`) para oficial (`../assets/team/`).
+- Agent Hub continua mantendo separação explícita: retrato humano = pessoa da equipe; avatar do Agent Hub = agente digital.
+- Build oficial do Gestor Team Identity V2: `f65dbe269e764643a4b9eab1794a66e446a2fae0` • GitHub Pages run `37407668814` = **SUCCESS**.
+- Build Central V5: `bad76ce00f4818e6b1cb6342a5aa218144646126` • GitHub Pages run `37407234029` = **SUCCESS**.
+- Checkpoint pré-promoção do Gestor: `checkpoint-before-gestor-team-identity-v2-promotion-20261005`.
+- Regra antirregressão: Sala da Equipe e Apresentação não devem ser modificadas por correções da Central; Central não deve herdar menu de preview antiga; Gestor não deve perder a equipe humana após rerender do Agent Hub.
