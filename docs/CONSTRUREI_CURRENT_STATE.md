@@ -1118,3 +1118,25 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - GestãoClick: correções de estabilidade dos acessos rápidos já foram aplicadas; qualquer validação final deve ser feita na Central publicada, sem criar novo link.
 - Regra anti-regressão: não criar nova arquitetura, não criar nova Central paralela e não reintroduzir dependências vivas de versões antigas. Continuar exclusivamente sobre o link homologado de 05/10.
 - Escopo após este checkpoint: concluir Documentação Operacional + Easy Flow e então encerrar esta fase.
+
+
+## Central Executiva — acessos + Documentação V15 — 2026-10-06
+
+- Status: **OFICIAL / PUBLICADA / VALIDADA NO OPERA**.
+- Link oficial preservado: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Merge de estabilização: `a9bddb6c1905f3c04090459f8df1a0761e5d2fe7`.
+- GitHub Pages run: `37524127775` — **SUCCESS**.
+- Checkpoint: `docs/CHECKPOINT_CENTRAL_DOCS_STABILITY_V15_20261006.md`.
+- Cinco acessos principais validados na Central:
+  - Cora → `https://app.cora.com.br/`;
+  - Trello → Gestão de Obras 2026;
+  - GestãoClick → `https://gestaoclick.com/inicio`;
+  - Wizy Flow → `https://app.wizyflow.com.br/`;
+  - Gmail CONSTRU-REI → caixa `contatoconstrurei@gmail.com`.
+- Wizy Flow não aponta para Pendências; nomenclatura correta restaurada.
+- Documentação Operacional: travamento corrigido; observer global da identidade humana removido; `docsTable` passa a ter renderer operacional único; 105 documentos operacionais carregaram no teste do Opera.
+- Documentos de desenvolvimento/arquitetura/API/auditoria permanecem fora da Central e pertencem ao Gestor do Projeto.
+- Miniavatares humanos permanecem contextuais aos responsáveis identificáveis.
+- Alias `/documentacao/` direciona para a Documentação Operacional da Central.
+- Apresentação Institucional oficial preservada em `production/central-operacional-v2-ux-r1-2-homologada-20261005/presentation/`; versão moderna confirmada com Rogério, Éder, Gabrielly e Fabrício na página 02.
+- Regra antirregressão: não reintroduzir MutationObserver global na camada de identidade humana; observers devem ser locais e idempotentes.
