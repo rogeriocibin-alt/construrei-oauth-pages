@@ -1081,3 +1081,17 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Commits recentes do pacote: `a294adef0b87173303ab61a460c06ff70947d94e` (logos oficiais) e `cb1af67ca87d5bd10820c91847b180a475f9dcf0` (dimensionamento visual das logos).
 - Próxima validação: conferir renderização final no Opera e seguir com auditoria de isolamento para remover dependências vivas de versões antigas, congelando-as como histórico.
 - Regra anti-regressão: não criar novo link ou nova arquitetura para esta frente; consolidar no link homologado de 05/10.
+
+
+## CHECKPOINT DE CONTINUIDADE — 2026-10-06 16:08 BRT
+- Central canônica ativa: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Estado visual atual: Cora e Trello estão estáveis; GestãoClick segue com falha visual/piscadeira no Opera apesar do link direto estar configurado.
+- Diagnóstico em andamento: a aba da Central entra em ciclo de atualização e o Opera não consegue estabilizar a página por 10 s; isso indica problema de renderização/reinjeção e não apenas de URL.
+- Correção já publicada para acessos rápidos: links diretos, bloco idempotente e tentativa de ativo estável para GestãoClick. Commit: `75357039d653025b63f2399bd44fbd0b04fd2845`.
+- Regra funcional dos acessos rápidos: Cora → `https://app.cora.com.br`; Trello → quadro GESTÃO DE OBRAS 2026; GestãoClick → `https://gestaoclick.com/inicio`. API não é requisito para abrir as interfaces; futura API da Cora será tratada em frente separada de gestão financeira viva.
+- Documentação Operacional: deve conter somente operação e uso do APP/F00–F09, procedimentos, manuais, checklists, treinamento e referências usadas pela equipe. Conteúdo técnico/de desenvolvimento deve ficar no Gestor do Projeto, área Infraestrutura & TI.
+- Resquícios técnicos identificados na Central para remoção/migração: “BASE TÉCNICA / Documentação / Acervo”, “Acervo 343”, “Central OS” e lógica de “documentação técnica”.
+- Identidade humana: manter miniavatares contextuais dos responsáveis Rogério, Éder, Fabrício e Gabrielly nas áreas operacionais aplicáveis.
+- Apresentação Institucional: restaurar a versão moderna/limpa previamente aprovada, com Rogério, Éder, Gabrielly e Fabrício na segunda página.
+- Escopo desta execução permanece fechado nesses pontos; nova batelada de melhorias fica para frente futura.
+- Regra anti-regressão: não criar novo link nem nova arquitetura; corrigir e consolidar tudo na Central homologada de 05/10, mantendo versões antigas apenas como histórico.
