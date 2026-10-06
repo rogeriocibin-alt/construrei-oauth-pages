@@ -10,7 +10,7 @@
 ## Credenciais
 - Client ID de Stage: já configurado pelo Rogério no Supabase como secret
 - Nome canônico do secret: `CORA_STAGE_CLIENT_ID`
-- Certificado PEM: próximo passo em andamento
+- Certificado PEM: configurado pelo Rogério no Supabase
 - Nome canônico do secret: `CORA_STAGE_CERT_PEM`
 - Private Key: pendente, será configurada depois do certificado
 - Nome canônico do secret: `CORA_STAGE_PRIVATE_KEY`
@@ -23,8 +23,7 @@
 - Primeira integração permanece candidata / Stage
 
 ## Próximo passo exato
-1. No Supabase, criar/editar o secret `CORA_STAGE_CERT_PEM`
-2. No Value, colar todo o conteúdo do arquivo Certificado PEM, incluindo BEGIN/END CERTIFICATE
+1. No Supabase, criar/editar o secret `CORA_STAGE_PRIVATE_KEY`
+2. No Value, colar todo o conteúdo do arquivo Private Key, incluindo o cabeçalho e rodapé exatamente como vieram
 3. Salvar
-4. Depois configurar `CORA_STAGE_PRIVATE_KEY`
-5. Só após os três secrets estarem configurados, validar autenticação Stage no backend
+4. Só após os três secrets estarem configurados, validar autenticação Stage no backend
