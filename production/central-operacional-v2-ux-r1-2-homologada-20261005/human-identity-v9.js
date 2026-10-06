@@ -127,11 +127,15 @@ function academy(){
 }
 function quickAccess(){
  const panel=document.querySelector('#dashboard .cr-operation-panel .cr-panel-head');if(!panel)return;
- let box=document.getElementById('crBizQuick');if(!box){box=document.createElement('div');box.id='crBizQuick';box.className='cr-biz-quick';panel.appendChild(box)}
+ let box=document.getElementById('crBizQuick');
+ if(!box){box=document.createElement('div');box.id='crBizQuick';box.className='cr-biz-quick';panel.appendChild(box)}
+ const sig='v12-direct-stable-20261006';
+ if(box.dataset.sig===sig)return;
+ box.dataset.sig=sig;
  box.innerHTML=
-  '<a href="'+LINKS.cora+'" target="_blank" rel="noopener noreferrer" class="cr-biz-btn cora" title="Abrir Cora"><span class="cr-biz-logo"><img src="https://comunidade.cora.com.br/wp-content/uploads/2022/08/cora-logo.svg" alt="Cora"></span><small>Cora</small></a>'+
-  '<a href="'+LINKS.trello+'" target="_blank" rel="noopener noreferrer" class="cr-biz-btn trello" title="Abrir Trello • Gestão de Obras 2026"><span class="cr-biz-logo"><img src="https://trello.com/favicon.ico" alt="Trello"></span><small>Trello</small></a>'+
-  '<a href="'+LINKS.gestaoclick+'" target="_blank" rel="noopener noreferrer" class="cr-biz-btn gc" title="Abrir GestãoClick"><span class="cr-biz-logo"><img src="https://gestaoclick.com/favicon.ico" alt="GestãoClick"></span><small>GestãoClick</small></a>';
+  '<a href="'+LINKS.cora+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn cora" title="Abrir Cora"><span class="cr-biz-logo"><img src="https://comunidade.cora.com.br/wp-content/uploads/2022/08/cora-logo.svg" alt="Cora"></span><small>Cora</small></a>'+
+  '<a href="'+LINKS.trello+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn trello" title="Abrir Trello • Gestão de Obras 2026"><span class="cr-biz-logo"><img src="https://trello.com/favicon.ico" alt="Trello"></span><small>Trello</small></a>'+
+  '<a href="'+LINKS.gestaoclick+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn gc" title="Abrir GestãoClick"><span class="cr-biz-logo"><img src="https://www.google.com/s2/favicons?domain=gestaoclick.com.br&sz=64" alt="GestãoClick"></span><small>GestãoClick</small></a>';
 }
 function topNav(){
  const menu=document.querySelector('.top .menu');if(menu)menu.classList.add('cr-menu-responsive-only');
