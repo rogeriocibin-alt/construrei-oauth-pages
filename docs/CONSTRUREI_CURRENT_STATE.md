@@ -819,3 +819,13 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Correções: cabeçalho premium, hierarquia comercial, subtotais fora da tabela sem quebra, títulos de serviços mais limpos, fornecimento de portas explicitamente separado na descrição, rodapé institucional, matemática preservada e auditável.
 - Caso Escola 766-26 validado matematicamente: Serviços R$ 2.140,00 + Produtos/Materiais R$ 1.543,00 = Total R$ 3.683,00.
 - Produção `production/flow-canonical-20261001/f02/` permanece inalterada até validação.
+
+
+### F02 ORÇA-REI R8 — impressão definitiva — 2026-10-05
+- Status: **CANDIDATA / AGUARDANDO VALIDAÇÃO HUMANA**.
+- Commit: `7bafdc617fa9c1bfe2ed50340ed6ddbb2bb2d8ee`.
+- Build: `CR-F02-ORCA-REI-V1-R8-PRINT-DEFINITIVE-20261005`.
+- Correção raiz: logo corporativa embutida em base64 limpo, sem quebras; impressão só ocorre após `complete + naturalWidth > 0 + decode()`.
+- Em caso de falha da imagem, o sistema bloqueia a impressão em vez de gerar PDF com logo quebrada.
+- Mantidos: matemática canônica, subtotais por seção, total geral, cabeçalho/rodapé premium, Caso Escola 766-26 e Entrada Inteligente.
+- F02 oficial de produção permanece inalterado até validação desta candidata.
