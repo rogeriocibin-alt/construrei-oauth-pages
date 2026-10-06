@@ -1,0 +1,11 @@
+CONSTRU-REI — HOMOLOGAÇÃO OFICIAL DA CENTRAL
+Data: 2026-10-04
+Versão validada por Rogério: Executive R9 Mobile Fix
+Commit funcional validado: b42c491dba5a60fa375c2f2609e26c660ebf892e
+Origem validada: preview/central-exec-r9-mobilefix-20261004/
+Destino de produção: production/central-homologada-exec-r9-20261004/
+Checkpoint funcional: CHECKPOINT_CENTRAL_EXEC_R9_MOBILEFIX_20261004
+Checkpoint homologado: CHECKPOINT_CENTRAL_EXEC_R9_HOMOLOGADA_20261004
+Branch homologada: central-homologada-exec-r9-20261004
+Validação humana: Rogério confirmou visual no celular em 2026-10-04.
+Política: preservar integralmente lógica, dados, APIs, identidade e módulos da R9 validada; promoção oficial altera somente o destino HOME do roteador centro-operacoes.
