@@ -66,3 +66,8 @@
 3. Não duplicar arquivos de retrato; novos componentes devem consumir `team-registry.json`.
 4. Links puramente técnicos ou redirecionamentos secos não precisam renderizar avatar; a superfície humana de destino deve renderizá-lo.
 5. O Checklist externo permanece funcional e não é alterado apenas por identidade visual.
+
+## Promoção
+- PR de promoção: **#28**.
+- Branch: `cr-human-identity-canon-v1-20261006`.
+- Gate solicitado por Rogério nesta conversa: finalizar a implantação e entregar a tabela de comprovação.
