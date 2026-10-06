@@ -929,7 +929,7 @@ details.box[open]{border-color:#bfd7e8!important}
 
 /* Shell logo compatibility fix: render official APP logo as replaced content */
 .cr-brand:before{
-  content:url("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&rev=app-identity-canonical-20260930")!important;
+  content:url("https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/brand/construrei-app-v1/app-icon-192.png?v=brand-v1")!important;
   display:block!important;
   width:32px!important;
   height:32px!important;
