@@ -705,3 +705,19 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - PDF: removida paginação CSS inválida `Página 0 de 0`; rodapé passou para fluxo normal para não invadir observações; blocos de observações, totais e termos protegidos contra quebra ruim; impressão espera a logo carregar.
 - Caso Escola 766-26 permanece gabarito de homologação.
 - F02 oficial em `production/flow-canonical-20261001/f02/` permanece inalterado até validação humana desta candidata.
+
+
+### F02 ORÇA-REI R5 — PDF Premium + matemática auditável — 2026-10-05
+- Status: **CANDIDATA / NÃO PROMOVIDA / AGUARDANDO VALIDAÇÃO HUMANA**.
+- UI candidata: `preview/f02-orca-rei-v1-r3-intake-20261005/`.
+- Commit UI: `50b74022c8bfbc94d9eece8f9dc01f1c48cb66ea`.
+- Build: `CR-F02-ORCA-REI-V1-R5-PDF-PREMIUM-MATH-20261005`.
+- Logo premium do PDF derivada da logo corporativa horizontal fornecida por Rogério; logo redonda continua exclusiva do APP.
+- Asset: `preview/f02-orca-rei-v1-r3-intake-20261005/assets/construrei-logo-corporate-premium-20261005.webp` (commit `13da7c5ae49bb80ddda457e1c8f3c55acba17aa3`).
+- Cabeçalho: CONSTRUTORA • REPAROS • REFORMAS; BOOM NEGÓCIOS LTDA + CNPJ + dados oficiais; PROPOSTA COMERCIAL; "Elaborado com critério técnico e transparência."
+- Rodapé premium: CONSTRU-REI • CONSTRUTORA, REPAROS E REFORMAS; SOLUÇÕES HOJE. TRANQUILIDADE SEMPRE.; Curitiba/RMC; identificação jurídica.
+- Matemática canônica: `subtotal_item = round2(quantidade × valor_unitário)`; subtotais por seção = soma dos subtotais; Total Geral = Subtotal Serviços + Subtotal Produtos/Materiais.
+- PDF exibe memória de cálculo por item e subtotais por seção.
+- Importação de orçamento pronto continua preservando quantidade e valor unitário, mas subtotais divergentes são recalculados pelo sistema.
+- Caso Escola 766-26 permanece gabarito: serviços R$ 2.140,00; produtos R$ 1.543,00; total R$ 3.683,00.
+- F02 oficial `production/flow-canonical-20261001/f02/` permanece inalterado.
