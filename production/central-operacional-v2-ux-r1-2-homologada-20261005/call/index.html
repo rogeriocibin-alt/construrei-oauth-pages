@@ -3,17 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#05265f">
-<meta name="cr-build" content="CR-CENTRAL-OP-V2-UX-NAV-R1.2-MEET-LAUNCHER-OFFICIAL-20261005">
+<meta name="theme-color" content="#031b46">
+<meta name="cr-build" content="CR-CENTRAL-OP-V2-TEAM-IDENTITY-V2-MEETING-20261005">
 <title>CONSTRU-REI • Sala da Equipe</title>
 <style>
-:root{--navy:#031b46;--navy2:#05265f;--blue:#0877f9;--gold:#ffc514;--bg:#eef8fd;--line:#d5e7f2;--ink:#07165b;--text:#17315d}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(180deg,var(--bg),#f9fcfe);font:14px/1.45 Inter,system-ui,Segoe UI,Arial;color:var(--text);padding:14px}
-.wrap{max-width:760px;margin:0 auto}.top{display:flex;gap:8px;align-items:center;margin-bottom:12px}.top a,.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:850;text-decoration:none;cursor:pointer}
-.top a{background:#e5f1fb;color:#0a4aa7}.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 16px 42px rgba(6,40,86,.12);overflow:hidden}
-.hero{padding:24px;background:linear-gradient(120deg,var(--navy),var(--navy2) 62%,#6f5310);color:#fff}.ey{font-size:10px;font-weight:900;letter-spacing:.12em;color:#ffd83d}.hero h1{margin:7px 0 8px;font-size:28px}.hero p{margin:0;color:#dce9f5}
-.body{padding:20px}.ok{border:1px solid #bde6d1;background:#edf9f4;color:#176f4d;border-radius:12px;padding:12px;margin-bottom:14px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{background:linear-gradient(180deg,#1688ff,#075bd8);color:#fff;min-height:48px}.btn.gold{background:linear-gradient(180deg,#ffd52c,#ffc400);color:#15275e}.btn.secondary{background:#edf5fb;color:#0a4aa7;border:1px solid #cfe2f0}.note{margin-top:14px;color:#6a8298;font-size:12px}
-@media(max-width:600px){body{padding:9px}.hero{padding:18px}.hero h1{font-size:23px}.actions{grid-template-columns:1fr}.btn{width:100%}}
+:root{--navy:#031b46;--navy2:#05265f;--blue:#0877f9;--gold:#ffc514;--bg:#eef8fd;--line:#d5e7f2;--ink:#07165b;--text:#17315d;--mut:#637c95}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(180deg,#eaf6fc,#f9fcfe);font:14px/1.45 Inter,system-ui,Segoe UI,Arial;color:var(--text);padding:16px}
+.wrap{max-width:1120px;margin:0 auto}.top{display:flex;gap:8px;align-items:center;margin-bottom:12px}.top a,.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:850;text-decoration:none;cursor:pointer}
+.top a{background:#e5f1fb;color:#0a4aa7;border:1px solid #d1e4f2}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 16px 42px rgba(6,40,86,.12);overflow:hidden}
+.hero{padding:26px;background:radial-gradient(circle at 88% 12%,rgba(8,119,249,.34),transparent 30%),linear-gradient(120deg,var(--navy),var(--navy2) 72%,#0b4f91);color:#fff;border-bottom:5px solid var(--gold)}
+.ey{font-size:10px;font-weight:900;letter-spacing:.13em;color:#ffd83d}.hero h1{margin:7px 0 8px;font-size:32px}.hero p{margin:0;color:#dce9f5;max-width:850px}
+.body{padding:22px}.team-title{font-size:9px;font-weight:900;letter-spacing:.13em;color:#0b64b1;margin-bottom:8px}.team{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.person{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #d8e8f3;border-radius:15px;background:linear-gradient(180deg,#fff,#f5faff)}
+.person img{width:64px;height:64px;object-fit:cover;border-radius:50%;border:3px solid var(--gold);background:var(--navy2);box-shadow:0 0 0 2px rgba(255,197,20,.12)}
+.person b{display:block;color:var(--ink);font-size:12px}.person small{display:block;color:var(--mut);font-size:9px;margin-top:3px;line-height:1.3}
+.info{display:grid;grid-template-columns:1.35fr .65fr;gap:12px}.panel{border:1px solid #d8e8f3;border-radius:15px;padding:15px;background:#f9fcff}.panel b{color:var(--ink)}
+.ok{border:1px solid #bde6d1;background:#edf9f4;color:#176f4d;border-radius:12px;padding:12px;margin-bottom:14px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{background:linear-gradient(180deg,#1688ff,#075bd8);color:#fff;min-height:48px}.btn.gold{background:linear-gradient(180deg,#ffd52c,#ffc400);color:#15275e}.btn.secondary{background:#edf5fb;color:#0a4aa7;border:1px solid #cfe2f0}.note{margin-top:12px;color:#6a8298;font-size:11px}
+@media(max-width:850px){.team{grid-template-columns:1fr 1fr}.info{grid-template-columns:1fr}}
+@media(max-width:600px){body{padding:9px}.hero{padding:20px}.hero h1{font-size:25px}.team{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.btn{width:100%}.person img{width:56px;height:56px}}
 </style>
 </head>
 <body>
@@ -21,31 +30,38 @@
   <div class="top"><a href="../">← Voltar à Central</a></div>
   <section class="card">
     <div class="hero">
-      <div class="ey">SALA DA EQUIPE • OFICIAL</div>
-      <h1>Reunião CONSTRU-REI</h1>
-      <p>A Central direciona para a sala oficial da equipe. O motor de reunião volta a ser o Google Meet homologado.</p>
+      <div class="ey">EQUIPE • COMUNICAÇÃO INTERNA</div>
+      <h1>Sala da Equipe CONSTRU-REI</h1>
+      <p>Identidade visual unificada com a Central. A sala oficial permanece no Google Meet, preservando estabilidade de câmera, microfone, participantes e compartilhamento de tela.</p>
     </div>
     <div class="body">
-      <div class="ok"><b>Conectividade restaurada.</b> Câmera, microfone, participantes e compartilhamento de tela ficam sob o Google Meet, sem a camada WebRTC experimental da Central.</div>
-      <div class="actions">
-        <button class="btn gold" id="join">🎥 Entrar na Sala da Equipe</button>
-        <button class="btn" id="copy">⧉ Copiar link da sala</button>
-        <button class="btn secondary" id="refresh">↻ Atualizar</button>
-        <button class="btn secondary" id="back">← Voltar à Central</button>
+      <div class="team-title">QUEM ESTÁ NESTA OPERAÇÃO</div>
+      <div class="team">
+        <div class="person"><img src="https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/rogerio-face.webp" alt="Rogério"><div><b>Rogério</b><small>Diretor • visão, decisão e governança</small></div></div>
+        <div class="person"><img src="https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/eder-face.webp" alt="Éder"><div><b>Éder</b><small>Admin Técnico • operação técnica e controle</small></div></div>
+        <div class="person"><img src="https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/gabrielly-face.webp" alt="Gabrielly"><div><b>Gabrielly</b><small>Atendimento • triagem e comunicação</small></div></div>
+        <div class="person"><img src="https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/fabricio-face.webp" alt="Fabrício"><div><b>Fabrício</b><small>Execução • campo e entrega</small></div></div>
       </div>
-      <div class="note">A Central não solicita permissões de câmera ou microfone nesta tela. Ao entrar, o Google Meet assume a reunião e pode abrir no aplicativo instalado ou no navegador.</div>
+      <div class="info">
+        <div class="panel">
+          <div class="ok"><b>Sala oficial homologada.</b> O Google Meet continua responsável pelo motor de reunião. Esta página organiza o acesso e mantém a identidade da CONSTRU-REI sem recriar a camada de vídeo.</div>
+          <div class="actions">
+            <button class="btn gold" id="join">🎥 Entrar na Sala da Equipe</button>
+            <button class="btn" id="copy">⧉ Copiar link da sala</button>
+            <button class="btn secondary" id="refresh">↻ Atualizar</button>
+            <button class="btn secondary" id="back">← Voltar à Central</button>
+          </div>
+        </div>
+        <div class="panel"><b>Padrão visual restaurado</b><p class="note">Azul-marinho, azul institucional, branco e amarelo. Sem texto escuro sobre fundo escuro e sem camada WebRTC experimental.</p><b>Compatibilidade</b><p class="note">Câmera, microfone e compartilhamento passam a ser tratados pelo Google Meet, reduzindo regressões de navegador e permissões.</p></div>
+      </div>
     </div>
   </section>
 </main>
 <script>
-(function(){
-'use strict';
-const MEET='https://meet.google.com/xtw-rihq-jwi';
+(()=>{'use strict';const MEET='https://meet.google.com/xtw-rihq-jwi';
 document.getElementById('join').onclick=()=>location.assign(MEET);
 document.getElementById('copy').onclick=async()=>{try{await navigator.clipboard.writeText(MEET);document.getElementById('copy').textContent='✓ Link copiado'}catch(e){prompt('Copie o link da sala:',MEET)}};
 document.getElementById('refresh').onclick=()=>location.reload();
-document.getElementById('back').onclick=()=>location.assign('../');
-})();
+document.getElementById('back').onclick=()=>location.assign('../');})();
 </script>
-</body>
-</html>
+</body></html>
