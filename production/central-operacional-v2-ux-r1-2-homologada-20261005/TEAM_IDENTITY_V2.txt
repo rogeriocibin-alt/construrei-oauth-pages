@@ -1,0 +1,16 @@
+CONSTRU-REI • CENTRAL OPERACIONAL V2 • TEAM IDENTITY V2
+Data: 2026-10-05
+Estado: IMPLEMENTADO NO LINK HOMOLOGADO / AGUARDANDO VALIDAÇÃO VISUAL FINAL
+Link: https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/
+Checkpoint: checkpoint-central-team-identity-v2-before-20261005
+Rollback SHA: bf33246a9a17b9974b4b199b6e7a16f7897c64dc
+
+Escopo:
+- Rogério no perfil da Diretoria;
+- Rogério, Éder, Gabrielly e Fabrício visíveis na Sala da Equipe;
+- miniavatares dos responsáveis na Agenda;
+- badges humanos nas áreas Rogério/Éder;
+- identidade visual da reunião restaurada;
+- Google Meet mantido como motor oficial;
+- Apresentação Viva com equipe no slide 02;
+- fotos humanas não substituem avatares dos agentes digitais.
