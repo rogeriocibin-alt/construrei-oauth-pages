@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="cr-build" content="CR-PM-AGENT-HUB-V1-CANDIDATE-20261005">
+  <title>Gestor do Projeto • Agent Hub V1 • Candidata • CONSTRU-REI</title>
+  <meta name="theme-color" content="#07185d">
+  <meta name="application-name" content="Gestor CONSTRU-REI">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Gestor CONSTRU-REI">
+  <link rel="manifest" href="./manifest.webmanifest?v=20261005v112h5official">
+  <link rel="icon" href="./pwa-icon.svg?v=20261005v112h5official" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css?v=20261005v112h5official">
+  <link rel="stylesheet" href="./executive-dashboard.css?v=20261005v112h5official">\n  <link rel="stylesheet" href="./agent-hub-panel.css?v=20261005agenthub1">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="./pwa-icon.svg?v=20261005v112h5official" alt="APP CONSTRU-REI">
+        <div>
+          <strong>CONSTRU-REI</strong>
+          <span>Gestor do Projeto</span>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav">
+        <button class="nav-btn active" data-view="now"><span class="ico">⌂</span><span>Agora</span></button>
+        <button class="nav-btn" data-view="pending"><span class="ico">!</span><span>Pendências do Projeto</span></button>
+        <button class="nav-btn" data-view="history"><span class="ico">◷</span><span>Histórico Vivo</span></button>
+        <button class="nav-btn" data-view="canonical"><span class="ico">◇</span><span>Cadeia Canônica</span></button>
+        <button class="nav-btn" data-view="fronts"><span class="ico">▦</span><span>Frentes</span></button>
+        <button class="nav-btn" data-view="versions"><span class="ico">⌘</span><span>Versões</span></button>
+        <button class="nav-btn" data-view="decisions"><span class="ico">✓</span><span>Decisões</span></button>
+        <button class="nav-btn" data-view="timeline"><span class="ico">↗</span><span>Linha do Tempo</span></button>
+        <button class="nav-btn" data-view="products"><span class="ico">▣</span><span>Produtos</span></button>
+        <button class="nav-btn" data-view="agents"><span class="ico">◉</span><span>Agentes & Automações</span></button>\n        <button class="nav-btn" data-view="infrastructure"><span class="ico">⌁</span><span>Infraestrutura & TI</span><span class="nav-alert">1</span></button>
+        <button class="nav-btn" data-view="recoverables"><span class="ico">↺</span><span>Recuperáveis</span></button>
+        <button class="nav-btn" data-view="audits"><span class="ico">◎</span><span>Auditorias</span><span class="nav-alert">1</span></button>
+        <button class="nav-btn" data-view="governance"><span class="ico">⚑</span><span>Governança</span></button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <div class="status-dot"></div>
+        <div><b>V1.2 • Candidata</b><small>Canônica homologada • riscos abertos preservados</small></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menu">☰</button><button class="ux-top-btn ux-top-nav" id="managerBackBtn" type="button" aria-label="Voltar" title="Voltar">←</button><button class="ux-top-btn ux-top-nav" id="managerHomeBtn" type="button" aria-label="Início" title="Início">⌂</button>
+        <div class="topbar-brand" aria-label="APP CONSTRU-REI">
+          <img src="./pwa-icon.svg?v=20261005v112h5official" alt="APP CONSTRU-REI">
+          <div><b>APP CONSTRU-REI</b><small>Gestor do proprietário</small></div>
+        </div>
+        <div class="heading">
+          <div class="crumbs" id="crumbs">Gestor do Projeto / Agora</div>
+          <h1 id="pageTitle">Cockpit do Projeto</h1>
+        </div>
+        <label class="search">
+          <span>⌕</span>
+          <input id="globalSearch" placeholder="Buscar pendência, versão, frente, decisão, commit...">
+        </label>
+        <button class="version-chip" id="versionChip" type="button" title="Versão, build e mudanças">V1.2 • CANDIDATA</button>
+        <span class="build-chip" id="liveBuildChip">V1.2 • CANDIDATA</span>
+        <button class="ghost-btn" id="installPwaBtn" hidden>Instalar Gestor</button>
+        <button class="ux-top-btn ux-refresh-btn" id="managerRefreshBtn" type="button" title="Buscar atualização do PWA">↻ Atualizar</button><button class="ghost-btn" id="presentationBtn">Modo apresentação</button>
+      </header>
+
+            <div class="update-banner" id="updateBanner" hidden role="status" aria-live="polite">
+        <div><b>Nova versão disponível</b><small id="updateBannerText">Há uma atualização do Gestor pronta para instalar neste mesmo PWA.</small></div>
+        <div class="update-actions">
+          <button class="soft-btn" id="updateNotesBtn" type="button">Ver mudanças</button>
+          <button class="soft-btn" id="updateLaterBtn" type="button">Depois</button>
+          <button class="primary-btn" id="updateNowBtn" type="button">Atualizar agora</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <section class="view active" id="view-now"></section>
+        <section class="view" id="view-pending"></section>
+        <section class="view" id="view-history"></section>
+        <section class="view" id="view-canonical"></section>
+        <section class="view" id="view-fronts"></section>
+        <section class="view" id="view-versions"></section>
+        <section class="view" id="view-decisions"></section>
+        <section class="view" id="view-timeline"></section>
+        <section class="view" id="view-products"></section>\n        <section class="view" id="view-agents"><div class="card empty">Carregando Agent Hub V1…</div></section>
+        <section class="view" id="view-infrastructure">
+          <div class="page-intro"><div><h2>Infraestrutura & TI</h2><p>Mapa do proprietário: onde o CONSTRU-REI está hospedado, armazenado e versionado, quais contas estão em uso, saúde atual, backups, Cofre Zero, notebook e fronteira entre documentação operacional e documentação de desenvolvimento.</p></div></div>
+
+          <section class="metrics infra-metrics">
+            <article class="metric"><div class="metric-top"><span class="metric-label">Provedores mapeados</span><span class="metric-icon">▦</span></div><div class="metric-value">10</div><small>infraestrutura + integrações</small></article>
+            <article class="metric"><div class="metric-top"><span class="metric-label">Verificados ao vivo</span><span class="metric-icon">●</span></div><div class="metric-value">6</div><small>conectores e dispositivo</small></article>
+            <article class="metric"><div class="metric-top"><span class="metric-label">Alerta crítico</span><span class="metric-icon">!</span></div><div class="metric-value">0</div><small>backup recuperado em 04/10</small></article>
+            <article class="metric"><div class="metric-top"><span class="metric-label">Supabase Edge</span><span class="metric-icon">ƒ</span></div><div class="metric-value">330</div><small>funções ativas</small></article>
+            <article class="metric"><div class="metric-top"><span class="metric-label">Netlify</span><span class="metric-icon">N</span></div><div class="metric-value">7</div><small>sites • plano Free</small></article>
+            <article class="metric"><div class="metric-top"><span class="metric-label">Vercel</span><span class="metric-icon">V</span></div><div class="metric-value">0</div><small>projetos no time conectado</small></article>
+          </section>
+
+          <div class="infra-secret-policy"><b>Regra de segurança:</b> o Gestor mostra conta, plano, projeto, saúde e atalho administrativo, mas não grava valores sensíveis no PWA. O repositório principal é público, então dados de acesso ficam nos cofres/provedores apropriados.</div>
+
+          <section class="card infra-block">
+            <div class="card-head"><div><h3>Onde está cada parte do CONSTRU-REI</h3><p>Fonte de verdade por camada.</p></div></div>
+            <div class="table-wrap"><table class="data-table">
+              <thead><tr><th>Camada</th><th>Plataforma</th><th>Ativo</th><th>Função</th><th>Saúde</th></tr></thead>
+              <tbody>
+                <tr><td><b>Gestor / PWA do proprietário</b></td><td>GitHub Pages</td><td>construrei-oauth-pages</td><td>Governança, história, pendências e desenvolvimento</td><td><span class="infra-pill infra-ok">Vivo</span></td></tr>
+                <tr><td><b>Central / APIs / Banco</b></td><td>Supabase</td><td>CONSTRU-REI Centro de Controle</td><td>Edge Functions, PostgreSQL, Storage e integrações</td><td><span class="infra-pill infra-ok">ACTIVE_HEALTHY</span></td></tr>
+                <tr><td><b>Código-fonte</b></td><td>GitHub</td><td>2 repositórios visíveis</td><td>Git, checkpoints, histórico e publicação</td><td><span class="infra-pill infra-ok">Saudável</span></td></tr>
+                <tr><td><b>Hospedagens históricas / failover</b></td><td>Netlify</td><td>7 sites</td><td>Previews, dashboard e failover</td><td><span class="infra-pill infra-attention">Revisar uso real</span></td></tr>
+                <tr><td><b>Hospedagem alternativa</b></td><td>Vercel</td><td>0 projetos</td><td>Conta conectada sem workload atual</td><td><span class="infra-pill infra-neutral">Sem workload</span></td></tr>
+                <tr><td><b>Baseline de recuperação</b></td><td>Rogerio-2022</td><td>Cofre Zero</td><td>Banco, Edge, Storage, checksums e restore runbook</td><td><span class="infra-pill infra-ok">Restore comprovado</span></td></tr>
+                <tr><td><b>Backup remoto</b></td><td>Google Drive / rclone</td><td>CONSTRUREI-BACKUP-AUTO</td><td>CURRENT + HISTORY</td><td><span class="infra-pill infra-ok">Backup 04/10 OK • restore amostral validado</span></td></tr>
+                <tr><td><b>Acesso remoto</b></td><td>Desktop Commander</td><td>Rogerio-2022</td><td>Auditoria e manutenção local autorizada</td><td><span class="infra-pill infra-ok">Online</span></td></tr>
+              </tbody>
+            </table></div>
+          </section>
+
+          <div class="page-intro infra-title-gap"><div><h2>Provedores, contas e planos</h2><p>Quando o plano não foi retornado pelo conector, ele fica explicitamente como não confirmado.</p></div></div>
+          <div class="infra-provider-grid">
+            <article class="card infra-provider"><div class="infra-provider-head"><div><small>BACKEND / BANCO / STORAGE / EDGE</small><h3>Supabase</h3><p>Organização Rogério Cibin</p></div><span class="infra-pill infra-ok">Saudável</span></div><div class="infra-plan"><span>Plano</span><b>Não confirmado pelo conector</b></div><div class="infra-stats"><div><small>Projeto</small><b>ACTIVE_HEALTHY</b></div><div><small>Região</small><b>sa-east-1</b></div><div><small>Tabelas public</small><b>157</b></div><div><small>Edge Functions</small><b>330</b></div></div><div class="infra-alert-list"><b>Auditoria atual</b><ul><li>226 Edge Functions estão com verify_jwt=false; revisar por função e finalidade.</li><li>Advisor de segurança: nível INFO, RLS habilitado sem policy em 159 achados.</li><li>Performance: 4 FKs sem índice, 126 índices sem uso e configuração Auth a revisar.</li></ul></div><a class="primary-btn infra-link" href="https://supabase.com/dashboard/project/yspuaamokjbrosytqjpg" target="_blank" rel="noopener">Abrir Supabase ↗</a></article>
+
+            <article class="card infra-provider"><div class="infra-provider-head"><div><small>CÓDIGO / GIT / PAGES</small><h3>GitHub</h3><p>rogeriocibin-alt</p></div><span class="infra-pill infra-ok">Saudável</span></div><div class="infra-plan"><span>Plano</span><b>Não confirmado pelo conector</b></div><div class="infra-stats"><div><small>Repositórios</small><b>2</b></div><div><small>Principal</small><b>Público</b></div><div><small>Dashboard candidato</small><b>Privado</b></div><div><small>PWA</small><b>GitHub Pages</b></div></div><div class="infra-alert-list"><b>Regra</b><ul><li>O repositório principal é público: nunca armazenar credenciais no HTML/JSON.</li></ul></div><a class="primary-btn infra-link" href="https://github.com/rogeriocibin-alt" target="_blank" rel="noopener">Abrir GitHub ↗</a></article>
+
+            <article class="card infra-provider"><div class="infra-provider-head"><div><small>HOSPEDAGEM HISTÓRICA / FAILOVER</small><h3>Netlify</h3><p>rogeriocibin’s team</p></div><span class="infra-pill infra-attention">Atenção</span></div><div class="infra-plan"><span>Plano</span><b>Free • confirmado</b></div><div class="infra-stats"><div><small>Sites</small><b>7</b></div><div><small>MFA do time</small><b>Não exigido</b></div><div><small>Dashboard</small><b>Deploy ready</b></div><div><small>Demais</small><b>Current / revisar</b></div></div><a class="primary-btn infra-link" href="https://app.netlify.com/teams/rogeriocibin" target="_blank" rel="noopener">Abrir Netlify ↗</a></article>
+
+            <article class="card infra-provider"><div class="infra-provider-head"><div><small>HOSPEDAGEM ALTERNATIVA</small><h3>Vercel</h3><p>contatoconstrurei-3042's projects</p></div><span class="infra-pill infra-neutral">Sem workload</span></div><div class="infra-plan"><span>Plano</span><b>Não confirmado pelo conector</b></div><div class="infra-stats"><div><small>Times</small><b>1</b></div><div><small>Projetos</small><b>0</b></div><div><small>Uso atual</small><b>Nenhum projeto identificado</b></div></div><a class="primary-btn infra-link" href="https://vercel.com/dashboard" target="_blank" rel="noopener">Abrir Vercel ↗</a></article>
+
+            <article class="card infra-provider"><div class="infra-provider-head"><div><small>DISPOSITIVO / FERRAMENTAS LOCAIS</small><h3>Rogerio-2022</h3><p>Notebook autorizado</p></div><span class="infra-pill infra-ok">Online</span></div><div class="infra-plan"><span>Desktop Commander</span><b>App 0.2.52</b></div><div class="infra-stats"><div><small>Remote MCP</small><b>85% restante na auditoria</b></div><div><small>Cofre Zero</small><b>Presente</b></div><div><small>Restore</small><b>Comprovado em 26/09</b></div><div><small>Backup diário</small><b>04/10 OK</b></div></div><a class="primary-btn infra-link" href="https://mcp.desktopcommander.app/" target="_blank" rel="noopener">Gerenciar dispositivo ↗</a></article>
+          </div>
+
+          <section class="card infra-block">
+            <div class="card-head"><div><h3>Sites Netlify encontrados</h3><p>Inventário ao vivo da conta conectada em 03/10/2026.</p></div></div>
+            <div class="table-wrap"><table class="data-table">
+              <thead><tr><th>Projeto</th><th>Papel conhecido</th><th>Acesso</th></tr></thead>
+              <tbody>
+                <tr><td><b>construrei-dashboard</b></td><td>Dashboard • deploy current/ready</td><td><a href="https://construrei-dashboard.netlify.app" target="_blank" rel="noopener">Abrir ↗</a></td></tr>
+                <tr><td><b>construrei-f01</b></td><td>F01 histórico • SSO do time</td><td><a href="https://construrei-f01.netlify.app" target="_blank" rel="noopener">Abrir ↗</a></td></tr>
+                <tr><td><b>construrei-knowledge-v3</b></td><td>Knowledge histórico • SSO do time</td><td><a href="https://construrei-knowledge-v3.netlify.app" target="_blank" rel="noopener">Abrir ↗</a></td></tr>
+                <tr><td><b>construrei-central-failover-v1</b></td><td>Failover histórico</td><td><a href="https://construrei-central-failover-v1.netlify.app" target="_blank" rel="noopener">Abrir ↗</a></td></tr>
+                <tr><td><b>construrei-agenda-v52</b></td><td>Agenda histórica</td><td><a href="https://construrei-agenda-v52.netlify.app" target="_blank" rel="noopener">Abrir ↗</a></td></tr>
+                <tr><td><b>construrei-home-reference-preview-20260930</b></td><td>Preview de referência</td><td><a href="https://construrei-home-reference-preview-20260930.netlify.app" target="_blank" rel="noopener">Abrir ↗</a></td></tr>
+                <tr><td><b>construrei-f00-canonical-preview-20261001</b></td><td>Preview F00</td><td><a href="https://construrei-f00-canonical-preview-20261001.netlify.app" target="_blank" rel="noopener">Abrir ↗</a></td></tr>
+              </tbody>
+            </table></div>
+          </section>
+
+          <div class="page-intro infra-title-gap"><div><h2>Cofre Zero & continuidade</h2><p>O Cofre Zero é uma baseline de restauração comprovada; ele não é um espelho vivo e não deve ser sobrescrito sem nova validação formal.</p></div></div>
+          <div class="infra-backup-grid">
+            <article class="card infra-backup"><div class="infra-backup-head"><div><small>BASELINE</small><h3>Cofre Zero</h3></div><span class="infra-pill infra-ok">RESTORE_PROVEN</span></div><p>Validação registrada em <b>26/09/2026</b>. Contém dump de banco, snapshot de Edge Functions, Storage, restore runbook e checksums.</p><div class="infra-stats"><div><small>Edge no baseline</small><b>254</b></div><div><small>Edge ao vivo</small><b>330</b></div><div><small>Interpretação</small><b>Baseline congelada, não espelho</b></div></div></article>
+            <article class="card infra-backup infra-card-critical"><div class="infra-backup-head"><div><small>ROTINA DIÁRIA • 03:00</small><h3>Backup automático</h3></div><span class="infra-pill infra-ok">RECUPERADO 04/10</span></div><p>Falhas de 01–03/10 foram superadas. Em <b>04/10/2026 18:57</b>, o backup concluiu com integridade do banco e manifesto de Storage; restore remoto amostral passou 3/3.</p><div class="notice"><b>Próxima validação:</b> concluir a reconstrução integral do PostgreSQL em ambiente descartável, sem tocar na produção ou no Cofre Zero.</div></article>
+            <article class="card infra-backup"><div class="infra-backup-head"><div><small>ROTINA SEMANAL • DOMINGO 04:30</small><h3>Edge Functions</h3></div><span class="infra-pill infra-attention">Não comprovado</span></div><p>O instalador registra a tarefa semanal, porém não foi localizado marcador LAST_SUCCESS_EDGE/LAST_ERROR_EDGE nem log edge-* na auditoria atual.</p><div class="notice"><b>P0:</b> executar uma validação controlada e registrar evidência do resultado.</div></article>
+          </div>
+
+          <div class="page-intro infra-title-gap"><div><h2>Documentação: Central × Desenvolvimento</h2><p>Separação de alçada para a Central não virar depósito de engenharia.</p></div></div>
+          <div class="card infra-doc-boundary">
+            <div><h4>Permanece na Central</h4><ul><li>APP operacional</li><li>Dashboards usados pela equipe</li><li>F00–F09</li><li>Links e acessos operacionais</li><li>Manuais e referência para Gabriele, Éder e Fabrício</li></ul></div>
+            <div><h4>Pertence ao Gestor</h4><ul><li>Infraestrutura e arquitetura</li><li>Provedores, planos, quotas e custos</li><li>Branches, commits, checkpoints e releases</li><li>Cofre Zero, backup, restore e incidentes</li><li>Notebook, conectores e dependências</li><li>Saúde técnica e decisões de engenharia</li></ul></div>
+            <div><h4>Migração em candidata segura</h4><ul><li>Status do Desenvolvimento</li><li>Saúde Técnica</li><li>Deploy/arquitetura</li><li>Releases/checkpoints</li><li>Gaps técnicos e recuperações</li></ul></div>
+          </div>
+          <div class="notice infra-boundary-note"><b>Proteção:</b> a Central canônica não foi alterada nesta execução. A retirada/redirect do conteúdo de desenvolvimento será feita em candidata isolada e só promovida após validação, preservando a operação da equipe.</div>
+
+          <div class="page-intro infra-title-gap"><div><h2>Riscos atuais</h2><p>O que merece ação de engenharia.</p></div></div>
+          <div class="infra-risk-grid">
+            <article class="infra-risk infra-critical"><span class="infra-pill infra-ok">Recuperado</span><h4>Backup diário restabelecido</h4><p>Execução de 04/10 concluída; integridade do banco e recuperação remota amostral comprovadas.</p><small><b>Próxima ação:</b> concluir restore integral do PostgreSQL em ambiente descartável.</small></article>
+            <article class="infra-risk infra-attention"><span class="infra-pill infra-attention">Atenção</span><h4>Edge semanal não comprovado</h4><p>Instalação existe, mas execução não foi evidenciada.</p><small><b>Ação:</b> validar tarefa e registrar sucesso/erro.</small></article>
+            <article class="infra-risk infra-attention"><span class="infra-pill infra-attention">Atenção</span><h4>Planos e limites incompletos</h4><p>Netlify Free foi confirmado; Supabase, GitHub e Vercel não retornaram plano/consumo pelos conectores desta auditoria.</p><small><b>Ação:</b> integrar telemetria autenticada de quotas e custo.</small></article>
+            <article class="infra-risk infra-attention"><span class="infra-pill infra-attention">Atenção</span><h4>Hospedagens históricas dispersas</h4><p>Há 7 sites Netlify e nenhum projeto Vercel atual.</p><small><b>Ação:</b> classificar cada ativo como produção, failover, histórico ou descartável.</small></article>
+          </div>
+
+          <div class="infra-source-note">Snapshot técnico verificado em 03/10/2026 por GitHub, Supabase, Netlify, Vercel e Desktop Commander. Fonte estruturada: <code>infra-data.json</code>. Telemetria contínua de plano/quota/custo permanece como próxima integração.</div>
+        </section>
+        <section class="view" id="view-recoverables"></section>
+        <section class="view" id="view-audits"></section>
+        <section class="view" id="view-governance"></section>
+        <section class="view" id="view-search"></section>
+      </div>
+    </main>
+  </div>
+
+  <nav class="manager-mobile-dock" id="managerMobileDock" aria-label="Navegação rápida">
+    <button id="managerDockBack" type="button">←<small>Voltar</small></button>
+    <button id="managerDockHome" type="button">⌂<small>Início</small></button>
+    <button id="managerDockRefresh" type="button">↻<small>Atualizar</small></button>
+    <button id="managerDockMenu" type="button">☰<small>Menu</small></button>
+  </nav>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <small id="drawerEyebrow">Detalhe</small>
+        <h2 id="drawerTitle">Informação</h2>
+      </div>
+      <button id="drawerClose" class="icon-btn" aria-label="Fechar">×</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+
+  <script src="./app.js?v=20261005v112h5official"></script>
+  <script src="./executive-dashboard.js?v=20261005v112h5official"></script>\n  <script src="./agent-hub-panel.js?v=20261005agenthub1"></script>
+</body>
+</html>

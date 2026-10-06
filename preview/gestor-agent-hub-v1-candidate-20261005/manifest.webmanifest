@@ -1,0 +1,38 @@
+{
+  "name": "Gestor do Projeto CONSTRU-REI",
+  "short_name": "Gestor CR APP",
+  "description": "Gestor do Projeto CONSTRU-REI com navegação H5 homologada.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f8fc",
+  "theme_color": "#07185d",
+  "orientation": "any",
+  "lang": "pt-BR",
+  "categories": [
+    "business",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./pwa-icon-192.svg?v=20261005v112h5official",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./pwa-icon-512.svg?v=20261005v112h5official",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./pwa-icon-512.svg?v=20261005v112h5official",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "./",
+  "prefer_related_applications": false
+}
