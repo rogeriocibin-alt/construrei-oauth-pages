@@ -1,0 +1,27 @@
+{
+  "id": "CR-BRAND-PLACEMENT-V2-20261006",
+  "status": "CANDIDATE_READY_FOR_HOMOLOGATION",
+  "source": "Brandboard Corporativo Constru-Rei APP(3).png",
+  "canonical_base": "/construrei-oauth-pages/assets/brand/construrei-app-v2/",
+  "roles": {
+    "01_logo_horizontal": "logo-horizontal.webp — cabeçalhos, login e relatórios",
+    "02_emblema": "emblema.png — identidade institucional compacta / avatar de marca",
+    "03_app_icon": "app-icon-192.png + app-icon-512.png — PWA / mobile",
+    "04_favicon": "favicon-16.png + favicon-32.png — navegador",
+    "05_color_versions": "logo-dark.webp + logo-light.webp — fundos escuros e claros",
+    "06_system_avatar": "system-avatar.png — avatar do sistema; nunca pessoa humana",
+    "07_module_icons": "module-projects.png, module-obras.png, module-orcamentos.png, module-financeiro.png, module-configuracoes.png, module-equipe.png",
+    "08_central_banner": "banner-central.webp — hero da Central Operacional",
+    "09_gestor_banner": "banner-gestor.webp — hero do Gestor do Projeto",
+    "10_login_background": "login-background.webp — entrada/login",
+    "11_projects_cover": "module-projects-cover.webp — capa de módulos/projetos",
+    "12_graphic_elements": "graphic-elements.webp — referência de detalhes visuais; não usar como conteúdo informacional"
+  },
+  "guardrails": [
+    "Avatar humano representa pessoa real e não pode ser substituído por avatar institucional.",
+    "APP icon não substitui logotipo horizontal em cabeçalhos.",
+    "Favicon simplificado fica restrito ao navegador.",
+    "Banners não substituem dados vivos nem capturam clique.",
+    "Não alterar lógica, roteamento ou regras de negócio por causa da identidade visual."
+  ]
+}
