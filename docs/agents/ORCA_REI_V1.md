@@ -406,3 +406,17 @@ A aplicação só precisa ser versionada novamente quando houver mudança real d
 ### 25.7 Frase de controle do aprendizado
 
 “Aprender com o que foi validado, lembrar de onde veio, sugerir sem sobrescrever e nunca mudar regra canônica sozinho.”
+
+## 26. Regra de continuidade e memória operacional
+
+Esta regra é canônica e deve ser aplicada automaticamente em toda retomada do ORÇA-REI:
+
+- o ORÇA-REI usa **código estável + conhecimento vivo**;
+- o aprendizado automático permanece ativo em modo **VALIDATED_ONLY**;
+- F02 liberado após revisão humana alimenta o histórico revisado;
+- F03 aprovado pelo cliente alimenta o histórico aprovado;
+- novos casos consultam o histórico automaticamente;
+- novos aprendizados não exigem redeploy, novo HTML ou atualização manual do aplicativo;
+- histórico nunca sobrescreve silenciosamente evidência, preço ou escopo atual;
+- regras, fórmulas, gates e arquitetura não se autoalteram;
+- Rogério não deve precisar relembrar ou reexplicar esta regra em novas conversas: a fonte canônica é este documento e `docs/CONSTRUREI_CURRENT_STATE.md`.
