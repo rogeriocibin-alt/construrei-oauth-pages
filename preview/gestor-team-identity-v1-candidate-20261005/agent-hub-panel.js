@@ -1,6 +1,13 @@
 (()=>{'use strict';
 const q=s=>document.querySelector(s);
 const e=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const HUMAN_TEAM=[
+ {name:'Rogério',role:'Diretor • Gate Master',img:'../../assets/team/rogerio.webp?v=2'},
+ {name:'Éder',role:'Admin Técnico • Operação técnica',img:'../../assets/team/eder.webp?v=2'},
+ {name:'Gabrielly',role:'Atendimento • Triagem',img:'../../assets/team/gabrielly.webp?v=2'},
+ {name:'Fabrício',role:'Execução • Campo',img:'../../assets/team/fabricio.webp?v=2'}
+];
+function humanTeam(){return '<section class="cr-human-team" data-cr-human-team="native"><div class="cr-human-team-head"><div><small>EQUIPE HUMANA • IDENTIDADE OPERACIONAL</small><h3>Quem conduz a CONSTRU-REI</h3></div><span>Pessoas reais • papéis visíveis • responsabilidade clara</span></div><div class="cr-human-team-grid">'+HUMAN_TEAM.map(p=>'<article class="cr-human-card"><img src="'+e(p.img)+'" alt="'+e(p.name)+' • CONSTRU-REI" loading="eager"><div><b>'+e(p.name)+'</b><small>'+e(p.role)+'</small></div></article>').join('')+'</div><div class="cr-human-note">Os retratos identificam pessoas da equipe. Avatares do Agent Hub continuam exclusivos dos agentes digitais, preservando a separação de alçadas.</div></section>'}
 function av(kind,name){
  const acc={
  orchestrator:'<path d="M23 46h34M40 38v18M31 49l9-11 9 11" stroke="#ffc514" stroke-width="3" fill="none" stroke-linecap="round"/>',
@@ -24,6 +31,7 @@ async function boot(){
  target.innerHTML='<div class="ah-root">'+
  '<section class="ah-live"><span class="ah-pulse"></span><div class="ah-avatar">'+av(active.avatar,active.name)+'</div><div class="ah-live-copy"><small>ÚLTIMA AÇÃO REGISTRADA • '+e(d.active_action.handoff.join(' → '))+'</small><b>'+e(active.name)+' • '+e(active.role)+'</b><span>'+e(d.active_action.action)+'</span></div><span class="ah-state">'+e(d.active_action.state)+'</span></section>'+
  '<section class="ah-hero"><div><small>GOVERNANÇA DE INTELIGÊNCIA</small><h2>Equipe digital visível.<br><span>Hierarquia antes de execução.</span></h2><p>BIO orquestra, os especialistas trabalham na própria alçada, CR Assertivo protege a engenharia e Rogério mantém o gate humano final.</p></div><div class="ah-hero-side"><b>AGENT HUB V1</b><strong>Know-How Canon V1</strong><span>OFICIAL • HOMOLOGADO • integrado ao Gestor</span></div></section>'+
+ humanTeam()+
  '<section class="ah-metrics">'+[
  ['Agentes visíveis',d.agents.length,'registro do Hub'],['Canônicos ativos',can,'sem ampliar alçada'],['Em onboarding',onboarding,'ainda não homologados'],['Guardrails',d.rules.length,'governança exibida']
  ].map(x=>'<article class="ah-metric"><small>'+x[0]+'</small><b>'+x[1]+'</b><span>'+x[2]+'</span></article>').join('')+'</section>'+
