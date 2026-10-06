@@ -22,6 +22,7 @@ Caso 447-26:
 - Lucro: R$ 599,95
 - Margem: 39,21%
 - Rateio: 20/28/28/14 + 10% CG
+- Arredondamento bruto do CG daria R$ 60,00; residual de R$ 0,01 é reconciliado no CG → R$ 59,99
 - Soma do rateio = R$ 599,95
 
 Resultado: **PASS**.
