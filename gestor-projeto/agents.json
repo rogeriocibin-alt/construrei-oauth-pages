@@ -1,15 +1,15 @@
 {
-  "build": "CR-PM-V1.2-AGENT-HUB-V1-OFFICIAL-20261005",
+  "build": "CR-PM-V1.2.1-FINANCEIRO-REI-V1-OFFICIAL-20261006",
   "status": "OFFICIAL_HOMOLOGATED",
-  "checkpoint": "checkpoint-before-agent-hub-v1-20261005",
-  "updated_at": "2026-10-05T22:15:00-03:00",
+  "checkpoint": "CHECKPOINT_FINANCEIRO_REI_V1_OFFICIAL_20261006",
+  "updated_at": "2026-10-06T08:18:00-03:00",
   "active_action": {
-    "agent": "CR_ASSERTIVO",
+    "agent": "FINANCEIRO_REI",
     "state": "CONCLUÍDO",
-    "action": "Agent Hub V1 homologado e integrado ao Gestor do Projeto",
+    "action": "Onboarding Financeiro REI V1 concluído; titularidade financeira e roteamento automático homologados",
     "handoff": [
-      "BIO",
-      "CR_ASSERTIVO"
+      "ROGERIO_MASTER",
+      "FINANCEIRO_REI"
     ]
   },
   "agents": [
@@ -83,13 +83,15 @@
       "name": "Financeiro REI",
       "role": "Inteligência Financeira",
       "level": 40,
-      "status": "ONBOARDING",
-      "mode": "FINANCIAL_GOVERNED",
-      "escalation": "BIO",
+      "status": "CANÔNICO / HOMOLOGADO",
+      "mode": "FINANCIAL_OWNER",
+      "escalation": "ROGERIO_MASTER",
       "avatar": "finance",
-      "summary": "Receitas, custos, lucro, margem, rateio, capital de giro, conciliação e divergências.",
-      "knowledge": "KNOW-HOW CANON V1 VINCULADO",
-      "proof": "PROVA DE ONBOARDING PENDENTE"
+      "summary": "Titular do financeiro: receitas, custos, lucro, margem, recebimentos, cobrança, rateio, capital de giro, comissões, conciliação, divergências e fechamentos.",
+      "knowledge": "FINANCEIRO REI V1 CANÔNICO",
+      "proof": "ONBOARDING CONCLUÍDO • GATE ROGÉRIO",
+      "human_manager": "Rogério",
+      "automatic_routing": true
     },
     {
       "code": "GABI_FLOW",
@@ -113,7 +115,13 @@
     "Avatar + nome + função + ação + estado são obrigatórios em ações visíveis.",
     "Visibilidade não amplia alçada.",
     "Cadastro não equivale a homologação.",
-    "Onboarding Know-How Canon V1 é obrigatório antes de homologação."
+    "Onboarding Know-How Canon V1 é obrigatório antes de homologação.",
+    "Financeiro REI é o titular exclusivo da especialidade financeira.",
+    "Toda intenção predominantemente financeira deve ser roteada automaticamente ao Financeiro REI.",
+    "BIO não executa especialidade financeira; apenas roteia e consolida.",
+    "CR Assertivo não define regra financeira; implementa somente após handoff técnico.",
+    "Rogério é o gestor humano direto do Financeiro REI.",
+    "Ágata não possui alçada ou responsabilidade ativa na operação financeira atual."
   ],
   "tests": [
     {
@@ -145,7 +153,27 @@
       "id": "T6",
       "title": "Infra REI detecta falha de backup",
       "expected": "ANALISAR → ESCALAR execução → CR ASSERTIVO"
+    },
+    {
+      "id": "T7",
+      "title": "BIO recebe fechamento financeiro",
+      "expected": "ROTEAR → FINANCEIRO REI"
+    },
+    {
+      "id": "T8",
+      "title": "CR recebe decisão de rateio",
+      "expected": "BLOQUEAR REGRA → FINANCEIRO REI / ROGÉRIO"
+    },
+    {
+      "id": "T9",
+      "title": "Financeiro precisa de mudança técnica",
+      "expected": "REGRA FINANCEIRA → HANDOFF TÉCNICO CR ASSERTIVO"
+    },
+    {
+      "id": "T10",
+      "title": "Exceção de política financeira",
+      "expected": "ESCALAR → ROGÉRIO MASTER"
     }
   ],
-  "hub_status": "OFICIAL / HOMOLOGADO / CONGELADO"
+  "hub_status": "OFICIAL / HOMOLOGADO / FINANCEIRO REI V1 ATIVO"
 }

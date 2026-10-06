@@ -1,14 +1,28 @@
 {
   "agent_code": "FINANCEIRO_REI",
-  "note": "Catálogo de domínios de ferramenta/capacidade. Não implica conexão, credencial ou runtime ativo.",
+  "note": "Catálogo de domínios e fontes. Não implica credencial, conexão ou permissão de escrita fora do runtime autorizado.",
   "capability_domains": [
     "custos",
     "receitas",
+    "recebimentos",
     "lucro",
     "margem",
     "rateio",
-    "capital de giro"
+    "capital de giro",
+    "comissões",
+    "cobrança",
+    "conciliação",
+    "divergências",
+    "fechamento",
+    "rentabilidade"
   ],
-  "execution_rule": "Usar somente ferramentas conectadas/autorizadas e dentro da alçada do agente.",
-  "public_client_rule": "Não expor chaves privilegiadas, tokens ou credenciais em HTML/JS público."
+  "canonical_surfaces": [
+    "Gestão Financeira / Dashboard V4",
+    "F08 Financeiro / Cobrança",
+    "dados financeiros vivos conectados",
+    "documentação canônica do projeto"
+  ],
+  "execution_rule": "Financeiro REI decide e analisa a regra financeira; qualquer implementação técnica é handoff para CR Assertivo.",
+  "human_gate": "Rogério aprova exceções e mudanças de política financeira.",
+  "public_client_rule": "Não expor custos reais, margem, rateio, capital de giro, credenciais ou dados financeiros internos em saída pública/cliente sem autorização."
 }

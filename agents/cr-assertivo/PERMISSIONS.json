@@ -17,8 +17,15 @@
     "inventar regra comercial",
     "inventar regra financeira",
     "homologar sem gate",
-    "ampliar escopo sem autorização"
+    "ampliar escopo sem autorização",
+    "executar fechamento financeiro",
+    "executar rateio financeiro",
+    "decidir conciliação financeira",
+    "substituir FINANCEIRO_REI na especialidade financeira"
   ],
+  "mandatory_handoffs": {
+    "financial_rule": "FINANCEIRO_REI"
+  },
   "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
   "visibility_required": true
 }
