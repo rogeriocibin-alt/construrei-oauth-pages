@@ -12,7 +12,7 @@
 - Nome canônico do secret: `CORA_STAGE_CLIENT_ID`
 - Certificado PEM: configurado pelo Rogério no Supabase
 - Nome canônico do secret: `CORA_STAGE_CERT_PEM`
-- Private Key: pendente, será configurada depois do certificado
+- Private Key: configurada pelo Rogério no Supabase
 - Nome canônico do secret: `CORA_STAGE_PRIVATE_KEY`
 
 ## Regras de segurança
@@ -22,8 +22,16 @@
 - Não ativar Produção nem gravar dados financeiros reais nesta fase
 - Primeira integração permanece candidata / Stage
 
-## Próximo passo exato
-1. No Supabase, criar/editar o secret `CORA_STAGE_PRIVATE_KEY`
-2. No Value, colar todo o conteúdo do arquivo Private Key, incluindo o cabeçalho e rodapé exatamente como vieram
-3. Salvar
-4. Só após os três secrets estarem configurados, validar autenticação Stage no backend
+## Checkpoint fechado
+- Configuração das três credenciais Stage no Supabase: **CONCLUÍDA**
+- `CORA_STAGE_CLIENT_ID`: configurado
+- `CORA_STAGE_CERT_PEM`: configurado
+- `CORA_STAGE_PRIVATE_KEY`: configurado
+- Nenhum valor sensível foi registrado neste arquivo ou no GitHub
+- Produção permanece intocada
+
+## Próxima etapa pendente
+1. Validar autenticação Cora no ambiente Stage a partir do backend
+2. Confirmar leitura segura sem gravar dados financeiros reais
+3. Só depois avançar para a candidata de conciliação/centro de custo
+
