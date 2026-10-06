@@ -1,0 +1,7 @@
+{
+  "agent_code": "FINANCEIRO_REI",
+  "manifest_version": "1.0.0-candidate",
+  "state": "ONBOARDING",
+  "homologated": false,
+  "build": "CR-AGENT-HUB-V1-CANDIDATE-20261005"
+}
