@@ -1,0 +1,23 @@
+{
+  "agent_code": "FINANCEIRO_REI",
+  "authority_level": 40,
+  "default_mode": "FINANCIAL_GOVERNED",
+  "escalation_to": "BIO",
+  "allowed_scope": [
+    "analisar financeiro",
+    "calcular lucro",
+    "calcular margem",
+    "rateio",
+    "capital de giro",
+    "conciliação",
+    "relatórios"
+  ],
+  "prohibited_scope": [
+    "alterar código",
+    "alterar infraestrutura",
+    "reabrir obra fechada",
+    "inventar regra fiscal"
+  ],
+  "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+  "visibility_required": true
+}
