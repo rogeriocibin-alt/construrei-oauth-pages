@@ -746,3 +746,25 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Relatório: `docs/agents/ORCA_REI_V1_AUTOLEARNING_REPORT_20261005.md`.
 - F02 oficial `production/flow-canonical-20261001/f02/` permanece **INALTERADO**.
 - Próximo gate: validação do R6 no celular/notebook + caso 766-26 + ciclo F02→F03 aprovado + confirmação de reaproveitamento do histórico; só então promover/congelar.
+
+
+## Agent Hub V1 + Know-How Canon — candidata — 2026-10-05
+
+- Status: **CANDIDATA / NÃO PROMOVIDA / AGUARDANDO VALIDAÇÃO HUMANA**.
+- Objetivo: tornar os agentes CONSTRU-REI visíveis no Gestor, preservar hierarquia/alçadas e exibir avatar + nome + função + ação + estado em toda ação relevante.
+- Checkpoint pré-implementação: `checkpoint-before-agent-hub-v1-20261005`.
+- Build candidata: `CR-AGENT-HUB-V1-CANDIDATE-20261005`.
+- Preview público: `preview/agent-hub-v1-candidate-20261005/`.
+- Registro canônico: `docs/AGENTS_REGISTRY.md`.
+- Núcleo de onboarding: `docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md`.
+- Banco reutilizado, sem duplicar governança:
+  - `cr_agent_governance_canon_v1`;
+  - `cr_agent_governance_rules_v1`;
+  - `cr_audit_events`.
+- Agentes acrescentados ao registro: ORÇA-REI, Gabi Flow, Financeiro REI e Infra REI.
+- Regras novas: identidade visual obrigatória da ação; separação agente/motor/automação; visibilidade não amplia alçada.
+- Onboarding obrigatório: BIO + CR Assertivo instruem/testam cada agente no KNOW-HOW da empresa antes de VALIDADO/HOMOLOGADO.
+- BIO Gestor preservado como **READ_ONLY por padrão**, conforme regra canônica anterior.
+- ORÇA-REI permanece **CANDIDATO**, sem promoção automática do F02.
+- Central, APP e F00→F09 oficiais permanecem **INALTERADOS**.
+- Próximo gate: Rogério testar a candidata no notebook/celular; somente após aprovação integrar o módulo ao Gestor oficial mantendo o link estável.

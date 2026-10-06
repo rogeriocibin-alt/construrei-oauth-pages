@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#031b46">
+<meta name="cr-build" content="CR-AGENT-HUB-V1-CANDIDATE-20261005">
+<title>Agent Hub V1 • CONSTRU-REI</title>
+<link rel="icon" href="../../gestor-projeto/pwa-icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./agent-hub.css?v=1">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="../../gestor-projeto/"><img src="../../gestor-projeto/pwa-icon.svg" alt=""><span><b>CONSTRU-REI</b><small>Gestor do Projeto • Agent Hub V1</small></span></a>
+  <div class="top-actions"><span class="candidate">CANDIDATA</span><a class="btn ghost" href="../../gestor-projeto/">← Gestor</a></div>
+</header>
+<main>
+  <section id="activeAgent" class="active-agent"></section>
+  <section class="hero">
+    <div><small>GOVERNANÇA DE INTELIGÊNCIA</small><h1>Equipe digital visível.<br><span>Hierarquia antes de execução.</span></h1>
+    <p>BIO orquestra, especialistas trabalham dentro da própria alçada, CR Assertivo protege a engenharia e Rogério mantém o gate humano final.</p></div>
+    <div class="hero-side"><b>AGENT HUB V1</b><span>Know-How Canon V1</span><small>Não promovido • aguardando validação humana</small></div>
+  </section>
+  <section id="metrics" class="metrics"></section>
+  <section class="section-title"><div><small>EQUIPE DIGITAL</small><h2>Agentes CONSTRU-REI</h2></div><span>Clique em um agente para ver alçada e treinamento.</span></section>
+  <section id="agents" class="agents"></section>
+
+  <section class="grid2">
+    <article class="panel">
+      <div class="panel-head"><div><small>HIERARQUIA</small><h2>Fluxo de comando</h2></div></div>
+      <div id="hierarchy" class="hierarchy"></div>
+    </article>
+    <article class="panel">
+      <div class="panel-head"><div><small>ACADEMIA</small><h2>Know-How obrigatório</h2></div><span class="pill">CANON V1</span></div>
+      <div class="know">
+        <div><b>01</b><span>Núcleo comum CONSTRU-REI</span></div>
+        <div><b>02</b><span>Alçada + segurança</span></div>
+        <div><b>03</b><span>Módulo da especialidade</span></div>
+        <div><b>04</b><span>Caso real</span></div>
+        <div><b>05</b><span>Handoff entre agentes</span></div>
+        <div><b>06</b><span>Teste bloqueante</span></div>
+      </div>
+      <p class="note">Só muda para VALIDADO/HOMOLOGADO após prova de conhecimento, alçada, caso real, fonte canônica, handoff e segurança.</p>
+    </article>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><small>TESTE DE ALÇADA</small><h2>Guardrails executáveis</h2></div><button id="runTests" class="btn">Executar testes</button></div>
+    <div id="tests" class="tests"></div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><div><small>INFRAESTRUTURA</small><h2>Agente ≠ motor ≠ automação</h2></div></div>
+    <div class="layers">
+      <div><span class="layer agent">AGENTE</span><b>BIO • CR Assertivo • ORÇA-REI • Bio Gestor • Gabi Flow • Financeiro REI • Infra REI</b></div>
+      <div><span class="layer engine">MOTOR</span><b>OpenAI / Flowise / OpenClaw — conforme homologação futura</b></div>
+      <div><span class="layer automation">AUTOMAÇÃO</span><b>n8n — integração e execução de fluxos, não “funcionário digital”</b></div>
+      <div><span class="layer data">DADOS</span><b>Supabase + GitHub + fontes operacionais canônicas</b></div>
+    </div>
+  </section>
+</main>
+<div id="modal" class="modal" aria-hidden="true"><div class="modal-card"><button id="modalClose" class="x">×</button><div id="modalBody"></div></div></div>
+<script src="./agent-hub.js?v=1"></script>
+</body>
+</html>
