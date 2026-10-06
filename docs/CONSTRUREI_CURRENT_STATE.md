@@ -851,3 +851,13 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Removida a rasterização Canvas/base64 da R9.
 - Todo o restante do modelo premium e da matemática permanece inalterado.
 - F02 oficial continua inalterado.
+
+
+### F02 ORÇA-REI R10 — VALIDAÇÃO HUMANA — 2026-10-05
+- Status: **VALIDADO** por Rogério em 2026-10-05.
+- Build validado: `CR-F02-ORCA-REI-V1-R10-LOGO-CANONICAL-JPEG-20261005`.
+- Commit validado: `a77adb1c46c7da56c0cc10c45be1eb2049877864`.
+- Checkpoint/branch: `cr-f02-orca-rei-r10-validated-20261005`.
+- Validação específica: logo corporativa correta no PDF, layout premium aprovado nesta etapa, matemática/subtotais/total preservados.
+- Regra: **não promover automaticamente para produção**; manter F02 oficial congelado até próxima rodada/homologação.
+- Próxima frente definida para 2026-10-06: criar campo de anexos com links para fotos, vídeos, arquivos e documentos; avaliar modelos inteligentes de vistoria e visualização inline dentro da própria tela em celular e desktop.
