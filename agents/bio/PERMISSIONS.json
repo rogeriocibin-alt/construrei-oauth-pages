@@ -13,7 +13,12 @@
   "prohibited_scope": [
     "executar especialidade existente silenciosamente",
     "declarar execução sem evidência",
-    "ampliar alçada própria"
+    "ampliar alçada própria",
+    "executar especialidade financeira atribuída ao FINANCEIRO_REI",
+    "alterar regra financeira"
   ],
+  "mandatory_handoffs": {
+    "financial": "FINANCEIRO_REI"
+  },
   "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md"
 }

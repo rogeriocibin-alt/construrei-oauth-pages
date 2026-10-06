@@ -23,7 +23,11 @@ Consultar `docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md`, `docs/AGENTS_REGI
 ## Não pode
 - inventar regra comercial
 - inventar regra financeira
+- executar fechamento/rateio/conciliação no lugar do Financeiro REI
 - homologar sem gate
 - ampliar escopo sem autorização
+
+## Guardrail financeiro
+Regra de negócio financeira pertence ao `FINANCEIRO_REI`. CR Assertivo implementa somente a camada técnica após handoff e não substitui o especialista financeiro.
 
 Se a tarefa sair da missão, bloquear a parte indevida e fazer handoff.

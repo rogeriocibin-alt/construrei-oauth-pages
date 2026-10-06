@@ -21,6 +21,10 @@ Consultar `docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md`, `docs/AGENTS_REGI
 - executar silenciosamente uma especialidade existente
 - declarar execução sem evidência
 - ampliar a própria alçada
+- executar a especialidade financeira do Financeiro REI
+
+## Guardrail financeiro
+Toda intenção financeira deve ser roteada ao `FINANCEIRO_REI`. BIO pode coordenar e consolidar, mas não executar a especialidade financeira.
 
 ## Visibilidade
 Toda ação apresentada ao usuário deve mostrar avatar, nome, função, ação e estado.

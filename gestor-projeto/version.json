@@ -1,37 +1,37 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
-  "version": "1.2.0",
-  "build": "CR-PM-V1.2-AGENT-HUB-V1-OFFICIAL-20261005",
+  "version": "1.2.1",
+  "build": "CR-PM-V1.2.1-FINANCEIRO-REI-V1-OFFICIAL-20261006",
   "environment": "canonical",
-  "release_status": "official_homologated_frozen",
-  "base_official": "CR-PM-V1.1.2-H5-UX-NAV-OFFICIAL-20261005",
-  "checkpoint_before": "checkpoint-gestor-h5-before-agent-hub-v1-20261005",
+  "release_status": "official_homologated",
+  "base_official": "CR-PM-V1.2-AGENT-HUB-V1-OFFICIAL-20261005",
+  "checkpoint_before": "47999fe1405b961b635b387ec52d23ccc38d45a1",
   "changes": [
-    "Agent Hub V1 integrado ao Gestor oficial na aba Agentes & Automações.",
-    "Sete agentes visíveis com avatar, função, alçada, estado e escalonamento.",
-    "Know-How Canon V1 e manifestos individuais materializados em /agents.",
-    "BIO + CR Assertivo responsáveis pelo onboarding canônico.",
-    "Agente, motor e automação permanecem camadas distintas.",
-    "Estados individuais preservados: ORÇA-REI candidato; Gabi Flow, Financeiro REI e Infra REI em onboarding.",
-    "Indicador representa última ação registrada quando não há execução viva.",
-    "Gates de alçada exibidos como regras canônicas, sem PASS fictício."
+    "Financeiro REI V1 homologado e promovido para CANÔNICO / ACTIVE.",
+    "Rogério definido como gestor humano direto do Financeiro REI.",
+    "Roteamento automático de intenções financeiras registrado.",
+    "BIO bloqueado de executar a especialidade financeira.",
+    "CR Assertivo bloqueado de definir/alterar regra financeira; atua apenas no handoff técnico.",
+    "Manual financeiro canônico e testes de onboarding materializados.",
+    "Ágata removida da governança financeira ativa; registros históricos preservados apenas como evidência.",
+    "Agent Hub V1 permanece como base oficial do Gestor."
   ],
   "gate": {
-    "owner": "PASS_EXPLICIT_OWNER_APPROVAL",
-    "candidate_structure": "PASS",
-    "github_pages": "PENDING_THIS_COMMIT",
-    "device_retest": "NOT_INDEPENDENTLY_RETESTED_THIS_PROMOTION",
-    "promotion": "PROMOTED_BY_OWNER_INSTRUCTION"
+    "owner": "PASS_EXPLICIT_OWNER_APPROVAL_20261006",
+    "financial_knowledge": "PASS",
+    "authority_guardrails": "PASS",
+    "canonical_math_case_447_26": "PASS",
+    "promotion": "AUTHORIZED_BY_OWNER_INSTRUCTION"
   },
-  "released_at": "2026-10-05T22:15:00-03:00",
-  "branch": "cr-project-manager-v1-2-agent-hub-v1-official-20261005",
+  "released_at": "2026-10-06T08:18:00-03:00",
+  "branch": "cr-financeiro-rei-v1-official-20261006",
   "canonical_changed": true,
-  "update_policy": "same_url_atomic_pwa_bundle",
-  "rollback": "checkpoint-gestor-h5-before-agent-hub-v1-20261005",
-  "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_2_AGENT_HUB_V1_OFFICIAL_20261005",
+  "update_policy": "same_url_agent_governance_update",
+  "rollback": "47999fe1405b961b635b387ec52d23ccc38d45a1",
+  "canonical_checkpoint": "CHECKPOINT_FINANCEIRO_REI_V1_OFFICIAL_20261006",
   "owner_homologation": {
     "status": "APPROVED_FINAL",
     "source": "explicit_owner_instruction_in_chat",
-    "note": "Proprietário autorizou homologar, atualizar no Gestor do Projeto e finalizar em 05/10/2026."
+    "note": "Rogério determinou o fechamento do onboarding, titularidade financeira, roteamento automático e gestão humana direta do Financeiro REI em 06/10/2026."
   }
 }

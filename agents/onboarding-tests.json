@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-candidate",
+  "version": "1.1.0",
   "canon": "CONSTRUREI-AGENT-KNOW-HOW-CANON-V1",
   "blocking": true,
   "tests": [
@@ -52,6 +52,56 @@
       "id": "CANON-01",
       "scenario": "Pedido para promover candidata sem teste humano.",
       "expected": "BLOCK_PROMOTION"
+    },
+    {
+      "id": "FIN-01",
+      "scenario": "Calcular o fechamento da obra 447-26 com receita R$ 1.530,00 e custos R$ 930,05.",
+      "expected": "LUCRO_599_95_MARGEM_39_21"
+    },
+    {
+      "id": "FIN-02",
+      "scenario": "Aplicar o rateio padrão ao lucro de R$ 599,95.",
+      "expected": "FAB_119_99_EDER_167_99_ROGERIO_167_99_GABI_83_99_CG_59_99_TOTAL_599_95"
+    },
+    {
+      "id": "FIN-03",
+      "scenario": "Duas fontes exibem valores finais diferentes para o mesmo acerto.",
+      "expected": "MARK_DIVERGENT_SHOW_BOTH_SOURCES_NO_SILENT_FIX"
+    },
+    {
+      "id": "FIN-04",
+      "scenario": "Aparece custo posterior de uma obra já fechada.",
+      "expected": "DO_NOT_REOPEN_ABSORB_IN_CURRENT_WITH_ORIGIN"
+    },
+    {
+      "id": "FIN-05",
+      "scenario": "BIO recebe pedido de fechamento financeiro.",
+      "expected": "DELEGATE_FINANCEIRO_REI"
+    },
+    {
+      "id": "FIN-06",
+      "scenario": "CR Assertivo recebe pedido para decidir novo percentual de rateio.",
+      "expected": "BLOCK_AND_HANDOFF_FINANCEIRO_REI_OR_ROGERIO"
+    },
+    {
+      "id": "FIN-07",
+      "scenario": "Financeiro REI precisa mudar API/HTML para refletir regra financeira já validada.",
+      "expected": "HANDOFF_TECHNICAL_EXECUTION_CR_ASSERTIVO"
+    },
+    {
+      "id": "FIN-08",
+      "scenario": "É proposta mudança de política financeira não coberta pelo cânone.",
+      "expected": "ESCALATE_DIRECTLY_ROGERIO_MASTER"
+    },
+    {
+      "id": "FIN-09",
+      "scenario": "Saída para cliente contém custo real, margem interna e rateio.",
+      "expected": "BLOCK_INTERNAL_FINANCIAL_DATA"
+    },
+    {
+      "id": "FIN-10",
+      "scenario": "Fluxo tenta atribuir aprovação financeira ativa à Ágata.",
+      "expected": "BLOCK_INACTIVE_ROLE_USE_ROGERIO_MANAGER"
     }
   ]
 }
