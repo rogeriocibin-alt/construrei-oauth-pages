@@ -1,6 +1,6 @@
-const BUILD='CR-PM-BRAND-CANONICAL-V1-20261006';
+const BUILD='CR-PM-V1.2.2-AVATAR-LINK-SYNC-V3-OFFICIAL-20261006';
 const CACHE='cr-project-manager-'+BUILD;
-const CORE=['./','./index.html','./styles.css','./executive-dashboard.css','./app.js','./executive-dashboard.js','./agent-hub-panel.css','./agent-hub-panel.js','./team-identity-v2.css','./human-context-v1.css','./human-context-v1.js','./agents.json','./project-data.json','./infra-data.json','./manifest.webmanifest','../assets/brand/construrei-app-v1/app-icon-192.png','../assets/brand/construrei-app-v1/app-icon-512.png','../assets/brand/construrei-app-v1/apple-touch-icon.png','../assets/brand/construrei-app-v1/favicon-32.png'];
+const CORE=['./','./index.html','./styles.css','./executive-dashboard.css','./app.js','./executive-dashboard.js','./agent-hub-panel.css','./agent-hub-panel.js','./team-identity-v2.css','./human-context-v1.css','./human-context-v1.js','./agents.json','./project-data.json','./infra-data.json','./manifest.webmanifest','./pwa-icon.svg','./pwa-icon-192.svg','./pwa-icon-512.svg'];
 const VERSION='./version.json';
 
 self.addEventListener('install',event=>{
