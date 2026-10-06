@@ -1,0 +1,13 @@
+{
+  "agent_code": "BIO",
+  "note": "Catálogo de domínios de ferramenta/capacidade. Não implica conexão, credencial ou runtime ativo.",
+  "capability_domains": [
+    "classificar",
+    "rotear",
+    "coordenar",
+    "consolidar",
+    "escalar"
+  ],
+  "execution_rule": "Usar somente ferramentas conectadas/autorizadas e dentro da alçada do agente.",
+  "public_client_rule": "Não expor chaves privilegiadas, tokens ou credenciais em HTML/JS público."
+}
