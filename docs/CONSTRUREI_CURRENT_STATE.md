@@ -721,3 +721,26 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Importação de orçamento pronto continua preservando quantidade e valor unitário, mas subtotais divergentes são recalculados pelo sistema.
 - Caso Escola 766-26 permanece gabarito: serviços R$ 2.140,00; produtos R$ 1.543,00; total R$ 3.683,00.
 - F02 oficial `production/flow-canonical-20261001/f02/` permanece inalterado.
+
+### F02 ORÇA-REI R6 — aprendizado automático validado — 2026-10-05
+- Status: **CANDIDATA / NÃO PROMOVIDA / AGUARDANDO HOMOLOGAÇÃO HUMANA**.
+- Base preservada: R5 PDF Premium + matemática auditável.
+- UI candidata: `preview/f02-orca-rei-v1-r6-autolearning-20261005/`.
+- Build UI: `CR-F02-ORCA-REI-V1-R6-AUTOLEARNING-PREMIUM-20261005`.
+- Edge candidata: `cr-flow-runtime-v2-orca-intake-candidate` **v6 ACTIVE**.
+- Build Edge: `CR-FLOW-RUNTIME-V2-ORCA-REI-V1-INTAKE-CANDIDATE-R6-AUTOLEARNING-20261005`.
+- SHA Edge: `ed8d17614b2e24fcf5a1596717deec55fc46349909f3fe096d9f553bf24ea8dd`.
+- Snapshot: `snapshots/edge-functions/cr-flow-runtime-v2-orca-intake-candidate/v6/index.ts`.
+- Banco vivo do ORÇA-REI criado com `cr_orca_learning_settings_v1`, `cr_orca_learning_events_v1` e `cr_orca_learning_patterns_v1`.
+- Aprendizado automático ocorre no ciclo operacional, sem redeploy:
+  - F02 efetivamente liberado para F03 após revisão humana → histórico revisado;
+  - F03 aprovado pelo cliente → histórico aprovado, com peso superior;
+  - novos casos consultam essas referências automaticamente na Entrada Inteligente.
+- Política de segurança: aprendizado é **VALIDATED_ONLY**; rascunho, texto bruto, IA terceira, hipótese, valor A CONFERIR e divergência não resolvida não viram verdade aprendida.
+- Política antideriva: histórico serve como referência e nunca sobrescreve silenciosamente preço/escopo atual; o agente não autoaltera código, fórmula, regra canônica ou gate humano.
+- Segurança das tabelas: RLS ativa; `anon`/`authenticated` sem acesso direto; RPC de gravação restrita a `service_role`.
+- Teste técnico da RPC executado dentro de transação com rollback; criação de evento/padrão ocorreu e nenhuma amostra fictícia permaneceu após rollback.
+- Documento canônico atualizado: `docs/agents/ORCA_REI_V1.md` seção **Aprendizado automático e contínuo**.
+- Relatório: `docs/agents/ORCA_REI_V1_AUTOLEARNING_REPORT_20261005.md`.
+- F02 oficial `production/flow-canonical-20261001/f02/` permanece **INALTERADO**.
+- Próximo gate: validação do R6 no celular/notebook + caso 766-26 + ciclo F02→F03 aprovado + confirmação de reaproveitamento do histórico; só então promover/congelar.
