@@ -1,0 +1,7 @@
+{
+  "agent_code": "ORCA_REI",
+  "manifest_version": "1.0.0-candidate",
+  "state": "CANDIDATE",
+  "homologated": false,
+  "build": "CR-AGENT-HUB-V1-CANDIDATE-20261005"
+}
