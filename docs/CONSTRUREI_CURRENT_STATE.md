@@ -839,3 +839,15 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - A impressão exige imagem completa com `naturalWidth > 0` e `naturalHeight > 0`; caso contrário o PDF é bloqueado, evitando documento com logo quebrada.
 - Todo o restante do R7/R8 foi preservado: layout premium, matemática, Campo Inteligente e Caso Escola 766-26.
 - F02 oficial continua inalterado.
+
+
+### F02 ORÇA-REI R10 — logo canônica JPEG na impressão — 2026-10-05
+- Status: **CANDIDATA / AGUARDANDO VALIDAÇÃO HUMANA**.
+- Commit: `a77adb1c46c7da56c0cc10c45be1eb2049877864`.
+- Build: `CR-F02-ORCA-REI-V1-R10-LOGO-CANONICAL-JPEG-20261005`.
+- Causa raiz confirmada: falha estava na decodificação do WebP/base64 no navegador antes da impressão.
+- Correção: o PDF passa a usar diretamente o endpoint canônico `construrei-logo?asset=corporate&v=22`, que serve o ativo corporativo armazenado em `app_public_assets` com MIME original (JPEG), CORS liberado e cache controlado.
+- A impressão só é liberada após a imagem reportar `complete`, `naturalWidth > 0` e `naturalHeight > 0`.
+- Removida a rasterização Canvas/base64 da R9.
+- Todo o restante do modelo premium e da matemática permanece inalterado.
+- F02 oficial continua inalterado.
