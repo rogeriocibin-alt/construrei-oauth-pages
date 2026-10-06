@@ -1060,3 +1060,13 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - APP e Esteira permanecem nos destinos oficiais já homologados; nenhuma nova arquitetura foi criada.
 - Checkpoint lógico: `CHECKPOINT_CENTRAL_HUMAN_IDENTITY_V9_20261006`
 - Rollback: a combinação anterior no commit `0c9287a4f4a7120835ef8af91ce3deccb93a30ba` permanece identificável no histórico.
+
+
+## CHECKPOINT DE CONTINUIDADE — 2026-10-06 15:54 BRT
+- Fonte de verdade operacional: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Regra: esta Central de 05/10 deve permanecer como única versão ativa; versões anteriores ficam congeladas como histórico e não devem ser usadas como dependência viva.
+- Correção aplicada: Documentação Operacional deve abrir dentro da própria Central homologada, sem redirecionar para endpoint/versão paralela.
+- Identidade humana: avatares restaurados e ativos em pontos contextuais (Checklist/Fabrício, APP Pendências/Rogério, Wizy e Éder Agora/Éder, Acesso Técnico, Sala da Equipe com Rogério/Éder/Gabrielly/Fabrício).
+- Acessos rápidos em "Hoje na Operação": Cora, Trello e GestãoClick com links funcionais.
+- Próxima ação imediata: substituir os marcadores C/T/GC pelas logos oficiais de Cora, Trello e GestãoClick, mantendo os links atuais.
+- Diretriz anti-regressão: não criar nova arquitetura ou novo link para esta correção; consolidar tudo na Central homologada de 05/10 e eliminar referências vivas a versões antigas após auditoria.
