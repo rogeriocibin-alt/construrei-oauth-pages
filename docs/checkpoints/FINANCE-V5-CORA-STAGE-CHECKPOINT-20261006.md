@@ -64,3 +64,10 @@
 - Resultado permaneceu: HTTP 400, `invalid_client`, sem token.
 - Assim, a hipótese de simples atraso visual/erro transitório de geração ficou enfraquecida.
 - Antes de qualquer revogação, manter Produção intocada e tratar a reemissão apenas como ação Stage explícita.
+
+
+## Regra de reemissão exibida pela Cora Web
+- Antes da revogação, a Cora Web informa que, dentro de 12 meses, a credencial pode ser gerada no máximo 2 vezes pela própria Cora Web.
+- Para uma 3ª credencial no período, a própria interface orienta acionar o suporte de API da Cora.
+- Decisão de segurança: não consumir automaticamente a segunda emissão enquanto a credencial atual aparece como ativa e o par certificado/private key já foi validado criptograficamente.
+- Próxima ação recomendada: escalar o `invalid_client` ao suporte Cora antes de revogar, salvo decisão explícita do Rogério de usar a segunda emissão.
