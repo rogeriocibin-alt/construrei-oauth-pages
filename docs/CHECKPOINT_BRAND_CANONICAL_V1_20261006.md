@@ -68,3 +68,19 @@ Assets canônicos:
 - F00/F01 amostra + shell compartilhado: marca carregada.
 - Apresentação: abertura + página 02 preservadas.
 - Mobile/PWA: manifest e ícones corretos; validação visual final em aparelho quando disponível.
+
+
+## Fechamento / homologação
+- PR: **#36**
+- Merge canônico: `19d2993fa7e766c4580c4d99c161ca35b3994dbb`
+- GitHub Pages run inicial: `37540846696` — **SUCCESS**
+- Hotfix de referência legada remanescente da Central: `183cf638512775ee407becbba7a9517e22f840cc`
+- Supabase `construrei-logo`: versão **29**, mantendo `verify_jwt=false` como na função pública anterior e passando a servir/proxyar os assets canônicos.
+- Central validada no Opera com marca canônica e os cinco acessos oficiais preservados.
+- Gestor validado no Opera com app icon canônico; manifest e service worker auditados no código publicado.
+- APP ativo validado no roteamento oficial; superfície visual atual usa a marca canônica.
+- F00 validado como amostra do shell compartilhado F00–F09 com `app-icon-192.png`.
+- Apresentação validada com logo horizontal canônica e equipe humana preservada na página 02.
+
+### Resultado
+**OFICIAL / HOMOLOGADO / CONGELADO COMO BASE VISUAL V1**
