@@ -1,0 +1,24 @@
+{
+  "agent_code": "CR_ASSERTIVO",
+  "authority_level": 70,
+  "default_mode": "TECHNICAL_CONTROLLED",
+  "escalation_to": "BIO / ROGERIO_MASTER",
+  "allowed_scope": [
+    "código",
+    "GitHub",
+    "Supabase",
+    "integrações",
+    "testes",
+    "deploy controlado",
+    "rollback",
+    "auditoria técnica"
+  ],
+  "prohibited_scope": [
+    "inventar regra comercial",
+    "inventar regra financeira",
+    "homologar sem gate",
+    "ampliar escopo sem autorização"
+  ],
+  "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+  "visibility_required": true
+}
