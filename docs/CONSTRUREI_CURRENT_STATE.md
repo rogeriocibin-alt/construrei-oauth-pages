@@ -727,6 +727,8 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Base preservada: R5 PDF Premium + matemática auditável.
 - UI candidata: `preview/f02-orca-rei-v1-r6-autolearning-20261005/`.
 - Build UI: `CR-F02-ORCA-REI-V1-R6-AUTOLEARNING-PREMIUM-20261005`.
+- Branch/checkpoint da candidata: `cr-f02-orca-rei-v1-r6-autolearning-20261005`.
+- Checkpoint lógico: `CHECKPOINT_F02_ORCA_REI_V1_R6_AUTOLEARNING_20261005`.
 - Edge candidata: `cr-flow-runtime-v2-orca-intake-candidate` **v6 ACTIVE**.
 - Build Edge: `CR-FLOW-RUNTIME-V2-ORCA-REI-V1-INTAKE-CANDIDATE-R6-AUTOLEARNING-20261005`.
 - SHA Edge: `ed8d17614b2e24fcf5a1596717deec55fc46349909f3fe096d9f553bf24ea8dd`.
