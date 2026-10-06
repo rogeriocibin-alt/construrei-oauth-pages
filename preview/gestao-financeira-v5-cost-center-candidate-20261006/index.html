@@ -400,7 +400,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 
   <div class="panel v5panel coralive">
     <div class="corahead">
-      <div><div class="r6eyebrow">CORA · CANAL VIVO</div><h3>Movimentações e fila de aprovisionamento</h3><div class="small muted">Leitura exclusiva da Conta Cora através do canal técnico disponível. Nenhum lançamento financeiro do GestãoClick é tratado como autoridade.</div></div>
+      <div><div class="r6eyebrow">CORA · CANAL VIVO</div><h3>Movimentações e fila de aprovisionamento</h3><div class="small muted">Fonte correta: EXTRATO da Conta Cora. Vendas, contas a receber e contas a pagar do ERP não são fluxo de caixa e não geram aprovisionamento.</div></div>
       <div><button class="v5refresh" onclick="coraLoad(true)">ATUALIZAR CORA</button></div>
     </div>
     <div id="corastatus" class="corastate" style="margin-top:8px"></div>
@@ -464,7 +464,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,
 </section>
 <section id="qual" class="section"><div id="qc" class="grid3"></div><div class="panel"><h3>Inconsistências detectadas</h3><div id="issues"></div></div></section></main><footer class="foot" id="buildfoot">GESTÃO FINANCEIRA V5 · CANDIDATA · API aguardando leitura · READ ONLY</footer>
 <script>
-const UI_BUILD="CR-FINANCE-V5-CANDIDATE-20261006-R18-CORA-POLICIAL";
+const UI_BUILD="CR-FINANCE-V5-CANDIDATE-20261006-R19-CORA-EXTRATO-SOURCE";
 const CR_API_BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate";
 const CG_API_BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-trello-capital-giro-v1";
 const S={session:sessionStorage.getItem("crv2")||"",years:{},current:null,capital:null,oy:"2026",fy:"2026",fm:0,status:"",opm:0,opYear:null,opAudit:null,monthlyAudit:null,cy:"2026",cm:0,costData:null,costCache:{},providerView:[],gcLast:null,gcLastAt:0,acertoHistory:[],acertoSelected:{},acertoHistoryLoaded:false,v5Simulations:{},cora:null,coraLastAt:0,coraNew:[],coraBaselineReady:false};const brl=c=>c==null?"Não informado":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(c/100),pct=v=>v==null?"Não calculável":Number(v).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",esc=s=>String(s??"").replace(/[&<>]/g,"");
@@ -897,7 +897,7 @@ function coraRender(){
     ["Entradas lidas",brl(sum(ins))],
     ["Saídas lidas",brl(sum(outs))]
   ].map((x,i)=>'<div class="corakpi '+(i===1&&Number(x[1])?"alert":"")+'"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("")+'</div>'+
-  (newSet.size?'<div class="coraalertline"><span><b>⚠ '+newSet.size+' nova(s) movimentação(ões) Cora detectada(s).</b><br>Revisar e aprovisionar no centro de custo correto.</span><button class="corabtn" onclick="r8Go(\'v5\');setTimeout(()=>document.getElementById(\'coraqueue\')?.scrollIntoView({behavior:\'smooth\'}),100)">REVISAR</button></div>':'<div class="coranote">Monitor ativo nesta candidata. Novas movimentações serão destacadas quando aparecerem no canal.</div>');
+  (newSet.size?'<div class="coraalertline"><span><b>⚠ '+newSet.size+' nova(s) movimentação(ões) Cora detectada(s).</b><br>Revisar e aprovisionar no centro de custo correto.</span><button class="corabtn" onclick="r8Go(\'v5\');setTimeout(()=>document.getElementById(\'coraqueue\')?.scrollIntoView({behavior:\'smooth\'}),100)">REVISAR</button></div>':'<div class="coranote">Monitor aguardando a fonte EXTRATO CORA. Nenhuma venda, conta a receber ou conta a pagar do ERP pode gerar alerta de aprovisionamento.</div>');
   const kp=document.getElementById("corakpis");if(kp)kp.innerHTML=[
     ["Saldo real Cora",balance,"saldo bancário"],
     ["Novos",newSet.size,"desde a última leitura conhecida"],
@@ -912,9 +912,9 @@ function coraRender(){
       :'<b>Saldo real Cora ainda não é exposto pela API externa do canal Click.</b> Por segurança o Financeiro REI mostra N/D, não calcula saldo a partir de lançamentos incompletos. Assim que a API direta Cora liberar, este campo passa a receber o saldo vivo.';
   }
   const q=document.getElementById("coraqueue");if(!q)return;
-  if(!mv.length){q.innerHTML='<div class="v5empty"><b>Nenhuma movimentação Cora retornada pelo canal.</b>Nenhum dado financeiro geral do GestãoClick foi importado.</div>';return}
+  if(!mv.length){q.innerHTML='<div class="v5empty"><b>Nenhuma movimentação do EXTRATO CORA disponível.</b>Vendas, recebimentos e pagamentos do ERP são ignorados para fluxo de caixa.</div>';return}
   const rows=[...mv].sort((a,b)=>coraRecent(b).localeCompare(coraRecent(a)));
-  q.innerHTML='<div class="corascope"><span>CORA ONLY</span><span>CLICK = CANAL TÉCNICO</span><span>RATEIO CLICK IGNORADO</span><span>CENTRO DE CUSTO CLICK IGNORADO</span></div>'+
+  q.innerHTML='<div class="corascope"><span>EXTRATO CORA ONLY</span><span>VENDAS CLICK IGNORADAS</span><span>RECEBER/PAGAR ERP IGNORADOS</span><span>RATEIO CLICK IGNORADO</span></div>'+
     '<div class="tablewrap" style="margin-top:8px"><table class="table coratable"><thead><tr><th>Data</th><th>Tipo</th><th>Descrição / contraparte</th><th>Valor</th><th>Forma</th><th>Alerta</th><th>Ação</th></tr></thead><tbody>'+
     rows.map(x=>'<tr class="'+(newSet.has(x.movement_id)?"new":"")+'"><td>'+coraFmtDate(x.date)+'</td><td><span class="corabadge '+(x.direction==="IN"?"in":"out")+'">'+coraKindLabel(x)+'</span></td><td><b>'+esc(x.counterparty||"N/D")+'</b><br><small>'+esc(x.description||"")+'</small></td><td><b>'+brl(x.amount_cents)+'</b></td><td>'+esc(x.payment_method||"N/D")+'</td><td>'+(newSet.has(x.movement_id)?'<span class="corabadge new">NOVO · APROVISIONAR</span>':'<span class="corabadge">DISPONÍVEL</span>')+'</td><td><button class="corabtn" onclick="coraOpenProvision(\''+esc(x.movement_id)+'\')">APROVISIONAR</button></td></tr>').join("")+
     '</tbody></table></div>';
