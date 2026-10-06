@@ -808,4 +808,5 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Integridade: o painel usa **última ação registrada** quando não existe execução viva confirmada e os testes de alçada são exibidos como gates canônicos, sem simular execução.
 - Estados individuais preservados: ORÇA-REI permanece candidato; Gabi Flow, Financeiro REI e Infra REI permanecem em onboarding até seus próprios gates.
 - Central, APP e F00→F09 não foram alterados nesta promoção.
+- GitHub Pages da homologação: **SUCCESS** — run `37398083013` sobre o state commit `61b34c494094721f961ab7642c77a788a7fdc6a7`.
 - Rollback imediato: branch `checkpoint-gestor-h5-before-agent-hub-v1-20261005`.
