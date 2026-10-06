@@ -1,0 +1,31 @@
+/* CONSTRU-REI • Human Identity V5
+   Referência visual: central-team-identity-v1-candidate-20261005
+   Regra: portar SOMENTE identidade humana; menu/shell oficial permanecem intactos. */
+.cr-profile .cr-avatar.cr-human-profile{
+  display:inline-flex!important;overflow:hidden!important;border:2px solid #ffc514!important;
+  background:#0b356c!important;box-shadow:0 0 0 2px rgba(255,197,20,.12)!important
+}
+.cr-profile .cr-avatar.cr-human-profile img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+.cr-profile.cr-profile-static{display:flex!important;align-items:center!important;visibility:visible!important}
+
+.cr-agenda-team-avatars{display:flex!important;align-items:center!important;margin:0 0 5px 1px!important;min-height:24px!important}
+.cr-agenda-team-avatars img{
+  width:25px!important;height:25px!important;min-width:25px!important;object-fit:cover!important;border-radius:50%!important;
+  border:2px solid #ffc514!important;background:#0b356c!important;box-shadow:0 0 0 1px #fff!important;margin-left:-5px!important
+}
+.cr-agenda-team-avatars img:first-child{margin-left:0!important}
+
+.cr-page-human{
+  display:inline-flex;align-items:center;gap:8px;margin:0 0 10px;padding:6px 9px;
+  border:1px solid #dce8f3;border-radius:12px;background:#fff;box-shadow:0 5px 14px rgba(7,54,105,.05)
+}
+.cr-page-human img{width:36px;height:36px;object-fit:cover;border-radius:50%;border:2px solid #ffc514}
+.cr-page-human b{display:block;font-size:9px;color:#0c315f}.cr-page-human small{display:block;font-size:7px;color:#6f8194}
+
+@media(max-width:1080px){.cr-profile-copy{display:none!important}.cr-profile{padding:0!important}}
+@media(max-width:767px){
+  .top .cr-profile.cr-profile-static{display:flex!important;visibility:visible!important;padding:0!important;margin-left:1px!important}
+  .top .cr-profile.cr-profile-static .cr-avatar{display:inline-flex!important;width:38px!important;height:38px!important;min-width:38px!important;border-radius:50%!important}
+  .top .cr-profile-copy{display:none!important}
+}
+@media(max-width:420px){.cr-agenda-team-avatars img{width:28px!important;height:28px!important;min-width:28px!important}}
