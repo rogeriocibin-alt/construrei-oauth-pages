@@ -2,11 +2,11 @@
 
 > Fonte de verdade para retomada entre conversas. Não depender do histórico do chat para identificar a versão atual.
 
-## Estado atual — 2026-10-05
+## Estado atual — 2026-10-06
 
 - Projeto: Central CONSTRU-REI
 - Repositório: `rogeriocibin-alt/construrei-oauth-pages`
-- Versão oficial atual: **Central Operacional V2 + UX R1.2 + Agenda v5 + Identidade de Links v1.3.3 — OFICIAL / HOMOLOGADA / CONGELADA**
+- Versão oficial atual: **Central Operacional V2 + UX R1.2 + Agenda v5 + Identidade Humana Contextual V9 + Identidade de Links v1.3.3 — OFICIAL / HOMOLOGADA / CONGELADA**
 - Branch homologada: `central-operacional-v2-ux-r1-2-oficial-20261005`
 - Branch de origem validada: `main` • candidata isolada `preview/central-operation-only-v2-direct-candidate-20261005/`
 - Commit funcional UX R1.2: `df3bfe574f638a1981330b2a0e9201c612056de6`
@@ -1021,3 +1021,42 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - GitHub Pages: run `37480263842` — **SUCCESS**.
 - Branch: `cr-human-identity-canon-v1-20261006`.
 - Regra antirregressão: não duplicar retratos, não promover previews antigas inteiras e não reintroduzir observers globais concorrentes na Central.
+
+
+## Identidade Humana Contextual V9 — OFICIAL / HOMOLOGADA — 2026-10-06
+
+- Status: **OFICIAL / HOMOLOGADA / CONGELADA**
+- Pasta oficial preservada: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`
+- Branch de checkpoint: `central-human-identity-v9-homologada-20261006`
+- Commit de promoção do pacote V9 na Central: `dc02cb68790e9d91e626adab911530db6ac2cac6`
+- Commit final de navegação Voltar / origem Gestor: `314c719b186a7a67221e0edc16d189aad59e608d`
+- Arquivos canônicos adicionados:
+  - `human-identity-v9.js`
+  - `human-identity-v9.css`
+- Regra visual da Central:
+  - **sem avatar fixo de Rogério no topo**; topo mantém a logo do APP/CONSTRU-REI;
+  - botão de atualizar preservado;
+  - sino representa Agenda e destaca compromisso até 1 hora antes;
+  - botão de menu é ocultado no desktop e permanece disponível no mobile;
+  - botão Voltar retorna ao Gestor do Projeto quando a Central tiver sido aberta a partir dele; nos demais casos usa a pilha canônica/local.
+- Agenda Operacional:
+  - avatares são **contextuais aos participantes reais**;
+  - Rogério, Éder, Gabrielly e Fabrício usam retratos canônicos;
+  - prestador sem foto cadastrada usa avatar genérico temporário;
+  - reunião com toda a equipe pode exibir os quatro retratos.
+- Pendências e acessos:
+  - `APP • Pendências` → Rogério;
+  - `Wizy Flow` e `Éder • Agora` → Éder;
+  - `Éder — Admin Técnico` → Éder;
+  - `Rogério — Diretor` → Rogério.
+- Sala da Equipe: restaurado o conjunto Rogério + Éder + Gabrielly + Fabrício.
+- Apresentação Institucional dentro da Central: equipe humana restaurada no cartão/página de acesso.
+- Conhecimento & Treinamento: cada trilha recebe avatar(es) do(s) responsável(is) contextual(is), sem avatar decorativo global.
+- Removido da Central o strip fixo de equipe no Dashboard; identidade humana aparece somente onde há contexto operacional/humano.
+- Acessos rápidos adicionados no cabeçalho de **Hoje na Operação**:
+  - Cora → `https://app.cora.com.br`
+  - Trello → quadro **GESTÃO DE OBRAS 2026**: `https://trello.com/b/qI0r9MT8/gest%C3%A3o-de-obras-2026`
+  - GestãoClick → `https://gestaoclick.com/inicio`
+- APP e Esteira permanecem nos destinos oficiais já homologados; nenhuma nova arquitetura foi criada.
+- Checkpoint lógico: `CHECKPOINT_CENTRAL_HUMAN_IDENTITY_V9_20261006`
+- Rollback: a combinação anterior no commit `0c9287a4f4a7120835ef8af91ce3deccb93a30ba` permanece identificável no histórico.
