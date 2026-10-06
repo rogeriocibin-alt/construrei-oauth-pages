@@ -318,22 +318,3 @@ button{cursor:pointer}
   .ux-top-nav{display:inline-grid}
   .ux-refresh-btn{display:inline-flex}
 }
-
-/* BRAND CANONICAL V1 — 2026-10-06 */
-.brand-logo,.topbar-brand img{object-fit:contain!important;background:#fff!important}
-#view-now>.hero{
-  isolation:isolate;
-  background:linear-gradient(120deg,#061a3b 0%,#0b347d 58%,#0f70bd 100%)!important;
-}
-#view-now>.hero:before{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:
-    linear-gradient(90deg,rgba(4,23,45,.93) 0%,rgba(7,24,93,.76) 43%,rgba(7,24,93,.18) 100%),
-    url("../assets/brand/construrei-app-v1/banner-gestor.webp?v=brand-v1") center right/cover no-repeat;
-}
-#view-now>.hero .hero-grid{position:relative;z-index:2}
-@media(max-width:720px){
-  #view-now>.hero:before{background:
-    linear-gradient(180deg,rgba(4,23,45,.84),rgba(7,24,93,.72)),
-    url("../assets/brand/construrei-app-v1/banner-gestor.webp?v=brand-v1") 66% center/cover no-repeat}
-}
