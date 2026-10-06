@@ -1002,7 +1002,7 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 
 ## Identidade Humana Canônica V1 — 2026-10-06
 
-- Status: **IMPLEMENTADA / AUDITADA / EM PROMOÇÃO**.
+- Status: **OFICIAL / HOMOLOGADA / PUBLICADA**.
 - Objetivo: tornar os retratos de Rogério, Éder, Gabrielly e Fabrício uma regra transversal do projeto, não um recurso isolado da Central ou do Gestor.
 - Fonte única: `assets/team/team-registry.json`.
 - Shared runtime APP/F00–F09: `assets/team/human-identity-canon-v1.js/css`.
@@ -1017,5 +1017,7 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Links Registry: **v1.4 Human Identity**.
 - Auditoria: `docs/HUMAN_IDENTITY_CANON_V1_20261006.md`.
 - PR: **#28**.
+- Merge canônico: `980d5f7a4254562bd4c904dbab3c3ac31558c1d5`.
+- GitHub Pages: run `37480263842` — **SUCCESS**.
 - Branch: `cr-human-identity-canon-v1-20261006`.
 - Regra antirregressão: não duplicar retratos, não promover previews antigas inteiras e não reintroduzir observers globais concorrentes na Central.
