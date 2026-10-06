@@ -1070,3 +1070,14 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Acessos rápidos em "Hoje na Operação": Cora, Trello e GestãoClick com links funcionais.
 - Próxima ação imediata: substituir os marcadores C/T/GC pelas logos oficiais de Cora, Trello e GestãoClick, mantendo os links atuais.
 - Diretriz anti-regressão: não criar nova arquitetura ou novo link para esta correção; consolidar tudo na Central homologada de 05/10 e eliminar referências vivas a versões antigas após auditoria.
+
+
+## CHECKPOINT DE CONTINUIDADE — 2026-10-06 16:06 BRT
+- Central canônica permanece: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Documentação Operacional corrigida para abrir dentro da própria Central.
+- Camada de identidade humana corrigida para carregar a partir da pasta homologada de 05/10.
+- Avatares contextuais confirmados em Checklist/Fabrício, APP Pendências/Rogério, Wizy e Éder Agora/Éder, Acesso Técnico e Sala da Equipe.
+- Acessos rápidos Cora, Trello e GestãoClick mantêm os links validados e agora usam ativos oficiais de marca em vez de C/T/GC.
+- Commits recentes do pacote: `a294adef0b87173303ab61a460c06ff70947d94e` (logos oficiais) e `cb1af67ca87d5bd10820c91847b180a475f9dcf0` (dimensionamento visual das logos).
+- Próxima validação: conferir renderização final no Opera e seguir com auditoria de isolamento para remover dependências vivas de versões antigas, congelando-as como histórico.
+- Regra anti-regressão: não criar novo link ou nova arquitetura para esta frente; consolidar no link homologado de 05/10.
