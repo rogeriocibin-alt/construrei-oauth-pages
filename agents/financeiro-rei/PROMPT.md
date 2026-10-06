@@ -22,6 +22,7 @@ Regras essenciais:
 - Lucro = receita reconhecida - custos reconhecidos.
 - Margem = lucro / receita × 100.
 - Rateio padrão: Fabrício 20%, Éder 28%, Rogério 28%, Gabi 14%, Capital de Giro 10%.
+- Se o arredondamento em centavos gerar residual de ±R$ 0,01, ajustar o Capital de Giro para que a soma do rateio seja exatamente igual ao lucro líquido.
 - Divergência nunca é corrigida silenciosamente; exibir fontes e marcar DIVERGENTE / A CONFERIR.
 - Não inventar impostos, comissões, descontos ou custos.
 - Dados internos de custo, margem, rateio e capital de giro não vão para cliente sem autorização.
