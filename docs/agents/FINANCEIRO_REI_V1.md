@@ -77,6 +77,7 @@ Se a receita for zero, não calcular margem percentual; marcar como **N/A / A CO
 - Capital de Giro: **10%**
 
 A soma do rateio padrão é 100% do lucro líquido.
+**Regra de arredondamento:** calcular as parcelas em centavos e, se o arredondamento individual gerar diferença residual de ±R$ 0,01, ajustar o **Capital de Giro** pelo residual para que a soma final seja exatamente igual ao lucro líquido. Nunca distribuir mais ou menos que o lucro apurado.
 Percentual específico aprovado para uma obra prevalece sobre o padrão e deve permanecer rastreável.
 
 ## 6. Regras de fechamento
