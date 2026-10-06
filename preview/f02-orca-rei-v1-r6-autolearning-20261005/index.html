@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="cr-flow-code" content="F02">
+<meta name="cr-build" content="CR-F02-ORCA-REI-V1-R6-AUTOLEARNING-PREMIUM-20261005">
+<title>CONSTRU-REI • F02 • ORÇA-REI V1</title>
+<link rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-shell.css">
+<link rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-product-design-20260930.css">
+<style>
+:root{--bg:#061524;--card:#0b2237;--line:#294b65;--mut:#abc0cf;--gold:#d6a51b;--ok:#51d59d;--warn:#f0bd4b;--bad:#ff8181}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font:13px Arial,sans-serif}
+.wrap{max-width:1280px;margin:auto;padding:14px}.head,.row,.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row{justify-content:space-between}.head h1,.head h2{margin:3px 0}.ey{font-size:10px;letter-spacing:.15em;color:#d8b84f;font-weight:900}
+.mut{color:var(--mut)}.small{font-size:11px}.grid{display:grid;grid-template-columns:300px 1fr;gap:10px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card,.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px}.box{margin-top:9px}
+.list{max-height:72vh;overflow:auto}.case{border:1px solid #31536d;border-radius:10px;padding:9px;margin:7px 0;cursor:pointer}.case:hover{border-color:#6f96ad}
+.tag{border:1px solid #406782;border-radius:999px;padding:3px 7px;font-size:9px}.btn{border:1px solid #406782;background:#0b3a61;color:white;border-radius:9px;padding:9px 11px;font-weight:800;cursor:pointer;text-decoration:none}
+.gold{background:var(--gold);color:#241900}.ok{background:#1f6d51}.danger{background:#6a3131}.input,textarea,select{width:100%;background:#061929;color:#fff;border:1px solid #31536d;border-radius:8px;padding:8px;margin:4px 0 8px}
+.label{font-size:9px;color:#a9bdcc;font-weight:900;letter-spacing:.08em}.hidden{display:none!important}.item{border-top:1px solid #25465c;padding:10px 0}.item:first-child{border-top:0}
+.metric{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.metric>div{background:#061929;border:1px solid #31536d;border-radius:10px;padding:9px}.metric b{display:block;font-size:16px;margin-top:4px}
+.good{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}.preview{white-space:pre-wrap;background:#04111d;border:1px solid #31536d;border-radius:10px;padding:12px;max-height:480px;overflow:auto}
+.itemgrid{display:grid;grid-template-columns:2.1fr .55fr .8fr .8fr;gap:7px}.sectionTitle{font-weight:900;font-size:15px;margin:2px 0 8px}.check{display:flex;gap:7px;align-items:center;margin:6px 0}.check input{width:auto}
+@media(max-width:850px){.grid,.cols,.metric{grid-template-columns:1fr}.list{max-height:34vh}.itemgrid{grid-template-columns:1fr 1fr}.itemgrid .wide{grid-column:1/-1}.btn{min-height:44px}}
+/* ORÇA-REI V1 • Refinamento visual alinhado à Central homologada */
+:root{--or-navy-950:#031b46;--or-navy-900:#05265f;--or-navy-800:#07377d;--or-blue-700:#075bd8;--or-blue-600:#0875f5;--or-blue-500:#2590ff;--or-gold-600:#e8ae00;--or-gold-500:#ffc400;--or-gold-300:#ffe27a;--or-bg:#eef7fc;--or-surface:#fff;--or-ink:#07175b;--or-text:#17315d;--or-muted:#637d98;--or-line:#d3e4f1;--or-success:#0daf67;--or-shadow:0 10px 28px rgba(15,61,105,.08)}
+html,body{background:var(--or-bg)!important;color:var(--or-text)!important}.wrap{max-width:1360px!important;padding-top:18px!important}
+.head{background:radial-gradient(circle at 88% 12%,rgba(37,144,255,.28),transparent 29%),radial-gradient(circle at 67% 115%,rgba(255,196,0,.20),transparent 36%),linear-gradient(118deg,var(--or-navy-950),#052d70 62%,#06245a)!important;border:1px solid rgba(255,196,0,.36)!important;border-radius:18px!important;padding:18px 20px!important;box-shadow:0 18px 44px rgba(6,40,86,.16)!important;color:#fff!important;margin-bottom:12px!important}
+.head h2,.head b,.head strong{color:#fff!important}.head .mut{color:#dceaff!important}.head .ey{color:#ffd33c!important}
+.card,.box{background:#fff!important;color:var(--or-text)!important;border:1px solid var(--or-line)!important;box-shadow:var(--or-shadow)!important}.card{border-radius:16px!important}.box{border-radius:14px!important}
+.sectionTitle,h1,h2,h3,b,strong{color:var(--or-ink)}.label{color:#68849e!important}.mut,.small{color:var(--or-muted)!important}
+.input,textarea,select,input{background:#fff!important;color:var(--or-text)!important;border:1px solid #b8d5ea!important;box-shadow:none!important}.input:focus,textarea:focus,select:focus{outline:3px solid rgba(8,117,245,.14)!important;border-color:var(--or-blue-600)!important}
+.case{background:#fff!important;border-color:var(--or-line)!important;box-shadow:0 5px 14px rgba(15,61,105,.05)!important}.case:hover{border-color:#9dc7e7!important;box-shadow:0 10px 24px rgba(15,61,105,.10)!important}.tag{background:#edf7ff!important;color:var(--or-blue-700)!important;border-color:#b8d5ea!important}
+.btn{background:linear-gradient(180deg,var(--or-blue-500),var(--or-blue-700))!important;color:#fff!important;border:1px solid #0a65df!important;box-shadow:0 5px 12px rgba(7,91,216,.16)!important}.btn.gold{background:linear-gradient(180deg,#ffd52c,var(--or-gold-500))!important;color:#15275e!important;border-color:#e2ad00!important}.btn.ok{background:linear-gradient(180deg,#18c77a,var(--or-success))!important;color:#fff!important;border-color:#0a9e5c!important}.btn.danger{background:linear-gradient(180deg,#ff4161,#ee2147)!important;color:#fff!important;border-color:#d9173a!important}
+.metric{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important}.metric>div{background:linear-gradient(180deg,#fff,#f5faff)!important;border:1px solid var(--or-line)!important;border-radius:13px!important;padding:11px 12px!important;box-shadow:0 6px 18px rgba(15,61,105,.06)!important;position:relative!important;overflow:hidden!important}.metric>div:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--or-blue-600)}.metric>div:nth-child(2):before,.metric>div:nth-child(5):before{background:var(--or-gold-500)}.metric>div:nth-child(3):before,.metric>div:nth-child(4):before{background:var(--or-success)}.metric>div:nth-child(7):before,.metric>div:nth-child(8):before{background:#ee2147}.metric span{color:#718ba2!important}.metric b{color:var(--or-ink)!important;font-size:18px!important}
+#warnings{background:#fff8db!important;border:1px solid #efd47c!important;color:#805c00!important;border-radius:11px!important;padding:10px 12px!important;line-height:1.5!important}
+#clientPreview{background:#fff!important;color:var(--or-text)!important;border:1px solid var(--or-line)!important;box-shadow:inset 0 0 0 1px #fff,0 8px 24px rgba(15,61,105,.06)!important;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif!important;font-size:12px!important;line-height:1.62!important}
+#saveBox{border-top:4px solid var(--or-gold-500)!important}.itemgrid{align-items:start}.subtotal{font-weight:900!important;color:var(--or-blue-700)!important;background:#f4f9fd!important}.budgetRow{border-color:#e2edf5!important}
+#auditBox{background:linear-gradient(180deg,#f8fcff,#eef7fc)!important;border:1px solid #d3e4f1!important;border-radius:14px!important;padding:12px!important}#view>.row:first-child{background:linear-gradient(90deg,#f7fbff,#fff8dc)!important;border:1px solid #d8e6f1!important;border-radius:13px!important;padding:10px 12px!important}#totalGeneral{color:var(--or-blue-700)!important}#services .budgetRow,#products .budgetRow{padding:12px 0!important}
+.pdfBtn{background:linear-gradient(180deg,#05265f,#031b46)!important;border-color:#031b46!important}.docHint{display:flex;gap:8px;align-items:center;background:#f6faff;border:1px solid var(--or-line);border-radius:10px;padding:8px 10px;color:var(--or-muted);font-size:11px}
+@media(max-width:850px){.head{padding:15px!important}.head>div:last-child{margin-left:0!important;width:100%!important}.metric{grid-template-columns:1fr 1fr!important}#clientPreview{max-height:420px!important}}
+@media(max-width:520px){.metric{grid-template-columns:1fr!important}.itemgrid{grid-template-columns:1fr!important}.itemgrid .wide{grid-column:auto!important}}
+.intakeBox{border-top:4px solid var(--or-blue-600)!important;background:linear-gradient(180deg,#ffffff,#f4faff)!important}
+.intakeHero{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.intakeTitle{display:flex;gap:9px;align-items:center}.intakeIcon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(180deg,var(--or-blue-500),var(--or-blue-700));color:#fff;font-size:19px;font-weight:900}
+#smartInput{min-height:160px;resize:vertical;font-size:13px;line-height:1.5}
+.intakeActions{display:flex;gap:8px;flex-wrap:wrap}.intakeResult{margin-top:10px;display:none}.intakeResult.show{display:block}
+.intakeSummary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0}.intakeSummary>div{background:#fff;border:1px solid var(--or-line);border-radius:10px;padding:9px}
+.intakeSummary b{display:block;color:var(--or-ink);font-size:17px;margin-top:3px}.intakeWarnings{background:#fff8db;border:1px solid #efd47c;border-radius:10px;padding:9px;color:#805c00;white-space:pre-wrap}
+.intakeConflicts{background:#fff2f3;border:1px solid #ffc3cb;border-radius:10px;padding:9px;color:#8e2031;margin-top:8px;white-space:pre-wrap}
+.intakePreview{margin-top:8px;background:#fff;border:1px solid var(--or-line);border-radius:10px;padding:10px;max-height:280px;overflow:auto;white-space:pre-wrap}
+@media(max-width:850px){.intakeSummary{grid-template-columns:1fr 1fr}}@media(max-width:520px){.intakeSummary{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<div class="head">
+  <div>
+    <div class="ey">CONSTRU-REI • F02 • CANDIDATA R6 • APRENDIZADO AUTOMÁTICO</div>
+    <h2>ORÇA-REI V1 — Cotação & Orçamento</h2>
+    <div class="mut">F01 entrega contexto • ORÇA-REI audita e precifica • Rogério aprova • F03 recebe</div>
+  </div>
+  <div style="margin-left:auto" class="toolbar">
+    <span class="tag">CR-F02-ORCA-REI-V1-R6-AUTOLEARNING-PREMIUM-20261005</span>
+    <button id="fixture" class="btn">Caso escola 766-26</button>
+  </div>
+</div>
+
+<div class="grid" style="margin-top:12px">
+<section class="card">
+  <input id="q" class="input" placeholder="Buscar nº, cliente ou endereço">
+  <div id="list" class="list"></div>
+</section>
+
+<section class="card">
+<div id="empty" style="padding:22px;text-align:center" class="mut">Selecione um orçamento da fila F02 ou carregue o caso escola 766-26.</div>
+<div id="view" class="hidden">
+  <div class="row"><div><div class="ey">ORÇAMENTO</div><h2 id="no"></h2></div><span id="queue" class="tag"></span></div>
+
+  <div class="box">
+    <div class="cols">
+      <div><div class="label">CLIENTE</div><input id="client" class="input"></div>
+      <div><div class="label">ENDEREÇO</div><input id="address" class="input"></div>
+    </div>
+    <div class="label">REFERÊNCIA</div><input id="reference" class="input">
+  </div>
+
+  <div class="box intakeBox">
+    <div class="intakeHero">
+      <div class="intakeTitle"><div class="intakeIcon">IA</div><div><div class="sectionTitle" style="margin-bottom:2px">ENTRADA INTELIGENTE</div><div class="mut small">Cole aqui texto bagunçado, orçamento de outra IA, vistoria, lista de materiais ou composição. O ORÇA-REI cruza com F00/F01 antes de aplicar.</div></div></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag">F00/F01 preservados</span><span id="learningTag" class="tag">Aprendizado automático • ATIVO</span></div>
+    </div>
+    <div class="mut small" style="margin:7px 0 4px"><strong>Conhecimento vivo:</strong> cada orçamento liberado após revisão humana e cada proposta aprovada alimentam automaticamente o histórico do ORÇA-REI. O sistema consulta esse histórico nos próximos casos sem precisar republicar o aplicativo e nunca altera regras canônicas sozinho.</div>
+    <textarea id="smartInput" placeholder="Ex.: 2 portas de correr 80x210, R$ 680 cada; ajuste 4 portas R$ 195/un; material massa R$ 32..."></textarea>
+    <div class="intakeActions">
+      <button id="processIntake" class="btn gold" type="button">PROCESSAR / ESTRUTURAR</button>
+      <button id="applyIntake" class="btn ok hidden" type="button">APLICAR AO ORÇAMENTO</button>
+      <button id="clearIntake" class="btn" type="button">Limpar entrada</button>
+    </div>
+    <div id="intakeResult" class="intakeResult">
+      <div class="intakeSummary">
+        <div><span class="mut small">Serviços</span><b id="intakeServices">0</b></div>
+        <div><span class="mut small">Produtos</span><b id="intakeProducts">0</b></div>
+        <div><span class="mut small">Confiança</span><b id="intakeConfidence">—</b></div>
+        <div><span class="mut small">Divergências</span><b id="intakeConflictsCount">0</b></div>
+      </div>
+      <div id="intakeWarnings" class="intakeWarnings hidden"></div>
+      <div id="intakeConflicts" class="intakeConflicts hidden"></div>
+      <div id="intakePreview" class="intakePreview"></div>
+      <div class="mut small" style="margin-top:7px">Nada é enviado ao F03 automaticamente. Após aplicar, tudo continua editável e sujeito ao gate humano do ORÇA-REI.</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="row"><div class="sectionTitle">SERVIÇOS</div><button id="addService" class="btn">+ Serviço</button></div>
+    <div id="services"></div>
+    <div class="row"><b>TOTAL SERVIÇOS</b><b id="totalServices">R$ 0,00</b></div>
+  </div>
+
+  <div class="box">
+    <div class="row"><div class="sectionTitle">PRODUTOS</div><button id="addProduct" class="btn">+ Produto</button></div>
+    <div id="products"></div>
+    <div class="row"><b>TOTAL PRODUTOS</b><b id="totalProducts">R$ 0,00</b></div>
+  </div>
+
+  <div class="box">
+    <div class="row"><b>TOTAL GERAL</b><b id="totalGeneral" style="font-size:20px">R$ 0,00</b></div>
+  </div>
+
+  <div class="box">
+    <div class="label">OBSERVAÇÕES TÉCNICAS</div>
+    <textarea id="notes" rows="6"></textarea>
+    <div class="cols">
+      <div><div class="label">VALIDADE</div><input id="validity" class="input" value="30 dias"></div>
+      <div><div class="label">GARANTIA</div><input id="warranty" class="input" value="90 dias"></div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="sectionTitle">ANÁLISE INTERNA CONSTRUREI — NÃO ENVIAR AO CLIENTE</div>
+    <div class="cols">
+      <div><div class="label">ENCARGOS COMERCIAIS/FISCAIS (%)</div><input id="charges" class="input" inputmode="decimal" value="18,5"></div>
+      <div><div class="label">MARGEM ALVO (%)</div><input id="target" class="input" inputmode="decimal" value="30"></div>
+    </div>
+    <div class="cols">
+      <div><div class="label">CUSTO MÃO DE OBRA PRÓPRIA</div><input id="costLabor" class="input" inputmode="decimal" value="0"></div>
+      <div><div class="label">CUSTO MATERIAL</div><input id="costMaterial" class="input" inputmode="decimal" value="0"></div>
+      <div><div class="label">CUSTO TERCEIRO</div><input id="costThird" class="input" inputmode="decimal" value="0"></div>
+      <div><div class="label">OUTROS CUSTOS DIRETOS</div><input id="costOther" class="input" inputmode="decimal" value="0"></div>
+    </div>
+
+    <div class="cols">
+      <div><div class="label">MEDIDAS</div><select id="measureStatus"><option>CONFIRMADO</option><option selected>A_CONFERIR</option></select></div>
+      <div><div class="label">MATERIAL</div><select id="materialStatus"><option>COTADO</option><option selected>A_CONFERIR</option></select></div>
+      <div><div class="label">TERCEIRO</div><select id="thirdStatus"><option>NAO_APLICAVEL</option><option>COTADO</option><option selected>A_CONFERIR</option></select></div>
+      <div><div class="label">ESCOPO</div><select id="scopeStatus"><option>FECHADO</option><option selected>PRELIMINAR</option></select></div>
+    </div>
+    <div class="cols">
+      <div><div class="label">DIAGNÓSTICO</div><select id="diagnosisStatus"><option>NAO_APLICAVEL</option><option>CONFIRMADO</option><option selected>HIPOTESE</option></select></div>
+      <div>
+        <label class="check"><input id="costsConfirmed" type="checkbox"> Custos internos conferidos</label>
+        <label class="check"><input id="humanApproved" type="checkbox"> Revisão humana realizada por Rogério</label><label class="check"><input id="commercialOverride" type="checkbox"> Override comercial explícito (exceção consciente)</label>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button id="auditBtn" class="btn gold">AUDITAR ORÇA-REI</button>
+    </div>
+    <div id="auditBox" class="hidden" style="margin-top:10px">
+      <div class="metric">
+        <div><span class="mut small">Custo direto</span><b id="mCost"></b></div>
+        <div><span class="mut small">Custo máx.</span><b id="mMax"></b></div>
+        <div><span class="mut small">Lucro projetado</span><b id="mProfit"></b></div>
+        <div><span class="mut small">Margem</span><b id="mMargin"></b></div>
+        <div><span class="mut small">Preço mínimo</span><b id="mMin"></b></div>
+        <div><span class="mut small">Confiança</span><b id="mConfidence"></b></div>
+        <div><span class="mut small">Risco</span><b id="mRisk"></b></div>
+        <div><span class="mut small">Decisão</span><b id="mDecision"></b></div>
+      </div>
+      <div id="warnings" class="warn small" style="margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="row"><div class="sectionTitle">TEXTO GESTÃOCLICK / CLIENTE</div><div class="toolbar"><button id="generateText" class="btn">Gerar texto</button><button id="pdfBtn" class="btn pdfBtn">GERAR PDF PROFISSIONAL</button></div></div><div class="docHint">PDF do cliente: identidade corporativa CONSTRU-REI premium, logo horizontal da empresa, memória de cálculo QTD × VR. UNIT. = SUBTOTAL, subtotais por seção e TOTAL GERAL. A logo redonda permanece exclusiva do APP.</div>
+    <div id="clientPreview" class="preview"></div>
+  </div>
+
+  <div id="saveBox" class="box">
+    <div class="toolbar">
+      <button id="save" class="btn">Salvar rascunho</button>
+      <button id="ready" class="btn ok">Salvar como PRONTO F03</button>
+      <button id="send" class="btn gold">ENVIAR PARA F03</button>
+    </div>
+    <div class="mut small" style="margin-top:7px">O envio ao F03 permanece bloqueado até custos internos + revisão humana concluírem o gate ORÇA-REI.</div>
+  </div>
+</div>
+</section>
+</div>
+</main>
+
+<script>
+var API="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-flow-runtime-v2-orca-intake-candidate";
+var rows=[],cur=null,fixtureMode=false,lastAudit=null,lastIntake=null;
+function $(x){return document.getElementById(x)}
+function esc(v){return String(v==null?"":v).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function n(v){var s=String(v==null?"":v).trim().replace(/[^\d,.-]/g,"");if(s.indexOf(",")>=0&&s.indexOf(".")>=0)s=s.replace(/\./g,"").replace(",",".");else if(s.indexOf(",")>=0)s=s.replace(",",".");var x=Number(s);return isFinite(x)?x:0}
+function brl(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+async function api(name,body){var r=await fetch(API+"?api="+encodeURIComponent(name),{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body||{})});var d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||"Falha");return d}
+async function load(){try{var d=await api("list",{phase:"F02"});rows=d.cases||[];renderList()}catch(e){$("list").innerHTML='<div class="warn">Falha ao carregar: '+esc(e.message)+'</div>'}}
+function renderList(){var q=$("q").value.toLowerCase();var a=rows.filter(function(x){return JSON.stringify(x).toLowerCase().indexOf(q)>=0});$("list").innerHTML=a.length?a.map(function(x){return '<div class="case" data-t="'+esc(x.token)+'"><div class="row"><b>'+esc(x.case_number)+'</b><span class="tag">'+esc(x.queue_status||x.status)+'</span></div><div>'+esc(x.client||"Cliente")+'</div><div class="mut small">'+esc(x.case_summary||x.address||"")+'</div></div>'}).join(""):'<div class="mut" style="padding:15px">Nenhum orçamento na fila F02.</div>';document.querySelectorAll(".case").forEach(function(e){e.onclick=function(){openCase(e.dataset.t)}})}
+function rowTpl(type,x,i){x=x||{};return '<div class="item budgetRow" data-type="'+type+'"><div class="itemgrid"><div class="wide"><div class="label">NOME / DESCRIÇÃO</div><input class="input name" value="'+esc(x.name||x.description||x.subject||"")+'"><textarea class="desc" rows="2" placeholder="Descrição técnica compacta">'+esc(x.detail||x.long_description||"")+'</textarea></div><div><div class="label">QTD</div><input class="input qty" inputmode="decimal" value="'+esc(x.quantity||1)+'"></div><div><div class="label">VR. UNIT.</div><input class="input unit" inputmode="decimal" value="'+esc(x.unit_value||x.value||"")+'"></div><div><div class="label">SUBTOTAL</div><input class="input subtotal" readonly value=""></div></div><button class="btn danger remove" type="button">Remover</button></div>'}
+function addRow(type,x){var host=$(type==="service"?"services":"products");host.insertAdjacentHTML("beforeend",rowTpl(type,x,host.children.length));bindRows();calc()}
+function bindRows(){document.querySelectorAll(".budgetRow").forEach(function(r){r.querySelectorAll(".qty,.unit").forEach(function(e){e.oninput=calc});r.querySelector(".remove").onclick=function(){r.remove();calc()}})}
+function roundMoney(v){return Math.round((Number(v||0)+Number.EPSILON)*100)/100}
+function calcLine(q,u){return roundMoney(n(q)*n(u))}
+function calc(){var ts=0,tp=0;document.querySelectorAll(".budgetRow").forEach(function(r){var st=calcLine(r.querySelector(".qty").value,r.querySelector(".unit").value);r.querySelector(".subtotal").value=brl(st);if(r.dataset.type==="service")ts=roundMoney(ts+st);else tp=roundMoney(tp+st)});var total=roundMoney(ts+tp);$("totalServices").textContent=brl(ts);$("totalProducts").textContent=brl(tp);$("totalGeneral").textContent=brl(total);lastAudit=null;return {services:ts,products:tp,total:total}}
+function extract(type){var out=[];document.querySelectorAll('.budgetRow[data-type="'+type+'"]').forEach(function(r,i){var q=n(r.querySelector(".qty").value),u=n(r.querySelector(".unit").value),v=calcLine(q,u);out.push({item:i+1,name:r.querySelector(".name").value.trim(),description:r.querySelector(".name").value.trim(),detail:r.querySelector(".desc").value.trim(),quantity:q,unit_value:u,value:v})});return out}
+function auditPayload(){return {token:fixtureMode?null:(cur&&cur.token),labor_items:extract("service"),material_items:extract("product"),charges_rate:n($("charges").value)/100,target_margin:n($("target").value)/100,cost_labor:n($("costLabor").value),cost_material:n($("costMaterial").value),cost_third_party:n($("costThird").value),other_direct_costs:n($("costOther").value),measures_status:$("measureStatus").value,material_quote_status:$("materialStatus").value,third_quote_status:$("thirdStatus").value,scope_status:$("scopeStatus").value,diagnosis_status:$("diagnosisStatus").value,costs_confirmed:$("costsConfirmed").checked,human_review_approved:$("humanApproved").checked,commercial_override:$("commercialOverride").checked}}
+async function audit(){var d=await api("budget-audit",auditPayload());lastAudit=d.audit;showAudit(lastAudit);return lastAudit}
+function showAudit(a){$("auditBox").classList.remove("hidden");$("mCost").textContent=brl(a.direct_cost);$("mMax").textContent=brl(a.max_direct_cost);$("mProfit").textContent=brl(a.projected_profit);$("mMargin").textContent=(a.projected_margin*100).toFixed(2).replace(".",",")+"%";$("mMin").textContent=a.min_price==null?"—":brl(a.min_price);$("mConfidence").textContent=a.confidence+" • "+a.confidence_label;$("mRisk").textContent=a.risk;$("mDecision").textContent=a.decision;$("warnings").textContent=(a.warnings||[]).join(" • ")}
+function textClient(){var t=calc(),lines=[];lines.push("ORÇAMENTO Nº "+$("no").textContent,"","Cliente: "+$("client").value,"Endereço: "+$("address").value,"Referência: "+$("reference").value,"","SERVIÇOS","");extract("service").forEach(function(x){lines.push(x.name.toUpperCase(),x.detail?"("+x.detail+")":"","QTD: "+String(x.quantity).replace(".",","),"VR. UNIT.: "+brl(x.unit_value),"SUBTOTAL: "+brl(x.value),"")});lines.push("TOTAL SERVIÇOS: "+brl(t.services),"","PRODUTOS","");extract("product").forEach(function(x){lines.push(x.name.toUpperCase(),x.detail?"("+x.detail+")":"","QTD: "+String(x.quantity).replace(".",","),"VR. UNIT.: "+brl(x.unit_value),"SUBTOTAL: "+brl(x.value),"")});lines.push("TOTAL PRODUTOS: "+brl(t.products),"TOTAL SERVIÇOS: "+brl(t.services),"TOTAL GERAL: "+brl(t.total),"","OBSERVAÇÕES TÉCNICAS","",$("notes").value.trim(),"","VALIDADE: "+$("validity").value,"GARANTIA: "+$("warranty").value);$("clientPreview").textContent=lines.join("\n");return lines.join("\n")}
+
+function intakeTextPreview(d){
+  var lines=[];
+  if(d.header&&Object.keys(d.header).length){lines.push("CABEÇALHO RECONHECIDO");Object.keys(d.header).forEach(function(k){lines.push("• "+k.toUpperCase()+": "+d.header[k])});lines.push("")}
+  if((d.services||[]).length){lines.push("SERVIÇOS");d.services.forEach(function(x,i){var r=x.learning_reference||{},hist=r.client_approved_samples?(" | HISTÓRICO APROVADO: "+r.client_approved_samples+" caso(s), média "+brl(r.avg_client_approved_unit_value||0)):(r.human_reviewed_samples?(" | HISTÓRICO REVISADO: "+r.human_reviewed_samples+" caso(s), média "+brl(r.avg_human_reviewed_unit_value||0)):"");lines.push((i+1)+". "+x.name+" | QTD "+x.quantity+(x.unit?" "+x.unit:"")+" | "+(x.unit_value?brl(x.unit_value):"valor a conferir")+" | "+x.nature_value+hist)});lines.push("")}
+  if((d.products||[]).length){lines.push("PRODUTOS / MATERIAIS");d.products.forEach(function(x,i){var r=x.learning_reference||{},hist=r.client_approved_samples?(" | HISTÓRICO APROVADO: "+r.client_approved_samples+" caso(s), média "+brl(r.avg_client_approved_unit_value||0)):(r.human_reviewed_samples?(" | HISTÓRICO REVISADO: "+r.human_reviewed_samples+" caso(s), média "+brl(r.avg_human_reviewed_unit_value||0)):"");lines.push((i+1)+". "+x.name+" | QTD "+x.quantity+(x.unit?" "+x.unit:"")+" | "+(x.unit_value?brl(x.unit_value):"valor a conferir")+" | "+x.nature_value+hist)});lines.push("")}
+  if((d.technical_notes||[]).length){lines.push("OBSERVAÇÕES TÉCNICAS");d.technical_notes.forEach(function(x){lines.push("• "+x)});lines.push("")}
+  if((d.visit_checklist||[]).length){lines.push("CHECKLIST DA VISITA");d.visit_checklist.forEach(function(x){lines.push("• "+x)})}
+  return lines.join("\n")||"Nenhum item reconhecido.";
+}
+function showIntake(d){
+  lastIntake=d;$("intakeResult").classList.add("show");
+  if(d.apply_allowed===false){$("applyIntake").classList.add("hidden")}else{$("applyIntake").classList.remove("hidden")}
+  $("intakeServices").textContent=(d.services||[]).length;$("intakeProducts").textContent=(d.products||[]).length;
+  $("intakeConfidence").textContent=(d.confidence==null?"—":d.confidence+"%");
+  $("intakeConflictsCount").textContent=(d.conflicts||[]).length;
+  if($("learningTag")&&d.learning){$("learningTag").textContent="Aprendizado automático • ATIVO • "+(d.learning.matches||0)+" referência(s)"}
+  var w=(d.warnings||[]).join("\n• ");if(w){$("intakeWarnings").textContent="• "+w;$("intakeWarnings").classList.remove("hidden")}else $("intakeWarnings").classList.add("hidden");
+  var cf=(d.conflicts||[]).map(function(x){return x.field.toUpperCase()+": confirmado = \""+x.confirmed+"\" | entrada = \""+x.incoming+"\" → "+x.action}).join("\n");
+  if(cf){$("intakeConflicts").textContent=cf;$("intakeConflicts").classList.remove("hidden")}else $("intakeConflicts").classList.add("hidden");
+  $("intakePreview").textContent=intakeTextPreview(d);
+}
+
+function moneyBR(v){
+  var t=String(v==null?"":v).replace(/R\$/gi,"").trim().replace(/\./g,"").replace(",",".");
+  var x=Number(t.replace(/[^0-9.-]/g,""));return isFinite(x)?x:0
+}
+function cleanItemName(v){
+  return String(v||"").replace(/^[-•*\d.)\s]+/,"").replace(/[|—–-]+\s*$/,"").trim()
+}
+function parseReadyBudget(raw){
+  var lines=String(raw||"").replace(/\r/g,"").split("\n").map(function(x){return x.trim()}).filter(Boolean);
+  var section="",services=[],products=[],notes=[],warnings=[],header={},budgetNo="";
+  var pendingName="",pendingQty=null,pendingUnit=null,pendingSub=null;
+  var priceSeen=0;
+
+  function pushItem(name,q,u,sub){
+    name=cleanItemName(name);q=Number(q||1);u=Number(u||0);sub=Number(sub||0);
+    if(!name||!u)return false;
+    var item={name:name,detail:"",quantity:q||1,unit:"un",unit_value:u,nature_value:"INFORMADO",source_subtotal:sub||null};
+    var calc=(q||1)*u;
+    if(sub&&Math.abs(calc-sub)>.011)warnings.push("Subtotal informado de "+name+" ("+brl(sub)+") difere de QTD × VR. UNIT. ("+brl(calc)+"). O sistema manterá quantidade e valor unitário e recalculará o subtotal.");
+    (section==="product"?products:services).push(item);priceSeen++;return true
+  }
+  function flushPending(){
+    if(pendingName&&pendingUnit){pushItem(pendingName,pendingQty||1,pendingUnit,pendingSub||0)}
+    pendingName="";pendingQty=null;pendingUnit=null;pendingSub=null;
+  }
+
+  lines.forEach(function(line){
+    var plain=line.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+
+    var mm=line.match(/(?:OR[ÇC]AMENTO|FLUXO)\s*(?:N[º°.]?\s*)?[:#-]?\s*([0-9]{2,6}(?:-[0-9]{2})?)/i);
+    if(mm){budgetNo=mm[1]}
+    var hm=line.match(/^\s*(?:CLIENTE|CLIENTE\/ORIGEM)\s*:\s*(.+)$/i);if(hm){header.client=hm[1].trim();return}
+    hm=line.match(/^\s*ENDERE[ÇC]O\s*:\s*(.+)$/i);if(hm){header.address=hm[1].trim();return}
+    hm=line.match(/^\s*REFER[ÊE]NCIA\s*:\s*(.+)$/i);if(hm){header.reference=hm[1].trim();return}
+
+    if(/^(SERVI[ÇC]OS|M[ÃA]O DE OBRA)\b/.test(plain)){flushPending();section="service";return}
+    if(/^(PRODUTOS|MATERIAIS|PRODUTOS \/ MATERIAIS)\b/.test(plain)){flushPending();section="product";return}
+    if(/^(OBSERVA[ÇC][ÕO]ES|OBSERVA[ÇC][ÕO]ES T[ÉE]CNICAS|NOTAS T[ÉE]CNICAS)\b/.test(plain)){flushPending();section="notes";return}
+    if(/^(TOTAL|VALIDADE|GARANTIA)\b/.test(plain)){flushPending();if(section==="notes"&&plain.indexOf("TOTAL")!==0)notes.push(line);return}
+    if(section==="notes"){notes.push(line.replace(/^[-•*]\s*/,""));return}
+
+    // One-line forms: "Descrição | 4 | R$ 195,00 | R$ 780,00", or "Descrição — 4 x R$ 195,00 = R$ 780,00".
+    var vals=line.match(/R\$\s*[\d.]+(?:,\d{1,2})?/gi)||[];
+    var qx=line.match(/(?:QTD\.?\s*[:=]?\s*)?(\d+(?:[.,]\d+)?)\s*(?:x|×)\s*R\$\s*([\d.]+(?:,\d{1,2})?)(?:\s*(?:=|→)\s*R\$\s*([\d.]+(?:,\d{1,2})?))?/i);
+    if(qx){
+      var name=line.slice(0,qx.index).replace(/[|—–-]+\s*$/,"").trim();
+      if(!name&&pendingName)name=pendingName;
+      if(pushItem(name,Number(qx[1].replace(",",".")),moneyBR(qx[2]),qx[3]?moneyBR(qx[3]):0)){pendingName="";return}
+    }
+    if(vals.length>=2){
+      var firstPrice=line.search(/R\$/i),before=line.slice(0,firstPrice);
+      var qmatch=before.match(/(?:QTD\.?\s*[:=]?\s*)?(\d+(?:[.,]\d+)?)\s*(?:un|und|unid|m2|m²|m|h|hr|hora|x)?\s*[|;—–-]*\s*$/i);
+      var q=qmatch?Number(qmatch[1].replace(",",".")):1;
+      var name=(qmatch?before.slice(0,qmatch.index):before).replace(/[|;—–-]+\s*$/,"").trim();
+      if(!name&&pendingName)name=pendingName;
+      if(pushItem(name,q,moneyBR(vals[0]),moneyBR(vals[1]))){pendingName="";return}
+    }
+    if(vals.length===1 && pendingName){
+      pendingUnit=moneyBR(vals[0]);
+      var qonly=line.match(/(?:QTD\.?\s*[:=]?\s*)?(\d+(?:[.,]\d+)?)/i); if(qonly)pendingQty=Number(qonly[1].replace(",","."));
+      flushPending();return
+    }
+
+    // Multi-line labeled fields.
+    var ql=line.match(/^QTD\.?\s*[:=]\s*(\d+(?:[.,]\d+)?)/i);if(ql){pendingQty=Number(ql[1].replace(",","."));return}
+    var ul=line.match(/^(?:VR\.?\s*UNIT\.?|VALOR\s*UNIT[ÁA]RIO)\s*[:=]\s*R\$\s*([\d.]+(?:,\d{1,2})?)/i);if(ul){pendingUnit=moneyBR(ul[1]);return}
+    var sl=line.match(/^SUBTOTAL\s*[:=]\s*R\$\s*([\d.]+(?:,\d{1,2})?)/i);if(sl){pendingSub=moneyBR(sl[1]);flushPending();return}
+
+    // Candidate item title in an active commercial section.
+    if((section==="service"||section==="product") && !/R\$/.test(line) && line.length>2){
+      flushPending();pendingName=line.replace(/^[-•*]\s*/,"")
+    }
+  });
+  flushPending();
+
+  if(!priceSeen)return null;
+  var conflicts=[],applyAllowed=true;
+  var currentNo=String((cur&&cur.case_number)||"").replace(/\s/g,"");
+  var incomingNo=String(budgetNo||"").replace(/\s/g,"");
+  if(incomingNo&&currentNo&&incomingNo!==currentNo){
+    conflicts.push({field:"fluxo",confirmed:currentNo,incoming:incomingNo,action:"BLOQUEAR_MISTURA_DE_CASOS"});applyAllowed=false
+  }
+  return {
+    import_mode:"READY_BUDGET",
+    document_type:"ORCAMENTO_PRONTO",
+    header:header,
+    services:services,
+    products:products,
+    technical_notes:notes,
+    visit_checklist:[],
+    warnings:warnings.concat(["Orçamento pronto reconhecido: preços informados serão preservados; subtotais e total serão recalculados pelo sistema."]),
+    conflicts:conflicts,
+    apply_allowed:applyAllowed,
+    confidence:98
+  }
+}
+async function processIntake(){
+  var raw=$("smartInput").value.trim();if(!raw){alert("Cole algum conteúdo na Entrada Inteligente.");return}
+  $("processIntake").disabled=true;$("processIntake").textContent="PROCESSANDO...";
+  try{
+    var ready=parseReadyBudget(raw);
+    if(ready){showIntake(ready);return}
+    var d=await api("budget-intake",{token:fixtureMode?null:(cur&&cur.token),context:fixtureMode?(cur&&cur.state||{}):undefined,raw_text:raw,actor:"Rogério"});
+    showIntake(d);
+  }catch(e){alert("Entrada Inteligente: "+e.message)}
+  finally{$("processIntake").disabled=false;$("processIntake").textContent="PROCESSAR / ESTRUTURAR"}
+}
+function rowKey(v){return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\W+/g," ").trim()}
+function mergeIntakeItem(type,x){
+  var host=$(type==="service"?"services":"products"),incoming=rowKey(x.name),found=null;
+  host.querySelectorAll(".budgetRow").forEach(function(r){var k=rowKey(r.querySelector(".name").value);if(!found&&k&&(k===incoming||k.indexOf(incoming)>=0||incoming.indexOf(k)>=0))found=r});
+  if(found){
+    var q=found.querySelector(".qty"),u=found.querySelector(".unit");
+    if((!n(q.value)||n(q.value)===1)&&x.quantity)q.value=x.quantity;
+    if(!n(u.value)&&x.unit_value)u.value=String(x.unit_value).replace(".",",");
+    if(!found.querySelector(".desc").value&&x.detail)found.querySelector(".desc").value=x.detail;
+  }else addRow(type,{name:x.name,detail:x.detail||"",quantity:x.quantity||1,unit_value:x.unit_value||0});
+}
+function applyIntake(){
+  if(!lastIntake)return;
+  if(lastIntake.apply_allowed===false){alert("Aplicação bloqueada: o conteúdo pertence a outro fluxo/caso. Abra o atendimento correto antes de aplicar.");return}
+  var h=lastIntake.header||{};
+  if(!$("client").value.trim()&&h.client)$("client").value=h.client;
+  if(!$("address").value.trim()&&h.address)$("address").value=h.address;
+  if(!$("reference").value.trim()&&h.reference)$("reference").value=h.reference;
+  if(lastIntake.import_mode==="READY_BUDGET"){
+    clearRows();
+    (lastIntake.services||[]).forEach(function(x){addRow("service",{name:x.name,detail:x.detail||"",quantity:x.quantity||1,unit_value:x.unit_value||0})});
+    (lastIntake.products||[]).forEach(function(x){addRow("product",{name:x.name,detail:x.detail||"",quantity:x.quantity||1,unit_value:x.unit_value||0})});
+  }else{
+    (lastIntake.services||[]).forEach(function(x){mergeIntakeItem("service",x)});
+    (lastIntake.products||[]).forEach(function(x){mergeIntakeItem("product",x)});
+  }
+  var old=$("notes").value.trim(),extra=(lastIntake.technical_notes||[]).filter(function(x){return old.indexOf(x)<0});
+  if(extra.length)$("notes").value=(old?old+"\n\n":"")+extra.join("\n");
+  calc();textClient();
+  alert("Entrada Inteligente aplicada por enriquecimento. Dados F00/F01 confirmados foram preservados; revise alertas e itens A CONFERIR.");
+}
+function clearIntake(){
+  $("smartInput").value="";lastIntake=null;$("intakeResult").classList.remove("show");$("applyIntake").classList.add("hidden");
+}
+
+function clearRows(){$("services").innerHTML="";$("products").innerHTML=""}
+function showBase(){clearIntake();fixtureMode=false;$("empty").classList.add("hidden");$("view").classList.remove("hidden");$("saveBox").classList.remove("hidden");$("auditBox").classList.add("hidden");lastAudit=null}
+async function openCase(token){var d=await api("get",{token:token});cur=d.handoff;var s=cur.state||{},b=s.budget||{};showBase();$("no").textContent=cur.case_number;$("queue").textContent=s.queue_status||cur.status;$("client").value=s.client||"";$("address").value=s.address||"";$("reference").value=s.reference||s.contract||s.case_summary||"";clearRows();var items=Array.isArray(s.items)?s.items:(Array.isArray(s.services)?s.services:[]);var labor=b.labor_items||[];var materials=b.material_items||[];if(labor.length)labor.forEach(function(x){addRow("service",x)});else (items.length?items:[{subject:s.case_summary||"Serviço"}]).forEach(function(x){addRow("service",{name:x.subject||x.description||"Serviço",quantity:1})});if(materials.length)materials.forEach(function(x){addRow("product",x)});$("notes").value=(b.technical_notes||[]).join("\n")||"";$("humanApproved").checked=!!b.human_review_approved;$("commercialOverride").checked=!!b.commercial_override;if(b.pricing_params){$("charges").value=String((b.pricing_params.charges_rate||.185)*100).replace(".",",");$("target").value=String((b.pricing_params.target_margin||.30)*100).replace(".",",")}if(b.internal_analysis){var a=b.internal_analysis;$("costLabor").value=a.cost_labor||0;$("costMaterial").value=a.cost_material||0;$("costThird").value=a.cost_third_party||0;$("costOther").value=a.other_direct_costs||0;$("costsConfirmed").checked=!!a.costs_confirmed;showAudit(a);lastAudit=a}calc();textClient()}
+function fixture(){cur={token:null,case_number:"766-26",state:{}};showBase();fixtureMode=true;$("saveBox").classList.add("hidden");$("no").textContent="766-26";$("queue").textContent="CASO ESCOLA • QA ISOLADO";$("client").value="Cleverson – esposo Raquel";$("address").value="Rua Reinaldo Stocco, 546 – Sobrado 110";$("reference").value="Ajustes de portas e substituição de 02 portas de correr";clearRows();addRow("service",{name:"AJUSTE E REGULAGEM DE 04 PORTAS",detail:"Ajuste, alinhamento e regulagem das portas do Quarto 1, Quarto 2, banheiro social e lavanderia, incluindo correções necessárias nos pontos de fechamento e funcionamento.",quantity:4,unit_value:195});addRow("service",{name:"SUBSTITUIÇÃO DA PORTA DE CORRER – LAVABO",detail:"Retirada da porta existente e instalação de nova porta de correr completa, para vão aproximado de 80 cm, incluindo montagem, fixação, alinhamento, regulagem e acabamento.",quantity:1,unit_value:680});addRow("service",{name:"SUBSTITUIÇÃO DA PORTA DE CORRER – SUÍTE",detail:"Retirada da porta existente e instalação de nova porta de correr completa, para vão aproximado de 80 cm, incluindo montagem, fixação, alinhamento, regulagem e acabamento.",quantity:1,unit_value:680});addRow("product",{name:"PORTA DE CORRER BRANCA COMPLETA – APROX. 80 × 210 CM",quantity:2,unit_value:680});addRow("product",{name:"MASSA PARA MADEIRA",quantity:1,unit_value:32});addRow("product",{name:"LIXA PARA MADEIRA",quantity:1,unit_value:36});addRow("product",{name:"TINTA PARA MADEIRA",quantity:1,unit_value:115});$("notes").value="As quatro portas existentes serão ajustadas conforme as condições das folhas, batentes, dobradiças e pontos de fechamento.\n\nAs medidas definitivas das portas de correr deverão ser conferidas no imóvel antes da aquisição.\n\nO modelo definitivo deverá ser escolhido após confirmação das dimensões, sistema existente e componentes necessários.\n\nDanos ocultos identificados após desmontagem não estão automaticamente contemplados. Serviços adicionais somente após aprovação.";$("costLabor").value="0";$("costMaterial").value="1120";$("costThird").value="650";$("costOther").value="100";$("measureStatus").value="A_CONFERIR";$("materialStatus").value="A_CONFERIR";$("thirdStatus").value="A_CONFERIR";$("scopeStatus").value="PRELIMINAR";$("diagnosisStatus").value="NAO_APLICAVEL";$("costsConfirmed").checked=true;$("humanApproved").checked=true;$("commercialOverride").checked=false;calc();textClient();audit()}
+var PDF_CORPORATE_LOGO="https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/f02-orca-rei-v1-r3-intake-20261005/assets/construrei-logo-corporate-premium-20261005.webp?v=13da7c5ae49bb80ddda457e1c8f3c55acba17aa3";
+function pdfEscape(v){return esc(v).replace(/\n/g,"<br>")}
+function buildProfessionalPdf(){
+ var t=calc(),services=extract("service"),products=extract("product"),no=$("no").textContent.trim()||"SEM-NUMERO",today=new Date().toLocaleDateString("pt-BR");
+ function qty(v){return String(Number(v||0)).replace(".",",")}
+ function rows(items){return items.map(function(x){
+   var d=x.detail?'<div class="detail">'+pdfEscape(x.detail)+'</div>':"";
+   var formula='<div class="formula">'+qty(x.quantity)+' × '+brl(x.unit_value)+' = '+brl(x.value)+'</div>';
+   return '<tr><td><b>'+esc(x.name)+'</b>'+d+formula+'</td><td class="c">'+qty(x.quantity)+'</td><td class="r">'+brl(x.unit_value)+'</td><td class="r strong">'+brl(x.value)+'</td></tr>'
+ }).join("")}
+ function sectionTable(title,items,subtotal,label){
+   if(!items.length)return "";
+   return '<section class="budgetSection"><h2>'+title+'</h2><div class="mathLegend">Cálculo de cada item: <b>Quantidade × Valor unitário = Subtotal</b></div><table><thead><tr><th>Descrição</th><th>Qtd.</th><th>Vr. unit.</th><th>Subtotal</th></tr></thead><tbody>'+rows(items)+'</tbody><tfoot><tr><td colspan="3">'+label+'</td><td class="r">'+brl(subtotal)+'</td></tr></tfoot></table></section>'
+ }
+ var obs=$("notes").value.trim().split(/\n+/).filter(Boolean).map(function(x){return '<li>'+esc(x)+'</li>'}).join("");
+ return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Orçamento '+esc(no)+' • CONSTRU-REI</title><style>'+
+ '@page{size:A4;margin:11mm 12mm 12mm}*{box-sizing:border-box}html,body{background:#fff}body{margin:0;color:#17315d;font:10.8px/1.43 Inter,"Segoe UI",Arial,sans-serif}.page{width:100%}.header{position:relative;background:linear-gradient(118deg,#031b46,#052d70 62%,#07377d);color:#fff;border-radius:12px;padding:12px 14px 11px;border-bottom:4px solid #ffc400;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:15px;align-items:center;break-inside:avoid;overflow:hidden}.header:after{content:"";position:absolute;right:-35px;top:-65px;width:190px;height:190px;border-radius:50%;background:rgba(255,196,0,.08)}.brandWrap{display:grid;grid-template-columns:210px minmax(0,1fr);gap:14px;align-items:center;min-width:0;position:relative;z-index:1}.logoPanel{height:79px;background:#fff;border-radius:10px;padding:5px 8px;display:flex;align-items:center;justify-content:center;overflow:hidden}.logo{display:block;width:205px;height:78px;object-fit:contain}.company{min-width:0}.companyTag{font-size:8.2px;font-weight:800;letter-spacing:.08em;color:#ffe27a;margin-bottom:3px}.legalTitle{font-size:9.2px;font-weight:900;color:#fff;letter-spacing:.015em}.legal{font-size:7.15px;color:#dceaff;margin-top:3px;line-height:1.38}.seal{position:relative;z-index:1;text-align:right;font-size:7.5px;color:#dceaff;min-width:150px}.seal b{display:block;color:#ffe27a;font-size:9.3px;letter-spacing:.09em;margin-bottom:3px}.seal .number{font-size:15px;color:#fff;font-weight:900;line-height:1.05;margin-bottom:4px}.seal .promise{max-width:170px;margin-left:auto;line-height:1.35}.title{margin:14px 0 7px;break-inside:avoid}.title h1{margin:0;color:#07175b;font-size:20px;line-height:1.1}.title p{margin:3px 0;color:#637d98}.meta{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0 13px;break-inside:avoid}.meta div{border:1px solid #d3e4f1;border-radius:8px;padding:7px 9px;background:#f7fbff;min-height:46px}.meta b{display:block;color:#637d98;font-size:7.2px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}.meta span{color:#07175b;font-weight:700}h2{font-size:11.5px;color:#05265f;margin:12px 0 4px;padding-bottom:4px;border-bottom:2px solid #ffc400;letter-spacing:.04em;break-after:avoid-page}.mathLegend{font-size:7.5px;color:#718ba2;margin:0 0 5px;text-align:right}.mathLegend b{color:#05265f}table{width:100%;border-collapse:collapse;margin-bottom:10px;page-break-inside:auto}thead{display:table-header-group}tr{break-inside:avoid;page-break-inside:avoid}th{background:#05265f;color:#fff;font-size:7.6px;text-transform:uppercase;letter-spacing:.05em;padding:6px;border:1px solid #05265f}td{padding:6px 7px;border-bottom:1px solid #dfeaf3;vertical-align:top}.detail{font-size:8.6px;color:#637d98;margin-top:3px;line-height:1.34}.formula{font-size:7.35px;color:#0b5eb3;margin-top:3px;font-weight:700}.c{text-align:center;width:9%}.r{text-align:right;width:18%;white-space:nowrap}.strong{font-weight:900;color:#07175b}tfoot td{background:#f1f7fb;border-top:1px solid #c6dceb;border-bottom:0;font-weight:900;color:#05265f;padding:6px 7px}tfoot td:first-child{text-align:right}.budgetSection{break-inside:auto}.totalsWrap{display:flex;justify-content:flex-end;margin-top:5px;break-inside:avoid;page-break-inside:avoid}.totals{width:55%;border:1px solid #d3e4f1;border-radius:10px;overflow:hidden;background:#fff}.totalsHead{padding:6px 9px;background:#eef7fc;font-size:7.3px;color:#637d98;text-transform:uppercase;letter-spacing:.08em;font-weight:900}.totals div.line{display:flex;justify-content:space-between;padding:6px 9px;border-top:1px solid #e5edf4}.totals div.grand{display:flex;justify-content:space-between;padding:8px 9px;background:#05265f;color:#fff;font-size:12.2px;font-weight:900}.totals b{color:inherit}.mathSummary{font-size:7.1px;color:#718ba2;padding:6px 9px;border-top:1px solid #e5edf4;line-height:1.35}.obs{border:1px solid #d3e4f1;border-left:4px solid #ffc400;border-radius:8px;padding:8px 10px;background:#fbfdff;break-inside:avoid;page-break-inside:avoid}.obs ul{margin:0;padding-left:17px}.obs li{margin:3px 0}.terms{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;break-inside:avoid}.terms div{background:#eef7fc;border:1px solid #d3e4f1;border-radius:8px;padding:7px 8px}.terms b{display:block;font-size:7.6px;color:#637d98;text-transform:uppercase}.terms span{font-weight:800;color:#07175b}.premiumFooter{margin-top:12px;border-top:3px solid #05265f;position:relative;padding:7px 9px 0;display:grid;grid-template-columns:1.25fr 1fr;gap:12px;color:#637d98;font-size:7px;break-inside:avoid;page-break-inside:avoid}.premiumFooter:before{content:"";position:absolute;top:-3px;left:0;width:30%;height:3px;background:#ffc400}.premiumFooter .footBrand{color:#05265f;font-weight:900;font-size:7.8px;letter-spacing:.03em}.premiumFooter .slogan{color:#0b5eb3;font-weight:900;margin-top:2px}.premiumFooter .footRight{text-align:right}.premiumFooter .footRight b{display:block;color:#05265f}.premiumFooter .footFine{margin-top:2px}.docCode{margin-top:4px;color:#9aabba;font-size:6.4px;text-align:right}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.header,.meta,.totalsWrap,.obs,.terms,.premiumFooter,tr{break-inside:avoid!important;page-break-inside:avoid!important}}'+
+ '</style></head><body><div class="page"><div class="header"><div class="brandWrap"><div class="logoPanel"><img class="logo" src="'+PDF_CORPORATE_LOGO+'" alt="CONSTRU-REI — Construtora, Reparos e Reformas"></div><div class="company"><div class="companyTag">CONSTRUTORA • REPAROS • REFORMAS</div><div class="legalTitle">BOOM NEGÓCIOS LTDA • CNPJ 32.329.721/0001-36</div><div class="legal">Rua Luiz Antonieto, 221 • Jardim das Américas • Curitiba/PR • CEP 81520-110<br>(41) 8778-6277 • (41) 98778-6277 • boomnegocios2019@gmail.com</div></div></div><div class="seal"><b>PROPOSTA COMERCIAL</b><div class="number">ORÇAMENTO '+esc(no)+'</div><div class="promise">Elaborado com critério técnico e transparência.</div><div style="margin-top:4px">Emitido em '+today+'</div></div></div><div class="title"><h1>ORÇAMENTO Nº '+esc(no)+'</h1><p>'+esc($("reference").value)+'</p></div><div class="meta"><div><b>Cliente</b><span>'+esc($("client").value)+'</span></div><div><b>Endereço</b><span>'+esc($("address").value)+'</span></div><div><b>Referência</b><span>'+esc($("reference").value)+'</span></div><div><b>Documento</b><span>Proposta comercial CONSTRU-REI</span></div></div>'+
+ sectionTable("SERVIÇOS",services,t.services,"SUBTOTAL DE SERVIÇOS")+
+ sectionTable("PRODUTOS E MATERIAIS",products,t.products,"SUBTOTAL DE PRODUTOS E MATERIAIS")+
+ '<div class="totalsWrap"><div class="totals"><div class="totalsHead">Resumo do orçamento</div><div class="line"><span>Subtotal de serviços</span><b>'+brl(t.services)+'</b></div><div class="line"><span>Subtotal de produtos e materiais</span><b>'+brl(t.products)+'</b></div><div class="grand"><span>TOTAL GERAL</span><b>'+brl(t.total)+'</b></div><div class="mathSummary">Total Geral = Subtotal de Serviços + Subtotal de Produtos e Materiais.<br>Todos os subtotais são recalculados por Quantidade × Valor Unitário.</div></div></div>'+
+ (obs?'<h2>OBSERVAÇÕES TÉCNICAS</h2><div class="obs"><ul>'+obs+'</ul></div>':"")+
+ '<div class="terms"><div><b>Validade da proposta</b><span>'+esc($("validity").value)+'</span></div><div><b>Garantia</b><span>'+esc($("warranty").value)+'</span></div></div>'+
+ '<footer class="premiumFooter"><div><div class="footBrand">CONSTRU-REI • CONSTRUTORA, REPAROS E REFORMAS</div><div class="slogan">SOLUÇÕES HOJE. TRANQUILIDADE SEMPRE.</div><div class="footFine">Atendimento técnico • Curitiba e Região Metropolitana</div></div><div class="footRight"><b>BOOM NEGÓCIOS LTDA • CNPJ 32.329.721/0001-36</b><div>Curitiba/PR • (41) 98778-6277</div><div>boomnegocios2019@gmail.com</div><div class="docCode">Proposta '+esc(no)+' • CONSTRU-REI</div></div></footer></div><script>(function(){function p(){setTimeout(function(){window.print()},180)}var a=[].slice.call(document.images||[]);if(!a.length){p();return}Promise.all(a.map(function(i){return i.complete?Promise.resolve():new Promise(function(r){i.onload=r;i.onerror=r})})).then(p)})();<\/script></body></html>';
+}
+function openProfessionalPdf(){textClient();var w=window.open("","_blank");if(!w){alert("O navegador bloqueou a janela do PDF. Autorize pop-ups para este site.");return}w.document.open();w.document.write(buildProfessionalPdf());w.document.close()}
+function savePayload(ready){var p=auditPayload();p.orca_rei_v1=true;p.budget_ready=ready;p.budget_status=ready?"PRONTO_F03":"EM_ELABORACAO";p.technical_notes=$("notes").value.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);p.copy_ready_text=textClient();p.human_review_required=true;p.actor="Rogério";return p}
+async function save(ready){if(fixtureMode)return;try{await audit();var d=await api("budget-save",savePayload(ready));await openCase(cur.token);await load();alert(ready?"ORÇA-REI: orçamento marcado como PRONTO F03.":"ORÇA-REI: rascunho salvo.")}catch(e){alert(e.message)}}
+$("processIntake").onclick=processIntake;$("applyIntake").onclick=applyIntake;$("clearIntake").onclick=clearIntake;$("q").oninput=renderList;$("addService").onclick=function(){addRow("service",{quantity:1})};$("addProduct").onclick=function(){addRow("product",{quantity:1})};$("auditBtn").onclick=function(){audit().catch(function(e){alert(e.message)})};$("generateText").onclick=textClient;$("pdfBtn").onclick=openProfessionalPdf;$("fixture").onclick=fixture;$("save").onclick=function(){save(false)};$("ready").onclick=function(){save(true)};$("send").onclick=async function(){if(fixtureMode||!cur)return;try{await api("budget-release",{token:cur.token,actor:"Rogério"});cur=null;$("view").classList.add("hidden");$("empty").classList.remove("hidden");await load();alert("F03 confirmou o recebimento.")}catch(e){alert(e.message)}};document.addEventListener("input",function(e){if(e.target.matches(".qty,.unit,#charges,#target,#costLabor,#costMaterial,#costThird,#costOther"))calc()});load();
+</script>
+<script defer src="https://rogeriocibin-alt.github.io/construrei-oauth-pages/central-runtime/ui/cr-shell.js"></script>
+</body>
+</html>
