@@ -878,3 +878,20 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Documento: `docs/TEAM_IDENTITY_V1_20261005.md`.
 - Central oficial e Gestor oficial permanecem **INALTERADOS** até o gate humano.
 - Próximo gate: testar notebook + celular; com aprovação explícita, promover aos caminhos oficiais mantendo os links estáveis, congelar e registrar checkpoint final.
+
+
+## Central Operacional V2 — Team Identity V2 no link homologado — 2026-10-05
+
+- Estado: **IMPLEMENTADO NO LINK HOMOLOGADO / AGUARDANDO VALIDAÇÃO VISUAL FINAL**.
+- Link estável preservado: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Checkpoint pré-alteração: `checkpoint-central-team-identity-v2-before-20261005` → `bf33246a9a17b9974b4b199b6e7a16f7897c64dc`.
+- Identidade humana aplicada: Rogério, Éder, Gabrielly e Fabrício.
+- Header: Rogério usa retrato humano no perfil da Diretoria.
+- Agenda: miniavatares aparecem quando o nome do responsável é reconhecido.
+- Sala da Equipe: os 4 integrantes aparecem juntos com nome e papel; identidade cromática restaurada para azul-marinho + azul institucional + branco + amarelo.
+- Motor da reunião: Google Meet permanece homologado; nenhuma camada WebRTC experimental foi reintroduzida.
+- Apresentação Viva local adicionada em `production/central-operacional-v2-ux-r1-2-homologada-20261005/presentation/`.
+- Melhor posição definida para a equipe: **slide 02**, imediatamente após a abertura institucional e antes da origem/negócio; preserva 20 slides e a narrativa executiva.
+- Slide 02 agora apresenta os 4 membros em composição profissional com papel/responsabilidade, mantendo a tese “pessoas antes da tecnologia”.
+- Central e Apresentação mantêm o mesmo link-base; não foi criada arquitetura paralela.
+- Rollback imediato: branch `checkpoint-central-team-identity-v2-before-20261005`.
