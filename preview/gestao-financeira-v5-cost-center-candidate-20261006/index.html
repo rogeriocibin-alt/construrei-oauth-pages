@@ -124,6 +124,11 @@ body{background:radial-gradient(circle at 72% 0,#0d3b67 0,#07182b 38%,#061525 78
     <div id="v5CostCenters"></div>
   </div>
 
+  <div class="panel v5panel">
+    <div class="v5head"><div><h3>Bridge legado → centro de custo canônico</h3><p class="small muted">Casos reais já reconciliados no histórico financeiro, porém ainda sem quote + approval canônicos. São candidatos de backfill, não centros de custo oficiais.</p></div><span class="v5tag">SOMENTE LEITURA</span></div>
+    <div id="v5LegacyBackfill"></div>
+  </div>
+
   <div class="grid2">
     <div class="panel v5panel">
       <h3>Fila Cora · revisão humana</h3>
@@ -248,11 +253,15 @@ document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelect
       ["Orçamentos canônicos",c.quotes??0,"cr_quotes_v1"],
       ["Aprovações",c.approvals??0,"cr_quote_approvals_v1"],
       ["Lançamentos",c.financial_entries??0,"cr_financial_entries_v1"],
+      ["Backfill legado",c.legacy_backfill_candidates??0,"aguardando mapeamento canônico"],
       ["Capital de giro",wc.real_balance==null?"N/D":money(wc.real_balance),"saldo real canônico"]
     ].map(x=>'<div class="v5kpi"><span>'+x[0]+'</span><b>'+x[1]+'</b><small>'+x[2]+'</small></div>').join("");
 
     const rows=j.cost_centers||[];
     document.getElementById("v5CostCenters").innerHTML=rows.length?'<div class="tablewrap"><table class="table v5table"><thead><tr><th>Centro</th><th>Orçamento</th><th>Aprovado</th><th>Status da obra</th><th>Categoria</th><th>Lançamentos</th><th>Baixados</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><b>'+e(r.case_code||r.cost_center_key)+'</b></td><td>'+e(r.quote_code||"—")+' · v'+e(r.quote_version??"—")+'</td><td>'+money(r.approved_amount)+'</td><td><span class="v5tag">'+e(r.case_status||"—")+'</span></td><td>'+e(r.service_category||"—")+'</td><td>'+e(r.financial_entries_count??0)+'</td><td>'+e(r.settled_entries_count??0)+'</td></tr>').join("")+'</tbody></table></div>':'<div class="v5empty"><b>Nenhum centro de custo canônico ainda.</b>As tabelas de orçamento/aprovação estão prontas, mas ainda não possuem orçamentos aprovados registrados. A candidata não inventa centros de custo a partir de números soltos: o bridge F02 → aprovação canônica é o próximo elo técnico.</div>';
+
+    const legacy=j.legacy_backfill_candidates||[];
+    document.getElementById("v5LegacyBackfill").innerHTML=legacy.length?'<div class="tablewrap"><table class="table v5table"><thead><tr><th>Obra</th><th>Ref. legado</th><th>Fase</th><th>Status financeiro</th><th>Valor histórico</th><th>Pendente</th><th>Situação</th></tr></thead><tbody>'+legacy.map(r=>'<tr><td><b>'+e(r.case_code)+'</b></td><td>'+e(r.legacy_quote_ref||"—")+'</td><td>'+e(r.phase||"—")+'</td><td>'+e(r.financial_status||"—")+'</td><td>'+money(r.gross_amount)+'</td><td>'+money(r.pending_amount)+'</td><td><span class="filtertag">BACKFILL PENDENTE</span></td></tr>').join("")+'</tbody></table></div>':'<div class="v5empty"><b>Nenhum candidato legado encontrado.</b>Não há casos reconciliados pendentes de bridge nesta leitura.</div>';
 
     document.getElementById("v5CoraQueue").innerHTML='<b>STAGE: aguardando suporte da Cora.</b><br>Autenticação retornou <code>invalid_client</code> apesar de Client ID, certificado e private key validados. Fila bancária e Provisionar permanecem desativados. Produção Cora não foi tocada.';
     document.getElementById("v5CoraStatus").textContent="Cora Stage · aguardando suporte";
