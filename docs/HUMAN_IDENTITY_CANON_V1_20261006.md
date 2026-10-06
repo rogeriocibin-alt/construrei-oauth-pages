@@ -71,3 +71,7 @@
 - PR de promoção: **#28**.
 - Branch: `cr-human-identity-canon-v1-20261006`.
 - Gate solicitado por Rogério nesta conversa: finalizar a implantação e entregar a tabela de comprovação.
+
+- Merge canônico: `980d5f7a4254562bd4c904dbab3c3ac31558c1d5`.
+- GitHub Pages: run `37480263842` — **SUCCESS**.
+- Estado final: **OFICIAL / HOMOLOGADA / PUBLICADA**.
