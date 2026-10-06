@@ -44,3 +44,14 @@
 2. Se necessário, regenerar/reemitir a credencial Stage e substituir o trio no Supabase.
 3. Repetir o teste de token sem expor o access token.
 4. Após sucesso, avançar para leitura segura e candidata de conciliação/centro de custo.
+
+
+## Diagnóstico adicional — pareamento criptográfico
+- Edge Function diagnóstica: `cora-stage-keypair-check-20261006`
+- Certificado PEM: parse válido = true
+- Private Key: parse válida = true
+- Certificado e Private Key: par criptográfico correspondente = true
+- Certificado atualmente dentro do período de validade = true
+- Conclusão: não há evidência de erro de formatação ou de chave privada incompatível com o certificado.
+- Como o Client ID também corresponde à credencial Stage ativa exibida no Cora Web, o bloqueio `invalid_client` passa a apontar para associação/provisionamento da credencial no lado Cora ou uso de um par válido pertencente a outra emissão Stage.
+- A interface Cora Web atualmente exibe a credencial como ativa, emitida em 06/10/26, mas também apresenta um aviso de falha: “Não conseguimos gerar sua credencial”, com opção “Tentar novamente”.
