@@ -931,3 +931,17 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Verificação de dependências: todos os `src/href ./...` atuais do `index.html` retornam arquivo existente no repositório.
 - GitHub Pages: **SUCCESS**, run `37405881620`, commit `e026992e3b092cd9ba7286a976822bf3d2157105`.
 - Sala da Equipe e Apresentação Viva não foram alteradas nesta correção.
+
+
+## Human Identity V4 — causa raiz final e correção — 2026-10-05
+
+- Estado: **PUBLICADO / GITHUB PAGES SUCCESS / AGUARDANDO VALIDAÇÃO VISUAL DE ROGÉRIO**.
+- Link: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Causa raiz final do travamento em Éder Técnico: coexistiam **dois controladores de identidade** (`team-identity-v2.js` e `human-identity-v3.js`) com observers globais. O V2 recriava `.cr-page-human` e o V3 removia esses elementos; ambos observavam todo o documento, gerando ciclo contínuo de mutações/remount e consumo de CPU. Ao abrir páginas técnicas, o efeito ficava perceptível como travamento.
+- Causa associada dos miniavatares: a Agenda é re-renderizada por `clean-native.js`; a disputa de observers globais e remounts concorrentes tornava a camada visual instável. Além disso, a pasta oficial antes não continha todas as dependências locais chamadas pelo HTML; isso já foi corrigido na V3.1.
+- Correção V4: removidas as referências de `team-identity-v2.js/css` e `human-identity-v3.js/css` da Central oficial e substituídas por **um único controlador**: `human-identity-v4.js/css`.
+- V4 não usa MutationObserver global. Observa apenas `#crAgendaRows` para reaplicar miniavatares após atualização da Agenda, e reaplica identidade estática em navegação/foco.
+- Perfil de Rogério forçado visível inclusive no mobile, vencendo a regra legado `.cr-profile-static{display:none!important}` por estilo inline importante.
+- Navegação de `technical/admin` permanece local; removidos do lazy load de desenvolvimento. `technical-console` recebeu timeout de 8 s para sessão antiga/API lenta não aparentar congelamento.
+- Verificação: nenhuma referência V2/V3 permanece no `index.html`; V4 CSS/JS ativos; sintaxe V4 OK; todos os arquivos relativos referenciados pelo HTML existem.
+- Build: `96c93389a3e643ac49e0749c36b79ce6ba448e87` • GitHub Pages run `37406548611` = **SUCCESS**.
