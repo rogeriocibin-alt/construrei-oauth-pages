@@ -1,0 +1,22 @@
+{
+  "agent_code": "INFRA_REI",
+  "authority_level": 50,
+  "default_mode": "MONITOR_READ_ONLY",
+  "escalation_to": "CR_ASSERTIVO",
+  "allowed_scope": [
+    "monitorar",
+    "auditar backup",
+    "avaliar restore",
+    "saúde de infraestrutura",
+    "checkpoint",
+    "detectar incidente"
+  ],
+  "prohibited_scope": [
+    "restore destrutivo autônomo",
+    "deploy estrutural autônomo",
+    "mudar executor sem gate",
+    "manipular credenciais em cliente público"
+  ],
+  "onboarding_canon": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+  "visibility_required": true
+}
