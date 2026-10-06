@@ -230,6 +230,19 @@ body{background:#eef5f9;color:var(--cr-ink)}
 @media(max-width:700px){.acfiltergrid{grid-template-columns:1fr 1fr}.acquick{overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.acquick button{flex:0 0 auto}.acrateio{grid-template-columns:repeat(2,minmax(0,1fr))}.ackpi b{font-size:16px!important}}
 @media(max-width:480px){.acfiltergrid{grid-template-columns:1fr}}
 </style>
+
+<style id="cr-finance-v5-r16-rateio-ux">
+/* R16 — Auditoria de Rateios limpa, sem avatares */
+.raudit{border-color:#c9dce9!important}
+.rakpis{gap:8px!important}.rakpi{background:linear-gradient(150deg,#082847,#06182a)!important;border:1px solid #2d5d82!important;box-shadow:0 5px 16px #07182b14!important}
+.rakpi span{color:#b8ccdc!important;font-weight:800!important}.rakpi b{color:#fff!important;font-size:16px!important}.rakpi.warn b{color:#ffd85e!important}.rakpi.bad b{color:#ff8e92!important}.rakpi.ok b{color:#9fe2c4!important}
+.rapersons{display:flex;gap:5px;flex-wrap:wrap}.rapill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;border:1px solid #bfd4e3;background:#f3f8fb;color:#173b58;font-size:9px;white-space:nowrap}.rapill b{color:#07182b;font-size:9px}
+.ramodel{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;font-size:8px;font-weight:900;border:1px solid #c6d9e6;background:#f4f9fc;color:#31546f;white-space:nowrap}
+.ramodel.current{background:#e9f8f0;color:#087148;border-color:#addfc5}.ramodel.legacy{background:#eef4fb;color:#315f88;border-color:#c6d9ea}.ramodel.mixed{background:#fff5d8;color:#815d00;border-color:#e4c967}.ramodel.incomplete{background:#fff0f0;color:#a43139;border-color:#e8bcc0}
+.ratable{min-width:1120px!important}.ratable th{background:#eaf4fa!important;color:#082848!important;font-size:9px!important;position:sticky;top:0;z-index:1}.ratable td{color:#17344e!important;vertical-align:middle!important}.ratable tbody tr:hover td{background:#f6fbfe!important}
+.rabasis{color:#7b91a5!important}
+@media(max-width:700px){.ratable{min-width:980px!important}.rakpi b{font-size:14px!important}.rapill{padding:4px 6px}}
+</style>
 </head><body><div id="login" class="login"><div class="box"><div style="display:flex;gap:10px;align-items:center"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><b>CONSTRU-REI · GESTÃO FINANCEIRA V5 · CANDIDATA</b></div><p class="muted small">Módulo oficial da Central CONSTRU-REI. Mesma chave da Central.</p><input id="key" type="password" placeholder="Chave de acesso"><button onclick="login()">Entrar</button><div id="err"></div></div></div>
 <header class="top"><div class="topin"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><div><b>CONSTRU-REI</b><div class="small" style="color:#f3e7c6">DASHBOARD GERENCIAL</div><div class="small">GESTÃO • OPERAÇÃO • FINANCEIRO • INTELIGÊNCIA</div></div><div class="grow"></div><b>V5 CANDIDATA</b><span id="live">online</span></div></header><main class="main"><div class="r6hero"><div class="r6eyebrow">CENTRO DE COMANDO DA DIRETORIA</div><div class="r6title">CONSTRU-REI · Diretoria Agora</div><div class="r6sub">VISÃO EXECUTIVA • OPERAÇÃO • RESULTADO • CUSTOS • RISCOS</div></div><div class="tabs"><button class="tab on" data-t="agora">VISÃO EXECUTIVA</button><button class="tab" data-t="fin">FINANCEIRO / ACERTOS</button><button class="tab" data-t="v5">CENTROS DE CUSTO V5</button><button class="tab" data-t="hist">HISTÓRICO / KPIs</button><button class="tab" data-t="conc">CONCILIAÇÃO</button><button class="tab" data-t="cost">CUSTOS / PRESTADORES</button><button class="tab" data-t="qual">SAÚDE DOS DADOS</button></div>
 <section id="agora" class="section on"><div class="r8commandbar"><div><div class="r8mode" id="r8mode">OPERAÇÃO VIVA</div><div id="r8context" class="r8context">2026 • ANO TODO</div></div><div class="r8quick"><button onclick="r8Go('agora')">OPERAÇÃO</button><button onclick="r8Go('fin')">FINANCEIRO</button><button onclick="r8Go('cost')">CUSTOS</button><button onclick="r8Go('cost');setTimeout(()=>document.getElementById('prov')?.scrollIntoView({behavior:'smooth'}),0)">PRESTADORES</button><button onclick="r8Go('hist')">HISTÓRICO</button><button onclick="r8Go('qual')">SAÚDE</button></div></div><div id="globalyears" class="yearnav"></div><div id="periodtitle" class="periodtitle"></div><div id="periodnote" class="periodnote"></div><div id="r8result"></div><div id="kpis" class="r7master"></div><div id="supportkpis" class="r7support"></div><div id="opkpis" class="opkpis"></div><div id="execalerts" class="r7alerts"></div><div id="r8costcontrol"></div><div class="exgrid"><div class="panel expanel"><h3>Evolução mensal do faturamento</h3><div id="exmonthly"></div></div><div class="panel expanel"><h3>Maiores origens / clientes identificados</h3><div id="exorigins"></div></div></div><div class="r7execgrid"><div class="panel r7readpanel"><h3>Leitura da Diretoria</h3><div id="execread"></div></div><div class="panel r7readpanel"><h3>Indicadores do período</h3><div id="execsmart" class="r7smart"></div></div></div><div class="panel"><h3>Operação e obras</h3><div id="chips" class="chips"></div><div id="opmonths" class="chips"></div><div class="filters"><input id="q" placeholder="Buscar orçamento, cliente, endereço..." oninput="ops()"><select id="sort" onchange="ops()"><option value="recent">Mais recentes</option><option value="old">Mais antigos</option><option value="gross">Maior valor</option><option value="profit">Maior lucro</option><option value="margin">Menor margem</option></select></div><div id="op"></div></div></section>
@@ -349,7 +362,7 @@ body{background:#eef5f9;color:var(--cr-ink)}
 </section>
 <section id="qual" class="section"><div id="qc" class="grid3"></div><div class="panel"><h3>Inconsistências detectadas</h3><div id="issues"></div></div></section></main><footer class="foot" id="buildfoot">GESTÃO FINANCEIRA V5 · CANDIDATA · API aguardando leitura · READ ONLY</footer>
 <script>
-const UI_BUILD="CR-FINANCE-V5-CANDIDATE-20261006-R15-UX";
+const UI_BUILD="CR-FINANCE-V5-CANDIDATE-20261006-R16-RATEIO-UX";
 const CR_API_BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate";
 const CG_API_BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-trello-capital-giro-v1";
 const S={session:sessionStorage.getItem("crv2")||"",years:{},current:null,capital:null,oy:"2026",fy:"2026",fm:0,status:"",opm:0,opYear:null,opAudit:null,monthlyAudit:null,cy:"2026",cm:0,costData:null,costCache:{},providerView:[],gcLast:null,gcLastAt:0,acertoHistory:[],acertoSelected:{},acertoHistoryLoaded:false,v5Simulations:{}};const brl=c=>c==null?"Não informado":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(c/100),pct=v=>v==null?"Não calculável":Number(v).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",esc=s=>String(s??"").replace(/[&<>]/g,"");
@@ -609,8 +622,17 @@ function raGroup(mode){
 }
 function raPeopleHtml(people){
   const names=Object.keys(people).sort((a,b)=>Number(people[b])-Number(people[a]));
-  const allHave=names.length>0&&names.every(n=>!!TEAM_AVATARS[acNorm(n).replace(/\s+/g,"")]);
-  return '<div class="rapersons">'+names.map(n=>'<span class="rapill">'+(allHave?acPerson(n,n,true):'<span>'+esc(n)+'</span>')+'<b>'+brl(people[n])+'</b></span>').join("")+'</div>';
+  return names.length?'<div class="rapersons">'+names.map(n=>'<span class="rapill"><span>'+esc(n)+'</span><b>'+brl(people[n])+'</b></span>').join("")+'</div>':'<span class="muted">Sem composição</span>';
+}
+function raModelBadge(modelsSet){
+  const models=[...modelsSet].filter(Boolean),raw=models.join(" · "),norm=acNorm(raw);
+  const hasMissing=models.some(x=>String(x).toUpperCase()==="SEM MODELO");
+  const current=models.length>0&&!hasMissing&&models.every(x=>{const n=acNorm(x);return n.includes("fabricio:20")&&n.includes("eder:28")&&n.includes("rogerio:28")&&(n.includes("gabrielly:14")||n.includes("gabi:14"))});
+  let label="LEGADO",cls="legacy";
+  if(hasMissing){label="INCOMPLETO";cls="incomplete"}
+  else if(current){label="PADRÃO ATUAL";cls="current"}
+  else if(models.length>1){label="MISTO";cls="mixed"}
+  return '<span class="ramodel '+cls+'" title="'+esc(raw||"Sem modelo registrado")+'">'+label+'</span>';
 }
 function rateioAuditMode(mode){S.raMode=mode;rateioAuditRender()}
 function rateioAuditRender(){
@@ -642,9 +664,9 @@ function rateioAuditRender(){
   ].map(x=>'<div class="rakpi '+x[2]+'"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("");
   if(!groups.length){root.innerHTML='<div class="state">Sem rateios auditáveis para este recorte.</div>';return}
   const tr=groups.map(g=>{
-    const diffClass=g.diffKnown&&Math.abs(g.difference)>100?"acbad":g.diffKnown?"acok":"acwarn",models=[...g.models].join(" · "),basis=Object.entries(g.basis).map(([k,v])=>k+" "+v).join(" · ");
+    const diffClass=g.diffKnown&&Math.abs(g.difference)>100?"acbad":g.diffKnown?"acok":"acwarn",basis=Object.entries(g.basis).map(([k,v])=>k+" "+v).join(" · ");
     const diffText=g.diffKnown?brl(g.difference):"N/D";
-    return '<tr><td><b>'+esc(g.label)+'</b><div class="rabasis">'+esc(basis)+'</div></td><td>'+g.cards+'<div class="rabasis">'+g.completeCards+' completos · '+g.partialCards+' pendentes</div></td><td>'+(g.profitKnown?brl(g.profit):"N/D")+'</td><td>'+(g.profitKnown?brl(g.distributedComparable):"N/D")+'</td><td>'+brl(g.capital)+'</td><td class="'+diffClass+'"><b>'+diffText+'</b></td><td>'+raPeopleHtml(g.people)+'</td><td>'+esc(models||"N/D")+'</td></tr>';
+    return '<tr><td><b>'+esc(g.label)+'</b><div class="rabasis">'+esc(basis)+'</div></td><td>'+g.cards+'<div class="rabasis">'+g.completeCards+' completos · '+g.partialCards+' pendentes</div></td><td>'+(g.profitKnown?brl(g.profit):"N/D")+'</td><td>'+(g.profitKnown?brl(g.distributedComparable):"N/D")+'</td><td>'+brl(g.capital)+'</td><td class="'+diffClass+'"><b>'+diffText+'</b></td><td>'+raPeopleHtml(g.people)+'</td><td>'+raModelBadge(g.models)+'</td></tr>';
   }).join("");
   root.innerHTML='<div class="small muted" style="margin-bottom:7px">Modo <b>'+({work:"OBRA A OBRA",week:"SEMANA",month:"MÊS",year:"ANO"}[mode])+'</b> · '+works.length+' obra(s) com algum registro de rateio/capital · '+complete.length+' com composição explícita · '+partial.length+' pendentes. Data temporal: '+dated+'; data financeira explícita: '+financialDate+'. Microdiferenças até R$ 1,00: '+rounding.length+'.</div><div class="tablewrap"><table class="table ratable"><thead><tr><th>Período / Obra</th><th>Obras</th><th>Lucro comparável</th><th>Distribuído comparável</th><th>Capital registrado</th><th>Diferença</th><th>Participantes</th><th>Modelo(s)</th></tr></thead><tbody>'+tr+'</tbody></table></div>';
 }
