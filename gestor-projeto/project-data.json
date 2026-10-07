@@ -3437,6 +3437,24 @@
       "path": "docs/INTELLIGENT_INPUT_PATTERN_V1_20261005.md",
       "status": "domain",
       "note": "Padrão operacional de entrada inteligente."
+    },
+    {
+      "domain": "Núcleo de agentes",
+      "path": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+      "status": "vigente",
+      "note": "Arquitetura, fontes de verdade, onboarding, homologação e antirregressão de agentes."
+    },
+    {
+      "domain": "Financeiro REI",
+      "path": "docs/agents/FINANCEIRO_REI_V1.md",
+      "status": "vigente",
+      "note": "Manual titular do domínio financeiro."
+    },
+    {
+      "domain": "ORÇA-REI",
+      "path": "docs/agents/ORCA_REI_V1.md",
+      "status": "domain",
+      "note": "Manual canônico/aprovado para implementação do F02; gate comercial final humano."
     }
   ]
 }
