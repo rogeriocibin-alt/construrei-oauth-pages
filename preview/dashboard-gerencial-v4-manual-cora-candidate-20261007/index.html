@@ -150,6 +150,39 @@ body{background:linear-gradient(180deg,#eef4f9 0,#f7f9fc 240px,#f4f7fb 100%)}
   .panel,.kpi,.r7mastercard{box-shadow:0 4px 14px #07182b0a}
 }
 
+
+/* R13 — identidade fiel Central/Gestor aplicada na candidata · 2026-10-07 */
+:root{--n:#061f4f;--n2:#0b5fb8;--g:#f2c94c;--gs:#fff3bf;--bg:#eef6fb;--m:#315c8a;--l:#cfe0ec;--ok:#087a50;--warn:#9b6900;--bad:#b33a3a}
+html,body{background:#eef6fb!important;color:#102a43!important}
+body{background:linear-gradient(180deg,#eef8fd 0,#f7fbfe 220px,#eef6fb 100%)!important}
+.top{background:#fff!important;color:#061f4f!important;border-bottom:3px solid #f2c94c!important;box-shadow:0 5px 18px rgba(6,31,79,.10)!important}
+.top .small,.topin>div:nth-child(2) .small,.topin>div:nth-child(2) .small[style]{color:#315c8a!important}
+.topin>b{color:#0b5fb8!important}
+#live{background:#e9f8f1!important;color:#087a50!important;border:1px solid #b9e3cf!important;padding:4px 8px!important;border-radius:999px!important}
+.main{color:#102a43!important}
+.r6hero{background:linear-gradient(118deg,#082d63 0%,#0b5fb8 72%,#1479c9 100%)!important;color:#fff!important;border:1px solid #2c7bc3!important;box-shadow:0 10px 24px rgba(6,31,79,.14)!important}
+.r6title{color:#fff!important}.r6eyebrow{color:#ffd84d!important}.r6sub{color:#edf7ff!important}
+.panel,.kpi,.r7mastercard,.r7supportcard,.r7readpanel,.r7smartcard,.opkpi,.r8commandbar,.r8result,.r8costsummary,.person,.op,.provcard{background:#fff!important;color:#102a43!important;border-color:#cfe0ec!important;box-shadow:0 5px 16px rgba(6,31,79,.07)!important}
+.panel h3,.periodtitle,.money,.v,.r7mastervalue,.r7smartcard b,.r8context,.r8resultmetric b,.r8resultperiod b,.opkpi b,.provtotal{color:#061f4f!important}
+.lab,.muted,.small,.hint,.foot,.r7mastersub,.r7supportcard .small,.r7smartcard span,.r7smartcard small,.r8resultmetric span,.r8resultperiod small,.opkpi span,.periodnote{color:#315c8a!important}
+.tab,.chip,.yearbtn,.month{background:#fff!important;color:#0b5fb8!important;border-color:#c5dbea!important}
+.tab.on,.chip.on,.yearbtn.on{background:#0b5fb8!important;color:#fff!important;border-color:#0b5fb8!important;box-shadow:inset 0 -3px 0 #f2c94c!important}
+.month.on{background:#f2c94c!important;color:#061f4f!important;border-color:#d9ae20!important;box-shadow:none!important}
+.filters input,.filters select,.box input{background:#fff!important;color:#102a43!important;border-color:#bfd5e5!important}
+.filters input::placeholder,.box input::placeholder{color:#6c8bab!important}
+.tablewrap{border-color:#cfe0ec!important}.table th{background:#eaf4fb!important;color:#061f4f!important;border-bottom-color:#cfe0ec!important}.table td{background:#fff!important;color:#102a43!important;border-bottom-color:#e1edf5!important}
+.r8quick button{background:#f5fbff!important;color:#0b5fb8!important;border-color:#c5dbea!important}.r8quick button:hover{background:#eaf4fb!important;border-color:#0b5fb8!important}
+.r8mode,.periodtitle{color:#8a6508!important}
+.filtertag,.pill{background:#edf6fc!important;color:#0b5fb8!important;border-color:#c5dbea!important}
+.trellobtn,.box button,.manualbtn{background:#0b5fb8!important;color:#fff!important;border-color:#0a4f98!important}
+.state,.opempty{background:#f7fbfe!important;color:#315c8a!important;border-color:#cfe0ec!important}
+.state.warn,.periodnote{background:#fff8d9!important;color:#6e5300!important;border-color:#ead27a!important}
+.r7alert{background:#f4f9fd!important;color:#24496b!important;border-color:#cfe0ec!important}
+.r7alert.ok{background:#eaf8f1!important;color:#087a50!important;border-color:#b9e3cf!important}
+.r7alert.warn{background:#fff8d9!important;color:#6e5300!important;border-color:#ead27a!important}
+.r7alert.bad{background:#fff0f0!important;color:#a12828!important;border-color:#efc2c2!important}
+@media(max-width:700px){body,.main{background:#eef6fb!important}.top{background:#fff!important}.panel,.kpi,.op,.provcard{box-shadow:0 3px 10px rgba(6,31,79,.06)!important}}
+
 </style></head><body><div id="login" class="login"><div class="box"><div style="display:flex;gap:10px;align-items:center"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><b>CONSTRU-REI · DASHBOARD V4</b></div><p class="muted small">Módulo oficial da Central CONSTRU-REI. Mesma chave da Central.</p><input id="key" type="password" placeholder="Chave de acesso"><button onclick="login()">Entrar</button><div id="err"></div></div></div>
 <header class="top"><div class="topin"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><div><b>CONSTRU-REI</b><div class="small" style="color:#f3e7c6">DASHBOARD GERENCIAL</div><div class="small">GESTÃO • OPERAÇÃO • FINANCEIRO • INTELIGÊNCIA</div></div><div class="grow"></div><b>V4 OFICIAL</b><span id="live">online</span></div></header><main class="main"><div class="r6hero"><div class="r6eyebrow">CENTRO DE COMANDO DA DIRETORIA</div><div class="r6title">CONSTRU-REI · Diretoria Agora</div><div class="r6sub">VISÃO EXECUTIVA • OPERAÇÃO • RESULTADO • CUSTOS • RISCOS</div></div><div class="tabs"><button class="tab on" data-t="agora">VISÃO EXECUTIVA</button><button class="tab" data-t="fin">FINANCEIRO / ACERTOS</button><button class="tab" data-t="cora">CORA MANUAL → TRELLO</button><button class="tab" data-t="hist">HISTÓRICO / KPIs</button><button class="tab" data-t="conc">CONCILIAÇÃO</button><button class="tab" data-t="cost">CUSTOS / PRESTADORES</button><button class="tab" data-t="qual">SAÚDE DOS DADOS</button></div>
 <section id="agora" class="section on"><div class="r8commandbar"><div><div class="r8mode" id="r8mode">OPERAÇÃO VIVA</div><div id="r8context" class="r8context">2026 • ANO TODO</div></div><div class="r8quick"><button onclick="r8Go('agora')">OPERAÇÃO</button><button onclick="r8Go('fin')">FINANCEIRO</button><button onclick="r8Go('cost')">CUSTOS</button><button onclick="r8Go('cost');setTimeout(()=>document.getElementById('prov')?.scrollIntoView({behavior:'smooth'}),0)">PRESTADORES</button><button onclick="r8Go('hist')">HISTÓRICO</button><button onclick="r8Go('qual')">SAÚDE</button></div></div><div id="globalyears" class="yearnav"></div><div id="periodtitle" class="periodtitle"></div><div id="periodnote" class="periodnote"></div><div id="r8result"></div><div id="kpis" class="r7master"></div><div id="supportkpis" class="r7support"></div><div id="opkpis" class="opkpis"></div><div id="execalerts" class="r7alerts"></div><div id="r8costcontrol"></div><div class="r7execgrid"><div class="panel r7readpanel"><h3>Leitura da Diretoria</h3><div id="execread"></div></div><div class="panel r7readpanel"><h3>Indicadores do período</h3><div id="execsmart" class="r7smart"></div></div></div><div class="panel"><h3>Operação e obras</h3><div id="chips" class="chips"></div><div id="opmonths" class="chips"></div><div class="filters"><input id="q" placeholder="Buscar orçamento, cliente, endereço..." oninput="ops()"><select id="sort" onchange="ops()"><option value="recent">Mais recentes</option><option value="old">Mais antigos</option><option value="gross">Maior valor</option><option value="profit">Maior lucro</option><option value="margin">Menor margem</option></select></div><div id="op"></div></div></section>
