@@ -194,6 +194,61 @@
       "date": "2026-10-01",
       "source": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
       "evidence": "Esteira consolidada e protegida contra regressão silenciosa."
+    },
+    {
+      "id": "SRC-001",
+      "label": "Histórico de chat não substitui fonte canônica nem dado vivo",
+      "category": "Fontes",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
+      "status": "preserved",
+      "date": "2026-10-06",
+      "source": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+      "evidence": "Antes de agir, consultar CURRENT_STATE, registro de agentes, manual do domínio, checkpoints e dados vivos pertinentes."
+    },
+    {
+      "id": "DEV-001",
+      "label": "Estados de maturidade são distintos: registrado, candidato, testado, validado, homologado e oficial",
+      "category": "Desenvolvimento",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
+      "status": "preserved",
+      "date": "2026-10-06",
+      "source": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+      "evidence": "Nenhum estado implica automaticamente o seguinte; homologação/oficialização exigem gate."
+    },
+    {
+      "id": "DEV-002",
+      "label": "Interface relevante exige validação notebook + celular, rollback conhecido e registro de versão/checkpoint",
+      "category": "Desenvolvimento",
+      "class": "OBRIGATÓRIA",
+      "criticality": "P1",
+      "status": "preserved",
+      "date": "2026-10-06",
+      "source": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+      "evidence": "Homologação relevante deve preservar link oficial quando possível e registrar branch, commit, checkpoint e estado."
+    },
+    {
+      "id": "REUSE-001",
+      "label": "Antes de criar ou reescrever, localizar ativo existente e classificar REUTILIZAR / ADAPTAR / CRIAR NOVO",
+      "category": "Desenvolvimento",
+      "class": "OBRIGATÓRIA",
+      "criticality": "P1",
+      "status": "preserved",
+      "date": "2026-10-06",
+      "source": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+      "evidence": "CRIAR NOVO exige justificativa; preservar o que já foi validado."
+    },
+    {
+      "id": "ARCH-001",
+      "label": "Central é operação; Gestor do Projeto é governança, versões, checkpoints, infraestrutura e auditoria",
+      "category": "Arquitetura",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
+      "status": "preserved",
+      "date": "2026-10-06",
+      "source": "docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md",
+      "evidence": "Evita transformar a Central em depósito de engenharia e mantém alçadas claras."
     }
   ],
   "products": [
