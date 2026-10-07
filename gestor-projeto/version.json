@@ -24,7 +24,7 @@
   "canonical_changed": true,
   "update_policy": "same_url_governance_only",
   "rollback": "checkpoint/gestor-v1-2-4-canonical-governance-official-20261007",
-  "canonical_checkpoint": "CHECKPOINT_CANONICAL_GOVERNANCE_INDEX_V1_20261007",
+  "canonical_checkpoint": "CHECKPOINT_GESTOR_V1_2_5_COFRE_ZERO_SAFE_20261007",
   "owner_homologation": {
     "status": "OWNER_APPROVED_FOR_PUBLICATION",
     "source": "explicit_owner_instruction_in_voice_chat",
@@ -32,6 +32,7 @@
   },
   "promotion": {
     "pr": 42,
-    "state": "AUTHORIZED_FOR_MERGE"
+    "merge_sha": "e44d82810cd56d03247df9e7e1008ae3d61ce0c2",
+    "state": "MERGED_TO_MAIN"
   }
 }
