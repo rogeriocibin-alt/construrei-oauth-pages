@@ -24,9 +24,15 @@
 - Financeiro / Acertos com identidade visual corrigida.
 - Cora Manual → Trello com validação, pré-visualização e lançamento.
 - Texto de lançamento limpo, sem marcadores técnicos visíveis e com deduplicação.
-- Saldo Cora verificado destacado: R$ 32.965,74 em 07/10/2026.
+- Saldo Cora verificado destacado: R$ 30.232,51 em 07/10/2026.
 - Saldo projetado atualizado a cada lançamento confirmado, sem se apresentar como saldo bancário em tempo real.
 - Integração direta Cora preparada, aguardando credenciais válidas de produção.
 
 ## Rollback
 A candidata permanece preservada em `preview/`; a pasta congelada acima é a nova base oficial para evoluções futuras do Dashboard Financeiro V4.
+
+## Ajuste final de saldo base — 2026-10-07
+- Saldo Cora verificado corrigido para **R$ 30.232,51**.
+- Commit final do Dashboard Financeiro V4 homologado: `cfd6617e761e557d4e4037dd88307132f92d6c12`.
+- A Central oficial já aponta para o alias estável `production/dashboard-financeiro-v4/`.
+- Estado: **CONGELADO / OFICIAL / PRONTO PARA TESTE NA CENTRAL**.
