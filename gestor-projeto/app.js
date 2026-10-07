@@ -390,6 +390,29 @@ async function refreshLiveRepository(){
 }
 
 
+function canonicalIntegrity(d){
+  const rules=arr(d?.canonical_rules), sources=arr(d?.canonical_sources), conflicts=arr(d?.canonical_conflicts);
+  const issues=[];
+  const ids=new Map();
+  for(const r of rules){
+    ids.set(r.id,(ids.get(r.id)||0)+1);
+    for(const k of ['id','label','category','class','criticality','status','source']){
+      if(!r?.[k])issues.push({severity:'P0',code:'MISSING_FIELD',detail:`${r?.id||'SEM_ID'} sem ${k}`});
+    }
+  }
+  for(const [id,n] of ids)if(n>1)issues.push({severity:'P0',code:'DUPLICATE_RULE_ID',detail:`ID duplicado: ${id} (${n}x)`});
+  const sourceState=new Map(sources.map(x=>[x.path,x.status]));
+  for(const r of rules){
+    if(sourceState.get(r.source)==='revoked')issues.push({severity:'P0',code:'ACTIVE_RULE_REVOKED_SOURCE',detail:`${r.id} aponta para fonte revogada: ${r.source}`});
+  }
+  const seenSource=new Map();
+  for(const x of sources){seenSource.set(x.path,(seenSource.get(x.path)||0)+1);}
+  for(const [path,n] of seenSource)if(n>1)issues.push({severity:'P1',code:'DUPLICATE_SOURCE',detail:`Fonte duplicada: ${path} (${n}x)`});
+  const unresolved=conflicts.filter(x=>!['resolved','guarded'].includes(x.status));
+  unresolved.forEach(x=>issues.push({severity:x.severity||'P1',code:'UNRESOLVED_CONFLICT',detail:`${x.id}: ${x.title}`}));
+  return {ok:issues.length===0,issues,rule_count:rules.length,source_count:sources.length,conflict_count:conflicts.length};
+}
+
 function renderCanonical(){
   const d=state.data;
   const gov=d.canonical_governance||{};
@@ -406,6 +429,7 @@ function renderCanonical(){
   const fundamental=rules.filter(r=>r.class==='FUNDAMENTAL').length;
   const revoked=sources.filter(x=>x.status==='revoked').length;
   const unresolved=conflicts.filter(x=>!['resolved','guarded'].includes(x.status)).length;
+  const integrity=canonicalIntegrity(d);
   $('#view-canonical').innerHTML=`
     <div class="page-intro"><div><h2>Regras Canônicas</h2><p>Índice Mestre de governança: o que vale, por que vale, qual fonte sustenta e o que foi revogado. Esta é a consulta obrigatória antes de mudança técnica relevante.</p></div></div>
     <section class="metrics">
@@ -414,6 +438,13 @@ function renderCanonical(){
       ${metric('P0',p0,'Não podem ser ignoradas','!')}
       ${metric('Fontes revogadas',revoked,'Histórico apenas','×')}
       ${metric('Conflitos não resolvidos',unresolved,'Dubiedade explícita, nunca silenciosa','⇄')}
+      ${metric('Integridade do índice',integrity.ok?'PASS':'ALERTA',integrity.ok?'IDs/fontes/conflitos coerentes':(integrity.issues.length+' problema(s) estrutural(is)'),'◎',integrity.ok?'':'metric-alert')}
+    </section>
+    <section class="card" style="margin-bottom:16px">
+      <div class="card-head"><div><h3>Autochecagem do Índice Mestre</h3><p>O próprio Gestor verifica IDs duplicados, campos obrigatórios, fontes revogadas e conflitos não resolvidos.</p></div><span class="badge ${integrity.ok?'completed':'blocked'}">${integrity.ok?'PASS':'ALERTA'}</span></div>
+      <div class="card-pad">
+        ${integrity.ok?'<div class="notice"><b>Integridade estrutural OK.</b> Nenhuma regra ativa aponta para fonte revogada, não há IDs duplicados e não há conflitos abertos.</div>':integrity.issues.map(x=>`<div class="rule-row"><span class="rule-state partial">!</span><div><b>${esc(x.code)}</b><small>${esc(x.detail)}</small></div><span class="badge ${x.severity==='P0'?'blocked':'attention'}">${esc(x.severity)}</span></div>`).join('')}
+      </div>
     </section>
     <section class="card" style="margin-bottom:16px">
       <div class="card-head"><div><h3>Precedência e antirregressão</h3><p>Quando houver conflito, a ordem abaixo decide. Revogação explícita sempre bloqueia reativação acidental.</p></div><span class="badge canonical">${esc(gov.version||'Índice Mestre')}</span></div>
