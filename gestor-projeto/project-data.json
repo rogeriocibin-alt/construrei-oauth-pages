@@ -25,7 +25,8 @@
     "current_baseline": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
     "baseline_freeze_checkpoint": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
     "baseline_freeze_branch": "checkpoint/current-official-logos-recovered-20261006",
-    "updated_at": "2026-10-07"
+    "updated_at": "2026-10-07",
+    "canonical_governance_index": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -41,58 +42,158 @@
   ],
   "canonical_rules": [
     {
-      "id": "r1",
-      "label": "Central oficial preservada durante candidatas executivas",
+      "id": "GOV-001",
+      "label": "Gestor do Projeto é a fonte única de governança e radar mestre de pendências",
+      "category": "Governança",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
       "status": "preserved",
-      "evidence": "Checkpoint V8 registra explicitamente: Central oficial não alterada."
+      "date": "2026-10-07",
+      "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+      "evidence": "Pendências, governança, versões, decisões e checkpoints têm um registro mestre; superfícies operacionais apenas projetam recortes."
     },
     {
-      "id": "r2",
-      "label": "APP oficial evolui somente por candidata isolada",
+      "id": "GOV-002",
+      "label": "Máximo de duas frentes em execução simultaneamente",
+      "category": "Governança",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
       "status": "preserved",
-      "evidence": "FINAL_CHECKPOINT_APP_CONSTRUREI_20261001 define uma única baseline oficial e evolução isolada."
+      "date": "2026-10-06",
+      "source": "gestor-projeto/project-data.json",
+      "evidence": "Ideia não é frente ativa; fila não disputa capacidade com execução."
     },
     {
-      "id": "r3",
-      "label": "F00→F09 possui namespace canônico único",
+      "id": "GOV-003",
+      "label": "Candidata não é canônica; evolução parte de baseline/checkpoint seguro",
+      "category": "Desenvolvimento",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
       "status": "preserved",
-      "evidence": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001."
+      "date": "2026-10-07",
+      "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+      "evidence": "Toda evolução ocorre em candidata isolada e só substitui oficial após validação e promoção explícita."
     },
     {
-      "id": "r4",
-      "label": "Apresentação Viva preserva PDF, PowerPoint, dados vivos e Radar",
+      "id": "GOV-004",
+      "label": "Antirregressão: não alterar fora do escopo nem promover versão antiga inteira para recuperar uma parte",
+      "category": "Desenvolvimento",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
       "status": "preserved",
-      "evidence": "CHECKPOINT_PRESENTATION_EXECUTIVE_VIVA_CANONICAL_20261002."
+      "date": "2026-10-07",
+      "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+      "evidence": "Lógica, roteamento, identidade, dados e integrações homologadas permanecem preservados fora do escopo."
     },
     {
-      "id": "r5",
-      "label": "Versões executivas V9/V10/V11 permanecem candidatas até homologação explícita",
+      "id": "GOV-005",
+      "label": "Entrega exige objetivo cumprido, teste, versão/checkpoint e decisão registrada",
+      "category": "Entrega",
+      "class": "OBRIGATÓRIA",
+      "criticality": "P0",
       "status": "preserved",
-      "evidence": "Branches/checkpoints e loaders publicados como candidate/preview."
+      "date": "2026-10-03",
+      "source": "gestor-projeto/project-data.json",
+      "evidence": "Implementação sem evidência não equivale a conclusão/homologação."
     },
     {
-      "id": "r6",
-      "label": "No máximo duas frentes ativas",
+      "id": "CONT-001",
+      "label": "Checkpoint de continuidade aproximadamente a cada 10 minutos e antes de pausas/troca de dispositivo quando possível",
+      "category": "Continuidade",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
       "status": "preserved",
-      "evidence": "Regra de governança adotada pelo Gestor V1; nesta carga há uma frente ativa."
+      "date": "2026-10-07",
+      "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+      "evidence": "Registrar estado atual, decisões, última ação, próxima ação, bloqueios e branch/commit/checkpoint quando houver código."
     },
     {
-      "id": "r7",
-      "label": "Banco Mestre persistente do Gestor já conectado",
-      "status": "partial",
-      "evidence": "Modelo persistente V1.1 criado em cr_internal; PWA ainda usa snapshot versionado como fallback até API autenticada do owner. Não declarar conexão completa antes do teste."
+      "id": "CONT-002",
+      "label": "Continuidade do projeto não deve depender de um dispositivo específico",
+      "category": "Continuidade",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
+      "status": "preserved",
+      "date": "2026-10-07",
+      "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+      "evidence": "Dependências locais devem ser reduzidas, explicitadas e ter alternativa/recuperação quando tecnicamente possível."
     },
     {
-      "id": "r8",
-      "label": "Gestor do Projeto é o radar mestre de todas as pendências; APP / WIZY / Éder recebem somente projeções de pendências do APP",
+      "id": "PEND-001",
+      "label": "Toda pendência nasce no Gestor; APP/WIZY/Éder são apenas projeções do escopo APP",
+      "category": "Pendências",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
       "status": "preserved",
-      "evidence": "Regra canônica definida por Rogério em 07/10/2026. Toda pendência entra no Gestor do Projeto. Listas APP/WIZY/Éder são recortes operacionais exclusivos do escopo APP; itens não-APP não podem ser lançados nelas."
+      "date": "2026-10-07",
+      "source": "gestor-projeto/project-data.json",
+      "evidence": "Itens não-APP não podem ser lançados nas listas APP/WIZY/Éder."
     },
     {
-      "id": "r9",
-      "label": "Auditorias históricas grandes viram baselines reutilizáveis; consultar baseline primeiro e auditar somente delta/exceções",
+      "id": "AUD-001",
+      "label": "Auditorias históricas grandes viram baseline; consultar baseline e auditar delta/exceções",
+      "category": "Auditoria",
+      "class": "FUNDAMENTAL",
+      "criticality": "P1",
       "status": "preserved",
-      "evidence": "Regra canônica definida por Rogério em 07/10/2026. Implementada com cr_internal.audit_baselines_v1 + RPC cr_audit_baseline_lookup_v1 + endpoint autenticado audit-lookup do Gestor. Auditoria FULL Trello 26/09/2026 registrada como AUDIT-TRELLO-FULL-20260926."
+      "date": "2026-10-07",
+      "source": "gestor-projeto/project-data.json",
+      "evidence": "Evita repetição de varreduras integrais e preserva evidência reutilizável."
+    },
+    {
+      "id": "AGT-001",
+      "label": "BIO orquestra; CR Assertivo executa técnica; especialistas executam sua alçada",
+      "category": "Agentes",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
+      "status": "preserved",
+      "date": "2026-10-06",
+      "source": "docs/AGENTS_REGISTRY.md",
+      "evidence": "Um agente não assume a especialidade de outro; titularidade e escalonamento seguem o Registro Canônico de Agentes."
+    },
+    {
+      "id": "FIN-001",
+      "label": "Financeiro REI é o agente titular para assuntos financeiros",
+      "category": "Financeiro",
+      "class": "DOMÍNIO",
+      "criticality": "P0",
+      "status": "preserved",
+      "date": "2026-10-06",
+      "source": "docs/AGENTS_REGISTRY.md",
+      "evidence": "BIO classifica/roteia; CR Assertivo só atua tecnicamente após handoff e não define regra financeira."
+    },
+    {
+      "id": "ID-001",
+      "label": "Pessoa real = retrato + nome + função; agente digital mantém avatar próprio",
+      "category": "Identidade",
+      "class": "DOMÍNIO",
+      "criticality": "P1",
+      "status": "preserved",
+      "date": "2026-10-06",
+      "source": "docs/HUMAN_IDENTITY_CANON_V1_20261006.md",
+      "evidence": "Fonte humana canônica centralizada; não duplicar retratos por produto."
+    },
+    {
+      "id": "ID-002",
+      "label": "Documento ou ativo marcado RETIRADO / NÃO UTILIZAR não pode ser reativado",
+      "category": "Identidade",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
+      "status": "preserved",
+      "date": "2026-10-07",
+      "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+      "evidence": "Revogação explícita prevalece sobre fechamento antigo de homologação no mesmo documento."
+    },
+    {
+      "id": "FLOW-001",
+      "label": "F00→F09 mantém namespace canônico único e evolução sem alterar lógica/roteamento homologado",
+      "category": "APP / F00–F09",
+      "class": "DOMÍNIO",
+      "criticality": "P1",
+      "status": "preserved",
+      "date": "2026-10-01",
+      "source": "CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001",
+      "evidence": "Esteira consolidada e protegida contra regressão silenciosa."
     }
   ],
   "products": [
@@ -3259,5 +3360,83 @@
       "AUDIT-TRELLO-FULL-20260926"
     ],
     "updated_at": "2026-10-07"
-  }
+  },
+  "canonical_governance": {
+    "version": "CANONICAL-RULES-MASTER-V1",
+    "status": "candidate_governance",
+    "updated_at": "2026-10-07",
+    "owner": "Rogério / Diretoria Master",
+    "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+    "purpose": "Fonte única de consulta para regras, guardrails, parâmetros fundamentais, precedência e documentos canônicos.",
+    "precedence": [
+      "Decisão explícita mais recente de Rogério / Diretoria Master, quando registrada.",
+      "Regra canônica vigente e não revogada no Índice Mestre.",
+      "Checkpoint/release homologado mais recente do produto afetado.",
+      "Manual canônico específico do domínio/agente.",
+      "Preferência operacional ainda não elevada a regra canônica.",
+      "Histórico, candidata antiga, documento retirado ou substituído nunca prevalece."
+    ],
+    "revocation_rule": "RETIRADO / NÃO UTILIZAR / SUBSTITUÍDO prevalece sobre texto antigo do mesmo documento que diga oficial ou homologado.",
+    "classes": [
+      "FUNDAMENTAL",
+      "OBRIGATÓRIA",
+      "DOMÍNIO",
+      "PREFERÊNCIA",
+      "REVOGADA/HISTÓRICA"
+    ],
+    "checkpoint_protocol": "Aproximadamente a cada 10 minutos de conversa ativa e antes de pausa/troca de dispositivo quando possível: estado, decisões, última ação, próxima ação, bloqueios e refs técnicas.",
+    "development_gate": [
+      "Identificar produto/domínio.",
+      "Consultar regras fundamentais e do domínio.",
+      "Identificar baseline/checkpoint atual.",
+      "Bloquear referência revogada.",
+      "Executar em candidata isolada.",
+      "Registrar checkpoint da sessão.",
+      "Promover somente após validação aplicável."
+    ]
+  },
+  "canonical_sources": [
+    {
+      "domain": "Estado geral",
+      "path": "docs/CONSTRUREI_CURRENT_STATE.md",
+      "status": "vigente",
+      "note": "Referência viva de continuidade."
+    },
+    {
+      "domain": "Agentes",
+      "path": "docs/AGENTS_REGISTRY.md",
+      "status": "vigente",
+      "note": "Titularidade, alçadas e onboarding."
+    },
+    {
+      "domain": "Identidade humana",
+      "path": "docs/HUMAN_IDENTITY_CANON_V1_20261006.md",
+      "status": "vigente",
+      "note": "Pessoas, avatares e superfícies."
+    },
+    {
+      "domain": "Identidade visual V1",
+      "path": "docs/CHECKPOINT_BRAND_CANONICAL_V1_20261006.md",
+      "status": "revoked",
+      "note": "RETIRADO / NÃO UTILIZAR; histórico apenas."
+    },
+    {
+      "domain": "GestãoClick PM26",
+      "path": "docs/CHECKPOINT_PM26_GESTAOCLICK_MARCO_ZERO_20261007.md",
+      "status": "domain",
+      "note": "Checkpoint do saneamento/financeiro conforme estado próprio."
+    },
+    {
+      "domain": "Agenda",
+      "path": "docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md",
+      "status": "domain",
+      "note": "Padrões de texto da Agenda."
+    },
+    {
+      "domain": "Input inteligente",
+      "path": "docs/INTELLIGENT_INPUT_PATTERN_V1_20261005.md",
+      "status": "domain",
+      "note": "Padrão operacional de entrada inteligente."
+    }
+  ]
 }
