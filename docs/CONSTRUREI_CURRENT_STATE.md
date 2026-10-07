@@ -1312,6 +1312,9 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Checkpoint: `CHECKPOINT_DASHBOARD_FINANCEIRO_V4_HOMOLOGADO_20261007.md`
 - Link oficial: https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v4/
 - Link congelado: https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v4-homologado-20261007/
-- Escopo: identidade visual aprovada; filtros Operação e Obras; Financeiro/Acertos; Cora Manual → Trello; limpeza/deduplicação de texto; saldo Cora verificado + saldo projetado.
+- Escopo: identidade visual aprovada; filtros Operação e Obras; Financeiro/Acertos; Cora Manual → Trello; limpeza/deduplicação de texto; saldo Cora verificado de R$ 30.232,51 + saldo projetado.
 - Dependência remanescente: leitura automática de saldo/extrato do Cora aguarda credenciais válidas de produção. Até lá, o saldo projetado permanece claramente separado do saldo bancário real.
 - Regra: futuras evoluções do Dashboard Financeiro V4 devem partir da pasta congelada de produção acima, preservando esta versão para rollback.
+
+- Ajuste final do saldo base Cora: **R$ 30.232,51** • commit `cfd6617e761e557d4e4037dd88307132f92d6c12`.
+- Central oficial já aponta para o alias estável do Dashboard Financeiro V4.
