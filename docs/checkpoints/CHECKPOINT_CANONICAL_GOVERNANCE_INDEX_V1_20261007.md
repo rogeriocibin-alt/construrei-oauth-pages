@@ -9,12 +9,14 @@ Candidata de governança criada para consolidar regras, precedência, revogaçõ
 ## Ações concluídas
 - Criado `docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md`.
 - Consolidada regra de precedência e regra de revogação.
-- Registradas 19 regras canônicas estruturadas no `gestor-projeto/project-data.json`.
+- Registradas 25 regras canônicas estruturadas no `gestor-projeto/project-data.json`.
 - Incluída regra de checkpoint de continuidade aproximadamente a cada 10 minutos de conversa ativa e antes de pausas/troca de dispositivo quando possível.
 - Incluída regra de independência de dispositivo.
 - Incluídas regras de fonte única de pendências, baseline+delta de auditoria, alçadas de agentes, Financeiro REI e identidade/antirregressão.
 - Tela `Regras Canônicas` do Gestor ganhou resumo, filtros, precedência, fontes vigentes/revogadas e gate antes de desenvolver.
 - Busca global passou a localizar regras e fontes canônicas.
+- Conflitos e dubiedades passaram a ser objetos explícitos no Gestor, com fonte, regra, severidade e resolução.
+- Foram indexadas 14 fontes canônicas/de domínio.
 - Metadados visuais do Gestor foram alinhados à versão oficial V1.2.3 já declarada em `version.json`, removendo a divergência V1.2.2 × V1.2.3 da candidata.
 - Navegação `Cadeia Canônica` renomeada para `Regras Canônicas`.
 
@@ -27,7 +29,7 @@ Candidata de governança criada para consolidar regras, precedência, revogaçõ
 ## Validação técnica
 - Sintaxe de `gestor-projeto/app.js`: PASS.
 - Parse JSON de `gestor-projeto/project-data.json`: PASS.
-- 19 regras estruturadas carregáveis.
+- 25 regras estruturadas carregáveis.
 - Diff contra `main`: somente arquivos de governança/interface/documentação do Gestor; Central/APP/F00–F09 permanecem intocados.
 - Produtos operacionais Central/APP/F00–F09: não alterados.
 
@@ -57,3 +59,10 @@ Nenhum bloqueio técnico conhecido nesta etapa. Falta validação visual/funcion
 - `e4a6d98de17fcebd572feea480efce25f7522aa5` — busca global inclui regras/fontes.
 - `4ba01d6d411c885cb33a79c18719caa2df016849` — dica de busca atualizada.
 - PR: **#39** — `Gestor: Índice Mestre de Regras Canônicas V1` — draft.
+
+
+## Continuação — saneamento de conflitos
+- `5d39f98f08c841e378c56fcc126bc666a9f8b6c1` — 25 regras + registro de conflitos.
+- `62bad07bd457482217175d3c33c9d3dd0a212ed6` — fontes de continuidade/Central/links indexadas.
+- `4ba31be4d6cb2310c6bc8079e58da249a0c23d16` — painel de conflitos/dubiedades na tela Regras Canônicas.
+- `dd76eff3f399358857e1dfffc09adf8ffd61a14c` — política de conflitos e guardrails documentais ampliados.
