@@ -1343,3 +1343,25 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Cron de 15 minutos permanece apenas como redundância.
 - WIZY e Éder permanecem manuais quando dependem de execução ou validação humana.
 - Checkpoint: `CHECKPOINT_CONSTRUREI_20261007_1730_AUTO_PENDENCIAS.md`.
+
+
+## Encerramento oficial — Financeiro V4 — 07/10/2026
+
+- Status: **HOMOLOGADO / OFICIAL / CONGELADO**
+- Validação humana: Rogério aprovou o fluxo final em teste real com a obra **775-26**.
+- Dashboard oficial: `production/dashboard-financeiro-v4-homologado-20261007/`
+- Alias oficial preservado: `production/dashboard-financeiro-v4/`
+- Central oficial aponta para o alias estável do Dashboard Financeiro.
+- Saldo Cora verificado/base no encerramento: **R$ 30.272,41**.
+- Saldo projetado reiniciado na mesma base e alterado somente pelos próximos lançamentos manuais.
+- Fluxo homologado:
+  1. Validar / Pré-visualizar.
+  2. Lançar no Trello.
+  3. Fechar obra.
+- Fechar obra reutiliza a lógica canônica do Acerto Vivo: base, custos, lucro, margem e rateios **20/28/28/14/10**.
+- O fechamento escreve o bloco financeiro no próprio card e **não move, arquiva ou altera a lista/status**.
+- Fechamento permitido em cards operacionais abertos: Em andamento, Retorno, Aguardando Pagamento, Pagamento Atrasado e Aguardando Acerto.
+- Formatação com emojis/modelo visual padronizado fica como evolução futura; não bloqueia a homologação atual.
+- Cora API automática continua pendência externa separada por credenciais de produção.
+- Sincronização pós-homologação executada conforme regra PEND-003: 60 commits verificados, 5 evidências adicionadas e registros Central/System/GC/Visual atualizados.
+- Checkpoint: `CHECKPOINT_FINANCEIRO_V4_OFICIAL_FINAL_20261007.md`.
