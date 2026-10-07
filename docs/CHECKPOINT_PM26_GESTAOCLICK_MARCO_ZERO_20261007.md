@@ -245,3 +245,63 @@ A evidência ao vivo demonstra que as contas internas do Gestão Click não est�
 5. **valores brutos de vendas**, enquanto o banco recebe valor líquido após taxas/comissões.
 
 Conclusão operacional: **não corrigir o saldo editando um número global e não excluir vendas em massa**. O saneamento deve atuar na situação, vinculação, conta, baixa e parcelamento dos títulos, preservando a venda/orçamento legítimo.
+
+
+## Refinamento do lote — 647-26, 579-26 e 691-26
+
+### 647-26 — regra confirmada
+Trello canônico:
+- Valor fechado: **R$ 530,00**
+- 2 parcelas de **R$ 265,00**
+- 1ª parcela: **paga em 06/10/2026**
+- 2ª parcela: **pendente**
+- Cliente/origem: Galvão
+
+Gestão Click ao vivo:
+- foram encontrados dois recebimentos de R$ 265,00 vinculados à venda 64726;
+- um com vencimento **08/10/2027**;
+- outro com vencimento **08/11/2027**;
+- ambos lançados na **Conta Banco CORA**;
+- ambos exibidos como **Não conciliado**;
+- a parcela já recebida integra o lote Galvão de 06/10/2026.
+
+Correção mínima proposta:
+- **não excluir a venda 64726**;
+- corrigir o ano dos vencimentos de 2027 para **2026**;
+- manter os dias de vencimento originais do Click (08/10 e 08/11) para não inventar condição comercial;
+- registrar a 1ª parcela como recebida, com liquidação bancária real em **06/10/2026**;
+- manter a 2ª parcela em aberto para novembro/2026;
+- remover o efeito da parcela já liquidada sobre o saldo bancário artificial.
+
+### 579-26
+Trello:
+- Valor fechado: **R$ 1.850,00**
+- pagamento em 2 repasses;
+- líquido por parcela: **R$ 832,50**
+- 1ª parcela: 26/09 — R$ 832,50 — OK
+- 2ª parcela: 26/10 — R$ 832,50 — pendente
+- comissão JBA total: R$ 185,00
+
+Gestão Click:
+- título visível na Conta Banco CORA: **R$ 925,00**, vencimento 25/10/2026, Não conciliado.
+
+Diagnóstico:
+- R$ 925,00 é a metade **bruta** de R$ 1.850,00;
+- o fluxo bancário esperado por parcela é **R$ 832,50 líquido**, após 10% JBA;
+- classificar como **TÍTULO COMERCIAL BRUTO / NÃO USAR COMO SALDO BANCÁRIO LÍQUIDO**;
+- 2ª parcela segue em aberto;
+- diferença de data 25/10 Click × 26/10 Trello deve ser revisada antes de qualquer alteração.
+
+### 691-26
+Trello:
+- Valor fechado: **R$ 220,00**
+- Valor recebido: **R$ 220,00**
+- origem: J8
+
+Gestão Click:
+- título visível na Conta Integrada: **R$ 220,00**, Não conciliado.
+
+Classificação atual:
+- **RECEBIDO OPERACIONALMENTE** segundo Trello;
+- **CONCILIAÇÃO BANCÁRIA AINDA NÃO COMPROVADA** nesta leitura;
+- não marcar como conciliado no Click até localizar o crédito correspondente no extrato ou outra evidência bancária.
