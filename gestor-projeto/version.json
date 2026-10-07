@@ -2,8 +2,8 @@
   "app": "Gestor do Projeto CONSTRU-REI",
   "version": "1.2.5",
   "build": "CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007",
-  "environment": "candidate",
-  "release_status": "candidate_validated_for_promotion",
+  "environment": "canonical",
+  "release_status": "official_homologated",
   "base_official": "CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007",
   "checkpoint_before": "CHECKPOINT_PROJECT_FRONTS_PRIORITY_20261006",
   "changes": [
@@ -19,20 +19,19 @@
     "restore_drill": "PASS_20261005",
     "owner_publication_authorization": "APPROVED_20261007"
   },
-  "released_at": null,
-  "branch": "cr-gestor-v1-2-5-cofre-zero-safe-20261007",
-  "canonical_changed": false,
+  "released_at": "2026-10-07",
+  "branch": "main",
+  "canonical_changed": true,
   "update_policy": "same_url_governance_only",
   "rollback": "checkpoint/gestor-v1-2-4-canonical-governance-official-20261007",
   "canonical_checkpoint": "CHECKPOINT_CANONICAL_GOVERNANCE_INDEX_V1_20261007",
   "owner_homologation": {
-    "status": "OWNER_APPROVED_FOR_DIRECT_HOMOLOGATION",
-    "source": "explicit_owner_instruction_in_chat",
-    "note": "Rogério autorizou publicar, atualizar o Gestor e homologar; conteúdo é técnico e deve respeitar identidade de cor e filtros."
+    "status": "OWNER_APPROVED_FOR_PUBLICATION",
+    "source": "explicit_owner_instruction_in_voice_chat",
+    "note": "Rogério autorizou publicação direta em 07/10/2026 após validação de segurança."
   },
   "promotion": {
-    "pr": 39,
-    "merge_sha": "0a16594d6a2e4fc4da3847a8c769591bc72fbf24",
-    "state": "MERGED_TO_MAIN"
+    "pr": 42,
+    "state": "AUTHORIZED_FOR_MERGE"
   }
 }
