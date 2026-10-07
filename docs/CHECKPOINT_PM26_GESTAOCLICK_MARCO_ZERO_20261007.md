@@ -56,9 +56,26 @@ Um título de venda pode ser legítimo sem equivaler ao valor líquido creditado
 - Relação: **R$ 5.329,56 - R$ 469,00 = R$ 4.860,56**
 - Classificação: **MANTER título comercial + REMAPEAR da lógica de saldo bancário**.
 
+### Match 727-26
+- Trello: valor fechado/recebido **R$ 1.902,40**.
+- Taxa de link: **R$ 133,35**.
+- Cora real em 06/10: crédito Boom Negócios **R$ 1.769,05**.
+- Relação: **R$ 1.902,40 - R$ 133,35 = R$ 1.769,05**.
+- Classificação: **MANTER bruto comercial + conciliar líquido bancário e taxa separadamente**.
+
 ### Match 547-26
-- Trello: recebido **R$ 1.813,70**
-- Cora real: crédito **R$ 1.813,70**
+- Trello: recebido **R$ 1.813,70**.
+- Cora real: crédito **R$ 1.813,70**.
+- Classificação: **MATCH FORTE / MANTER e conciliar**.
+
+### Match 717-26
+- Trello: recebido **R$ 3.827,70**.
+- Cora real em 29/09: **R$ 3.827,70**.
+- Classificação: **MATCH FORTE / MANTER e conciliar**.
+
+### Match 586-26
+- Trello: recebido **R$ 17.000,00**.
+- Cora real em 28/09: **R$ 17.000,00**.
 - Classificação: **MATCH FORTE / MANTER e conciliar**.
 
 ## Conciliação ampliada — 07/10/2026
@@ -91,6 +108,44 @@ Um título de venda pode ser legítimo sem equivaler ao valor líquido creditado
 - Bridge canônico legado: pendente **R$ 3.216,97**, status **PARCIAL**.
 - Classificação: **AJUSTAR parcela futura + AJUSTAR saldo pendente do bridge**. Não apagar a venda.
 
+### Lote Galvão — PIX R$ 2.783,43 em 06/10
+- Crédito Cora: **CLASSIC GESTAO ADMINISTRATIVA LTDA — R$ 2.783,43**.
+- Caso-escola financeiro já documentado e validado:
+  - 645-26: R$ 1.040,00 com desconto específico de 5% = **R$ 988,00**
+  - 649-26: **R$ 970,00**
+  - parcela 650-26: **R$ 400,00**
+  - parcela 647-26: **R$ 265,00**
+  - 653-26: **R$ 469,70**
+- Base do lote: **R$ 3.092,70**
+- Comissão Galvão 10%: **R$ 309,27**
+- Líquido: **R$ 2.783,43**
+- Diferença para o PIX real: **R$ 0,00**
+- Classificação: **RECEBIMENTO AGRUPADO CONFIRMADO**. Regra: um PIX pode liquidar várias obras/parcelas; não forçar relação 1 PIX = 1 card.
+
+### Transferência Éder — R$ 159,86 em 03/10
+- Cora: saída **-R$ 159,86** para CASUAL SEMI JOIAS LTDA às 20:01:04.
+- Cora: entrada **+R$ 159,86** de EDER CIBIN às 20:02:58.
+- Mesma data, mesmo valor e diferença inferior a 2 minutos.
+- Classificação: **RESTITUIÇÃO/REEMBOLSO — NÃO É RECEITA DE OBRA**.
+
+### Créditos ainda sem correspondência comprovada
+- **29/09 — LUIZ CARLOS CAZARIN DE SOUZA — +R$ 800,00**: existem várias obras de R$ 800,00; 725-26 é candidata operacional, mas não há prova suficiente de pagador/vínculo. **SEM CORRESPONDÊNCIA por enquanto.**
+- **01/10 — JBA LOCACAO DE IMOVEIS LTDA — +R$ 87,06**: não há card/título comprovado para esse valor. **SEM CORRESPONDÊNCIA por enquanto.**
+- Esses movimentos não serão atribuídos por aproximação.
+
+## Anomalia estrutural adicional — 647-26
+
+Foi identificado no Gestão Click:
+- título da venda **64726**, centro de custo **647-26**, valor **R$ 265,00**;
+- competência **04/09/2026**;
+- conta bancária interna **Conta Banco CORA**;
+- situação **Em aberto / Não conciliado**;
+- vencimento de uma ocorrência em **08/11/2027**;
+- outra ocorrência visível em **08/10/2027**, também R$ 265,00;
+- a parcela de R$ 265,00 já integra o lote Galvão recebido em 06/10/2026.
+
+Classificação: **P0 DE SANEAMENTO — PARCELAS FUTURAS/REPETIDAS POTENCIALMENTE INFLANDO O SALDO INTERNO**. Antes de excluir ou baixar, levantar todas as ocorrências vinculadas à venda 64726 e demais vendas com padrão semelhante.
+
 ## Estado da camada canônica
 
 Leitura das tabelas V5:
@@ -111,7 +166,8 @@ Cada lançamento será classificado antes de alteração:
 - **MANTER** — título legítimo e corretamente associado à obra.
 - **AJUSTAR** — título legítimo com data, conta, valor, situação ou vínculo incorreto.
 - **REMOVER DO SALDO BANCÁRIO / REMAPEAR** — título comercial válido, mas lançado de forma que contamina o saldo de conta bancária.
-- **DUPLICADO** — registro redundante.
+- **DUPLICADO / FUTURO INDEVIDO** — registro redundante ou parcela criada fora da operação real.
+- **NÃO RECEITA** — reembolso, restituição ou transferência interna sem natureza de recebimento de obra.
 - **SEM CORRESPONDÊNCIA** — exige conferência antes de qualquer ação.
 
 ## Separação obrigatória de frentes dentro da PM-26
@@ -130,8 +186,8 @@ Cada lançamento será classificado antes de alteração:
 
 ## Próxima etapa
 
-- Identificar e classificar os demais créditos recentes da Cora.
-- Localizar títulos do Gestão Click que ainda aparecem em conta incorreta.
-- Fechar matriz **MANTER / AJUSTAR / REMAPEAR / DUPLICADO / SEM CORRESPONDÊNCIA**.
+- Auditar todas as parcelas futuras/repetidas que alimentam as contas internas, começando pela 647-26.
+- Fechar os dois créditos sem correspondência (R$ 800,00 e R$ 87,06) somente com evidência.
+- Montar lote de correção **SEM EXCLUSÃO DE VENDA**, separando títulos comerciais legítimos de saldo bancário.
 - Executar limpeza somente após checkpoint pré-saneamento e plano de rollback.
 - Depois estabelecer o **Marco Zero definitivo** e habilitar a construção da sincronização futura.
