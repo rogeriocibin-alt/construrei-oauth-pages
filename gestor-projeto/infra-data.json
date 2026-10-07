@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-03",
+  "generated_at": "2026-10-07T17:30:00-03:00",
   "title": "Infraestrutura do Projeto CONSTRU-REI",
   "policy": {
     "owner_view": "Gestor do Projeto",
@@ -19,7 +19,8 @@
     "github_repositories": 2,
     "supabase_projects": 2,
     "supabase_edge_functions": 330,
-    "supabase_public_tables": 157
+    "supabase_public_tables": 157,
+    "updated_at": "2026-10-07T17:30:00-03:00"
   },
   "topology": [
     {
@@ -66,17 +67,17 @@
       "layer": "Backup base / recuperação",
       "platform": "Notebook Rogerio-2022",
       "asset": "Cofre Zero",
-      "role": "Baseline local restore-proven",
-      "status": "attention",
-      "freshness": "device_live"
+      "role": "Baseline de recuperação comprovada / rollback",
+      "status": "live",
+      "freshness": "restore_drill_2026-10-05"
     },
     {
       "layer": "Backup remoto",
-      "platform": "Google Drive via rclone",
-      "asset": "CONSTRUREI-BACKUP-AUTO",
-      "role": "CURRENT/HISTORY de backup",
-      "status": "attention",
-      "freshness": "log_2026-10-03"
+      "platform": "Google Cloud Run + Cloud Scheduler + Google Drive",
+      "asset": "construrei-backup / construrei-backup-diario",
+      "role": "Backup recorrente oficial independente do notebook",
+      "status": "live",
+      "freshness": "execucao_2026-10-07_PASS"
     },
     {
       "layer": "Storage operacional",
@@ -408,9 +409,9 @@
   ],
   "backups": {
     "cofre_zero": {
-      "status": "restore_proven",
-      "validation_date": "2026-09-26",
-      "local_baseline": "Cofre Zero presente",
+      "status": "restore_proven_preserved",
+      "validation_date": "2026-10-05",
+      "local_baseline": "Baseline de recuperação preservada; backup oficial corrente migrou para nuvem",
       "contents": [
         "dump de banco",
         "Edge Functions congeladas",
@@ -418,33 +419,32 @@
         "restore runbook",
         "checksums"
       ],
-      "note": "Cofre Zero é baseline de recuperação comprovada, não espelho vivo. Deve permanecer preservado e imutável salvo nova validação formal.",
+      "note": "Cofre Zero permanece como baseline de recuperação comprovada. O backup recorrente oficial roda em Google Cloud Run + Cloud Scheduler e não depende do notebook.",
       "edge_function_snapshot_count": 254,
       "current_live_edge_functions": 330
     },
     "daily": {
-      "schedule": "03:00 diariamente (registro de instalação)",
-      "installed_at": "2026-09-26 07:37:10",
-      "state": "critical",
-      "last_attempt": "2026-10-03 03:00:04",
-      "last_result": "FALHA",
-      "failed_consecutive_dates": [
-        "2026-10-01",
-        "2026-10-02",
-        "2026-10-03"
-      ],
-      "root_cause": "Supabase CLI db dump exige Docker; Docker Desktop Linux Engine não estava disponível.",
+      "schedule": "03:00 diariamente • America/Sao_Paulo",
+      "installed_at": "2026-10-05 • migração cloud oficial",
+      "state": "healthy",
+      "last_attempt": "2026-10-07 03:00:01 -03:00",
+      "last_result": "SUCESSO",
+      "cloud_job": "construrei-backup",
+      "cloud_scheduler": "construrei-backup-diario",
+      "verification": "Scheduler ENABLED; execuções 06/10 e 07/10 Completed=True",
+      "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
-        "Google Drive remote alcançado",
-        "Supabase Storage/S3 remote alcançado"
+        "Google Drive CURRENT/HISTORY",
+        "Supabase Storage",
+        "Banco PostgreSQL"
       ],
-      "action": "Redesenhar o dump para execução independente do notebook/Docker ou garantir engine disponível no agendamento; depois provar restauração."
+      "action": "Monitorar falhas reais e manter restore drill periódico."
     },
     "edge_weekly": {
-      "schedule": "Domingo 04:30 (registro de instalação)",
-      "state": "attention",
-      "evidence": "Script instalado, mas não foi encontrado LAST_SUCCESS_EDGE/LAST_ERROR_EDGE nem log edge-* no diretório auditado.",
-      "action": "Executar/validar uma corrida controlada e registrar sucesso/erro sem alterar o Cofre Zero."
+      "schedule": "Domingo 04:30",
+      "state": "healthy",
+      "evidence": "LAST_SUCCESS_EDGE 04/10/2026 05:22; 338 functions; Google Drive OK.",
+      "action": "Manter rotina e revalidar em restore drill periódico."
     }
   },
   "external_integrations": [
@@ -520,16 +520,10 @@
   },
   "risks": [
     {
-      "severity": "critical",
-      "title": "Backup diário falhando",
-      "detail": "Três tentativas consecutivas 01–03/10 falharam no db dump por Docker indisponível.",
-      "action": "Corrigir dependência e provar novo backup/restauração."
-    },
-    {
-      "severity": "attention",
-      "title": "Edge semanal não comprovado",
-      "detail": "Não há marcador/log de execução semanal na pasta auditada.",
-      "action": "Validar a tarefa e registrar evidência."
+      "severity": "resolved",
+      "title": "Backup cloud independente do notebook",
+      "detail": "Cloud Scheduler 03:00 habilitado e Cloud Run concluiu 06/10 e 07/10 com sucesso.",
+      "action": "Monitorar somente falhas reais."
     },
     {
       "severity": "attention",
@@ -555,13 +549,13 @@
       "priority": "P0",
       "title": "Restaurar backup diário confiável e independente do notebook",
       "owner": "CR Assertivo",
-      "status": "open"
+      "status": "completed"
     },
     {
       "priority": "P0",
       "title": "Provar execução do backup semanal de Edge Functions",
       "owner": "CR Assertivo",
-      "status": "open"
+      "status": "completed"
     },
     {
       "priority": "P1",
