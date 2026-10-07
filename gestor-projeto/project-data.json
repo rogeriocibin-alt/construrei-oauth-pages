@@ -1,8 +1,8 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1.2.4 • GOVERNANÇA CANÔNICA • 07/10",
-    "status": "OFICIAL / HOMOLOGADA • ÍNDICE MESTRE DE REGRAS CANÔNICAS V1",
+    "version": "V1.2.5 • COFRE ZERO SAFE CONTROL • 07/10",
+    "status": "CANDIDATA SEGURA • BACKUP CLOUD OPERACIONAL",
     "generated_at": "2026-10-07",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
@@ -11,7 +11,7 @@
     "audit_snapshot": "2026-10-07",
     "audit_state": "Governança canônica consolidada: 25 regras, 14 fontes, conflitos explícitos e autochecagem estrutural PASS.",
     "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
-    "build": "CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007",
+    "build": "CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007",
     "environment": "canonical",
     "baseline_commit": "edfba9f8ef57f98a199c116d69e45bb7a9345ccf",
     "baseline_checkpoint": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
@@ -325,7 +325,7 @@
       "layer": "Governança",
       "status": "canonical",
       "summary": "Cockpit superior do proprietário para governança, memória, versões, decisões e desenvolvimento do ecossistema APP CONSTRU-REI, com acesso ao diretório mestre de Links Oficiais.",
-      "current": "V1.2.3 • fila executiva reconciliada • 2 frentes ativas"
+      "current": "V1.2.5 candidata segura • Cofre Zero no Cockpit • automático 03:00"
     },
     {
       "id": "links_oficiais",
@@ -868,16 +868,16 @@
     {
       "id": "front-backup-auto",
       "name": "Cofre Zero / backup automático",
-      "status": "queue",
+      "status": "completed",
       "priority": "P1",
       "objective": "Garantir continuidade sem dependência do notebook, com cópia automatizada e recuperação comprovada.",
-      "progress": 80,
+      "progress": 100,
       "owner": "Bio + CR Assertivo",
-      "last_advance": "Restore drill integral já foi comprovado; a automação recorrente do Cofre Zero ainda precisa verificação final independente nesta varredura.",
-      "next_action": "Auditar job recorrente, destino, retenção e última cópia válida; fechar somente com evidência de execução automática.",
-      "dependency": "Verificação do job recorrente e destino externo",
+      "last_advance": "Cloud Run oficial e Scheduler diário às 03:00 validados; execuções automáticas de 06/10 e 07/10 concluídas com sucesso; restore drill integral PASS.",
+      "next_action": "Operação automática; reabrir somente em falha real ou no restore drill periódico.",
+      "dependency": "Nenhuma dependência do notebook",
       "blocked": false,
-      "age_days": 1
+      "age_days": 0
     },
     {
       "id": "front-health",
@@ -1367,13 +1367,13 @@
       "title": "Cofre Zero — provar automação recorrente de backup",
       "domain": "Infraestrutura",
       "priority": "P1",
-      "state": "queue",
+      "state": "completed",
       "owner": "Bio + CR Assertivo",
-      "last_movement": "2026-10-05",
-      "next_action": "Verificar job, destino, retenção e última cópia automática válida; registrar evidência.",
-      "dependency": "Evidência do job recorrente",
-      "source": "Continuidade / restore drill já concluído",
-      "close_when": "Backup automático executa sem notebook e existe restore verificável.",
+      "last_movement": "2026-10-07",
+      "next_action": "Monitorar apenas falhas reais; manter restore drill periódico.",
+      "dependency": "Nenhuma dependência operacional do notebook",
+      "source": "Cloud Run construrei-backup + Scheduler construrei-backup-diario + restore drill 05/10",
+      "close_when": "Concluído: execução automática independente do notebook e restore verificável.",
       "human_action": false,
       "provenance": "current_explicit"
     },
@@ -2749,6 +2749,16 @@
       "description": "Aplicação operacional atual."
     },
     {
+      "id": "backup",
+      "name": "Backup / Cofre Zero",
+      "kind": "Continuidade",
+      "status": "live",
+      "access": "MASTER",
+      "url": "https://console.cloud.google.com/run/jobs/details/southamerica-east1/construrei-backup?project=app-construrei",
+      "source": "Google Cloud Run • construrei-backup • Cloud Scheduler",
+      "description": "Backup automático diário às 03:00; controle manual exige autenticação Google Cloud."
+    },
+    {
       "id": "links_oficiais",
       "name": "Links Oficiais",
       "kind": "Governança de acessos",
@@ -3285,16 +3295,16 @@
       "name": "Backups automáticos",
       "status": "healthy",
       "confidence": "high",
-      "last_read": "05/10",
-      "note": "Backup automático + restore drill integral aprovados em 05/10/2026."
+      "last_read": "2026-10-07T06:05:10Z",
+      "note": "Cloud Run construrei-backup + Scheduler construrei-backup-diario ENABLED; execução 07/10 concluída com sucesso; restore drill integral PASS em 05/10."
     },
     {
       "id": "SRC-COFRE-ZERO",
       "name": "Cofre Zero",
       "status": "healthy",
       "confidence": "high",
-      "last_read": "05/10",
-      "note": "Cofre Zero preservado; restore físico Storage e banco validados em 05/10/2026."
+      "last_read": "2026-10-07T06:05:10Z",
+      "note": "Cofre Zero preservado em nuvem; restore físico de 4526 arquivos e banco validado; rotina oficial independente do notebook."
     }
   ],
   "reconciliations": [
