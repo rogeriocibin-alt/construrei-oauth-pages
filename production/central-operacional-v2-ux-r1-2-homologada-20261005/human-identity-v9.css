@@ -35,3 +35,81 @@
 .cr-doc-owner-avatar{width:26px!important;height:26px!important;object-fit:cover!important;border-radius:50%!important;border:2px solid #ffc514!important;background:#05265f!important;box-shadow:0 0 0 1px #fff!important}
 .cr-doc-owner-avatar+.cr-doc-owner-avatar{margin-left:-9px}
 @media(max-width:767px){.cr-doc-owner-avatar{width:24px!important;height:24px!important}.cr-biz-quick{margin-left:0!important}}
+
+/* CR-MOBILE-POLISH-R1-20261006 — refinamento leve sem redesign */
+@media(max-width:767px){
+  /* Acesso rápido: mostrar os cinco atalhos sem cortar o último item. */
+  #crBizQuick{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    width:100%!important;
+    margin:6px 0 0!important;
+    padding:0!important;
+    gap:6px!important;
+    overflow:visible!important;
+  }
+  #crBizQuick .cr-biz-btn{
+    min-width:0!important;
+    width:100%!important;
+    height:44px!important;
+    padding:0 5px!important;
+    justify-content:center!important;
+    border-radius:10px!important;
+  }
+  #crBizQuick .cr-biz-logo{
+    flex:0 0 28px!important;
+    width:28px!important;
+    height:28px!important;
+  }
+  #crBizQuick .cora .cr-biz-logo{flex-basis:34px!important;width:34px!important}
+  #crBizQuick .cr-biz-btn small{display:none!important}
+
+  /* Painel principal um pouco mais enxuto no telefone, preservando a arte. */
+  #dashboard>.cr-home-hero{
+    margin-bottom:10px!important;
+    border-radius:16px!important;
+  }
+  #dashboard .cr-hero-main{
+    padding-top:18px!important;
+    padding-bottom:18px!important;
+  }
+  #dashboard .cr-hero-main h1{margin-bottom:10px!important}
+  #dashboard .cr-hero-main p{margin-bottom:8px!important}
+
+  /* Cabeçalho Hoje na Operação: menos área morta e botão mais proporcional. */
+  #dashboard .cr-operation-panel .cr-panel-head{
+    padding:9px 10px 8px!important;
+    gap:7px!important;
+  }
+  #dashboard .cr-operation-panel .cr-panel-action{
+    min-height:42px!important;
+    padding:8px 34px 8px 12px!important;
+    margin-top:2px!important;
+  }
+
+  /* O selo técnico de homologação não deve cobrir conteúdo operacional no celular. */
+  #crOperationV2Badge{display:none!important}
+
+  /* Dock inferior ligeiramente menor, mantendo quatro ações e área segura. */
+  .cr-mobile-dock{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    left:7px!important;
+    right:7px!important;
+    bottom:calc(6px + env(safe-area-inset-bottom))!important;
+    padding:5px!important;
+    gap:5px!important;
+    border-radius:14px!important;
+  }
+  .cr-mobile-dock button{
+    min-height:48px!important;
+    padding:7px 4px!important;
+    font-size:9.5px!important;
+  }
+  body{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
+  .content{padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}
+}
+@media(max-width:390px){
+  #crBizQuick{gap:4px!important}
+  #crBizQuick .cr-biz-btn{height:42px!important;padding:0 3px!important}
+  #crBizQuick .cr-biz-logo{width:26px!important;height:26px!important;flex-basis:26px!important}
+}
