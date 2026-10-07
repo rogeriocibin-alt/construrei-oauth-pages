@@ -760,7 +760,7 @@ window.addEventListener('appinstalled',()=>{const b=$('#installPwaBtn'); if(b)b.
 
 async function init(){
   try{
-    const r=await fetch('./project-data.json?v=20261006v122avatarsyncv3',{cache:'no-store'});
+    const r=await fetch('./project-data.json?v=20261007pendingroutingv1',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     state.data=await r.json();
     renderAll();
