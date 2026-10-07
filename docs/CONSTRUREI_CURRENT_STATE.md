@@ -1207,3 +1207,16 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Release do Gestor: **CR-PM-V1.2.3-PROJECT-FRONTS-20261006**.
 - Novo checkpoint de continuidade: `checkpoint/current-project-priority-20261006`.
 - Regra vigente: qualquer nova frente deve partir deste estado; limite de duas frentes ativas continua obrigatório.
+
+
+## 2026-10-07 — Regra canônica de pendências
+
+- **Gestor do Projeto = radar mestre e fonte única de verdade para TODAS as pendências do projeto.**
+- Toda pendência nova deve existir no Gestor do Projeto com ID canônico único.
+- **APP • Pendências / WIZY / Éder são projeções operacionais exclusivas do APP**, nunca uma segunda fonte de verdade.
+- Escopo de projeção APP: `APP`, `F00`–`F09` e `WIZY`.
+- WIZY é subconjunto do escopo APP; Éder é subconjunto das pendências APP sob sua responsabilidade.
+- Pendências fora do APP — Financeiro independente, Central, Infraestrutura, Governança, Visual, Meeting, Conhecimento etc. — ficam somente no Gestor do Projeto.
+- Deduplicação obrigatória pelo ID canônico da pendência.
+- Implementação: regra persistida em `cr_internal.pending_automation_config_v1` como `CANONICAL_PENDING_ROUTING`; projeção operacional corrigida no `central-public-api-p0` build `central-public-api-p0-pending-routing-v23-20261007`.
+- Pendência `PM-26` — **Gestão Click — saneamento financeiro + marco zero** — registrada como P1 no mestre, área FINANCEIRO, sem projeção para APP/WIZY/Éder.
