@@ -142,6 +142,50 @@ Antes de criar ou reescrever: localizar ativo existente, classificar **REUTILIZA
 **Domínio:** Arquitetura  
 A Central é superfície operacional. O Gestor do Projeto concentra governança, versões, checkpoints, infraestrutura, auditoria e desenvolvimento.
 
+### BASE-001 — Base oficial e rollback por escopo
+**Classe:** FUNDAMENTAL  
+**Domínio:** Continuidade  
+Toda evolução parte do checkpoint oficial atual ou de descendente direto. Não fazer rollback global para corrigir alteração futura; reverter somente o escopo causador do problema.
+
+### ARCH-002 — Engenharia fora da Central operacional
+**Classe:** FUNDAMENTAL  
+**Domínio:** Arquitetura  
+Documentação técnica, arquitetura, releases, APIs, schema, deploy, GitHub, Supabase e auditoria pertencem ao Gestor do Projeto, não à Central operacional.
+
+### UX-001 — Observer global proibido na Central
+**Classe:** DOMÍNIO  
+**Domínio:** Desenvolvimento / Central  
+Não reintroduzir MutationObserver global na camada humana/Documentação. Observers devem ser locais, idempotentes e restritos ao componente necessário.
+
+### LINK-001 — Links públicos estáveis
+**Classe:** DOMÍNIO  
+**Domínio:** Arquitetura  
+Aliases públicos amigáveis são a camada de acesso. Endpoints técnicos canônicos permanecem preservados e não são renomeados/excluídos por conveniência.
+
+### PEND-002 — WIZY/Éder não fecham automaticamente
+**Classe:** DOMÍNIO  
+**Domínio:** Pendências  
+Automação pode anexar evidência sistêmica, mas não deve concluir automaticamente itens WIZY/Éder que dependam de execução ou validação humana.
+
+### INPUT-001 — Entrada Inteligente enriquece, não substitui
+**Classe:** DOMÍNIO  
+**Domínio:** APP / F00–F09  
+Entrada Inteligente enriquece o mesmo caso. Não cria fluxo paralelo, não sobrescreve dado confirmado silenciosamente e transforma conflito em DIVERGENTE / AMBÍGUO / A CONFERIR.
+
+## 4.1 Conflitos e dubiedades
+
+Conflito entre fontes não é resolvido por soma, média ou preferência informal. Deve haver:
+1. identificação das fontes;
+2. aplicação da regra de precedência;
+3. resolução registrada;
+4. regra canônica relacionada;
+5. preservação do histórico.
+
+Conflitos já identificados nesta candidata:
+- Brand V1: corpo antigo dizia homologado, mas o próprio documento foi marcado RETIRADO / NÃO UTILIZAR e o checkpoint atual colocou V1/V2 em quarentena. **Resolvido: não reativar.**
+- Gestor: app/shell ainda mostravam V1.2.2 enquanto `version.json` já estava em V1.2.3. **Resolvido na candidata: metadados alinhados.**
+- Pendências: risco de APP/WIZY/Éder serem tratados como bancos paralelos. **Protegido: Gestor é mestre; demais são projeções.**
+
 ## 5. Documentos-fonte indexados
 
 | Domínio | Documento | Estado |
@@ -158,6 +202,10 @@ A Central é superfície operacional. O Gestor do Projeto concentra governança,
 | GestãoClick PM26 | `docs/CHECKPOINT_PM26_GESTAOCLICK_MARCO_ZERO_20261007.md` | domínio financeiro/operacional, conforme estado próprio |
 | Agenda | `docs/AGENDA_TEXT_TEMPLATES_CONSTRUREI_20261004.md` | padrão de texto |
 | Input inteligente | `docs/INTELLIGENT_INPUT_PATTERN_V1_20261005.md` | padrão operacional |
+| Links oficiais | `docs/official-links-registry.json` | vigente |
+| Pendências vivas | `docs/PENDENCIAS_LIVE_REGISTRY_20261004.md` | domínio |
+| Central • estabilidade | `docs/CHECKPOINT_CENTRAL_DOCS_STABILITY_V15_20261006.md` | vigente |
+| Base oficial | `docs/CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006.md` | vigente |
 
 ## 6. Como criar ou mudar uma regra
 
