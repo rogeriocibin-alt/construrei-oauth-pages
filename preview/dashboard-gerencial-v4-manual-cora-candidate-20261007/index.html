@@ -203,6 +203,108 @@ body{background:linear-gradient(180deg,#eef8fd 0,#f7fbfe 220px,#eef6fb 100%)!imp
 @media(max-width:900px){.opfilterstats{grid-template-columns:repeat(3,minmax(0,1fr))}.opfilters{grid-template-columns:1fr 2fr!important}}
 @media(max-width:700px){.opfilterstats{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.opfilterstat{padding:9px}.opfilterstat b{font-size:14px}.opfilters{grid-template-columns:1fr!important}}
 
+
+/* R15 — Financeiro/Acertos + Cora Manual alinhados à Visão Executiva · 2026-10-07 */
+/* FINANCEIRO / ACERTOS */
+#fin .aclive{
+  background:#fff!important;
+  border:1px solid #cfe0ec!important;
+  box-shadow:0 7px 22px rgba(6,31,79,.07)!important;
+}
+#fin .aclivehead h3,#fin h3{color:#061f4f!important}
+#fin .aclivehead .muted,#fin .acstatus,#fin .acdetails,#fin .achsnap small{color:#315c8a!important}
+#fin .acbtn{
+  background:#f5fbff!important;
+  color:#0b5fb8!important;
+  border:1px solid #bcd7e9!important;
+  box-shadow:none!important;
+}
+#fin .acbtn:hover{background:#eaf4fb!important;border-color:#0b5fb8!important}
+#fin .acbtn.primary{
+  background:#0b5fb8!important;
+  color:#fff!important;
+  border-color:#0a4f98!important;
+}
+#fin .ackpi,#fin .acshare,#fin .achsnap{
+  background:#f7fbfe!important;
+  border:1px solid #cfe0ec!important;
+  color:#102a43!important;
+}
+#fin .ackpi span,#fin .acshare span{color:#315c8a!important}
+#fin .ackpi b,#fin .acshare b,#fin .achsnap b{color:#061f4f!important}
+#fin .ackpi.gold{
+  background:#fff9dc!important;
+  border-color:#ead27a!important;
+}
+#fin .ackpi.gold b{color:#7a5b00!important}
+#fin .acfilters input,#fin .acfilters select{
+  background:#fff!important;
+  color:#102a43!important;
+  border:1px solid #bfd5e5!important;
+}
+#fin .acfilters input::placeholder{color:#6c8bab!important}
+#fin .acsel{color:#8a6508!important}
+#fin .acwarn{color:#8a6508!important}
+#fin .acbad{color:#a12828!important}
+#fin .acok{color:#087a50!important}
+#fin .acdot{background:#1f9d68!important;box-shadow:0 0 0 3px rgba(31,157,104,.12)!important}
+#fin .acpersontext span,#fin .acpersontext strong{color:#102a43!important}
+#fin .acmoneyicon{background:#fff7cf!important;border-color:#ead27a!important}
+#fin .rows .r{color:#102a43!important}
+
+/* CORA MANUAL → TRELLO */
+#cora .panel{
+  background:#fff!important;
+  color:#102a43!important;
+  border:1px solid #cfe0ec!important;
+  box-shadow:0 7px 22px rgba(6,31,79,.07)!important;
+}
+#cora h3{color:#061f4f!important}
+#cora .r6eyebrow{color:#0b5fb8!important}
+#cora .state.warn{
+  background:#fff8d9!important;
+  color:#6e5300!important;
+  border-color:#ead27a!important;
+}
+#cora .manualgrid label{color:#315c8a!important}
+#cora .manualgrid input,#cora .manualgrid select,#cora .manualgrid textarea{
+  background:#fff!important;
+  color:#102a43!important;
+  border:1px solid #bfd5e5!important;
+}
+#cora .manualgrid input::placeholder,#cora .manualgrid textarea::placeholder{color:#6c8bab!important}
+#cora .manualbtn{
+  background:#f5fbff!important;
+  color:#0b5fb8!important;
+  border:1px solid #bcd7e9!important;
+  box-shadow:none!important;
+}
+#cora .manualbtn:hover{background:#eaf4fb!important;border-color:#0b5fb8!important}
+#cora .manualbtn.primary{
+  background:#0b5fb8!important;
+  color:#fff!important;
+  border-color:#0a4f98!important;
+}
+#cora .manualbtn:disabled{opacity:.45!important}
+#cora .manualpreview{
+  background:#f7fbfe!important;
+  border:1px solid #cfe0ec!important;
+  color:#102a43!important;
+}
+#cora .manualpreview code{color:#17315d!important}
+#cora .manualbadge{
+  background:#fff7cf!important;
+  border:1px solid #ead27a!important;
+  color:#6e5300!important;
+}
+#cora .manualnote{color:#315c8a!important}
+#cora .manualok{color:#087a50!important}
+#cora .manualerr{color:#a12828!important}
+#cora .rows .r{color:#102a43!important}
+@media(max-width:700px){
+  #fin .acbtn,#cora .manualbtn{min-height:42px}
+}
+
 </style></head><body><div id="login" class="login"><div class="box"><div style="display:flex;gap:10px;align-items:center"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><b>CONSTRU-REI · DASHBOARD V4</b></div><p class="muted small">Módulo oficial da Central CONSTRU-REI. Mesma chave da Central.</p><input id="key" type="password" placeholder="Chave de acesso"><button onclick="login()">Entrar</button><div id="err"></div></div></div>
 <header class="top"><div class="topin"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><div><b>CONSTRU-REI</b><div class="small" style="color:#f3e7c6">DASHBOARD GERENCIAL</div><div class="small">GESTÃO • OPERAÇÃO • FINANCEIRO • INTELIGÊNCIA</div></div><div class="grow"></div><b>V4 OFICIAL</b><span id="live">online</span></div></header><main class="main"><div class="r6hero"><div class="r6eyebrow">CENTRO DE COMANDO DA DIRETORIA</div><div class="r6title">CONSTRU-REI · Diretoria Agora</div><div class="r6sub">VISÃO EXECUTIVA • OPERAÇÃO • RESULTADO • CUSTOS • RISCOS</div></div><div class="tabs"><button class="tab on" data-t="agora">VISÃO EXECUTIVA</button><button class="tab" data-t="fin">FINANCEIRO / ACERTOS</button><button class="tab" data-t="cora">CORA MANUAL → TRELLO</button><button class="tab" data-t="hist">HISTÓRICO / KPIs</button><button class="tab" data-t="conc">CONCILIAÇÃO</button><button class="tab" data-t="cost">CUSTOS / PRESTADORES</button><button class="tab" data-t="qual">SAÚDE DOS DADOS</button></div>
 <section id="agora" class="section on"><div class="r8commandbar"><div><div class="r8mode" id="r8mode">OPERAÇÃO VIVA</div><div id="r8context" class="r8context">2026 • ANO TODO</div></div><div class="r8quick"><button onclick="r8Go('agora')">OPERAÇÃO</button><button onclick="r8Go('fin')">FINANCEIRO</button><button onclick="r8Go('cost')">CUSTOS</button><button onclick="r8Go('cost');setTimeout(()=>document.getElementById('prov')?.scrollIntoView({behavior:'smooth'}),0)">PRESTADORES</button><button onclick="r8Go('hist')">HISTÓRICO</button><button onclick="r8Go('qual')">SAÚDE</button></div></div><div id="globalyears" class="yearnav"></div><div id="periodtitle" class="periodtitle"></div><div id="periodnote" class="periodnote"></div><div id="r8result"></div><div id="kpis" class="r7master"></div><div id="supportkpis" class="r7support"></div><div id="opkpis" class="opkpis"></div><div id="execalerts" class="r7alerts"></div><div id="r8costcontrol"></div><div class="r7execgrid"><div class="panel r7readpanel"><h3>Leitura da Diretoria</h3><div id="execread"></div></div><div class="panel r7readpanel"><h3>Indicadores do período</h3><div id="execsmart" class="r7smart"></div></div></div><div class="panel"><h3>Operação e obras</h3><div id="chips" class="chips"></div><div id="opmonths" class="chips"></div><div class="opfiltertitle">FILTRAR ORÇAMENTOS / OBRAS</div><div class="filters opfilters"><select id="opyear" onchange="oy(this.value)"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option></select><input id="q" placeholder="Buscar orçamento, cliente, endereço..." oninput="ops()"><select id="sort" onchange="ops()"><option value="recent">Mais recentes</option><option value="old">Mais antigos</option><option value="gross">Maior valor</option><option value="profit">Maior lucro</option><option value="margin">Menor margem</option></select></div><div id="op"></div></div></section>
