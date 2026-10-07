@@ -337,3 +337,53 @@ Correção proposta:
 - manter como **não recebido** até crédito bancário real da 3ª parcela;
 - não criar nova parcela;
 - revisar se as duas parcelas já pagas permanecem abertas em outras contas/páginas antes de qualquer baixa adicional.
+
+
+## DECISÃO DE ARQUITETURA — RESET OPERACIONAL (07/10/2026)
+
+Por decisão do gestor, fica **cancelada a estratégia de saneamento item a item das contas antigas do Gestão Click**.
+
+### Motivo
+As contas antigas estão poluídas por:
+- títulos históricos;
+- vendas convertidas em recebimentos;
+- parcelas futuras incorretas;
+- valores brutos misturados com líquidos;
+- contas Cora/Itaú/PagSeguro/Integrada com saldos que não representam caixa real.
+
+O custo/risco de corrigir item a item é maior do que o benefício.
+
+### Nova estratégia canônica
+
+1. **Preservar o legado, sem apagar histórico.**
+2. Marcar conceitualmente as 5 contas existentes como **LEGADO / NÃO USAR PARA DASHBOARD**.
+3. Criar uma única conta limpa no Gestão Click:
+   - **CORA ONLINE — MARCO ZERO 07/10/2026**
+4. Saldo inicial dessa conta = **saldo real do Cora no instante do Marco Zero**.
+5. A partir do Marco Zero:
+   - crédito real no Cora => recebimento confirmado no espelho;
+   - débito real no Cora => pagamento confirmado no espelho;
+   - transferências/reembolsos devem manter natureza correta e não virar receita/despesa indevidamente.
+6. O Dashboard deve ler **exclusivamente a nova conta CORA ONLINE**, ignorando todas as contas legadas.
+7. Nenhuma venda/orçamento deve alterar o saldo dessa conta automaticamente sem correspondência bancária real.
+8. Sincronização deve ser idempotente pelo identificador da transação bancária, impedindo duplicidade.
+
+### Estado de integração
+
+- GestãoClick API: credenciais presentes e leitura operacional.
+- API oficial permite criar **recebimentos** e **pagamentos**.
+- API oficial exposta atualmente apenas lista contas bancárias; criação de nova conta bancária não está disponível no endpoint público usado pelo projeto.
+- Cora produção: credenciais diretas não estão presentes no Supabase.
+- Cora stage: credenciais antigas presentes, porém autenticação atual retorna invalid_client.
+- Portanto:
+  - **Click pode ser abastecido automaticamente via API** assim que a conta espelho existir;
+  - **Cora em tempo real ainda exige reativação das credenciais de produção** para sincronização servidor-servidor contínua.
+
+### Regra de transição
+
+Até a Cora API de produção ser reativada:
+- o extrato online Cora aberto dentro do GestãoClick pode ser usado como fonte de importação/lote;
+- não realizar correção manual das contas antigas;
+- não reabrir obras;
+- não ajustar títulos históricos individuais salvo exceção indispensável.
+
