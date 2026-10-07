@@ -1,32 +1,33 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1.2.3 • PENDÊNCIAS EXECUTIVAS • 06/10",
-    "status": "OFICIAL EM ATUALIZAÇÃO CONTROLADA • FILA EXECUTIVA RECONCILIADA 06/10/2026",
-    "generated_at": "2026-10-06",
+    "version": "V1.2.4 • GOVERNANÇA CANÔNICA • 07/10",
+    "status": "OFICIAL / HOMOLOGADA • ÍNDICE MESTRE DE REGRAS CANÔNICAS V1",
+    "generated_at": "2026-10-07",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
-    "branch": "cr-project-manager-v1-1-2-h5-official-20261005",
+    "branch": "main",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
     "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
-    "audit_snapshot": "2026-10-06",
-    "audit_state": "Varredura executiva reconciliada: 2 frentes ativas; demais itens em fila, manutenção ou dependência manual. Legado não deve competir com prioridades atuais.",
+    "audit_snapshot": "2026-10-07",
+    "audit_state": "Governança canônica consolidada: 25 regras, 14 fontes, conflitos explícitos e autochecagem estrutural PASS.",
     "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
-    "build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006",
+    "build": "CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007",
     "environment": "canonical",
     "baseline_commit": "edfba9f8ef57f98a199c116d69e45bb7a9345ccf",
     "baseline_checkpoint": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
     "persistence": "Supabase cr_internal conectado por API candidata sanitizada; snapshot local permanece como fallback offline.",
     "previous_official_commit": "fa980eb74b42a1ffd044288e0f4216aeaed108a1",
-    "canonical_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H5_OFFICIAL_20261005",
+    "canonical_checkpoint": "CHECKPOINT_CANONICAL_GOVERNANCE_INDEX_V1_20261007",
     "pwa_mobile_status": "PASS_OWNER_CONFIRMED",
     "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
     "reconciled_at": "2026-10-06T21:30:00-03:00",
-    "owner_validation": "PASS_OWNER_APPROVED",
-    "current_baseline": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
+    "owner_validation": "PASS_OWNER_DIRECT_HOMOLOGATION",
+    "current_baseline": "CHECKPOINT_CANONICAL_GOVERNANCE_INDEX_V1_20261007",
     "baseline_freeze_checkpoint": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
     "baseline_freeze_branch": "checkpoint/current-official-logos-recovered-20261006",
     "updated_at": "2026-10-07",
-    "canonical_governance_index": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md"
+    "canonical_governance_index": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+    "previous_official_build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -3484,7 +3485,7 @@
   },
   "canonical_governance": {
     "version": "CANONICAL-RULES-MASTER-V1",
-    "status": "candidate_governance",
+    "status": "official_homologated",
     "updated_at": "2026-10-07",
     "owner": "Rogério / Diretoria Master",
     "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
@@ -3515,7 +3516,10 @@
       "Registrar checkpoint da sessão.",
       "Promover somente após validação aplicável."
     ],
-    "conflict_policy": "Conflito não é resolvido por soma, média ou preferência informal. Registrar fontes, aplicar precedência, declarar resolução e manter o histórico."
+    "conflict_policy": "Conflito não é resolvido por soma, média ou preferência informal. Registrar fontes, aplicar precedência, declarar resolução e manter o histórico.",
+    "owner_approval": "2026-10-07 • Rogério autorizou publicação direta no Gestor, preservando filtros e identidade visual existente.",
+    "integrity_status": "PASS",
+    "visual_policy": "Preservar identidade visual vigente; esta release não altera CSS/tema."
   },
   "canonical_sources": [
     {
