@@ -1172,3 +1172,16 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Checkpoint: `docs/CHECKPOINT_BRAND_CANONICAL_V1_20261006.md`.
 - Regra antirregressão: novas superfícies usam `assets/brand/construrei-app-v1/`; não duplicar logos por produto; avatar humano e avatar institucional permanecem conceitos distintos.
 \n\n## RECUPERAÇÃO DE IDENTIDADE VISUAL — 2026-10-06\n- Status: **EM RECUPERAÇÃO SEGURA / BRAND V1 E V2 RETIRADAS**.\n- Motivo: as artes fornecidas para a nova identidade visual estavam incorretas.\n- Branch de segurança pré-reversão: `safety/pre-revert-brand-art-20261006`.\n- Branch de recuperação: `recovery/remove-wrong-brand-20261006`.\n- Regra: preservar todas as funcionalidades e mudanças financeiras posteriores; reverter somente referências visuais introduzidas pelo Brand Canonical V1/V2.\n- Supabase `construrei-logo`: versão 31 restaurou os ativos históricos de `app_public_assets` (`construrei-logo` e `app-construrei-wizy-logo`), mantendo aliases e `verify_jwt=false`. Teste HEAD: corporate 200 image/jpeg; app 200 image/webp.\n- `assets/brand/construrei-app-v1/` e `assets/brand/construrei-app-v2/`: **QUARENTENA / NÃO UTILIZAR** até novo kit visual validado.\n
+
+## CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006
+- Status: **ATUAL / OFICIAL / CONGELADO COMO BASE DE CONTINUIDADE**.
+- Data: 2026-10-06 (BRT).
+- Link oficial da Central: `https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Commit funcional atual congelado: `7138edf18bdaea494de1f6a3b9f5ea1e27eafef7`.
+- Recuperação visual de referência: PR #37 / commit `b9c32b84ce211631bb9a764471fca1ab5031e092`.
+- Branch congelada: `checkpoint/current-official-logos-recovered-20261006`.
+- Logos históricas recuperadas: Supabase `construrei-logo` v31.
+- Brand V1/V2 incorreta: **QUARENTENA / NÃO UTILIZAR**.
+- Regra de continuidade: **toda alteração futura deve partir deste checkpoint ou de descendente direto dele; não retomar branches/commits anteriores como base ativa**.
+- Regra de promoção: qualquer nova alteração deve nascer em candidata isolada e somente substituir esta base após validação/homologação explícita.
+- Regra antirregressão: preservar lógica, dados, integrações, financeiro, links, Central, APP, Gestor, Apresentação e F00–F09 que já estejam válidos neste estado.
