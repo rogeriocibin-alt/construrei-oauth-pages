@@ -3,7 +3,7 @@
   "version": "1.2.3",
   "build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006",
   "environment": "canonical",
-  "release_status": "candidate_for_promotion",
+  "release_status": "official_homologated",
   "base_official": "CR-PM-V1.2.2-AVATAR-LINK-SYNC-V3-OFFICIAL-20261006",
   "checkpoint_before": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
   "changes": [
@@ -19,16 +19,16 @@
     "two_front_limit": "PASS",
     "wizy_manual_policy": "PASS",
     "canonical_baseline_preserved": "PASS",
-    "promotion": "OWNER_REQUESTED_GENERAL_SWEEP"
+    "promotion": "MERGED_PR_38"
   },
   "released_at": "2026-10-06T21:30:00-03:00",
   "branch": "audit/project-fronts-priority-20261006",
-  "canonical_changed": false,
+  "canonical_changed": true,
   "update_policy": "same_url_governance_data_only",
   "rollback": "checkpoint/current-official-logos-recovered-20261006",
   "canonical_checkpoint": "CHECKPOINT_PROJECT_FRONTS_PRIORITY_20261006",
   "owner_homologation": {
-    "status": "OWNER_REQUESTED_GENERAL_SWEEP",
+    "status": "OWNER_REQUESTED_AND_PROMOTED",
     "source": "explicit_owner_instruction_in_chat",
     "note": "Rogério pediu varredura geral, priorização e atualização das pendências no Gestor e APP para acelerar a entrega."
   }
