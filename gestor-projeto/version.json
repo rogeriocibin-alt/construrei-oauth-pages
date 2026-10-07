@@ -1,36 +1,35 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
-  "version": "1.2.2",
-  "build": "CR-PM-V1.2.2-AVATAR-LINK-SYNC-V3-OFFICIAL-20261006",
+  "version": "1.2.3",
+  "build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006",
   "environment": "canonical",
-  "release_status": "official_homologated",
-  "base_official": "CR-PM-V1.2.1-FINANCEIRO-REI-V1-OFFICIAL-20261006",
-  "checkpoint_before": "26bb2b151b4e1127ed117f10c459204838215ba8",
+  "release_status": "candidate_for_promotion",
+  "base_official": "CR-PM-V1.2.2-AVATAR-LINK-SYNC-V3-OFFICIAL-20261006",
+  "checkpoint_before": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
   "changes": [
-    "Links embarcados do Gestor passaram a usar os aliases canônicos do GitHub Pages, evitando drift entre PWA e notebook.",
-    "Central oficial ganhou faixa humana visível no dashboard com Rogério, Éder, Gabrielly e Fabrício, sem substituir a logo do APP.",
-    "Agenda mantém miniavatares dinâmicos conforme os participantes reais de cada compromisso.",
-    "Pendências APP, Wizy FLOW, Éder Agora, Academy e SST passaram a abrir diretamente a superfície contextual correta da Central, preservando hash/rota.",
-    "Apresentação Executiva Viva atualizada em 06/10 com equipe humana e arquitetura atual do Agent Hub, incluindo Financeiro REI V1.",
-    "PWA mantém o mesmo endereço; o novo build apenas renova cache e conteúdo."
+    "Banco Mestre do Gestor reconciliado pela situação real de 06/10/2026.",
+    "Somente duas frentes P0 permanecem ativas: Financeiro V5/Cora e fechamento APP F00→F09 + ORÇA-REI.",
+    "Wizy, Cofre Zero, Saúde Técnica, Meet Add-ons, identidade visual futura e Academy/documentação permanecem em fila explícita, sem disputar execução simultânea.",
+    "Pendências legadas superadas foram encerradas como histórico; subitens APP foram subordinados ao gate E2E único.",
+    "Nenhuma lógica, rota, identidade visual ou integração da Central/APP foi alterada nesta release de governança."
   ],
   "gate": {
     "source_review": "PASS",
-    "route_consistency": "PASS",
-    "avatar_context_map": "PASS",
-    "presentation_sync": "PASS",
-    "pwa_cache_rotation": "PASS",
-    "promotion": "AUTHORIZED_BY_OWNER_REQUEST"
+    "pending_reconciliation": "PASS",
+    "two_front_limit": "PASS",
+    "wizy_manual_policy": "PASS",
+    "canonical_baseline_preserved": "PASS",
+    "promotion": "OWNER_REQUESTED_GENERAL_SWEEP"
   },
-  "released_at": "2026-10-06T12:00:00-03:00",
-  "branch": "cr-avatar-link-sync-v3-20261006",
-  "canonical_changed": true,
-  "update_policy": "same_url_pwa_cache_rotation_and_alias_sync",
-  "rollback": "26bb2b151b4e1127ed117f10c459204838215ba8",
-  "canonical_checkpoint": "CHECKPOINT_AVATAR_LINK_SYNC_V3_OFFICIAL_20261006",
+  "released_at": "2026-10-06T21:30:00-03:00",
+  "branch": "audit/project-fronts-priority-20261006",
+  "canonical_changed": false,
+  "update_policy": "same_url_governance_data_only",
+  "rollback": "checkpoint/current-official-logos-recovered-20261006",
+  "canonical_checkpoint": "CHECKPOINT_PROJECT_FRONTS_PRIORITY_20261006",
   "owner_homologation": {
-    "status": "OWNER_REQUESTED_GENERAL_REVIEW",
+    "status": "OWNER_REQUESTED_GENERAL_SWEEP",
     "source": "explicit_owner_instruction_in_chat",
-    "note": "Rogério solicitou revisão geral dos avatares e sincronização dos links embarcados no Gestor do Projeto para PWA no celular e link externo no notebook."
+    "note": "Rogério pediu varredura geral, priorização e atualização das pendências no Gestor e APP para acelerar a entrega."
   }
 }
