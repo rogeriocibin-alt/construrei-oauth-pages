@@ -1284,3 +1284,18 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Evidência reconciliada: execuções automáticas de 06/10 e 07/10 concluídas; restore drill integral de 05/10 aprovado.
 - Central, APP e F00–F09 não foram alterados nesta promoção.
 - Regra de continuidade: esta V1.2.5 passa a ser a base oficial do Gestor para evoluções futuras; qualquer mudança nasce em candidata isolada e preserva rollback.
+
+
+---
+
+## Dashboard Gerencial V4 + Cora Manual — baseline congelada — 07/10/2026
+
+- Status: **CANDIDATA ATUAL / BASELINE CONGELADA PARA EVOLUÇÕES FUTURAS**.
+- Caminho: `preview/dashboard-gerencial-v4-manual-cora-candidate-20261007/`.
+- Revisão-base: `4b42d06824f5d014a0081c8547555dcbb7067887`.
+- Identidade visual aprovada: padrão Central + Gestor do Projeto, com superfícies claras, azul-marinho para hierarquia, azul institucional nos controles e amarelo como destaque.
+- Abas que devem manter esse padrão: Visão Executiva, Financeiro / Acertos e Cora Manual → Trello.
+- Operação e Obras: anos 2024, 2025 e 2026; busca por orçamento/cliente/endereço; ordenação; filtros por status; autosoma de faturamento, custos, lucro e margem.
+- Regra de continuidade: **DAQUI PARA FRENTE**. Não reintroduzir CSS escuro antigo, não voltar a versões visuais anteriores e não descaracterizar a identidade aprovada.
+- Qualquer novo ajuste deve nascer sobre esta baseline e preservar rollback.
+- Próxima evolução autorizada: aumentar legibilidade dos controles de Operação e Obras no desktop, sem alterar a base visual homologada.
