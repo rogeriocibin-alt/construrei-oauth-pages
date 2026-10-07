@@ -1265,3 +1265,22 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Integridade: **PASS** — sem ID duplicado, campo obrigatório ausente, regra ativa em fonte revogada ou conflito não resolvido.
 - Identidade visual: preservada; nenhum CSS/tema da Central, APP ou F00–F09 foi alterado.
 - Autorização: Rogério dispensou validação visual detalhada desta entrega técnica e autorizou publicação/homologação direta, mantendo filtros e identidade de cor.
+
+
+---
+
+## Gestor do Projeto V1.2.5 — Cofre Zero Safe Control — 07/10/2026
+
+- Status: **OFICIAL / HOMOLOGADA / PUBLICADA / CONGELADA COMO BASE ATUAL DO GESTOR**.
+- Build: `CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007`.
+- Link estável: https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/
+- PR de promoção: **#42**.
+- Merge oficial: `e44d82810cd56d03247df9e7e1008ae3d61ce0c2`.
+- Checkpoint: `docs/CHECKPOINT_GESTOR_V1_2_5_COFRE_ZERO_SAFE_20261007.md`.
+- Rollback imediato: `checkpoint/gestor-v1-2-4-canonical-governance-official-20261007`.
+- Cofre Zero/Backup incorporado ao cockpit do Gestor, ao lado de Central, APP, Pendências e Auditorias.
+- Backup oficial: Google Cloud Run + Cloud Scheduler, execução automática diária às 03:00 (America/Sao_Paulo), independente do notebook.
+- Controle manual abre somente o Google Cloud autenticado; nenhuma credencial ou endpoint público de escrita foi exposto.
+- Evidência reconciliada: execuções automáticas de 06/10 e 07/10 concluídas; restore drill integral de 05/10 aprovado.
+- Central, APP e F00–F09 não foram alterados nesta promoção.
+- Regra de continuidade: esta V1.2.5 passa a ser a base oficial do Gestor para evoluções futuras; qualquer mudança nasce em candidata isolada e preserva rollback.
