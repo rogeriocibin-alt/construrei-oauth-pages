@@ -162,6 +162,11 @@ Não reintroduzir MutationObserver global na camada humana/Documentação. Obser
 **Domínio:** Arquitetura  
 Aliases públicos amigáveis são a camada de acesso. Endpoints técnicos canônicos permanecem preservados e não são renomeados/excluídos por conveniência.
 
+### PEND-003 — Pós-homologação atualiza pendências automaticamente
+**Classe:** FUNDAMENTAL  
+**Domínio:** Pendências / Governança  
+Toda homologação, promoção, congelamento ou validação explícita de Rogério/Diretoria deve disparar **no mesmo ciclo** a atualização imediata do Banco Mestre de pendências, números, evolução, evidências, próxima ação e checkpoint aplicável. As projeções APP/WIZY/Éder recebem somente o recorte permitido por escopo. A rotina periódica de 15 minutos é redundância e não substitui o disparo imediato.
+
 ### PEND-002 — WIZY/Éder não fecham automaticamente
 **Classe:** DOMÍNIO  
 **Domínio:** Pendências  
