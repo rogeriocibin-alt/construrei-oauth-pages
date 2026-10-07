@@ -305,3 +305,35 @@ Classificação atual:
 - **RECEBIDO OPERACIONALMENTE** segundo Trello;
 - **CONCILIAÇÃO BANCÁRIA AINDA NÃO COMPROVADA** nesta leitura;
 - não marcar como conciliado no Click até localizar o crédito correspondente no extrato ou outra evidência bancária.
+
+
+## Refinamento — 670-26
+
+Trello canônico:
+- Valor fechado: **R$ 4.825,30**
+- 16/09/2026 — Parcela 1 — **R$ 1.608,33 — OK**
+- 30/09/2026 — Parcela 2 — **R$ 1.608,33 — OK**
+- 30/10/2026 — Parcela 3 — **R$ 1.608,33 — pendente**
+
+Gestão Click ao vivo — recebimento 607806298:
+- descrição: Venda de nº 67026
+- competência: **16/09/2026**
+- valor: **R$ 1.608,44**
+- vencimento: **16/11/2026**
+- conta: **Conta Banco CORA**
+- situação: **Não recebido**
+- centro de custo: **670-26**
+
+Divergências objetivas:
+- valor Click x Trello: **+ R$ 0,11**
+- vencimento Click: **16/11/2026**
+- vencimento canônico: **30/10/2026**
+- deslocamento: **17 dias**
+
+Correção proposta:
+- manter a venda 67026 e o centro de custo;
+- ajustar o título pendente para **R$ 1.608,33**;
+- ajustar vencimento para **30/10/2026**;
+- manter como **não recebido** até crédito bancário real da 3ª parcela;
+- não criar nova parcela;
+- revisar se as duas parcelas já pagas permanecem abertas em outras contas/páginas antes de qualquer baixa adicional.
