@@ -1199,3 +1199,11 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Gestor candidato: `CR-PM-V1.2.3-PROJECT-FRONTS-20261006`.
 - Branch: `audit/project-fronts-priority-20261006`.
 - Checkpoint: `docs/CHECKPOINT_PROJECT_FRONTS_PRIORITY_20261006.md`.
+
+
+### Promoção da varredura executiva
+- PR: **#38** — Gestor V1.2.3 / fila executiva reconciliada.
+- Merge: `a3cb0003ef6c502f3a5a0b65e849fbd06a915f3a`.
+- Release do Gestor: **CR-PM-V1.2.3-PROJECT-FRONTS-20261006**.
+- Novo checkpoint de continuidade: `checkpoint/current-project-priority-20261006`.
+- Regra vigente: qualquer nova frente deve partir deste estado; limite de duas frentes ativas continua obrigatório.
