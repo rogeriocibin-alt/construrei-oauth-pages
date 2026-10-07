@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow">
-  <meta name="cr-build" content="CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007">
-  <title>Gestor do Projeto • V1.2.4 • CONSTRU-REI</title>
+  <meta name="cr-build" content="CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007">
+  <title>Gestor do Projeto • V1.2.5 • CONSTRU-REI</title>
   <meta name="theme-color" content="#07185d">
   <meta name="application-name" content="Gestor CONSTRU-REI">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -48,7 +48,7 @@
 
       <div class="sidebar-foot">
         <div class="status-dot"></div>
-        <div><b>V1.2.4 • Homologada</b><small>Governança Canônica V1 • integridade PASS</small></div>
+        <div><b>V1.2.5 • Homologada</b><small>Governança Canônica V1 • integridade PASS</small></div>
       </div>
     </aside>
 
@@ -67,8 +67,8 @@
           <span>⌕</span>
           <input id="globalSearch" placeholder="Buscar regra, pendência, versão, frente, decisão, commit...">
         </label>
-        <button class="version-chip" id="versionChip" type="button" title="Versão, build e mudanças">V1.2.4 • OFICIAL</button>
-        <span class="build-chip" id="liveBuildChip">V1.2.4 • OFICIAL</span>
+        <button class="version-chip" id="versionChip" type="button" title="Versão, build e mudanças">V1.2.5 • OFICIAL</button>
+        <span class="build-chip" id="liveBuildChip">V1.2.5 • OFICIAL</span>
         <button class="ghost-btn" id="installPwaBtn" hidden>Instalar Gestor</button>
         <button class="ux-top-btn ux-refresh-btn" id="managerRefreshBtn" type="button" title="Buscar atualização do PWA">↻ Atualizar</button><button class="ghost-btn" id="presentationBtn">Modo apresentação</button>
       </header>
@@ -99,7 +99,7 @@
           <section class="metrics infra-metrics">
             <article class="metric"><div class="metric-top"><span class="metric-label">Provedores mapeados</span><span class="metric-icon">▦</span></div><div class="metric-value">10</div><small>infraestrutura + integrações</small></article>
             <article class="metric"><div class="metric-top"><span class="metric-label">Verificados ao vivo</span><span class="metric-icon">●</span></div><div class="metric-value">6</div><small>conectores e dispositivo</small></article>
-            <article class="metric"><div class="metric-top"><span class="metric-label">Alerta crítico</span><span class="metric-icon">!</span></div><div class="metric-value">0</div><small>backup recuperado em 04/10</small></article>
+            <article class="metric"><div class="metric-top"><span class="metric-label">Alerta crítico</span><span class="metric-icon">!</span></div><div class="metric-value">0</div><small>backup cloud saudável em 07/10</small></article>
             <article class="metric"><div class="metric-top"><span class="metric-label">Supabase Edge</span><span class="metric-icon">ƒ</span></div><div class="metric-value">330</div><small>funções ativas</small></article>
             <article class="metric"><div class="metric-top"><span class="metric-label">Netlify</span><span class="metric-icon">N</span></div><div class="metric-value">7</div><small>sites • plano Free</small></article>
             <article class="metric"><div class="metric-top"><span class="metric-label">Vercel</span><span class="metric-icon">V</span></div><div class="metric-value">0</div><small>projetos no time conectado</small></article>
@@ -117,8 +117,8 @@
                 <tr><td><b>Código-fonte</b></td><td>GitHub</td><td>2 repositórios visíveis</td><td>Git, checkpoints, histórico e publicação</td><td><span class="infra-pill infra-ok">Saudável</span></td></tr>
                 <tr><td><b>Hospedagens históricas / failover</b></td><td>Netlify</td><td>7 sites</td><td>Previews, dashboard e failover</td><td><span class="infra-pill infra-attention">Revisar uso real</span></td></tr>
                 <tr><td><b>Hospedagem alternativa</b></td><td>Vercel</td><td>0 projetos</td><td>Conta conectada sem workload atual</td><td><span class="infra-pill infra-neutral">Sem workload</span></td></tr>
-                <tr><td><b>Baseline de recuperação</b></td><td>Rogerio-2022</td><td>Cofre Zero</td><td>Banco, Edge, Storage, checksums e restore runbook</td><td><span class="infra-pill infra-ok">Restore comprovado</span></td></tr>
-                <tr><td><b>Backup remoto</b></td><td>Google Drive / rclone</td><td>CONSTRUREI-BACKUP-AUTO</td><td>CURRENT + HISTORY</td><td><span class="infra-pill infra-ok">Backup 04/10 OK • restore amostral validado</span></td></tr>
+                <tr><td><b>Baseline de recuperação</b></td><td>Google Cloud + Drive/S3</td><td>Cofre Zero</td><td>Banco, Storage, checksums e restore drill independente do notebook</td><td><span class="infra-pill infra-ok">Restore PASS • 05/10</span></td></tr>
+                <tr><td><b>Backup remoto</b></td><td>Cloud Run / Cloud Scheduler</td><td>construrei-backup</td><td>Automático 03:00 • Drive CURRENT/HISTORY • validação integrada</td><td><span class="infra-pill infra-ok">07/10 OK • execução independente</span></td></tr>
                 <tr><td><b>Acesso remoto</b></td><td>Desktop Commander</td><td>Rogerio-2022</td><td>Auditoria e manutenção local autorizada</td><td><span class="infra-pill infra-ok">Online</span></td></tr>
               </tbody>
             </table></div>
@@ -134,7 +134,7 @@
 
             <article class="card infra-provider"><div class="infra-provider-head"><div><small>HOSPEDAGEM ALTERNATIVA</small><h3>Vercel</h3><p>contatoconstrurei-3042's projects</p></div><span class="infra-pill infra-neutral">Sem workload</span></div><div class="infra-plan"><span>Plano</span><b>Não confirmado pelo conector</b></div><div class="infra-stats"><div><small>Times</small><b>1</b></div><div><small>Projetos</small><b>0</b></div><div><small>Uso atual</small><b>Nenhum projeto identificado</b></div></div><a class="primary-btn infra-link" href="https://vercel.com/dashboard" target="_blank" rel="noopener">Abrir Vercel ↗</a></article>
 
-            <article class="card infra-provider"><div class="infra-provider-head"><div><small>DISPOSITIVO / FERRAMENTAS LOCAIS</small><h3>Rogerio-2022</h3><p>Notebook autorizado</p></div><span class="infra-pill infra-ok">Online</span></div><div class="infra-plan"><span>Desktop Commander</span><b>App 0.2.52</b></div><div class="infra-stats"><div><small>Remote MCP</small><b>85% restante na auditoria</b></div><div><small>Cofre Zero</small><b>Presente</b></div><div><small>Restore</small><b>Comprovado em 26/09</b></div><div><small>Backup diário</small><b>04/10 OK</b></div></div><a class="primary-btn infra-link" href="https://mcp.desktopcommander.app/" target="_blank" rel="noopener">Gerenciar dispositivo ↗</a></article>
+            <article class="card infra-provider"><div class="infra-provider-head"><div><small>DISPOSITIVO / FERRAMENTAS LOCAIS</small><h3>Rogerio-2022</h3><p>Notebook autorizado</p></div><span class="infra-pill infra-ok">Online</span></div><div class="infra-plan"><span>Desktop Commander</span><b>App 0.2.52</b></div><div class="infra-stats"><div><small>Remote MCP</small><b>85% restante na auditoria</b></div><div><small>Cofre Zero</small><b>Presente</b></div><div><small>Restore</small><b>Comprovado em 26/09</b></div><div><small>Backup diário</small><b>Cloud Run independente</b></div></div><a class="primary-btn infra-link" href="https://mcp.desktopcommander.app/" target="_blank" rel="noopener">Gerenciar dispositivo ↗</a></article>
           </div>
 
           <section class="card infra-block">
@@ -206,7 +206,7 @@
   </aside>
 
   <script src="./app.js?v=20261006v122avatarsyncv3"></script>
-  <script src="./executive-dashboard.js?v=20261006v122avatarsyncv3"></script>
+  <script src="./executive-dashboard.js?v=20261007cofrezero125"></script>
   <script src="./agent-hub-panel.js?v=20261006financeirorei1"></script>
   <script src="./human-context-v1.js?v=20261006-context-v3"></script>
 </body>

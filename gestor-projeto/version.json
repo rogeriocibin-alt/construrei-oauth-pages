@@ -1,25 +1,23 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
-  "version": "1.2.4",
-  "build": "CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007",
+  "version": "1.2.5",
+  "build": "CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007",
   "environment": "canonical",
   "release_status": "official_homologated",
-  "base_official": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006",
+  "base_official": "CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007",
   "checkpoint_before": "CHECKPOINT_PROJECT_FRONTS_PRIORITY_20261006",
   "changes": [
-    "Índice Mestre de Regras Canônicas V1 incorporado ao Gestor.",
-    "25 regras estruturadas, 14 fontes indexadas e política explícita de precedência/revogação.",
-    "Painel de conflitos e dubiedades com autochecagem de integridade.",
-    "Filtros e busca por regras/fontes canônicas.",
-    "Identidade visual existente preservada; nenhum CSS/tema da Central, APP ou F00–F09 foi alterado."
+    "Backup / Cofre Zero adicionado à faixa principal de ações do Cockpit, no padrão visual existente.",
+    "Status do acesso deriva da fonte de continuidade do próprio Gestor.",
+    "Controle manual abre o Cloud Run autenticado; nenhuma credencial ou endpoint público de escrita é exposto.",
+    "Infraestrutura atualizada para refletir Cloud Run + Cloud Scheduler e independência do notebook.",
+    "Backup automático diário às 03:00 permanece inalterado."
   ],
   "gate": {
-    "source_review": "PASS",
-    "canonical_integrity": "PASS",
-    "conflicts_open": 0,
-    "identity_preserved": "PASS_NO_CSS_CHANGE",
-    "owner_homologation": "APPROVED",
-    "promotion": "AUTHORIZED_BY_OWNER_20261007"
+    "security": "PASS_NO_PUBLIC_WRITE",
+    "cloud_backup_evidence": "PASS_20261007",
+    "restore_drill": "PASS_20261005",
+    "owner_publication_authorization": "APPROVED_20261007"
   },
   "released_at": "2026-10-07",
   "branch": "main",
@@ -28,13 +26,12 @@
   "rollback": "checkpoint/gestor-v1-2-4-canonical-governance-official-20261007",
   "canonical_checkpoint": "CHECKPOINT_CANONICAL_GOVERNANCE_INDEX_V1_20261007",
   "owner_homologation": {
-    "status": "OWNER_APPROVED_FOR_DIRECT_HOMOLOGATION",
-    "source": "explicit_owner_instruction_in_chat",
-    "note": "Rogério autorizou publicar, atualizar o Gestor e homologar; conteúdo é técnico e deve respeitar identidade de cor e filtros."
+    "status": "OWNER_APPROVED_FOR_PUBLICATION",
+    "source": "explicit_owner_instruction_in_voice_chat",
+    "note": "Rogério autorizou publicação direta em 07/10/2026 após validação de segurança."
   },
   "promotion": {
-    "pr": 39,
-    "merge_sha": "0a16594d6a2e4fc4da3847a8c769591bc72fbf24",
-    "state": "MERGED_TO_MAIN"
+    "pr": 42,
+    "state": "AUTHORIZED_FOR_MERGE"
   }
 }

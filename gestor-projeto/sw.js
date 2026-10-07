@@ -1,4 +1,4 @@
-const BUILD='CR-PM-V1.2.2-AVATAR-LINK-SYNC-V3-OFFICIAL-20261006';
+const BUILD='CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007';
 const CACHE='cr-project-manager-'+BUILD;
 const CORE=['./','./index.html','./styles.css','./executive-dashboard.css','./app.js','./executive-dashboard.js','./agent-hub-panel.css','./agent-hub-panel.js','./team-identity-v2.css','./human-context-v1.css','./human-context-v1.js','./agents.json','./project-data.json','./infra-data.json','./manifest.webmanifest','./pwa-icon.svg','./pwa-icon-192.svg','./pwa-icon-512.svg'];
 const VERSION='./version.json';
