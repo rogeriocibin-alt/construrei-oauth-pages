@@ -117,12 +117,40 @@ Pessoa real representada = retrato + nome + função. Agente digital mantém ava
 **Domínio:** Identidade / Antirregressão  
 Documentos/ativos marcados como **RETIRADO / NÃO UTILIZAR** não podem ser reativados, mesmo que contenham no corpo um fechamento antigo de “homologado”.
 
+### SRC-001 — Chat não substitui fonte canônica
+**Classe:** FUNDAMENTAL  
+**Domínio:** Fontes  
+Histórico de conversa ajuda no contexto, mas não substitui fonte canônica, checkpoint vigente nem dado vivo quando a tarefa depende deles.
+
+### DEV-001 — Estados de maturidade são distintos
+**Classe:** FUNDAMENTAL  
+**Domínio:** Desenvolvimento  
+REGISTRADO, CANDIDATO, TESTADO, VALIDADO, HOMOLOGADO e OFICIAL são estados diferentes. Nenhum estado promove automaticamente para o seguinte.
+
+### DEV-002 — Gate de interface e rollback
+**Classe:** OBRIGATÓRIA  
+**Domínio:** Desenvolvimento  
+Mudança relevante de interface exige validação em notebook + celular quando aplicável, rollback conhecido e registro de branch, commit, checkpoint e estado.
+
+### REUSE-001 — Reutilizar antes de recriar
+**Classe:** OBRIGATÓRIA  
+**Domínio:** Desenvolvimento  
+Antes de criar ou reescrever: localizar ativo existente, classificar **REUTILIZAR / ADAPTAR / CRIAR NOVO** e justificar CRIAR NOVO.
+
+### ARCH-001 — Separação Central × Gestor
+**Classe:** FUNDAMENTAL  
+**Domínio:** Arquitetura  
+A Central é superfície operacional. O Gestor do Projeto concentra governança, versões, checkpoints, infraestrutura, auditoria e desenvolvimento.
+
 ## 5. Documentos-fonte indexados
 
 | Domínio | Documento | Estado |
 |---|---|---|
 | Estado geral | `docs/CONSTRUREI_CURRENT_STATE.md` | referência viva de continuidade |
 | Agentes | `docs/AGENTS_REGISTRY.md` | vigente |
+| Núcleo de agentes | `docs/agents/CONSTRUREI_AGENT_KNOW_HOW_CANON_V1.md` | vigente |
+| Financeiro REI | `docs/agents/FINANCEIRO_REI_V1.md` | vigente |
+| ORÇA-REI | `docs/agents/ORCA_REI_V1.md` | domínio / aprovado para implementação |
 | Identidade humana | `docs/HUMAN_IDENTITY_CANON_V1_20261006.md` | vigente |
 | Identidade visual V1 | `docs/CHECKPOINT_BRAND_CANONICAL_V1_20261006.md` | **RETIRADO / NÃO UTILIZAR** |
 | Pendências | `gestor-projeto/project-data.json` + Banco Mestre | vigente |
