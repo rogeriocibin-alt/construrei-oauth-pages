@@ -3577,6 +3577,30 @@
       "path": "docs/agents/ORCA_REI_V1.md",
       "status": "domain",
       "note": "Manual canônico/aprovado para implementação do F02; gate comercial final humano."
+    },
+    {
+      "domain": "Base oficial de continuidade",
+      "path": "docs/CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006.md",
+      "status": "vigente",
+      "note": "Checkpoint oficial/congelado de continuidade; mudanças derivam dele ou de descendente direto."
+    },
+    {
+      "domain": "Central • estabilidade documental",
+      "path": "docs/CHECKPOINT_CENTRAL_DOCS_STABILITY_V15_20261006.md",
+      "status": "vigente",
+      "note": "Fronteira Central×Gestor e regra contra MutationObserver global."
+    },
+    {
+      "domain": "Pendências vivas",
+      "path": "docs/PENDENCIAS_LIVE_REGISTRY_20261004.md",
+      "status": "domain",
+      "note": "Automação de evidência; WIZY/Éder permanecem manuais quando dependem de execução humana."
+    },
+    {
+      "domain": "Links oficiais",
+      "path": "docs/official-links-registry.json",
+      "status": "vigente",
+      "note": "Aliases públicos estáveis; endpoints técnicos preservados."
     }
   ],
   "canonical_conflicts": [
