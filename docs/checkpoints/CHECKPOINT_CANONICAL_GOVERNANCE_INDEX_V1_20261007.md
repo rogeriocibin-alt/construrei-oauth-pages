@@ -1,7 +1,7 @@
 # CHECKPOINT — Índice Mestre de Regras Canônicas V1 — 07/10/2026
 
 ## Estado atual
-Candidata de governança criada para consolidar regras, precedência, revogações, fontes e freios de desenvolvimento no Gestor do Projeto.
+**HOMOLOGADO / AUTORIZADO PARA PROMOÇÃO** — governança canônica consolidada no Gestor do Projeto.
 
 ## Branch
 `candidate/canonical-governance-index-20261007`
@@ -43,10 +43,10 @@ Candidata de governança criada para consolidar regras, precedência, revogaçõ
 Validação estática da candidata e conferência do diff.
 
 ## Próxima ação
-PR #39 criado como **draft** para revisão. Aguardar validação do Owner antes de qualquer merge/promoção.
+Promover o PR #39 para `main` e confirmar o link estável do Gestor.
 
 ## Bloqueios
-Nenhum bloqueio técnico conhecido nesta etapa. Falta validação visual/funcional do Owner antes de qualquer promoção.
+Nenhum. Rogério autorizou publicação/homologação direta desta camada técnica em 07/10/2026, preservando filtros e identidade visual vigente.
 
 
 ## Delta posterior ao checkpoint inicial
@@ -73,3 +73,10 @@ Nenhum bloqueio técnico conhecido nesta etapa. Falta validação visual/funcion
 - Resultado atual: PASS.
 - Checkpoint branch: `checkpoint/canonical-governance-index-v1-20261007-1130`.
 - SHA do checkpoint: `1a9b9b1d91560ef0b6e2c5a3c6fd6f747d66a204`.
+
+
+## Homologação do proprietário
+- Decisão: **APROVADO PARA PUBLICAR E HOMOLOGAR**.
+- Critério: conteúdo predominantemente técnico; não exige inspeção visual detalhada.
+- Condições preservadas: filtros funcionais, identidade de cor vigente e ausência de alteração destrutiva em Central/APP/F00–F09.
+- Release: **Gestor V1.2.4 — CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007**.
