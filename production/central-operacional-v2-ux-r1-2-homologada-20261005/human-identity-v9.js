@@ -6,7 +6,7 @@ const LOGO='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-log
 const LINKS={
  trello:'https://trello.com/b/qI0r9MT8/gest%C3%A3o-de-obras-2026',
  gestaoclick:'https://gestaoclick.com/inicio',
- cora:'https://app.cora.com.br',
+ cora:'https://cora.sng.link/Dds0c/fv34?_smtype=3',
  wizy:'https://app.wizyflow.com.br',
  gmail:'https://mail.google.com/mail/u/?authuser=contatoconstrurei@gmail.com#inbox'
 };
@@ -131,11 +131,11 @@ function quickAccess(){
  const panel=document.querySelector('#dashboard .cr-operation-panel .cr-panel-head');if(!panel)return;
  let box=document.getElementById('crBizQuick');
  if(!box){box=document.createElement('div');box.id='crBizQuick';box.className='cr-biz-quick';panel.appendChild(box)}
- const sig='v15-five-apps-official-20261006';
+ const sig='v16-five-apps-cora-app-20261006';
  if(box.dataset.sig===sig)return;
  box.dataset.sig=sig;
  box.innerHTML=
-  '<a href="'+LINKS.cora+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn cora" title="Abrir Cora"><span class="cr-biz-logo"><img src="https://comunidade.cora.com.br/wp-content/uploads/2022/08/cora-logo.svg" alt="Cora"></span><small>Cora</small></a>'+
+  '<a href="'+LINKS.cora+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn cora" title="Abrir Cora no aplicativo"><span class="cr-biz-logo"><img src="https://comunidade.cora.com.br/wp-content/uploads/2022/08/cora-logo.svg" alt="Cora"></span><small>Cora</small></a>'+
   '<a href="'+LINKS.trello+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn trello" title="Abrir Trello • Gestão de Obras 2026"><span class="cr-biz-logo"><img src="https://trello.com/favicon.ico" alt="Trello"></span><small>Trello</small></a>'+
   '<a href="'+LINKS.gestaoclick+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn gc" title="Abrir GestãoClick"><span class="cr-biz-logo"><img src="https://www.google.com/s2/favicons?domain=gestaoclick.com.br&sz=64" alt="GestãoClick"></span><small>GestãoClick</small></a>'+
   '<a href="'+LINKS.wizy+'" target="_top" rel="noopener noreferrer" class="cr-biz-btn wizy" title="Abrir Wizy Flow"><span class="cr-biz-logo"><img src="https://app.wizyflow.com.br/favicon.ico" alt="Wizy Flow"></span><small>Wizy Flow</small></a>'+
