@@ -1185,3 +1185,17 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Regra de continuidade: **toda alteração futura deve partir deste checkpoint ou de descendente direto dele; não retomar branches/commits anteriores como base ativa**.
 - Regra de promoção: qualquer nova alteração deve nascer em candidata isolada e somente substituir esta base após validação/homologação explícita.
 - Regra antirregressão: preservar lógica, dados, integrações, financeiro, links, Central, APP, Gestor, Apresentação e F00–F09 que já estejam válidos neste estado.
+
+
+## VARREDURA EXECUTIVA DE FRENTES — 2026-10-06
+- Base de partida preservada: `CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006`.
+- Escopo: **governança e saneamento de pendências**, sem mudança funcional/visual na Central ou APP runtime.
+- Regra ativa: máximo de **2 frentes simultâneas**.
+- **P0 ativo 1:** Financeiro V5 + Cora / Aprovisionamento — R18 candidata, aproximadamente 88%; falta gate humano e escrita Trello controlada com deduplicação/auditoria.
+- **P0 ativo 2:** APP F00→F09 + ORÇA-REI — aproximadamente 82%; falta complementar F02 e executar um gate E2E único em celular + notebook.
+- **P1 em fila:** Cofre Zero/backup automático; Wizy Flow ↔ APP.
+- **P2 em fila:** Saúde Técnica; Google Meet Add-ons; identidade visual futura (somente com kit correto); Academy/refinamentos documentais.
+- Banco Mestre `cc_items`: legado claramente superado encerrado como histórico; subitens APP subordinados ao gate E2E único; WIZY/Éder preservados como manuais.
+- Gestor candidato: `CR-PM-V1.2.3-PROJECT-FRONTS-20261006`.
+- Branch: `audit/project-fronts-priority-20261006`.
+- Checkpoint: `docs/CHECKPOINT_PROJECT_FRONTS_PRIORITY_20261006.md`.
