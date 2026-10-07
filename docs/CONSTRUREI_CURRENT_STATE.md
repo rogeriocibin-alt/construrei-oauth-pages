@@ -1299,3 +1299,19 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Regra de continuidade: **DAQUI PARA FRENTE**. Não reintroduzir CSS escuro antigo, não voltar a versões visuais anteriores e não descaracterizar a identidade aprovada.
 - Qualquer novo ajuste deve nascer sobre esta baseline e preservar rollback.
 - Próxima evolução autorizada: aumentar legibilidade dos controles de Operação e Obras no desktop, sem alterar a base visual homologada.
+
+
+## Dashboard Financeiro V4 — oficializado em 2026-10-07
+
+- Status: **HOMOLOGADO / OFICIAL / CONGELADO**
+- Origem validada: `preview/dashboard-gerencial-v4-manual-cora-candidate-20261007/`
+- Produção congelada: `production/dashboard-financeiro-v4-homologado-20261007/`
+- Alias oficial estável: `production/dashboard-financeiro-v4/`
+- Commit de promoção: `e397647f97f8aa2b7e7c411147ad3649a3a4fd2a`
+- Commit do alias: `b16da47d2d1bf734247f19cfb48a637603f3dc0d`
+- Checkpoint: `CHECKPOINT_DASHBOARD_FINANCEIRO_V4_HOMOLOGADO_20261007.md`
+- Link oficial: https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v4/
+- Link congelado: https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v4-homologado-20261007/
+- Escopo: identidade visual aprovada; filtros Operação e Obras; Financeiro/Acertos; Cora Manual → Trello; limpeza/deduplicação de texto; saldo Cora verificado + saldo projetado.
+- Dependência remanescente: leitura automática de saldo/extrato do Cora aguarda credenciais válidas de produção. Até lá, o saldo projetado permanece claramente separado do saldo bancário real.
+- Regra: futuras evoluções do Dashboard Financeiro V4 devem partir da pasta congelada de produção acima, preservando esta versão para rollback.
