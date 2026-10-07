@@ -9,15 +9,15 @@ const STATUS_LABEL={
   registered:'Registrada',implementation_planned:'Implementação planejada',investigating:'Investigando',planned:'Planejada',healthy:'Saudável',error:'Erro',stale:'Desatualizada'
 };
 const VIEW_TITLES={
-  now:'Cockpit do Projeto',pending:'Pendências do Projeto',history:'Histórico Vivo',canonical:'Cadeia Canônica',fronts:'Frentes',versions:'Versões',
+  now:'Cockpit do Projeto',pending:'Pendências do Projeto',history:'Histórico Vivo',canonical:'Regras Canônicas',fronts:'Frentes',versions:'Versões',
   decisions:'Decisões',timeline:'Linha do Tempo',products:'Produtos',agents:'Agentes & Automações',infrastructure:'Infraestrutura & TI',recoverables:'Recuperáveis',
   audits:'Auditorias',governance:'Governança',search:'Busca'
 };
 
-const CURRENT_RELEASE={version:'1.2.2',build:'CR-PM-V1.2.2-AVATAR-LINK-SYNC-V3-OFFICIAL-20261006',environment:'canonical'};
+const CURRENT_RELEASE={version:'1.2.4',build:'CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007',environment:'canonical'};
 const PM_API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
 const PM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
-const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
+const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',canonicalFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -128,7 +128,7 @@ function renderLiveRibbon(){
   const attention=Number((s.degraded_or_error??0)+(s.stale??0)+(s.not_confirmed??0)) || fallback.filter(x=>x.status!=='healthy').length;
   return `<section class="live-ribbon ${sync?.ok?'is-live':'is-fallback'}">
     <div class="live-main"><span class="live-dot"></span><div><b>${sync?.ok?'Banco Mestre persistente conectado':'Fallback versionado ativo'}</b><small>${sync?.ok?('Snapshot '+fmtLiveTs(live?.generated_at)):'Sem resposta viva neste instante; o snapshot local permanece disponível.'}</small></div></div>
-    <div class="live-facts"><span><b>${healthy}/${total}</b> fontes saudáveis</span><span><b>${attention}</b> atenção/revalidação</span><span><b>V1.2.2</b> canônica homologada • riscos abertos preservados</span></div>
+    <div class="live-facts"><span><b>${healthy}/${total}</b> fontes saudáveis</span><span><b>${attention}</b> atenção/revalidação</span><span><b>V1.2.4</b> canônica homologada • riscos abertos preservados</span></div>
   </section>`;
 }
 async function refreshProjectManagerLive(){
@@ -139,10 +139,10 @@ async function refreshProjectManagerLive(){
     if(!body?.ok)throw new Error(body?.error||'snapshot inválido');
     state.pmLive=body;
     state.pmSync={ok:true,at:body.generated_at||new Date().toISOString()};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.2 • AGENT HUB • OFICIAL • LIVE';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.4 • OFICIAL • LIVE';
   }catch(err){
     state.pmSync={ok:false,at:new Date().toISOString(),error:String(err?.message||err)};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.2 • AGENT HUB • OFICIAL • FALLBACK';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.4 • OFICIAL • FALLBACK';
   }
   renderNow();
   renderAudits();
@@ -390,27 +390,100 @@ async function refreshLiveRepository(){
 }
 
 
-function renderCanonical(){
-  const d=state.data;
-  const chain=arr(d.versions).filter(v=>['central-canonical-20261001','exec-v6','exec-v7','exec-v8','exec-v9','exec-v10','exec-v11'].includes(v.id));
-  $('#view-canonical').innerHTML=`
-    <div class="page-intro"><div><h2>Cadeia Canônica</h2><p>A numeração não define a verdade do projeto. O que vale é a relação entre baseline, candidata, checkpoint e decisão explícita.</p></div></div>
-    <div class="card">
-      <div class="card-head"><div><h3>Central → Executiva V6 → V11</h3><p>Genealogia visível, com status e evidência.</p></div></div>
-      <div class="chain">
-        ${chain.map((v,i)=>`${i?'<div class="chain-arrow">→</div>':''}<button class="chain-node detail-btn" data-type="version" data-id="${esc(v.id)}" style="text-align:left;cursor:pointer"><div style="margin-bottom:8px">${badge(v.status)}</div><strong>${esc(v.name)}</strong><small>${esc(v.date)} • ${esc(short(v.commit))}</small><small>${esc(v.note||'')}</small></button>`).join('')}
-      </div>
-    </div>
-    <div class="card" style="margin-top:16px">
-      <div class="card-head"><div><h3>Travas de canonicidade</h3><p>Regras que impedem regressão silenciosa.</p></div></div>
-      <div class="card-pad">
-        ${arr(d.canonical_rules).map(r=>`<div class="rule-row"><span class="rule-state ${r.status==='preserved'?'ok':'partial'}">${r.status==='preserved'?'✓':'!'}</span><div><b>${esc(r.label)}</b><small>${esc(r.evidence)}</small></div>${badge(r.status)}</div>`).join('')}
-      </div>
-    </div>
-  `;
-  bindDetailButtons();
+function canonicalIntegrity(d){
+  const rules=arr(d?.canonical_rules), sources=arr(d?.canonical_sources), conflicts=arr(d?.canonical_conflicts);
+  const issues=[];
+  const ids=new Map();
+  for(const r of rules){
+    ids.set(r.id,(ids.get(r.id)||0)+1);
+    for(const k of ['id','label','category','class','criticality','status','source']){
+      if(!r?.[k])issues.push({severity:'P0',code:'MISSING_FIELD',detail:`${r?.id||'SEM_ID'} sem ${k}`});
+    }
+  }
+  for(const [id,n] of ids)if(n>1)issues.push({severity:'P0',code:'DUPLICATE_RULE_ID',detail:`ID duplicado: ${id} (${n}x)`});
+  const sourceState=new Map(sources.map(x=>[x.path,x.status]));
+  for(const r of rules){
+    if(sourceState.get(r.source)==='revoked')issues.push({severity:'P0',code:'ACTIVE_RULE_REVOKED_SOURCE',detail:`${r.id} aponta para fonte revogada: ${r.source}`});
+  }
+  const seenSource=new Map();
+  for(const x of sources){seenSource.set(x.path,(seenSource.get(x.path)||0)+1);}
+  for(const [path,n] of seenSource)if(n>1)issues.push({severity:'P1',code:'DUPLICATE_SOURCE',detail:`Fonte duplicada: ${path} (${n}x)`});
+  const unresolved=conflicts.filter(x=>!['resolved','guarded'].includes(x.status));
+  unresolved.forEach(x=>issues.push({severity:x.severity||'P1',code:'UNRESOLVED_CONFLICT',detail:`${x.id}: ${x.title}`}));
+  return {ok:issues.length===0,issues,rule_count:rules.length,source_count:sources.length,conflict_count:conflicts.length};
 }
 
+function renderCanonical(){
+  const d=state.data;
+  const gov=d.canonical_governance||{};
+  const rules=arr(d.canonical_rules);
+  const sources=arr(d.canonical_sources);
+  const conflicts=arr(d.canonical_conflicts);
+  const filters=[
+    ['all','Todas'],['FUNDAMENTAL','Fundamentais'],['Governança','Governança'],['Continuidade','Continuidade'],
+    ['Desenvolvimento','Desenvolvimento'],['Arquitetura','Arquitetura'],['Fontes','Fontes'],['Pendências','Pendências'],['Agentes','Agentes'],
+    ['Financeiro','Financeiro'],['Identidade','Identidade'],['Auditoria','Auditoria'],['APP / F00–F09','APP / F00–F09']
+  ];
+  const list=rules.filter(r=>state.canonicalFilter==='all'||r.class===state.canonicalFilter||r.category===state.canonicalFilter);
+  const p0=rules.filter(r=>r.criticality==='P0').length;
+  const fundamental=rules.filter(r=>r.class==='FUNDAMENTAL').length;
+  const revoked=sources.filter(x=>x.status==='revoked').length;
+  const unresolved=conflicts.filter(x=>!['resolved','guarded'].includes(x.status)).length;
+  const integrity=canonicalIntegrity(d);
+  $('#view-canonical').innerHTML=`
+    <div class="page-intro"><div><h2>Regras Canônicas</h2><p>Índice Mestre de governança: o que vale, por que vale, qual fonte sustenta e o que foi revogado. Esta é a consulta obrigatória antes de mudança técnica relevante.</p></div></div>
+    <section class="metrics">
+      ${metric('Regras vigentes',rules.length,'Índice Mestre V1','◇')}
+      ${metric('Fundamentais',fundamental,'Freios e contrapesos','⚑')}
+      ${metric('P0',p0,'Não podem ser ignoradas','!')}
+      ${metric('Fontes revogadas',revoked,'Histórico apenas','×')}
+      ${metric('Conflitos não resolvidos',unresolved,'Dubiedade explícita, nunca silenciosa','⇄')}
+      ${metric('Integridade do índice',integrity.ok?'PASS':'ALERTA',integrity.ok?'IDs/fontes/conflitos coerentes':(integrity.issues.length+' problema(s) estrutural(is)'),'◎',integrity.ok?'':'metric-alert')}
+    </section>
+    <section class="card" style="margin-bottom:16px">
+      <div class="card-head"><div><h3>Autochecagem do Índice Mestre</h3><p>O próprio Gestor verifica IDs duplicados, campos obrigatórios, fontes revogadas e conflitos não resolvidos.</p></div><span class="badge ${integrity.ok?'completed':'blocked'}">${integrity.ok?'PASS':'ALERTA'}</span></div>
+      <div class="card-pad">
+        ${integrity.ok?'<div class="notice"><b>Integridade estrutural OK.</b> Nenhuma regra ativa aponta para fonte revogada, não há IDs duplicados e não há conflitos abertos.</div>':integrity.issues.map(x=>`<div class="rule-row"><span class="rule-state partial">!</span><div><b>${esc(x.code)}</b><small>${esc(x.detail)}</small></div><span class="badge ${x.severity==='P0'?'blocked':'attention'}">${esc(x.severity)}</span></div>`).join('')}
+      </div>
+    </section>
+    <section class="card" style="margin-bottom:16px">
+      <div class="card-head"><div><h3>Precedência e antirregressão</h3><p>Quando houver conflito, a ordem abaixo decide. Revogação explícita sempre bloqueia reativação acidental.</p></div><span class="badge canonical">${esc(gov.version||'Índice Mestre')}</span></div>
+      <div class="card-pad">
+        ${arr(gov.precedence).map((x,i)=>`<div class="rule-row"><span class="rule-state ok">${i+1}</span><div><b>${esc(x)}</b><small>${i===0?'Autoridade humana atual registrada.':'Aplicar somente se as camadas acima não resolverem o conflito.'}</small></div></div>`).join('')}
+        <div class="notice" style="margin-top:12px"><b>Regra de revogação:</b> ${esc(gov.revocation_rule||'Documento retirado não prevalece.')}</div>
+      </div>
+    </section>
+    <div class="toolbar">
+      ${filters.map(([id,t])=>`<button class="filter-btn ${state.canonicalFilter===id?'active':''}" data-cfilter="${esc(id)}">${esc(t)}</button>`).join('')}
+    </div>
+    <section class="card">
+      <div class="card-head"><div><h3>Índice de regras vigentes</h3><p>Filtre por classe ou domínio. Cada regra aponta para sua evidência/fonte.</p></div><span class="badge candidate">${list.length} visíveis</span></div>
+      <div class="card-pad">
+        ${list.map(r=>`<div class="rule-row"><span class="rule-state ${r.status==='preserved'?'ok':'partial'}">✓</span><div><div class="decision-meta"><span class="mono">${esc(r.id)}</span><span class="badge review">${esc(r.class||'REGRA')}</span><span class="badge ${r.criticality==='P0'?'attention':'review'}">${esc(r.criticality||'')}</span></div><b>${esc(r.label)}</b><small>${esc(r.category||'Geral')} • ${esc(r.evidence||'')}</small><small class="mono">Fonte: ${esc(r.source||'—')} • ${esc(r.date||'')}</small></div>${badge(r.status||'preserved')}</div>`).join('')||'<div class="empty">Nenhuma regra neste filtro.</div>'}
+      </div>
+    </section>
+    <section class="card" style="margin-top:16px">
+      <div class="card-head"><div><h3>Fontes canônicas e revogações</h3><p>Documento antigo pode continuar no repositório sem continuar valendo.</p></div></div>
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th>Domínio</th><th>Documento</th><th>Estado</th><th>Nota</th></tr></thead>
+        <tbody>${sources.map(x=>`<tr><td><b>${esc(x.domain)}</b></td><td class="mono">${esc(x.path)}</td><td>${x.status==='revoked'?'<span class="badge blocked">REVOGADO</span>':x.status==='vigente'?'<span class="badge canonical">VIGENTE</span>':'<span class="badge review">DOMÍNIO</span>'}</td><td>${esc(x.note||'')}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </section>
+    <section class="card" style="margin-top:16px">
+      <div class="card-head"><div><h3>Conflitos e dubiedades registradas</h3><p>Quando fontes divergem, a decisão fica explícita e auditável em vez de depender da memória.</p></div><span class="badge ${unresolved?'attention':'completed'}">${unresolved?'ATENÇÃO':'SEM CONFLITO ABERTO'}</span></div>
+      <div class="card-pad">
+        ${conflicts.map(c=>`<div class="govern-item"><div class="decision-meta"><span class="mono">${esc(c.id)}</span><span class="badge ${c.severity==='P0'?'attention':'review'}">${esc(c.severity||'')}</span><span class="badge ${c.status==='resolved'?'completed':c.status==='guarded'?'canonical':'blocked'}">${esc(String(c.status||'').toUpperCase())}</span></div><p><b>${esc(c.title)}</b></p><p>${esc(c.resolution||'')}</p><small>${esc(c.domain||'')} • Regra: ${esc(c.rule||'—')} • Fontes: ${esc(arr(c.sources).join(' | '))}</small></div>`).join('')||'<div class="empty">Nenhuma dubiedade registrada.</div>'}
+      </div>
+      <div class="notice" style="margin:0 14px 14px"><b>Política:</b> ${esc(gov.conflict_policy||'Conflitos devem ser registrados e resolvidos por precedência.')}</div>
+    </section>
+    <section class="card" style="margin-top:16px">
+      <div class="card-head"><div><h3>Gate antes de desenvolver</h3><p>Checklist mínimo para BIO, CR Assertivo e qualquer executor.</p></div></div>
+      <div class="card-pad">${arr(gov.development_gate).map((x,i)=>`<div class="rule-row"><span class="rule-state ok">${i+1}</span><div><b>${esc(x)}</b></div></div>`).join('')}</div>
+      <div class="notice" style="margin:0 14px 14px"><b>Checkpoint:</b> ${esc(gov.checkpoint_protocol||'Registrar continuidade antes de pausar.')}</div>
+    </section>
+  `;
+  $$('[data-cfilter]').forEach(b=>b.onclick=()=>{state.canonicalFilter=b.dataset.cfilter;renderCanonical();});
+}
 function renderFronts(){
   const d=state.data;
   const active=arr(d.fronts).filter(f=>['executing','homologation'].includes(f.status));
@@ -537,7 +610,7 @@ function renderAudits(){
 
 function syncReleaseUi(meta=CURRENT_RELEASE){
   const chip=$('#versionChip');
-  if(chip) chip.textContent='V1.2.2 • AGENT HUB';
+  if(chip) chip.textContent='V1.2.4 • OFICIAL';
 }
 
 function releaseNotesHtml(meta){
@@ -675,7 +748,9 @@ function renderSearch(q){
       ['Produto',d.products,'name',['summary','current','layer']],
       ['Checkpoint',d.checkpoints,'name',['role','commit']],
       ['Marco',d.milestones,'title',['detail','type']],
-      ['Pendência',d.project_pending,'title',['id','domain','priority','state','owner','next_action','dependency','source','close_when']]
+      ['Pendência',d.project_pending,'title',['id','domain','priority','state','owner','next_action','dependency','source','close_when']],
+      ['Regra canônica',d.canonical_rules,'label',['id','category','class','criticality','source','evidence']],
+      ['Fonte canônica',d.canonical_sources,'domain',['path','status','note']]
     ];
     for(const [kind,list,titleKey,fields] of groups){
       for(const item of arr(list)){
