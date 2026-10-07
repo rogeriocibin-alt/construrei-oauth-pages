@@ -707,7 +707,9 @@ function renderSearch(q){
       ['Produto',d.products,'name',['summary','current','layer']],
       ['Checkpoint',d.checkpoints,'name',['role','commit']],
       ['Marco',d.milestones,'title',['detail','type']],
-      ['Pendência',d.project_pending,'title',['id','domain','priority','state','owner','next_action','dependency','source','close_when']]
+      ['Pendência',d.project_pending,'title',['id','domain','priority','state','owner','next_action','dependency','source','close_when']],
+      ['Regra canônica',d.canonical_rules,'label',['id','category','class','criticality','source','evidence']],
+      ['Fonte canônica',d.canonical_sources,'domain',['path','status','note']]
     ];
     for(const [kind,list,titleKey,fields] of groups){
       for(const item of arr(list)){
