@@ -1220,3 +1220,20 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - Deduplicação obrigatória pelo ID canônico da pendência.
 - Implementação: regra persistida em `cr_internal.pending_automation_config_v1` como `CANONICAL_PENDING_ROUTING`; projeção operacional corrigida no `central-public-api-p0` build `central-public-api-p0-pending-routing-v23-20261007`. O ponto autenticado de criação/edição também foi endurecido no `central-gestao-api` build `central-gestao-r128-v5-canonical-pending-routing-20261007`: toda criação grava área explícita no mestre e Éder fica restrito ao escopo APP/WIZY.
 - Pendência `PM-26` — **Gestão Click — saneamento financeiro + marco zero** — registrada como P1 no mestre, área FINANCEIRO, sem projeção para APP/WIZY/Éder.
+
+
+## 2026-10-07 — Regra canônica de reutilização de auditorias históricas
+
+- **Regra:** auditoria histórica grande concluída passa a ser **baseline reutilizável** e não deve ser refeita por padrão.
+- **Princípio operacional:** `BASELINE FIRST → DELTA SECOND`.
+- Antes de qualquer auditoria ampla, a inteligência deve consultar uma baseline válida para a fonte/período solicitado.
+- Se o período solicitado já estiver coberto, usar o resultado persistido e **não executar FULL novamente**.
+- Se a consulta exigir dados posteriores ao corte da baseline, auditar apenas o **delta posterior ao cutoff** e/ou lacunas específicas.
+- Nova auditoria FULL só é permitida por: ausência de baseline válida; falha de integridade; mudança material de escopo; divergência inexplicada; ou solicitação explícita do proprietário.
+- Implementação persistente: `cr_internal.audit_baselines_v1`.
+- Lookup canônico: RPC `cr_audit_baseline_lookup_v1`.
+- Endpoint autenticado no Gestor: `audit-lookup`, build `CR-PROJECT-MANAGER-V1.1-AUDIT-REUSE-API-20261007`.
+- Auditoria Trello FULL de 26/09/2026 canonizada como `AUDIT-TRELLO-FULL-20260926` / `AUD-002`.
+- Escopo dessa baseline: 13 quadros, 1.520 cards, 146 listas, 299 etiquetas, 50.303 ações históricas, 807 checklists e 4.009 anexos; inclui histórico 2024, 2025, 2026 e quadros arquivados.
+- Consulta de teste 2024→01/09/2026 retornou `USE_BASELINE_NO_FULL_RESCAN`.
+- Consulta 2024→07/10/2026 retornou `USE_BASELINE_PLUS_DELTA_OR_TARGETED_GAP`, com delta a partir do corte de 26/09/2026.
