@@ -14,7 +14,7 @@ const VIEW_TITLES={
   audits:'Auditorias',governance:'Governança',search:'Busca'
 };
 
-const CURRENT_RELEASE={version:'1.2.3',build:'CR-PM-V1.2.3-PROJECT-FRONTS-20261006',environment:'canonical'};
+const CURRENT_RELEASE={version:'1.2.4',build:'CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007',environment:'canonical'};
 const PM_API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
 const PM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
 const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',canonicalFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
@@ -128,7 +128,7 @@ function renderLiveRibbon(){
   const attention=Number((s.degraded_or_error??0)+(s.stale??0)+(s.not_confirmed??0)) || fallback.filter(x=>x.status!=='healthy').length;
   return `<section class="live-ribbon ${sync?.ok?'is-live':'is-fallback'}">
     <div class="live-main"><span class="live-dot"></span><div><b>${sync?.ok?'Banco Mestre persistente conectado':'Fallback versionado ativo'}</b><small>${sync?.ok?('Snapshot '+fmtLiveTs(live?.generated_at)):'Sem resposta viva neste instante; o snapshot local permanece disponível.'}</small></div></div>
-    <div class="live-facts"><span><b>${healthy}/${total}</b> fontes saudáveis</span><span><b>${attention}</b> atenção/revalidação</span><span><b>V1.2.3</b> canônica homologada • riscos abertos preservados</span></div>
+    <div class="live-facts"><span><b>${healthy}/${total}</b> fontes saudáveis</span><span><b>${attention}</b> atenção/revalidação</span><span><b>V1.2.4</b> canônica homologada • riscos abertos preservados</span></div>
   </section>`;
 }
 async function refreshProjectManagerLive(){
@@ -139,10 +139,10 @@ async function refreshProjectManagerLive(){
     if(!body?.ok)throw new Error(body?.error||'snapshot inválido');
     state.pmLive=body;
     state.pmSync={ok:true,at:body.generated_at||new Date().toISOString()};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.3 • OFICIAL • LIVE';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.4 • OFICIAL • LIVE';
   }catch(err){
     state.pmSync={ok:false,at:new Date().toISOString(),error:String(err?.message||err)};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.3 • OFICIAL • FALLBACK';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.4 • OFICIAL • FALLBACK';
   }
   renderNow();
   renderAudits();
@@ -610,7 +610,7 @@ function renderAudits(){
 
 function syncReleaseUi(meta=CURRENT_RELEASE){
   const chip=$('#versionChip');
-  if(chip) chip.textContent='V1.2.3 • OFICIAL';
+  if(chip) chip.textContent='V1.2.4 • OFICIAL';
 }
 
 function releaseNotesHtml(meta){
