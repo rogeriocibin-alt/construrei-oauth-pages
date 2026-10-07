@@ -2,6 +2,7 @@
 'use strict';
 
 var API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
+var BACKUP_CONTROL_URL='https://console.cloud.google.com/run/jobs/details/southamerica-east1/construrei-backup?project=app-construrei';
 var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
 var lastPayload=null;
 var lastVisit=null;
@@ -126,8 +127,9 @@ function render(payload){
   html.push('<section class="xd-hero"><div class="xd-hero-main"><div class="xd-kicker">GESTÃO EXECUTIVA • CANÔNICA HOMOLOGADA</div><h2>O projeto inteiro em uma tela.<br><span>Veja, decida e entre na ação.</span></h2><p>Estado, risco, capacidade, decisões e avanço comprovado primeiro. A camada técnica continua preservada nos níveis seguintes.</p><div class="xd-actions">');
   if(central)html.push('<button class="primary-btn xd-url" data-url="'+esc(central.url)+'">Abrir Central ↗</button>');
   if(app)html.push('<button class="soft-btn xd-url" data-url="'+esc(app.url)+'">Abrir APP ↗</button>');
+  html.push('<button class="soft-btn xd-url" data-url="'+BACKUP_CONTROL_URL+'">Backup / Cofre Zero • '+(backup&&backup.status==='healthy'?'SAUDÁVEL':'VERIFICAR')+' ↗</button>');
   html.push('<button class="soft-btn" data-view="pending">Pendências</button><button class="soft-btn" data-view="audits">Auditorias</button></div></div>');
-  html.push('<div class="xd-state"><small>ESTADO GERAL</small><div><span>Versão</span><b>V1.1.2 • CANÔNICA</b></div><div><span>Ambiente</span><b>Canônica homologada</b></div><div><span>Dados</span><b>'+(payload.liveOk?'LIVE • persistente':'FALLBACK • versionado')+'</b></div><div><span>Última leitura</span><b>'+esc(fmt(payload.generatedAt))+'</b></div><div class="xd-gate '+(String(gate).toUpperCase()==='BLOCKED'?'blocked':'ok')+'"><span>'+(String(gate).toUpperCase()==='BLOCKED'?'⛔':'✓')+'</span><p><small>GATE DE PROMOÇÃO</small><strong>'+esc(label(gate))+'</strong></p></div></div></section>');
+  html.push('<div class="xd-state"><small>ESTADO GERAL</small><div><span>Versão</span><b>V1.2.5 • CANÔNICA</b></div><div><span>Ambiente</span><b>Canônica homologada</b></div><div><span>Dados</span><b>'+(payload.liveOk?'LIVE • persistente':'FALLBACK • versionado')+'</b></div><div><span>Última leitura</span><b>'+esc(fmt(payload.generatedAt))+'</b></div><div class="xd-gate '+(String(gate).toUpperCase()==='BLOCKED'?'blocked':'ok')+'"><span>'+(String(gate).toUpperCase()==='BLOCKED'?'⛔':'✓')+'</span><p><small>GATE DE PROMOÇÃO</small><strong>'+esc(label(gate))+'</strong></p></div></div></section>');
 
   html.push('<div class="xd-section-head"><div><small>PROJETO EM NÚMEROS</small><h3>Tamanho, pressão e capacidade</h3></div><span>Clique para chegar ao detalhe.</span></div><section class="xd-metrics">');
   html.push(metric('Frentes ativas',x.active.length+'/2',x.queue.length+' na fila','▦','fronts',x.active.length>=2?'amber':'green'));
@@ -196,7 +198,7 @@ function render(payload){
 }
 async function load(){
   try{
-    var dataResp=await fetch('./project-data.json?v=20261005v112h3',{cache:'no-store'});
+    var dataResp=await fetch('./project-data.json?v=20261007cofrezero125',{cache:'no-store'});
     var data=await dataResp.json();
     var live=null,ok=false,generatedAt=data.meta&&data.meta.generated_at;
     try{
