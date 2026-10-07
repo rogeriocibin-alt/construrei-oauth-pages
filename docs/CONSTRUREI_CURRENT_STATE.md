@@ -1218,5 +1218,5 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 - WIZY é subconjunto do escopo APP; Éder é subconjunto das pendências APP sob sua responsabilidade.
 - Pendências fora do APP — Financeiro independente, Central, Infraestrutura, Governança, Visual, Meeting, Conhecimento etc. — ficam somente no Gestor do Projeto.
 - Deduplicação obrigatória pelo ID canônico da pendência.
-- Implementação: regra persistida em `cr_internal.pending_automation_config_v1` como `CANONICAL_PENDING_ROUTING`; projeção operacional corrigida no `central-public-api-p0` build `central-public-api-p0-pending-routing-v23-20261007`.
+- Implementação: regra persistida em `cr_internal.pending_automation_config_v1` como `CANONICAL_PENDING_ROUTING`; projeção operacional corrigida no `central-public-api-p0` build `central-public-api-p0-pending-routing-v23-20261007`. O ponto autenticado de criação/edição também foi endurecido no `central-gestao-api` build `central-gestao-r128-v5-canonical-pending-routing-20261007`: toda criação grava área explícita no mestre e Éder fica restrito ao escopo APP/WIZY.
 - Pendência `PM-26` — **Gestão Click — saneamento financeiro + marco zero** — registrada como P1 no mestre, área FINANCEIRO, sem projeção para APP/WIZY/Éder.
