@@ -1318,3 +1318,28 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 
 - Ajuste final do saldo base Cora: **R$ 30.232,51** • commit `cfd6617e761e557d4e4037dd88307132f92d6c12`.
 - Central oficial já aponta para o alias estável do Dashboard Financeiro V4.
+
+
+## Checkpoint geral — 07/10/2026 • 17:30 — pós-homologação automática
+
+- Status do ciclo: **HOMOLOGADO / CONGELADO / CHECKPOINT REGISTRADO**
+- Dashboard Financeiro V4: **OFICIAL / HOMOLOGADO / CONGELADO**
+- Central oficial: botão **Dashboard Financeiro V4** aponta para a versão homologada.
+- Saldo base Cora: **R$ 30.232,51**.
+- Cora API automática: pendência externa separada, bloqueada por credenciais válidas de produção.
+- Cofre Zero: baseline de recuperação preservada.
+- Backup recorrente oficial: **Google Cloud Run + Cloud Scheduler**, 03:00 America/Sao_Paulo, execuções automáticas de 06/10 e 07/10 com **PASS**.
+- Banco Mestre de pendências após sincronização imediata: **183 itens**:
+  - 54 concluídos
+  - 24 em andamento
+  - 13 em validação
+  - 49 aguardando
+  - 6 bloqueados
+  - 1 não iniciado
+  - 36 cancelados
+- Sincronização manual pós-homologação executada em 07/10: 60 commits verificados, 2 novas evidências anexadas, 2 registros automáticos tocados; WIZY manual preservado.
+- Regra canônica nova: **PEND-003 — Pós-homologação atualiza pendências automaticamente**.
+- Regra operacional: toda homologação, promoção, congelamento ou validação explícita do Rogério deve disparar, no mesmo ciclo, a atualização do Gestor, números, evolução, evidências, próxima ação, checkpoint e projeções APP aplicáveis.
+- Cron de 15 minutos permanece apenas como redundância.
+- WIZY e Éder permanecem manuais quando dependem de execução ou validação humana.
+- Checkpoint: `CHECKPOINT_CONSTRUREI_20261007_1730_AUTO_PENDENCIAS.md`.
