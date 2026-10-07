@@ -1241,25 +1241,26 @@ Revisão de navegabilidade e operação sem redesign e sem alteração dos links
 
 ---
 
-## GOVERNANÇA CANÔNICA — ÍNDICE MESTRE V1 — CANDIDATA 07/10/2026
+## GOVERNANÇA CANÔNICA — ÍNDICE MESTRE V1 — HOMOLOGADA 07/10/2026
 
-- Fonte de consulta proposta: `docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md`.
+- Fonte de consulta oficial: `docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md`.
 - Branch: `candidate/canonical-governance-index-20261007`.
-- PR: **#39** (draft).
+- PR: **#39** — mesclado em `main`.
 - Objetivo: consolidar precedência, regras fundamentais, regras de domínio, fontes, revogações e gate pré-desenvolvimento no Gestor do Projeto.
 - Regra crítica: fonte explicitamente **RETIRADA / NÃO UTILIZAR / SUBSTITUÍDA** nunca prevalece sobre regra vigente, ainda que o próprio documento contenha homologação antiga.
 - Checkpoint de continuidade: aproximadamente a cada 10 minutos de conversa ativa e antes de pausa/troca de dispositivo quando possível, registrando estado, decisões, última ação, próxima ação e bloqueios.
-- Estado: **CANDIDATA — ainda não promovida para oficial**.
+- Estado: **OFICIAL / HOMOLOGADA / PROMOVIDA**.
 
 
 ## Gestor do Projeto V1.2.4 — Governança Canônica — 07/10/2026
 
-- Status: **OFICIAL / HOMOLOGADA — PROMOÇÃO AUTORIZADA PELO PROPRIETÁRIO**.
+- Status: **OFICIAL / HOMOLOGADA / PROMOVIDA PARA `main` PELO PR #39**.
 - Build: `CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007`.
 - Link estável: https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/
 - Índice Mestre: `docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md`.
 - Homologação: `docs/HOMOLOGACAO_GESTOR_V1_2_4_CANONICAL_GOVERNANCE_20261007.md`.
 - Checkpoint: `CHECKPOINT_CANONICAL_GOVERNANCE_INDEX_V1_20261007`.
+- Merge oficial: `0a16594d6a2e4fc4da3847a8c769591bc72fbf24`.
 - Conteúdo: 25 regras, 14 fontes indexadas, filtros, busca, precedência, revogação, conflitos explícitos e autochecagem de integridade.
 - Integridade: **PASS** — sem ID duplicado, campo obrigatório ausente, regra ativa em fonte revogada ou conflito não resolvido.
 - Identidade visual: preservada; nenhum CSS/tema da Central, APP ou F00–F09 foi alterado.
