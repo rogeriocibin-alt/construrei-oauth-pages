@@ -87,6 +87,12 @@
       "label": "Gestor do Projeto é o radar mestre de todas as pendências; APP / WIZY / Éder recebem somente projeções de pendências do APP",
       "status": "preserved",
       "evidence": "Regra canônica definida por Rogério em 07/10/2026. Toda pendência entra no Gestor do Projeto. Listas APP/WIZY/Éder são recortes operacionais exclusivos do escopo APP; itens não-APP não podem ser lançados nelas."
+    },
+    {
+      "id": "r9",
+      "label": "Auditorias históricas grandes viram baselines reutilizáveis; consultar baseline primeiro e auditar somente delta/exceções",
+      "status": "preserved",
+      "evidence": "Regra canônica definida por Rogério em 07/10/2026. Implementada com cr_internal.audit_baselines_v1 + RPC cr_audit_baseline_lookup_v1 + endpoint autenticado audit-lookup do Gestor. Auditoria FULL Trello 26/09/2026 registrada como AUDIT-TRELLO-FULL-20260926."
     }
   ],
   "products": [
@@ -3232,6 +3238,26 @@
     ],
     "deduplicate_by": "canonical_pending_id",
     "no_parallel_master": true,
+    "updated_at": "2026-10-07"
+  },
+  "audit_reuse_policy": {
+    "version": "CR-AUDIT-REUSE-V1.0-20261007",
+    "rule": "BASELINE_FIRST_DELTA_SECOND",
+    "large_audit_must_persist": true,
+    "consult_baseline_before_rescan": true,
+    "full_rescan_default": "BLOCKED",
+    "allowed_full_rescan_triggers": [
+      "NO_VALID_BASELINE",
+      "BASELINE_INTEGRITY_FAILURE",
+      "MATERIAL_SCOPE_CHANGE",
+      "UNEXPLAINED_DIVERGENCE",
+      "EXPLICIT_OWNER_REQUEST"
+    ],
+    "default_behavior_for_current_queries": "reuse historical baseline and inspect only delta after baseline cutoff",
+    "default_behavior_for_historical_queries": "answer from persisted audit result; targeted source lookup only for facts absent from baseline",
+    "known_baselines": [
+      "AUDIT-TRELLO-FULL-20260926"
+    ],
     "updated_at": "2026-10-07"
   }
 }
