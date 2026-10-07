@@ -84,7 +84,73 @@ body{background:radial-gradient(circle at 72% 0,#0d3b67 0,#07182b 38%,#061525 78
 @media(max-width:1000px){.ackpis{grid-template-columns:repeat(3,minmax(0,1fr))}.acrateio{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){.aclivedesktop{display:none}.acmobile{display:grid;gap:8px}.ackpis{grid-template-columns:repeat(2,minmax(0,1fr))}.acrateio{grid-template-columns:repeat(2,minmax(0,1fr))}.acfilters{grid-template-columns:1fr}.acactions{display:grid;grid-template-columns:repeat(2,1fr);width:100%}.acbtn{width:100%}.aclivehead{display:block}.acstatus{margin-top:8px}}
 
-.manualgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.manualgrid .full{grid-column:1/-1}.manualgrid label{display:grid;gap:5px;font-size:9px;font-weight:850;color:#9fb2c5;text-transform:uppercase}.manualgrid input,.manualgrid select,.manualgrid textarea{width:100%;background:#081d34;color:#f5f7fa;border:1px solid #244968;border-radius:10px;padding:10px;font:inherit}.manualgrid textarea{min-height:82px;resize:vertical}.manualactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.manualbtn{border:1px solid #3a83bb;background:#0d5f9e;color:#fff;border-radius:10px;padding:10px 13px;font-weight:900;cursor:pointer}.manualbtn.primary{background:linear-gradient(180deg,#d4a73d,#af7e15);border-color:#e1c365;color:#07182b}.manualbtn:disabled{opacity:.45;cursor:not-allowed}.manualpreview{margin-top:12px;padding:12px;border:1px solid #244968;border-radius:12px;background:#061a2f}.manualpreview code{display:block;white-space:pre-wrap;overflow-wrap:anywhere;color:#dbe8f3;font-family:ui-monospace,Consolas,monospace;font-size:10px}.manualbadge{display:inline-block;padding:5px 8px;border-radius:999px;background:#c99d3215;border:1px solid #c99d325c;color:#e1c365;font-size:9px;font-weight:900}.manualok{color:#73d9a9}.manualerr{color:#ff969d}.manualnote{font-size:10px;color:#a9b8c9;line-height:1.5}@media(max-width:700px){.manualgrid{grid-template-columns:1fr}.manualgrid .full{grid-column:auto}.manualactions{display:grid}.manualbtn{width:100%}}</style></head><body><div id="login" class="login"><div class="box"><div style="display:flex;gap:10px;align-items:center"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><b>CONSTRU-REI · DASHBOARD V4</b></div><p class="muted small">Módulo oficial da Central CONSTRU-REI. Mesma chave da Central.</p><input id="key" type="password" placeholder="Chave de acesso"><button onclick="login()">Entrar</button><div id="err"></div></div></div>
+.manualgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.manualgrid .full{grid-column:1/-1}.manualgrid label{display:grid;gap:5px;font-size:9px;font-weight:850;color:#9fb2c5;text-transform:uppercase}.manualgrid input,.manualgrid select,.manualgrid textarea{width:100%;background:#081d34;color:#f5f7fa;border:1px solid #244968;border-radius:10px;padding:10px;font:inherit}.manualgrid textarea{min-height:82px;resize:vertical}.manualactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.manualbtn{border:1px solid #3a83bb;background:#0d5f9e;color:#fff;border-radius:10px;padding:10px 13px;font-weight:900;cursor:pointer}.manualbtn.primary{background:linear-gradient(180deg,#d4a73d,#af7e15);border-color:#e1c365;color:#07182b}.manualbtn:disabled{opacity:.45;cursor:not-allowed}.manualpreview{margin-top:12px;padding:12px;border:1px solid #244968;border-radius:12px;background:#061a2f}.manualpreview code{display:block;white-space:pre-wrap;overflow-wrap:anywhere;color:#dbe8f3;font-family:ui-monospace,Consolas,monospace;font-size:10px}.manualbadge{display:inline-block;padding:5px 8px;border-radius:999px;background:#c99d3215;border:1px solid #c99d325c;color:#e1c365;font-size:9px;font-weight:900}.manualok{color:#73d9a9}.manualerr{color:#ff969d}.manualnote{font-size:10px;color:#a9b8c9;line-height:1.5}@media(max-width:700px){.manualgrid{grid-template-columns:1fr}.manualgrid .full{grid-column:auto}.manualactions{display:grid}.manualbtn{width:100%}}
+/* R10 — identidade clara Central + Gestor do Projeto · 2026-10-07 */
+:root{
+  --n:#07182b;--n2:#12395d;--g:#f2c94c;--gs:#fff3bf;
+  --bg:#f4f7fb;--m:#66788a;--l:#d8e1ea;--ok:#1f8a5b;--warn:#b7791f;--bad:#c44545;
+}
+html,body{background:#f4f7fb;color:#142235}
+body{background:linear-gradient(180deg,#eef4f9 0,#f7f9fc 240px,#f4f7fb 100%)}
+.top{background:linear-gradient(135deg,#07182b,#12395d);border-bottom:3px solid #f2c94c;box-shadow:0 7px 24px #07182b20}
+.main{color:#142235}
+.r6hero{background:linear-gradient(135deg,#07182b,#12395d 68%,#174f86);border:1px solid #315979;box-shadow:0 10px 28px #07182b24}
+.r6eyebrow{color:#f2c94c}.r6sub{color:#d7e3ed}
+.r8commandbar{background:#ffffff;border:1px solid #d8e1ea;box-shadow:0 5px 18px #07182b0b}
+.r8mode{color:#8b6910}.r8context{color:#07182b}
+.r8quick button{background:#f8fbfe;color:#29445e;border-color:#cdd9e4}
+.r8quick button:hover{background:#eef5fb;border-color:#174f86;color:#07182b}
+.tab,.chip,.yearbtn,.month{background:#fff;color:#52677b;border-color:#d8e1ea}
+.tab.on,.chip.on,.yearbtn.on,.month.on{background:#12395d;color:#fff;border-color:#12395d;box-shadow:inset 0 -3px 0 #f2c94c}
+.panel{background:#fff;border-color:#d8e1ea;box-shadow:0 7px 24px #07182b0b}
+.panel h3{color:#07182b;border-bottom-color:#fff0ad}
+.kpi,.r7supportcard,.opkpi{background:#fff;border-color:#d8e1ea;box-shadow:inset 0 3px 0 #174f86}
+.kpi .v,.r7supportcard .v,.opkpi b{color:#07182b}
+.lab,.muted,.r7supportcard .small,.opkpi span{color:#66788a}
+.r7mastercard{background:linear-gradient(145deg,#ffffff,#f3f7fb);border-color:#d8e1ea;box-shadow:0 8px 24px #07182b10}
+.r7mastercard:before{background:#f2c94c22}
+.r7masterlabel{color:#60778c}.r7mastervalue{color:#07182b}.r7mastersub{color:#71869a}
+.r7icon{background:#fff8d7;border-color:#f0d66e;color:#8b6910}
+.r7trend span{background:#f5f8fb;border-color:#d8e1ea;color:#5f7285}
+.r7trend .pos{background:#edf9f3;color:#1f7a59;border-color:#a9dec5}
+.r7trend .neg{background:#fff1f2;color:#a63d40;border-color:#efc1c4}
+.r7alert{background:#f8fafc;color:#506579;border-color:#d8e1ea}
+.r7alert.warn{background:#fff9e8;color:#6f5316;border-color:#ead995}
+.r7alert.bad{background:#fff2f2;color:#8f3437;border-color:#edc2c4}
+.r7alert.ok{background:#eff9f4;color:#276749;border-color:#b9dfca}
+.r7read{color:#32475b}.r7smartcard{background:#f7fafc;border-color:#d8e1ea}.r7smartcard span{color:#72869a}.r7smartcard b{color:#07182b}.r7smartcard small{color:#66788a}
+.r8result{background:linear-gradient(135deg,#ffffff,#f4f8fc);border-color:#d8e1ea;box-shadow:0 7px 22px #07182b0c}
+.r8resultperiod small{color:#66788a}.r8resultperiod b{color:#12395d}
+.r8resultmetric,.r8costsummary,.r8costitem{background:#f7fafc;border-color:#d8e1ea}
+.r8resultmetric span,.r8costitem span{color:#66788a}.r8resultmetric b,.r8costitem b{color:#07182b}
+.r8costsummary h4{color:#12395d}
+.filters input,.filters select{background:#fff;color:#142235;border-color:#ccd8e3}
+.filters option{background:#fff;color:#142235}
+.periodtitle{color:#12395d}.periodnote{background:#fff9e8;color:#5f512a;border-color:#ead995}
+.filtertag{background:#fff9e8;color:#7a5d0c;border-color:#ead995}
+.tablewrap{background:#fff;border-color:#d8e1ea}.table th{background:#eef4f9;color:#40586e;border-bottom-color:#d8e1ea}.table td{color:#23384c;border-bottom-color:#e7edf2}
+.rows .r,.r{border-top-color:#e4ebf1}
+.person,.op,.provcard{background:#fff;border-color:#d8e1ea;color:#142235}
+.provshare{color:#795e12;border-color:#e7d47d;background:#fff9e8}.provtotal{color:#12395d}
+.provstats div,.opvals div{background:#f3f7fa}.provstats small,.opvals small{color:#66788a}
+.state{background:#f7fafc;border-color:#ccd8e3;color:#607386}.state.warn{background:#fff9e8;border-color:#e2d18a;color:#6f5316}
+.trellobtn{background:#12395d;color:#fff;border-color:#174f86}.trellobtn:hover{background:#174f86}
+.bar{background:linear-gradient(180deg,#2a6fa8,#12395d);border-color:#2a6fa8}
+.bv{color:#12395d}.btip{background:#07182bf2;border-color:#f2c94c80}
+.btip b{color:#f2c94c}.btip span{color:#fff}.btip small{color:#c9d6e2}
+.r6drawer{background:#07182b80}.r6drawerpanel{background:#f7fafc;border-left-color:#d8e1ea;color:#142235}
+.r6drawerhead{background:#f7fafc;border-bottom-color:#d8e1ea}.r6drawerhead b{color:#07182b}.r6drawerhead button{background:#fff;border-color:#ccd8e3;color:#12395d}
+.r6metric{border-top-color:#e4ebf1}.r6metric span{color:#66788a}.r6metric b{color:#07182b}
+.box{background:#fff;color:#142235;border-color:#d8e1ea;box-shadow:0 18px 50px #07182b2b}
+.box input{background:#fff;color:#142235;border-color:#ccd8e3}.box button{background:#12395d;color:#fff;border-color:#174f86}
+.foot{color:#74879a}
+@media(max-width:700px){
+  body{background:#f4f7fb}
+  .r6hero{box-shadow:0 7px 20px #07182b20}
+  .panel,.kpi,.r7mastercard{box-shadow:0 4px 14px #07182b0a}
+}
+
+</style></head><body><div id="login" class="login"><div class="box"><div style="display:flex;gap:10px;align-items:center"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><b>CONSTRU-REI · DASHBOARD V4</b></div><p class="muted small">Módulo oficial da Central CONSTRU-REI. Mesma chave da Central.</p><input id="key" type="password" placeholder="Chave de acesso"><button onclick="login()">Entrar</button><div id="err"></div></div></div>
 <header class="top"><div class="topin"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><div><b>CONSTRU-REI</b><div class="small" style="color:#f3e7c6">DASHBOARD GERENCIAL</div><div class="small">GESTÃO • OPERAÇÃO • FINANCEIRO • INTELIGÊNCIA</div></div><div class="grow"></div><b>V4 OFICIAL</b><span id="live">online</span></div></header><main class="main"><div class="r6hero"><div class="r6eyebrow">CENTRO DE COMANDO DA DIRETORIA</div><div class="r6title">CONSTRU-REI · Diretoria Agora</div><div class="r6sub">VISÃO EXECUTIVA • OPERAÇÃO • RESULTADO • CUSTOS • RISCOS</div></div><div class="tabs"><button class="tab on" data-t="agora">VISÃO EXECUTIVA</button><button class="tab" data-t="fin">FINANCEIRO / ACERTOS</button><button class="tab" data-t="cora">CORA MANUAL → TRELLO</button><button class="tab" data-t="hist">HISTÓRICO / KPIs</button><button class="tab" data-t="conc">CONCILIAÇÃO</button><button class="tab" data-t="cost">CUSTOS / PRESTADORES</button><button class="tab" data-t="qual">SAÚDE DOS DADOS</button></div>
 <section id="agora" class="section on"><div class="r8commandbar"><div><div class="r8mode" id="r8mode">OPERAÇÃO VIVA</div><div id="r8context" class="r8context">2026 • ANO TODO</div></div><div class="r8quick"><button onclick="r8Go('agora')">OPERAÇÃO</button><button onclick="r8Go('fin')">FINANCEIRO</button><button onclick="r8Go('cost')">CUSTOS</button><button onclick="r8Go('cost');setTimeout(()=>document.getElementById('prov')?.scrollIntoView({behavior:'smooth'}),0)">PRESTADORES</button><button onclick="r8Go('hist')">HISTÓRICO</button><button onclick="r8Go('qual')">SAÚDE</button></div></div><div id="globalyears" class="yearnav"></div><div id="periodtitle" class="periodtitle"></div><div id="periodnote" class="periodnote"></div><div id="r8result"></div><div id="kpis" class="r7master"></div><div id="supportkpis" class="r7support"></div><div id="opkpis" class="opkpis"></div><div id="execalerts" class="r7alerts"></div><div id="r8costcontrol"></div><div class="r7execgrid"><div class="panel r7readpanel"><h3>Leitura da Diretoria</h3><div id="execread"></div></div><div class="panel r7readpanel"><h3>Indicadores do período</h3><div id="execsmart" class="r7smart"></div></div></div><div class="panel"><h3>Operação e obras</h3><div id="chips" class="chips"></div><div id="opmonths" class="chips"></div><div class="filters"><input id="q" placeholder="Buscar orçamento, cliente, endereço..." oninput="ops()"><select id="sort" onchange="ops()"><option value="recent">Mais recentes</option><option value="old">Mais antigos</option><option value="gross">Maior valor</option><option value="profit">Maior lucro</option><option value="margin">Menor margem</option></select></div><div id="op"></div></div></section>
 <section id="fin" class="section">
