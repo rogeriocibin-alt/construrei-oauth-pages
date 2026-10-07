@@ -191,3 +191,57 @@ Cada lançamento será classificado antes de alteração:
 - Montar lote de correção **SEM EXCLUSÃO DE VENDA**, separando títulos comerciais legítimos de saldo bancário.
 - Executar limpeza somente após checkpoint pré-saneamento e plano de rollback.
 - Depois estabelecer o **Marco Zero definitivo** e habilitar a construção da sincronização futura.
+
+
+## Varredura das cinco contas internas — títulos visíveis no topo
+
+### Conta Banco CORA
+Títulos visíveis como **Não conciliado**:
+- 647-26 — R$ 265,00 — vencimentos visíveis **08/10/2027** e **08/11/2027**.
+- 670-26 — R$ 1.608,44 — 16/11/2026 — divergente da parcela canônica.
+- 579-26 — R$ 925,00 — 25/10/2026 — requer classificação.
+- 775-26 — R$ 5.329,56 — 07/10/2026 — recebimento bruto já comprovado; líquido Cora R$ 4.860,56.
+- 653-26 — R$ 469,70 — 06/10/2026 — integra o lote Galvão recebido por R$ 2.783,43.
+
+### Conta Banco ITAÚ
+Títulos históricos ainda **Não conciliados**:
+- 1044-25 — R$ 250,00 — 23/12/2025.
+- 1041-25 — R$ 450,00 — 01/12/2025.
+- 1032-25 — R$ 696,80 — 01/12/2025.
+- 1049-25 — R$ 1.500,00 — 01/12/2025.
+
+### Conta Banco PAGSEGURO
+Títulos históricos ainda **Não conciliados**:
+- 298-26 — R$ 3.400,00 — 04/05/2026.
+- 225-26 — R$ 792,88 — 30/04/2026.
+- 185-26 — R$ 1.500,50 — 25/04/2026.
+- 149-26 — R$ 7.174,90 — 03/04/2026.
+- 1095-25 — R$ 1.916,20 — 06/01/2026.
+- 1077-25 — R$ 3.496,50 — 17/12/2025.
+- 1019-25 — R$ 1.737,50 — 30/11/2025.
+
+### Conta Capital de Giro 14%
+- Não houve títulos de venda visíveis no recorte atual.
+- Saldo da conta no snapshot inicial permanece negativo em R$ 3.024,75 e deve ser auditado separadamente, sem misturar com recebimentos de obras.
+
+### Conta Integrada
+Títulos visíveis como **Não conciliado**:
+- 645-26 — R$ 988,00 — 06/10/2026 — integra lote Galvão já recebido.
+- 649-26 — R$ 970,00 — 06/10/2026 — integra lote Galvão já recebido.
+- 693-26 — R$ 1.755,00 — 05/10/2026 — recebido e confirmado no Cora/Trello/Click.
+- 716-26 — R$ 2.721,00 — 29/09/2026 — recebido e confirmado no Cora/Trello.
+- 547-26 — R$ 1.813,70 — 25/09/2026 — recebido e confirmado no Cora/Trello.
+- 694-26 — R$ 2.000,00 — 25/09/2026 — Trello registra acordo em dinheiro de R$ 2.000,00; não confundir com o PIX Galvão de R$ 2.783,43.
+- 691-26 — R$ 220,00 — 25/09/2026 — requer classificação.
+
+## Diagnóstico consolidado da causa do saldo artificial
+
+A evidência ao vivo demonstra que as contas internas do Gestão Click não estão funcionando como espelho confiável do caixa bancário. Elas acumulam:
+
+1. **títulos comerciais legítimos ainda marcados como não conciliados mesmo após recebimento real**;
+2. **títulos históricos antigos** de 2025/2026;
+3. **parcelas futuras indevidas ou divergentes**, inclusive em 2027;
+4. **parcelas individuais de recebimentos agrupados**, que não podem ser conciliadas isoladamente 1:1 com um único PIX;
+5. **valores brutos de vendas**, enquanto o banco recebe valor líquido após taxas/comissões.
+
+Conclusão operacional: **não corrigir o saldo editando um número global e não excluir vendas em massa**. O saneamento deve atuar na situação, vinculação, conta, baixa e parcelamento dos títulos, preservando a venda/orçamento legítimo.
