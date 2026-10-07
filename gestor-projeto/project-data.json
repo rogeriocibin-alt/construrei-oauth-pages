@@ -2,7 +2,7 @@
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
     "version": "V1.2.5 • COFRE ZERO SAFE CONTROL • 07/10",
-    "status": "CANDIDATA SEGURA • BACKUP CLOUD OPERACIONAL",
+    "status": "OFICIAL / HOMOLOGADA • COFRE ZERO CLOUD OPERACIONAL",
     "generated_at": "2026-10-07",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
@@ -21,8 +21,8 @@
     "pwa_mobile_status": "PASS_OWNER_CONFIRMED",
     "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
     "reconciled_at": "2026-10-06T21:30:00-03:00",
-    "owner_validation": "PASS_OWNER_DIRECT_HOMOLOGATION",
-    "current_baseline": "CHECKPOINT_CANONICAL_GOVERNANCE_INDEX_V1_20261007",
+    "owner_validation": "PASS_OWNER_PUBLICATION_AUTHORIZATION",
+    "current_baseline": "CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007",
     "baseline_freeze_checkpoint": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
     "baseline_freeze_branch": "checkpoint/current-official-logos-recovered-20261006",
     "updated_at": "2026-10-07",
@@ -325,7 +325,7 @@
       "layer": "Governança",
       "status": "canonical",
       "summary": "Cockpit superior do proprietário para governança, memória, versões, decisões e desenvolvimento do ecossistema APP CONSTRU-REI, com acesso ao diretório mestre de Links Oficiais.",
-      "current": "V1.2.5 candidata segura • Cofre Zero no Cockpit • automático 03:00"
+      "current": "V1.2.5 • Cofre Zero no Cockpit • backup cloud automático 03:00"
     },
     {
       "id": "links_oficiais",
