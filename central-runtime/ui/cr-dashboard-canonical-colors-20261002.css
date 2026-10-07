@@ -384,3 +384,92 @@ body{background:linear-gradient(180deg,#eef4f9 0,#f7f9fc 260px,#f4f7fb 100%)!imp
 .provtotal{color:#12395d!important}.provshare{background:#fff8df!important;color:#72550d!important;border-color:#e7d47d!important}.provstats div,.opvals div{background:#f3f7fa!important;color:#142235!important}
 .trellobtn,.box button{background:#12395d!important;color:#fff!important;border-color:#174f86!important}.periodnote,.state.warn{background:#fff8df!important;color:#624d00!important;border-color:#ead995!important}.state,.opempty{background:#f7fafc!important;color:#52677b!important;border-color:#d7e0e8!important}
 @media(max-width:700px){.main{background:#f4f7fb!important}.top{background:linear-gradient(135deg,#07182b,#12395d)!important}.panel,.kpi,.op,.provcard{box-shadow:0 3px 10px rgba(7,24,43,.06)!important}}
+
+
+/* R12 — correção de contraste fiel Central/Gestor · 2026-10-07 */
+html,body{background:#f4f7fb!important;color:#142235!important}
+.top{
+  background:rgba(249,253,255,.98)!important;
+  color:#07182b!important;
+  border-bottom:1px solid #d5e7f2!important;
+  box-shadow:0 5px 18px rgba(15,61,105,.08)!important;
+  backdrop-filter:blur(14px)!important;
+}
+.topin>div:nth-child(2)>b{color:#07182b!important}
+.topin>div:nth-child(2) .small{color:#315c8a!important;opacity:1!important}
+.topin>div:nth-child(2) .small[style]{color:#17315d!important}
+.topin>.grow+b{
+  color:#075bd8!important;
+  background:#edf7fc!important;
+  border:1px solid #bcd9ed!important;
+}
+#live{
+  color:#087a50!important;
+  background:#eafaf2!important;
+  border:1px solid #bfe9d4!important;
+}
+.r6hero{
+  background:linear-gradient(112deg,#031b46 0%,#07357f 58%,#04235c 100%)!important;
+  color:#fff!important;
+  border:1px solid rgba(255,197,20,.34)!important;
+}
+.r6hero .r6title{color:#fff!important}
+.r6hero .r6sub{color:#d8e5ef!important}
+.r6hero .r6eyebrow{color:#ffc514!important}
+.main,.panel,.kpi,.r7mastercard,.r7supportcard,.r7readpanel,.r7smartcard,.opkpi,.r8commandbar,.r8result,.r8costsummary{
+  color:#17315d!important
+}
+.panel h1,.panel h2,.panel h3,.panel h4,.periodtitle,.money,.v,
+.r7mastervalue,.r7smartcard b,.r8context,.r8resultmetric b,.r8resultperiod b,.opkpi b{
+  color:#07165b!important
+}
+.tab,.chip,.month,.yearbtn{
+  background:#fff!important;
+  color:#075bd8!important;
+  border-color:#d5e7f2!important
+}
+.tab.on,.chip.on,.yearbtn.on{
+  background:linear-gradient(180deg,#1688ff,#075bd8)!important;
+  color:#fff!important;
+  border-color:#0b6fe6!important;
+  box-shadow:inset 0 -2px 0 #ffc514!important
+}
+.month.on{
+  background:linear-gradient(180deg,#ffd84d,#ffc514)!important;
+  color:#031b46!important;
+  border-color:#e6ac00!important
+}
+.r8commandbar,.r8result,.r7mastercard,.r7supportcard,.r7readpanel,.r7smartcard,.opkpi,.r8costsummary,
+.panel,.kpi,.person,.op,.provcard{
+  background:#fff!important;
+  border-color:#d5e7f2!important
+}
+.r8mode{color:#9d6d0b!important}
+.r8quick button{
+  background:#fff!important;
+  color:#075bd8!important;
+  border-color:#c7dff0!important
+}
+.r8quick button:hover{
+  background:#edf7fc!important;
+  color:#075bd8!important;
+  border-color:#9cc8e6!important
+}
+.filters input,.filters select,.box input{
+  background:#fff!important;
+  color:#17315d!important;
+  border-color:#d5e7f2!important
+}
+.table th{
+  background:#edf7fc!important;
+  color:#07165b!important
+}
+.table td{
+  background:#fff!important;
+  color:#17315d!important
+}
+.lab,.muted,.small,.hint,.foot,
+.r7mastersub,.r7supportcard .small,.r7smartcard span,.r7smartcard small,
+.r8resultmetric span,.r8resultperiod small,.opkpi span{
+  color:#6d8299!important
+}
