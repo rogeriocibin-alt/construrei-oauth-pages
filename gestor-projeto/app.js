@@ -397,7 +397,7 @@ function renderCanonical(){
   const sources=arr(d.canonical_sources);
   const filters=[
     ['all','Todas'],['FUNDAMENTAL','Fundamentais'],['Governança','Governança'],['Continuidade','Continuidade'],
-    ['Desenvolvimento','Desenvolvimento'],['Pendências','Pendências'],['Agentes','Agentes'],
+    ['Desenvolvimento','Desenvolvimento'],['Arquitetura','Arquitetura'],['Fontes','Fontes'],['Pendências','Pendências'],['Agentes','Agentes'],
     ['Financeiro','Financeiro'],['Identidade','Identidade'],['Auditoria','Auditoria'],['APP / F00–F09','APP / F00–F09']
   ];
   const list=rules.filter(r=>state.canonicalFilter==='all'||r.class===state.canonicalFilter||r.category===state.canonicalFilter);
