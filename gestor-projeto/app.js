@@ -395,6 +395,7 @@ function renderCanonical(){
   const gov=d.canonical_governance||{};
   const rules=arr(d.canonical_rules);
   const sources=arr(d.canonical_sources);
+  const conflicts=arr(d.canonical_conflicts);
   const filters=[
     ['all','Todas'],['FUNDAMENTAL','Fundamentais'],['Governança','Governança'],['Continuidade','Continuidade'],
     ['Desenvolvimento','Desenvolvimento'],['Arquitetura','Arquitetura'],['Fontes','Fontes'],['Pendências','Pendências'],['Agentes','Agentes'],
@@ -404,6 +405,7 @@ function renderCanonical(){
   const p0=rules.filter(r=>r.criticality==='P0').length;
   const fundamental=rules.filter(r=>r.class==='FUNDAMENTAL').length;
   const revoked=sources.filter(x=>x.status==='revoked').length;
+  const unresolved=conflicts.filter(x=>!['resolved','guarded'].includes(x.status)).length;
   $('#view-canonical').innerHTML=`
     <div class="page-intro"><div><h2>Regras Canônicas</h2><p>Índice Mestre de governança: o que vale, por que vale, qual fonte sustenta e o que foi revogado. Esta é a consulta obrigatória antes de mudança técnica relevante.</p></div></div>
     <section class="metrics">
@@ -411,6 +413,7 @@ function renderCanonical(){
       ${metric('Fundamentais',fundamental,'Freios e contrapesos','⚑')}
       ${metric('P0',p0,'Não podem ser ignoradas','!')}
       ${metric('Fontes revogadas',revoked,'Histórico apenas','×')}
+      ${metric('Conflitos não resolvidos',unresolved,'Dubiedade explícita, nunca silenciosa','⇄')}
     </section>
     <section class="card" style="margin-bottom:16px">
       <div class="card-head"><div><h3>Precedência e antirregressão</h3><p>Quando houver conflito, a ordem abaixo decide. Revogação explícita sempre bloqueia reativação acidental.</p></div><span class="badge canonical">${esc(gov.version||'Índice Mestre')}</span></div>
@@ -434,6 +437,13 @@ function renderCanonical(){
         <thead><tr><th>Domínio</th><th>Documento</th><th>Estado</th><th>Nota</th></tr></thead>
         <tbody>${sources.map(x=>`<tr><td><b>${esc(x.domain)}</b></td><td class="mono">${esc(x.path)}</td><td>${x.status==='revoked'?'<span class="badge blocked">REVOGADO</span>':x.status==='vigente'?'<span class="badge canonical">VIGENTE</span>':'<span class="badge review">DOMÍNIO</span>'}</td><td>${esc(x.note||'')}</td></tr>`).join('')}</tbody>
       </table></div>
+    </section>
+    <section class="card" style="margin-top:16px">
+      <div class="card-head"><div><h3>Conflitos e dubiedades registradas</h3><p>Quando fontes divergem, a decisão fica explícita e auditável em vez de depender da memória.</p></div><span class="badge ${unresolved?'attention':'completed'}">${unresolved?'ATENÇÃO':'SEM CONFLITO ABERTO'}</span></div>
+      <div class="card-pad">
+        ${conflicts.map(c=>`<div class="govern-item"><div class="decision-meta"><span class="mono">${esc(c.id)}</span><span class="badge ${c.severity==='P0'?'attention':'review'}">${esc(c.severity||'')}</span><span class="badge ${c.status==='resolved'?'completed':c.status==='guarded'?'canonical':'blocked'}">${esc(String(c.status||'').toUpperCase())}</span></div><p><b>${esc(c.title)}</b></p><p>${esc(c.resolution||'')}</p><small>${esc(c.domain||'')} • Regra: ${esc(c.rule||'—')} • Fontes: ${esc(arr(c.sources).join(' | '))}</small></div>`).join('')||'<div class="empty">Nenhuma dubiedade registrada.</div>'}
+      </div>
+      <div class="notice" style="margin:0 14px 14px"><b>Política:</b> ${esc(gov.conflict_policy||'Conflitos devem ser registrados e resolvidos por precedência.')}</div>
     </section>
     <section class="card" style="margin-top:16px">
       <div class="card-head"><div><h3>Gate antes de desenvolver</h3><p>Checklist mínimo para BIO, CR Assertivo e qualquer executor.</p></div></div>
