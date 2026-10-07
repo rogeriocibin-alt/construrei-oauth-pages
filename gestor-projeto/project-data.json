@@ -24,7 +24,8 @@
     "owner_validation": "PASS_OWNER_APPROVED",
     "current_baseline": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
     "baseline_freeze_checkpoint": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
-    "baseline_freeze_branch": "checkpoint/current-official-logos-recovered-20261006"
+    "baseline_freeze_branch": "checkpoint/current-official-logos-recovered-20261006",
+    "updated_at": "2026-10-07"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -80,6 +81,12 @@
       "label": "Banco Mestre persistente do Gestor já conectado",
       "status": "partial",
       "evidence": "Modelo persistente V1.1 criado em cr_internal; PWA ainda usa snapshot versionado como fallback até API autenticada do owner. Não declarar conexão completa antes do teste."
+    },
+    {
+      "id": "r8",
+      "label": "Gestor do Projeto é o radar mestre de todas as pendências; APP / WIZY / Éder recebem somente projeções de pendências do APP",
+      "status": "preserved",
+      "evidence": "Regra canônica definida por Rogério em 07/10/2026. Toda pendência entra no Gestor do Projeto. Listas APP/WIZY/Éder são recortes operacionais exclusivos do escopo APP; itens não-APP não podem ser lançados nelas."
     }
   ],
   "products": [
@@ -1200,6 +1207,25 @@
       "close_when": "Conteúdo/visual revisados e versionados.",
       "human_action": false,
       "provenance": "current_explicit"
+    },
+    {
+      "id": "PM-26",
+      "title": "Gestão Click — saneamento financeiro + marco zero",
+      "domain": "Financeiro",
+      "priority": "P1",
+      "state": "queue",
+      "owner": "Financeiro REI + BIO",
+      "last_movement": "2026-10-07",
+      "next_action": "Gerar snapshot/exportação do módulo financeiro do Gestão Click; auditar vínculos, contas e saldos necessários; sanear a base; estabelecer marco zero usando o Trello como fonte financeira canônica; validar Trello × Click antes de liberar a automação do APP.",
+      "dependency": "Acesso autorizado ao Gestão Click + snapshot prévio",
+      "source": "Regra financeira aprovada em 07/10/2026",
+      "close_when": "Gestão Click saneado, estrutura financeira correta, posição de corte validada contra o Trello e integração preparada para reconciliação pelo APP.",
+      "human_action": false,
+      "provenance": "current_explicit",
+      "routing_scope": [
+        "GESTOR_PROJETO"
+      ],
+      "app_projection": false
     }
   ],
   "history_catalog": {
@@ -3175,5 +3201,37 @@
       "canonical_changed": true
     },
     "reconciled_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_CYCLE0_RECONCILED_20261003"
+  },
+  "pending_routing": {
+    "version": "CR-PENDING-ROUTING-V1.0-20261007",
+    "master": "GESTOR_PROJETO",
+    "rule": "ALL_TO_MASTER_APP_ONLY_TO_OPERATIONAL_PROJECTIONS",
+    "all_pending_to_master": true,
+    "operational_projection": "APP_ONLY",
+    "app_targets": [
+      "APP",
+      "WIZY",
+      "EDER"
+    ],
+    "app_scope_areas": [
+      "APP",
+      "F00",
+      "F01",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F08",
+      "F09",
+      "WIZY"
+    ],
+    "non_app_targets": [
+      "GESTOR_PROJETO"
+    ],
+    "deduplicate_by": "canonical_pending_id",
+    "no_parallel_master": true,
+    "updated_at": "2026-10-07"
   }
 }
