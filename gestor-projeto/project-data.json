@@ -1,8 +1,8 @@
 {
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
-    "version": "V1.2.5 • COFRE ZERO SAFE CONTROL • 07/10",
-    "status": "OFICIAL / HOMOLOGADA • COFRE ZERO CLOUD OPERACIONAL",
+    "version": "V1.2.7 • FINANCEIRO V4 OFICIAL • 07/10 ENCERRADO",
+    "status": "OFICIAL / HOMOLOGADA • FINANCEIRO V4 CONGELADO • CENTRAL ATUALIZADA",
     "generated_at": "2026-10-07",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
@@ -22,10 +22,10 @@
     "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
     "reconciled_at": "2026-10-06T21:30:00-03:00",
     "owner_validation": "PASS_OWNER_PUBLICATION_AUTHORIZATION",
-    "current_baseline": "CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007",
+    "current_baseline": "CR-PM-V1.2.7-FINANCEIRO-V4-OFFICIAL-20261007",
     "baseline_freeze_checkpoint": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
     "baseline_freeze_branch": "checkpoint/current-official-logos-recovered-20261006",
-    "updated_at": "2026-10-07",
+    "updated_at": "2026-10-07T17:55:00-03:00",
     "canonical_governance_index": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
     "previous_official_build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006"
   },
@@ -388,8 +388,8 @@
       "name": "Dashboard Gerencial V4",
       "layer": "Produto gerenciado",
       "status": "canonical",
-      "summary": "Painel gerencial preservado como fonte de leitura.",
-      "current": "V4 preservado"
+      "summary": "Dashboard Financeiro V4 oficial: lançamentos manuais, pré-visualização, escrita no Trello, Acerto Vivo e fechamento financeiro automático no card.",
+      "current": "HOMOLOGADO / OFICIAL / CONGELADO • Cora Manual → Trello • Fechar obra homologado • saldo base R$ 30.272,41"
     },
     {
       "id": "academy",
@@ -826,14 +826,14 @@
     {
       "id": "front-finance-v5",
       "name": "Financeiro V5 + Cora / Aprovisionamento",
-      "status": "executing",
+      "status": "completed",
       "priority": "P0",
       "objective": "Fechar a Gestão Financeira V5 como centro operacional-financeiro por obra, com fila Cora e escrita Trello controlada.",
-      "progress": 88,
+      "progress": 100,
       "owner": "Financeiro REI + CR Assertivo",
-      "last_advance": "R18 CORA POLICIAL entregue em candidata: movimentos Cora liquidados, fila de aprovisionamento, deduplicação e prévia de impacto. Escrita final no Trello permanece bloqueada por segurança.",
-      "next_action": "Validar R18; homologar contrato de escrita; habilitar ENVIAR AO TRELLO com deduplicação/auditoria; testar movimento real; promover somente após gate.",
-      "dependency": "Validação humana + escrita Trello controlada",
+      "last_advance": "07/10 fim do dia: Rogério testou a obra 775-26; Fechar obra calculou custos, lucro, margem e rateios e gravou no card sem mover de lista. Homologado e oficializado.",
+      "next_action": "Ciclo encerrado. Próximas evoluções partem desta baseline; Cora API automática permanece frente futura dependente de credenciais de produção.",
+      "dependency": "Nenhuma para operação manual homologada.",
       "blocked": false,
       "age_days": 0
     },
@@ -1202,6 +1202,13 @@
       "type": "canonical",
       "title": "Baseline final 05/10 homologada e congelada",
       "detail": "Central UX R1.2 HTML Hotfix H1 + Sala da Equipe v6 + Gestor H5 + links estáveis; único gate do proprietário em aberto: F00→F09.",
+      "confidence": "owner_homologated"
+    },
+    {
+      "date": "2026-10-07",
+      "type": "canonical",
+      "title": "Financeiro V4 completo homologado com Fechar obra",
+      "detail": "Fluxo Cora Manual → Trello homologado; botão Fechar obra reutiliza cálculo canônico do Acerto Vivo e grava fechamento financeiro no card. Teste real 775-26 aprovado pelo proprietário.",
       "confidence": "owner_homologated"
     }
   ],
