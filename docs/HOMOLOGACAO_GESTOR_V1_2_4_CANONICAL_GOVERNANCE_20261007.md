@@ -45,3 +45,10 @@ Rogério autorizou explicitamente a publicação e homologação direta em 07/10
 
 ## Regra de continuidade
 Toda evolução relevante deve consultar o Índice Mestre e o gate canônico antes de alterar produto.
+
+
+## Promoção
+- PR #39: **MERGED**.
+- Merge SHA da release: `0a16594d6a2e4fc4da3847a8c769591bc72fbf24`.
+- Branch oficial: `main`.
+- Checkpoint final: `checkpoint/gestor-v1-2-4-canonical-governance-official-20261007`.
