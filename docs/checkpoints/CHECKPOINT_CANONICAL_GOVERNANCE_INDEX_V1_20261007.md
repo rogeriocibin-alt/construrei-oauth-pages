@@ -4,7 +4,7 @@
 **HOMOLOGADO / AUTORIZADO PARA PROMOÇÃO** — governança canônica consolidada no Gestor do Projeto.
 
 ## Branch
-`candidate/canonical-governance-index-20261007`
+Origem: `candidate/canonical-governance-index-20261007` • Oficial: `main`
 
 ## Ações concluídas
 - Criado `docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md`.
@@ -43,7 +43,7 @@
 Validação estática da candidata e conferência do diff.
 
 ## Próxima ação
-Promover o PR #39 para `main` e confirmar o link estável do Gestor.
+Concluído: PR #39 promovido para `main`. Acompanhar apenas regressões reais no uso diário.
 
 ## Bloqueios
 Nenhum. Rogério autorizou publicação/homologação direta desta camada técnica em 07/10/2026, preservando filtros e identidade visual vigente.
@@ -58,7 +58,7 @@ Nenhum. Rogério autorizou publicação/homologação direta desta camada técni
 - `836a105063b565cbf6da2230ff3eb8f1460f22b3` — índice mestre documental ampliado.
 - `e4a6d98de17fcebd572feea480efce25f7522aa5` — busca global inclui regras/fontes.
 - `4ba01d6d411c885cb33a79c18719caa2df016849` — dica de busca atualizada.
-- PR: **#39** — `Gestor: Índice Mestre de Regras Canônicas V1` — draft.
+- PR: **#39** — `Gestor: Índice Mestre de Regras Canônicas V1` — **MERGED**.
 
 
 ## Continuação — saneamento de conflitos
@@ -80,3 +80,11 @@ Nenhum. Rogério autorizou publicação/homologação direta desta camada técni
 - Critério: conteúdo predominantemente técnico; não exige inspeção visual detalhada.
 - Condições preservadas: filtros funcionais, identidade de cor vigente e ausência de alteração destrutiva em Central/APP/F00–F09.
 - Release: **Gestor V1.2.4 — CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007**.
+
+
+## Promoção concluída
+- PR #39: **MERGED**.
+- Merge SHA: `0a16594d6a2e4fc4da3847a8c769591bc72fbf24`.
+- Branch oficial: `main`.
+- Checkpoint final congelado: `checkpoint/gestor-v1-2-4-canonical-governance-official-20261007`.
+- Estado: **OFICIAL / HOMOLOGADO**.
