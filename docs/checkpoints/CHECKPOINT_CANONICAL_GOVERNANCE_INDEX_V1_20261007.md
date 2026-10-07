@@ -66,3 +66,10 @@ Nenhum bloqueio técnico conhecido nesta etapa. Falta validação visual/funcion
 - `62bad07bd457482217175d3c33c9d3dd0a212ed6` — fontes de continuidade/Central/links indexadas.
 - `4ba31be4d6cb2310c6bc8079e58da249a0c23d16` — painel de conflitos/dubiedades na tela Regras Canônicas.
 - `dd76eff3f399358857e1dfffc09adf8ffd61a14c` — política de conflitos e guardrails documentais ampliados.
+
+
+## Integridade do registro
+- Autochecagem adicionada ao Gestor para IDs duplicados, campos obrigatórios, fontes revogadas e conflitos abertos.
+- Resultado atual: PASS.
+- Checkpoint branch: `checkpoint/canonical-governance-index-v1-20261007-1130`.
+- SHA do checkpoint: `1a9b9b1d91560ef0b6e2c5a3c6fd6f747d66a204`.
