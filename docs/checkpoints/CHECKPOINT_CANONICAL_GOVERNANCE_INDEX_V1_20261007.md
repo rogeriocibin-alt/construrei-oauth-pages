@@ -9,11 +9,13 @@ Candidata de governança criada para consolidar regras, precedência, revogaçõ
 ## Ações concluídas
 - Criado `docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md`.
 - Consolidada regra de precedência e regra de revogação.
-- Registradas 14 regras canônicas estruturadas no `gestor-projeto/project-data.json`.
+- Registradas 19 regras canônicas estruturadas no `gestor-projeto/project-data.json`.
 - Incluída regra de checkpoint de continuidade aproximadamente a cada 10 minutos de conversa ativa e antes de pausas/troca de dispositivo quando possível.
 - Incluída regra de independência de dispositivo.
 - Incluídas regras de fonte única de pendências, baseline+delta de auditoria, alçadas de agentes, Financeiro REI e identidade/antirregressão.
 - Tela `Regras Canônicas` do Gestor ganhou resumo, filtros, precedência, fontes vigentes/revogadas e gate antes de desenvolver.
+- Busca global passou a localizar regras e fontes canônicas.
+- Metadados visuais do Gestor foram alinhados à versão oficial V1.2.3 já declarada em `version.json`, removendo a divergência V1.2.2 × V1.2.3 da candidata.
 - Navegação `Cadeia Canônica` renomeada para `Regras Canônicas`.
 
 ## Commits desta candidata
@@ -25,8 +27,8 @@ Candidata de governança criada para consolidar regras, precedência, revogaçõ
 ## Validação técnica
 - Sintaxe de `gestor-projeto/app.js`: PASS.
 - Parse JSON de `gestor-projeto/project-data.json`: PASS.
-- 14 regras estruturadas carregáveis.
-- Diff contra `main`: somente 4 arquivos de governança/interface alterados antes deste checkpoint.
+- 19 regras estruturadas carregáveis.
+- Diff contra `main`: somente arquivos de governança/interface/documentação do Gestor; Central/APP/F00–F09 permanecem intocados.
 - Produtos operacionais Central/APP/F00–F09: não alterados.
 
 ## Decisões tomadas
@@ -39,7 +41,19 @@ Candidata de governança criada para consolidar regras, precedência, revogaçõ
 Validação estática da candidata e conferência do diff.
 
 ## Próxima ação
-Criar PR da candidata para revisão e entregar link de teste/revisão sem promover a versão oficial.
+PR #39 criado como **draft** para revisão. Aguardar validação do Owner antes de qualquer merge/promoção.
 
 ## Bloqueios
 Nenhum bloqueio técnico conhecido nesta etapa. Falta validação visual/funcional do Owner antes de qualquer promoção.
+
+
+## Delta posterior ao checkpoint inicial
+- `912e09640567e77760c368289e2928df211a56c5` — app alinhado à release oficial V1.2.3.
+- `9fb76ebd7ba6b9d8eed145d4c4428e9616d59868` — shell alinhado à release oficial V1.2.3.
+- `6b5dd6d58b3a7a498c6d56abaa80aa5a4045931b` — manuais canônicos de agentes indexados.
+- `e0896f9849ef25d205ad81124fe90fcf257e9757` — regras adicionais de fonte, maturidade, reutilização e arquitetura.
+- `d173131c22cb74c5bd00a74832dad5583cdd9ac9` — filtros ampliados.
+- `836a105063b565cbf6da2230ff3eb8f1460f22b3` — índice mestre documental ampliado.
+- `e4a6d98de17fcebd572feea480efce25f7522aa5` — busca global inclui regras/fontes.
+- `4ba01d6d411c885cb33a79c18719caa2df016849` — dica de busca atualizada.
+- PR: **#39** — `Gestor: Índice Mestre de Regras Canônicas V1` — draft.
