@@ -45,3 +45,20 @@ Esta é uma regra operacional do projeto, não um cron automático externo. Ela 
 ## Autoridade
 Rogério é a autoridade humana Master para alterar esta regra.
 
+
+
+## Regra pétrea de pós-homologação automática — 2026-10-07
+
+Sempre que uma ação, correção, interface, integração ou fluxo for **testado e homologado**, ou **validado explicitamente por Rogério/Diretoria**, o mesmo ciclo de execução deve obrigatoriamente:
+
+1. disparar imediatamente a sincronização automática das pendências do projeto;
+2. atualizar o **Gestor do Projeto** como fonte mestre;
+3. atualizar números, evolução, status, próxima ação, evidências e checkpoint relacionados;
+4. projetar para **APP • Pendências / WIZY / Éder** somente os itens pertencentes ao escopo APP/F00–F09/WIZY;
+5. preservar WIZY e Éder como manuais quando dependem de execução/validação humana;
+6. atualizar `docs/CONSTRUREI_CURRENT_STATE.md` e o checkpoint da sessão quando a homologação alterar o estado oficial;
+7. não depender de comando posterior do Rogério para executar essa atualização.
+
+A rotina periódica existente continua como redundância, mas **não substitui o disparo imediato após homologação**.
+
+Gatilho operacional canônico: `cr-pendencias-auto-sync-20261004`.
