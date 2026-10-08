@@ -1075,8 +1075,8 @@ load();
   function atendimentoSignals(c){
     const v=[c.title,c.problem,c.raw_text,c.client,c.status].filter(Boolean).join(" ").toLowerCase();
     // Sinais são apenas suspeitas para triagem humana; não certificam emergência.
-    const emergency=/\\b(emerg[eê]ncia|urgente|risco|inc[eê]ndio|fogo|choque el[eé]trico|curto.circuito|g[aá]s|vazamento intenso|alagamento|inunda[cç][aã]o|desabamento|perigo)\\b/i.test(v);
-    const internal=/\\b(fabr[ií]cio|[eé]der|equipe interna|colaborador|prestador)\\b/i.test(v);
+    const emergency=/\b(emerg[eê]ncia|urgente|risco|inc[eê]ndio|fogo|choque el[eé]trico|curto.circuito|g[aá]s|vazamento intenso|alagamento|inunda[cç][aã]o|desabamento|perigo)\b/i.test(v);
+    const internal=/\b(fabr[ií]cio|[eé]der|equipe interna|colaborador|prestador)\b/i.test(v);
     const newEntry=/^(EM_COLETA|INCOMPLETO)$/.test(String(c.status||"")) && hours(c.created_at)<12;
     return {emergency,internal,newEntry};
   }
