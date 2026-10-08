@@ -1,3 +1,13 @@
+## Atualização APP/Central — 08/10/2026 — fechamento do ciclo de publicação progressiva
+
+- **Aprovado pela direção:** Central como vitrine viva e link estável para cada versão já aprovada; candidata separada para novas etapas; checkpoint/rollback a cada promoção. Não confundir demonstração com sistema sincronizado para equipe.
+- **Verificado no repositório:** Central `production/central-operacional-v2-ux-r1-2-homologada-20261005/index.html` contém botão principal, menu APP e copiar link apontando para `preview/app-gabi-v21-parecer-logo-20261008/`. Commit de roteamento `9fb4afbeb1a5da02f081886bd99b127fe7f85576`; verificação posterior do arquivo confirma as três referências. Link da Central mantido estável.
+- **Escopo disponibilizado:** V21 F00–F02 como demonstração/base funcional aprovada; F03 ainda não integrado para revisão compartilhada.
+- **Pendências APP — Gestor mestre (sincronização PENDENTE):** integração e persistência F00–F02 no Core compartilhado; F03 real, com histórico de revisão e permissões; anexos/fotos de F00 no parecer 710-26; motor de IA com pesquisa e fontes; QA celular/notebook, logo PDFs, rollback e avaliação da equipe. As projeções APP/WIZY/Éder são somente recortes do Gestor, não fontes independentes.
+- **Saúde:** avanço de publicação de link confirmado; funcionamento E2E e dados multiusuário não validados; não inventar percentual.
+- **Bloqueio:** consulta e atualização do banco de pendências não confirmadas nesta sessão. Este checkpoint GitHub NÃO substitui escrita no Gestor do Projeto nem demonstra atualização dos seus medidores.
+- **Próximo ciclo:** F03 em candidata, testes de regressão F00–F02, promoção para o mesmo link Central apenas após validação. A versão anterior da Central segue recuperável por commit `0529016dcc48867695424cb5658786a1849cefd8`.
+
 ## Homologação Agenda — 2026-10-08
 
 - Estado: **HOMOLOGADA 100% PELA OPERAÇÃO / CONGELADA COMO REFERÊNCIA FUNCIONAL**.
