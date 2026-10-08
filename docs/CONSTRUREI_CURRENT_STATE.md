@@ -1,3 +1,17 @@
+## Homologação Agenda — 2026-10-08
+
+- Estado: **HOMOLOGADA 100% PELA OPERAÇÃO / CONGELADA COMO REFERÊNCIA FUNCIONAL**.
+- Validação humana: **Gabrielly aprovou** a correção da agenda no seu ambiente; **Rogério aprovou** no computador em 2026-10-08.
+- Escopo validado: agenda operacional, expansão estável e cópia do texto padrão, sem piscar/re-renderização prejudicial.
+- Produção oficial preservada: `production/central-operacional-v2-ux-r1-2-homologada-20261005/`.
+- Script homologado: `agenda-copy-stable-20261008.js?v=20261008-hotfix-1`.
+- Commit exato da produção validada (snapshot/rollback): `1ac33d5c52289e5048a528ca353c18a8b4b51bba`.
+- Branch de checkpoint criada: `checkpoint-central-agenda-copy-homologada-20261008` (aponta para o commit acima).
+- Checkpoint: `CHECKPOINT_CENTRAL_AGENDA_COPY_STABLE_HOMOLOGADA_20261008`.
+- URL de validação: https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/
+- **Política antirregressão:** não alterar diretamente os arquivos da agenda homologada sem nova autorização; alterações futuras em candidata isolada, com validação em dispositivos antes de promoção. Preservar o checkpoint e o caminho de rollback por commit/branch.
+- Observação: congelamento aqui significa checkpoint/versionamento documentado, não bloqueio técnico de escrita na branch `main`.
+
 # CONSTRU-REI — ESTADO MESTRE DA CENTRAL
 
 > Fonte de verdade para retomada entre conversas. Não depender do histórico do chat para identificar a versão atual.
