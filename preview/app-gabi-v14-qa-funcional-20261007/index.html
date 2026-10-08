@@ -542,20 +542,20 @@ async function api(name,payload={}){
     for(const [src,dst] of Object.entries({client:"client",address:"address",contact:"contact_name",phone:"contact_phone",problem:"problem",payment:"payment",availability:"availability",access:"access_note"})){if(d[src]!==undefined&&d[src]!==""&&d[src]!==c[dst]){c[dst]=d[src];changes.push(dst)}}
     const raw=String(d.raw||"");
     const low=raw.toLowerCase();
-    const payer=raw.match(/(?:quem paga|pagamento|pagador|pago pel[oa]|respons[aá]vel pelo pagamento)[^.;\\n]{0,55}?(propriet[aá]ri[oa]|condom[ií]nio|imobili[aá]ria|inquilino|locat[aá]rio)/i);
-    const authorizer=/\\b(autorizad[oa]|autorizou|autorização|autoriza)\\b/i.test(raw);
+    const payer=raw.match(/(?:quem paga|pagamento|pagador|pago pel[oa]|respons[aá]vel pelo pagamento)[^.;\n]{0,55}?(propriet[aá]ri[oa]|condom[ií]nio|imobili[aá]ria|inquilino|locat[aá]rio)/i);
+    const authorizer=/\b(autorizad[oa]|autorizou|autorização|autoriza)\b/i.test(raw);
     if(payer||((low.includes("propriet")||low.includes("condom"))&&authorizer)){
       const who=payer?.[1]||(low.includes("propriet")?"Proprietário":"Condomínio");
       c.payment=who+(authorizer?" — autorização mencionada":" — confirmar autorização");changes.push("payment");
     }
-    const day=raw.match(/\\b(segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo|amanh[aã]|hoje)(?:-feira)?\\b/i);
-    const at=raw.match(/(?:[àa]s?\\s*)?(\\d{1,2})\\s*(?:h|:)\\s*(\\d{2})?\\b/i);
-    const date=raw.match(/\\b\\d{1,2}\\/\\d{1,2}(?:\\/\\d{2,4})?\\b/);
+    const day=raw.match(/\b(segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo|amanh[aã]|hoje)(?:-feira)?\b/i);
+    const at=raw.match(/(?:[àa]s?\s*)?(\d{1,2})\s*(?:h|:)\s*(\d{2})?\b/i);
+    const date=raw.match(/\b\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\b/);
     if((day||date)&&at&&Number(at[1])<24){c.availability=(day?.[0]||date?.[0])+" às "+at[1].padStart(2,"0")+":"+String(at[2]||"00").padStart(2,"0")+" (fictício)";changes.push("availability")}
     if(/portaria/i.test(raw)){c.access_note="Acesso pela portaria com identificação";changes.push("access_note")}
-    const tel=raw.match(/\\(?\\d{2}\\)?\\s*9?\\d{4}[- ]?\\d{4}/);
+    const tel=raw.match(/\(?\d{2}\)?\s*9?\d{4}[- ]?\d{4}/);
     if(tel){c.contact_phone=tel[0];changes.push("contact_phone")}
-    const nm=raw.match(/(?:contato|respons[aá]vel no local|morador)\\s*(?:é|:)?\\s*([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+\\s+[A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+)/);
+    const nm=raw.match(/(?:contato|respons[aá]vel no local|morador)\s*(?:é|:)?\s*([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+\s+[A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+)/);
     if(nm){c.contact_name=nm[1];changes.push("contact_name")}
     if(raw)qaLog(c,"Informação adicional fictícia: "+d.raw.slice(0,160));else qaLog(c,"Campos editados no modo demonstração");
     if(c.status==="AGUARDANDO_RESPOSTA")c.status="EM_COLETA";
