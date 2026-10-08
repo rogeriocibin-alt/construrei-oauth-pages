@@ -1,0 +1,1487 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta name="cr-ui-shell" content="CR-UI-SHELL-V1-PROMOTION-READY-F00-20260922"><meta name="cr-flow-code" content="F00">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CONSTRU-REI • Atendimento — DEMONSTRAÇÃO V19</title>
+<style>
+:root{--bg:#061524;--card:#0b2237;--card2:#071b2d;--line:#294d68;--gold:#d6a51b;--gold2:#f1cb62;--mut:#a9bdcc;--ok:#4fd39a;--warn:#f0bd4b;--bad:#ff727a;--blue:#5db4ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 75% 0,#0d3a64 0,#07192b 38%,#061524 78%);color:#fff;font:14px Inter,Arial,sans-serif}
+.wrap{max-width:1180px;margin:auto;padding:14px}.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.eyebrow{font-size:10px;letter-spacing:.12em;color:var(--gold2);font-weight:900}.head h1{margin:3px 0;font-size:23px}.mut{color:var(--mut)}.small{font-size:11px}
+.btn{border:1px solid #3b6380;background:#0c3a61;color:#fff;border-radius:11px;padding:10px 13px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}.btn.gold{background:linear-gradient(180deg,#e0b640,#b98210);color:#1d1400;border-color:#f0ce70}.btn.ok{background:#1d6a50}.btn.ghost{background:#071b2d}.btn:disabled{opacity:.42;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:13px 0}.stat{background:linear-gradient(155deg,#0c2b4b,#081d34);border:1px solid var(--line);border-radius:15px;padding:12px;cursor:pointer}.stat.on{border-color:var(--gold2);box-shadow:inset 0 2px 0 var(--gold)}.stat b{display:block;font-size:25px}.stat span{font-size:10px;color:var(--mut);font-weight:800}
+.grid{display:grid;grid-template-columns:350px 1fr;gap:10px}.card{background:linear-gradient(160deg,#0b2746,#081d34);border:1px solid var(--line);border-radius:15px;padding:12px}.input,textarea{width:100%;background:#061929;border:1px solid #31536d;color:#fff;border-radius:10px;padding:11px;font:inherit}.label{font-size:11px;color:var(--mut);font-weight:800;margin:8px 0 5px}.list{max-height:72vh;overflow:auto}.case{border:1px solid #31536d;border-radius:12px;padding:10px;margin:8px 0;background:#071b2d;cursor:pointer}.case:hover{border-color:#6992ac}.caseTop{display:flex;justify-content:space-between;gap:8px}.caseNo{font-weight:900;font-size:16px}.status{font-size:9px;border:1px solid #4a6c83;border-radius:999px;padding:4px 7px;height:max-content}.pending{color:var(--warn);font-size:10px;font-weight:800;margin-top:7px}.updated{font-size:10px;color:var(--mut);margin-top:4px}.capture{max-width:760px;margin:0 auto}.capture h2{font-size:22px;margin:5px 0}.number{font-size:20px;font-weight:900;letter-spacing:.04em}.drop{margin-top:9px;border:1px dashed #557b94;border-radius:13px;padding:11px;background:#071b2d}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.box{border:1px solid #31536d;background:#071b2d;border-radius:12px;padding:11px;margin-top:9px}.identified{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.fact{background:#061929;border:1px solid #22445f;border-radius:10px;padding:9px}.compactList{margin-top:8px}.compactRow{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-top:1px solid #1e4058}.compactRow:first-child{border-top:0}.compactCode{min-width:58px;color:#f1cb62;font-weight:900;font-size:10px}.compactMain{flex:1}.compactMain b{display:block}.compactMeta{color:#a9bdcc;font-size:10px;margin-top:2px}.typeBadge{display:inline-block;margin-left:6px;border:1px solid #406782;border-radius:999px;padding:3px 7px;font-size:9px;color:#b9d4e6}.fact b{display:block;color:var(--ok);font-size:10px;margin-bottom:4px}.fact span{white-space:pre-wrap}.missing{border-color:#755e28;background:#241f12}.missing h3{color:var(--warn);margin:0 0 8px}.missingItem{padding:7px 0;border-top:1px solid #463d23}.missingItem:first-of-type{border-top:0}.countBadge{display:inline-block;background:#493b13;color:#ffd86a;border:1px solid #7e6621;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:900}.okline{color:var(--ok);font-weight:900}.hidden{display:none!important}.caseHeader{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.caseHeader h2{margin:0}.files{margin-top:7px}.evidenceGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:9px}.thumb{position:relative;min-height:118px;background:#061929;border:1px solid #274b65;border-radius:11px;overflow:hidden;cursor:pointer}.thumb:hover{border-color:#6e9ab5}.thumbMedia{width:100%;height:88px;display:flex;align-items:center;justify-content:center;background:#03111e;overflow:hidden}.thumbMedia img,.thumbMedia video,.thumbMedia iframe{width:100%;height:100%;object-fit:cover;border:0}.thumbIcon{font-size:27px}.thumbName{font-size:9px;color:#c2d4df;padding:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.previewModal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px}.previewCard{position:relative;width:min(980px,96vw);height:min(780px,90vh);background:#061524;border:1px solid #446b85;border-radius:14px;padding:10px;display:flex;flex-direction:column}.previewHead{display:flex;gap:8px;align-items:center;margin-bottom:8px}.previewHead b{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.previewBody{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#020b12;border-radius:10px;overflow:hidden}.previewBody img,.previewBody video,.previewBody iframe{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;border:0}.previewBody audio{width:min(600px,90%)}.editGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}details summary{cursor:pointer;font-weight:800;color:#b9d4e6}pre{font:inherit;white-space:pre-wrap;margin:8px 0}.empty{text-align:center;color:var(--mut);padding:25px 10px}
+@media(max-width:790px){.wrap{padding:10px}.evidenceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.thumb{min-height:108px}.thumbMedia{height:80px}.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.list{max-height:36vh}.identified,.editGrid{grid-template-columns:1fr}.btn{min-height:44px}.caseHeader{display:block}.caseHeader .toolbar{margin-top:8px}}
+</style>
+<meta name="cr-f00-canonical-pilot" content="20261001"><meta name="cr-preview-isolated" content="F00-CANONICAL-UI-20261001"><meta name="cr-candidate" content="APP-GABI-F01-CRM-UX-V13-20261007">
+<meta name="cr-architecture" content="APP=casa;GabiFlow=Atendimento;F00=motor;single-route=/f00/">
+<style id="cr-fusion-style">
+:root{
+  --cr-navy:#07165b;--cr-blue:#075bd8;--cr-blue2:#0877f9;--cr-sky:#1688ff;
+  --cr-ink:#031b46;--cr-ink2:#294b65;--cr-bg:#f8fcff;--cr-line:#d9e7f4;
+  --cr-card:#ffffff;--cr-yellow:#ffd52c;--cr-ok:#12805c;--cr-warn:#a96900;--cr-danger:#b83b3b;
+}
+*{box-sizing:border-box}
+body.app-candidate{margin:0;background:linear-gradient(180deg,#eef6ff 0,#f8fcff 240px,#f8fcff 100%);color:var(--cr-ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.cr-app-shell{position:sticky;top:0;z-index:80;background:rgba(248,252,255,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--cr-line);box-shadow:0 8px 24px rgba(3,27,70,.08)}
+.cr-top{max-width:1440px;margin:auto;padding:12px 18px 8px;display:flex;align-items:center;gap:14px}
+.cr-brand{display:flex;align-items:center;gap:11px;min-width:230px}.cr-mark{width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,var(--cr-navy),var(--cr-blue2));display:grid;place-items:center;color:white;font-weight:950;box-shadow:0 7px 18px rgba(7,91,216,.24)}
+.cr-brand b{display:block;font-size:15px;letter-spacing:.02em}.cr-brand small{display:block;color:#567394;font-size:11px;margin-top:2px}
+.cr-context{flex:1}.cr-context .ey{font-size:10px;font-weight:900;letter-spacing:.12em;color:var(--cr-blue);text-transform:uppercase}.cr-context h1{font-size:18px;line-height:1.15;margin:2px 0;color:var(--cr-ink)}.cr-context p{margin:0;color:#567394;font-size:11px}
+.cr-health{display:flex;align-items:center;gap:7px;border:1px solid var(--cr-line);background:white;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:850;color:#567394;white-space:nowrap}
+.cr-health i{width:8px;height:8px;border-radius:50%;background:#9ba9b5;box-shadow:0 0 0 3px #edf2f6}
+.cr-health.ok i{background:#1aa775;box-shadow:0 0 0 3px #d9f6eb}.cr-health.bad i{background:#d14b4b;box-shadow:0 0 0 3px #fde6e6}
+.cr-modules,.cr-nav{max-width:1440px;margin:auto;padding:0 18px;display:flex;gap:7px;overflow:auto;scrollbar-width:none}.cr-modules::-webkit-scrollbar,.cr-nav::-webkit-scrollbar{display:none}
+.cr-modules{padding-bottom:8px}.cr-module{border:1px solid var(--cr-line);background:white;color:#567394;border-radius:10px;padding:7px 10px;font-size:10px;font-weight:850;white-space:nowrap}.cr-module.active{background:var(--cr-navy);border-color:var(--cr-navy);color:white}.cr-module:disabled{opacity:.62}
+.cr-nav{border-top:1px solid #e8f0f7;padding-top:8px;padding-bottom:9px}.cr-nav button{border:0;background:transparent;color:#567394;border-radius:9px;padding:8px 10px;font-size:11px;font-weight:850;white-space:nowrap;cursor:pointer}.cr-nav button.active{background:#e9f3ff;color:var(--cr-blue)}.cr-nav .cr-new{margin-left:auto;background:var(--cr-blue);color:white;padding-left:14px;padding-right:14px;box-shadow:0 6px 14px rgba(7,91,216,.18)}
+.fusion-page{display:none}.fusion-page.active{display:block}.fusion-wrap{max-width:1440px;margin:auto;padding:16px 18px 28px}
+.fusion-hero{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin:2px 0 14px}.fusion-hero h2{font-size:23px;margin:0 0 5px;color:var(--cr-ink)}.fusion-hero p{font-size:12px;color:#567394;margin:0;max-width:760px}.fusion-date{background:white;border:1px solid var(--cr-line);border-radius:12px;padding:9px 12px;color:#567394;font-size:10px;font-weight:800}
+.fusion-kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;margin-bottom:12px}.fusion-kpi{background:white;border:1px solid var(--cr-line);border-radius:13px;padding:11px;box-shadow:0 5px 14px rgba(3,27,70,.04);min-height:74px}.fusion-kpi b{display:block;font-size:23px;color:var(--cr-navy)}.fusion-kpi span{display:block;font-size:9px;font-weight:900;letter-spacing:.04em;color:#567394;text-transform:uppercase;margin-top:3px}
+.fusion-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(320px,.65fr);gap:11px}.fusion-card{background:white;border:1px solid var(--cr-line);border-radius:14px;padding:13px;box-shadow:0 5px 14px rgba(3,27,70,.04)}.fusion-card h3{font-size:13px;margin:0 0 3px;color:var(--cr-ink)}.fusion-card .sub{font-size:10px;color:#6d8498;margin-bottom:9px}.fusion-list{display:grid;gap:7px}.fusion-empty{padding:18px;text-align:center;color:#7890a3;font-size:11px;border:1px dashed #c9dbea;border-radius:10px;background:#fbfdff}
+.fusion-row{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:9px;align-items:center;padding:9px;border:1px solid #e2edf6;border-radius:11px;background:#fbfdff;cursor:pointer}.fusion-row:hover{border-color:#a9c9e8;background:#f3f9ff}.fusion-pri{font-size:10px;font-weight:950;border-radius:8px;padding:6px;text-align:center;background:#e9f3ff;color:var(--cr-blue)}.fusion-pri.p0{background:#fde9e9;color:#a62e2e}.fusion-pri.p1{background:#fff0dc;color:#9c5b00}.fusion-main b{display:block;font-size:11px;color:var(--cr-ink)}.fusion-main span{display:block;font-size:10px;color:#6a8296;margin-top:2px}.fusion-status{font-size:9px;font-weight:900;color:#4e6a80;white-space:nowrap}
+.fusion-rules{display:grid;gap:7px}.fusion-rule{border-left:3px solid var(--cr-blue);background:#f3f8ff;border-radius:8px;padding:8px 9px}.fusion-rule b{display:block;font-size:10px;color:var(--cr-ink)}.fusion-rule span{font-size:9px;color:#6c8194}
+.fusion-section-title{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}.fusion-section-title h2{margin:0;font-size:20px}.fusion-section-title p{margin:3px 0 0;color:#6a8296;font-size:11px}
+.fusion-chip{display:inline-flex;align-items:center;border:1px solid var(--cr-line);background:white;border-radius:999px;padding:6px 9px;font-size:9px;font-weight:900;color:#567394}
+.fusion-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
+.fusion-summary .fusion-card strong{font-size:22px;color:var(--cr-navy);display:block}
+.fusion-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.fusion-btn{border:1px solid var(--cr-line);background:white;color:var(--cr-blue);font-weight:850;font-size:10px;border-radius:9px;padding:8px 10px;cursor:pointer}.fusion-btn.primary{background:var(--cr-blue);border-color:var(--cr-blue);color:white}
+body.app-candidate .wrap{max-width:1440px!important;padding:16px 18px 28px!important;color:var(--cr-ink)}
+body.app-candidate .head{background:transparent!important;color:var(--cr-ink)!important}
+body.app-candidate .head h1{color:var(--cr-ink)!important}
+body.app-candidate .card,body.app-candidate .box,body.app-candidate .stat,body.app-candidate details.box{background:#fff!important;color:var(--cr-ink)!important;border-color:var(--cr-line)!important;box-shadow:0 5px 14px rgba(3,27,70,.04)!important}
+body.app-candidate .mut,body.app-candidate .small,body.app-candidate .compactMeta,body.app-candidate .updated{color:#6a8296!important}
+body.app-candidate .input,body.app-candidate textarea,body.app-candidate select,body.app-candidate input{background:#fff!important;color:var(--cr-ink)!important;border-color:#bfd4e8!important}
+body.app-candidate .btn.gold,body.app-candidate .btn.ok,body.app-candidate .btn-primary{background:var(--cr-blue)!important;border-color:var(--cr-blue)!important;color:#fff!important}
+body.app-candidate .btn,body.app-candidate .btn.ghost{border-color:#bcd2e6!important}
+body.app-candidate .case{background:#fbfdff!important;border-color:#dce9f4!important;color:var(--cr-ink)!important}
+body.app-candidate .case:hover{border-color:#9fc3e5!important;background:#f1f8ff!important}
+body.app-candidate .caseNo,body.app-candidate .eyebrow{color:var(--cr-blue)!important}
+body.app-candidate .status{background:#e9f3ff!important;color:var(--cr-blue)!important;border-color:#b8d6f2!important}
+body.app-candidate .missing{background:#fff9eb!important;border-color:#edd39a!important}.app-candidate .missing h3{color:#9b6500!important}
+body.app-candidate .thumb{background:#f6faff!important;border-color:#d6e6f3!important}.app-candidate .thumbMedia{background:#eef5fb!important}
+body.app-candidate pre{color:var(--cr-ink)!important}
+@media(max-width:1050px){.fusion-kpis{grid-template-columns:repeat(3,1fr)}.fusion-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.cr-top{padding:10px 11px 7px}.cr-brand{min-width:auto}.cr-context p{display:none}.cr-health span{display:none}.cr-modules,.cr-nav{padding-left:11px;padding-right:11px}.cr-nav .cr-new{margin-left:0}.fusion-wrap,body.app-candidate .wrap{padding:12px 10px 24px!important}.fusion-hero{display:block}.fusion-date{margin-top:9px;display:inline-block}.fusion-kpis{grid-template-columns:repeat(2,1fr)}.fusion-grid{grid-template-columns:1fr}.fusion-row{grid-template-columns:48px minmax(0,1fr)}.fusion-status{grid-column:2}.fusion-summary{grid-template-columns:1fr}.cr-context h1{font-size:15px}.cr-module{padding:7px 9px}}
+</style>
+<style id="cr-central-identity-current-20261002">
+:root{
+  --crh-navy:#031b46;--crh-navy-2:#05265f;--crh-blue:#0877f9;--crh-blue-2:#075bd8;
+  --crh-blue-3:#0b69e7;--crh-gold:#ffc514;--crh-gold-2:#ffd129;--crh-bg:#eef8fd;
+  --crh-panel:#f9fdff;--crh-card:#ffffff;--crh-line:#d5e7f2;--crh-ink:#07165b;
+  --crh-text:#17315d;--crh-muted:#6d8299;--crh-ok:#0daf67;--crh-warn:#f2a500;
+  --crh-bad:#ee2147;--crh-shadow:0 5px 14px rgba(13,63,111,.08);--crh-shadow-2:0 16px 42px rgba(6,40,86,.14);
+}
+html,body{background:var(--crh-bg)!important;color:var(--crh-text)!important}
+body.app-candidate{background:
+  radial-gradient(circle at 88% -12%,rgba(8,119,249,.08),transparent 28%),
+  linear-gradient(180deg,#f7fcff 0,#eef8fd 220px,#eef8fd 100%)!important;
+  color:var(--crh-text)!important
+}
+.cr-app-shell{
+  background:rgba(247,252,255,.985)!important;border-bottom:1px solid var(--crh-line)!important;
+  box-shadow:0 5px 18px rgba(15,61,105,.08)!important;backdrop-filter:blur(14px)!important
+}
+.cr-top{min-height:62px!important;padding-top:9px!important;padding-bottom:7px!important}
+.cr-mark{
+  width:48px!important;height:48px!important;border-radius:50%!important;
+  background:#fff url("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&v=128") center/92% no-repeat!important;
+  color:transparent!important;border:1px solid #d8e6f2!important;
+  box-shadow:0 7px 20px rgba(6,40,86,.12)!important
+}
+.cr-brand b{color:var(--crh-ink)!important;font-size:15px!important}.cr-brand small{color:#315c8a!important}
+.cr-context .ey{color:var(--crh-blue)!important}.cr-context h1{color:var(--crh-ink)!important;font-weight:900!important}
+.cr-context p{color:#315c8a!important}
+.cr-health{background:#fff!important;border-color:#d4e4f1!important;color:#315c8a!important;box-shadow:0 3px 10px rgba(13,63,111,.05)!important}
+.cr-modules{padding-bottom:7px!important}
+.cr-module{
+  min-height:34px!important;background:#fff!important;border:1px solid #d4e4f1!important;color:#315c8a!important;
+  border-radius:9px!important;box-shadow:0 2px 8px rgba(13,63,111,.04)!important
+}
+.cr-module.active{
+  background:linear-gradient(90deg,#0b69e7,#0875f5)!important;border-color:#0872e9!important;color:#fff!important;
+  box-shadow:inset 4px 0 0 var(--crh-gold),0 5px 14px rgba(2,20,53,.14)!important
+}
+.cr-nav{border-top:1px solid #e4eef6!important;padding-top:7px!important}
+.cr-nav button{
+  min-height:34px!important;color:#315c8a!important;border-radius:8px!important;padding:8px 11px!important
+}
+.cr-nav button:hover{background:#e8f3fd!important;color:#0b45aa!important}
+.cr-nav button.active{
+  background:linear-gradient(180deg,#2896ff,#0877f9)!important;color:#fff!important;
+  box-shadow:inset 0 -3px 0 var(--crh-gold),0 4px 12px rgba(8,119,249,.16)!important
+}
+.cr-nav .cr-new{
+  background:linear-gradient(180deg,#0d72ee,#0549bd)!important;color:#fff!important;border:1px solid #0a63dc!important;
+  box-shadow:inset 0 -3px 0 var(--crh-gold),0 5px 14px rgba(8,119,249,.18)!important
+}
+.fusion-wrap,body.app-candidate .wrap{max-width:1440px!important}
+.fusion-hero{margin-top:4px!important}.fusion-hero h2,.fusion-section-title h2{color:var(--crh-ink)!important;font-weight:900!important}
+.fusion-hero p,.fusion-section-title p{color:#315c8a!important}
+.fusion-date,.fusion-chip{
+  background:#fff!important;border-color:#cbdff0!important;color:#315c8a!important;box-shadow:0 3px 10px rgba(13,63,111,.04)!important
+}
+.fusion-kpi,.fusion-card,
+body.app-candidate .card,body.app-candidate .box,body.app-candidate .stat,body.app-candidate details.box{
+  background:linear-gradient(180deg,#fff,#f9fdff)!important;border:1px solid var(--crh-line)!important;color:var(--crh-text)!important;
+  box-shadow:var(--crh-shadow)!important;border-radius:12px!important
+}
+.fusion-kpi{border-top:3px solid #8fb4d4!important}.fusion-kpi:nth-child(1){border-top-color:var(--crh-blue)!important}
+.fusion-kpi:nth-child(2){border-top-color:var(--crh-warn)!important}.fusion-kpi:nth-child(3){border-top-color:var(--crh-bad)!important}
+.fusion-kpi:nth-child(4){border-top-color:var(--crh-ok)!important}.fusion-kpi:nth-child(5){border-top-color:#8b36d6!important}.fusion-kpi:nth-child(6){border-top-color:#ff8614!important}
+.fusion-kpi b{color:var(--crh-ink)!important}.fusion-kpi span{color:#315c8a!important}
+.fusion-card h3{color:var(--crh-ink)!important}.fusion-card .sub{color:#6d8299!important}
+.fusion-row,body.app-candidate .case{
+  background:#fff!important;border:1px solid #dce9f4!important;color:var(--crh-text)!important;border-radius:10px!important
+}
+.fusion-row:hover,body.app-candidate .case:hover{background:#f3f9ff!important;border-color:#9fc3e5!important}
+.fusion-pri{background:#e8f3fd!important;color:#0b45aa!important}.fusion-pri.p0{background:#fde9ee!important;color:#b31637!important}.fusion-pri.p1{background:#fff2d7!important;color:#9c6500!important}
+.fusion-main b,.caseNo,.caseHeader h2{color:var(--crh-ink)!important}.fusion-main span,.fusion-status{color:#5f7895!important}
+.fusion-rule{background:#f3f8ff!important;border-left:4px solid var(--crh-blue)!important}
+.fusion-rule:nth-child(2n){border-left-color:var(--crh-gold)!important}.fusion-rule b{color:var(--crh-ink)!important}.fusion-rule span{color:#627b96!important}
+.fusion-empty{background:#fbfdff!important;border-color:#c9dbea!important;color:#6d8299!important}
+body.app-candidate .head h1{color:var(--crh-ink)!important;font-weight:900!important}
+body.app-candidate .eyebrow{color:var(--crh-blue)!important}
+body.app-candidate .mut,body.app-candidate .small,body.app-candidate .compactMeta,body.app-candidate .updated{color:#6d8299!important}
+body.app-candidate .input,body.app-candidate textarea,body.app-candidate select,body.app-candidate input{
+  background:#fff!important;color:var(--crh-text)!important;border:1px solid #cbdff0!important;box-shadow:none!important
+}
+body.app-candidate .input:focus,body.app-candidate textarea:focus,body.app-candidate select:focus,body.app-candidate input:focus{
+  outline:2px solid rgba(8,119,249,.16)!important;border-color:var(--crh-blue)!important
+}
+body.app-candidate .btn,body.app-candidate .btn.ghost,.fusion-btn{
+  background:#e8f3fd!important;border:1px solid #cbdff0!important;color:#0b45aa!important;border-radius:10px!important;font-weight:850!important
+}
+body.app-candidate .btn:hover,.fusion-btn:hover{background:#dceefe!important;filter:none!important}
+body.app-candidate .btn.gold,body.app-candidate .btn.ok,body.app-candidate .btn-primary,.fusion-btn.primary{
+  background:linear-gradient(180deg,#2896ff,#0877f9)!important;border-color:#0872e9!important;color:#fff!important;
+  box-shadow:inset 0 -3px 0 var(--crh-gold),0 5px 14px rgba(8,119,249,.16)!important
+}
+body.app-candidate .status{
+  background:#e8f3fd!important;color:#0b45aa!important;border-color:#b8d6f2!important;font-weight:850!important
+}
+body.app-candidate .stat.on{border-color:var(--crh-gold)!important;box-shadow:inset 0 3px 0 var(--crh-gold),var(--crh-shadow)!important}
+body.app-candidate .stat b{color:var(--crh-ink)!important}.app-candidate .stat span{color:#315c8a!important}
+body.app-candidate .drop,body.app-candidate .fact{background:#fbfdff!important;border-color:#d8e6f2!important}
+body.app-candidate .fact b{color:var(--crh-ok)!important}
+body.app-candidate .compactRow{border-top-color:#e3edf5!important}
+body.app-candidate .compactCode{color:#0b69e7!important}
+body.app-candidate .missing{background:#fff8e8!important;border-color:#f0d486!important}.app-candidate .missing h3{color:#9a6500!important}
+body.app-candidate .countBadge{background:#fff3cb!important;color:#7b5600!important;border-color:#e5c66a!important}
+body.app-candidate .thumb{background:#f6faff!important;border-color:#d6e6f3!important}.app-candidate .thumbMedia{background:#eef5fb!important}
+.previewCard{background:#fff!important;border-color:#cbdff0!important;color:var(--crh-text)!important}.previewBody{background:#eef5fb!important}
+body.app-candidate pre{color:var(--crh-text)!important}
+@media(max-width:720px){
+  .cr-app-shell{box-shadow:0 5px 16px rgba(15,61,105,.09)!important}
+  .cr-top{padding-left:10px!important;padding-right:10px!important}
+  .cr-mark{width:44px!important;height:44px!important}.cr-brand{min-width:auto!important}
+  .cr-modules,.cr-nav{padding-left:10px!important;padding-right:10px!important}
+}
+</style>
+<style id="cr-gabi-operational-hardening-20261002">
+.op-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.op-pill{display:inline-flex;align-items:center;min-height:22px;padding:3px 7px;border:1px solid #d7e7f3;border-radius:999px;background:#f7fbff;color:#4f6f91;font-size:9px;font-weight:850}
+.op-pill.bad{background:#fff0f2;border-color:#f3c4cc;color:#b31637}
+.op-pill.warn{background:#fff7e7;border-color:#efd7a3;color:#8b5b00}
+.op-pill.ok{background:#eaf9f3;border-color:#bae8d5;color:#08754c}
+.op-alert{display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:flex-start;padding:10px;border:1px solid #dce9f4;border-radius:10px;background:#fff}
+.op-alert strong{display:block;color:#07165b;font-size:11px}.op-alert span{display:block;color:#5f7895;font-size:10px;margin-top:2px}
+.op-dot{width:10px;height:10px;border-radius:50%;margin-top:3px;background:#0877f9}.op-dot.bad{background:#ee2147}.op-dot.warn{background:#f2a500}.op-dot.ok{background:#0daf67}
+.reprocess-feedback{margin-top:9px;padding:9px 10px;border:1px solid #b9dfcf;border-radius:10px;background:#f0fbf6;color:#17694e;font-size:10px;line-height:1.45}
+.reprocess-feedback.warn{border-color:#ecd39b;background:#fff9e9;color:#7c5a00}
+.reprocess-feedback b{font-size:10px}
+#caseView.f01-mode{display:flex!important;flex-direction:column}
+#caseView.f01-mode .caseHeader{order:0}
+#caseView.f01-mode #opCaseSummary{order:1}
+#caseView.f01-mode #stageBox{order:2;border-color:#a9cbea!important;box-shadow:0 10px 28px rgba(8,119,249,.10)!important}
+#caseView.f01-mode #f01Support{order:3}
+.f01-workspace-title{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:7px}
+.f01-workspace-title b{font-size:12px;color:#07165b}
+.f01-next{border-left:4px solid #0877f9;background:#f3f8ff;border-radius:9px;padding:9px 10px;margin:8px 0}
+.f01-next b{display:block;font-size:10px;color:#07165b}.f01-next span{display:block;font-size:11px;color:#315c8a;margin-top:3px}
+.f01-check{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:9px 0}
+.f01-check-item{border:1px solid #dce9f4;background:#fbfdff;border-radius:9px;padding:8px}
+.f01-check-item b{display:block;font-size:9px;color:#315c8a;text-transform:uppercase;letter-spacing:.03em}
+.f01-check-item span{display:block;font-size:10px;color:#17315d;margin-top:3px;white-space:pre-wrap}
+.f01-check-item.ok{border-color:#bce5d5;background:#f0fbf6}.f01-check-item.ok b{color:#0b7a52}
+.f01-check-item.warn{border-color:#edd39a;background:#fff9ea}.f01-check-item.warn b{color:#8f6100}
+.f01-check-item.neutral{border-color:#dce9f4;background:#f8fbfd}
+.f01-quick{border:1px solid #b9d8f4;background:linear-gradient(180deg,#f5faff,#eef7ff);border-radius:11px;padding:10px;margin:10px 0}
+.f01-quick> b{display:block;color:#07165b;font-size:11px;margin-bottom:3px}
+.f01-quick .mut{margin-bottom:7px}
+.f01-quick textarea{min-height:96px}
+#f01Support>summary{font-weight:900;color:#0b45aa;cursor:pointer;list-style:none}
+#f01Support>summary::-webkit-details-marker{display:none}
+#f01Support>summary:after{content:" ▾";font-size:10px}
+#f01Support[open]>summary:after{content:" ▴"}
+#f01SupportHost>.box,#f01SupportHost>details.box{box-shadow:none!important;margin-top:9px!important}
+@media(max-width:720px){
+  #caseView.f01-mode #stageBox{margin-top:8px!important;padding:10px!important}
+  .f01-check{grid-template-columns:1fr 1fr;gap:6px}
+  .f01-check-item{padding:7px}
+  .f01-quick textarea{min-height:88px}
+}
+@media(max-width:720px){
+  .cr-app-shell{position:relative!important}
+  html{scroll-padding-top:12px}
+  .case,.fusion-row{scroll-margin-top:12px}
+  .cr-context{min-width:0}
+  .cr-top{align-items:flex-start!important}
+}
+</style>
+<link rel="stylesheet" href="https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/human-identity-canon-v1.css?v=20261006-context-v2">
+</head>
+<body class="app-candidate">
+<div class="cr-app-shell">
+  <div class="cr-top">
+    <div class="cr-brand">
+      <div class="cr-mark">CR</div>
+      <div><b>APP CONSTRU-REI</b><small>Candidata integrada • 02/10/2026</small></div>
+    </div>
+    <div class="cr-context">
+      <div class="ey">Módulo Atendimento</div>
+      <h1>Gabrielly • Atendimento & Relacionamento</h1>
+      <p>Uma tela, um chamado, um histórico. Gabi Flow na experiência; F00 no motor.</p>
+    </div>
+    <div id="fusionHealth" class="cr-health"><i></i><span>Sincronizando dados</span></div>
+  </div>
+  <div class="cr-modules">
+    <button class="cr-module active">Atendimento • Gabi</button>
+    <button class="cr-module" disabled>Operação • Fabrício</button>
+    <button class="cr-module" disabled>Técnico & Qualidade • Éder</button>
+    <button class="cr-module" disabled>Diretoria • Rogério</button>
+  </div>
+  <nav id="fusionNav" class="cr-nav">
+    <button class="active" data-fusion-view="agora">Agora</button>
+    <button data-fusion-view="novo">Atendimentos</button>
+    <button data-fusion-view="pendencias">Pendências</button>
+    <button data-fusion-view="agenda">Agenda</button>
+    <button data-fusion-view="retornos">Retornos</button>
+    <button data-fusion-view="fechamento">Fechar dia</button>
+    <button id="fusionNew" class="cr-new">+ Novo chamado</button>
+  </nav>
+</div>
+
+<section class="fusion-page active" data-view="agora">
+  <div class="fusion-wrap">
+    <div class="fusion-hero">
+      <div><h2 id="fusionGreeting">Gabrielly, aqui está o que pede atenção agora.</h2><p>A fila organiza o próximo passo, os retornos e o que não pode ficar para trás.</p></div>
+      <div id="fusionDate" class="fusion-date">Hoje</div>
+    </div>
+    <div class="fusion-kpis">
+      <div class="fusion-kpi"><b id="fkActive">0</b><span>Chamados ativos</span></div>
+      <div class="fusion-kpi"><b id="fkWaiting">0</b><span>Aguardando resposta</span></div>
+      <div class="fusion-kpi"><b id="fkMissing">0</b><span>Informações faltando</span></div>
+      <div class="fusion-kpi"><b id="fkReady">0</b><span>Prontos para qualificação</span></div>
+      <div class="fusion-kpi"><b id="fkQualify">0</b><span>Em qualificação</span></div>
+      <div class="fusion-kpi"><b id="fkAgenda">0</b><span>Com disponibilidade</span></div>
+      <div class="fusion-kpi"><b id="fkPayment">0</b><span>Pagamento a esclarecer</span></div>
+    </div>
+    <div class="fusion-grid">
+      <section class="fusion-card">
+        <h3>O que fazer agora</h3><div class="sub">Fila priorizada pelos atendimentos reais.</div>
+        <div id="fusionNowList" class="fusion-list"><div class="fusion-empty">Carregando chamados…</div></div>
+      </section>
+      <section class="fusion-card">
+        <h3>Alertas de atendimento</h3><div class="sub">Só o que precisa de ação, sem texto de treinamento.</div>
+        <div id="fusionAlertList" class="fusion-list"><div class="fusion-empty">Calculando exceções…</div></div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<section class="fusion-page" data-view="pendencias">
+  <div class="fusion-wrap">
+    <div class="fusion-section-title"><div><h2>Pendências vivas</h2><p>Lacunas, esperas e retornos do próprio atendimento, em uma única fila.</p></div><span id="pendCount" class="fusion-chip">0 pendências</span></div>
+    <div id="fusionPendingList" class="fusion-list"></div>
+  </div>
+</section>
+
+<section class="fusion-page" data-view="agenda">
+  <div class="fusion-wrap">
+    <div class="fusion-section-title"><div><h2>Agenda do atendimento</h2><p>Disponibilidades dos chamados + visão consolidada da agenda real da operação.</p></div><span id="agendaCount" class="fusion-chip">0 itens</span></div>
+    <div class="fusion-summary" style="margin-bottom:10px">
+      <div class="fusion-card"><strong id="agendaToday">—</strong><span>Visitas hoje</span></div>
+      <div class="fusion-card"><strong id="agendaTomorrow">—</strong><span>Agenda amanhã</span></div>
+      <div class="fusion-card"><strong id="agendaYesterday">—</strong><span>Pendências de ontem</span></div>
+    </div>
+    <div id="agendaBridgeNote" class="sub" style="margin:0 0 9px;color:#6d8299">Sincronizando agenda consolidada…</div>
+    <div id="fusionAgendaList" class="fusion-list"></div>
+  </div>
+</section>
+
+<section class="fusion-page" data-view="retornos">
+  <div class="fusion-wrap">
+    <div class="fusion-section-title"><div><h2>Retornos que não podem ser esquecidos</h2><p>Chamados marcados como aguardando resposta, em uma fila única para acompanhamento.</p></div><span id="returnCount" class="fusion-chip">0 retornos</span></div>
+    <div id="fusionReturnList" class="fusion-list"></div>
+  </div>
+</section>
+
+<section class="fusion-page" data-view="fechamento">
+  <div class="fusion-wrap">
+    <div class="fusion-section-title"><div><h2>Fechamento do dia</h2><p>Visão rápida para a Gabi terminar o dia sabendo exatamente o que ficou aberto.</p></div><span class="fusion-chip">Atendimento integrado</span></div>
+    <div class="fusion-summary">
+      <div class="fusion-card"><strong id="closeCollect">0</strong><span>Em coleta / incompletos</span></div>
+      <div class="fusion-card"><strong id="closeWait">0</strong><span>Aguardando resposta</span></div>
+      <div class="fusion-card"><strong id="closeReady">0</strong><span>Prontos para seguir</span></div>
+    </div>
+    <div class="fusion-card" style="margin-top:10px">
+      <h3>Exceções antes de encerrar</h3><div class="sub">Se houver algo aqui, ainda existe trabalho operacional pendente.</div>
+      <div id="closeExceptionList" class="fusion-list"><div class="fusion-empty">Calculando pendências…</div></div>
+      <div class="fusion-actions"><button class="fusion-btn primary" data-go="pendencias">Resolver pendências</button><button class="fusion-btn" data-go="retornos">Cobrar retornos</button><button class="fusion-btn" data-go="novo">Abrir atendimentos</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="fusion-page" data-view="novo"><main class="wrap">
+  <div class="head">
+    <div>
+      <div class="eyebrow">CONSTRU-REI • APP</div>
+      <h1>Atendimentos</h1>
+      <div class="mut small">Cole o que chegou. O sistema organiza, preserva o histórico e mostra o que falta.</div>
+    </div>
+    <div style="margin-left:auto"><button id="newBtn" class="btn gold">+ Novo chamado</button></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat" data-filter="COLLECT"><b id="kCollect">0</b><span>EM COLETA</span></div>
+    <div class="stat" data-filter="WAIT"><b id="kWait">0</b><span>AGUARDANDO RESPOSTA</span></div>
+    <div class="stat" data-filter="READY"><b id="kReady">0</b><span>PRONTOS PARA QUALIFICAÇÃO</span></div>
+    <div class="stat" data-filter="QUALIFY"><b id="kQualify">0</b><span>EM QUALIFICAÇÃO</span></div>
+    <div class="stat" data-filter="ALL"><b id="kAll">0</b><span>HISTÓRICO / TOTAL</span></div>
+  </div>
+
+  <div class="grid">
+    <section class="card">
+      <div class="mut small" style="margin-bottom:7px">Fila inicial: somente o que ainda depende da Gabrielly.</div><input id="search" class="input" placeholder="Buscar nº, cliente, endereço, contato ou telefone">
+      <div id="list" class="list"><div class="empty">Carregando…</div></div>
+    </section>
+
+    <section class="card">
+      <div id="capture" class="capture">
+        <div class="eyebrow">NOVO CHAMADO</div>
+        <h2>Jogue aqui o que você recebeu.</h2>
+        <p class="mut">Sem organizar, sem preencher formulário. Digite o número que veio do GestãoClick, cole a mensagem e anexe o que tiver.</p>
+
+        <div class="label">NÚMERO DO ORÇAMENTO / CHAMADO</div>
+        <input id="caseNumber" class="input number" placeholder="Ex.: 731-26" inputmode="text" autocomplete="off">
+
+        <div class="label">CHAMADO BRUTO / NOVA INFORMAÇÃO</div>
+        <textarea id="raw" rows="10" placeholder="Cole aqui toda a mensagem do WhatsApp, observações, contatos, endereço, explicações... Não precisa organizar nada."></textarea>
+
+        <div class="drop">
+          <b>Fotos, vídeos e arquivos</b>
+          <div class="mut small">Pode selecionar vários de uma vez.</div>
+          <input id="newFiles" class="input files" type="file" multiple accept="image/*,video/*,application/pdf,audio/*">
+          <div id="selectedFiles" class="mut small"></div>
+        </div>
+
+        <div class="toolbar">
+          <button id="processNew" class="btn gold">PROCESSAR CHAMADO</button>
+          <button id="clearNew" class="btn ghost">Limpar</button>
+        </div>
+        <div id="newMsg" class="box hidden"></div>
+      </div>
+
+      <div id="caseView" class="hidden">
+        <div class="caseHeader">
+          <div>
+            <div class="eyebrow">CHAMADO</div>
+            <h2 id="viewNo"></h2>
+            <div id="viewTitle" class="mut"></div>
+          </div>
+          <div>
+            <span id="viewStatus" class="status"></span>
+            <span id="viewPending" class="countBadge"></span>
+          </div>
+        </div>
+
+        <div id="opCaseSummary" class="box">
+          <b>CONDUÇÃO DO ATENDIMENTO</b>
+          <div id="opCaseMeta" class="op-meta" style="margin-top:8px"></div>
+          <div id="opCaseNext" class="mut small" style="margin-top:8px"></div>
+        </div>
+
+        <div id="supportData" class="box">
+          <b>DADOS IDENTIFICADOS</b><span id="caseType" class="typeBadge"></span>
+          <div id="identified" class="identified"></div>
+        </div>
+
+        <div id="itemsBox" class="box hidden">
+          <b>ASSUNTOS IDENTIFICADOS — <span id="itemCount">0</span></b>
+          <div id="items" class="compactList"></div>
+        </div>
+
+        <div id="involvedBox" class="box hidden">
+          <b>ENVOLVIDOS — <span id="involvedCount">0</span></b>
+          <div id="involved" class="compactList"></div>
+        </div>
+
+        <div id="missingBox" class="box missing">
+          <h3>INFORMAÇÕES PENDENTES</h3>
+          <div id="missing"></div>
+        </div>
+
+        <div id="moreBox" class="box">
+          <b>+ ADICIONAR NOVA INFORMAÇÃO</b>
+          <div class="mut small">Cole qualquer nova informação, mesmo bagunçada. O sistema distribui o que reconhecer e ignora o que não altera o atendimento.</div>
+          <textarea id="moreRaw" rows="6" style="margin-top:8px" placeholder="Cole aqui: nome, telefone, quem paga, disponibilidade, endereço, mensagem de WhatsApp ou qualquer complemento..."></textarea>
+          <input id="moreFiles" class="input files" type="file" multiple accept="image/*,video/*,application/pdf,audio/*">
+          <div class="toolbar">
+            <button id="reprocess" class="btn gold">INCORPORAR INFORMAÇÃO</button>
+            <button id="waiting" class="btn ghost">Marcar aguardando resposta</button>
+          </div>
+          <div id="reprocessResult" class="reprocess-feedback hidden"></div>
+        </div>
+
+        <div id="supportFiles" class="box">
+          <b>ARQUIVOS DO CHAMADO</b>
+          <div id="fileList" class="mut small"></div>
+        </div>
+
+        <div id="supportMessage" class="box">
+          <b>MENSAGEM DE COLETA</b>
+          <pre id="message"></pre>
+          <button id="copyWait" class="btn gold">COPIAR + MARCAR AGUARDANDO RESPOSTA</button>
+        </div>
+
+        <div id="supportGC" class="box">
+          <b>GESTÃOCLICK — BLOCO PRONTO</b>
+          <pre id="gc"></pre>
+          <button class="btn copy" data-copy="gc">Copiar dados</button>
+        </div>
+
+        <div id="stageBox" class="box">
+          <b id="stageTitle">PRÓXIMA ETAPA</b>
+          <div id="stageBadge" class="op-meta" style="margin-top:8px"></div>
+          <div id="gateText" style="margin:8px 0"></div>
+
+          <div id="f01Embedded" class="hidden">
+            <div class="f01-workspace-title">
+              <div><b>ATENDIMENTO EM QUALIFICAÇÃO</b><div class="mut small">A etapa mudou, mas o atendimento continua no mesmo card.</div></div>
+              <span class="op-pill">Responsável: Gabrielly</span>
+            </div>
+            <div id="f01NextAction" class="f01-next"></div>
+            <div id="f01Checklist" class="f01-check"></div>
+            <div class="f01-quick">
+              <b>RECEBEU NOVA INFORMAÇÃO? COLE AQUI.</b>
+              <div class="mut small">WhatsApp, nome, telefone, escopo, disponibilidade, autorização ou qualquer complemento. Não organize antes.</div>
+              <textarea id="f01QuickRaw" rows="4" placeholder="Cole a próxima informação do atendimento..."></textarea>
+              <input id="f01QuickFiles" class="input files" type="file" multiple accept="image/*,video/*,application/pdf,audio/*">
+              <div class="toolbar">
+                <button id="f01Incorporate" class="btn gold">INCORPORAR E RECALCULAR</button>
+                <button id="f01Wait" class="btn ghost">Marcar aguardando resposta</button>
+              </div>
+              <div id="f01QuickResult" class="reprocess-feedback hidden"></div>
+            </div>
+            <div id="f01CompactSummary" class="identified"></div>
+            <div class="actions" style="margin-top:10px">
+              <button id="f01Edit" class="btn">Revisar dado</button>
+              <button id="f01CopyBudget" class="btn">Preparar pré-orçamento</button>
+            </div>
+          </div>
+
+          <button id="release" class="btn ok">Concluir coleta e iniciar qualificação</button>
+        </div>
+
+        <details id="f01Support" class="box hidden">
+          <summary>Dados completos da coleta, arquivos e histórico</summary>
+          <div id="f01SupportHost"></div>
+        </details>
+
+        <details id="editDetails" class="box">
+          <summary>Editar informações extraídas — usar somente se necessário</summary>
+          <div class="editGrid" style="margin-top:9px">
+            <div><div class="label">Cliente / imobiliária</div><input id="eClient" class="input"></div>
+            <div><div class="label">Endereço</div><input id="eAddress" class="input"></div>
+            <div><div class="label">Contato</div><input id="eContact" class="input"></div>
+            <div><div class="label">Telefone</div><input id="ePhone" class="input"></div>
+            <div style="grid-column:1/-1"><div class="label">Problema</div><textarea id="eProblem" rows="3"></textarea></div>
+            <div><div class="label">Pagamento / autorização</div><input id="ePayment" class="input"></div>
+            <div><div class="label">Disponibilidade</div><input id="eAvailability" class="input"></div>
+            <div><div class="label">Acesso</div><input id="eAccess" class="input"></div>
+            <div style="grid-column:1/-1"><button id="saveEdit" class="btn">Salvar correção manual</button></div>
+          </div>
+        </details>
+
+        <div id="supportTimeline" class="box">
+          <b>LINHA DO TEMPO</b>
+          <div id="timeline" class="mut small" style="margin-top:7px"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main></section>
+<div id="previewModal" class="previewModal hidden" role="dialog" aria-modal="true">
+  <div class="previewCard">
+    <div class="previewHead"><b id="previewName">Arquivo</b><a id="previewOpen" class="btn ghost" target="_blank">Abrir arquivo</a><button id="previewClose" class="btn">Fechar</button></div>
+    <div id="previewBody" class="previewBody"></div>
+  </div>
+</div>
+
+<script>
+const API="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-f00-intake-candidate-20261002";
+let rows=[],current=null,filter="ACTIVE",lastReprocessNote="",lastF01Note="";
+const $=id=>document.getElementById(id);
+
+const QA_SEED={id:"qa-99001-26",case_number:"99001-26",status:"EM_COLETA",title:"Infiltração no teto da cozinha",client:"Imobiliária Horizonte Testes (FICTÍCIA)",address:"Rua das Amostras, 123, ap. 402, Curitiba (FICTÍCIO)",contact_name:"Ana Exemplo",contact_phone:"(41) 90000-0000",contact_email:"",problem:"Infiltração no teto da cozinha; origem não identificada",payment:"",availability:"",access_note:"",raw_text:"Solicito vistoria de infiltração no teto da cozinha do apartamento 402.",structured:{case_type:"VISTORIA",items:[{id:"01",subject:"Investigar infiltração",environment:"Cozinha 402"}],involved:[{name:"Ana Exemplo",role:"Contato no local"}]},created_at:new Date().toISOString(),updated_at:new Date().toISOString(),released_f01:false};
+let qaCases=[QA_SEED],qaEvents={"qa-99001-26":[{created_at:new Date().toISOString(),event_text:"Caso fictício inicializado para teste; nenhuma gravação real."}]};
+
+function qaV19Extract(raw,c){
+ const normalized=String(raw||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+ const changes=[]; const set=(key,val)=>{if(val&&c[key]!==val){if(c[key])qaLog(c,"Atualização "+key+": informação anterior preservada no histórico.");c[key]=val;changes.push(key)}};
+ const mail=String(raw).match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);if(mail)set("contact_email",mail[0]);
+ const phone=String(raw).match(/(?:\+55\s*)?\(?\d{2}\)?\s*9?\d{4}[-.\s]?\d{4}\b/);if(phone)set("contact_phone",phone[0]);
+ const contact=String(raw).match(/(?:contato|respons[aá]vel no local|falar com|morador[a]?|recebido por)\s*(?:é|:|será)?\s*([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+(?:\s+[A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+){0,2})/i);
+ if(contact)set("contact_name",contact[1]);
+ const pay=normalized.match(/(?:quem paga|pagamento|pagador|pago pel[oa]|responsavel pel[oa] pagamento|custeado pel[oa])\s*(?:e|:|sera)?\s*(?:o|a|pelo|pela)?\s*(proprietari[oa]|condominio|imobiliaria|locatari[oa]|inquilin[oa])/i);
+ if(pay)set("payment",pay[1]+" — responsabilidade informada; autorização sujeita à conferência");
+ else if(/(?:proprietari[oa]|condominio|imobiliaria).*?(?:paga|pagamento|custeia)/i.test(normalized)){const v=normalized.match(/(proprietari[oa]|condominio|imobiliaria)/);if(v)set("payment",v[1]+" — responsabilidade informada; autorização sujeita à conferência")}
+ const hour=normalized.match(/(?:as?\s+|horario\s*(?:de|:)?\s*|por volta das?\s+)?(\d{1,2})(?:\s*[:h]\s*(\d{1,2})?)\b/) || normalized.match(/(?:as?\s+)(\d{1,2})\s+(?:da|de)\s+(?:manha|tarde|noite)/);
+ const day=normalized.match(/\b(?:segunda|terca|quarta|quinta|sexta|sabado|domingo)(?:-feira)?\b|\b(?:amanha|hoje)\b|\b\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\b/);
+ if(hour && (day||/horario|atendimento|visita|disponiv|recebe|agend/.test(normalized))){
+  let h=+hour[1],m=+(hour[2]||0);if(h<=12&&/tarde/.test(normalized)&&h<12)h+=12;
+  if(h<24&&m<60)set("availability",(day?day[0]+" ":"")+"às "+String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+" (informado; confirmar agenda)");
+ }
+ if(/portaria|acesso|chave|porteiro/i.test(normalized)){
+  const sent=String(raw).split(/[.\n;]/).find(t=>/portaria|acesso|chave|porteiro/i.test(t));if(sent)set("access_note",sent.trim().slice(0,160))
+ }
+ const adr=String(raw).match(/(?:endere[cç]o|localiza[cç][aã]o)\s*(?::|-)\s*([^\n.;]{10,140})/i);if(adr)set("address",adr[1].trim());
+ const problem=String(raw).match(/(?:problema|servi[cç]o solicitado|ocorr[eê]ncia)\s*(?::|-)\s*([^\n.;]{10,190})/i);if(problem)set("problem",problem[1].trim());
+ return [...new Set(changes)];
+}
+
+const qaMissing=c=>[!c.client&&"cliente / origem",!c.address&&"endereço completo",!c.contact_name&&"nome do contato no imóvel",!c.contact_phone&&"telefone do contato",!c.payment&&"pagamento / autorização",!c.availability&&"disponibilidade para atendimento"].filter(Boolean);
+function qaDetail(c){let missing=qaMissing(c);return {case:{...c,missing_fields:missing},events:qaEvents[c.id]||[],files:[],missing,ready:!missing.length,message:missing.length?"Confirmar as informações ainda pendentes com o solicitante.":"Coleta completa, revisar e iniciar F01.",gestaoclick:"PRÉ-ORÇAMENTO FICTÍCIO — Vistoria técnica de infiltração; identificar causa e extensão; sem valores; sujeito a aprovação técnica."}}
+function qaLog(c,msg){c.updated_at=new Date().toISOString();(qaEvents[c.id]??=[]).push({created_at:c.updated_at,event_text:msg})}
+async function api(name,payload={}){
+  if(name==="list")return {cases:qaCases.map(c=>({...c,missing_fields:qaMissing(c)}))};
+  const c=qaCases.find(x=>x.id===payload.id);
+  if(name==="create"){
+    if(qaCases.some(x=>x.case_number===payload.case_number)){const e=new Error("Chamado de teste já existe");e.data={code:"DUPLICATE_CASE",existing:qaCases.find(x=>x.case_number===payload.case_number)};throw e}
+    const n={...QA_SEED,id:"qa-"+Date.now(),case_number:payload.case_number,raw_text:payload.data?.raw||"",title:"Nova coleta fictícia",client:"",address:"",contact_name:"",contact_phone:"",problem:"",payment:"",availability:"",access_note:"",status:"EM_COLETA",created_at:new Date().toISOString(),updated_at:new Date().toISOString()};qaCases.unshift(n);qaLog(n,"Coleta de teste criada");return {case:n};
+  }
+  if(!c)throw new Error("Chamado fictício não encontrado");
+  if(name==="get")return qaDetail(c);
+  if(name==="update"){
+    const d=payload.data||{},changes=[];
+    for(const [src,dst] of Object.entries({client:"client",address:"address",contact:"contact_name",phone:"contact_phone",problem:"problem",payment:"payment",availability:"availability",access:"access_note"})){if(d[src]!==undefined&&d[src]!==""&&d[src]!==c[dst]){c[dst]=d[src];changes.push(dst)}}
+    const raw=String(d.raw||"");
+    const low=raw.toLowerCase();
+    const updates=qaV19Extract(raw,c);changes.push(...updates);
+    const payer=raw.match(/(?:quem paga|pagamento|pagador|pago pel[oa]|respons[aá]vel pelo pagamento)[^.;\n]{0,55}?(propriet[aá]ri[oa]|condom[ií]nio|imobili[aá]ria|inquilino|locat[aá]rio)/i);
+    const authorizer=/\b(autorizad[oa]|autorizou|autorização|autoriza)\b/i.test(raw);
+    if(payer||((low.includes("propriet")||low.includes("condom"))&&authorizer)){
+      const who=payer?.[1]||(low.includes("propriet")?"Proprietário":"Condomínio");
+      c.payment=who+(authorizer?" — autorização mencionada":" — confirmar autorização");changes.push("payment");
+    }
+    // Interpretação incremental: dia/data + horário expresso em formatos variados.
+    const norm=raw.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+    const day=norm.match(/(?:segunda|terca|quarta|quinta|sexta|sabado|domingo)(?:-feira)?|amanha|hoje/i);
+    const date=norm.match(/(?:dia\s*)?(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)/);
+    const at=norm.match(/(?:as?\s+)?(\d{1,2})\s*(?:h(?:oras?)?|:)\s*(\d{1,2})?/i)
+      ||norm.match(/(?:as?\s+|por volta d[ae]s?\s+)(\d{1,2})(?:\s+(?:da|de)\s+(manha|tarde|noite))?/i);
+    const period=norm.match(/\b(manha|tarde|noite)\b/);
+    let hrs=at?Number(at[1]):null;
+    if(hrs!==null&&hrs<=12&&/tarde/.test(period?.[0]||"")&&hrs<12)hrs+=12;
+    const minutes=at?.[2]&&/^\d{1,2}$/.test(at[2])?Number(at[2]):0;
+    const qualifiedTime=hrs!==null&&hrs>=0&&hrs<24&&minutes<60;
+    const datePart=day?.[0]||date?.[1]||"";
+    if(qualifiedTime&&(datePart||/(disponivel|horario|atendimento|visita|recebe|agend|pode atender)/i.test(norm))){
+      c.availability=(datePart?datePart+" ":"")+"às "+String(hrs).padStart(2,"0")+":"+String(minutes).padStart(2,"0")+" (fictício)";changes.push("availability");
+    }
+    if(/portaria/i.test(raw)){c.access_note="Acesso pela portaria com identificação";changes.push("access_note")}
+    const tel=raw.match(/\(?\d{2}\)?\s*9?\d{4}[- ]?\d{4}/);
+    if(tel){c.contact_phone=tel[0];changes.push("contact_phone")}
+    const nm=raw.match(/(?:contato|respons[aá]vel no local|morador)\s*(?:é|:)?\s*([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+\s+[A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+)/);
+    if(nm){c.contact_name=nm[1];changes.push("contact_name")}
+    if(raw)qaLog(c,"Informação adicional fictícia: "+d.raw.slice(0,160));else qaLog(c,"Campos editados no modo demonstração");
+    if(c.status==="AGUARDANDO_RESPOSTA")c.status="EM_COLETA";
+    return {case:c,recognized_changes:changes,reconciliation:{superseded:[]}};
+  }
+  if(name==="wait"){c.status="AGUARDANDO_RESPOSTA";qaLog(c,"Aguardando resposta (demonstração)");return {case:c}}
+  if(name==="release"){if(qaMissing(c).length)throw Error("Informações obrigatórias incompletas");c.status="LIBERADO_F01";c.released_f01=true;qaLog(c,"F01 ativado somente na demonstração");return {case:c}}
+  throw Error("Operação não disponível no teste isolado: "+name)
+}
+
+function esc(v){return String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function normalizeNo(v){return String(v||"").replace(/\s/g,"")}
+function pendingCount(x){
+  if(Array.isArray(x._exactMissing))return x._exactMissing.length;
+  return Array.isArray(x.missing_fields)?x.missing_fields.length:0
+}
+function inFilter(x){
+  if(filter==="ALL")return true;
+  if(filter==="ACTIVE")return ["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01","LIBERADO_F01"].includes(x.status);
+  if(filter==="COLLECT")return x.status==="EM_COLETA"||x.status==="INCOMPLETO";
+  if(filter==="WAIT")return x.status==="AGUARDANDO_RESPOSTA";
+  if(filter==="READY")return x.status==="PRONTO_F01";
+  if(filter==="QUALIFY")return x.status==="LIBERADO_F01";
+  return true;
+}
+function formatDate(v){try{return new Date(v).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}catch{return""}}
+function humanStatus(v){
+  return ({EM_COLETA:"EM COLETA",INCOMPLETO:"INCOMPLETO",AGUARDANDO_RESPOSTA:"AGUARDANDO RESPOSTA",PRONTO_F01:"PRONTO PARA QUALIFICAÇÃO",LIBERADO_F01:"EM QUALIFICAÇÃO"})[v]||String(v||"");
+}
+function isBogusContact(v){
+  const n=String(v||"").trim().toLowerCase();
+  const bad=new Set(["quantidade","valor unitário","valor unitario","total","endereço","endereco","data","base","cliente/origem","solicitante","unidade envolvida","unidade afetada","descrição","descricao","serviço","servico","material","horário","horario"]);
+  return !n||bad.has(n)||/^r\$\s*\d/i.test(n)||/^\d+[\s.,%]/.test(n);
+}
+function isPlaceholderProblem(v){
+  const n=String(v||"").trim().toLowerCase().replace(/[.]+$/,"");
+  return !n||["atendimento técnico","atendimento tecnico","serviço","servico","manutenção","manutencao","verificar"].includes(n);
+}
+function cleanPayment(v){
+  return String(v||"")
+    .replace(/^[\s⚠?¿!•*]+/u,"")
+    .replace(/^(?:respons[aá]vel\s+pelo\s+pagamento(?:\s*\/\s*autoriza[cç][aã]o)?|pagamento(?:\s*\/\s*autoriza[cç][aã]o)?|autoriza[cç][aã]o)\s*[-:=]\s*/i,"")
+    .trim();
+}
+function hasConcreteAvailability(v){
+  const s=String(v||"").trim().toLowerCase();
+  if(!s)return false;
+  if(/\b([01]?\d|2[0-3])[:h][0-5]?\d?\b/.test(s))return true;
+  if(/\b(segunda|terça|terca|quarta|quinta|sexta|sábado|sabado|domingo)\b/.test(s))return true;
+  if(/\b(hoje|amanhã|amanha)\b/.test(s)&&/\b(manhã|manha|tarde|noite|\d{1,2})\b/.test(s))return true;
+  if(/\b\d{1,2}[\/.-]\d{1,2}(?:[\/.-]\d{2,4})?\b/.test(s))return true;
+  return false;
+}
+function correctedMissing(d){
+  const arr=Array.isArray(d.missing)?[...d.missing]:[];
+  const c=d.case||{};
+  if(isBogusContact(c.contact_name) && !arr.some(x=>/nome.*contato|contato.*nome/i.test(String(x))))arr.push("nome do contato no imóvel");
+  if(isPlaceholderProblem(c.problem) && !arr.some(x=>/problema|escopo|itens.*atendimento/i.test(String(x))))arr.push("descrição do problema ou escopo do atendimento");
+  if(!hasConcreteAvailability(c.availability) && !arr.some(x=>/disponibilidade|horário|horario|agenda/i.test(String(x))))arr.push("disponibilidade concreta para atendimento");
+  return [...new Set(arr.map(x=>String(x).trim()).filter(Boolean))];
+}
+function qualificationIssues(c){
+  const out=[];
+  if(!String(c.client||"").trim())out.push("Confirmar cliente / origem.");
+  if(!String(c.address||"").trim())out.push("Confirmar endereço do imóvel.");
+  if(isBogusContact(c.contact_name))out.push("Confirmar pessoa de contato no imóvel.");
+  if(!String(c.contact_phone||"").replace(/\D/g,""))out.push("Confirmar telefone do contato.");
+  if(!cleanPayment(c.payment))out.push("Confirmar quem paga / autoriza.");
+  if(isPlaceholderProblem(c.problem))out.push("Descrever o problema / escopo real.");
+  if(!hasConcreteAvailability(c.availability))out.push("Definir data, horário ou janela concreta para atendimento.");
+  return [...new Set(out)];
+}
+function caseAgeHours(v){const t=new Date(v||0).getTime();return t?Math.max(0,(Date.now()-t)/36e5):0}
+function caseNextAction(c,missing){
+  if(c.status==="AGUARDANDO_RESPOSTA")return "Conferir se houve resposta, cobrar se necessário e incorporar a resposta neste mesmo chamado.";
+  if(c.status==="LIBERADO_F01"){
+    const q=qualificationIssues(c);
+    return q.length?"Completar "+(q.length===1?"1 ponto de qualificação":q.length+" pontos de qualificação")+" antes de orçar.":"Qualificação suficiente: revisar o resumo e preparar a orçamentação.";
+  }
+  if(c.status==="PRONTO_F01"&&!missing.length)return "Revisar os dados e iniciar a qualificação no mesmo atendimento.";
+  if(missing.length)return "Coletar "+(missing.length===1?"1 informação":missing.length+" informações")+" que ainda "+(missing.length===1?"falta":"faltam")+".";
+  return "Revisar o chamado e definir a próxima ação.";
+}
+function collectionMessage(missing){
+  const lines=(missing||[]).map(x=>{
+    const t=String(x||"").toLowerCase();
+    if(/complemento.*endere/.test(t))return "Confirmar o complemento do endereço (apto, bloco, torre, casa ou unidade).";
+    if(/endere/.test(t))return "Confirmar o endereço completo do imóvel.";
+    if(/nome.*contato|contato.*nome/.test(t))return "Confirmar o nome da pessoa de contato no imóvel.";
+    if(/telefone/.test(t))return "Confirmar o telefone do contato no imóvel.";
+    if(/pagamento|autoriza/.test(t))return "Confirmar quem autorizou o atendimento ou será responsável pelo pagamento.";
+    if(/disponibilidade|dias e horários|dias e horarios/.test(t))return "Confirmar dias e horários disponíveis para visita ou atendimento.";
+    if(/acesso/.test(t))return "Confirmar como será o acesso ao imóvel.";
+    return "Confirmar: "+String(x||"").replace(/^confirmar:\s*/i,"")+".";
+  });
+  return "INFORMAÇÕES QUE AINDA PRECISAMOS:\n"+lines.map(x=>"• "+x).join("\n");
+}
+
+async function hydrateOperationalDetails(list){
+  const active=list.filter(x=>["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01","LIBERADO_F01"].includes(x.status));
+  const results=await Promise.allSettled(active.map(async c=>{
+    const d=await api("get",{id:c.id});
+    const missing=correctedMissing(d);
+    return {id:c.id,missing,ready:!!d.ready&&!missing.length,case:d.case||{},events:Array.isArray(d.events)?d.events:[]};
+  }));
+  const byId=new Map(results.filter(r=>r.status==="fulfilled").map(r=>[r.value.id,r.value]));
+  return list.map(c=>{
+    const d=byId.get(c.id);if(!d)return c;
+    return {...c,...d.case,_exactMissing:d.missing,_exactReady:d.ready,_detailCase:d.case,_events:d.events};
+  });
+}
+async function load(){
+  try{
+    const base=(await api("list")).cases||[];
+    rows=await hydrateOperationalDetails(base);
+    window.__gabiDataLoadOk=true;
+    render();
+  }catch(e){window.__gabiDataLoadOk=false;const host=$("list");if(host)host.innerHTML='<div class="empty">Falha ao atualizar: '+esc(e.message)+'. A lista pode estar desatualizada.</div>';const health=document.querySelector("#fusionHealth span");if(health)health.textContent="Falha de leitura F00 — não sincronizado";}
+}
+function render(){
+  $("kCollect").textContent=rows.filter(x=>x.status==="EM_COLETA"||x.status==="INCOMPLETO").length;
+  $("kWait").textContent=rows.filter(x=>x.status==="AGUARDANDO_RESPOSTA").length;
+  $("kReady").textContent=rows.filter(x=>x.status==="PRONTO_F01").length;
+  $("kQualify").textContent=rows.filter(x=>x.status==="LIBERADO_F01").length;
+  $("kAll").textContent=rows.length;
+
+  const q=($("search").value||"").toLowerCase();
+  const data=rows.filter(inFilter).filter(x=>JSON.stringify(x).toLowerCase().includes(q));
+  const host=$("list");host.innerHTML="";
+  if(!data.length){host.innerHTML='<div class="empty">Nenhum chamado nesta visão.</div>';return}
+  data.forEach(x=>{
+    const d=document.createElement("div");d.className="case";
+    const pc=pendingCount(x);
+    d.innerHTML='<div class="caseTop"><div class="caseNo">'+esc(x.case_number)+'</div><span class="status">'+esc(humanStatus(x.status))+'</span></div>'+
+      '<div style="font-weight:800;margin-top:5px">'+esc(x.client||"Cliente a identificar")+'</div>'+
+      '<div class="mut small">'+esc(x.address||x.title||x.problem||"Aguardando organização")+'</div>'+
+      '<div class="pending">'+(pc===0?"✓ 0 pendências":pc+" pendência"+(pc===1?"":"s"))+'</div>'+
+      '<div class="updated">Atualizado '+esc(formatDate(x.updated_at))+'</div>';
+    d.onclick=()=>openCase(x.id);host.appendChild(d);
+  });
+}
+function showCapture(){
+  current=null;filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.toggle("on",x.dataset.filter==="ACTIVE"));$("caseView").classList.add("hidden");$("capture").classList.remove("hidden");
+  $("caseNumber").value="";$("raw").value="";$("newFiles").value="";$("selectedFiles").textContent="";$("newMsg").classList.add("hidden");
+}
+async function uploadFiles(caseId,fileList){if(fileList.length)alert("Anexos simulados neste teste; nenhum arquivo será enviado ao servidor.");}
+
+async function processNew(){
+  const no=normalizeNo($("caseNumber").value),raw=$("raw").value.trim(),fs=[...$("newFiles").files];
+  $("newMsg").classList.remove("hidden");$("newMsg").textContent="Processando e organizando…";
+  if(!/^\d{1,5}-\d{2}$/.test(no)){$("newMsg").innerHTML='<span class="warn">Digite o número no formato 731-26.</span>';return}
+  if(!raw){$("newMsg").innerHTML='<span class="warn">Cole o chamado bruto antes de processar.</span>';return}
+  try{
+    const d=await api("create",{case_number:no,data:{raw}});
+    if(fs.length)await uploadFiles(d.case.id,fs);
+    await load();await openCase(d.case.id);
+  }catch(e){
+    if(e.data&&e.data.code==="DUPLICATE_CASE"&&e.data.existing){
+      $("newMsg").innerHTML='<span class="warn">Este chamado já existe no atendimento.</span> <button id="openDup" class="btn">Abrir '+esc(no)+'</button>';
+      $("openDup").onclick=()=>openCase(e.data.existing.id);
+    }else $("newMsg").innerHTML='<span class="warn">'+esc(e.message)+'</span>';
+  }
+}
+function fact(label,value){
+  if(!value)return"";
+  return '<div class="fact"><b>✓ '+esc(label)+'</b><span>'+esc(value)+'</span></div>';
+}
+function factWarn(label,value){
+  if(!value)return"";
+  return '<div class="fact"><b>⚠ '+esc(label)+'</b><span>'+esc(value)+'</span></div>';
+}
+function renderItems(arr){
+  const meta=new Set(["cliente/origem","endereço","endereco","base","data","quantidade","valor unitário","valor unitario","total"]);
+  const items=(Array.isArray(arr)?arr:[]).filter(x=>{
+    const subject=String(x?.subject||"").trim().toLowerCase();
+    const env=String(x?.environment||"").replace(/[🏢📍📄📅]/g,"").trim().toLowerCase();
+    if(meta.has(subject)||meta.has(env))return false;
+    if(/^r\$\s*[\d.,]+$/i.test(subject))return false;
+    if(/^\d+\s*unidade(s)?$/i.test(subject))return false;
+    if(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(subject))return false;
+    return true;
+  });
+  $("itemCount").textContent=items.length;
+  $("itemsBox").classList.toggle("hidden",!items.length);
+  const visible=items.slice(0,8);
+  let html=visible.map(x=>'<div class="compactRow"><div class="compactCode">'+esc(x.id||"ITEM")+'</div><div class="compactMain"><b>'+esc(x.subject||"Item identificado")+'</b><div class="compactMeta">'+esc(x.environment||"")+(x.confidence?' • '+esc(x.confidence):'')+'</div></div></div>').join("");
+  if(items.length>8)html+='<details><summary>Ver todos os '+items.length+' itens</summary>'+items.slice(8).map(x=>'<div class="compactRow"><div class="compactCode">'+esc(x.id||"ITEM")+'</div><div class="compactMain"><b>'+esc(x.subject||"Item identificado")+'</b><div class="compactMeta">'+esc(x.environment||"")+'</div></div></div>').join("")+'</details>';
+  $("items").innerHTML=html;
+}
+function renderInvolved(arr){
+  const blocked=new Set(["quantidade","valor unitário","valor unitario","total","endereço","endereco","data","base","cliente/origem","solicitante","unidade envolvida","possível unidade de origem","possivel unidade de origem","unidade afetada","apartamento de baixo","apartamento de cima","descrição","descricao","serviço","servico","material","horário","horario"]);
+  const raw=Array.isArray(arr)?arr:[];
+  const a=raw.filter(x=>{
+    if(x&&x.unit)return String(x.unit).trim().length>1 || /\d/.test(String(x.unit));
+    const n=String(x?.name||"").trim().toLowerCase();
+    if(!n||blocked.has(n))return false;
+    if(/^r\$\s*\d/i.test(n)||/^\d+[\s.,%]/.test(n))return false;
+    if(n===String(x?.role||"").trim().toLowerCase() && !x?.phone)return false;
+    return true;
+  });
+  $("involvedCount").textContent=a.length;
+  $("involvedBox").classList.toggle("hidden",!a.length);
+  $("involved").innerHTML=a.slice(0,12).map(x=>{
+    const isUnit=!!x.unit;
+    const title=isUnit?("Unidade "+x.unit):(x.name||"Pessoa envolvida");
+    const meta=isUnit?String(x.role||"unidade relacionada"):[x.role,x.phone].filter(Boolean).join(" • ");
+    return '<div class="compactRow"><div class="compactCode">'+esc(isUnit?("UN "+x.unit):"PESSOA")+'</div><div class="compactMain"><b>'+esc(title)+'</b><div class="compactMeta">'+esc(meta)+'</div></div></div>';
+  }).join("");
+}
+
+function fileKind(f){
+  const t=(f.content_type||"").toLowerCase(),n=(f.filename||"").toLowerCase();
+  if(t.startsWith("image/")||/\.(jpg|jpeg|png|webp|gif|heic)$/i.test(n))return"image";
+  if(t==="application/pdf"||/\.pdf$/i.test(n))return"pdf";
+  if(t.startsWith("video/")||/\.(mp4|mov|webm|m4v)$/i.test(n))return"video";
+  if(t.startsWith("audio/")||/\.(mp3|m4a|wav|ogg)$/i.test(n))return"audio";
+  return"document";
+}
+function thumbHtml(f){
+  const k=fileKind(f),u=esc(f.signed_url||""),name=esc(f.filename||"arquivo");
+  let media="";
+  if(k==="image")media='<img loading="lazy" src="'+u+'" alt="'+name+'">';
+  else if(k==="pdf")media='<iframe loading="lazy" src="'+u+'#page=1&toolbar=0&navpanes=0&scrollbar=0" title="'+name+'"></iframe>';
+  else if(k==="video")media='<video muted playsinline preload="metadata" src="'+u+'#t=0.1"></video>';
+  else if(k==="audio")media='<div class="thumbIcon">🎵</div>';
+  else media='<div class="thumbIcon">📄</div>';
+  return '<div class="thumb" data-file-id="'+esc(f.id||"")+'"><div class="thumbMedia">'+media+'</div><div class="thumbName">'+name+'</div></div>';
+}
+function renderFiles(files){
+  const a=Array.isArray(files)?files:[];
+  window.__f00Files={};a.forEach(f=>window.__f00Files[String(f.id||"")]=f);
+  $("fileList").className="";
+  $("fileList").innerHTML=a.length?'<div class="evidenceGrid">'+a.map(thumbHtml).join("")+'</div>':'<div class="mut small">Nenhum arquivo recebido.</div>';
+  document.querySelectorAll(".thumb[data-file-id]").forEach(el=>el.onclick=()=>openPreview(window.__f00Files[el.dataset.fileId]));
+}
+function openPreview(f){
+  if(!f)return;const k=fileKind(f),u=f.signed_url||"";
+  $("previewName").textContent=f.filename||"Arquivo";$("previewOpen").href=u||"#";
+  let html="";
+  if(k==="image")html='<img src="'+esc(u)+'" alt="'+esc(f.filename||"imagem")+'">';
+  else if(k==="pdf")html='<iframe src="'+esc(u)+'#page=1" title="'+esc(f.filename||"PDF")+'"></iframe>';
+  else if(k==="video")html='<video controls autoplay playsinline src="'+esc(u)+'"></video>';
+  else if(k==="audio")html='<audio controls autoplay src="'+esc(u)+'"></audio>';
+  else html='<div style="text-align:center"><div style="font-size:52px">📄</div><p class="mut">Visualização interna não disponível para este formato.</p></div>';
+  $("previewBody").innerHTML=html;$("previewModal").classList.remove("hidden");
+}
+function closePreview(){$("previewModal").classList.add("hidden");$("previewBody").innerHTML=""}
+
+const f01SupportIds=["supportData","itemsBox","involvedBox","missingBox","moreBox","supportFiles","supportMessage","supportGC","editDetails","supportTimeline"];
+const f01Origins={};
+function initF01Support(){
+  f01SupportIds.forEach(id=>{
+    const node=$(id);if(!node||f01Origins[id])return;
+    const marker=document.createComment("f01-origin-"+id);
+    node.parentNode.insertBefore(marker,node);
+    f01Origins[id]={marker};
+  });
+}
+function setQualificationLayout(active){
+  initF01Support();
+  const view=$("caseView"),support=$("f01Support"),host=$("f01SupportHost");
+  if(view)view.classList.toggle("f01-mode",!!active);
+  if(support){
+    support.classList.toggle("hidden",!active);
+    if(active)support.open=false;
+  }
+  f01SupportIds.forEach(id=>{
+    const node=$(id),origin=f01Origins[id];if(!node||!origin)return;
+    if(active){if(host&&node.parentNode!==host)host.appendChild(node)}
+    else if(origin.marker?.parentNode && node.parentNode!==origin.marker.parentNode){
+      origin.marker.parentNode.insertBefore(node,origin.marker.nextSibling);
+    }
+  });
+}
+function qualItem(label,ok,value,neutral=false){
+  const cls=neutral?"neutral":(ok?"ok":"warn");
+  const mark=neutral?"○":(ok?"✓":"⚠");
+  return '<div class="f01-check-item '+cls+'"><b>'+mark+' '+esc(label)+'</b><span>'+esc(value||"")+'</span></div>';
+}
+function qualificationNextAction(c){
+  if(c.status==="AGUARDANDO_RESPOSTA")return "Aguardando resposta externa. Assim que chegar, cole a resposta neste mesmo atendimento.";
+  if(isPlaceholderProblem(c.problem))return "Falta entender exatamente o problema / escopo. Cole a mensagem do cliente, morador ou responsável.";
+  if(isBogusContact(c.contact_name))return "Falta confirmar quem é a pessoa de contato no imóvel.";
+  if(!String(c.contact_phone||"").replace(/\D/g,""))return "Falta confirmar o telefone do contato no imóvel.";
+  if(!cleanPayment(c.payment))return "Falta confirmar quem paga ou autoriza este atendimento.";
+  if(!hasConcreteAvailability(c.availability))return "Falta definir data, horário ou uma janela concreta de disponibilidade.";
+  if(!String(c.address||"").trim())return "Falta confirmar o endereço completo do imóvel.";
+  return "Dados suficientes. Revise o resumo e prepare o pré-orçamento.";
+}
+function renderQualificationWorkspace(d){
+  const c=d.case||{},files=Array.isArray(d.files)?d.files:[];
+  const contactOk=!isBogusContact(c.contact_name);
+  const phoneOk=!!String(c.contact_phone||"").replace(/\D/g,"");
+  const problemOk=!isPlaceholderProblem(c.problem);
+  const availOk=hasConcreteAvailability(c.availability);
+  const evidenceOk=files.length>0;
+  $("f01NextAction").innerHTML='<b>PRÓXIMA AÇÃO</b><span>'+esc(qualificationNextAction(c))+'</span>';
+  $("f01Checklist").innerHTML=[
+    qualItem("Cliente / origem",!!String(c.client||"").trim(),c.client||"Não identificado"),
+    qualItem("Endereço",!!String(c.address||"").trim(),c.address||"Não identificado"),
+    qualItem("Contato",contactOk,contactOk?c.contact_name:"Confirmar pessoa de contato"),
+    qualItem("Telefone",phoneOk,phoneOk?c.contact_phone:"Confirmar telefone"),
+    qualItem("Quem paga / autoriza",!!cleanPayment(c.payment),cleanPayment(c.payment)||"Confirmar responsável"),
+    qualItem("Problema / escopo",problemOk,problemOk?c.problem:"Escopo ainda insuficiente"),
+    qualItem("Disponibilidade",availOk,availOk?c.availability:"Definir data, horário ou janela"),
+    qualItem("Acesso",!!String(c.access_note||"").trim(),c.access_note||"Confirmar se necessário",!String(c.access_note||"").trim()),
+    qualItem("Evidências",evidenceOk,evidenceOk?(files.length+" arquivo(s)"):"Não anexado — exigir somente se o caso pedir",!evidenceOk)
+  ].join("");
+  $("f01CompactSummary").innerHTML=[
+    fact("Problema / escopo",problemOk?c.problem:"A confirmar"),
+    fact("Cliente / origem",c.client),
+    fact("Endereço",c.address),
+    fact("Contato",contactOk?c.contact_name:""),
+    fact("Telefone",c.contact_phone),
+    fact("E-mail",c.contact_email),
+    fact("Pagamento / autorização",cleanPayment(c.payment)),
+    fact("Disponibilidade",availOk?c.availability:"A confirmar"),
+    fact("Acesso",c.access_note)
+  ].join("");
+  $("f01QuickRaw").value="";
+  $("f01QuickFiles").value="";
+  const host=$("f01QuickResult");
+  if(host){
+    if(lastF01Note){host.innerHTML=lastF01Note;host.classList.remove("hidden","warn");lastF01Note=""}
+    else{host.classList.add("hidden");host.classList.remove("warn");host.innerHTML=""}
+  }
+}
+async function incorporateQualification(){
+  if(!current)return;
+  const raw=$("f01QuickRaw").value.trim(),fs=[...$("f01QuickFiles").files],host=$("f01QuickResult");
+  if(!raw&&!fs.length){if(host){host.textContent="Cole uma informação ou selecione um arquivo.";host.classList.remove("hidden");host.classList.add("warn")}return}
+  try{
+    let result=null;
+    if(raw)result=await api("update",{id:current.id,data:{raw}});
+    if(fs.length)await uploadFiles(current.id,fs);
+    const changes=Array.isArray(result?.recognized_changes)?result.recognized_changes:[];
+    const superseded=Array.isArray(result?.reconciliation?.superseded)?result.reconciliation.superseded:[];
+    let note="";
+    if(changes.length){
+      note="<b>✓ Informação incorporada.</b> Atualizei: "+esc(changes.join(", "))+".";
+      if(superseded.length)note+=" A informação mais recente substituiu o dado anterior quando necessário.";
+    }else if(raw)note="<b>✓ Informação registrada.</b> Nenhum campo operacional precisou ser alterado.";
+    else note="<b>✓ Arquivo incorporado ao atendimento.</b>";
+    const keepId=current.id;
+    lastF01Note=note;
+    await load();
+    await openCase(keepId);
+    setTimeout(()=>{const x=$("stageBox");if(x)x.scrollIntoView({behavior:"smooth",block:"start"})},80);
+  }catch(e){
+    if(host){host.textContent=e.message;host.classList.remove("hidden");host.classList.add("warn")}
+    else alert(e.message)
+  }
+}
+
+function fillEdit(c){
+  $("eClient").value=c.client||"";$("eAddress").value=c.address||"";$("eContact").value=c.contact_name||"";$("ePhone").value=c.contact_phone||"";
+  $("eProblem").value=c.problem||"";$("ePayment").value=c.payment||"";$("eAvailability").value=c.availability||"";$("eAccess").value=c.access_note||"";
+}
+async function openCase(id){
+  try{
+    const d=await api("get",{id});
+    const missing=correctedMissing(d);
+    current=d.case;
+    $("capture").classList.add("hidden");$("caseView").classList.remove("hidden");
+    $("viewNo").textContent=d.case.case_number;$("viewTitle").textContent=isPlaceholderProblem(d.case.problem)?"Escopo a confirmar":(d.case.title||d.case.problem||"Chamado em organização");$("viewStatus").textContent=humanStatus(d.case.status);
+    $("viewPending").textContent=missing.length+" pendência"+(missing.length===1?"":"s");
+
+    const identified=[
+      fact("Cliente / origem",d.case.client),
+      fact("Endereço",d.case.address),
+      fact("Contato",isBogusContact(d.case.contact_name)?"":d.case.contact_name),
+      fact("Telefone",d.case.contact_phone),
+      (isPlaceholderProblem(d.case.problem)?factWarn("Problema / escopo insuficiente",d.case.problem):fact("Problema identificado",d.case.problem)),
+      fact("Pagamento / autorização",cleanPayment(d.case.payment)),
+      (!hasConcreteAvailability(d.case.availability)&&d.case.availability?factWarn("Disponibilidade insuficiente",d.case.availability):fact("Disponibilidade",d.case.availability)),
+      fact("Acesso",d.case.access_note),
+      fact("Evidências",(d.files||[]).length?((d.files||[]).length+" arquivo(s) recebido(s)"):"")
+    ].join("");
+    $("identified").innerHTML=identified||'<div class="mut">Ainda não foi possível identificar dados estruturados.</div>';
+    const st=d.case.structured||{};
+    $("caseType").textContent=st.case_type||"";
+    $("caseType").classList.toggle("hidden",!st.case_type);
+    renderItems(st.items||[]);
+    renderInvolved(st.involved||[]);
+
+    if(missing.length){
+      $("missingBox").classList.remove("hidden");
+      $("missing").innerHTML=missing.map(x=>'<div class="missingItem">⚠ '+esc(x)+'</div>').join("");
+      $("gateText").innerHTML='<span class="warn">Ainda '+(missing.length===1?'falta 1 informação':'faltam '+missing.length+' informações')+' para seguir.</span>';
+    }else{
+      $("missingBox").classList.add("hidden");
+      $("gateText").innerHTML='<span class="okline">✓ Sem pendências críticas. Pronto para seguir.</span>';
+    }
+    renderFiles(d.files||[]);
+    $("message").textContent=missing.length?collectionMessage(missing):(d.message||"Nenhuma mensagem necessária.");
+    $("gc").textContent=d.gestaoclick||"";
+    const inQualification=d.case.status==="LIBERADO_F01"||!!d.case.released_f01;
+    $("release").classList.toggle("hidden",inQualification);
+    $("release").disabled=!d.ready||missing.length>0;
+    $("release").textContent="Concluir coleta e iniciar qualificação";
+    $("moreBox").classList.remove("hidden");
+    $("stageTitle").textContent=inQualification?"F01 — ATENDIMENTO & QUALIFICAÇÃO":"PRÓXIMA ETAPA";
+    $("stageBadge").innerHTML=inQualification
+      ? '<span class="op-pill">F01 ativo</span><span class="op-pill">Responsável: Gabrielly</span>'
+      : '<span class="op-pill">F00 • coleta</span>';
+    $("f01Embedded").classList.toggle("hidden",!inQualification);
+    setQualificationLayout(inQualification);
+    if(inQualification){
+      $("gateText").innerHTML='<span class="okline">✓ Coleta encerrada. O atendimento segue em qualificação neste mesmo card.</span>';
+      renderQualificationWorkspace(d);
+    }
+    $("timeline").innerHTML=(d.events||[]).map(x=>"• "+esc(formatDate(x.created_at))+" — "+esc(x.event_text)).join("<br>")||"Sem eventos.";
+    const age=Math.floor(caseAgeHours(d.case.updated_at));
+    const overdue=age>=24 && d.case.status!=="PRONTO_F01";
+    $("opCaseMeta").innerHTML=
+      '<span class="op-pill">Responsável: Gabrielly</span>'+
+      (d.case.status==="AGUARDANDO_RESPOSTA"?'<span class="op-pill warn">Dependência: cliente/contato</span>':'')+
+      '<span class="op-pill '+(overdue?'bad':'')+'">'+(overdue?'Parado há '+age+'h':'Atualizado '+esc(formatDate(d.case.updated_at)))+'</span>';
+    $("opCaseNext").innerHTML='<b>Próxima ação:</b> '+esc(inQualification?qualificationNextAction(d.case):caseNextAction(d.case,missing));
+    $("moreRaw").value="";$("moreFiles").value="";
+    if($("reprocessResult")){
+      if(lastReprocessNote){$("reprocessResult").innerHTML=lastReprocessNote;$("reprocessResult").classList.remove("hidden","warn");lastReprocessNote=""}
+      else{$("reprocessResult").classList.add("hidden");$("reprocessResult").classList.remove("warn");$("reprocessResult").innerHTML=""}
+    }
+    fillEdit({...d.case,contact_name:isBogusContact(d.case.contact_name)?"":d.case.contact_name});
+    if(window.innerWidth<=790){
+      setTimeout(()=>{
+        const target=inQualification?$("stageBox"):$("caseView");
+        if(target)target.scrollIntoView({behavior:"auto",block:"start"});
+      },60);
+    }
+  }catch(e){alert(e.message)}
+}
+async function reprocess(){
+  if(!current)return;
+  const raw=$("moreRaw").value.trim(),fs=[...$("moreFiles").files];
+  if(!raw&&!fs.length){alert("Cole uma nova informação ou selecione um arquivo.");return}
+  const host=$("reprocessResult");
+  try{
+    let result=null;
+    if(raw)result=await api("update",{id:current.id,data:{raw}});
+    if(fs.length)await uploadFiles(current.id,fs);
+    const changes=Array.isArray(result?.recognized_changes)?result.recognized_changes:[];
+    const superseded=Array.isArray(result?.reconciliation?.superseded)?result.reconciliation.superseded:[];
+    let note="";
+    if(changes.length){
+      note="<b>✓ Informação incorporada.</b> Atualizei automaticamente: "+esc(changes.join(", "))+".";
+      if(superseded.length)note+=" A informação mais recente substituiu dado anterior quando necessário.";
+    }else if(raw){
+      note="<b>✓ Informação registrada no histórico.</b> Ela não alterou nenhum campo operacional necessário.";
+    }else note="<b>✓ Arquivo incorporado ao chamado.</b>";
+    lastReprocessNote=note;
+    const keepId=current.id;
+    await load();await openCase(keepId);
+    const feedback=$("reprocessResult");
+    if(feedback)setTimeout(()=>feedback.scrollIntoView({behavior:"smooth",block:"nearest"}),50);
+  }catch(e){
+    if(host){host.textContent=e.message;host.classList.remove("hidden");host.classList.add("warn")}
+    else alert(e.message)
+  }
+}
+async function markWaiting(){
+  if(!current)return;
+  try{await api("wait",{id:current.id});filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();alert("Chamado movido para AGUARDANDO RESPOSTA. Ele saiu da fila ativa, mas continua registrado no histórico.")}catch(e){alert(e.message)}
+}
+async function copyAndWait(){
+  if(!current)return;
+  const txt=$("message").textContent||"";
+  if(!txt.trim()){alert("Não há mensagem de coleta para copiar.");return}
+  try{
+    await navigator.clipboard.writeText(txt);
+  }catch{
+    alert("O navegador não permitiu copiar a mensagem. O status não foi alterado.");
+    return;
+  }
+  try{
+    await api("wait",{id:current.id});
+    filter="ACTIVE";document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));current=null;await load();showCapture();
+    alert("Mensagem copiada. Chamado agora está AGUARDANDO RESPOSTA.");
+  }catch(e){alert("A mensagem foi copiada, mas o status não foi alterado: "+e.message)}
+}
+async function saveEdit(){
+  if(!current)return;
+  try{
+    await api("update",{id:current.id,data:{
+      raw:"",
+      client:$("eClient").value,address:$("eAddress").value,contact:$("eContact").value,phone:$("ePhone").value,
+      problem:$("eProblem").value,payment:$("ePayment").value,availability:$("eAvailability").value,access:$("eAccess").value
+    }});
+    await load();await openCase(current.id);
+  }catch(e){alert(e.message)}
+}
+async function releaseF01(){
+  if(!current)return;
+  try{
+    const check=await api("get",{id:current.id});
+    const blockers=correctedMissing(check);
+    if(blockers.length){
+      await openCase(current.id);
+      alert("Ainda não vou iniciar a qualificação. Falta: "+blockers.join("; ")+".");
+      return;
+    }
+    if(!confirm("Concluir a coleta e iniciar a qualificação deste atendimento?\n\nO card continuará aberto aqui no APP."))return;
+    const keepId=current.id;
+    await api("release",{id:keepId});
+    filter="ACTIVE";
+    document.querySelectorAll(".stat").forEach(x=>x.classList.remove("on"));
+    await load();
+    await openCase(keepId);
+    alert("F01 iniciado. O atendimento continua neste mesmo card.");
+  }catch(e){alert(e.message)}
+}
+async function copyFrom(id){const el=$(id),txt=(el?.textContent||"").trim();if(!txt){alert("Não há conteúdo pronto para copiar. Complete a coleta e revise o orçamento.");return false}try{await navigator.clipboard.writeText(txt);return true}catch(e){alert("Falha ao copiar. Verifique as permissões do navegador.");return false}}
+
+$("newBtn").onclick=showCapture;$("clearNew").onclick=showCapture;$("processNew").onclick=processNew;$("reprocess").onclick=reprocess;$("waiting").onclick=markWaiting;$("saveEdit").onclick=saveEdit;$("release").onclick=releaseF01;$("copyWait").onclick=copyAndWait;$("previewClose").onclick=closePreview;$("previewModal").onclick=e=>{if(e.target===$("previewModal"))closePreview()};
+$("f01Incorporate").onclick=incorporateQualification;
+$("f01Wait").onclick=markWaiting;
+$("f01Edit").onclick=()=>{const support=$("f01Support"),d=$("editDetails");if(support)support.open=true;if(d){d.open=true;setTimeout(()=>d.scrollIntoView({behavior:"smooth",block:"center"}),80)}};
+$("f01CopyBudget").onclick=async()=>{const ok=await copyFrom("gc");const h=$("f01QuickResult");if(h){h.textContent=ok?"Pré-orçamento copiado. Revise antes de enviar.":"Pré-orçamento não copiado. Verifique se o conteúdo está disponível.";h.classList.remove("hidden");h.classList.toggle("warn",!ok)}};
+$("search").oninput=render;$("newFiles").onchange=()=>{$("selectedFiles").textContent=[...$("newFiles").files].map(f=>f.name).join(" • ")};
+document.querySelectorAll(".stat").forEach(s=>s.onclick=()=>{filter=s.dataset.filter;document.querySelectorAll(".stat").forEach(x=>x.classList.toggle("on",x===s));render()});
+document.querySelectorAll(".copy").forEach(b=>b.onclick=()=>copyFrom(b.dataset.copy));
+initF01Support();
+load();
+</script>
+<script defer src="../_shared/cr-shell-production-20261001.js"></script>
+<script id="cr-fusion-script">
+(function(){
+  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
+  function cases(){try{return Array.isArray(rows)?rows:[]}catch(e){return[]}}
+  function esc2(v){return String(v??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+  function hours(v){const t=new Date(v||0).getTime();return t?Math.max(0,(Date.now()-t)/36e5):0}
+  function pc(c){return pendingCount(c)}
+  function statusLabel(v){
+    return ({EM_COLETA:"EM COLETA",INCOMPLETO:"INCOMPLETO",AGUARDANDO_RESPOSTA:"AGUARDANDO RESPOSTA",PRONTO_F01:"PRONTO PARA QUALIFICAÇÃO",LIBERADO_F01:"EM QUALIFICAÇÃO"})[v]||String(v||"");
+  }
+  function ownerText(c){
+    if(c.status==="AGUARDANDO_RESPOSTA")return "Aguardando cliente/contato";
+    if(c.status==="LIBERADO_F01")return "Gabrielly · qualificação";
+    if(c.status==="PRONTO_F01")return "Gabrielly · revisar";
+    return "Gabrielly · coleta";
+  }
+  function dueText(c){
+    const age=Math.floor(hours(c.updated_at));
+    if(c.status==="AGUARDANDO_RESPOSTA"&&age>=24)return "Atrasado · "+age+"h";
+    if(c.status==="AGUARDANDO_RESPOSTA")return "Retorno hoje";
+    if(c.status==="PRONTO_F01")return "Pronto agora";
+    if(age>=24)return "Parado · "+age+"h";
+    return "Hoje";
+  }
+  function pluralInfo(n){return n===1?"1 informação":n+" informações"}
+  function atendimentoSignals(c){
+    const v=[c.title,c.problem,c.raw_text,c.client,c.status].filter(Boolean).join(" ").toLowerCase();
+    // Sinais são apenas suspeitas para triagem humana; não certificam emergência.
+    const emergency=/\b(emerg[eê]ncia|urgente|inc[eê]ndio|choque el[eé]trico|curto.circuito|vazamento de g[aá]s|cheiro de g[aá]s|vazamento intenso|alagamento|inunda[cç][aã]o|desabamento|perigo imediato)\b/i.test(v);
+    const internal=/\b(fabr[ií]cio|[eé]der|equipe interna|colaborador|prestador)\b/i.test(v);
+    const newEntry=/^(EM_COLETA|INCOMPLETO)$/.test(String(c.status||"")) && hours(c.created_at)<12;
+    return {emergency,internal,newEntry};
+  }
+  function suggestedPriority(c){
+    const sig=atendimentoSignals(c);
+    const age=hours(c.updated_at);
+    // P0 é reservado à suspeita de risco imediato; exige confirmação humana.
+    if(sig.emergency)return"P0";
+    if(sig.newEntry)return"P1";
+    if(c.status==="AGUARDANDO_RESPOSTA"&&age>=24)return"P2";
+    if(c.status==="AGUARDANDO_RESPOSTA")return"P3";
+    if(pc(c)>=3)return"P2";
+    if(c.status==="PRONTO_F01"||c.status==="LIBERADO_F01")return"P3";
+    return"P4";
+  }
+  function nextText(c){
+    if(c.status==="AGUARDANDO_RESPOSTA")return "Acompanhar retorno e incorporar a resposta no mesmo chamado.";
+    if(c.status==="LIBERADO_F01"){
+      const q=qualificationIssues(c);
+      return q.length?"Qualificação em andamento: "+q.length+" ponto"+(q.length===1?"":"s")+" antes de orçar.":"Qualificação suficiente: preparar orçamentação.";
+    }
+    if(c.status==="PRONTO_F01")return "Coleta suficiente: revisar e iniciar a qualificação.";
+    const n=pc(c);
+    if(n)return "Coletar "+pluralInfo(n)+" que ainda "+(n===1?"falta":"faltam")+".";
+    return "Abrir o chamado e confirmar o próximo passo.";
+  }
+  function row(c,extra){
+    const p=suggestedPriority(c);
+    const title=c.client||c.address||c.title||c.problem||"Chamado em organização";
+    const due=dueText(c),bad=due.startsWith("Atrasado")||due.startsWith("Parado");
+    return '<div class="fusion-row" data-case-id="'+esc2(c.id)+'"><div class="fusion-pri '+p.toLowerCase()+'">'+p+'</div><div class="fusion-main"><b>'+esc2(c.case_number||"Sem nº")+' • '+esc2(title)+'</b><span>'+esc2(extra||nextText(c))+'</span><div class="op-meta"><i class="op-pill">'+esc2(ownerText(c))+'</i><i class="op-pill '+(bad?"bad":"")+'">'+esc2(due)+'</i></div></div><div class="fusion-status">'+esc2(statusLabel(c.status))+'</div></div>';
+  }
+  function bindRows(){
+    qa(".fusion-row[data-case-id]").forEach(el=>el.onclick=async()=>{showView("novo");try{await openCase(el.dataset.caseId)}catch(e){}});
+  }
+  function renderFusion(){
+    const all=cases();
+    const active=all.filter(c=>["EM_COLETA","INCOMPLETO","AGUARDANDO_RESPOSTA","PRONTO_F01","LIBERADO_F01"].includes(c.status));
+    const waiting=all.filter(c=>c.status==="AGUARDANDO_RESPOSTA");
+    const ready=all.filter(c=>c.status==="PRONTO_F01");
+    const qualify=all.filter(c=>c.status==="LIBERADO_F01");
+    const collect=all.filter(c=>c.status==="EM_COLETA"||c.status==="INCOMPLETO");
+    const missing=active.reduce((n,c)=>n+pc(c),0);
+    const agenda=all.filter(c=>String(c.availability||"").trim());
+    const payment=active.filter(c=>!String(c.payment||"").trim());
+
+    const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+    set("fkActive",active.length);set("fkWaiting",waiting.length);set("fkMissing",missing);set("fkReady",ready.length);set("fkQualify",qualify.length);set("fkAgenda",agenda.length);set("fkPayment",payment.length);
+    set("closeCollect",collect.length);set("closeWait",waiting.length);set("closeReady",ready.length);
+    set("pendCount",missing+" pendência"+(missing===1?"":"s"));
+    set("agendaCount",agenda.length+" item"+(agenda.length===1?"":"s"));
+    set("returnCount",waiting.length+" retorno"+(waiting.length===1?"":"s"));
+
+    const score={P0:0,P1:1,P2:2,P3:3,P4:4};
+    const now=[...active].sort((a,b)=>score[suggestedPriority(a)]-score[suggestedPriority(b)]||new Date(a.updated_at)-new Date(b.updated_at)).slice(0,8);
+    q("#fusionNowList").innerHTML=now.length?now.map(c=>row(c)).join(""):'<div class="fusion-empty">Nenhum chamado ativo. A fila está limpa.</div>';
+
+    const pend=active.filter(c=>pc(c)>0||c.status==="AGUARDANDO_RESPOSTA");
+    q("#fusionPendingList").innerHTML=pend.length?pend.map(c=>row(c,pc(c)?pluralInfo(pc(c))+" pendente"+(pc(c)===1?"":"s")+".":"Aguardando resposta externa.")).join(""):'<div class="fusion-empty">Nenhuma pendência viva encontrada no F00.</div>';
+
+    q("#fusionAgendaList").innerHTML=agenda.length?agenda.map(c=>row(c,"Disponibilidade: "+String(c.availability))).join(""):'<div class="fusion-empty">Ainda não há disponibilidade registrada nos chamados ativos.</div>';
+
+    q("#fusionReturnList").innerHTML=waiting.length?waiting.map(c=>row(c,"Aguardando resposta há aproximadamente "+Math.floor(hours(c.updated_at))+"h.")).join(""):'<div class="fusion-empty">Nenhum chamado marcado como aguardando resposta.</div>';
+
+    const overdue=active.filter(c=>hours(c.updated_at)>=24 && c.status!=="PRONTO_F01");
+    const alertHost=q("#fusionAlertList");
+    if(alertHost){
+      const parts=[];
+      if(overdue.length)parts.push('<div class="op-alert"><i class="op-dot bad"></i><div><strong>'+overdue.length+' atendimento'+(overdue.length===1?'':'s')+' parado'+(overdue.length===1?'':'s')+' há mais de 24h</strong><span>Abrir agora e definir a próxima ação.</span></div></div>');
+      if(waiting.length)parts.push('<div class="op-alert"><i class="op-dot warn"></i><div><strong>'+waiting.length+' retorno'+(waiting.length===1?'':'s')+' externo'+(waiting.length===1?'':'s')+'</strong><span>Conferir se houve resposta e cobrar quando necessário.</span></div></div>');
+      if(ready.length)parts.push('<div class="op-alert"><i class="op-dot ok"></i><div><strong>'+ready.length+' pronto'+(ready.length===1?'':'s')+' para seguir</strong><span>Revisar e encaminhar sem reabrir a coleta.</span></div></div>');
+      alertHost.innerHTML=parts.length?parts.join(""):'<div class="op-alert"><i class="op-dot ok"></i><div><strong>Sem exceções críticas agora</strong><span>A fila está sob controle.</span></div></div>';
+    }
+
+    const closeHost=q("#closeExceptionList");
+    if(closeHost){
+      const exceptions=[...overdue,...waiting.filter(c=>!overdue.some(o=>o.id===c.id)),...collect.filter(c=>!overdue.some(o=>o.id===c.id)),...ready];
+      closeHost.innerHTML=exceptions.length?exceptions.map(c=>row(c)).join(""):'<div class="op-alert"><i class="op-dot ok"></i><div><strong>Dia sem pendências operacionais</strong><span>Nenhum atendimento ativo ficou órfão.</span></div></div>';
+    }
+
+    bindRows();
+    if(window.__gabiDataLoadOk===true)health(true,"Última leitura F00 concluída");
+  }
+  async function loadAgendaBridge(){const note=q("#agendaBridgeNote");if(note)note.textContent="Agenda em modo demonstração: nenhuma conexão externa ou compromisso real.";}
+
+  function health(ok,msg){
+    const e=q("#fusionHealth");if(!e)return;e.classList.toggle("ok",!!ok);e.classList.toggle("bad",ok===false);
+    const s=q("span",e);if(s)s.textContent=msg||(ok?"Dados sincronizados":"Dados indisponíveis");
+  }
+  function showView(view){
+    qa(".fusion-page").forEach(p=>p.classList.toggle("active",p.dataset.view===view));
+    qa("#fusionNav [data-fusion-view]").forEach(b=>b.classList.toggle("active",b.dataset.fusionView===view));
+    window.scrollTo({top:0,behavior:"smooth"});
+    if(view==="novo")setTimeout(()=>{try{render()}catch(e){}},0);
+  }
+  qa("#fusionNav [data-fusion-view]").forEach(b=>b.onclick=()=>showView(b.dataset.fusionView));
+  qa("[data-go]").forEach(b=>b.onclick=()=>showView(b.dataset.go));
+  q("#fusionNew").onclick=()=>{showView("novo");try{showCapture()}catch(e){}};
+
+  const now=new Date();
+  const fd=q("#fusionDate");if(fd)fd.textContent=now.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+  const fg=q("#fusionGreeting");if(fg){const h=now.getHours();fg.textContent=(h<12?"Bom dia":h<18?"Boa tarde":"Boa noite")+", Gabrielly. Aqui está o que pede atenção agora."}
+
+  try{
+    const oldRender=render;
+    render=function(){oldRender();renderFusion()};
+  }catch(e){}
+  window.addEventListener("unhandledrejection",()=>health(false,"Falha de sincronização"));
+  setTimeout(()=>{if(window.__gabiDataLoadOk)renderFusion()},500);
+  setTimeout(()=>{if(window.__gabiDataLoadOk)renderFusion()},1600);
+  loadAgendaBridge();
+  setInterval(()=>{if(window.__gabiDataLoadOk)renderFusion()},30000);
+  setInterval(loadAgendaBridge,120000);
+})();
+</script>
+<script defer src="https://rogeriocibin-alt.github.io/construrei-oauth-pages/assets/team/human-identity-canon-v1.js?v=20261006-context-v2"></script>
+
+<!-- V12 / Atendimento e Relacionamento: adição isolada, sem alterar F00/F01 nem identidade homologada. -->
+<style id="gabi-relacionamento-v12-style">
+.gabi-v12-panel{border:1px solid #bfd8ee;background:linear-gradient(140deg,#f8fcff,#eef7ff);border-radius:15px;padding:14px;margin:12px 0;color:#062849}
+.gabi-v12-panel h3{margin:0 0 5px;font-size:17px;color:#07165b}.gabi-v12-panel p{margin:0 0 10px;font-size:12px;color:#294b65}
+.gabi-v12-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.gabi-v12-item{border:1px solid #d4e7f6;background:#fff;border-radius:12px;padding:10px}
+.gabi-v12-item b{font-size:12px;color:#07165b;display:block}.gabi-v12-item span{font-size:11px;color:#294b65;display:block;margin-top:5px}
+.gabi-v12-note{font-size:11px;margin-top:9px;color:#35546b}
+</style>
+<script id="gabi-relacionamento-v12">
+(function(){
+  "use strict";
+  // Indicadores são derivados do DOM alimentado pelo F00 existente; não representam inbox de WhatsApp/e-mail.
+  const mount=()=>{
+    if(document.getElementById("gabiV12Guide"))return;
+    const host=document.getElementById("fusionNowList");if(!host||!host.parentNode)return;
+    const box=document.createElement("section");box.id="gabiV12Guide";box.className="gabi-v12-panel";
+    box.innerHTML='<h3>Atendimento e Relacionamento • prioridades da Gabrielly</h3>'+
+      '<p>Organização da rotina sem criar novos chamados ou alterar valores e decisões comerciais.</p>'+
+      '<div class="gabi-v12-grid">'+
+      '<div class="gabi-v12-item"><b>1 · Novas solicitações</b><span>Imobiliárias, canais empresariais e atendimentos recém-capturados.</span></div>'+
+      '<div class="gabi-v12-item"><b>2 · Emergências de clientes</b><span>Confirmar risco, localização, acesso e acionar o responsável competente.</span></div>'+
+      '<div class="gabi-v12-item"><b>3 · Emergências da equipe</b><span>Verificar severidade real; perigo imediato antecede a ordem administrativa.</span></div>'+
+      '<div class="gabi-v12-item"><b>4 · Completar atendimento</b><span>F00 → F01: envolvidos, evidências, pagador, acesso e próxima ação.</span></div>'+
+      '<div class="gabi-v12-item"><b>5 · Preparar orçamento</b><span>F02: coletar especificações e montar prévia para aprovação competente.</span></div>'+
+      '<div class="gabi-v12-item"><b>6 · Relacionamento ativo</b><span>Retornos, confirmações, lembretes e acompanhamento de pendências.</span></div>'+
+      '</div><div class="gabi-v12-note">P0 significa suspeita de emergência e requer triagem humana. Atraso, sozinho, não é emergência. A agenda abaixo conserva as integrações preexistentes; conectores adicionais ainda não foram homologados.</div>';
+    host.parentNode.insertBefore(box,host);
+  };
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
+})();
+</script>
+<div style="position:fixed;bottom:8px;left:8px;z-index:9999;background:#fff4d7;color:#715000;border:2px solid #d7ad29;padding:8px 11px;border-radius:9px;font:700 12px Arial">AMBIENTE FICTÍCIO • sem gravação no Core</div><section class="gabi-v12-panel" id="qaFlowV14" style="margin:10px auto;max-width:1440px">
+<h3>Teste guiado • Fluxos seguintes</h3><p>Ambiente 100% fictício: conclusão da coleta → F01 → F02 → F03 → agenda → encerramento. Nenhum acesso real foi liberado.</p><p id="qaFlowMessage" style="font-weight:700">Abra 99001-26 e complete as informações pendentes.</p>
+<div class="gabi-v12-grid"><button class="btn" id="qaF02">F02 • Pré-orçamento fictício</button><button class="btn" id="qaF03">F03 • Encaminhar aprovação fictícia</button><button class="btn" id="qaF04">F04 • Agenda fictícia</button><button class="btn" id="qaFinish">Concluir teste</button><button class="btn" id="qaRestart">Reiniciar cenário</button></div></section>
+<script id="gabi-v14-flow">
+(function(){
+function msg(x){document.getElementById("qaFlowMessage").textContent=x}
+function pick(){return (typeof current!=="undefined"&&current&&qaCases.find(c=>c.id===current.id))||qaCases.find(c=>c.case_number==="99001-26")}
+function run(stage){const c=pick();if(!c)return msg("Caso não encontrado.");if(stage==="F02"&&!c.released_f01)return msg("Bloqueado: primeiro complete pendências e libere F01.");if(stage==="F03"&&!c.qaF02)return msg("Bloqueado: execute F02 primeiro.");if(stage==="F04"&&!c.qaF03)return msg("Bloqueado: encaminhe F03 primeiro.");if(stage==="END"&&!c.qaF04)return msg("Bloqueado: confirme a agenda fictícia.");if(stage==="F02"){c.qaF02=true;qaLog(c,"F02: escopo de vistoria preparado sem valor")}if(stage==="F03"){c.qaF03=true;qaLog(c,"F03: solicitação de aprovação simulada; nenhuma aprovação real")}if(stage==="F04"){c.qaF04=true;qaLog(c,"F04: agenda simulada; nenhum compromisso criado")}if(stage==="END"){c.status="ENCERRADO_QA";qaLog(c,"Ciclo fictício completo");load()}msg(c.case_number+" — "+({F02:"pré-orçamento preparado para revisão",F03:"enviado para aprovação fictícia",F04:"agenda fictícia registrada",END:"teste concluído sem dados reais"}[stage]))}
+function start(){const a={qaF02:"F02",qaF03:"F03",qaF04:"F04",qaFinish:"END"};for(const [id,stage] of Object.entries(a))document.getElementById(id).onclick=()=>run(stage);document.getElementById("qaRestart").onclick=()=>{const c=pick();Object.assign(c,{payment:"",availability:"",access_note:"",status:"EM_COLETA",released_f01:false,qaF02:false,qaF03:false,qaF04:false});qaLog(c,"Teste reiniciado");load();msg("Reiniciado: pagamento e disponibilidade pendentes.")}}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
+})();
+</script><style id="qa-navigation-hotfix">
+#qaNextDock{position:sticky;bottom:0;z-index:90;background:#eff7ff;border:1px solid #b9d7f5;border-radius:12px;padding:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:0 -5px 18px #0b3d7833;margin:12px 8px}
+#qaNextDock button{min-height:38px}
+#qaNextDock span{font-size:12px;font-weight:700;color:#07165b;flex:1;min-width:180px}
+</style>
+<div id="qaNextDock" role="navigation" aria-label="Navegação da demonstração Gabrielly">
+ <span id="qaDockStatus">Teste fictício • escolha o próximo passo</span>
+ <button class="btn" id="qaBackList">← Atendimentos</button>
+ <button class="btn" id="qaGoFlows">Próximos fluxos ↓</button>
+ <button class="btn gold" id="qaDockNext">Avançar etapa →</button>
+</div>
+<script id="qa-nav-hotfix">
+(function(){
+ function getCase(){return (typeof current!=="undefined"&&current&&qaCases.find(x=>x.id===current.id))||qaCases.find(x=>x.case_number==="99001-26")}
+ function status(t){const e=document.getElementById("qaDockStatus");if(e)e.textContent=t}
+ function viewList(){const fn=window.__gabiGoView;if(fn)fn("novo");else{const b=document.querySelector('[data-fusion-view="novo"]');if(b)b.click()}const box=document.getElementById("caseView");if(box)box.classList.add("hidden");const cap=document.getElementById("capture");if(cap)cap.classList.remove("hidden");status("Voltou aos atendimentos; o chamado continua na lista.");window.scrollTo({top:0,behavior:"smooth"})}
+ function flow(){const e=document.getElementById("qaFlowV14");if(e)e.scrollIntoView({behavior:"smooth",block:"center"})}
+ function next(){const c=getCase();if(!c){status("Abra um chamado fictício primeiro.");return}
+ if(!c.released_f01){if(typeof qaMissing!=="undefined"&&qaMissing(c).length){status("Ainda faltam: "+qaMissing(c).join("; "));return} const b=document.getElementById("release");if(b&&!b.classList.contains("hidden")){b.click();status("Revise e confirme a liberação F01.");return}status("Abra o chamado e conclua a coleta para liberar F01.");return}
+ let target=!c.qaF02?"qaF02":!c.qaF03?"qaF03":!c.qaF04?"qaF04":"qaFinish";flow();document.getElementById(target)?.click(); }
+ const init=()=>{document.getElementById("qaBackList").onclick=viewList;document.getElementById("qaGoFlows").onclick=flow;document.getElementById("qaDockNext").onclick=next};
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
+})();
+</script><style id="gabi-v16-flow-clean">
+/* F01 focuses on qualification only; legacy capture details remain in expandable support */
+#caseView.f01-mode #opCaseSummary,#caseView.f01-mode #identified,#caseView.f01-mode #itemsBox,#caseView.f01-mode #involvedBox,#caseView.f01-mode #missingBox,#caseView.f01-mode #moreBox,#caseView.f01-mode #editDetails,#caseView.f01-mode #supportData,#caseView.f01-mode #supportMessage,#caseView.f01-mode #supportGC{display:none!important}
+#caseView.f01-mode #f01Embedded{display:block!important}
+#caseView.f01-mode #f01Support{display:none!important}
+#qaFlowV14{display:none!important}
+#qaNextDock{position:sticky!important;bottom:0!important;z-index:100!important;margin:8px 0!important;box-shadow:0 -6px 22px #07165b29}
+#qaNextDock .btn{font-size:12px!important;padding:9px 12px!important}
+#qaFlowInline{border:1px solid #bfd8f0;border-radius:12px;padding:12px;margin:12px 0;background:#f3f9ff}
+#qaFlowInline h3{margin:0 0 8px;color:#07165b}
+#qaFlowInline .btn{margin:3px}
+@media(max-width:720px){#qaNextDock{position:sticky!important;bottom:0!important}#qaDockStatus{width:100%;flex-basis:100%!important}}
+</style>
+<script id="gabi-v16-compact-flow">
+(function(){
+function move(){
+ const box=document.getElementById("caseView"),inline=document.getElementById("qaFlowInline"),dock=document.getElementById("qaNextDock");if(!box||!dock)return;
+ const after=document.getElementById("stageBox")||box.firstElementChild;
+ if(dock.parentNode!==box)box.insertBefore(dock,after?.nextSibling||null);
+ if(!inline){const x=document.createElement("section");x.id="qaFlowInline";x.innerHTML='<h3>Próxima etapa do teste</h3><p id="qaInlineMsg">Conclua F01 e prossiga. Etapas fictícias, sem gravação no Core.</p><div id="qaInlineActions"></div>';box.insertBefore(x,dock.nextSibling)}
+ const buttons=document.getElementById("qaInlineActions");for(const id of ["qaF02","qaF03","qaF04","qaFinish","qaRestart"]){const b=document.getElementById(id);if(b&&b.parentNode!==buttons)buttons.appendChild(b)}
+ const msg=document.getElementById("qaFlowMessage");if(msg){new MutationObserver(()=>{const e=document.getElementById("qaInlineMsg");if(e)e.textContent=msg.textContent}).observe(msg,{childList:true,subtree:true})}
+ const goto=document.getElementById("qaGoFlows");if(goto)goto.onclick=()=>document.getElementById("qaFlowInline")?.scrollIntoView({behavior:"smooth",block:"center"});
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",move,{once:true});else move();
+})();
+</script><style id="gabi-v17-manual">
+#qaManualBar{border:1px solid #9fc5ed;border-radius:10px;background:#edf6ff;padding:10px;margin:10px 0;color:#07165b}
+#qaManualBar button{margin-right:6px}#qaManualBar label{display:block;font-size:12px;font-weight:800;margin:5px 0}
+#qaManualBar input,#qaManualBar select{width:100%;max-width:460px;padding:9px;border:1px solid #bad4eb;border-radius:8px;background:#fff;color:#07165b}
+#qaManualFeedback{font-size:12px;margin-top:7px}
+#qaManualOpen{margin:9px 0}
+</style>
+<script id="gabi-v17-manual">
+(function(){
+ const root=document.getElementById("caseView");if(!root)return;
+ const html='<div id="qaManualBar" hidden><b>Resolver pendência manualmente</b><label for="qaManualField">Campo pendente</label><select id="qaManualField"><option value="availability">Disponibilidade / horário</option><option value="payment">Pagamento / autorização</option><option value="contact">Contato</option><option value="phone">Telefone</option><option value="access">Acesso ao imóvel</option></select><label for="qaManualValue">Informação confirmada</label><input id="qaManualValue" placeholder="Ex.: quinta-feira às 14h"><div style="margin-top:9px"><button class="btn gold" id="qaManualSave">Salvar pendência</button><button class="btn" id="qaManualCancel">Cancelar</button></div><div id="qaManualFeedback" role="status"></div></div>';
+ const open=document.createElement("button");open.type="button";open.className="btn";open.id="qaManualOpen";open.textContent="✎ Resolver pendência manualmente";
+ const box=document.createElement("div");box.innerHTML=html;
+ const stage=document.getElementById("stageBox"),missing=document.getElementById("missingBox");
+ if(stage)stage.insertBefore(open,stage.firstChild);else root.insertBefore(open,root.firstChild);
+ open.after(box.firstElementChild);
+ const panel=document.getElementById("qaManualBar"),field=document.getElementById("qaManualField"),val=document.getElementById("qaManualValue"),feed=document.getElementById("qaManualFeedback");
+ open.onclick=()=>{panel.hidden=!panel.hidden;val.focus()};
+ document.getElementById("qaManualCancel").onclick=()=>{panel.hidden=true;feed.textContent=""};
+ document.getElementById("qaManualSave").onclick=async()=>{
+   const input=val.value.trim();if(!input){feed.textContent="Preencha a informação confirmada.";return}
+   if(typeof current==="undefined"||!current){feed.textContent="Abra um atendimento antes de salvar.";return}
+   try{feed.textContent="Salvando no caso fictício...";
+    const keep=current.id;await api("update",{id:keep,data:{raw:"",[field.value]:input}});await load();await openCase(keep);
+    panel.hidden=false;feed.textContent="✓ Informação salva. Pendências e próxima etapa recalculadas.";val.value="";
+   }catch(e){feed.textContent="Falha: "+e.message}
+ };
+})();
+</script><style id="gabi-v18-f02-style">
+#qaF02Workspace{background:#fff;border:2px solid #0877f9;border-radius:12px;padding:16px;margin:12px 0;color:#092c57;box-shadow:0 7px 25px #0a54a019}
+#qaF02Workspace[hidden]{display:none!important}#qaF02Workspace h2{font-size:20px;color:#07165b;margin:0 0 6px}
+#qaF02Workspace label{display:block;font-size:12px;font-weight:800;margin-top:10px}
+#qaF02Workspace textarea{display:block;width:100%;min-height:70px;margin-top:4px;border:1px solid #a5c8ee;border-radius:9px;color:#092c57;background:#fff;padding:10px}
+#qaF02Workspace .btn{margin:8px 6px 0 0}
+</style>
+<script id="gabi-v18-f02-workspace">
+(function(){
+const html='<section id="qaF02Workspace" hidden aria-label="F02 pré-orçamento fictício">'+
+'<h2>F02 — Preparação do pré-orçamento</h2><p>Chamado <b id="qaF02Case"></b> · Escopo fictício para revisão. Não cria orçamento no GestãoClick.</p>'+
+'<label>Serviços / mão de obra<textarea id="qaF02Services"></textarea></label>'+
+'<label>Materiais / verificações<textarea id="qaF02Materials"></textarea></label>'+
+'<label>Observações técnicas<textarea id="qaF02Notes"></textarea></label>'+
+'<div><button class="btn gold" id="qaF02Save">Salvar rascunho fictício</button><button class="btn" id="qaF02Copy">Copiar pré-orçamento</button><button class="btn" id="qaF02Advance">Encaminhar à revisão → F03</button><button class="btn" id="qaF02Return">Voltar ao F01</button></div><p id="qaF02Status" role="status">Revise o escopo antes do encaminhamento.</p></section>';
+const mount=()=>{const target=document.getElementById("qaFlowInline")||document.getElementById("qaFlowV14");if(!target)return;target.insertAdjacentHTML("afterend",html);
+const panel=document.getElementById("qaF02Workspace"),msg=document.getElementById("qaF02Status");const pick=()=>typeof current!=="undefined"&&current?qaCases.find(c=>c.id===current.id):qaCases.find(c=>c.case_number==="99001-26");
+const open=()=>{const c=pick();if(!c){return}if(!c.released_f01){msg.textContent="F01 precisa estar concluído.";return}
+panel.hidden=false;document.getElementById("qaF02Case").textContent=c.case_number;document.getElementById("qaF02Services").value=c.qaDraft?.services||"Vistoria técnica para identificar a origem da infiltração no teto da cozinha.";document.getElementById("qaF02Materials").value=c.qaDraft?.materials||"Verificar instalações e elementos construtivos envolvidos; materiais de reparo sujeitos ao diagnóstico.";document.getElementById("qaF02Notes").value=c.qaDraft?.notes||"Não iniciar reparos sem diagnóstico e autorização. Valor a definir por responsável comercial.";panel.scrollIntoView({behavior:"smooth",block:"start"})};
+const save=()=>{const c=pick();if(!c)return false;c.qaDraft={services:document.getElementById("qaF02Services").value.trim(),materials:document.getElementById("qaF02Materials").value.trim(),notes:document.getElementById("qaF02Notes").value.trim()};if(!c.qaDraft.services){msg.textContent="Descreva os serviços antes de continuar.";return false}c.qaF02=true;qaLog(c,"Rascunho F02 revisado no ambiente fictício");msg.textContent="Rascunho fictício salvo, sem valores. Pronto para solicitar revisão.";return true};
+document.getElementById("qaF02Save").onclick=save;
+document.getElementById("qaF02Copy").onclick=async()=>{if(!save())return;const c=pick();const text=["CONSTRU-REI | PRÉ-ORÇAMENTO FICTÍCIO",c.case_number,"SERVIÇOS: "+c.qaDraft.services,"MATERIAIS: "+c.qaDraft.materials,"OBSERVAÇÕES: "+c.qaDraft.notes].join("\\n");try{await navigator.clipboard.writeText(text);msg.textContent="Pré-orçamento fictício copiado."}catch{msg.textContent="O navegador bloqueou a cópia; selecione manualmente os campos."}};
+document.getElementById("qaF02Advance").onclick=()=>{if(!save())return;document.getElementById("qaF03")?.click();msg.textContent="Rascunho encaminhado para revisão fictícia F03. Nenhuma aprovação real foi emitida."};
+document.getElementById("qaF02Return").onclick=()=>{panel.hidden=true;document.getElementById("stageBox")?.scrollIntoView({behavior:"smooth"})};
+document.getElementById("qaF02").onclick=()=>{const c=pick();if(!c?.released_f01){msg.textContent="Complete F01 antes de avançar.";panel.hidden=false;return}open()};
+document.getElementById("f01CopyBudget").onclick=()=>open();
+const nativeNext=document.getElementById("qaDockNext");if(nativeNext)nativeNext.onclick=()=>{const c=pick();if(c?.released_f01&&!c.qaF02)open();else if(c?.qaF02&&!c.qaF03)document.getElementById("qaF03")?.click();else if(c?.qaF03&&!c.qaF04)document.getElementById("qaF04")?.click();else if(c?.qaF04)document.getElementById("qaFinish")?.click();else msg.textContent="Finalize o F01 antes de avançar"};
+};
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount,{once:true});else mount();
+})();
+</script>
+<style id="gabi-v19-workflow-css">
+#qaF02Workspace{position:relative!important;order:0!important;margin-top:0!important}
+#caseView.v19-f02-active{display:block!important}
+#caseView.v19-f02-active>*:not(#qaF02Workspace){display:none!important}
+#caseView.v19-f02-active #qaF02Workspace{display:block!important}
+#qaF02Workspace textarea{min-height:115px!important;font-size:14px!important}
+#qaManualOpen{opacity:.7;font-size:11px!important}
+</style>
+<script id="gabi-v19-intelligent-workflow">
+(function(){
+function getCase(){return typeof current!=="undefined"&&current?qaCases.find(x=>x.id===current.id):null}
+function draft(c){
+ const problem=String(c.problem||c.title||"").toLowerCase(),context=[c.problem,c.raw_text,c.structured?.items?.map(x=>x.subject).join(" ")].filter(Boolean).join(" ");
+ if(/infiltra|umidade|vazamento/.test(problem+" "+context)){
+  return {
+  services:"01. Realizar vistoria técnica no ambiente afetado para levantamento de indícios de infiltração e avaliação visual dos pontos envolvidos.\n02. Investigar possíveis caminhos da água e condições aparentes das instalações e elementos construtivos, definindo os testes tecnicamente pertinentes.\n03. Documentar os achados e orientar o encaminhamento técnico da solução, conforme diagnóstico.",
+  materials:"01. Equipamentos e instrumentos de inspeção adequados ao diagnóstico, conforme avaliação do responsável técnico.\n02. Materiais de reparo, reposição ou acabamento: especificações e quantidades somente após identificação da origem; não presumir necessidade de compra.",
+  notes:"A causa e a extensão da infiltração ainda não estão comprovadas. A vistoria é investigativa; abertura de acabamentos, ensaios invasivos, reparos e substituições dependem de avaliação e autorização. Pré-orçamento técnico sem valores, sujeito à conferência de Éder e aprovação comercial de Rogério."
+  }
+ }
+ if(/chuveiro|disjuntor|eletric|curto/.test(problem+" "+context))return{services:"01. Realizar avaliação técnica do ponto elétrico relatado, verificando condições de segurança e funcionamento.\n02. Identificar a causa provável da anomalia por testes adequados e definir eventual correção após diagnóstico.",materials:"01. Instrumentos de medição e proteção apropriados.\n02. Componentes e quantidades condicionados à avaliação técnica; não presumir substituições.",notes:"Não energizar ponto com suspeita de risco. Execução condicionada ao diagnóstico, às condições de segurança e à aprovação do responsável técnico."};
+ return {services:"01. Realizar vistoria técnica do serviço solicitado: "+(c.problem||"escopo a confirmar")+".\n02. Levantar condições do local, identificar necessidades e registrar evidências para definir a intervenção.",materials:"01. Materiais e insumos a definir somente após avaliação do escopo e das condições locais; não estimar quantidades.",notes:"Minuta preliminar de triagem, não é laudo nem orçamento aprovado. Confirmar serviços, materiais, riscos, acessos e autorizações com responsável técnico antes da proposta."};
+}
+function init(){
+ const panel=document.getElementById("qaF02Workspace"),view=document.getElementById("caseView"),f02=document.getElementById("qaF02");
+ if(!panel||!view||!f02)return;
+ const refresh=()=>{const c=getCase();if(!c?.released_f01){alert("Conclua F01 antes de preparar o orçamento.");return}
+  const x=c.qaDraft||draft(c);
+  document.getElementById("qaF02Case").textContent=c.case_number;
+  document.getElementById("qaF02Services").value=x.services;document.getElementById("qaF02Materials").value=x.materials;document.getElementById("qaF02Notes").value=x.notes;
+  view.appendChild(panel);view.classList.add("v19-f02-active");panel.hidden=false;panel.scrollIntoView({behavior:"smooth",block:"start"});
+  document.getElementById("qaF02Status").textContent=c.qaDraft?"Rascunho salvo recuperado para revisão.":"Minuta técnica preliminar gerada a partir do escopo identificado; revisão humana obrigatória.";
+ };
+ f02.onclick=refresh;document.getElementById("f01CopyBudget").onclick=refresh;
+ const oldBack=document.getElementById("qaF02Return");oldBack.onclick=()=>{view.classList.remove("v19-f02-active");panel.hidden=true;document.getElementById("stageBox")?.scrollIntoView({behavior:"smooth",block:"start"})};
+ const next=document.getElementById("qaDockNext");if(next)next.onclick=()=>{const c=getCase();if(!c?.released_f01){document.getElementById("qaDockStatus").textContent="Finalize a coleta e o F01.";return}if(!c.qaF02)refresh();else if(!c.qaF03)document.getElementById("qaF03")?.click();else if(!c.qaF04)document.getElementById("qaF04")?.click();else document.getElementById("qaFinish")?.click()};
+ const oldSave=document.getElementById("qaF02Save").onclick;document.getElementById("qaF02Save").onclick=()=>{oldSave();const c=getCase();if(c?.qaDraft)document.getElementById("qaF02Status").textContent="Minuta fictícia salva e registrada para conferência técnica e comercial."};
+ const oldAdvance=document.getElementById("qaF02Advance");oldAdvance.onclick=()=>{document.getElementById("qaF02Save").click();const c=getCase();if(!c?.qaF02)return;document.getElementById("qaF03").click();document.getElementById("qaF02Status").textContent="F03: revisão solicitada, sem aprovação real."};
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
+})();
+</script>
+<style id="v20-pdf-css">
+#v20Docs{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0}
+#v20Docs button{background:#0d4778;color:#fff;border:1px solid #d5ad3a;border-radius:10px;padding:12px;cursor:pointer;font-weight:800}
+#v20Docs p{width:100%;font-size:12px;color:#17446e}
+</style>
+<script id="gabi-v20-pdf-docs">
+(function(){
+"use strict";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const val=id=>document.getElementById(id)?.value||"";
+function active(){try{return typeof current!=="undefined"&&current?qaCases.find(c=>c.id===current.id):null}catch(e){return null}}
+function hunt(c){return /infiltra|vazamento|umidade/i.test([c?.problem,c?.title,c?.raw_text].join(" ")) && /origem (não|nao) identificada|sem localizar|não localizado|nao localizado|origem desconhecida/i.test([c?.problem,c?.raw_text].join(" "))}
+const work="01. CAÇA-VAZAMENTOS — investigação técnica para diagnóstico e localização de vazamentos ocultos e infiltrações, com recursos como geofone, câmera termográfica, detector de umidade e testes pertinentes, buscando evitar quebras desnecessárias.\n02. Inspecionar, conforme pertinência técnica, redes de água fria e quente, esgoto, registros, conexões, louças sanitárias e pontos de consumo associados à ocorrência.";
+const remarks="O valor cobre exclusivamente investigação, localização e diagnóstico. Não inclui reparos hidráulicos, substituição de tubulações ou componentes, impermeabilização, recomposição de alvenaria, revestimentos, pisos, forros ou pintura. Abertura técnica exige autorização prévia; recomposição será orçada à parte. Após o diagnóstico, eventual reparo dependerá de orçamento complementar e aprovação. A garantia do diagnóstico limita-se à região identificada, sem abranger novas ocorrências ou vícios estruturais preexistentes.";
+function fill(){const c=active();if(!c||!hunt(c)||c.qaDraft)return;const a=document.getElementById("qaF02Services"),b=document.getElementById("qaF02Materials"),d=document.getElementById("qaF02Notes");if(!a||!b||!d)return;a.value=work;b.value="Equipamentos técnicos de inspeção conforme o diagnóstico. Materiais de reparo: não inclusos nesta fase.";d.value=remarks;const s=document.getElementById("qaF02Status");if(s)s.textContent="Caça-vazamentos identificado: preço comercial padrão R$ 800,00. Conferir e salvar antes de gerar PDF."}
+function doc(kind){const c=active();if(!c){alert("Abra primeiro um chamado.");return}const title=kind==="budget"?"PRÉ-ORÇAMENTO COMERCIAL":"PARECER TÉCNICO PRELIMINAR",price=kind==="budget"&&hunt(c),services=val("qaF02Services"),materials=val("qaF02Materials"),notes=val("qaF02Notes");if(!services.trim()){alert("Revise o escopo no F02 antes de gerar o documento.");return}
+const W=window.open("","_blank");if(!W){alert("Permita pop-ups para abrir a prévia de impressão/PDF.");return}
+const q=s=>esc(s).replace(/\n/g,"<br>");
+const body='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>'+title+' - '+esc(c.case_number)+'</title><style>@page{size:A4;margin:17mm}body{font:12px Arial,sans-serif;color:#0a2540}header{border-bottom:4px solid #d3ab38;padding-bottom:13px;margin-bottom:18px}h1{font-size:20px;color:#102a51;margin:5px 0}h2{font-size:13px;background:#103d6b;color:white;padding:7px}p{line-height:1.5}section{margin:13px 0}.brand{color:#073975;font-weight:900;font-size:19px}.meta{font-size:11px;color:#456}strong{color:#103d6b}.total{border-top:2px solid #c7a132;text-align:right;font-size:18px;padding:12px}.warn{color:#a35b00;font-weight:bold}button{margin:10px;padding:10px;background:#123b65;color:white;border:0}pre{font:inherit;white-space:pre-wrap}@media print{button{display:none}}</style></head><body><header><div class="brand">CONSTRU-REI</div><div>BOOM NEGÓCIOS · CNPJ 32.329.721/0001-36</div><div class="meta">Rua Luiz Antonieto, 221 · Jardim das Américas · Curitiba/PR</div></header><h1>'+title+'</h1><p class="warn">DOCUMENTO FICTÍCIO DE TESTE · NÃO É PROPOSTA APROVADA</p><p><strong>Chamado:</strong> '+esc(c.case_number)+'<br><strong>Cliente:</strong> '+esc(c.client)+'<br><strong>Imóvel:</strong> '+esc(c.address)+'<br><strong>Ocorrência:</strong> '+esc(c.problem)+'</p><section><h2>Serviços / mão de obra</h2><p>'+q(services)+'</p></section><section><h2>Materiais e verificações</h2><p>'+q(materials)+'</p></section><section><h2>Observações técnicas</h2><p>'+q(notes)+'</p></section>'+(kind==="budget"?'<section><h2>Condições comerciais</h2><p>Validade: 30 dias, sujeita a conferência antes do envio. Serviços adicionais sujeitos a orçamento complementar.</p><p class="total">'+(price?'Total previsto: R$ 800,00':'Valor: sujeito à revisão comercial')+'</p></section>':'<p><strong>Natureza:</strong> Parecer preliminar baseado na triagem; não comprova a origem e não substitui vistoria técnica.</p>')+'<button onclick="window.print()">Imprimir / Salvar como PDF</button></body></html>';
+W.document.open();W.document.write(body);W.document.close();W.focus();
+}
+function init(){const panel=document.getElementById("qaF02Workspace");if(!panel)return;const box=document.createElement("div");box.id="v20Docs";box.innerHTML='<button type="button" id="v20Budget">Gerar PDF · Orçamento</button><button type="button" id="v20Report">Gerar PDF · Parecer</button><p>Prévia fictícia. Use “Salvar como PDF” na impressão. Encaminhar à revisão → F03 permanece disponível.</p>';const status=document.getElementById("qaF02Status");panel.insertBefore(box,status);document.getElementById("v20Budget").onclick=()=>doc("budget");document.getElementById("v20Report").onclick=()=>doc("report");document.getElementById("qaF02")?.addEventListener("click",()=>setTimeout(fill,20));document.getElementById("f01CopyBudget")?.addEventListener("click",()=>setTimeout(fill,20));}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
+})();
+</script></body>
+</html>
