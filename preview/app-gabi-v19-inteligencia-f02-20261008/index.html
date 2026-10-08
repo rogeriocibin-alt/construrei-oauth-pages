@@ -536,7 +536,7 @@ function qaV19Extract(raw,c){
  const pay=normalized.match(/(?:quem paga|pagamento|pagador|pago pel[oa]|responsavel pel[oa] pagamento|custeado pel[oa])\s*(?:e|:|sera)?\s*(?:o|a|pelo|pela)?\s*(proprietari[oa]|condominio|imobiliaria|locatari[oa]|inquilin[oa])/i);
  if(pay)set("payment",pay[1]+" — responsabilidade informada; autorização sujeita à conferência");
  else if(/(?:proprietari[oa]|condominio|imobiliaria).*?(?:paga|pagamento|custeia)/i.test(normalized)){const v=normalized.match(/(proprietari[oa]|condominio|imobiliaria)/);if(v)set("payment",v[1]+" — responsabilidade informada; autorização sujeita à conferência")}
- const hour=normalized.match(/(?:as?\s+|horario\s*(?:de|:)?\s*|por volta das?\s+)?(\d{1,2})(?:\s*[:h]\s*(\d{1,2})?)\b/);
+ const hour=normalized.match(/(?:as?\s+|horario\s*(?:de|:)?\s*|por volta das?\s+)?(\d{1,2})(?:\s*[:h]\s*(\d{1,2})?)\b/) || normalized.match(/(?:as?\s+)(\d{1,2})\s+(?:da|de)\s+(?:manha|tarde|noite)/);
  const day=normalized.match(/\b(?:segunda|terca|quarta|quinta|sexta|sabado|domingo)(?:-feira)?\b|\b(?:amanha|hoje)\b|\b\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\b/);
  if(hour && (day||/horario|atendimento|visita|disponiv|recebe|agend/.test(normalized))){
   let h=+hour[1],m=+(hour[2]||0);if(h<=12&&/tarde/.test(normalized)&&h<12)h+=12;
@@ -545,7 +545,7 @@ function qaV19Extract(raw,c){
  if(/portaria|acesso|chave|porteiro/i.test(normalized)){
   const sent=String(raw).split(/[.\n;]/).find(t=>/portaria|acesso|chave|porteiro/i.test(t));if(sent)set("access_note",sent.trim().slice(0,160))
  }
- const adr=String(raw).match(/(?:endere[cç]o|local(?:iza[cç][aã]o)?)\s*(?::|-)\s*([^\n.;]{10,140})/i);if(adr)set("address",adr[1].trim());
+ const adr=String(raw).match(/(?:endere[cç]o|localiza[cç][aã]o)\s*(?::|-)\s*([^\n.;]{10,140})/i);if(adr)set("address",adr[1].trim());
  const problem=String(raw).match(/(?:problema|servi[cç]o solicitado|ocorr[eê]ncia)\s*(?::|-)\s*([^\n.;]{10,190})/i);if(problem)set("problem",problem[1].trim());
  return [...new Set(changes)];
 }
