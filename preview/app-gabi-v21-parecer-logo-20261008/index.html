@@ -7,7 +7,7 @@ const w=frame.contentWindow,d=w.document;
 function escape(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function read(id){return d.getElementById(id)?.value?.trim()||'';}
 function generate(kind){
-const c=w.current||{};const services=read('qaF02Services'),materials=read('qaF02Materials'),notes=read('qaF02Notes');
+const c=(function(){try{return w.eval('current')||{}}catch(e){return {}}})();const services=read('qaF02Services'),materials=read('qaF02Materials'),notes=read('qaF02Notes');
 if(!services){w.alert('Informe o escopo do F02 antes de gerar o documento.');return;}
 const problem=c.problem||'', all=[problem,services,notes].join(' ').toLowerCase();
 const leak=/vazament|infiltra|umidade|tubula|hidrául|hidraul|prumada|gotej/.test(all);
