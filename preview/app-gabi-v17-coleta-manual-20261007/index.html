@@ -549,17 +549,18 @@ async function api(name,payload={}){
       c.payment=who+(authorizer?" — autorização mencionada":" — confirmar autorização");changes.push("payment");
     }
     // Interpretação incremental: dia/data + horário expresso em formatos variados.
-    const day=raw.match(/\b(segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo)(?:-feira)?\b|\b(amanh[aã]|hoje)\b/i);
-    const date=raw.match(/\b(?:dia\s*)?(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\b/);
-    const at=raw.match(/\b(?:[àa]s?\s*)?(\d{1,2})\s*(?:h(?:oras?)?|:)\s*(\d{1,2})?\b/i)
-      ||raw.match(/\b(?:[àa]s?\s+|por volta d[ae]s?\s+)(\d{1,2})(?:\s+(?:da|de)\s+(manh[aã]|tarde|noite))?\b/i);
-    const period=raw.match(/\b(manh[aã]|tarde|noite)\b/i);
+    const norm=raw.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+    const day=norm.match(/(?:segunda|terca|quarta|quinta|sexta|sabado|domingo)(?:-feira)?|amanha|hoje/i);
+    const date=norm.match(/(?:dia\s*)?(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)/);
+    const at=norm.match(/(?:as?\s+)?(\d{1,2})\s*(?:h(?:oras?)?|:)\s*(\d{1,2})?/i)
+      ||norm.match(/(?:as?\s+|por volta d[ae]s?\s+)(\d{1,2})(?:\s+(?:da|de)\s+(manha|tarde|noite))?/i);
+    const period=norm.match(/\b(manha|tarde|noite)\b/);
     let hrs=at?Number(at[1]):null;
-    if(hrs!==null&&hrs<=12&&(/tarde/i.test(at?.[2]||"")||(/tarde/i.test(period?.[0]||"")&&hrs<12)))hrs+=12;
+    if(hrs!==null&&hrs<=12&&/tarde/.test(period?.[0]||"")&&hrs<12)hrs+=12;
     const minutes=at?.[2]&&/^\d{1,2}$/.test(at[2])?Number(at[2]):0;
     const qualifiedTime=hrs!==null&&hrs>=0&&hrs<24&&minutes<60;
     const datePart=day?.[0]||date?.[1]||"";
-    if(qualifiedTime&&(datePart||/\b(dispon[ií]vel|hor[aá]rio|atendimento|visita|recebe|agend)/i.test(raw))){
+    if(qualifiedTime&&(datePart||/(disponivel|horario|atendimento|visita|recebe|agend|pode atender)/i.test(norm))){
       c.availability=(datePart?datePart+" ":"")+"às "+String(hrs).padStart(2,"0")+":"+String(minutes).padStart(2,"0")+" (fictício)";changes.push("availability");
     }
     if(/portaria/i.test(raw)){c.access_note="Acesso pela portaria com identificação";changes.push("access_note")}
