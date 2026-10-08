@@ -1,0 +1,30 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gabrielly V21 | Parecer e logo | CONSTRU-REI</title><style>html,body{margin:0;height:100%;font-family:Arial}iframe{width:100%;height:100%;border:0}.note{position:fixed;bottom:0;right:0;background:#082b49;color:white;padding:7px 12px;font-size:11px;z-index:5}</style></head><body><iframe id="app" title="Gabrielly F00 a F02 V21" src="../app-gabi-v20-documentos-f02-20261008/"></iframe><div class="note">V21 • candidata isolada • sem homologação</div><script>
+(function(){
+const LOGO='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=app&v=128';
+const frame=document.getElementById('app');
+frame.addEventListener('load',()=>{
+const w=frame.contentWindow,d=w.document;
+function escape(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function read(id){return d.getElementById(id)?.value?.trim()||'';}
+function generate(kind){
+const c=w.current||{};const services=read('qaF02Services'),materials=read('qaF02Materials'),notes=read('qaF02Notes');
+if(!services){w.alert('Informe o escopo do F02 antes de gerar o documento.');return;}
+const problem=c.problem||'', all=[problem,services,notes].join(' ').toLowerCase();
+const leak=/vazament|infiltra|umidade|tubula|hidrául|hidraul|prumada|gotej/.test(all);
+const hypotheses=leak?'Possível perda de estanqueidade ou infiltração. A origem, a extensão e eventual responsabilidade dependem de vistoria e ensaios específicos.':'A causa ainda não pode ser estabelecida com segurança a partir dos dados de triagem.';
+const tests=leak?'Inspeção visual e documentação fotográfica; quando pertinente, testes de pressão e estanqueidade, geofone e termografia, definidos pelo técnico responsável.':'Inspeção presencial, registro de evidências e ensaios adequados à ocorrência.';
+const field=(name,value)=>'<p><b>'+name+':</b> '+escape(value)+'</p>';
+const block=(n,title,value)=>'<section><h2>'+n+'. '+title+'</h2><p>'+escape(value).replace(/\n/g,'<br>')+'</p></section>';
+let html='<html lang="pt-BR"><head><meta charset="utf-8"><title>'+ (kind==='report'?'Parecer':'Orçamento')+' CONSTRU-REI</title><style>@page{size:A4;margin:16mm}body{font:12px Arial;color:#173449}header{border-top:9px solid #092e50;border-bottom:4px solid #1482b7;display:flex;gap:18px;align-items:center;padding:14px 0}header img{width:76px;height:76px;object-fit:contain}header strong{font-size:22px;color:#0b3157}h1{color:#0b3157;font-size:20px}h2{font-size:13px;background:#e8f4fa;border-left:5px solid #158bbd;padding:8px;color:#0b3157}section{margin:15px 0;break-inside:avoid}p{line-height:1.55}.warning{background:#fff6df;padding:9px;color:#76500b}.badge{border-top:2px solid #1482b7;margin-top:25px;padding-top:8px;color:#456;font-size:10px}button{padding:10px;background:#0b3157;color:white;border:0}@media print{button{display:none}}</style></head><body><header><img src="'+LOGO+'" alt="Logo oficial CONSTRU-REI"><div><strong>CONSTRU-REI</strong><div>BOOM NEGÓCIOS</div><div>CNPJ 32.329.721/0001-36 • Curitiba/PR</div></div></header><h1>'+(kind==='report'?'PARECER TÉCNICO PRELIMINAR':'PRÉ-ORÇAMENTO COMERCIAL')+'</h1><p class="warning">DOCUMENTO FICTÍCIO DE TESTE — NÃO HOMOLOGADO</p>'+field('Chamado',c.case_number)+field('Cliente',c.client)+field('Imóvel',c.address);
+if(kind==='report'){
+html+=block(1,'Objeto / relato de ocorrência',problem||'Ocorrência em triagem; relato não informado.')+block(2,'Serviços / dados recebidos',services)+block(3,'Materiais e verificações',materials||'Não informados.')+block(4,'Observações e evidências descritas',notes||'Não informadas.')+block(5,'Análise técnica — hipóteses',hypotheses)+block(6,'Verificações e metodologia recomendadas',tests)+block(7,'Conclusão preliminar','Sem confirmação da causa, sem atribuição de responsabilidade e sem substituição de vistoria técnica. Fotografias do F00 devem ser vinculadas e verificadas antes da emissão definitiva.');
+}else{
+html+=block(1,'Serviços / mão de obra',services)+block(2,'Materiais',materials||'A confirmar')+block(3,'Observações técnicas',notes||'A confirmar')+block(4,'Condições comerciais',leak?'Referência preliminar para investigação de caça-vazamentos: R$ 800,00. Reparos e recomposições mediante orçamento adicional.':'Valores, validade e garantia dependem da revisão comercial.');
+}
+html+='<div class="badge">CONSTRU-REI • Emissão experimental F02 • Fotografias não anexadas automaticamente sem vínculo validado</div><button onclick="window.print()">Imprimir / Salvar PDF</button></body></html>';
+const popup=w.open('','_blank');if(!popup){w.alert('Autorize janelas de impressão para gerar o PDF.');return;}popup.document.open();popup.document.write(html);popup.document.close();popup.focus();
+}
+d.addEventListener('click',e=>{const b=e.target.closest('#v20Report,#v20Budget');if(!b)return;e.preventDefault();e.stopImmediatePropagation();generate(b.id==='v20Report'?'report':'budget');},true);
+});
+})();
+</script></body></html>
