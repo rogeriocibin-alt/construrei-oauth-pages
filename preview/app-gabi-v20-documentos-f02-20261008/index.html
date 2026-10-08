@@ -1477,58 +1477,59 @@ function fill(){const c=active();if(!c||!hunt(c)||c.qaDraft)return;const a=docum
 function doc(kind){const c=active();if(!c){alert("Abra primeiro um chamado.");return}const title=kind==="budget"?"PRÉ-ORÇAMENTO COMERCIAL":"PARECER TÉCNICO PRELIMINAR",price=kind==="budget"&&hunt(c),services=val("qaF02Services"),materials=val("qaF02Materials"),notes=val("qaF02Notes");if(!services.trim()){alert("Revise o escopo no F02 antes de gerar o documento.");return}
 const W=window.open("","_blank");if(!W){alert("Permita pop-ups para abrir a prévia de impressão/PDF.");return}
 const q=s=>esc(s).replace(/\n/g,"<br>");
-const body='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>'+title+' - '+esc(c.case_number)+'</title><style>@page{size:A4;margin:17mm}body{font:12px Arial,sans-serif;color:#0a2540}header{border-bottom:4px solid #d3ab38;padding-bottom:13px;margin-bottom:18px}h1{font-size:20px;color:#102a51;margin:5px 0}h2{font-size:13px;background:#103d6b;color:white;padding:7px}p{line-height:1.5}section{margin:13px 0}.brand{color:#073975;font-weight:900;font-size:19px}.meta{font-size:11px;color:#456}strong{color:#103d6b}.total{border-top:2px solid #c7a132;text-align:right;font-size:18px;padding:12px}.warn{color:#a35b00;font-weight:bold}button{margin:10px;padding:10px;background:#123b65;color:white;border:0}pre{font:inherit;white-space:pre-wrap}@media print{button{display:none}}</style></head><body><header><div class="brand">CONSTRU-REI</div><div>BOOM NEGÓCIOS · CNPJ 32.329.721/0001-36</div><div class="meta">Rua Luiz Antonieto, 221 · Jardim das Américas · Curitiba/PR</div></header><h1>'+title+'</h1><p class="warn">DOCUMENTO FICTÍCIO DE TESTE · NÃO É PROPOSTA APROVADA</p><p><strong>Chamado:</strong> '+esc(c.case_number)+'<br><strong>Cliente:</strong> '+esc(c.client)+'<br><strong>Imóvel:</strong> '+esc(c.address)+'<br><strong>Ocorrência:</strong> '+esc(c.problem)+'</p><section><h2>Serviços / mão de obra</h2><p>'+q(services)+'</p></section><section><h2>Materiais e verificações</h2><p>'+q(materials)+'</p></section><section><h2>Observações técnicas</h2><p>'+q(notes)+'</p></section>'+(kind==="budget"?'<section><h2>Condições comerciais</h2><p>Validade: 30 dias, sujeita a conferência antes do envio. Serviços adicionais sujeitos a orçamento complementar.</p><p class="total">'+(price?'Total previsto: R$ 800,00':'Valor: sujeito à revisão comercial')+'</p></section>':'<p><strong>Natureza:</strong> Parecer preliminar baseado na triagem; não comprova a origem e não substitui vistoria técnica.</p>')+'<button onclick="window.print()">Imprimir / Salvar como PDF</button><script id="gabi-v20-fix-20261008">
+const body='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>'+title+' - '+esc(c.case_number)+'</title><style>@page{size:A4;margin:17mm}body{font:12px Arial,sans-serif;color:#0a2540}header{border-bottom:4px solid #d3ab38;padding-bottom:13px;margin-bottom:18px}h1{font-size:20px;color:#102a51;margin:5px 0}h2{font-size:13px;background:#103d6b;color:white;padding:7px}p{line-height:1.5}section{margin:13px 0}.brand{color:#073975;font-weight:900;font-size:19px}.meta{font-size:11px;color:#456}strong{color:#103d6b}.total{border-top:2px solid #c7a132;text-align:right;font-size:18px;padding:12px}.warn{color:#a35b00;font-weight:bold}button{margin:10px;padding:10px;background:#123b65;color:white;border:0}pre{font:inherit;white-space:pre-wrap}@media print{button{display:none}}</style></head><body><header><div class="brand">CONSTRU-REI</div><div>BOOM NEGÓCIOS · CNPJ 32.329.721/0001-36</div><div class="meta">Rua Luiz Antonieto, 221 · Jardim das Américas · Curitiba/PR</div></header><h1>'+title+'</h1><p class="warn">DOCUMENTO FICTÍCIO DE TESTE · NÃO É PROPOSTA APROVADA</p><p><strong>Chamado:</strong> '+esc(c.case_number)+'<br><strong>Cliente:</strong> '+esc(c.client)+'<br><strong>Imóvel:</strong> '+esc(c.address)+'<br><strong>Ocorrência:</strong> '+esc(c.problem)+'</p><section><h2>Serviços / mão de obra</h2><p>'+q(services)+'</p></section><section><h2>Materiais e verificações</h2><p>'+q(materials)+'</p></section><section><h2>Observações técnicas</h2><p>'+q(notes)+'</p></section>'+(kind==="budget"?'<section><h2>Condições comerciais</h2><p>Validade: 30 dias, sujeita a conferência antes do envio. Serviços adicionais sujeitos a orçamento complementar.</p><p class="total">'+(price?'Total previsto: R$ 800,00':'Valor: sujeito à revisão comercial')+'</p></section>':'<p><strong>Natureza:</strong> Parecer preliminar baseado na triagem; não comprova a origem e não substitui vistoria técnica.</p>')+'<button onclick="window.print()">Imprimir / Salvar como PDF</button></body></html>';
+W.document.open();W.document.write(body);W.document.close();W.focus();
+}
+function init(){const panel=document.getElementById("qaF02Workspace");if(!panel)return;const box=document.createElement("div");box.id="v20Docs";box.innerHTML='<button type="button" id="v20Budget">Gerar PDF · Orçamento</button><button type="button" id="v20Report">Gerar PDF · Parecer</button><p>Prévia fictícia. Use “Salvar como PDF” na impressão. Encaminhar à revisão → F03 permanece disponível.</p>';const status=document.getElementById("qaF02Status");panel.insertBefore(box,status);document.getElementById("v20Budget").onclick=()=>doc("budget");document.getElementById("v20Report").onclick=()=>doc("report");document.getElementById("qaF02")?.addEventListener("click",()=>setTimeout(fill,20));document.getElementById("f01CopyBudget")?.addEventListener("click",()=>setTimeout(fill,20));}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
+})();
+</script><script id="gabi-v20-repair">
 (function(){
 "use strict";
-const key="cr-gabi-v20-qa-v2";
-const get=()=>typeof current!=="undefined"&&current?qaCases.find(c=>c.id===current.id):null;
-const el=id=>document.getElementById(id);
+const $v=id=>document.getElementById(id);
+const get=()=>typeof current!=="undefined"&&current?qaCases.find(x=>x.id===current.id):null;
 const norm=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-function persist(){try{localStorage.setItem(key,JSON.stringify({cases:qaCases,events:qaEvents}))}catch(e){}}
-try{const saved=JSON.parse(localStorage.getItem(key)||"null");if(saved?.cases?.length){qaCases=saved.cases;qaEvents=saved.events||{}}}catch(e){}
-const native=api;
+const seedKey="cr-gabi-v20-repair";
+try{const stored=JSON.parse(localStorage.getItem(seedKey)||"null");if(stored?.cases?.length){qaCases=stored.cases;qaEvents=stored.events||{}}}catch(e){}
+function persist(){try{localStorage.setItem(seedKey,JSON.stringify({cases:qaCases,events:qaEvents}))}catch(e){}}
+const apiOriginal=api;
 api=async function(action,payload={}){
- const result=await native(action,payload);
- const c=qaCases.find(x=>x.id===(result?.case?.id||payload.id));
+ const result=await apiOriginal(action,payload);
+ if(action==="create"&&result?.case){const c=qaCases.find(x=>x.id===result.case.id);if(c){qaV19Extract(payload.data?.raw||"",c);}}
+ const c=qaCases.find(x=>x.id===(payload.id||result?.case?.id));
  if(c&&["create","update"].includes(action)){
- const raw=String(payload.data?.raw||""),t=norm(raw);
- if(action==="create"&&raw)qaV19Extract(raw,c);
+ const t=norm(payload.data?.raw||"");
  const day=t.match(/\b(?:segunda|terca|quarta|quinta|sexta|sabado|domingo)(?:-feira)?\b|\b(?:hoje|amanha)\b|\b\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\b/);
- const h=t.match(/(?:as|das|pelas|horario|por volta das)?\s*(\d{1,2})\s*(?:h|:)\s*(\d{0,2})\b/)||t.match(/\b(?:as|pelas|das)\s+(\d{1,2})\s*(?:da\s*)?(manha|tarde|noite)?/);
+ const h=t.match(/\b(?:as|das|pelas|horario|por volta das)?\s*(\d{1,2})\s*(?:h|:)\s*(\d{0,2})\b/)||t.match(/\b(?:as|das|pelas)\s+(\d{1,2})\s*(?:da\s*)?(manha|tarde|noite)?\b/);
  if(h&&/dispon|atend|horario|visita|agend|receb|segunda|terca|quarta|quinta|sexta|sabado|domingo|amanha|hoje/.test(t)){
  let hour=Number(h[1]),minute=/^\d{1,2}$/.test(h[2]||"")?Number(h[2]):0;
  if(hour<12&&/tarde/.test(t))hour+=12;
- if(hour<24&&minute<60){
- const prior=c.availability||"",d=day?.[0]||prior.match(/segunda|terca|quarta|quinta|sexta|sabado|domingo|amanha|hoje|\d{1,2}\/\d{1,2}/i)?.[0]||"";
- c.availability=(d?d+" ":"")+"às "+String(hour).padStart(2,"0")+":"+String(minute).padStart(2,"0")+" (informado; confirmar agenda)";
- if(prior!==c.availability){qaLog(c,"Horário reconhecido: "+c.availability);result.recognized_changes=[...new Set([...(result.recognized_changes||[]),"availability"])];}
- }
+ if(hour<24&&minute<60){const old=c.availability||"",d=day?.[0]||"";c.availability=(d?d+" ":"")+"às "+String(hour).padStart(2,"0")+":"+String(minute).padStart(2,"0")+" (informado; confirmar agenda)";if(old!==c.availability){qaLog(c,"Disponibilidade reconhecida: "+c.availability);result.recognized_changes=[...new Set([...(result.recognized_changes||[]),"availability"])];}}
  }
  }
  if(["create","update","wait","release"].includes(action))persist();
  return result;
 };
-function unknown(c){const t=norm([c?.problem,c?.title,c?.raw_text].join(" "));return /infiltra|vazamento|umidade/.test(t)&&/origem nao identificada|origem desconhecida|nao localiz|sem localizar|triagem inconclusiva/.test(t)}
-const services="01. CAÇA-VAZAMENTOS — inspeção técnica para diagnóstico e localização de vazamentos ocultos e infiltrações, evitando quebras desnecessárias. Utilizar geofone, câmera termográfica, detector de umidade e testes específicos conforme pertinência.\n02. Inspecionar redes de água fria e quente, esgoto, registros, conexões, louças sanitárias e outros pontos pertinentes.";
-const materials="Equipamentos de investigação aplicáveis incluídos. Materiais de reparo e recomposição não incluídos; especificação após diagnóstico.";
-const notes="R$ 800,00 exclusivamente para investigação, localização e diagnóstico. Não contempla reparos hidráulicos, substituições, impermeabilização ou recomposição de revestimentos, pisos, forros e pintura. Abertura técnica mediante autorização prévia. Reparos em orçamento complementar; garantia restrita à região identificada.";
-function apply(){const c=get();if(!c||!unknown(c)||c.qaDraft)return;el("qaF02Services").value=services;el("qaF02Materials").value=materials;el("qaF02Notes").value=notes;el("qaF02Status").textContent="Padrão 675-26 de caça-vazamentos aplicado. Preço R$ 800,00 sujeito a revisão antes do envio."}
-function saveDraft(){const c=get();if(!c)return null;c.qaDraft={services:el("qaF02Services").value.trim(),materials:el("qaF02Materials").value.trim(),notes:el("qaF02Notes").value.trim()};c.qaF02=!!c.qaDraft.services;persist();return c}
+function unknown(c){const t=norm([c?.problem,c?.title,c?.raw_text,c?.structured?.items?.map(x=>x.subject).join(" ")].join(" "));return /infiltra|umidade|vazamento/.test(t)&&/origem nao identificada|origem desconhecida|nao localiz|sem localizar|triagem inconclusiva/.test(t)}
+const labor="01. CAÇA-VAZAMENTOS — investigação técnica da origem de vazamentos ocultos e infiltrações, sem quebras desnecessárias; avaliação com geofone, câmera termográfica, detector de umidade e testes específicos tecnicamente pertinentes.\n02. Realizar vistoria dos pontos relacionados à ocorrência: água fria e quente, esgoto, registros, conexões, louças sanitárias e demais pontos aplicáveis.";
+const materials="Equipamentos e instrumentos para diagnóstico incluídos no serviço. Materiais de reparo, substituição e recomposição não inclusos, sujeitos a orçamento complementar.";
+const notes="R$ 800,00 para investigação, localização e diagnóstico. Reparos hidráulicos, substituições, impermeabilização, alvenaria, revestimentos, pisos, forros e pintura não estão incluídos. Aberturas técnicas dependem de autorização prévia. Após o diagnóstico, reparos serão orçados separadamente. Garantia restrita ao ponto ou região identificada.";
+function applyScope(){
+ const c=get();if(!c||!unknown(c))return;
+ const a=$v("qaF02Services"),b=$v("qaF02Materials"),d=$v("qaF02Notes");if(!a||!b||!d)return;
+ const existing=c.qaDraft?.services||"";
+ const generic=/Realizar vistoria técnica no ambiente afetado|Vistoria técnica para identificar a origem|Investigar possíveis caminhos da água/.test(existing);
+ if(c.qaDraft&&!generic)return; // protects human-edited draft
+ a.value=labor;b.value=materials;d.value=notes;c.qaDraft={services:labor,materials,notes};c.qaF02=false;persist();
+ $v("qaF02Status").textContent="✓ Regra técnica 675-26 aplicada automaticamente • Caça-vazamentos R$ 800,00 • Conferir antes de emitir.";
+}
+function persistDraft(){const c=get();if(!c)return;c.qaDraft={services:$v("qaF02Services").value.trim(),materials:$v("qaF02Materials").value.trim(),notes:$v("qaF02Notes").value.trim()};c.qaF02=!!c.qaDraft.services;persist();}
 function init(){
-for(const id of ["qaF02","f01CopyBudget"])el(id)?.addEventListener("click",()=>setTimeout(apply,30));
-el("qaF02Save")?.addEventListener("click",saveDraft);
-el("qaF02Return")?.addEventListener("click",saveDraft);
-for(const id of ["v20Budget","v20Report"])el(id)?.addEventListener("click",saveDraft,true);
-el("qaF02Advance").onclick=()=>{const c=saveDraft();if(!c?.qaF02)return alert("Complete a mão de obra antes do encaminhamento.");c.qaF03=true;qaLog(c,"F03: revisão solicitada no ambiente fictício");persist();el("qaF02Workspace").hidden=true;el("caseView").classList.remove("v19-f02-active");openCase(c.id);alert("Encaminhado para revisão fictícia F03, com rascunho preservado.")};
-el("qaF02Copy").addEventListener("click",saveDraft,true);
-load();
+ ["qaF02","f01CopyBudget"].forEach(id=>$v(id)?.addEventListener("click",()=>setTimeout(applyScope,40)));
+ ["qaF02Save","qaF02Copy","v20Budget","v20Report","qaF02Return"].forEach(id=>$v(id)?.addEventListener("click",persistDraft,true));
+ const adv=$v("qaF02Advance");if(adv)adv.onclick=()=>{persistDraft();const c=get();if(!c?.qaF02)return alert("Preencha os serviços do F02.");c.qaF03=true;qaLog(c,"Revisão F03 solicitada no ambiente fictício");persist();$v("qaF02Workspace").hidden=true;$v("caseView").classList.remove("v19-f02-active");openCase(c.id);alert("Rascunho encaminhado à revisão fictícia F03. Nenhuma aprovação foi emitida.")};
+ load();
 }
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
-})();
-</script></body></html>';
-W.document.open();W.document.write(body);W.document.close();W.focus();
-}
-function init(){const panel=document.getElementById("qaF02Workspace");if(!panel)return;const box=document.createElement("div");box.id="v20Docs";box.innerHTML='<button type="button" id="v20Budget">Gerar PDF · Orçamento</button><button type="button" id="v20Report">Gerar PDF · Parecer</button><p>Prévia fictícia. Use “Salvar como PDF” na impressão. Encaminhar à revisão → F03 permanece disponível.</p>';const status=document.getElementById("qaF02Status");panel.insertBefore(box,status);document.getElementById("v20Budget").onclick=()=>doc("budget");document.getElementById("v20Report").onclick=()=>doc("report");document.getElementById("qaF02")?.addEventListener("click",()=>setTimeout(fill,20));document.getElementById("f01CopyBudget")?.addEventListener("click",()=>setTimeout(fill,20));}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
 </script></body>
