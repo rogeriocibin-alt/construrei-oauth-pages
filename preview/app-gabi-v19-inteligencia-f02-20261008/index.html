@@ -531,7 +531,7 @@ function qaV19Extract(raw,c){
  const changes=[]; const set=(key,val)=>{if(val&&c[key]!==val){if(c[key])qaLog(c,"Atualização "+key+": informação anterior preservada no histórico.");c[key]=val;changes.push(key)}};
  const mail=String(raw).match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);if(mail)set("contact_email",mail[0]);
  const phone=String(raw).match(/(?:\+55\s*)?\(?\d{2}\)?\s*9?\d{4}[-.\s]?\d{4}\b/);if(phone)set("contact_phone",phone[0]);
- const contact=String(raw).match(/(?:contato|respons[aá]vel no local|falar com|morador[a]?|recebido por)\s*(?:é|:|será)?\s*([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+(?:\s+[A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+){0,2})/);
+ const contact=String(raw).match(/(?:contato|respons[aá]vel no local|falar com|morador[a]?|recebido por)\s*(?:é|:|será)?\s*([A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+(?:\s+[A-ZÁÉÍÓÚÃÕÇ][a-záéíóúãõç]+){0,2})/i);
  if(contact)set("contact_name",contact[1]);
  const pay=normalized.match(/(?:quem paga|pagamento|pagador|pago pel[oa]|responsavel pel[oa] pagamento|custeado pel[oa])\s*(?:e|:|sera)?\s*(?:o|a|pelo|pela)?\s*(proprietari[oa]|condominio|imobiliaria|locatari[oa]|inquilin[oa])/i);
  if(pay)set("payment",pay[1]+" — responsabilidade informada; autorização sujeita à conferência");
