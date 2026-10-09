@@ -1,3 +1,14 @@
+## CANDIDATA ÚNICA — FINANCEIRO V11 — CAPITAL DE GIRO + COMPROVANTES (09/10/2026)
+
+- Diretoria solicitou duas melhorias numa única candidata, **SEM PROMOÇÃO À PRODUÇÃO** antes de validação.
+- Link: https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-financeiro-v11-capital-comprovantes-candidate-20261009/index.html
+- GitHub: commit `3ce07b855dc2e5d7cac52cd2abdc6015987b7a15`. Origem preservada: `production/dashboard-financeiro-v4-homologado-20261007/index.html` SHA `24c56f1d1711e70e73d643f530dd2027ff4c7970`.
+- Endpoint isolado de Capital de Giro: `cr-capital-despesas-v11-candidate-20261009`, baseado na reconciliação canônica Trello, autenticado por sessão do Dashboard, ações `periods` e `debit`. Rateio de uma despesa por múltiplos saldos, menores primeiro; débito parcial identificado pela operação. Prévia sem escrita. Após confirmação, sincronização dos saldos via reconciliador. Necessário teste com dados controlados e monitorar falha parcial multi-card.
+- Cora Manual/Trello: campo de arquivo único, leitura local de texto/PDF com texto/imagem OCR no navegador, sugestão de valor/data/favorecido/referência e categoria básica. **Arquivo não é ainda anexado como evidência ao card do Trello** — evolução pendente. Apenas o formulário existente realiza `manual-cora-preview` e `manual-cora-commit` mediante confirmação.
+- Não presumir identificação 100% de PDFs digitalizados ou de formatos binários variados; no erro solicitar revisão manual; não presumir valores.
+- Testes E2E, login, upload real e atualização Trello/Central ainda não homologados. Próxima etapa: usuário validar candidata notebook/celular, testar débito pequeno controlado, conferir título, descrição, saldo real e sincronismo; resolver anexo real antes de homologação final.
+- Regra: não alterar os produtos oficiais nem tocar obras fechadas; manter o Gestor do Projeto como registro mestre de pendências.
+
 ## HOMOLOGAÇÃO V10 — RECEBIDOS MENSAIS — 09/10/2026
 
 - Rogério aprovou explicitamente candidata V10 após teste: **HOMOLOGADA**. Produção promovida mantendo URL canônica.
