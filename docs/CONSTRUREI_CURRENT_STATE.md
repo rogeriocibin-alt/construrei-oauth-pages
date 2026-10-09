@@ -1,3 +1,10 @@
+## PM-24 — Identidade visual — encerrada por decisão da diretoria (09/10/2026)
+
+- Rogério confirmou que a pendência **PM-24 — Nova identidade visual — somente com kit correto** está resolvida.
+- Banco mestre Gestor: `cc_items.EXEC-VISUAL-FUTURE-20261006` atualizado de Aguardando para **Concluído**, sem nova ação.
+- Recuperação visual e identidade atual preservadas; versões V1/V2 equivocadas continuam em quarentena, não reutilizar.
+- Qualquer novo desenvolvimento visual requer nova demanda explícita e candidata isolada. Não manter PM-24 na fila de ações do Rogério.
+
 ## Homologação Central — GestãoClick V9 — 09/10/2026
 
 - **Aprovação expressa:** Rogério validou a candidata V9 e determinou homologar, congelar e promover sem alterar o endereço oficial.
