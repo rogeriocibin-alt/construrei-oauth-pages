@@ -38,10 +38,10 @@ function renderKpis(){
   card('blue','⚙','Serviços em andamento',k.services_in_progress?.count??'—',state.fast?'Fonte operacional real':waiting,'Trello'),
   card('green','$','Aguardando pagamento',k.awaiting_payment?.count??'—',state.fast?brl(k.awaiting_payment?.amount_cents):waiting,'GestãoClick'),
   card('amber','✓','Aguardando acerto',k.awaiting_adjustment?.count??'—',state.fast?brl(k.awaiting_adjustment?.amount_cents):waiting,'GestãoClick'),
-  card('blue','✎','Em elaboração',statusCount('EM_ELABORACAO'),statusDetail,'GestãoClick'),
-  card('blue','▤','Elaborados',statusCount('ELABORADOS'),statusDetail,'GestãoClick'),
-  card('amber','↗','Aguardando envio',statusCount('AGUARDANDO_ENVIO'),statusDetail,'GestãoClick'),
-  card('amber','↶','Retornos',statusCount('RETORNO'),statusDetail,'GestãoClick')
+  card('purple','✎','Em elaboração',statusCount('EM_ELABORACAO'),statusDetail,'GestãoClick'),
+  card('teal','▤','Elaborados',statusCount('ELABORADOS'),statusDetail,'GestãoClick'),
+  card('orange','↗','Aguardando envio',statusCount('AGUARDANDO_ENVIO'),statusDetail,'GestãoClick'),
+  card('red','↶','Retornos',statusCount('RETORNO'),statusDetail,'GestãoClick')
  ].join('');
  stamp();
 }
