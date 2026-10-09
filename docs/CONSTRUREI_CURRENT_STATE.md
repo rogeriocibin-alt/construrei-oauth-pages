@@ -1,3 +1,14 @@
+## INÍCIO DA V12 — ANEXO ORIGINAL CORA → TRELLO — 09/10/2026
+
+- V11 Financeiro permanece HOMOLOGADO e preservado, com URL estável.
+- Auditoria identificou ausência de upload binário na UI/Edge de Cora Manual; pré-preenchimento de comprovantes V11 não equivale a anexo no Trello.
+- Banco mestre: `FIN-V12-CORA-ATTACH-20261009` = Em andamento, área FINANCEIRO, P1. Candidata futura; nenhuma alteração financeira efetuada nesta etapa.
+- `FIN-V11-CAPITAL-GIRO-20261009` e `FIN-V11-CORA-COMPROVANTES-20261009` mantidos Concluídos/Homologados e classificados Financeiro.
+- `EXEC-FIN-V5-20261006` (R18) mantido Em andamento só para auditoria de delta; não duplicar commit homologado.
+- Checkpoint técnico: `docs/CHECKPOINT_FINANCEIRO_V12_CORA_ATTACH_20261009.md` (commit `f204496350d5ffc947f92b3fac7a2cd3185a31c6`).
+- Próxima implementação: anexo original com autenticação e operação idempotente; erros de anexação não podem causar segundo lançamento financeiro.
+- APP F03 e gate E2E F00–F09 permanecem na fila, sem alteração nesta rodada.
+
 ## HOMOLOGAÇÃO FINAL DASHBOARD FINANCEIRO V11 — 09/10/2026
 
 - Aprovação expressa de Rogério em 09/10/2026: **Capital de Giro** (débito no Trello e redução no Dashboard confirmados) e **leitor de comprovantes Cora Manual** (favorecido ZAMP S.A. identificado em PDF de teste) **HOMOLOGADOS**.
