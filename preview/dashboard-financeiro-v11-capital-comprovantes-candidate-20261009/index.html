@@ -463,7 +463,7 @@ const status=(id,msg)=>q(id).textContent=msg;
 async function api(action,opts={}){let r=await fetch(capApi+'?action='+action,{...opts,headers:{'x-cr-session':session(),...(opts.headers||{})},cache:'no-store'});let x=await r.json().catch(()=>({}));if(!r.ok||x.ok===false)throw Error(x.error||'Leitura não disponível');return x}
 function create(){
 let cap=q('cap');if(cap&&!q('v11cap')){cap.insertAdjacentHTML('afterend','<div id="v11cap"><h3>💼 Lançar despesa — Capital de Giro</h3><p>Selecione os períodos disponíveis. Os saldos residuais são consumidos primeiro. Somente confirmar grava no Trello.</p><div class="v11row"><label>Descrição<input id="v11desc" placeholder="Honorários de contabilidade"></label><label>Valor R$<input id="v11amount" placeholder="460,00"></label></div><button class="v11button" id="v11load">Buscar saldos reais</button><div id="v11periods"></div><button class="v11button" id="v11preview">Pré-visualizar débito</button><button class="v11button" id="v11commit" disabled>Confirmar no Trello</button><div id="v11status" class="v11msg">Sem alteração nos cartões.</div></div>');q('v11load').onclick=load;q('v11preview').onclick=preview;q('v11commit').onclick=commit;}
-let form=q('cora')?.querySelector('.manualgrid');if(form&&!q('v11receipt')){form.insertAdjacentHTML('beforebegin','<div id="v11receipt"><h3>📎 Pré-lançar a partir de comprovante</h3><p>Um arquivo de cada vez. PDFs com texto, imagens e arquivos textuais. A revisão e o envio ao Trello permanecem no formulário abaixo.</p><input id="v11file" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.bmp,.txt,.csv,.json,.xml,.ofx,image/*,application/pdf,text/*"><div id="v11fstatus" class="v11msg">Selecione um arquivo. Ele não será anexado automaticamente ao Trello.</div></div>');q('v11file').onchange=receipt;}
+let form=q('cora')?.querySelector('.manualgrid');if(form&&!q('v11receipt')){form.insertAdjacentHTML('beforebegin','<div id="v11receipt"><h3>📎 Pré-lançar a partir de comprovante</h3><p>Um arquivo de cada vez. PDFs com texto, imagens e arquivos textuais. A revisão e o envio ao Trello permanecem no formulário abaixo.</p><input id="v11file" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.bmp,.txt,.csv,.json,.xml,.ofx,image/*,application/pdf,text/*"><div id="v11fstatus" class="v11msg">Selecione um arquivo. Ele não será anexado automaticamente ao Trello.</div></div>');q('v11file').onchange=receiptRefined;}
 }
 async function load(){try{if(!session())throw Error('Faça login no Dashboard primeiro.');status('v11status','Consultando Trello...');let d=await api('periods');periods=d.periods||[];q('v11periods').innerHTML=periods.filter(x=>x.balance_cents>0).map(x=>'<label class="v11period"><input type="checkbox" data-id="'+safe(x.id)+'"><span>'+safe(x.period)+'</span><b>'+brl(x.balance_cents)+'</b></label>').join('')||'<p>Nenhum período com saldo positivo confirmado.</p>';q('v11periods').querySelectorAll('input').forEach(e=>e.onchange=preview);status('v11status','Selecione os períodos com saldo positivo.');}catch(e){status('v11status',e.message)}}
 function preview(){q('v11commit').disabled=true;draft=null;const total=parse(q('v11amount').value),desc=q('v11desc').value.trim();const checked=[...q('v11periods').querySelectorAll('input:checked')].map(e=>periods.find(p=>p.id===e.dataset.id)).filter(Boolean).sort((a,b)=>a.balance_cents-b.balance_cents);if(!desc||!total||total<0||!checked.length){status('v11status','Informe despesa, valor e períodos.');return}let rest=total;const allocation=checked.map(x=>{const c=Math.min(x.balance_cents,rest);rest-=c;return {id:x.id,cents:c,label:x.period,after:x.balance_cents-c}}).filter(x=>x.cents>0);if(rest>0){status('v11status','Saldo insuficiente. Faltam '+brl(rest));return}draft={operation_id:crypto.randomUUID(),total_cents:total,description:desc,allocations:allocation.map(x=>({id:x.id,cents:x.cents}))};status('v11status','PRÉVIA '+desc+' '+brl(total)+'\n'+allocation.map(x=>x.label+': débito '+brl(x.cents)+' / saldo restante '+brl(x.after)).join('\n')+'\nNenhuma escrita até a confirmação.');q('v11commit').disabled=false}
@@ -471,6 +471,72 @@ async function commit(){if(!draft||pending)return;if(!confirm('Confirma a despes
 function script(url,name){return new Promise((resolve,reject)=>{if(window[name])return resolve(window[name]);const s=document.createElement('script');s.src=url;s.onload=()=>resolve(window[name]);s.onerror=()=>reject(Error('Leitor indisponível'));document.head.appendChild(s)})}
 async function read(file){if(/\.(txt|csv|json|xml|ofx)$/i.test(file.name)||file.type.startsWith('text/'))return file.text();if(/\.pdf$/i.test(file.name)||file.type==='application/pdf'){const lib=await script('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js','pdfjsLib');lib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';let pdf=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;let t='';for(let i=1;i<=Math.min(pdf.numPages,3);i++)t+=(await(await pdf.getPage(i)).getTextContent()).items.map(x=>x.str).join(' ')+'\n';if(!t.trim())throw Error('PDF digitalizado sem texto: revisão manual necessária');return t}if(file.type.startsWith('image/')||/\.(png|jpg|jpeg|webp|bmp)$/i.test(file.name)){let lib=await script('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js','Tesseract');let worker=await lib.createWorker('por');try{return(await worker.recognize(file)).data.text}finally{await worker.terminate()}}throw Error('Formato sem leitura automática: preencha manualmente')}
 async function receipt(ev){const f=ev.target.files?.[0];if(!f)return;if(f.size>12e6){status('v11fstatus','Limite de 12 MB por comprovante.');return}q('mc_commit').disabled=true;status('v11fstatus','Lendo '+f.name+'...');try{const t=await read(f),amount=[...t.matchAll(/(?:R\$|valor|total|pago|transferido)\s*[:\-]?\s*([0-9.]+,[0-9]{2})/gi)].map(m=>parse(m[1])).filter(n=>n>0).sort((a,b)=>b-a)[0];const date=t.match(/\b(\d{1,2})[\/.\-](\d{1,2})[\/.\-](20\d\d)\b/);const party=t.match(/(?:favorecido|destinatário|beneficiário|recebedor)\s*[:\-]\s*([^\n]+)/i);const reference=t.match(/(?:autenticação|identificador|end.to.end)\s*[:\-]\s*([a-zA-Z0-9.-]{6,70})/i);if(amount)q('mc_amount').value=(amount/100).toFixed(2).replace('.',',');if(date)q('mc_date').value=date[3]+'-'+date[2].padStart(2,'0')+'-'+date[1].padStart(2,'0');if(party)q('mc_party').value=party[1].slice(0,90);if(reference)q('mc_ref').value=reference[1];if(/combustível|gasolina|etanol|posto\s/i.test(t))q('mc_category').value='Combustível';else if(/apoio/i.test(t))q('mc_category').value='Apoio';else if(/éder|rogério|fabrício|mão de obra/i.test(t))q('mc_category').value='Mão de Obra';status('v11fstatus','Prévia extraída de '+f.name+'. Confira o valor e favorecido, preencha a obra e use VALIDAR / PRÉ-VISUALIZAR.\n'+t.slice(0,500))}catch(e){status('v11fstatus',e.message+' — o formulário manual permanece disponível.')} }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',create);else create();
+
+function refinePanel(){
+ const file=q('v11receipt');if(!file||q('v11method'))return;
+ file.insertAdjacentHTML('beforeend','<div class="v11row" style="margin-top:10px"><label>Forma de pagamento<select id="v11method" style="width:100%;padding:10px;border-radius:8px"><option value="">Não identificada</option><option>PIX</option><option>TED</option><option>DOC</option><option>Boleto</option><option>Cartão</option><option>Transferência</option><option>Dinheiro</option></select></label><label>Tipo identificado<select id="v11nature" style="width:100%;padding:10px;border-radius:8px"><option value="">Conferir</option><option value="OUT">SAÍDA / CUSTO</option><option value="IN">ENTRADA / RECEBIMENTO</option></select></label></div><div class="v11msg" id="v11receiptDetails">Após anexar, confira a prévia dos campos extraídos e ajuste o que não for reconhecido.</div>');
+ q('v11method').addEventListener('change',syncMethod);q('v11nature').addEventListener('change',()=>{if(q('v11nature').value)q('mc_dir').value=q('v11nature').value});
+}
+function syncMethod(){const d=q('mc_desc'),m=q('v11method')?.value||'';if(!d)return;d.value=d.value.replace(/\[Forma: [^\]]*\]\s*/g,'').trim();if(m)d.value=('[Forma: '+m+'] '+d.value).trim()}
+function labels(lines,patterns){
+ for(const line of lines){for(const pattern of patterns){const match=line.match(pattern);if(match&&match[1]){let v=match[1].replace(/\s+(?:CPF|CNPJ|Instituição|Banco|Agência|Conta|Data|Valor)\s*[:\-].*$/i,'').trim();if(v.length>2&&v.length<120)return v;}}}return ''}
+function parseSmartReceipt(t){
+ const lines=t.replace(/\r/g,'').split('\n').map(x=>x.trim()).filter(Boolean),flat=lines.join('\n');
+ let direction=/\b(recebido|entrada|crédito em conta|você recebeu)\b/i.test(flat)?'IN':'OUT';
+ let payment=/\bPIX\b|chave pix|end.to.end|e2e/i.test(flat)?'PIX':/\bTED\b/i.test(flat)?'TED':/\bDOC\b/i.test(flat)?'DOC':/boleto|linha digitável/i.test(flat)?'Boleto':/cartão|débito|crédito/i.test(flat)?'Cartão':/transferência/i.test(flat)?'Transferência':/dinheiro|espécie/i.test(flat)?'Dinheiro':'';
+ const receiver=labels(lines,[/^(?:nome do )?(?:favorecido|benefici[aá]rio|destinat[aá]rio|recebedor|para|quem recebeu|recebido por)\s*[:\-]?\s*(.+)/i,/^nome\s*do\s*destinat[aá]rio\s*[:\-]?\s*(.+)/i]);
+ const payer=labels(lines,[/^(?:pagador|remetente|de|quem enviou|origem)\s*[:\-]?\s*(.+)/i]);
+ const party=direction==='IN'?(payer||receiver):(receiver||payer);
+ const values=[];
+ for(const line of lines){
+  for(const m of line.matchAll(/(?:R\$\s*|(?:valor|total|pago|transferido|recebido)\s*[:\-]?\s*)([0-9.]+,[0-9]{2})/gi)){
+   const v=parse(m[1]);if(v>0)values.push({value:v,rank:/valor\s+(?:da\s+)?(?:transa[cç][aã]o|transfer[eê]ncia|pago|recebido)|valor\s+total|total\s+(?:pago|recebido)/i.test(line)?3:/\bvalor\b|\btotal\b|\bpagamento\b/i.test(line)?2:1});
+  }
+ }
+ values.sort((a,b)=>b.rank-a.rank);const value=values[0]?.value||0;
+ const d=flat.match(/\b([0-3]?\d)[\/.\-]([01]?\d)[\/.\-](20\d{2})\b/);
+ const date=d?d[3]+'-'+d[2].padStart(2,'0')+'-'+d[1].padStart(2,'0'):'';
+ const ref=(flat.match(/(?:autentica[cç][aã]o|id(?:entificador)?(?: da transa[cç][aã]o)?|end.to.end|e2e)\s*[:\-#]?\s*([a-z0-9_.\-]{6,75})/i)||[])[1]||'';
+ let category='';
+ if(/posto|combust[ií]vel|diesel|gasolina|etanol/i.test(flat))category='Combustível';
+ else if(/\bapoio\b/i.test(flat))category='Apoio';
+ else if(/pedreiro|eletricista|encanador|prestador|fabr[ií]cio|[eé]der|rog[eé]rio|m[aã]o de obra/i.test(flat))category='Mão de Obra';
+ else if(/frete|transportadora|entrega/i.test(flat))category='Frete / Transporte';
+ else if(/nota fiscal|tributo|imposto/i.test(flat))category='NF';
+ else if(/material|ferragem|constru[cç][aã]o|tintas|dep[oó]sito/i.test(flat))category='Materiais';
+ return {value,date,party,payer,receiver,payment,direction,category,ref};
+}
+async function receiptRefined(ev){
+ refinePanel();
+ const f=ev.target.files?.[0];if(!f)return;
+ if(f.size>12e6){status('v11fstatus','Arquivo acima do limite de 12 MB.');return}
+ q('mc_commit').disabled=true;
+ if(typeof S!=='undefined'){S.manualPreview=null;S.manualOp=null}
+ status('v11fstatus','Analisando '+f.name+'... Nenhum lançamento será enviado sem confirmação.');
+ try{
+  let text='';
+  try{text=await read(f)}catch(err){
+   if(!/\.pdf$/i.test(f.name))throw err;
+   const lib=await script('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js','pdfjsLib');
+   lib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+   const pdf=await lib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;
+   const ocr=await script('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js','Tesseract');
+   const worker=await ocr.createWorker('por');
+   try{for(let k=1;k<=Math.min(pdf.numPages,2);k++){const page=await pdf.getPage(k),view=page.getViewport({scale:1.65}),canvas=document.createElement('canvas');canvas.width=view.width;canvas.height=view.height;await page.render({canvasContext:canvas.getContext('2d'),viewport:view}).promise;text+=(await worker.recognize(canvas)).data.text+'\n'}}finally{await worker.terminate()}
+  }
+  const p=parseSmartReceipt(text);
+  if(p.value>0)q('mc_amount').value=(p.value/100).toFixed(2).replace('.',',');
+  if(p.date)q('mc_date').value=p.date;
+  if(p.party)q('mc_party').value=p.party;
+  if(p.ref)q('mc_ref').value=p.ref;
+  if(p.category&&[...q('mc_category').options].some(o=>o.value===p.category))q('mc_category').value=p.category;
+  q('v11method').value=p.payment;q('v11nature').value=p.direction;q('mc_dir').value=p.direction;syncMethod();
+  const lines=['Arquivo: '+f.name,'Valor: '+(p.value?brl(p.value):'Não identificado'),'Favorecido/origem: '+(p.party||'Não identificado'),'Pagamento: '+(p.payment||'Não identificado'),'Direção: '+(p.direction==='IN'?'Entrada':'Saída'),'Categoria: '+(p.category||'Revisar'),'Data: '+(p.date||'Não identificada'),'Referência: '+(p.ref||'Não identificada'),'Obra: informe ou confira o número no campo abaixo.','Prévia apenas: nada lançado no Trello.'];
+  status('v11fstatus','Leitura concluída. Revise os campos antes de usar VALIDAR / PRÉ-VISUALIZAR.');
+  status('v11receiptDetails',lines.join('\n'));
+ }catch(e){status('v11fstatus','Não foi possível interpretar o comprovante: '+e.message+'. Utilize o formulário manual.');}
+}
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{create();refinePanel()});else {create();refinePanel()}
 })();
 </script></body></html>
