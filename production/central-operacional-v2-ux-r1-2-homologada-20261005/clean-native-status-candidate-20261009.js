@@ -107,19 +107,23 @@ function budgetRank(name){
  if(/CANCEL/.test(n))return 100;
  return 85;
 }
+// A mesma paleta é usada nos cartões executivos e nas barras GestãoClick.
+const CR_STATUS_COLORS={
+ EM_ANDAMENTO:'#0877f9',AGUARDANDO_PAGAMENTO:'#12b76a',
+ AGUARDANDO_ACERTO:'#f3ad00',EM_ELABORACAO:'#8b36d6',
+ ELABORADOS:'#009da5',AGUARDANDO_ENVIO:'#ff8614',RETORNO:'#ff375f'
+};
 function budgetColor(name){
- const n=budgetNorm(name);
+ const n=budgetNorm(name),key=canonicalBudgetStatus(name).key;
+ if(CR_STATUS_COLORS[key])return CR_STATUS_COLORS[key];
  if(/CANCEL/.test(n))return '#8094a8';
  if(/NAO APROV|REPROV/.test(n))return '#e54d5d';
  if(/FINAL|CONCLU/.test(n))return '#16a99b';
- if(/PAGAMENTO/.test(n))return '#f17a32';
- if(/ACERTO|AJUST/.test(n))return '#e99528';
- if(/RETORNO/.test(n))return '#8059d9';
- if(/ANDAMENTO|EXECU/.test(n))return '#5869d9';
- if(/APROVAD/.test(n)&&!/AGUARDANDO/.test(n))return '#2fbd69';
+ if(/PAGO|RECEBIDO/.test(n))return '#2fbd69';
+ if(/ENVIAD/.test(n))return '#44a6e8';
  if(/AGUARDANDO APROV/.test(n))return '#eea91c';
- if(/AGUARDANDO ENVIO|ENVIAD/.test(n))return '#44a6e8';
- if(/ANALIS|ELABOR/.test(n))return '#7658d7';
+ if(/APROVAD/.test(n))return '#2fbd69';
+ if(/ANALIS/.test(n))return '#7658d7';
  if(/ORCAMENT/.test(n))return '#17acd0';
  if(/NOVO|VISITA|AGENDAMENTO/.test(n))return '#2e86ed';
  const palette=['#258edc','#14a7a0','#6c63d9','#36a86f','#4c9bd9','#8b65c9'];
