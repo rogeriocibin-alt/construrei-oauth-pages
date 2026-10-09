@@ -1,3 +1,10 @@
+## HOMOLOGAÇÃO V10 — RECEBIDOS MENSAIS — 09/10/2026
+
+- Rogério aprovou explicitamente candidata V10 após teste: **HOMOLOGADA**. Produção promovida mantendo URL canônica.
+- Endpoint vivo de recebimentos integrado em JS de produção: `cr-gc-recebidos-v10-candidate-20261009`; atualização a cada 120 segundos enquanto a Central está aberta; mudança automática de mês pelo fuso São Paulo; exibição de erro sem valor presumido.
+- Release JS commit: `4425841d93bc4df43de1c0552a9ca1fee1fd446a`; HTML commit: `ac197810568866a6b0ab3ab38d4899d8f9478493`; checkpoint: `docs/CHECKPOINT_CENTRAL_RECEBIDOS_V10_20261009.md` (commit `6101efc7a6766e00cbe6e7a83ce6360af165d7b0`).
+- Fonte da verdade anterior V9 preservada por registro histórico; rollback pelo SHA anterior no checkpoint. Testes de produção após publicação e celular não confirmados nesta execução; não reabrir aprovação humana da candidata.
+
 ## PM-24 — Identidade visual — encerrada por decisão da diretoria (09/10/2026)
 
 - Rogério confirmou que a pendência **PM-24 — Nova identidade visual — somente com kit correto** está resolvida.
