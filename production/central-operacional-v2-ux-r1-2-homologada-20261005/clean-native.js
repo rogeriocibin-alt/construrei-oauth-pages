@@ -1,11 +1,11 @@
 (()=>{'use strict';
 if(window.__CR_NATIVE_CLEAN_V1)return;window.__CR_NATIVE_CLEAN_V1=true;
 window.__CR_NATIVE_HOME_OWNER=true;
-const BUILD='CR-CENTRAL-HERO-FULL-BG-20261004';
+const BUILD='CR-CENTRAL-STATUS-V9-HOMOLOGADA-20261009';
 const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
 const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-executive-v2-candidate-20261004';
 const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v12-1-candidate-20261003?view=public';
-const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v3-candidate-20261004';
+const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v5-drilldown-20261009';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -28,10 +28,24 @@ function card(cls,ic,l,v,d,s){return '<article class="cr-op-card '+cls+'"><div c
 function renderKpis(){
  const h=$('#kpis');if(!h)return;
  const k=state.fast?.kpis||{},waiting=state.errors.fast?'Leitura rápida indisponível — nova tentativa automática':'Conectando…';
+ const statusRows=state.budgets?.statuses?mergeBudgetStatuses(state.budgets.statuses):[];
+ const statusCount=key=>{
+  if(!state.budgets)return '—';
+  return statusRows.filter(x=>x.canonical_key===key).reduce((sum,x)=>sum+(Number(x.count)||0),0);
+ };
+ const statusDetail=key=>{
+  if(!state.budgets)return state.errors.budgets?'Fonte indisponível':'Carregando GestãoClick…';
+  const sum=statusRows.filter(x=>x.canonical_key===key).reduce((a,x)=>a+Number(x.total_cents||0),0);
+  return brl(sum);
+ };
  h.innerHTML=[
-  card('blue','⚙','Serviços em andamento',k.services_in_progress?.count??'—',state.fast?'Fonte operacional real':waiting,'Trello'),
-  card('green','$','Aguardando pagamento',k.awaiting_payment?.count??'—',state.fast?brl(k.awaiting_payment?.amount_cents):waiting,'GestãoClick'),
-  card('amber','✓','Aguardando acerto',k.awaiting_adjustment?.count??'—',state.fast?brl(k.awaiting_adjustment?.amount_cents):waiting,'GestãoClick')
+  card('blue','⚙','Serviços em andamento',statusCount('EM_ANDAMENTO'),statusDetail('EM_ANDAMENTO'),'GestãoClick'),
+  card('green','$','Aguardando pagamento',statusCount('AGUARDANDO_PAGAMENTO'),statusDetail('AGUARDANDO_PAGAMENTO'),'GestãoClick'),
+  card('amber','✓','Aguardando acerto',statusCount('AGUARDANDO_ACERTO'),statusDetail('AGUARDANDO_ACERTO'),'GestãoClick'),
+  card('purple','✎','Em elaboração',statusCount('EM_ELABORACAO'),statusDetail('EM_ELABORACAO'),'GestãoClick'),
+  card('teal','▤','Elaborados',statusCount('ELABORADOS'),statusDetail('ELABORADOS'),'GestãoClick'),
+  card('orange','↗','Aguardando envio',statusCount('AGUARDANDO_ENVIO'),statusDetail('AGUARDANDO_ENVIO'),'GestãoClick'),
+  card('red','↶','Retornos',statusCount('RETORNO'),statusDetail('RETORNO'),'GestãoClick')
  ].join('');
  stamp();
 }
@@ -97,19 +111,23 @@ function budgetRank(name){
  if(/CANCEL/.test(n))return 100;
  return 85;
 }
+// A mesma paleta é usada nos cartões executivos e nas barras GestãoClick.
+const CR_STATUS_COLORS={
+ EM_ANDAMENTO:'#0877f9',AGUARDANDO_PAGAMENTO:'#12b76a',
+ AGUARDANDO_ACERTO:'#f3ad00',EM_ELABORACAO:'#8b36d6',
+ ELABORADOS:'#009da5',AGUARDANDO_ENVIO:'#ff8614',RETORNO:'#ff375f'
+};
 function budgetColor(name){
- const n=budgetNorm(name);
+ const n=budgetNorm(name),key=canonicalBudgetStatus(name).key;
+ if(CR_STATUS_COLORS[key])return CR_STATUS_COLORS[key];
  if(/CANCEL/.test(n))return '#8094a8';
  if(/NAO APROV|REPROV/.test(n))return '#e54d5d';
  if(/FINAL|CONCLU/.test(n))return '#16a99b';
- if(/PAGAMENTO/.test(n))return '#f17a32';
- if(/ACERTO|AJUST/.test(n))return '#e99528';
- if(/RETORNO/.test(n))return '#8059d9';
- if(/ANDAMENTO|EXECU/.test(n))return '#5869d9';
- if(/APROVAD/.test(n)&&!/AGUARDANDO/.test(n))return '#2fbd69';
+ if(/PAGO|RECEBIDO/.test(n))return '#2fbd69';
+ if(/ENVIAD/.test(n))return '#44a6e8';
  if(/AGUARDANDO APROV/.test(n))return '#eea91c';
- if(/AGUARDANDO ENVIO|ENVIAD/.test(n))return '#44a6e8';
- if(/ANALIS|ELABOR/.test(n))return '#7658d7';
+ if(/APROVAD/.test(n))return '#2fbd69';
+ if(/ANALIS/.test(n))return '#7658d7';
  if(/ORCAMENT/.test(n))return '#17acd0';
  if(/NOVO|VISITA|AGENDAMENTO/.test(n))return '#2e86ed';
  const palette=['#258edc','#14a7a0','#6c63d9','#36a86f','#4c9bd9','#8b65c9'];
@@ -134,7 +152,9 @@ function canonicalBudgetStatus(v){
  if(/AGUARDANDO ENVIO/.test(n))return{key:'AGUARDANDO_ENVIO',name:'Aguardando envio'};
  if(/ENVIAD/.test(n))return{key:'ENVIADO',name:'Enviado'};
  if(/ANALIS/.test(n))return{key:'EM_ANALISE',name:'Em análise'};
- if(/ELABOR/.test(n))return{key:'EM_ELABORACAO',name:'Em elaboração'};
+ if(/^(ELABORADO|ELABORADOS|ORCAMENTO ELABORADO|ORCAMENTOS ELABORADOS)$/.test(n))return{key:'ELABORADOS',name:'Elaborados'};
+ if(/EM ELABORACAO|ELABORANDO|EM ELABOR/.test(n))return{key:'EM_ELABORACAO',name:'Em elaboração'};
+ if(/ELABOR/.test(n))return{key:'ELABORADOS',name:'Elaborados'};
  if(/ORCAMENT/.test(n))return{key:'ORCAMENTO',name:'Orçamento'};
  if(/NOVO/.test(n))return{key:'NOVO',name:'Novo'};
  if(/VISITA|AGENDAMENTO|AGENDADO/.test(n))return{key:'AGENDADO',name:'Agendado'};
@@ -144,7 +164,7 @@ function mergeBudgetStatuses(input){
  const map=new Map();
  (Array.isArray(input)?input:[]).forEach((x,idx)=>{
   const c=canonicalBudgetStatus(x?.name||x?.status||'SEM STATUS');
-  const key=String(x?.canonical_key||c.key);
+  const key=String(c.key.startsWith('RAW:')?(x?.canonical_key||c.key):c.key);
   const name=c.name;
   const count=Number(x?.count)||0,total=Number(x?.total_cents)||0,order=Number(x?.source_order);
   if(!map.has(key)){
@@ -170,7 +190,7 @@ function renderBudgets(){
   }
   return;
  }
- const rows=mergeBudgetStatuses(d.statuses).sort((a,b)=>(Number(b.count)||0)-(Number(a.count)||0)||String(a.name).localeCompare(String(b.name),'pt-BR'));
+ const rows=mergeBudgetStatuses(d.statuses).filter(x=>! /^(PEDIDO EMBALADO|PEDIDO ENTREGUE)$/.test(budgetNorm(x.name))).sort((a,b)=>(Number(b.count)||0)-(Number(a.count)||0)||String(a.name).localeCompare(String(b.name),'pt-BR'));
  const max=Math.max(1,...rows.map(x=>Number(x.count)||0));
  h.innerHTML=rows.length?rows.map(x=>{
    const count=Number(x.count)||0,color=budgetColor(x.name),pct=count?Math.max(3,Math.round(count/max*100)):0;
@@ -307,7 +327,7 @@ async function refreshBudgets(){
  }catch(err){
   state.errors.budgets=String(err);
  }
- renderBudgets();renderHealth();
+ renderBudgets();renderKpis();renderHealth();
 }
 
 const MATURITY='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes';
@@ -409,4 +429,44 @@ function boot(){
  window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshAgendaToday,refreshMaturity,refreshBudgets,loadApprovedHeroBackground,APP};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+
+const CR_STATUS_DRILL=[{key:'EM_ANDAMENTO',name:'Serviços em andamento'},{key:'AGUARDANDO_PAGAMENTO',name:'Aguardando pagamento'},{key:'AGUARDANDO_ACERTO',name:'Aguardando acerto'},{key:'EM_ELABORACAO',name:'Em elaboração'},{key:'ELABORADOS',name:'Elaborados'},{key:'AGUARDANDO_ENVIO',name:'Aguardando envio'},{key:'RETORNO',name:'Retornos'}];
+function crDrillUI(){
+ let node=document.getElementById('crStatusDrill');if(node)return node;
+ node=document.createElement('div');node.id='crStatusDrill';node.setAttribute('role','dialog');node.setAttribute('aria-modal','true');node.hidden=true;
+ node.innerHTML='<div class="crd-panel"><button class="crd-close" type="button" aria-label="Fechar">×</button><div class="crd-ey">GESTÃO OPERACIONAL • GESTÃOCLICK</div><h2 id="crdTitle">Situação</h2><div id="crdCount"></div><div id="crdBody"></div></div>';
+ document.body.appendChild(node);
+ node.querySelector('.crd-close').onclick=()=>{node.hidden=true};
+ node.onclick=e=>{if(e.target===node)node.hidden=true};
+ return node;
+}
+const CR_GC_LOGIN='https://gestaoclick.com/login/';
+const CR_GC_FILTER_LINKS={EM_ANDAMENTO:"https://gestaoclick.com/pedidos/orcamentos/orcamentos_servicos?loja=534500&codigo=&data_inicio=&data_fim=&data_inicio_e=&data_fim_e=&cliente-id=&produto=&servico=&data_mes=&data_ano=&nome_cliente=&centro-custo=&nome_centro-custo=&equipamento=&marca=&modelo=&serie=&situacaoBuscaAvancada=true&situacao%5B0%5D=8553986&atributo%5B85718%5D=",AGUARDANDO_PAGAMENTO:"https://gestaoclick.com/pedidos/orcamentos/orcamentos_servicos?loja=534500&codigo=&data_inicio=&data_fim=&data_inicio_e=&data_fim_e=&cliente-id=&produto=&servico=&data_mes=&data_ano=&nome_cliente=&centro-custo=&nome_centro-custo=&equipamento=&marca=&modelo=&serie=&situacaoBuscaAvancada=true&situacao%5B0%5D=8595091&atributo%5B85718%5D=",AGUARDANDO_ACERTO:"https://gestaoclick.com/pedidos/orcamentos/orcamentos_servicos?loja=534500&codigo=&data_inicio=&data_fim=&data_inicio_e=&data_fim_e=&cliente-id=&produto=&servico=&data_mes=&data_ano=&nome_cliente=&centro-custo=&nome_centro-custo=&equipamento=&marca=&modelo=&serie=&situacaoBuscaAvancada=true&situacao%5B0%5D=8606987&atributo%5B85718%5D=",EM_ELABORACAO:"https://gestaoclick.com/pedidos/orcamentos/orcamentos_servicos?loja=534500&codigo=&data_inicio=&data_fim=&data_inicio_e=&data_fim_e=&cliente-id=&produto=&servico=&data_mes=&data_ano=&nome_cliente=&centro-custo=&nome_centro-custo=&equipamento=&marca=&modelo=&serie=&situacaoBuscaAvancada=true&situacao%5B0%5D=8553985&atributo%5B85718%5D=",ELABORADOS:"https://gestaoclick.com/pedidos/orcamentos/orcamentos_servicos?loja=534500&codigo=&data_inicio=&data_fim=&data_inicio_e=&data_fim_e=&cliente-id=&produto=&servico=&data_mes=&data_ano=&nome_cliente=&centro-custo=&nome_centro-custo=&equipamento=&marca=&modelo=&serie=&situacaoBuscaAvancada=true&situacao%5B0%5D=9431457&atributo%5B85718%5D=",AGUARDANDO_ENVIO:"https://gestaoclick.com/pedidos/orcamentos/orcamentos_servicos?loja=534500&codigo=&data_inicio=&data_fim=&data_inicio_e=&data_fim_e=&cliente-id=&produto=&servico=&data_mes=&data_ano=&nome_cliente=&centro-custo=&nome_centro-custo=&equipamento=&marca=&modelo=&serie=&situacaoBuscaAvancada=true&situacao%5B0%5D=9371021&atributo%5B85718%5D=",RETORNO:"https://gestaoclick.com/pedidos/orcamentos/orcamentos_servicos?loja=534500&codigo=&data_inicio=&data_fim=&data_inicio_e=&data_fim_e=&cliente-id=&produto=&servico=&data_mes=&data_ano=&nome_cliente=&centro-custo=&nome_centro-custo=&equipamento=&marca=&modelo=&serie=&situacaoBuscaAvancada=true&situacao%5B0%5D=8562437&atributo%5B85718%5D="};
+async function crOpenDrill(key,title){
+ const node=crDrillUI();node.hidden=false;
+ const statuses=state.budgets?.statuses?mergeBudgetStatuses(state.budgets.statuses):[];
+ const status=statuses.find(s=>s.canonical_key===key);
+ const count=status?Number(status.count)||0:null;
+ const cents=status?Number(status.total_cents)||0:null;
+ node.querySelector('#crdTitle').textContent=title||status?.name||key;
+ node.querySelector('#crdCount').textContent=(count==null?'Contagem não disponível':count+' orçamento(s)')+' • SOMA '+(cents==null?'indisponível':brl(cents));
+ const body=node.querySelector('#crdBody');
+ body.replaceChildren();
+ const intro=document.createElement('p');
+ intro.textContent='Acesso ao Gestão Click: faça login com sua senha ou conta Google, caso a sessão não esteja aberta.';
+ const exact=CR_GC_FILTER_LINKS[key];
+ const login=document.createElement('a');login.href=exact||CR_GC_LOGIN;login.target='_blank';login.rel='noopener noreferrer';login.className='crd-gc-link';login.textContent=exact?'Abrir no Gestão Click com este filtro ↗':'Abrir Gestão Click • Senha ou Google ↗';
+ const hint=document.createElement('p');hint.textContent=exact?'Filtro real identificado no link: Situação '+new URL(exact).searchParams.get('situacao[0]')+' ('+(title||status?.name||key)+'). Caso o Gestão Click solicite login, entre com senha ou Google; a continuidade automática do filtro após autenticação ainda precisa ser testada.':'Situação selecionada: '+(title||status?.name||key)+'. Após entrar, abra Orçamentos → Serviços → Busca avançada → Situação e selecione este status.';
+ const copy=document.createElement('button');copy.type='button';copy.textContent='Copiar situação para o filtro';copy.className='crd-gc-copy';copy.onclick=()=>{if(navigator.clipboard?.writeText)navigator.clipboard.writeText(title||status?.name||key).then(()=>{copy.textContent='Situação copiada ✓'}).catch(()=>{});};
+ body.append(intro,login,hint,copy);
+ const note=document.createElement('p');note.className='crd-gc-note';note.textContent=exact?'Endereço filtrado informado pela diretoria. O funcionamento após login depende do Gestão Click e ainda não foi validado.':'Ainda não recebemos um endereço filtrado validado para esta situação. Acesso pelo login oficial, sem inventar identificadores.';body.append(note);
+}
+function crBindDrill(){
+ const k=document.querySelectorAll('#kpis .cr-op-card');
+ k.forEach((el,i)=>{if(el.dataset.crDrill)return;const d=CR_STATUS_DRILL[i];if(!d)return;el.dataset.crDrill=d.key;el.setAttribute('role','button');el.setAttribute('tabindex','0');el.setAttribute('aria-label','Consultar '+d.name);el.onclick=()=>crOpenDrill(d.key,d.name);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();crOpenDrill(d.key,d.name)}}});
+ document.querySelectorAll('#crBudgetStatusRows .cr-budget-row').forEach(el=>{if(el.dataset.crDrill)return;const name=el.querySelector('.cr-budget-name')?.textContent||'';const key=canonicalBudgetStatus(name).key;el.dataset.crDrill=key;el.setAttribute('role','button');el.setAttribute('tabindex','0');el.onclick=()=>crOpenDrill(key,name);el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();crOpenDrill(key,name)}}});
+}
+const crDrillObserver=new MutationObserver(()=>crBindDrill());
+document.addEventListener('DOMContentLoaded',()=>{crBindDrill();const a=document.getElementById('kpis'),b=document.getElementById('crBudgetStatusRows');if(a)crDrillObserver.observe(a,{childList:true});if(b)crDrillObserver.observe(b,{childList:true})});
+
 })();
