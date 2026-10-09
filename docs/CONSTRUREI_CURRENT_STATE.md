@@ -1,3 +1,14 @@
+## Homologação Central — GestãoClick V9 — 09/10/2026
+
+- **Aprovação expressa:** Rogério validou a candidata V9 e determinou homologar, congelar e promover sem alterar o endereço oficial.
+- **Link oficial estável:** https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/central-operacional-v2-ux-r1-2-homologada-20261005/
+- **Versão:** CR-CENTRAL-STATUS-V9-HOMOLOGADA-20261009; sete cartões com contadores, somas e cores diferenciadas, status GestãoClick e redirecionamento direto à busca avançada de cada situação.
+- **Filtros:** EM_ANDAMENTO=8553986; AGUARDANDO_PAGAMENTO=8595091; AGUARDANDO_ACERTO=8606987; EM_ELABORACAO=8553985; ELABORADOS=9431457; AGUARDANDO_ENVIO=9371021; RETORNO=8562437.
+- **Produção:** `production/central-operacional-v2-ux-r1-2-homologada-20261005/index.html` e `clean-native.js` atualizados; commit final de arquivos `210065731c71d6713a81b4456883878cf00b9c67`.
+- **Checkpoint e rollback:** `docs/CHECKPOINT_CENTRAL_STATUS_V9_20261009.md`, contendo SHAs anteriores para restauração.
+- **Gestor mestre de pendências (Supabase):** `cc_items.id=CENTRAL-GC-STATUS-V9-20261009`, status Concluído, aprovação registrada.
+- **Atenção:** teste de publicação HTTP e pós-release em notebook/celular continua como verificação operacional, não reabre homologação aprovada. Sem alteração da regra de login do GestãoClick, apenas links de filtragem fornecidos pela direção.
+
 ## Atualização APP/Central — 08/10/2026 — fechamento do ciclo de publicação progressiva
 
 - **Aprovado pela direção:** Central como vitrine viva e link estável para cada versão já aprovada; candidata separada para novas etapas; checkpoint/rollback a cada promoção. Não confundir demonstração com sistema sincronizado para equipe.
