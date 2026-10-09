@@ -156,7 +156,7 @@ function mergeBudgetStatuses(input){
  const map=new Map();
  (Array.isArray(input)?input:[]).forEach((x,idx)=>{
   const c=canonicalBudgetStatus(x?.name||x?.status||'SEM STATUS');
-  const key=String(x?.canonical_key||c.key);
+  const key=String(c.key.startsWith('RAW:')?(x?.canonical_key||c.key):c.key);
   const name=c.name;
   const count=Number(x?.count)||0,total=Number(x?.total_cents)||0,order=Number(x?.source_order);
   if(!map.has(key)){
