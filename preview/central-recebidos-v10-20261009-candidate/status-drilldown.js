@@ -7,6 +7,30 @@ const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendenci
 const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v12-1-candidate-20261003?view=public';
 const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v5-drilldown-20261009';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
+const RECEIPTS_URL='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-recebidos-v10-candidate-20261009';
+let receiptsSnapshot=null,receiptsProblem='';
+async function updateReceipts(){
+ try{
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),20000);
+  let response;try{response=await fetch(RECEIPTS_URL+'?refresh='+Date.now(),{cache:'no-store',signal:controller.signal});}finally{clearTimeout(timer)}
+  const data=await response.json();
+  if(!response.ok||data.ok!==true||!Number.isFinite(Number(data.total_cents)))throw Error('Fonte financeira indisponível');
+  receiptsSnapshot=data;receiptsProblem='';
+ }catch(e){receiptsSnapshot=null;receiptsProblem='Consulta financeira indisponível';}
+ renderKpis();
+}
+function receivedKpi(){
+ const info=crRecebidosMes(),d=receiptsSnapshot;
+ const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit'}).formatToParts(new Date());
+ const period=parts.find(x=>x.type==='year').value+'-'+parts.find(x=>x.type==='month').value;
+ const fresh=d&&String(d.period_start||'').slice(0,7)===period;
+ const amount=fresh?new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(Number(d.total_cents)/100):'—';
+ const detail=fresh?('Recebimentos confirmados • '+Number(d.count||0)+' lançamentos • consulta '+new Date(d.read_at).toLocaleTimeString('pt-BR',{timeZone:'America/Sao_Paulo'})):(receiptsProblem||'Consultando Gestão Click…');
+ return card('navy','💰',info.label,amount,detail,'GestãoClick');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{updateReceipts();setInterval(updateReceipts,120000)});
+else{updateReceipts();setInterval(updateReceipts,120000)}
+
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const brl=c=>c==null?'—':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(Number(c)/100);
@@ -47,7 +71,7 @@ function renderKpis(){
   card('teal','▤','Elaborados',statusCount('ELABORADOS'),statusDetail('ELABORADOS'),'GestãoClick'),
   card('orange','↗','Aguardando envio',statusCount('AGUARDANDO_ENVIO'),statusDetail('AGUARDANDO_ENVIO'),'GestãoClick'),
   card('red','↶','Retornos',statusCount('RETORNO'),statusDetail('RETORNO'),'GestãoClick'),
-  card('navy','💰',crRecebidosMes().label,(crRecebidosMes().label==='Recebidos — Outubro'?'R$ 13.964,09':'—'),(crRecebidosMes().label==='Recebidos — Outubro'?'Valor confirmado em 09/10/2026 • atualização automática pendente':'Total ainda não confirmado para este mês'),'GestãoClick')
+  receivedKpi()
  ].join('');
  stamp();
 }
