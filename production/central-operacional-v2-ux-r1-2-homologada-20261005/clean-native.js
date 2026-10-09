@@ -28,10 +28,20 @@ function card(cls,ic,l,v,d,s){return '<article class="cr-op-card '+cls+'"><div c
 function renderKpis(){
  const h=$('#kpis');if(!h)return;
  const k=state.fast?.kpis||{},waiting=state.errors.fast?'Leitura rápida indisponível — nova tentativa automática':'Conectando…';
+ const statusRows=state.budgets?.statuses?mergeBudgetStatuses(state.budgets.statuses):[];
+ const statusCount=key=>{
+  if(!state.budgets)return '—';
+  return statusRows.filter(x=>x.canonical_key===key).reduce((sum,x)=>sum+(Number(x.count)||0),0);
+ };
+ const statusDetail=state.budgets?'Orçamentos • GestãoClick':(state.errors.budgets?'Fonte indisponível': 'Carregando GestãoClick…');
  h.innerHTML=[
   card('blue','⚙','Serviços em andamento',k.services_in_progress?.count??'—',state.fast?'Fonte operacional real':waiting,'Trello'),
   card('green','$','Aguardando pagamento',k.awaiting_payment?.count??'—',state.fast?brl(k.awaiting_payment?.amount_cents):waiting,'GestãoClick'),
-  card('amber','✓','Aguardando acerto',k.awaiting_adjustment?.count??'—',state.fast?brl(k.awaiting_adjustment?.amount_cents):waiting,'GestãoClick')
+  card('amber','✓','Aguardando acerto',k.awaiting_adjustment?.count??'—',state.fast?brl(k.awaiting_adjustment?.amount_cents):waiting,'GestãoClick'),
+  card('blue','✎','Em elaboração',statusCount('EM_ELABORACAO'),statusDetail,'GestãoClick'),
+  card('blue','▤','Elaborados',statusCount('ELABORADOS'),statusDetail,'GestãoClick'),
+  card('amber','↗','Aguardando envio',statusCount('AGUARDANDO_ENVIO'),statusDetail,'GestãoClick'),
+  card('amber','↶','Retornos',statusCount('RETORNO'),statusDetail,'GestãoClick')
  ].join('');
  stamp();
 }
@@ -134,7 +144,9 @@ function canonicalBudgetStatus(v){
  if(/AGUARDANDO ENVIO/.test(n))return{key:'AGUARDANDO_ENVIO',name:'Aguardando envio'};
  if(/ENVIAD/.test(n))return{key:'ENVIADO',name:'Enviado'};
  if(/ANALIS/.test(n))return{key:'EM_ANALISE',name:'Em análise'};
- if(/ELABOR/.test(n))return{key:'EM_ELABORACAO',name:'Em elaboração'};
+ if(/^(ELABORADO|ELABORADOS|ORCAMENTO ELABORADO|ORCAMENTOS ELABORADOS)$/.test(n))return{key:'ELABORADOS',name:'Elaborados'};
+ if(/EM ELABORACAO|ELABORANDO|EM ELABOR/.test(n))return{key:'EM_ELABORACAO',name:'Em elaboração'};
+ if(/ELABOR/.test(n))return{key:'ELABORADOS',name:'Elaborados'};
  if(/ORCAMENT/.test(n))return{key:'ORCAMENTO',name:'Orçamento'};
  if(/NOVO/.test(n))return{key:'NOVO',name:'Novo'};
  if(/VISITA|AGENDAMENTO|AGENDADO/.test(n))return{key:'AGENDADO',name:'Agendado'};
@@ -170,7 +182,7 @@ function renderBudgets(){
   }
   return;
  }
- const rows=mergeBudgetStatuses(d.statuses).sort((a,b)=>(Number(b.count)||0)-(Number(a.count)||0)||String(a.name).localeCompare(String(b.name),'pt-BR'));
+ const rows=mergeBudgetStatuses(d.statuses).filter(x=>! /^(PEDIDO EMBALADO|PEDIDO ENTREGUE)$/.test(budgetNorm(x.name))).sort((a,b)=>(Number(b.count)||0)-(Number(a.count)||0)||String(a.name).localeCompare(String(b.name),'pt-BR'));
  const max=Math.max(1,...rows.map(x=>Number(x.count)||0));
  h.innerHTML=rows.length?rows.map(x=>{
    const count=Number(x.count)||0,color=budgetColor(x.name),pct=count?Math.max(3,Math.round(count/max*100)):0;
@@ -307,7 +319,7 @@ async function refreshBudgets(){
  }catch(err){
   state.errors.budgets=String(err);
  }
- renderBudgets();renderHealth();
+ renderBudgets();renderKpis();renderHealth();
 }
 
 const MATURITY='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/centro-operacoes';
