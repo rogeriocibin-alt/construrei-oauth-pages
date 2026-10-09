@@ -1,3 +1,16 @@
+## HOMOLOGAÇÃO FINAL DASHBOARD FINANCEIRO V11 — 09/10/2026
+
+- Aprovação expressa de Rogério em 09/10/2026: **Capital de Giro** (débito no Trello e redução no Dashboard confirmados) e **leitor de comprovantes Cora Manual** (favorecido ZAMP S.A. identificado em PDF de teste) **HOMOLOGADOS**.
+- **Link oficial mantido sem modificação:** https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v4/
+- Pasta de produção mantida: `production/dashboard-financeiro-v4-homologado-20261007/index.html`. Promoção da UI V11: commit `20579d15d2a88812425070937a80eed5cc8e18c3`.
+- Rollback anterior ao release: branch `checkpoint/financeiro-v4-pre-v11-promotion-20261009`; base anterior `24c56f1d1711e70e73d643f530dd2027ff4c7970` (SHA do blob da UI).
+- Endpoint de despesas preservado: `cr-capital-despesas-v11-candidate-20261009` v3 (nome técnico histórico, agora utilizado pela produção aprovada). Sem repetição de débitos de teste.
+- Fonte canônica Trello para saldos; Dashboard apenas consulta/espelha; custo por período com lançamento datado e deduplicação. Cora Manual recebe um comprovante por vez, extrai valor/favorecido, método, data e referência com revisão antes de lançar.
+- Banco Mestre do Gestor: `FIN-V11-CAPITAL-GIRO-20261009` e `FIN-V11-CORA-COMPROVANTES-20261009` → **Concluído / HOMOLOGADO / produção**, ambos com aprovação humana.
+- **Limite de verificação:** promoção e leitura do GitHub confirmadas; ferramenta externa não conseguiu abrir o URL público para teste HTTP após deploy. Validação humana anterior foi na candidata. Não confundir commit de produção com QA HTTP final.
+- Regra antirregressão: manter URL oficial e componentes anteriores; qualquer nova melhoria em candidata isolada, checkpoint antes de promoção e não reabrir obras fechadas.
+- Pendência distinta: **anexar fisicamente o comprovante ao Trello** não foi verificado como funcionando; extração e pré-preenchimento não garantem upload de arquivo para o card.
+
 ## HOMOLOGAÇÃO PARCIAL FINANCEIRO V11 — 09/10/2026
 
 - **Capital de Giro HOMOLOGADO pela diretoria** após teste de débito real: Rogério confirmou que a operação foi gravada no Trello e o saldo foi reduzido corretamente tanto no Trello quanto no Dashboard.
