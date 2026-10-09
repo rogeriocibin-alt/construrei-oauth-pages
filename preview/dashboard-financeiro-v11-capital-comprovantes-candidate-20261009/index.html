@@ -485,8 +485,10 @@ function parseSmartReceipt(t){
  let direction=/\b(recebido|entrada|crédito em conta|você recebeu)\b/i.test(flat)?'IN':'OUT';
  let payment=/\bPIX\b|chave pix|end.to.end|e2e/i.test(flat)?'PIX':/\bTED\b/i.test(flat)?'TED':/\bDOC\b/i.test(flat)?'DOC':/boleto|linha digitável/i.test(flat)?'Boleto':/cartão|débito|crédito/i.test(flat)?'Cartão':/transferência/i.test(flat)?'Transferência':/dinheiro|espécie/i.test(flat)?'Dinheiro':'';
  const receiver=labels(lines,[/(?:^|\b)(?:nome\s+d[oa]\s+)?(?:favorecido|benefici[aá]rio|destinat[aá]rio|recebedor|quem recebeu|recebido por)\s*[:\-]\s*([^\n]+?)(?=\s+(?:CPF|CNPJ|Institui[cç][aã]o|Banco|Ag[eê]ncia|Conta|Data|Valor)\s*[:\-]|$)/i,/^(?:para|nome do destinat[aá]rio)\s*[:\-]\s*(.+)/i]);
+ const receiverFromSection=(()=>{for(let i=0;i<lines.length;i++){if(/^(?:dados (?:do|da) )?(?:favorecido|benefici[aá]rio|destinat[aá]rio|recebedor|quem recebeu|recebido por|dados de quem recebeu|para quem)$/i.test(lines[i].replace(/[:\-]$/,''))){for(let j=i+1;j<=Math.min(lines.length-1,i+4);j++){let candidate=lines[j].replace(/^(?:nome(?: completo)?|raz[aã]o social)\s*[:\-]?\s*/i,'').trim();if(candidate.length>3&&!/^(?:cpf|cnpj|banco|institui[cç][aã]o|ag[eê]ncia|conta|chave|valor|data|pix|documento|id|tipo)\b/i.test(candidate)&&!/^\d{2,}/.test(candidate))return candidate;}}}return '';})();
+ const receiverWithName=labels(lines,[/^(?:nome(?: completo)?|raz[aã]o social)\s*[:\-]\s*(.+)/i]);
  const payer=labels(lines,[/^(?:pagador|remetente|de|quem enviou|origem)\s*[:\-]?\s*(.+)/i]);
- const party=direction==='IN'?(payer||receiver):(receiver||payer);
+ const party=direction==='IN'?(payer||receiver||receiverFromSection):(receiver||receiverFromSection||receiverWithName||payer);
  const values=[];
  for(const line of lines){
   for(const m of line.matchAll(/(?:R\$\s*|(?:valor|total|pago|transferido|recebido)\s*[:\-]?\s*)([0-9.]+,[0-9]{2})/gi)){
