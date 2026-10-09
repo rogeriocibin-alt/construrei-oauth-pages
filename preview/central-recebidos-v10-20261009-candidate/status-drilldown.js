@@ -47,7 +47,7 @@ function renderKpis(){
   card('teal','▤','Elaborados',statusCount('ELABORADOS'),statusDetail('ELABORADOS'),'GestãoClick'),
   card('orange','↗','Aguardando envio',statusCount('AGUARDANDO_ENVIO'),statusDetail('AGUARDANDO_ENVIO'),'GestãoClick'),
   card('red','↶','Retornos',statusCount('RETORNO'),statusDetail('RETORNO'),'GestãoClick'),
-  card('navy','✓',crRecebidosMes().label,'—','Total aguardando integração financeira','GestãoClick')
+  card('navy','✓',crRecebidosMes().label,(crRecebidosMes().label==='Recebidos — Outubro'?'R$ 13.964,09':'—'),(crRecebidosMes().label==='Recebidos — Outubro'?'Valor confirmado em 09/10/2026 • atualização automática pendente':'Total ainda não confirmado para este mês'),'GestãoClick')
  ].join('');
  stamp();
 }
