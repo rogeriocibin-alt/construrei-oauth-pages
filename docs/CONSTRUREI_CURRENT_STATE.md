@@ -1,3 +1,11 @@
+## HOMOLOGAÇÃO PARCIAL FINANCEIRO V11 — 09/10/2026
+
+- **Capital de Giro HOMOLOGADO pela diretoria** após teste de débito real: Rogério confirmou que a operação foi gravada no Trello e o saldo foi reduzido corretamente tanto no Trello quanto no Dashboard.
+- Função candidata: `cr-capital-despesas-v11-candidate-20261009` v3. Manter lógica e histórico sem repetir débitos. Fonte Trello, saldo espelhado no Dashboard.
+- Gestor mestre `cc_items.FIN-V11-CAPITAL-GIRO-20261009`: Concluído; homologação funcional parcial. Não confundir com promoção da candidata inteira para produção. V4 oficial não alterada.
+- **Leitor de comprovantes Cora Manual → Trello NÃO homologado**: falha de favorecido permanece. Aguardando PDF original do usuário para diagnosticar extração/layout. Gestor `cc_items.FIN-V11-CORA-COMPROVANTES-20261009`: Em validação.
+- Candidata única V11 preservada: https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-financeiro-v11-capital-comprovantes-candidate-20261009/index.html
+
 ## HOTFIX CANDIDATA FINANCEIRO V11 — 09/10/2026
 
 - Candidata única mantida: https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-financeiro-v11-capital-comprovantes-candidate-20261009/index.html
