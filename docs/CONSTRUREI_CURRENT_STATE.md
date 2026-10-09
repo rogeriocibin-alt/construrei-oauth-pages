@@ -1,3 +1,12 @@
+## HOTFIX CANDIDATA FINANCEIRO V11 — 09/10/2026
+
+- Candidata única mantida: https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-financeiro-v11-capital-comprovantes-candidate-20261009/index.html
+- Interface commit `9905a5658c55df432e96c603bc6605490fb558b5`: extração refinada de comprovante, beneficiário/origem, método PIX/TED/boleto/cartão, natureza, categoria, data/referência, prévia e preenchimento dos campos; OCR como fallback de PDF digitalizado.
+- Supabase função candidata `cr-capital-despesas-v11-candidate-20261009` versão 2: corrigida a captura do marcador `CG_CREDIT` antes do débito real, preservada origem do período.
+- Teste funcional do usuário prévio: distribuição de Capital de Giro correta, mas gravação Trello e redução do saldo não ocorreram; leitor anterior preencheu somente valor. Correções aguardam novo teste real end-to-end. **Não declarar sincronismo financeiro comprovado até conferência do Trello, saldo e Central após débito confirmado**.
+- A evidência do comprovante permanece no dispositivo; leitura/preenchimento não significa que o arquivo já foi anexado ao card Trello. Tratamento de anexo persistente permanece pendente.
+- Oficial V4 mantido sem alterações. Antes da homologação verificar publicação GitHub Pages, fluxo de confirmação, Trello, dashboard, Central e duplicidade em retry.
+
 ## CANDIDATA ÚNICA — FINANCEIRO V11 — CAPITAL DE GIRO + COMPROVANTES (09/10/2026)
 
 - Diretoria solicitou duas melhorias numa única candidata, **SEM PROMOÇÃO À PRODUÇÃO** antes de validação.
