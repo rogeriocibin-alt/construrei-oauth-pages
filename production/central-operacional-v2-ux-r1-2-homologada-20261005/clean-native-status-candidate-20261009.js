@@ -5,7 +5,7 @@ const BUILD='CR-CENTRAL-HERO-FULL-BG-20261004';
 const FAST='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-executive-readonly-v12-1-candidate-20261003?view=public-home';
 const PENDING='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-pendencias-executive-v2-candidate-20261004';
 const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-executive-v12-1-candidate-20261003?view=public';
-const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v3-candidate-20261004';
+const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v4-elaborados-20261009';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
