@@ -33,15 +33,19 @@ function renderKpis(){
   if(!state.budgets)return '—';
   return statusRows.filter(x=>x.canonical_key===key).reduce((sum,x)=>sum+(Number(x.count)||0),0);
  };
- const statusDetail=state.budgets?'Orçamentos • GestãoClick':(state.errors.budgets?'Fonte indisponível': 'Carregando GestãoClick…');
+ const statusDetail=key=>{
+  if(!state.budgets)return state.errors.budgets?'Fonte indisponível':'Carregando GestãoClick…';
+  const sum=statusRows.filter(x=>x.canonical_key===key).reduce((a,x)=>a+Number(x.total_cents||0),0);
+  return brl(sum);
+ };
  h.innerHTML=[
-  card('blue','⚙','Serviços em andamento',statusCount('EM_ANDAMENTO'),statusDetail,'GestãoClick'),
-  card('green','$','Aguardando pagamento',statusCount('AGUARDANDO_PAGAMENTO'),statusDetail,'GestãoClick'),
-  card('amber','✓','Aguardando acerto',statusCount('AGUARDANDO_ACERTO'),statusDetail,'GestãoClick'),
-  card('purple','✎','Em elaboração',statusCount('EM_ELABORACAO'),statusDetail,'GestãoClick'),
-  card('teal','▤','Elaborados',statusCount('ELABORADOS'),statusDetail,'GestãoClick'),
-  card('orange','↗','Aguardando envio',statusCount('AGUARDANDO_ENVIO'),statusDetail,'GestãoClick'),
-  card('red','↶','Retornos',statusCount('RETORNO'),statusDetail,'GestãoClick')
+  card('blue','⚙','Serviços em andamento',statusCount('EM_ANDAMENTO'),statusDetail('EM_ANDAMENTO'),'GestãoClick'),
+  card('green','$','Aguardando pagamento',statusCount('AGUARDANDO_PAGAMENTO'),statusDetail('AGUARDANDO_PAGAMENTO'),'GestãoClick'),
+  card('amber','✓','Aguardando acerto',statusCount('AGUARDANDO_ACERTO'),statusDetail('AGUARDANDO_ACERTO'),'GestãoClick'),
+  card('purple','✎','Em elaboração',statusCount('EM_ELABORACAO'),statusDetail('EM_ELABORACAO'),'GestãoClick'),
+  card('teal','▤','Elaborados',statusCount('ELABORADOS'),statusDetail('ELABORADOS'),'GestãoClick'),
+  card('orange','↗','Aguardando envio',statusCount('AGUARDANDO_ENVIO'),statusDetail('AGUARDANDO_ENVIO'),'GestãoClick'),
+  card('red','↶','Retornos',statusCount('RETORNO'),statusDetail('RETORNO'),'GestãoClick')
  ].join('');
  stamp();
 }
@@ -436,28 +440,24 @@ function crDrillUI(){
  node.onclick=e=>{if(e.target===node)node.hidden=true};
  return node;
 }
+const CR_GC_LOGIN='https://gestaoclick.com/login/';
 async function crOpenDrill(key,title){
  const node=crDrillUI();node.hidden=false;
  const statuses=state.budgets?.statuses?mergeBudgetStatuses(state.budgets.statuses):[];
  const status=statuses.find(s=>s.canonical_key===key);
+ const count=status?Number(status.count)||0:null;
+ const cents=status?Number(status.total_cents)||0:null;
  node.querySelector('#crdTitle').textContent=title||status?.name||key;
- node.querySelector('#crdCount').textContent=status?status.count+' registro(s) nesta situação':'Consultando GestãoClick…';
- const body=node.querySelector('#crdBody');body.textContent='Carregando registros com acesso controlado…';
- try{
-  const session=sessionStorage.getItem('crGestaoSession')||'';
-  if(!session){body.innerHTML='<p>Para consultar os registros individualmente, entre na Central com o acesso administrativo Rogério ou Éder. Os totais permanecem visíveis sem login.</p>';return}
-  const url=BUDGET_STATUS+'?view=items&status='+encodeURIComponent(key);
-  const r=await fetch(url,{cache:'no-store',headers:{'x-cr-session':session}});
-  const d=await r.json().catch(()=>({}));
-  if(!r.ok||!d.ok)throw Error(d.error||'CONSULTA_INDISPONIVEL');
-  if(!d.complete){body.innerHTML='<p>Consulta parcial: a leitura não cobriu todos os orçamentos. Confira no GestãoClick antes de tomar decisões.</p>'}
-  else body.replaceChildren();
-  const items=Array.isArray(d.items)?d.items:[];
-  const ul=document.createElement('ul');ul.className='crd-list';
-  items.forEach(x=>{const li=document.createElement('li');const b=document.createElement('button');b.type='button';b.textContent='Copiar número';b.onclick=()=>navigator.clipboard?.writeText(String(x.numero||x.id));const span=document.createElement('span');span.textContent='Orçamento '+String(x.numero||x.id||'sem número')+' • '+String(x.status||'');li.append(span,b);ul.appendChild(li)});
-  if(!items.length)body.textContent='Nenhum registro encontrado nesta situação.';
-  else body.appendChild(ul);
- }catch(e){body.textContent='Não foi possível abrir os detalhes: '+String(e?.message||e)+'. Os indicadores consolidados não foram alterados.'}
+ node.querySelector('#crdCount').textContent=(count==null?'Contagem não disponível':count+' orçamento(s)')+' • SOMA '+(cents==null?'indisponível':brl(cents));
+ const body=node.querySelector('#crdBody');
+ body.replaceChildren();
+ const intro=document.createElement('p');
+ intro.textContent='Acesso ao Gestão Click: faça login com sua senha ou conta Google, caso a sessão não esteja aberta.';
+ const login=document.createElement('a');login.href=CR_GC_LOGIN;login.target='_blank';login.rel='noopener noreferrer';login.className='crd-gc-link';login.textContent='Abrir Gestão Click • Senha ou Google ↗';
+ const hint=document.createElement('p');hint.textContent='Situação selecionada: '+(title||status?.name||key)+'. Após entrar, abra Orçamentos → Serviços → Busca avançada → Situação e selecione este status.';
+ const copy=document.createElement('button');copy.type='button';copy.textContent='Copiar situação para o filtro';copy.className='crd-gc-copy';copy.onclick=()=>{if(navigator.clipboard?.writeText)navigator.clipboard.writeText(title||status?.name||key).then(()=>{copy.textContent='Situação copiada ✓'}).catch(()=>{});};
+ body.append(intro,login,hint,copy);
+ const note=document.createElement('p');note.className='crd-gc-note';note.textContent='O Gestão Click não confirmou um link profundo público que preserve esse filtro após autenticação. O acesso seguro abre o sistema oficial; a situação fica indicada para localizar os registros.';body.append(note);
 }
 function crBindDrill(){
  const k=document.querySelectorAll('#kpis .cr-op-card');
