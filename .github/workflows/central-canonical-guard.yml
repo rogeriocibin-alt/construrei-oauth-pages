@@ -33,7 +33,9 @@ jobs:
         shell: bash
         run: |
           actual="$(git hash-object production/central-homologada-20261001/index.html)"
-          expected="d7e3a3d30bb1b0f4927d661deab75f48205ff8ea"
+          # Hash from owner-confirmed homologation commit a5bc15c3adc297 (2026-10-04).
+          # Main file remains byte-identical to that authorized promotion.
+          expected="a4d58cf22090e3aa51010720c27978ec476335a5"
           test "$actual" = "$expected" || {
             echo "ERROR: homologated Central baseline was modified."
             echo "Expected $expected, got $actual"
