@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#07185d">
+<title>Cofre Zero • Controle Móvel | CONSTRU-REI</title>
+<link rel="manifest" href="../manifest.webmanifest"><link rel="icon" href="../pwa-icon.svg" type="image/svg+xml">
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#07102e;color:#f3f7ff}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 60% -25%,#123d91 0,#091d4f 35%,#07102e 69%);padding-bottom:40px}
+a{color:#acd8ff;text-decoration:none}.wrap{max-width:780px;margin:auto;padding:18px 15px 32px}
+.top{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:12px}.brand img{width:46px;height:46px}.brand b{display:block;font-size:16px}.brand small{color:#b2c4e2}
+.back{background:#152952;border:1px solid #4062a4;border-radius:12px;padding:10px 12px;white-space:nowrap;font-size:13px}
+.eyebrow{color:#83bbf9;font-size:11px;letter-spacing:.16em;font-weight:850}
+h1{font-size:clamp(27px,6vw,40px);letter-spacing:-.04em;margin:8px 0}h2{font-size:18px;margin:0}p{color:#c4d0e9;line-height:1.48;margin:6px 0 14px}
+.lead{margin-bottom:19px}.meta{font-size:12px;color:#a6b9dc;padding:7px 0 12px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:17px}
+button,.btn{border:1px solid #4165a8;border-radius:13px;min-height:47px;padding:11px 10px;font-size:14px;font-weight:700;cursor:pointer;background:#1b386f;color:#fff;text-align:center}
+button.primary{background:#2084e9;border-color:#57b2ff;color:white}button:disabled{opacity:.55;cursor:wait}
+.alert{padding:13px 14px;background:#15294a;border:1px solid #3b598c;border-radius:14px;font-size:13px;margin-bottom:15px;line-height:1.5}
+.alert.error{border-color:#af6174;background:#351d35}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:17px}
+.stat,.panel{border:1px solid #334d7f;background:linear-gradient(160deg,#10264f,#0a1938);border-radius:17px;padding:16px;min-width:0}
+.stat span{display:block;color:#aac1e9;font-size:12px;font-weight:700}.stat b{font-size:25px;display:block;margin:5px 0}.stat small{font-size:11px;color:#8fafdf}
+.panel{margin-bottom:12px}.panel-title{display:flex;justify-content:space-between;gap:10px;align-items:center}.pill{font-size:11px;font-weight:800;display:inline-block;padding:5px 8px;border-radius:20px;background:#294464;border:1px solid #53739b;color:#cfe9ff;white-space:nowrap}
+.pill.ok{background:#163c39;color:#98f0ce;border-color:#347e66}
+.pill.bad{background:#462738;color:#ffb2bf;border-color:#884f66}
+.pill.warn{background:#4b3b21;color:#fbd491;border-color:#846e3d}
+.details{display:grid;gap:6px;margin:12px 0;color:#cbd9ef;font-size:13px}.details b{color:#f6f9ff}
+.evidence{font-size:12px;color:#a1c9f9;text-decoration:underline;text-underline-offset:3px}
+.foot{margin-top:22px;border-top:1px solid #334768;padding-top:16px;font-size:12px;color:#b5c6e0;line-height:1.55}
+#copyNotice{font-size:12px;color:#9af0c8;padding:4px}
+@media(min-width:680px){.stats{grid-template-columns:repeat(4,1fr)}.wrap{padding-top:24px}.actions{display:flex}.actions>*{flex:1}}
+</style></head>
+<body><main class="wrap">
+<header class="top"><div class="brand"><img src="../pwa-icon.svg" alt=""><div><b>APP CONSTRU-REI</b><small>Gestor do Projeto • módulo operacional</small></div></div><a class="back" href="../">← Gestor</a></header>
+<div class="lead"><div class="eyebrow">INFRAESTRUTURA • CONTROLE MÓVEL</div><h1>Cofre Zero</h1>
+<p>Uma visão no celular, alimentada pelos executores da nuvem. Sem notebook, sem Work e sem precisar abrir cada provedor para consultar o andamento.</p></div>
+<div class="actions"><button class="primary" id="refresh">↻ Atualizar agora</button><button id="copy">Copiar checkpoint</button></div>
+<div id="alert" class="alert" role="status" aria-live="polite">Conectando aos registros de execução…</div>
+<div class="stats">
+ <div class="stat"><span>Motor do backup</span><b id="motor">…</b><small>Supabase • leitura direta</small></div>
+ <div class="stat"><span>Último inventário</span><b id="items">…</b><small>Registros totais</small></div>
+ <div class="stat"><span>Quadros Trello</span><b id="boards">13*</b><small>*Último levantamento verificado</small></div>
+ <div class="stat"><span>Execuções GitHub</span><b id="runs">…</b><small>Últimas rotinas observadas</small></div>
+</div>
+<section aria-label="Estado dos componentes" id="panels"></section>
+<div id="copyNotice" role="status" aria-live="polite"></div>
+<footer class="foot"><b>Governança CONSTRU-REI</b> · Esta tela é somente leitura. Não contém senhas ou tokens administrativos; a chave pública usada para consulta não concede controle do banco. Uma rotina verde representa execução bem-sucedida, não certificação de restauração integral. Backups incompletos continuam identificados. A versão homologada do Gestor, a Central e o backup Cloud Run não são alterados por esta página.</footer>
+</main>
+<script>
+(()=>{'use strict';
+const ENDPOINT='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-cofre-mobile-status-v1?api=status';
+const ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
+const $=id=>document.getElementById(id);
+const esc=v=>String(v==null?'—':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\u0027':'&#39;'}[c]));
+const when=v=>{try{return v?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(v)):'Sem registro'}catch{return 'Data inválida'}};
+const label=x=>x==='success'?'APROVADA':x==='failure'?'FALHOU':x==='cancelled'?'CANCELADA':x==='in_progress'||x==='queued'?'EXECUTANDO':x==='completed'?'CONCLUÍDA':x?'EM VERIFICAÇÃO':'NÃO VERIFICADA';
+const state={last:null};
+function card(title,code,info,details,link){
+ const kind=code==='success'||code==='completed'?'ok':code==='failure'?'bad':'warn';
+ return '<article class="panel"><div class="panel-title"><h2>'+esc(title)+'</h2><span class="pill '+kind+'">'+esc(label(code))+'</span></div><p>'+esc(info)+'</p><div class="details">'+details.map(x=>'<div>'+esc(x)+'</div>').join('')+'</div>'+(link?'<a class="evidence" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">Consultar execução oficial ↗</a>':'')+'</article>';
+}
+function render(d,offline=false){
+ state.last=d;const sup=d?.sources?.supabase||{},gh=d?.sources?.github||{},last=sup.latest||{};
+ const arr=Array.isArray(gh.workflows)?gh.workflows:[],find=p=>arr.find(x=>x.name.includes(p))?.latest||null;
+ const archive=find('Immutable daily'),trello=find('Trello full'),netlify=find('Netlify static'),git=find('Git offsite'),edge=find('Edge baseline');
+ $('motor').textContent=sup.ok?'ATIVO':'—';$('items').textContent=Number.isFinite(Number(last.record_count))?Number(last.record_count).toLocaleString('pt-BR'):'—';
+ $('boards').textContent='13*';$('runs').textContent=arr.filter(x=>!!x.latest).length+'/'+arr.length;
+ const details=(run,scope)=>[scope,run?'Início: '+when(run.created_at):'Sem execução recente',run?'Ramo: '+run.branch:'Verificação ainda necessária'];
+ let html=card('Inventário Supabase / Trello / Click',last.status,sup.ok?'Dados persistidos no Supabase, consulta sem alterar origem.':'A fonte não pôde ser consultada nesta leitura.',[
+ 'Última coleta: '+when(last.finished_at||last.started_at),
+ 'Páginas contabilizadas: '+(last.page_count??'—'),
+ 'Trello: 13 quadros com contexto; anexos binários não cobertos por esta rotina.'
+ ],null);
+ html+=card('Histórico diário imutável',archive?.conclusion||archive?.status,'Rotina GitHub do histórico integral; verificação de restauração SQL completa é um teste separado.',details(archive,'Cloud Run é o executor diário independente; o GitHub conserva o histórico.'),archive?.url);
+ html+=card('Trello: anexos e recuperação offsite',trello?.conclusion||trello?.status,'A coleta semanal de contexto não substitui o arquivo integral dos anexos. O PR #47 continua isolado enquanto falhar.',details(trello,'Falha identificada anteriormente: 401 na credencial de gerenciamento Supabase.'),trello?.url);
+ html+=card('Netlify: sites estáticos',netlify?.conclusion||netlify?.status,'Recuperação de 1 dos 7 sites. Os outros seis não apresentaram arquivos publicados no ensaio.',details(netlify,'Não confundir backup parcial com cobertura total.'),netlify?.url);
+ html+=card('Cópias de código e auditoria Edge',git?.conclusion||git?.status,'Backups e auditorias independentes, sem promover versões candidatas automaticamente.',[
+ 'Git: '+label(git?.conclusion||git?.status),
+ 'Edge: '+label(edge?.conclusion||edge?.status),
+ 'Funções, segredos e integrações exigem cobertura e teste próprios.'
+ ],git?.url);
+ $('panels').innerHTML=html;
+ $('alert').className='alert'+(!sup.ok&&!gh.ok?' error':'');
+ $('alert').textContent=(offline?'Sem rede: exibindo última leitura local. ':'')+(sup.ok&&gh.ok?'Conectado aos registros do Supabase e GitHub.':sup.ok?'Supabase conectado; GitHub sem resposta nesta consulta.':gh.ok?'GitHub conectado; status do Supabase indisponível.':'Sem confirmação de fontes ao vivo.')+' Atualização: '+when(d.generated_at);
+}
+async function refresh(){
+ $('refresh').disabled=true;$('refresh').textContent='Consultando…';
+ try{
+  const ctrl=new AbortController(),t=setTimeout(()=>ctrl.abort(),15000);
+  let r;try{r=await fetch(ENDPOINT,{cache:'no-store',headers:{Authorization:'Bearer '+ANON,apikey:ANON,Accept:'application/json'},signal:ctrl.signal})}finally{clearTimeout(t)}
+  if(!r.ok)throw Error('HTTP '+r.status);
+  const body=await r.json();if(!body.ok)throw Error('Não foi possível confirmar as fontes.');
+  localStorage.setItem('cr-cofre-mobile-readonly-v1',JSON.stringify(body));render(body);
+ }catch(e){
+  try{const previous=localStorage.getItem('cr-cofre-mobile-readonly-v1');if(previous){render(JSON.parse(previous),true);return}}catch(_){}
+  $('alert').className='alert error';$('alert').textContent='Não foi possível obter o estado atual ('+String(e?.message||e)+'). Nenhum backup foi iniciado ou modificado.';
+ }finally{$('refresh').disabled=false;$('refresh').textContent='↻ Atualizar agora'}
+}
+$('copy').addEventListener('click',async()=>{
+ const d=state.last;if(!d){$('copyNotice').textContent='Atualize primeiro para gerar o checkpoint.';return}
+ const sup=d.sources?.supabase||{},gh=d.sources?.github||{};
+ const lines=['COFRE ZERO • CHECKPOINT MÓVEL','Leitura: '+when(d.generated_at),'Supabase: '+(sup.ok?'conectado':'indisponível'),
+ 'Inventário: '+(sup.latest?.record_count??'sem leitura')+' registros em '+(sup.latest?.page_count??'—')+' páginas',
+ ...((gh.workflows||[]).map(x=>x.name+': '+label(x.latest?.conclusion||x.latest?.status)+' ('+when(x.latest?.created_at)+')')),
+ 'Observação: informações de execução, não certificação de restauração total.'];
+ const text=lines.join('\n');
+ try{await navigator.clipboard.writeText(text);$('copyNotice').textContent='Checkpoint copiado.'}
+ catch(_){$('copyNotice').textContent='Não foi possível copiar automaticamente. Utilize compartilhar pelo navegador.'}
+});
+$('refresh').addEventListener('click',refresh);refresh();
+})();
+</script></body></html>
