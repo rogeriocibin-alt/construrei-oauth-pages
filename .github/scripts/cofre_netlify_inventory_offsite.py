@@ -20,6 +20,7 @@ def get(path,raw=False):
     url=path if path.startswith(BASE+"/") else BASE+path
     if not url.startswith(BASE+"/"): raise RuntimeError("Unapproved host")
     headers={"Authorization":"Bearer "+TOKEN,"Accept":"application/vnd.bitballoon.v1.raw" if raw else "application/json"}
+    if raw:headers["Content-Type"]="application/vnd.bitballoon.v1.raw"
     req=urllib.request.Request(url,headers=headers,method="GET")
     with urllib.request.urlopen(req,timeout=90) as r:
         return r.read(),r.headers.get("Link","")
@@ -47,7 +48,7 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 def site_inventory(name,site):
     item=obj("/sites/"+site)
-    dep=item.get("published_deploy_id") or (item.get("published_deploy") or {}).get("id")
+    dep=(item.get("published_deploy") or {}).get("id") or item.get("published_deploy_id")
     result={"name":name,"id":site,"site_url":item.get("url"),"published_deploy_id":dep,"state":"UNPUBLISHED","static_files":0}
     if not dep:return result
     files=listing(site)
