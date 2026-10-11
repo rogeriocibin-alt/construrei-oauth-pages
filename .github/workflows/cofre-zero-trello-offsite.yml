@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 concurrency:
   group: cofre-zero-trello-offsite
@@ -20,22 +21,17 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 90
     env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
       TRELLO_MAX_BYTES: "2147483648"
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Verify script without accessing Trello
+      - name: Validate OIDC code and offsite Drive configuration
         shell: bash
         run: |
           set -euo pipefail
           python3 -m py_compile .github/scripts/cofre_trello_readonly.py .github/scripts/cofre_trello_bootstrap.py .github/scripts/cofre_trello_restore.py
-          test -n "$SUPABASE_ACCESS_TOKEN" || {
-            echo "::error::Existing Supabase authorization absent; nothing exported"
-            exit 2
-          }
           test -n "$RCLONE_CONFIG_B64" || {
             echo "::error::Cloud Drive credential not configured; nothing exported"
             exit 2
@@ -47,7 +43,7 @@ jobs:
           chmod 600 "$HOME/.config/rclone/rclone.conf"
           rclone lsd construrei-drive: >/dev/null
 
-      - name: Read-only Trello archive and restore check
+      - name: GitHub OIDC authorized read-only Trello archive and restore check
         shell: bash
         env:
           TRELLO_EXPORT_DIR: ${{ runner.temp }}/trello-private/trello-data
