@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   backup:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
@@ -164,14 +164,33 @@ jobs:
             echo "SOURCE_PROJECT: $PROJECT_REF"
           } > BACKUP_STATUS.txt
 
-      - name: Publish to Google Drive with history
+      - name: Publish immutable, complete daily recovery point first
         shell: bash
         run: |
           set -euo pipefail
           RUN_ID="${{ steps.prep.outputs.run_id }}"
           WORK="${{ steps.prep.outputs.work }}"
+          SNAPSHOT="construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL/$RUN_ID"
+          # HISTORY/ is legacy *changed-before-update* data, not a complete daily snapshot.
+          # Never overwrite or purge that legacy archive.
+          # Upload new point-in-time data before touching CURRENT.
+          rclone copy "$WORK" "$SNAPSHOT" --immutable --create-empty-src-dirs --checkers 8 --transfers 4
+          rclone check "$WORK" "$SNAPSHOT"
+          rclone copyto "$SNAPSHOT/BACKUP_STATUS.txt" "$RUNNER_TEMP/archive-status-readback.txt"
+          cmp "$WORK/BACKUP_STATUS.txt" "$RUNNER_TEMP/archive-status-readback.txt"
+          rclone copyto "$SNAPSHOT/SHA256SUMS.txt" "$RUNNER_TEMP/archive-sha-readback.txt"
+          cmp "$WORK/SHA256SUMS.txt" "$RUNNER_TEMP/archive-sha-readback.txt"
+          echo "Immutable full recovery point verified: HISTORY_FULL/$RUN_ID"
+
+      - name: Update CURRENT only after full history passes verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          RUN_ID="${{ steps.prep.outputs.run_id }}"
+          WORK="${{ steps.prep.outputs.work }}"
+          # Preserve replaced/deleted CURRENT files without mixing them into HISTORY_FULL.
           rclone sync "$WORK" construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT \
-            --backup-dir "construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY/$RUN_ID" \
+            --backup-dir "construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_DELTAS/$RUN_ID" \
             --create-empty-src-dirs
           rclone check "$WORK" construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT
 

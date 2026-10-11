@@ -1,0 +1,107 @@
+name: Cofre Zero | Immutable daily full archive
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '32 6 * * *'
+  push:
+    branches:
+      - checkpoint/cofre-zero-archive-full-20261011
+    paths:
+      - .github/workflows/cofre-zero-history-full.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cofre-zero-history-full
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+      SOURCE: construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT
+      ARCHIVE_ROOT: construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL
+    steps:
+      - name: Connect to independent private Google Drive
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64" || { echo "::error::Missing RCLONE_CONFIG_B64"; exit 2; }
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone lsd construrei-drive: >/dev/null
+
+      - name: Preserve, verify, and recovery-test full daily archive
+        id: snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          STATUS="$(rclone cat "$SOURCE/BACKUP_STATUS.txt")"
+          printf '%s\n' "$STATUS" | grep -Fxq 'CONSTRU-REI CLOUD BACKUP'
+          RUN_ID="$(printf '%s\n' "$STATUS" | sed -n 's/^RUN_ID: //p' | head -n 1)"
+          UTC_STAMP="$(printf '%s\n' "$STATUS" | sed -n 's/^UTC: //p' | head -n 1)"
+          DB_COUNT="$(printf '%s\n' "$STATUS" | sed -n 's/^DATABASE_FILES: //p' | head -n 1)"
+          STORAGE_COUNT="$(printf '%s\n' "$STATUS" | sed -n 's/^STORAGE_FILES: //p' | head -n 1)"
+          PROJECT="$(printf '%s\n' "$STATUS" | sed -n 's/^SOURCE_PROJECT: //p' | head -n 1)"
+          [[ "$RUN_ID" =~ ^[0-9]{8}-[0-9]{6}$ ]] || { echo "::error::Invalid RUN_ID"; exit 3; }
+          [[ "$UTC_STAMP" == "${RUN_ID:0:4}-${RUN_ID:4:2}-${RUN_ID:6:2}"* ]] || { echo "::error::Timestamp does not match RUN_ID"; exit 3; }
+          [[ "$PROJECT" == 'yspuaamokjbrosytqjpg' ]] || { echo "::error::Wrong source project"; exit 3; }
+          [[ "$DB_COUNT" == 3 && "$STORAGE_COUNT" =~ ^[0-9]+$ && "$STORAGE_COUNT" -gt 0 ]] || { echo "::error::Invalid object counts"; exit 3; }
+          if [[ "${{ github.event_name }}" == schedule && "${RUN_ID:0:8}" != "$(date -u +%Y%m%d)" ]]; then
+            echo "::error::Current snapshot is stale; archive halted to prevent silent backup gaps"
+            exit 4
+          fi
+
+          DEST="$ARCHIVE_ROOT/$RUN_ID"
+          # Append-only; never sync/move/delete. Source CURRENT is never modified.
+          rclone copy "$SOURCE" "$DEST" --immutable --create-empty-src-dirs --checkers 8 --transfers 4 --retries 5
+          rclone check "$SOURCE" "$DEST"
+          test "$(rclone lsf "$DEST/03_DATABASE" --recursive --files-only | wc -l | tr -d ' ')" = "$DB_COUNT"
+          test "$(rclone lsf "$DEST/06_STORAGE" --recursive --files-only | wc -l | tr -d ' ')" = "$STORAGE_COUNT"
+
+          RESTORE="$RUNNER_TEMP/restore-readback"
+          mkdir -p "$RESTORE/03_DATABASE"
+          rclone copy "$DEST/03_DATABASE" "$RESTORE/03_DATABASE"
+          rclone copyto "$DEST/SHA256SUMS.txt" "$RESTORE/SHA256SUMS.txt"
+          rclone copyto "$DEST/BACKUP_STATUS.txt" "$RESTORE/BACKUP_STATUS.txt"
+          printf '%s\n' "$STATUS" > "$RUNNER_TEMP/expected-status.txt"
+          cmp "$RUNNER_TEMP/expected-status.txt" "$RESTORE/BACKUP_STATUS.txt"
+          cd "$RESTORE"
+          grep '  03_DATABASE/' SHA256SUMS.txt | sha256sum -c -
+
+          # Sample independent remote readback of actual Supabase Storage objects.
+          mapfile -t SAMPLES < <(rclone lsf "$DEST/06_STORAGE" --recursive --files-only | sed -n '1,3p')
+          test "${#SAMPLES[@]}" -eq 3
+          i=0
+          for rel in "${SAMPLES[@]}"; do
+            i=$((i+1))
+            rclone copyto "$DEST/06_STORAGE/$rel" "$RESTORE/archive-object-$i"
+            rclone copyto "$SOURCE/06_STORAGE/$rel" "$RESTORE/current-object-$i"
+            cmp "$RESTORE/archive-object-$i" "$RESTORE/current-object-$i"
+          done
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "database=$DB_COUNT" >> "$GITHUB_OUTPUT"
+          echo "storage=$STORAGE_COUNT" >> "$GITHUB_OUTPUT"
+          echo "IMMUTABLE_ARCHIVE_AND_READBACK=PASS"
+
+      - name: Publish audit result
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Cofre Zero - immutable daily archive"
+            echo "- Result: ${{ job.status }}"
+            echo "- Run ID: ${{ steps.snapshot.outputs.run_id }}"
+            echo "- Database SQL: ${{ steps.snapshot.outputs.database }} / 3"
+            echo "- Supabase Storage: ${{ steps.snapshot.outputs.storage }} objects"
+            echo "- Target: CONSTRUREI-BACKUP-AUTO/HISTORY_FULL"
+            echo "- Readback: all 3 SQL SHA256 plus 3 Storage object samples"
+            echo "- This is a file-level recovery check, not a database SQL replay."
+            echo "- No modification of CURRENT or production services."
+          } >> "$GITHUB_STEP_SUMMARY"
