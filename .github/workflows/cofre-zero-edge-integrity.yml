@@ -92,7 +92,8 @@ jobs:
           RUN_ID="$(date -u +'%Y%m%d-%H%M%S')-$GITHUB_RUN_ID"
           DEST="construrei-drive:CONSTRUREI-COFRE-ZERO/24_EXTERNAL_SOURCES/EDGE_INTEGRITY_AUDITS/RUN_$RUN_ID"
           rclone copyto "$RUNNER_TEMP/edge-audit/EDGE_HASH_AUDIT.json" "$DEST/EDGE_HASH_AUDIT.json"
-          rclone check "$RUNNER_TEMP/edge-audit/EDGE_HASH_AUDIT.json" "$DEST/EDGE_HASH_AUDIT.json"
+          rclone copyto "$DEST/EDGE_HASH_AUDIT.json" "$RUNNER_TEMP/edge-audit/EDGE_HASH_AUDIT.readback.json"
+          cmp "$RUNNER_TEMP/edge-audit/EDGE_HASH_AUDIT.json" "$RUNNER_TEMP/edge-audit/EDGE_HASH_AUDIT.readback.json"
           echo "Stored read-only verification in private Drive"
 
       - name: Summarize integrity result
