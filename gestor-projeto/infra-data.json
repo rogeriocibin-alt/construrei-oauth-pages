@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-07T17:30:00-03:00",
+  "generated_at": "2026-10-10",
   "title": "Infraestrutura do Projeto CONSTRU-REI",
   "policy": {
     "owner_view": "Gestor do Projeto",
@@ -12,15 +12,15 @@
   "summary": {
     "providers_total": 10,
     "providers_live_verified": 6,
-    "critical_alerts": 1,
+    "critical_alerts": 0,
     "attention_alerts": 4,
     "netlify_sites": 7,
     "vercel_projects": 0,
     "github_repositories": 2,
     "supabase_projects": 2,
-    "supabase_edge_functions": 330,
+    "supabase_edge_functions": 366,
     "supabase_public_tables": 157,
-    "updated_at": "2026-10-07T17:30:00-03:00"
+    "updated_at": "2026-10-10"
   },
   "topology": [
     {
@@ -77,7 +77,7 @@
       "asset": "construrei-backup / construrei-backup-diario",
       "role": "Backup recorrente oficial independente do notebook",
       "status": "live",
-      "freshness": "execucao_2026-10-07_PASS"
+      "freshness": "google_drive_2026-10-10_03h"
     },
     {
       "layer": "Storage operacional",
@@ -355,20 +355,18 @@
           "name": "Cofre Zero",
           "kind": "Baseline local",
           "status": "healthy",
-          "detail": "RESTORE_PROVEN=TRUE • validado em 26/09/2026"
+          "detail": "RESTORE_PROVEN=TRUE • restore isolado validado 05/10/2026"
         },
         {
           "name": "CONSTRUREI-BACKUP-AUTO",
-          "kind": "Automação local",
-          "status": "critical",
-          "detail": "execução diária falhando desde 01/10 por dependência do Docker"
+          "kind": "Automação local legada / fallback",
+          "status": "idle",
+          "detail": "Não é executora canônica. Backup diário oficial Google Cloud funciona sem notebook."
         }
       ],
       "admin_url": "https://mcp.desktopcommander.app/",
-      "source": "Desktop Commander • 03/10/2026",
-      "alerts": [
-        "Dependência local do Docker está quebrando o backup diário; isso conflita com a meta de independência de dispositivo."
-      ]
+      "source": "Inventário do dispositivo histórico • rotina oficial é cloud (comprovada 10/10)",
+      "alerts": []
     },
     {
       "id": "google-drive",
@@ -377,11 +375,11 @@
       "account": "Remote construrei-drive",
       "plan": "Não confirmado",
       "plan_status": "unknown",
-      "health": "attention",
+      "health": "healthy",
       "usage": [
         {
           "label": "Conectividade",
-          "value": "OK no início da rotina de 03/10 às 03:00"
+          "value": "Drive acessível; pacote diário de 10/10 presente"
         },
         {
           "label": "Destino",
@@ -389,22 +387,20 @@
         },
         {
           "label": "Última conclusão diária",
-          "value": "Não comprovada; a rotina falhou antes do envio do novo backup"
+          "value": "10/10 03:00 • 3 SQL e 4.526 objetos"
         }
       ],
       "assets": [
         {
           "name": "CONSTRUREI-COFRE-ZERO",
-          "kind": "Pasta remota observada",
+          "kind": "Baseline histórica preservada",
           "status": "healthy",
-          "detail": "remoto acessível via rclone"
+          "detail": "Drive acessível; arquivo diário CURRENT comprovado 10/10"
         }
       ],
       "admin_url": "https://drive.google.com/",
-      "source": "Logs locais de backup • 03/10/2026",
-      "alerts": [
-        "A conectividade está OK, mas o pacote diário não chega à etapa de sincronização porque o dump do banco falha antes."
-      ]
+      "source": "BACKUP_STATUS.txt Google Drive • 10/10/2026 03h BRT",
+      "alerts": []
     }
   ],
   "backups": {
@@ -421,30 +417,30 @@
       ],
       "note": "Cofre Zero permanece como baseline de recuperação comprovada. O backup recorrente oficial roda em Google Cloud Run + Cloud Scheduler e não depende do notebook.",
       "edge_function_snapshot_count": 254,
-      "current_live_edge_functions": 330
+      "current_live_edge_functions": 366
     },
     "daily": {
       "schedule": "03:00 diariamente • America/Sao_Paulo",
       "installed_at": "2026-10-05 • migração cloud oficial",
       "state": "healthy",
-      "last_attempt": "2026-10-07 03:00:01 -03:00",
-      "last_result": "SUCESSO",
+      "last_attempt": "2026-10-10 03:00 -03:00 (Drive: RUN_ID 20261010-060013)",
+      "last_result": "BACKUP_STATUS PRESENTE — 3 SQL + 4.526 objetos",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
-      "verification": "Scheduler ENABLED; execuções 06/10 e 07/10 Completed=True",
+      "verification": "Google Drive 10/10/2026: BACKUP_STATUS + 3 SQL + SHA256SUMS; Storage origem 4.526. Restore integral isolado anterior 05/10.",
       "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
         "Google Drive CURRENT/HISTORY",
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Monitorar falhas reais e manter restore drill periódico."
+      "action": "Monitorar somente falha confirmada. Novo restore periódico exclusivamente em ambiente isolado."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
-      "state": "healthy",
-      "evidence": "LAST_SUCCESS_EDGE 04/10/2026 05:22; 338 functions; Google Drive OK.",
-      "action": "Manter rotina e revalidar em restore drill periódico."
+      "state": "partial",
+      "evidence": "Evidência histórica LAST_SUCCESS_EDGE 04/10 (338 funções); inventário de 10/10 conta 366 funções. Cópia integral atual das 366 não comprovada.",
+      "action": "Reconciliar total de Edge e provar artefatos versionados; sem incidente do backup diário."
     }
   },
   "external_integrations": [
@@ -542,6 +538,12 @@
       "title": "Inventário de hospedagens históricas precisa racionalização",
       "detail": "Há 7 sites Netlify e 0 projetos Vercel no time conectado.",
       "action": "Classificar cada site: produção, failover, histórico ou descartável."
+    },
+    {
+      "severity": "attention",
+      "title": "Cobertura externa de código e hospedagem parcial",
+      "detail": "GitHub conectado, 7 projetos Netlify e 366 Edge Functions inventariadas em 10/10; exportação completa versionada para recuperação ainda não comprovada.",
+      "action": "Tratar em EXEC-COFRE-COVERAGE-20261010. Não confundir com backup diário banco/Storage, que está saudável."
     }
   ],
   "next_actions": [
