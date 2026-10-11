@@ -20,16 +20,29 @@ class SafeRedirect(urllib.request.HTTPRedirectHandler):
         return new
 OPENER=urllib.request.build_opener(SafeRedirect())
 OAUTH='OAuth oauth_consumer_key="'+KEY+'", oauth_token="'+TOKEN+'"'
+_OIDC={"token":"","created":0.0}
+def github_oidc():
+    now=time.monotonic()
+    if _OIDC["token"] and now-_OIDC["created"]<120:
+        return _OIDC["token"]
+    base=os.getenv("ACTIONS_ID_TOKEN_REQUEST_URL","")
+    auth=os.getenv("ACTIONS_ID_TOKEN_REQUEST_TOKEN","")
+    if not base or not auth:raise RuntimeError("OIDC runtime unavailable")
+    url=base+("&" if "?" in base else "?")+"audience=construrei-cofre-trello-readonly-v1"
+    req=urllib.request.Request(url,headers={"Authorization":"Bearer "+auth},method="GET")
+    with urllib.request.urlopen(req,timeout=30) as r:
+        token=json.load(r).get("value","")
+    if not token:raise RuntimeError("GitHub OIDC token unavailable")
+    _OIDC.update(token=token,created=time.monotonic())
+    return token
 def request(path,params=None,binary=False):
     url=ROOT+path
     if params:url += "?"+urllib.parse.urlencode(params)
-    headers={"Authorization":OAUTH,"User-Agent":"CONSTRUREI-CofreZero-ReadOnly/1"}
-    if BRIDGE:
-        url=BRIDGE+"?"+urllib.parse.urlencode({"path":path,**(params or {})})
-        headers={"Authorization":"Bearer "+BRIDGE_TOKEN,"User-Agent":"CONSTRUREI-CofreZero-ReadOnly/2"}
-    req=urllib.request.Request(url,headers=headers,method="GET")
+    if BRIDGE:url=BRIDGE+"?"+urllib.parse.urlencode({"path":path,**(params or {})})
     for attempt in range(7):
         try:
+            headers={"Authorization":"Bearer "+github_oidc(),"User-Agent":"CONSTRUREI-CofreZero-ReadOnly/3"} if BRIDGE else {"Authorization":OAUTH,"User-Agent":"CONSTRUREI-CofreZero-ReadOnly/1"}
+            req=urllib.request.Request(url,headers=headers,method="GET")
             time.sleep(.15)
             with OPENER.open(req,timeout=90) as resp:
                 body=resp.read(MAX_BYTES+1) if binary else resp.read(20*1024*1024)
