@@ -5,6 +5,9 @@ from datetime import datetime, timezone
 
 KEY=os.getenv("TRELLO_API_KEY","")
 TOKEN=os.getenv("TRELLO_API_TOKEN","")
+BRIDGE=os.getenv("TRELLO_BACKUP_BRIDGE","")
+BRIDGE_TOKEN=os.getenv("TRELLO_BACKUP_BRIDGE_TOKEN","")
+READY=bool(BRIDGE and BRIDGE_TOKEN) or bool(KEY and TOKEN)
 DEST=pathlib.Path(os.getenv("TRELLO_EXPORT_DIR","trello-private-snapshot"))
 ROOT="https://api.trello.com/1"
 MAX_BYTES=int(os.getenv("TRELLO_MAX_BYTES",str(2*1024*1024*1024)))
@@ -21,6 +24,9 @@ def request(path,params=None,binary=False):
     url=ROOT+path
     if params:url += "?"+urllib.parse.urlencode(params)
     headers={"Authorization":OAUTH,"User-Agent":"CONSTRUREI-CofreZero-ReadOnly/1"}
+    if BRIDGE:
+        url=BRIDGE+"?"+urllib.parse.urlencode({"path":path,**(params or {})})
+        headers={"Authorization":"Bearer "+BRIDGE_TOKEN,"User-Agent":"CONSTRUREI-CofreZero-ReadOnly/2"}
     req=urllib.request.Request(url,headers=headers,method="GET")
     for attempt in range(7):
         try:
@@ -45,7 +51,7 @@ def safe_name(name):
 def actions(board_id):
     all_items=[];last=None;seen=set()
     for _ in range(150):
-        params={"limit":1000}
+        params={"limit":1000,"filter":"all"}
         if last:params["before"]=last
         batch=request("/boards/"+board_id+"/actions",params)
         if not isinstance(batch,list):raise RuntimeError("Invalid action page")
@@ -60,10 +66,10 @@ def actions(board_id):
     raise RuntimeError("Action pagination safety cap reached")
 def export():
     global TOTAL_BYTES
-    if not KEY or not TOKEN:raise RuntimeError("BLOCKED: Trello API read credentials missing; no download attempted")
+    if not READY:raise RuntimeError("BLOCKED: Trello API read credentials missing; no download attempted")
     DEST.mkdir(parents=True,exist_ok=True)
-    boards=request("/members/me/boards",{"filter":"all","fields":"id,name,url,closed,dateLastActivity"})
-    if not isinstance(boards,list) or not boards:raise RuntimeError("No boards discovered")
+    boards=request("/members/me/boards",{"filter":"all","fields":"all"})
+    if not isinstance(boards,list) or len(boards)<13:raise RuntimeError("No boards discovered")
     manifest={"format":"CONSTRUREI_TRELLO_OFFSITE_V1","captured_at":datetime.now(timezone.utc).isoformat(),
       "board_count":len(boards),"boards":[],"attachment_count":0,"attachment_bytes":0,
       "external_link_attachments_metadata_only":0,"complete":False,"production_modified":False}
@@ -73,13 +79,16 @@ def export():
         if not re.fullmatch(r"[0-9a-f]{24}",bid):raise RuntimeError("Unexpected board ID")
         if bid in seen:raise RuntimeError("Duplicate board ID")
         seen.add(bid)
-        cards=request("/boards/"+bid+"/cards",{"filter":"all"})
+        cards=request("/boards/"+bid+"/cards",{"filter":"all","attachments":"true","checklists":"all","customFieldItems":"true"})
         if not isinstance(cards,list):raise RuntimeError("Invalid board card listing")
         parent=DEST/"boards"/bid
         write_json(parent/"board.json",board)
         write_json(parent/"cards.json",cards)
         write_json(parent/"lists.json",request("/boards/"+bid+"/lists",{"filter":"all"}))
-        write_json(parent/"labels.json",request("/boards/"+bid+"/labels"))
+        labels=request("/boards/"+bid+"/labels",{"limit":1000})
+        if len(labels)>=1000:raise RuntimeError("Label listing limit reached")
+        write_json(parent/"labels.json",labels)
+        write_json(parent/"customFields.json",request("/boards/"+bid+"/customFields"))
         write_json(parent/"actions.json",actions(bid))
         count=0
         for card in cards:
@@ -87,10 +96,10 @@ def export():
             if not re.fullmatch(r"[0-9a-f]{24}",cid):raise RuntimeError("Invalid card ID")
             carddir=parent/"cards"/cid
             if card.get("idChecklists"):
-                write_json(carddir/"checklists.json",request("/cards/"+cid+"/checklists"))
+                write_json(carddir/"checklists.json",card.get("checklists") if isinstance(card.get("checklists"),list) else request("/cards/"+cid+"/checklists"))
             if not card.get("badges",{}).get("attachments",0):
                 continue
-            attachments=request("/cards/"+cid+"/attachments")
+            attachments=card.get("attachments") if isinstance(card.get("attachments"),list) else request("/cards/"+cid+"/attachments")
             write_json(carddir/"attachments.json",attachments)
             for att in attachments:
                 if not att.get("isUpload"):
@@ -114,15 +123,24 @@ def export():
                 write_json(carddir/"files"/(aid+".metadata.json"),
                    {"attachment_id":aid,"file":target.name,"sha256":hashlib.sha256(blob).hexdigest(),"size":len(blob)})
         manifest["boards"].append({"id":bid,"name":board.get("name"),"cards":len(cards),"uploaded_attachments":count})
+        print("Board exported",len(manifest["boards"]),"/",len(boards),"cards",len(cards),"binaries",count,flush=True)
     manifest["card_count"]=sum(x["cards"] for x in manifest["boards"])
     manifest["complete"]=True
     write_json(DEST/"RECOVERY_MANIFEST.json",manifest)
     return manifest
 def main():
-    if not KEY or not TOKEN:
+    if not READY:
         print("BLOCKED: TRELLO_API_KEY / TRELLO_API_TOKEN absent; no Trello operation")
         return 2
     manifest=export()
+    file_index=[]
+    for p in sorted(DEST.rglob("*")):
+        if p.is_file():
+            h=hashlib.sha256()
+            with p.open("rb") as stream:
+                for chunk in iter(lambda:stream.read(1024*1024),b""):h.update(chunk)
+            file_index.append({"path":str(p.relative_to(DEST)),"bytes":p.stat().st_size,"sha256":h.hexdigest()})
+    write_json(DEST/"FILE_MANIFEST.json",file_index)
     archive=DEST.parent/"TRELLO_READONLY_SNAPSHOT.zip"
     with zipfile.ZipFile(archive,"w",compression=zipfile.ZIP_DEFLATED,allowZip64=True) as z:
         for p in sorted(DEST.rglob("*")):
@@ -133,7 +151,10 @@ def main():
         if not m.get("complete") or m["card_count"]!=manifest["card_count"]:
             raise RuntimeError("Manifest validation failed")
     size=archive.stat().st_size
-    sha=hashlib.sha256(archive.read_bytes()).hexdigest() if size<1024*1024*1024 else None
+    h=hashlib.sha256()
+    with archive.open("rb") as stream:
+        for chunk in iter(lambda:stream.read(1024*1024),b""):h.update(chunk)
+    sha=h.hexdigest()
     write_json(DEST.parent/"TRANSFER_MANIFEST.json",{"archive":archive.name,
       "archive_size":size,"sha256":sha,
       "board_count":manifest["board_count"],"card_count":manifest["card_count"],
