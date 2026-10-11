@@ -1,5 +1,8 @@
 ## COFRE ZERO — SNAPSHOT TRELLO 13 QUADROS — 11/10/2026
 
+- Trello backup automatizado de anexos/histórico: candidata isolada PR #47 DRAFT; workflow de GET read-only sem agendamento aprovado. Actions 38153523173 confirmou compilação e BLOQUEIO SEGURO por ausência dos segredos COFRE_TRELLO_API_KEY / COFRE_TRELLO_READ_TOKEN; nunca pedir tokens neste chat. Backup snapshot 1644 cartões segue íntegro; restauração integral ainda pendente.
+
+
 - Cofre Zero Trello: leitura autorizada de 13 quadros acessíveis, incluindo arquivados, total **1.644 cartões** preservados no Drive privado. Divisão: Obras 2024 352, Obras 2025 410, Obras 2026 382, Gestão Financeira 68, mais 9 quadros com 432 cartões.
 - Arquivos de recuperação: 25 partes `BASE64_UTF8` em 5 pastas sob `CONSTRUREI-COFRE-ZERO/24_EXTERNAL_SOURCES`. Foram relidas e reconstruídas as coleções em JSON (contagem de quadros/cartões, IDs únicos, UTF-8). Comparação de IDs, nomes e descrições dos quadros 2024/2025 e outros nove mostrou zero diferenças.
 - Manifesto privado com pastas, procedimento de recuperação e limites: https://docs.google.com/document/d/1d_rZyeEY8cxOLw4DFrOZHY7CPuOzbzXbZTPUywBuYFo/edit
