@@ -108,10 +108,28 @@ def main():
         print("AVISO: conteudos de preview alterados; verificar candidatos antes de atualizar registry:", moved_or_changed[:30])
     required_files = registry["production_contracts"][0]["paths"]
     asset = "preview/_shared/cr-checklist-native-20261004.js"
+    canonical = "central-runtime/_shared/cr-checklist-native-20261004.js"
+    src_before = "../../" + asset + "?v=20261004"
+    src_after = "../../" + canonical + "?v=20261004"
+    candidate = (
+        os.environ.get("GITHUB_EVENT_NAME") == "pull_request"
+        and os.environ.get("GITHUB_HEAD_REF") == "cr-homolog-f00-f09-canonic-v1-20261011"
+    )
     assert len(required_files) == 10 and asset in {r for r, _, _, _ in entries}, "Native checklist baseline missing"
+    assert canonical in {r for r, _, _, _ in entries}, "Canonical candidate missing"
+    assert (ROOT / asset).read_bytes() == (ROOT / canonical).read_bytes(), "Canonical JS has diverged"
     for required in required_files:
         body = (ROOT / required).read_text(encoding="utf-8")
-        assert asset in body, "Runtime checklist dependency changed outside homologation: " + required
+        if candidate:
+            assert body.count(src_after) == 1 and src_before not in body, "Invalid candidate import: " + required
+            base = subprocess.run(
+                ["git", "-C", str(ROOT), "show", "HEAD^1:" + required],
+                check=True, stdout=subprocess.PIPE
+            ).stdout.decode("utf-8")
+            assert base.count(src_before) == 1, "Production base import mismatch: " + required
+            assert body == base.replace(src_before, src_after), "Non-URL change detected in candidate: " + required
+        else:
+            assert body.count(src_before) == 1 and src_after not in body, "Runtime checklist dependency changed outside homologation: " + required
     official = (ROOT / "production/central-operacional-v2-ux-r1-2-homologada-20261005/index.html").read_text(encoding="utf-8")
     assert "preview/app-gabi-v21-parecer-logo-20261008/" in official, "APP link changed outside formal homologation"
     status_counts = collections.Counter(e["status"] for e in listed)
