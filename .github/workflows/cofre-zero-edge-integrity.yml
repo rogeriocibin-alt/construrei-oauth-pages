@@ -1,0 +1,106 @@
+name: Cofre Zero | Edge baseline SHA audit
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - checkpoint/cofre-zero-edge-integrity-20261011
+    paths:
+      - .github/workflows/cofre-zero-edge-integrity.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+    steps:
+      - name: Authenticate read-only data transfer
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64" || exit 2
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone lsd construrei-drive: >/dev/null
+
+      - name: Download immutable Edge baseline and checksum catalog
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/edge-audit/functions"
+          REMOTE="construrei-drive:CONSTRUREI-BACKUP-AUTO/EDGE_FUNCTIONS_CURRENT"
+          rclone copy "$REMOTE/supabase/functions" "$RUNNER_TEMP/edge-audit/functions" --checkers 4 --transfers 2
+          rclone copyto "$REMOTE/EDGE_FUNCTIONS_SHA256.txt" "$RUNNER_TEMP/edge-audit/expected_sha256.txt"
+
+      - name: Recompute 338 baseline function hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/edge-audit"
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          root = pathlib.Path("functions")
+          lines = pathlib.Path("expected_sha256.txt").read_text(encoding="utf-8-sig").splitlines()
+          expected = {}
+          invalid = []
+          for line in lines:
+              if not line.strip():
+                  continue
+              parts = line.strip().split(None, 1)
+              if len(parts) != 2 or len(parts[0]) != 64:
+                  invalid.append(line[:120])
+                  continue
+              rawpath = parts[1].lstrip("*").replace(chr(92), "/").strip()
+              expected[rawpath] = parts[0].lower()
+          actual = {}
+          for path in root.rglob("*"):
+              if path.is_file():
+                  actual[path.relative_to(root).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+          missing = sorted(set(expected) - set(actual))
+          untracked = sorted(set(actual) - set(expected))
+          mismatch = sorted(k for k in expected.keys() & actual.keys() if expected[k] != actual[k])
+          status = "PASS" if not (missing or untracked or mismatch or invalid) and len(expected)==339 else "FAIL"
+          report = {
+              "format": "CONSTRUREI_COFRE_ZERO_EDGE_HASH_RECOMPUTE_V1",
+              "baseline": "CONSTRUREI-BACKUP-AUTO/EDGE_FUNCTIONS_CURRENT/supabase/functions",
+              "manifest_entries": len(expected),
+              "downloaded_files": len(actual),
+              "missing": missing,
+              "untracked": untracked,
+              "mismatch": mismatch,
+              "invalid_manifest_lines": invalid,
+              "status": status,
+              "production_modified": False,
+          }
+          pathlib.Path("EDGE_HASH_AUDIT.json").write_text(json.dumps(report, indent=2, ensure_ascii=False),encoding="utf-8")
+          print(json.dumps({k:v for k,v in report.items() if k not in ("missing","mismatch","untracked")}))
+          if status != "PASS":
+              print("Missing:", missing[:20], "Untracked:",untracked[:20],"Mismatch:",mismatch[:20])
+              raise SystemExit(1)
+          PY
+
+      - name: Publish successful audit evidence to private Drive
+        shell: bash
+        run: |
+          set -euo pipefail
+          RUN_ID="$(date -u +'%Y%m%d-%H%M%S')-$GITHUB_RUN_ID"
+          DEST="construrei-drive:CONSTRUREI-COFRE-ZERO/24_EXTERNAL_SOURCES/EDGE_INTEGRITY_AUDITS/RUN_$RUN_ID"
+          rclone copyto "$RUNNER_TEMP/edge-audit/EDGE_HASH_AUDIT.json" "$DEST/EDGE_HASH_AUDIT.json"
+          rclone copyto "$DEST/EDGE_HASH_AUDIT.json" "$RUNNER_TEMP/edge-audit/EDGE_HASH_AUDIT.readback.json"
+          cmp "$RUNNER_TEMP/edge-audit/EDGE_HASH_AUDIT.json" "$RUNNER_TEMP/edge-audit/EDGE_HASH_AUDIT.readback.json"
+          echo "Stored read-only verification in private Drive"
+
+      - name: Summarize integrity result
+        if: always()
+        shell: bash
+        run: |
+          echo "## Cofre Zero Edge baseline verification" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Result: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 339 recorded files from 338 source directories (including deno.json)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- No deploy or production mutation." >> "$GITHUB_STEP_SUMMARY"
