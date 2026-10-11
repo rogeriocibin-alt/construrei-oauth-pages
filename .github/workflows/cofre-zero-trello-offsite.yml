@@ -19,8 +19,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 90
     env:
-      TRELLO_API_KEY: ${{ secrets.COFRE_TRELLO_API_KEY }}
-      TRELLO_API_TOKEN: ${{ secrets.COFRE_TRELLO_READ_TOKEN }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
       TRELLO_MAX_BYTES: "2147483648"
     steps:
@@ -31,9 +30,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile .github/scripts/cofre_trello_readonly.py
-          test -n "$TRELLO_API_KEY" && test -n "$TRELLO_API_TOKEN" || {
-            echo "::error::Trello read credentials not configured; nothing exported"
+          python3 -m py_compile .github/scripts/cofre_trello_readonly.py .github/scripts/cofre_trello_bootstrap.py .github/scripts/cofre_trello_restore.py
+          test -n "$SUPABASE_ACCESS_TOKEN" || {
+            echo "::error::Existing Supabase authorization absent; nothing exported"
             exit 2
           }
           test -n "$RCLONE_CONFIG_B64" || {
@@ -53,7 +52,7 @@ jobs:
           TRELLO_EXPORT_DIR: ${{ runner.temp }}/trello-private/trello-data
         run: |
           set -euo pipefail
-          python3 .github/scripts/cofre_trello_readonly.py
+          python3 .github/scripts/cofre_trello_bootstrap.py
 
       - name: Upload to independent private Drive storage
         shell: bash
@@ -65,13 +64,22 @@ jobs:
           RUN_ID="$(date -u +'%Y%m%d-%H%M%S')-$GITHUB_RUN_ID"
           REMOTE="construrei-drive:CONSTRUREI-COFRE-ZERO/24_EXTERNAL_SOURCES/TRELLO_FULL_OFFSITE/RUN_$RUN_ID"
           (cd "$ROOT" && sha256sum TRELLO_READONLY_SNAPSHOT.zip TRANSFER_MANIFEST.json > SHA256SUMS.txt)
-          rclone copy "$ROOT/TRELLO_READONLY_SNAPSHOT.zip" "$REMOTE"
-          rclone copy "$ROOT/TRANSFER_MANIFEST.json" "$REMOTE"
-          rclone copy "$ROOT/SHA256SUMS.txt" "$REMOTE"
-          rclone check "$ROOT" "$REMOTE" --one-way --include TRELLO_READONLY_SNAPSHOT.zip --include TRANSFER_MANIFEST.json --include SHA256SUMS.txt
+          rclone copy "$ROOT/TRELLO_READONLY_SNAPSHOT.zip" "$REMOTE" --immutable
+          rclone copy "$ROOT/TRANSFER_MANIFEST.json" "$REMOTE" --immutable
+          rclone copy "$ROOT/SHA256SUMS.txt" "$REMOTE" --immutable
+          rclone check "$ROOT" "$REMOTE" --immutable --one-way --include TRELLO_READONLY_SNAPSHOT.zip --include TRANSFER_MANIFEST.json --include SHA256SUMS.txt
           rclone copyto "$REMOTE/TRANSFER_MANIFEST.json" "$RUNNER_TEMP/TRELLO_MANIFEST_READBACK.json"
           cmp "$ROOT/TRANSFER_MANIFEST.json" "$RUNNER_TEMP/TRELLO_MANIFEST_READBACK.json"
-          echo "SUCCESS: uploaded verified archive to private Drive"
+          RECOVER="$RUNNER_TEMP/trello-drive-readback"
+          rclone copy "$REMOTE" "$RECOVER"
+          cmp "$ROOT/TRANSFER_MANIFEST.json" "$RECOVER/TRANSFER_MANIFEST.json"
+          ( cd "$RECOVER" && sha256sum --check SHA256SUMS.txt )
+          python3 .github/scripts/cofre_trello_restore.py "$RECOVER" "$RUNNER_TEMP/trello-isolated-restore"
+          rclone copy "$RECOVER" "$REMOTE" --immutable --include RESTORE_REPORT.json --include TRELLO_RECOVERED.sqlite
+          rclone check "$RECOVER" "$REMOTE" --one-way
+          echo "PASS: private Drive snapshot and offline recovery verified"
+          echo "- Snapshot: TRELLO_FULL_OFFSITE/RUN_$RUN_ID" >> "$GITHUB_STEP_SUMMARY"
+          python3 -c 'import json,os; r=json.load(open(os.environ["RUNNER_TEMP"]+"/trello-drive-readback/RESTORE_REPORT.json")); print("- Recovery:",r["status"],r["counts"],"attachments",r["attachments"])' >> "$GITHUB_STEP_SUMMARY"
       - name: Report limitations
         if: always()
         shell: bash
