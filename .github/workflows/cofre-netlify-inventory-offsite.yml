@@ -5,6 +5,7 @@ on:
     - cron: '15 7 * * *'
   push:
     branches:
+      - main
       - checkpoint/cofre-zero-netlify-inventory-offsite-20261011
     paths:
       - .github/workflows/cofre-netlify-inventory-offsite.yml
