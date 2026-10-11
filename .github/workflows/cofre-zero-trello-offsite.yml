@@ -1,0 +1,83 @@
+name: Cofre Zero | Trello full recovery candidate
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - checkpoint/cofre-zero-trello-offsite-20261011
+    paths:
+      - .github/workflows/cofre-zero-trello-offsite.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cofre-zero-trello-offsite
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    env:
+      TRELLO_API_KEY: ${{ secrets.COFRE_TRELLO_API_KEY }}
+      TRELLO_API_TOKEN: ${{ secrets.COFRE_TRELLO_READ_TOKEN }}
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+      TRELLO_MAX_BYTES: "2147483648"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify script without accessing Trello
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/cofre_trello_readonly.py
+          test -n "$TRELLO_API_KEY" && test -n "$TRELLO_API_TOKEN" || {
+            echo "::error::Trello read credentials not configured; nothing exported"
+            exit 2
+          }
+          test -n "$RCLONE_CONFIG_B64" || {
+            echo "::error::Cloud Drive credential not configured; nothing exported"
+            exit 2
+          }
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone lsd construrei-drive: >/dev/null
+
+      - name: Read-only Trello archive and restore check
+        shell: bash
+        env:
+          TRELLO_EXPORT_DIR: ${{ runner.temp }}/trello-private/trello-data
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/cofre_trello_readonly.py
+
+      - name: Upload to independent private Drive storage
+        shell: bash
+        env:
+          TRELLO_EXPORT_DIR: ${{ runner.temp }}/trello-private/trello-data
+        run: |
+          set -euo pipefail
+          ROOT="$(dirname "$TRELLO_EXPORT_DIR")"
+          RUN_ID="$(date -u +'%Y%m%d-%H%M%S')-$GITHUB_RUN_ID"
+          REMOTE="construrei-drive:CONSTRUREI-COFRE-ZERO/24_EXTERNAL_SOURCES/TRELLO_FULL_OFFSITE/RUN_$RUN_ID"
+          (cd "$ROOT" && sha256sum TRELLO_READONLY_SNAPSHOT.zip TRANSFER_MANIFEST.json > SHA256SUMS.txt)
+          rclone copy "$ROOT/TRELLO_READONLY_SNAPSHOT.zip" "$REMOTE"
+          rclone copy "$ROOT/TRANSFER_MANIFEST.json" "$REMOTE"
+          rclone copy "$ROOT/SHA256SUMS.txt" "$REMOTE"
+          rclone check "$ROOT" "$REMOTE" --one-way --include TRELLO_READONLY_SNAPSHOT.zip --include TRANSFER_MANIFEST.json --include SHA256SUMS.txt
+          rclone copyto "$REMOTE/TRANSFER_MANIFEST.json" "$RUNNER_TEMP/TRELLO_MANIFEST_READBACK.json"
+          cmp "$ROOT/TRANSFER_MANIFEST.json" "$RUNNER_TEMP/TRELLO_MANIFEST_READBACK.json"
+          echo "SUCCESS: uploaded verified archive to private Drive"
+      - name: Report limitations
+        if: always()
+        shell: bash
+        run: |
+          echo "## Cofre Zero Trello recovery candidate" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Status: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Read-only GET requests; no production write operations." >> "$GITHUB_STEP_SUMMARY"
+          echo "- External link targets, Trello automations and identity/account configurations remain out of scope." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Do not promote until verified, including recovery outside Trello." >> "$GITHUB_STEP_SUMMARY"
