@@ -11,6 +11,7 @@ on:
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
       - .github/scripts/cr_f00_f09_staging_smoke.py
+      - .github/scripts/cr_visual_staging_smoke.py
       - central-runtime/_shared/cr-checklist-native-20261004.js
       - preview/_shared/cr-checklist-native-20261004.js
       - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
@@ -27,6 +28,7 @@ on:
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
       - .github/scripts/cr_f00_f09_staging_smoke.py
+      - .github/scripts/cr_visual_staging_smoke.py
       - central-runtime/_shared/cr-checklist-native-20261004.js
       - preview/_shared/cr-checklist-native-20261004.js
       - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
@@ -133,4 +135,15 @@ jobs:
           PY
       - name: Local ephemeral staging smoke of F00-F09 canonical JS URLs
         run: python3 .github/scripts/cr_f00_f09_staging_smoke.py
+      - name: Headless Chrome responsive smoke (candidate PR only)
+        if: github.event_name == 'pull_request' && github.head_ref == 'cr-homolog-f00-f09-canonic-v1-20261011'
+        run: python3 .github/scripts/cr_visual_staging_smoke.py
+      - name: Store short-lived visual QA evidence (72h)
+        if: github.event_name == 'pull_request' && github.head_ref == 'cr-homolog-f00-f09-canonic-v1-20261011'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cr-f00-f09-responsive-smoke
+          path: .cr-qa-output/*.png
+          if-no-files-found: error
+          retention-days: 3
 
