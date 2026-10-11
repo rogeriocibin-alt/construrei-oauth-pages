@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-10",
+  "generated_at": "2026-10-11",
   "title": "Infraestrutura do Projeto CONSTRU-REI",
   "policy": {
     "owner_view": "Gestor do Projeto",
@@ -18,9 +18,9 @@
     "vercel_projects": 0,
     "github_repositories": 2,
     "supabase_projects": 2,
-    "supabase_edge_functions": 366,
+    "supabase_edge_functions": 370,
     "supabase_public_tables": 157,
-    "updated_at": "2026-10-10"
+    "updated_at": "2026-10-11"
   },
   "topology": [
     {
@@ -43,17 +43,17 @@
       "layer": "Código-fonte",
       "platform": "GitHub",
       "asset": "construrei-oauth-pages + dashboard privado",
-      "role": "Versionamento, checkpoints e histórico",
+      "role": "Versionamento e cópias automáticas externas dos repositórios público e privado",
       "status": "live",
-      "freshness": "connector_live"
+      "freshness": "actions_20261011_offsite_verified"
     },
     {
       "layer": "Hospedagens históricas / failover",
       "platform": "Netlify",
       "asset": "7 projetos CONSTRU-REI",
-      "role": "Previews, dashboard e failover",
+      "role": "Inventário diário de 7 projetos; cópia externa do único deploy publicado",
       "status": "attention",
-      "freshness": "connector_live"
+      "freshness": "actions_20261011_readback_verified"
     },
     {
       "layer": "Hospedagem alternativa",
@@ -67,8 +67,8 @@
       "layer": "Backup base / recuperação",
       "platform": "Notebook Rogerio-2022",
       "asset": "Cofre Zero",
-      "role": "Baseline de recuperação comprovada / rollback",
-      "status": "live",
+      "role": "Apenas baseline histórica de recuperação; nenhuma execução diária depende do notebook",
+      "status": "preserved",
       "freshness": "restore_drill_2026-10-05"
     },
     {
@@ -189,6 +189,14 @@
         {
           "label": "Gestor PWA",
           "value": "GitHub Pages no repositório principal"
+        },
+        {
+          "label": "Git privado offsite",
+          "value": "Git bundle + SHA + clone/fscK PASS 11/10"
+        },
+        {
+          "label": "Agendamento",
+          "value": "02:15 diariamente, sem notebook"
         }
       ],
       "assets": [
@@ -239,6 +247,14 @@
         {
           "label": "Outros sites",
           "value": "registrados como current; deploy detalhado não retornado"
+        },
+        {
+          "label": "Inventário automático",
+          "value": "7/7 projetos • diariamente"
+        },
+        {
+          "label": "Cópia publicada",
+          "value": "1 site / 14 arquivos • Drive + SHA + restore PASS"
         }
       ],
       "assets": [
@@ -417,17 +433,17 @@
       ],
       "note": "Cofre Zero permanece como baseline de recuperação comprovada. O backup recorrente oficial roda em Google Cloud Run + Cloud Scheduler e não depende do notebook.",
       "edge_function_snapshot_count": 254,
-      "current_live_edge_functions": 366
+      "current_live_edge_functions": 370
     },
     "daily": {
       "schedule": "03:00 diariamente • America/Sao_Paulo",
       "installed_at": "2026-10-05 • migração cloud oficial",
       "state": "healthy",
-      "last_attempt": "2026-10-10 03:00 -03:00 (Drive: RUN_ID 20261010-060013)",
-      "last_result": "BACKUP_STATUS PRESENTE — 3 SQL + 4.526 objetos",
+      "last_attempt": "2026-10-11 03:00 -03:00 (Drive: RUN_ID 20261011-060021)",
+      "last_result": "BACKUP_STATUS PRESENTE — 3 SQL + 4.526 objetos; histórico diário integral independente no GitHub PR #48",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
-      "verification": "Google Drive 10/10/2026: BACKUP_STATUS + 3 SQL + SHA256SUMS; Storage origem 4.526. Restore integral isolado anterior 05/10.",
+      "verification": "Backup CURRENT e HISTORY_FULL em Drive em 11/10: 3 SQL + 4.526 objetos, checksums e leitura de volta. Teste de importação SQL integral nesta data não comprovado.",
       "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
         "Google Drive CURRENT/HISTORY",
@@ -439,8 +455,29 @@
     "edge_weekly": {
       "schedule": "Domingo 04:30",
       "state": "partial",
-      "evidence": "Evidência histórica LAST_SUCCESS_EDGE 04/10 (338 funções); inventário de 10/10 conta 366 funções. Cópia integral atual das 366 não comprovada.",
+      "evidence": "370 funções ativas em 11/10. Manifesto Drive de 10/10 referencia 366; quatro funções novas exportadas com código integral para cofre privado Git e readback verificado, posteriormente espelhado no Supabase Storage.",
       "action": "Reconciliar total de Edge e provar artefatos versionados; sem incidente do backup diário."
+    },
+    "external": {
+      "netlify": {
+        "frequency": "daily 04:15 America/Sao_Paulo",
+        "status": "verified_published_static",
+        "run": 38181895937,
+        "scope": "7 inventariados, 1 site com deploy / 14 arquivos preservados, 6 sem publicação",
+        "restore": "Drive readback + extração ZIP estático PASS"
+      },
+      "private_git": {
+        "frequency": "daily 02:15 America/Sao_Paulo",
+        "status": "verified",
+        "run": 38182272365,
+        "scope": "repositório financeiro privado e delta Edge de quatro fontes",
+        "restore": "git bundle, SHA256 readback, clone mirror e fsck PASS"
+      },
+      "trello_binary": {
+        "status": "in_progress",
+        "run": 38180968850,
+        "scope": "backup integral dos anexos e teste offsite ainda não homologados"
+      }
     }
   },
   "external_integrations": [
@@ -542,8 +579,8 @@
     {
       "severity": "attention",
       "title": "Cobertura externa de código e hospedagem parcial",
-      "detail": "GitHub conectado, 7 projetos Netlify e 366 Edge Functions inventariadas em 10/10; exportação completa versionada para recuperação ainda não comprovada.",
-      "action": "Tratar em EXEC-COFRE-COVERAGE-20261010. Não confundir com backup diário banco/Storage, que está saudável."
+      "detail": "Git privado, Netlify publicado e histórico diário foram copiados e recuperados em teste isolado em 11/10; 370 Edge referenciadas na baseline + delta. Trello binário/restore completo e funções/segredos de sites sem deploy seguem sem prova de cobertura total.",
+      "action": "Manter executores automáticos e verificar testes pendentes sem declarar 100%."
     }
   ],
   "next_actions": [
