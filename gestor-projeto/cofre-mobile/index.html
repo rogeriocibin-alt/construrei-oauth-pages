@@ -63,7 +63,7 @@ function card(title,code,info,details,link){
 function render(d,offline=false){
  state.last=d;const sup=d?.sources?.supabase||{},gh=d?.sources?.github||{},last=sup.latest||{};
  const arr=Array.isArray(gh.workflows)?gh.workflows:[],find=p=>arr.find(x=>x.name.includes(p))?.latest||null;
- const archive=find('Immutable daily'),trello=find('Trello full'),netlify=find('Netlify static'),git=find('Git offsite'),edge=find('Edge baseline');
+ const archive=find('Immutable daily'),trello=find('Trello full'),netlify=find('Netlify inventory')||find('Netlify static'),git=find('Git offsite'),edge=find('Edge baseline'),privateGit=sup.private_git||{};
  $('motor').textContent=sup.ok?'ATIVO':'—';$('items').textContent=Number.isFinite(Number(last.record_count))?Number(last.record_count).toLocaleString('pt-BR'):'—';
  $('boards').textContent='13*';$('runs').textContent=arr.filter(x=>!!x.latest).length+'/'+arr.length;
  const details=(run,scope)=>[scope,run?'Início: '+when(run.created_at):'Sem execução recente',run?'Ramo: '+run.branch:'Verificação ainda necessária'];
@@ -73,8 +73,13 @@ function render(d,offline=false){
  'Trello: 13 quadros com contexto; anexos binários não cobertos por esta rotina.'
  ],null);
  html+=card('Histórico diário imutável',archive?.conclusion||archive?.status,'Rotina GitHub do histórico integral; verificação de restauração SQL completa é um teste separado.',details(archive,'Cloud Run é o executor diário independente; o GitHub conserva o histórico.'),archive?.url);
- html+=card('Trello: anexos e recuperação offsite',trello?.conclusion||trello?.status,'A coleta semanal de contexto não substitui o arquivo integral dos anexos. O PR #47 continua isolado enquanto falhar.',details(trello,'Falha identificada anteriormente: 401 na credencial de gerenciamento Supabase.'),trello?.url);
- html+=card('Netlify: sites estáticos',netlify?.conclusion||netlify?.status,'Recuperação de 1 dos 7 sites. Os outros seis não apresentaram arquivos publicados no ensaio.',details(netlify,'Não confundir backup parcial com cobertura total.'),netlify?.url);
+ html+=card('Trello: anexos e recuperação offsite',trello?.conclusion||trello?.status,'A coleta semanal registra os quadros. A cópia de anexos depende da execução integral e da restauração offsite do PR #47.',details(trello,'Autenticação OIDC temporária configurada; acompanhar teste integral e Drive.'),trello?.url);
+ html+=card('Netlify: sites estáticos',netlify?.conclusion||netlify?.status,'Inventário automático 7/7, com arquivos do único deploy publicado recuperados e testados; seis sites sem deploy.',details(netlify,'Não confundir backup parcial com cobertura total.'),netlify?.url);
+ html+=card('Git privado: dashboard financeiro',privateGit.stored?'success':'not_confirmed',privateGit.stored?'Pacote Git privado armazenado em bucket protegido; restauração Git validada pelo Actions.':'Nenhum pacote privado confirmado neste registro.',[
+ 'Último arquivo: '+when(privateGit.last_uploaded),
+ 'Volume registrado: '+(privateGit.bytes?Math.round(privateGit.bytes/1024)+' KiB':'—'),
+ 'Agendamento privado diário às 02h15 (horário de Brasília).'
+ ],null);
  html+=card('Cópias de código e auditoria Edge',git?.conclusion||git?.status,'Backups e auditorias independentes, sem promover versões candidatas automaticamente.',[
  'Git: '+label(git?.conclusion||git?.status),
  'Edge: '+label(edge?.conclusion||edge?.status),
