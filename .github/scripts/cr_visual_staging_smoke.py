@@ -13,7 +13,7 @@ import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-OUTPUT = ROOT / ".cr-qa-output"
+OUTPUT = ROOT / "cr-qa-output"
 PAGES = ("f00", "f02", "f09")
 SIZES = {"mobile": "390,844", "desktop": "1365,900"}
 EXPECTED = "data-cr-checklist-native=\"candidate-20261004\""
