@@ -11,6 +11,11 @@ on:
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
       - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
+      - docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json
+      - 'preview/**'
+      - 'production/**'
+      - 'central-runtime/**'
+      - gestor-projeto/project-data.json
   pull_request:
     branches: [main]
     paths:
@@ -19,6 +24,11 @@ on:
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
       - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
+      - docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json
+      - 'preview/**'
+      - 'production/**'
+      - 'central-runtime/**'
+      - gestor-projeto/project-data.json
 permissions:
   contents: read
 concurrency:

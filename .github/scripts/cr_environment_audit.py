@@ -84,6 +84,39 @@ def main():
             f.write(summary)
     assert OUTPUT.exists(), "Official plan absent"
     assert len(preview) > 0 and total_bytes > 0, "Inventory failed or unexpected empty checkout"
+    # Contract registry — never move a preview without checking its real consumers.
+    registry_path = ROOT / "docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    listed = registry["folders"]
+    assert len(listed) == registry["folder_count"] == 121, "Preview registry incomplete"
+    assert len({e["path"] for e in listed}) == len(listed), "Duplicate registry paths"
+    assert all(not e["authorized_to_move"] and not e["authorized_to_delete"] for e in listed), "Unauthorized migration flag"
+    actual_dirs = {item[0].split("/")[1] for item in preview}
+    known_dirs = {item["path"].split("/")[1] for item in listed}
+    missing = sorted(known_dirs - actual_dirs)
+    unexpected = sorted(actual_dirs - known_dirs)
+    assert not missing, "Registered preview folders disappeared without restoration approval: " + repr(missing)
+    assert not unexpected, "New preview folders appeared directly in main, use candidate branch: " + repr(unexpected)
+    expected_size = {e["path"]: (e["files"], e["logical_bytes"]) for e in listed}
+    by_dir = collections.defaultdict(lambda: [0, 0])
+    for path, size, _, _ in preview:
+        key = "preview/" + path.split("/")[1] + "/"
+        by_dir[key][0] += 1
+        by_dir[key][1] += size
+    moved_or_changed = sorted(key for key, value in expected_size.items() if tuple(by_dir[key]) != value)
+    if moved_or_changed:
+        print("AVISO: conteudos de preview alterados; verificar candidatos antes de atualizar registry:", moved_or_changed[:30])
+    required_files = registry["production_contracts"][0]["paths"]
+    asset = "preview/_shared/cr-checklist-native-20261004.js"
+    assert len(required_files) == 10 and asset in {r for r, _, _, _ in entries}, "Native checklist baseline missing"
+    for required in required_files:
+        body = (ROOT / required).read_text(encoding="utf-8")
+        assert asset in body, "Runtime checklist dependency changed outside homologation: " + required
+    official = (ROOT / "production/central-operacional-v2-ux-r1-2-homologada-20261005/index.html").read_text(encoding="utf-8")
+    assert "preview/app-gabi-v21-parecer-logo-20261008/" in official, "APP link changed outside formal homologation"
+    status_counts = collections.Counter(e["status"] for e in listed)
+    linked = sum(c for name, c in status_counts.items() if name != "UNCLASSIFIED_REVIEW_ONLY")
+    print(f"AMBIENTES: {len(listed)} pastas, {linked} com referencias, {len(listed) - linked} a revisar, 0 aptas a mover")
     return 0
 
 if __name__ == "__main__":
