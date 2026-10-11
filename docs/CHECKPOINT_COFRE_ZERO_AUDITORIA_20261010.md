@@ -46,3 +46,9 @@ Zero novo custo, nada destrutivo em produção, nada dependente do notebook, nã
 - **Limite de QA:** navegador HTTP externo indisponível nesta sessão. Deploy confirmado pelo workflow, mas não equivale a teste visual real em celular/notebook; não inventar esse teste.
 
 A atualização de indicadores não altera os critérios do restore drill homologado ou o estado do motor do backup.
+
+## Revisão final de QA — Gestor V1.2.5.2 (10/10/2026)
+- Depois da atualização 1.2.5.1, leitura de volta detectou valores estáticos históricos: 330 Edge, contagem de JWT não revalidada, incidentes de 04/10 apresentados como risco atual. Corrigidos na V1.2.5.2.
+- Build final `CR-PM-V1.2.5.2-COFRE-AUDIT-20261010`, commit final de artefatos `9962bc6e22b6543d6ba6fef4d24c8b189f66a687`; rollback continua em `checkpoint/cofre-zero-pre-infra-refresh-20261010`.
+- Readback GitHub pós-commit: PASS para 366 funções em indicador, dados 10/10, risco antigo removido, autenticação histórica apresentada sem contagem vigente, botão Cofre Zero existente.
+- Publicação GitHub Pages após a revisão final: workflow criado e em andamento no último instante da checagem; não afirmar QA HTTP ou visual antes de evidência. A publicação anterior V1.2.5.1 concluiu com sucesso.
