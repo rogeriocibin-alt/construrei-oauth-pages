@@ -1,3 +1,13 @@
+## COFRE ZERO — SNAPSHOT TRELLO 13 QUADROS — 11/10/2026
+
+- Cofre Zero Trello: leitura autorizada de 13 quadros acessíveis, incluindo arquivados, total **1.644 cartões** preservados no Drive privado. Divisão: Obras 2024 352, Obras 2025 410, Obras 2026 382, Gestão Financeira 68, mais 9 quadros com 432 cartões.
+- Arquivos de recuperação: 25 partes `BASE64_UTF8` em 5 pastas sob `CONSTRUREI-COFRE-ZERO/24_EXTERNAL_SOURCES`. Foram relidas e reconstruídas as coleções em JSON (contagem de quadros/cartões, IDs únicos, UTF-8). Comparação de IDs, nomes e descrições dos quadros 2024/2025 e outros nove mostrou zero diferenças.
+- Manifesto privado com pastas, procedimento de recuperação e limites: https://docs.google.com/document/d/1d_rZyeEY8cxOLw4DFrOZHY7CPuOzbzXbZTPUywBuYFo/edit
+- **Não declarar backup integral Trello**: binários anexos e histórico completo de atividades/comentários podem faltar; recorrência automática ainda não configurada; sem ensaio de restauração em Trello isolado. `BASE64` é codificação, não criptografia; acesso protegido pelas permissões do Drive.
+- Registrado no Gestor do Projeto: `EXEC-COFRE-TRELLO-20261011` (P1, Em andamento, 2/5, `backup_restore_ok=false`). Não incluir esta pendência nas listas APP/WIZY/Éder. Original Trello/Click/Financeiro e obras fechadas intactos.
+
+---
+
 ## COFRE ZERO — PROTEÇÃO EXTERNA 11/10/2026 (checkpoint verificado)
 
 - Base de dados + Storage: Cloud Run/Scheduler 03:00 BRT, pacote 11/10 `20261011-060021` (3 SQL + 4526 objetos), independente de notebook; manter fluxo canônico, não reabrir `EXEC-BACKUP-AUTO-20261006`.
