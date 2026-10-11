@@ -6,6 +6,7 @@ on:
       - checkpoint/cofre-zero-trello-offsite-20261011
     paths:
       - .github/workflows/cofre-zero-trello-offsite.yml
+      - .github/scripts/cofre_trello_*.py
 
 permissions:
   contents: read
