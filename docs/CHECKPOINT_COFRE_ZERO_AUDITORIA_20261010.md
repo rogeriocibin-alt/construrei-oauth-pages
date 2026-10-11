@@ -31,3 +31,18 @@
 
 ## Política de continuidade
 Zero novo custo, nada destrutivo em produção, nada dependente do notebook, não sobrescrever a baseline original. Em futura homologação de cobertura total, exigir manifesto, contagem, hashes e restore isolado, com checkpoint/rollback.
+
+
+## Hotfix do Gestor V1.2.5.1 — 10/10/2026, mesmo endereço canônico
+
+**Checkpoint de rollback antes da alteração:** branch `checkpoint/cofre-zero-pre-infra-refresh-20261010` criada a partir de `main` antes das cinco escritas.
+
+**Mudanças documentais/visuais, nenhuma alteração de backup real:** arquivos `gestor-projeto/infra-data.json`, `index.html`, `sw.js`, `version.json` e `executive-dashboard.js`. Atualização de contadores (366 Edge), dados 10/10 (3 SQL e 4.526 Storage), remoção de alarmes legados de Docker, controle manual autenticado preservado, status semanal de Edge = cobertura parcial. Sem alteração de Cloud Scheduler, Cloud Run, banco/Storage, APP, Central ou financeiro.
+
+- Build `CR-PM-V1.2.5.1-COFRE-AUDIT-20261010`
+- Commit final de artefatos: `465d0ac1f9ede073ff4c21a20540ef5573f44651`
+- Workflow GitHub Pages para este SHA: **completed / success**, criado em 11/10/2026 às 02:21 UTC.
+- Leitura de volta dos cinco arquivos no GitHub: **PASS**; JSON válido, novo build consistente no service worker e UI, marcador BACKUP 10/10 OK, sem cartão estático crítico legado; `infra-data.json` sem alertas antigos de notebook/Drive.
+- **Limite de QA:** navegador HTTP externo indisponível nesta sessão. Deploy confirmado pelo workflow, mas não equivale a teste visual real em celular/notebook; não inventar esse teste.
+
+A atualização de indicadores não altera os critérios do restore drill homologado ou o estado do motor do backup.
