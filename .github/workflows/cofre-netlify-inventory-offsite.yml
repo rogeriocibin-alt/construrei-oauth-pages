@@ -1,0 +1,73 @@
+name: Cofre Zero | Netlify inventory and published offsite
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 7 * * *'
+  push:
+    branches:
+      - main
+      - checkpoint/cofre-zero-netlify-inventory-offsite-20261011
+    paths:
+      - .github/workflows/cofre-netlify-inventory-offsite.yml
+      - .github/scripts/cofre_netlify_inventory_offsite.py
+permissions:
+  contents: read
+concurrency:
+  group: cofre-zero-netlify-inventory-offsite
+  cancel-in-progress: false
+jobs:
+  copy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+      COFRE_OUTPUT_DIR: /tmp/cofre-netlify
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate secrets and runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/cofre_netlify_inventory_offsite.py
+          test -n "$NETLIFY_AUTH_TOKEN" || { echo "::error::No existing Netlify token"; exit 2; }
+          test -n "$RCLONE_CONFIG_B64" || { echo "::error::No existing Drive authorization"; exit 2; }
+          sudo apt-get update -qq && sudo apt-get install -qq -y rclone
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone lsd construrei-drive: >/dev/null
+      - name: Inventory and restore-test published files
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/cofre_netlify_inventory_offsite.py
+      - name: Private offsite snapshot and readback
+        shell: bash
+        run: |
+          set -euo pipefail
+          RUN_ID="$(date -u +%Y%m%d-%H%M%S)-$GITHUB_RUN_ID"
+          REMOTE="construrei-drive:CONSTRUREI-COFRE-ZERO/24_EXTERNAL_SOURCES/NETLIFY_INVENTORY_AND_PUBLISHED/RUN_$RUN_ID"
+          rclone copy "$COFRE_OUTPUT_DIR" "$REMOTE" --immutable
+          rclone check "$COFRE_OUTPUT_DIR" "$REMOTE" --one-way
+          mkdir -p "$RUNNER_TEMP/netlify-drive-readback"
+          rclone copy "$REMOTE" "$RUNNER_TEMP/netlify-drive-readback"
+          (cd "$RUNNER_TEMP/netlify-drive-readback" && sha256sum --check SHA256SUMS.txt)
+          python3 - <<'PY'
+          import os,json,pathlib,zipfile
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"netlify-drive-readback"
+          doc=json.loads((p/"INVENTORY.json").read_text())
+          assert doc["registered_sites"]==7 and doc["inventoried_sites"]==7
+          assert doc["status"]=="PASS_INVENTORY_WITH_PUBLISHED_STATIC"
+          for s in doc["sites"]:
+              if s["state"]=="STATIC_VERIFIED":
+                  with zipfile.ZipFile(p/s["archive"]) as z:
+                      assert len(z.namelist())==s["static_files"] and z.testzip() is None
+          print("PASS: immutable Drive readback and isolated static restore test")
+          PY
+          echo "## Cofre Zero — Netlify" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Seven project records snapshotted. Published sites backed up and SHA-readback." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Unpublished sites are INVENTORIED, not misrepresented as backed up." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Does not include Functions, deployment history, DNS or env secrets." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Snapshot: NETLIFY_INVENTORY_AND_PUBLISHED/RUN_$RUN_ID" >> "$GITHUB_STEP_SUMMARY"
