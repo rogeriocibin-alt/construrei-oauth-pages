@@ -10,6 +10,8 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
+      - central-runtime/_shared/cr-checklist-native-20261004.js
+      - preview/_shared/cr-checklist-native-20261004.js
       - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
       - docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json
       - 'preview/**'
@@ -23,6 +25,8 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
+      - central-runtime/_shared/cr-checklist-native-20261004.js
+      - preview/_shared/cr-checklist-native-20261004.js
       - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
       - docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json
       - 'preview/**'
@@ -96,3 +100,28 @@ jobs:
         run: python3 .github/scripts/cofre_governance_guard.py
       - name: Validate three-environment inventory (read-only)
         run: python3 .github/scripts/cr_environment_audit.py
+      - name: Verify byte-identical F00-F09 shared asset candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          source="preview/_shared/cr-checklist-native-20261004.js"
+          candidate="central-runtime/_shared/cr-checklist-native-20261004.js"
+          test -s "$source"
+          test -s "$candidate"
+          cmp "$source" "$candidate"
+          sha256sum "$source" "$candidate"
+          node --check "$source"
+          node --check "$candidate"
+          python3 - <<'PY'
+          from pathlib import Path
+          names = ["f00", "f01-canonical-20261001"] + [f"f{i:02d}" for i in range(2, 10)]
+          old = "preview/_shared/cr-checklist-native-20261004.js"
+          new = "central-runtime/_shared/cr-checklist-native-20261004.js"
+          assert len(names) == 10
+          for name in names:
+              page = Path("central-runtime") / name / "index.html"
+              assert page.is_file() and old in page.read_text(encoding="utf-8"), f"Unexpected production contract: {page}"
+          assert new not in "".join((Path("central-runtime") / n / "index.html").read_text(encoding="utf-8") for n in names), "Candidate linked before approval"
+          print("PASS: 10 live pages unchanged; exact copy and valid JS; no URL cutover")
+          PY
+
