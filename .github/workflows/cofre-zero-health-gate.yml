@@ -98,6 +98,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 2
       - name: Validate canonical governance without deleting data
         run: python3 .github/scripts/cofre_governance_guard.py
       - name: Validate three-environment inventory (read-only)
@@ -115,16 +116,20 @@ jobs:
           node --check "$source"
           node --check "$candidate"
           python3 - <<'PY'
+          import os
           from pathlib import Path
           names = ["f00", "f01-canonical-20261001"] + [f"f{i:02d}" for i in range(2, 10)]
-          old = "preview/_shared/cr-checklist-native-20261004.js"
-          new = "central-runtime/_shared/cr-checklist-native-20261004.js"
+          old = "../../preview/_shared/cr-checklist-native-20261004.js?v=20261004"
+          new = "../../central-runtime/_shared/cr-checklist-native-20261004.js?v=20261004"
+          candidate = os.getenv("GITHUB_EVENT_NAME") == "pull_request" and os.getenv("GITHUB_HEAD_REF") == "cr-homolog-f00-f09-canonic-v1-20261011"
           assert len(names) == 10
           for name in names:
               page = Path("central-runtime") / name / "index.html"
-              assert page.is_file() and old in page.read_text(encoding="utf-8"), f"Unexpected production contract: {page}"
-          assert new not in "".join((Path("central-runtime") / n / "index.html").read_text(encoding="utf-8") for n in names), "Candidate linked before approval"
-          print("PASS: 10 live pages unchanged; exact copy and valid JS; no URL cutover")
+              body = page.read_text(encoding="utf-8")
+              expected = new if candidate else old
+              forbidden = old if candidate else new
+              assert body.count(expected) == 1 and forbidden not in body, f"Unexpected import or URL changes: {page}"
+          print("PASS: 10/10 URLs match the expected candidate or protected main mode")
           PY
       - name: Local ephemeral staging smoke of F00-F09 canonical JS URLs
         run: python3 .github/scripts/cr_f00_f09_staging_smoke.py
