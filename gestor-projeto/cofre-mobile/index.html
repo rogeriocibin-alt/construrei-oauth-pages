@@ -91,7 +91,7 @@ async function refresh(){
   let r;try{r=await fetch(ENDPOINT,{cache:'no-store',headers:{Authorization:'Bearer '+ANON,apikey:ANON,Accept:'application/json'},signal:ctrl.signal})}finally{clearTimeout(t)}
   if(!r.ok)throw Error('HTTP '+r.status);
   const body=await r.json();if(!body.ok)throw Error('Não foi possível confirmar as fontes.');
-  localStorage.setItem('cr-cofre-mobile-readonly-v1',JSON.stringify(body));render(body);
+  try{localStorage.setItem('cr-cofre-mobile-readonly-v1',JSON.stringify(body))}catch(_){}render(body);
  }catch(e){
   try{const previous=localStorage.getItem('cr-cofre-mobile-readonly-v1');if(previous){render(JSON.parse(previous),true);return}}catch(_){}
   $('alert').className='alert error';$('alert').textContent='Não foi possível obter o estado atual ('+String(e?.message||e)+'). Nenhum backup foi iniciado ou modificado.';
