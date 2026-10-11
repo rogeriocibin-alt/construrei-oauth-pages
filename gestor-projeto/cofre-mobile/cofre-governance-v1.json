@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "title": "CONSTRU-REI | Governanca operacional canonica",
+  "effective_date": "2026-10-11",
+  "owner": "Gestor do Projeto CONSTRU-REI",
+  "mode": "audit_only_no_deletion",
+  "control_panel": "gestor-projeto/cofre-mobile/",
+  "principles": [
+    "Uma fonte oficial por dominio; candidatos e branches checkpoint nao sao producao.",
+    "Copias externas sao redundancia de recuperacao, nao clones de aplicacoes.",
+    "Nenhuma exclusao automatica antes de inventario, politica de retencao, backup verificavel e restauracao isolada.",
+    "Nenhuma promocao automatica de candidata sem teste e protecao anti-regressao.",
+    "Credenciais privilegiadas permanecem no servidor; nada de tokens secretos no PWA."
+  ],
+  "canonical_sources": [
+    {
+      "domain": "gestor",
+      "primary": "gestor-projeto/",
+      "role": "painel central e leitura; nao e armazenamento principal"
+    },
+    {
+      "domain": "central",
+      "primary": "production/central-operacional-v2-ux-r1-2-homologada-20261005/",
+      "guard": ".github/workflows/central-canonical-guard.yml",
+      "role": "producao homologada; nunca promover branch checkpoint por descoberta automatica"
+    },
+    {
+      "domain": "database_and_storage",
+      "primary": "Google Cloud Run + Cloud Scheduler",
+      "schedule_local": "03:00 America/Sao_Paulo",
+      "role": "executor operacional principal; GitHub nao deve duplicar backup de producao"
+    },
+    {
+      "domain": "daily_archive",
+      "primary": ".github/workflows/cofre-zero-history-full.yml",
+      "role": "copia imutavel de CURRENT; nao e outro banco nem outro app"
+    },
+    {
+      "domain": "trello",
+      "primary": "PR #47 + workflow guarded",
+      "role": "arquivos e anexos integrais so contam apos restauracao; snapshot semanal distinto nao substitui anexo"
+    },
+    {
+      "domain": "netlify",
+      "primary": ".github/workflows/cofre-netlify-inventory-offsite.yml",
+      "role": "inventario 7 projetos; copia apenas deploys recuperaveis, sem fabricar arquivos"
+    },
+    {
+      "domain": "private_financial_dashboard_git",
+      "primary": "repositório privado construrei-dashboard-v4-candidate",
+      "role": "espelho Git privado, nao uma segunda versao publicada do financeiro"
+    }
+  ],
+  "main_repository": "rogeriocibin-alt/construrei-oauth-pages",
+  "managed_workflows": [
+    {
+      "id": "daily_history",
+      "path": "cofre-zero-history-full.yml",
+      "cron_utc": "32 6 * * *",
+      "function": "arquivar CURRENT depois do Cloud Run",
+      "classification": "active_backup"
+    },
+    {
+      "id": "netlify_inventory",
+      "path": "cofre-netlify-inventory-offsite.yml",
+      "cron_utc": "15 7 * * *",
+      "function": "inventario de 7 sites e backup dos deploys publicados",
+      "classification": "active_backup"
+    },
+    {
+      "id": "public_git_offsite",
+      "path": "cofre-zero-git-offsite.yml",
+      "cron_utc": "37 6 * * 0",
+      "function": "espelho externo do historico Git publico",
+      "classification": "active_backup"
+    },
+    {
+      "id": "trello_guarded_dispatch",
+      "path": "cofre-trello-weekly-dispatch.yml",
+      "cron_utc": "45 7 * * 0",
+      "function": "disparo condicional; so libera apos merge e homologacao PR47",
+      "classification": "conditional_dispatch"
+    },
+    {
+      "id": "backup_health",
+      "path": "cofre-zero-health-gate.yml",
+      "cron_utc": "30 11 * * *",
+      "function": "auditoria de integridade, agendamentos e fontes",
+      "classification": "monitor_not_backup"
+    },
+    {
+      "id": "cloud_backup_manual",
+      "path": "construrei-cloud-backup.yml",
+      "cron_utc": null,
+      "function": "diagnostico/backup acionado manualmente; Cloud Run executa diario",
+      "classification": "manual_only"
+    },
+    {
+      "id": "trello_guarded_promote",
+      "path": "cofre-trello-guarded-promote.yml",
+      "cron_utc": null,
+      "function": "promocao protegida por workflow_run",
+      "classification": "conditional_release"
+    },
+    {
+      "id": "edge_integrity",
+      "path": "cofre-zero-edge-integrity.yml",
+      "cron_utc": null,
+      "function": "auditoria de SHA acionada manualmente ou por branch controlada",
+      "classification": "manual_audit"
+    },
+    {
+      "id": "mobile_smoke",
+      "path": "cofre-mobile-smoke.yml",
+      "cron_utc": null,
+      "function": "teste do painel movel, nao exporta dados",
+      "classification": "test"
+    },
+    {
+      "id": "central_guard",
+      "path": "central-canonical-guard.yml",
+      "cron_utc": null,
+      "function": "protege baseline oficial da Central",
+      "classification": "release_guard"
+    }
+  ],
+  "known_external_schedulers": [
+    {
+      "system": "Cloud Scheduler",
+      "job": "backup principal Cloud Run",
+      "status": "documentado_nao_auditado_por_este_guard"
+    },
+    {
+      "system": "Supabase pg_cron",
+      "job": "cofre-zero-weekly-sunday-03-brazil",
+      "cron_utc": "0 6 * * 0",
+      "status": "ativo_verificado_2026-10-11",
+      "note": "Confirmar escopo funcional antes de chamar de duplicado"
+    },
+    {
+      "system": "Supabase pg_cron",
+      "job": "cr-pendencias-auto-sync-15m",
+      "cron_utc": "*/15 * * * *",
+      "status": "ativo_verificado_2026-10-11",
+      "note": "Rotina operacional de pendencias, nao backup"
+    },
+    {
+      "system": "GitHub repo privado",
+      "job": "private dashboard Git offsite",
+      "status": "ativo_verificado_2026-10-11",
+      "note": "Rotina distinta de codigo privado"
+    }
+  ],
+  "known_recovery_gaps": [
+    "PR47: exportacao integral de anexos Trello ainda sem PASS final",
+    "Restauracao SQL completa em instancia descartavel ainda nao homologada",
+    "Netlify: seis projetos nao possuem deploy publicado recuperavel; inventario nao equivale a conteudo",
+    "Edge Functions: fonte copiada e hashes conferidos nao equivalem a restauracao executavel com configuracoes e segredos"
+  ],
+  "retention": {
+    "state": "NOT_ENFORCED",
+    "reason": "Nao apagar copias antigas ate medir volume, custo, janelas de restauracao e provar teste SQL+Trello.",
+    "default_action": "never_delete_automatically",
+    "lifecycle": "propor politica de retencao e so habilitar com protecao de ultima copia valida e restauracao testada"
+  },
+  "self_audit": {
+    "existing_workflow": ".github/workflows/cofre-zero-health-gate.yml",
+    "script": ".github/scripts/cofre_governance_guard.py",
+    "strict_rule": "falha quando workflow Cofre agendado aparece sem registro, some ou tem cron alterado",
+    "external_limitation": "agendamentos dos provedores externos sao catalogados, mas nao validados por este script"
+  }
+}
