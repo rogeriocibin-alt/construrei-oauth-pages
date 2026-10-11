@@ -4,6 +4,7 @@ on:
     paths:
       - .github/workflows/cofre-mobile-smoke.yml
       - gestor-projeto/cofre-mobile/index.html
+      - gestor-projeto/index.html
   workflow_dispatch:
 permissions:
   contents: read
@@ -30,6 +31,8 @@ jobs:
               if self.in_script: self.parts.append(d)
           src=Path("gestor-projeto/cofre-mobile/index.html").read_text()
           assert "cofre-mobile-status-v1" in src and "../" in src
+          manager=Path("gestor-projeto/index.html").read_text()
+          assert 'id="cofreMobileEntry"' in manager and 'href="./cofre-mobile/"' in manager
           parser=Scripts();parser.feed(src)
           script="\n".join(parser.parts)
           assert script.strip() and "addEventListener" in script
