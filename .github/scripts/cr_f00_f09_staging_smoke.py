@@ -43,9 +43,12 @@ def main():
         for name in MODULES:
             original = ROOT / "central-runtime" / name / "index.html"
             body = original.read_text(encoding="utf-8")
-            assert body.count(BEFORE) == 1, f"Expected exactly one original JS import: {name}"
-            candidate = body.replace(BEFORE, AFTER)
-            assert candidate.replace(AFTER, BEFORE) == body, f"Unexpected HTML change: {name}"
+            if body.count(BEFORE) == 1 and AFTER not in body:
+                candidate = body.replace(BEFORE, AFTER)
+                assert candidate.replace(AFTER, BEFORE) == body, f"Unexpected HTML change: {name}"
+            else:
+                assert body.count(AFTER) == 1 and BEFORE not in body, f"Invalid staged import: {name}"
+                candidate = body
             destination = temp / "central-runtime" / name / "index.html"
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_text(candidate, encoding="utf-8")
