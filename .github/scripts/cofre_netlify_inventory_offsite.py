@@ -82,7 +82,7 @@ def main():
             print("SITE",name,item["state"],item["static_files"],flush=True)
         except Exception as e:
             errors.append({"name":name,"reason":type(e).__name__})
-            print("ERROR",name,type(e).__name__,flush=True)
+            print("ERROR",name,type(e).__name__,str(e)[:180],flush=True)
     restored=sum(x["state"]=="STATIC_VERIFIED" for x in inventory)
     without=sum(x["state"]=="UNPUBLISHED" for x in inventory)
     status="PASS_INVENTORY_WITH_PUBLISHED_STATIC" if not errors and len(inventory)==7 and restored>0 else "FAIL_INVENTORY"
