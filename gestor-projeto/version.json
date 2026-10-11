@@ -1,7 +1,7 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
-  "version": "1.2.5.1",
-  "build": "CR-PM-V1.2.5.1-COFRE-AUDIT-20261010",
+  "version": "1.2.5.2",
+  "build": "CR-PM-V1.2.5.2-COFRE-AUDIT-20261010",
   "environment": "canonical",
   "release_status": "official_homologated",
   "base_official": "CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007",
@@ -13,7 +13,8 @@
     "Infraestrutura atualizada para refletir Cloud Run + Cloud Scheduler e independência do notebook.",
     "Backup automático diário às 03:00 permanece inalterado.",
     "Correção somente dos indicadores da Infraestrutura / Cofre Zero com prova Drive 10/10, sem alteração do executor Cloud Run, Cloud Scheduler, lógica financeira ou APP.",
-    "Alertas legados de Docker retirados; cobertura externa GitHub/Netlify/Edge permanece parcial, documentada no Gestor."
+    "Alertas legados de Docker retirados; cobertura externa GitHub/Netlify/Edge permanece parcial, documentada no Gestor.",
+    "Revisão final dos riscos e contadores estáticos; avisos históricos de segurança permanecem auditáveis, sem serem apresentados como métricas atuais."
   ],
   "gate": {
     "security": "PASS_NO_PUBLIC_WRITE",
