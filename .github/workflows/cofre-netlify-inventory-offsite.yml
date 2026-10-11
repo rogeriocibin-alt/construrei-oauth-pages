@@ -21,7 +21,7 @@ jobs:
     env:
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
-      COFRE_OUTPUT_DIR: ${{ runner.temp }}/cofre-netlify
+      COFRE_OUTPUT_DIR: /tmp/cofre-netlify
     steps:
       - uses: actions/checkout@v4
         with:
