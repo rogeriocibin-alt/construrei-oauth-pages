@@ -1,3 +1,15 @@
+## COFRE ZERO — PROTEÇÃO EXTERNA 11/10/2026 (checkpoint verificado)
+
+- Base de dados + Storage: Cloud Run/Scheduler 03:00 BRT, pacote 11/10 `20261011-060021` (3 SQL + 4526 objetos), independente de notebook; manter fluxo canônico, não reabrir `EXEC-BACKUP-AUTO-20261006`.
+- GitHub `construrei-oauth-pages`: backup Git completo de refs para Drive privado em 11/10, `GITHUB_PUBLIC_ALL_REFS.bundle`, 6.465.534 bytes, `git bundle verify` + `rclone check` + readback `cmp` PASS (Actions `38145087751`). Backup semanal domingo 03h37 BRT aprovado no main via PR #44, commit `77ad27e26702bd7fe1e3d8857e5cf033a6e4b301`.
+- GitHub privado `construrei-dashboard-v4-candidate`: código-fonte HEAD 47/47 preservado em quatro documentos privados no Drive e leitura reversa PASS. NÃO equivale a bundle completo; token de leitura `COFRE_GITHUB_READ_TOKEN` não configurado na automação.
+- Edge histórico: 338 diretórios, 339 arquivos = SHA256 339/339 PASS, sem diferenças, ausentes ou extras, Actions `38145646363`, relatório privado Drive `1yL7K_-L7ifRgglQl-wqNopyEZsHuT4Kh`. Verificador manual read-only homologado no main via PR #45, commit `5ebed2982f08f811c7571d2d46a452f689028231`. Inventário atual 366 Edge com 37 pacotes complementares preservados em 10/10; restauração executável integral ainda por demonstrar.
+- Netlify: sete sites inventariados no Drive e readback OK. Exportação independente estática candidata `checkpoint/cofre-zero-netlify-offsite-20261011`, PR #46 DRAFT; compilação PASS, exportação bloqueada com segurança pois `NETLIFY_AUTH_TOKEN` não existe nos GitHub Actions Secrets. Não promover até validar 7/7. Funções/configurações/segredos não abrangidos pela exportação estática.
+- Recuperação integral integrada em ambiente isolado ainda NÃO homologada. `EXEC-COFRE-COVERAGE-20261010` permanece **Em andamento** (P1), `backup_restore_ok=false`. Evidências completas e rollback em `docs/CHECKPOINT_COFRE_ZERO_PROTECAO_20261011.md`.
+- Não alterar arquitetura oficial, Central, APP, financeiro, permissões dos sites, banco ou serviços em produção. Não publicar tokens/segredos. Não declarar 100% antes do teste de recuperação.
+
+---
+
 ## COFRE ZERO — AUDITORIA / GESTOR V1.2.5.2 — 10/10/2026
 
 - Backup diário oficial no Google Cloud Run + Cloud Scheduler, independente de notebook. Google Drive `BACKUP_STATUS` de 10/10/2026 03:00 BRT: 3 SQL + 4.526 objetos Storage; último restore integral homologado 05/10.
