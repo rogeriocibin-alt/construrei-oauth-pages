@@ -1,8 +1,8 @@
-## COFRE ZERO — AUDITORIA / GESTOR V1.2.5.1 — 10/10/2026
+## COFRE ZERO — AUDITORIA / GESTOR V1.2.5.2 — 10/10/2026
 
 - Backup diário oficial no Google Cloud Run + Cloud Scheduler, independente de notebook. Google Drive `BACKUP_STATUS` de 10/10/2026 03:00 BRT: 3 SQL + 4.526 objetos Storage; último restore integral homologado 05/10.
 - Registro `blocked` de 27/09 no banco (`cofre_zero_backup_runs`) é execução **legada**, preservada por auditoria, e não indica falha da rotina cloud atual.
-- Gestor da versão V1.2.5.1: indicadores de backup atualizados, alerta falso de Docker removido, botão manual Cloud Run autenticado V1.2.5 mantido; GitHub Pages deployment success para commit `465d0ac1f9ede073ff4c21a20540ef5573f44651`.
+- Gestor V1.2.5.2: indicadores de backup atualizados, 366 Edge no inventário, avisos históricos de Docker/04-10 removidos, botão manual Cloud Run autenticado mantido; artefatos atualizados no commit `9962bc6e22b6543d6ba6fef4d24c8b189f66a687`. Readback GitHub PASS; publicação HTTP em checagem.
 - Rollback: `checkpoint/cofre-zero-pre-infra-refresh-20261010`. Fonte do checkpoint: `docs/CHECKPOINT_COFRE_ZERO_AUDITORIA_20261010.md`.
 - Banco mestre: `EXEC-BACKUP-AUTO-20261006` Concluído (5/5); `EXEC-COFRE-COVERAGE-20261010` Em andamento (P1, Infraestrutura) porque cópia integral de GitHub, 7 Netlify e 366 Edge Functions ainda não foi demonstrada.
 - Health Watch atualizado para alertas confirmados, sem falsos positivos da rotina legada. Verificação HTTP visual pós-deploy no navegador/celular permanece não confirmada nesta sessão; checkpoint/readback/workflow PASS.
