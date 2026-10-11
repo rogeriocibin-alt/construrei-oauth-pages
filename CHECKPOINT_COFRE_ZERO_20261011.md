@@ -52,3 +52,22 @@
 - Pela conversa do ChatGPT, usar conectores instalados GitHub/Supabase/Trello/Netlify para auditorias e ações permitidas, sem depender da cota do Work. Serviços subjacentes continuam sujeitos às suas próprias credenciais e disponibilidade.
 - Sempre preservar versão homologada, teste isolado, leitura antes de alteração, checkpoint e rollback. A falta dos seis Netlify estáticos continua real; não registrar Netlify 7/7 sem artefatos.
 
+
+
+## Checkpoint de arquitetura móvel e automação — 11/10/2026, 20h00 BRT
+
+### Operacional implantado e verificado (sem Work/notebook)
+- Painel do proprietário: https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/cofre-mobile/ • menu Gestor > Infraestrutura & TI. API Edge `cr-cofre-mobile-status-v1` GET/JWT, fonte DB + GitHub, sem secrets nem comandos mutáveis; smoke 38181982195 SUCCESS.
+- Executor principal Cloud Run + Cloud Scheduler 03:00 BRT permanece canônico. Histórico diário full no main, PR #48 integrado e CI 38169973796 SUCCESS. Arquivos SQL e Storage com SHA/readback; SQL replay integral do pacote 11/10 ainda não homologado.
+- Netlify PR #49 **integrado ao main**: 7/7 projetos inventariados; único deploy publicado `construrei-dashboard` com 14 arquivos + ZIP + SHA + Drive readback/restore estático PASS. 6 sites sem deploy publicado, portanto não existem arquivos estáticos recuperáveis nesses sites. Workflow `cofre-netlify-inventory-offsite.yml` 04:15 BRT diário. Main Actions 38181895937 SUCCESS. PR #46 legado integral permanece DRAFT e não é utilizado como cobertura fictícia.
+- Git financeiro privado: workflow no repo `rogeriocibin-alt/construrei-dashboard-v4-candidate` agenda 02:15 BRT diariamente, usa OIDC assinado com escopo do próprio repo e Supabase Edge `cofre-private-git-oidc-offsite-v1`, grava em `storage.buckets/cofre-zero-private-git` (privado), verifica SHA remoto, download, `git clone --mirror` e `git fsck` em ambiente descartável. Sucesso em 38181880257, 38182272365 e 38182608801. Nenhum PAT permanente GitHub/Supabase no runner. Verificar no próximo backup Cloud Run se o novo bucket foi incluído na exportação dinâmica.
+- Edge: manifesto privado no Drive de 10/10 referencia 366 fontes (baseline 338 + delta 28, refresh 9). Auditoria de 11/10 comparou live 370, sem função anterior perdida/alterada na comparação; 4 novas fontes completas versionadas em `cofre-zero/edge/EDGE_DELTA_20261011_4_FUNCOES.json` no Git privado, restauradas via bundle SHA independente, incluindo OIDC v6 e status v3. Isso **não** comprova restauração funcional de todas as Edge nem segredos de execução. Inventário cr_internal atualizado.
+- Gate diário cloud-native `cofre-zero-health-gate.yml` agendado 08:30 BRT, resultado 38182127412 SUCCESS com checks de histórico, Netlify e Git privado (última tentativa reexecutada SUCCESS). Não substitui auditoria detalhada Cloud Run.
+- GitHub-only release guard `cofre-trello-guarded-promote.yml` valida run ID 38180968850, SHA exato ae8ef98f2a8ac6220552e524e9df132d9c253a04, repo de origem, 3 etapas CI PASS e PR #47 antes de qualquer integração. Não faz checkout de código não confiável nem publica candidato diferente. O scheduler `cofre-trello-weekly-dispatch.yml` executa domingos 04:45 BRT **somente após o PR #47 estar integrado**, caso contrário SKIP seguro; primeira execução 38182583271 SUCCESS no skip.
+- Trello Full PR #47: OIDC é válido sem PAT, 13 quadros acessíveis, downloads binários autorizados e validação de caminhos reforçada; run 38180968850 attempt 2 estava em execução na última verificação, **sem** upload/restore final comprovado até aqui. Não declarar 100% nem ativar backup integral mensal/semanal como concluído antes de SUCCESS. A rotina semanal atual Supabase 11/10 teve 136 páginas/11.154 itens, mas não equivale a binários Trello.
+- Capacidade: backup integral Trello tem ~4.055 anexos declarados, ~1,85 GB; acompanhar quota Drive para evitar falha por retenção infinita de ZIPs completos. Nenhuma cópia preexistente apagada.
+
+### Continuidade e critérios
+- Acompanhar resultados diretamente pelo Cofre Zero móvel, sem Work. O scheduler externo e o gate foram instalados na nuvem.
+- Preservar Central, Dashboard V4, APP F00–F09, PWA Gestor e Cloud Run homologados. Nenhuma versão funcional foi reaberta.
+- Status global: **proteção de fontes principais automatizada, mas Cofre Zero integral 100% ainda NÃO homologado**, por Trello binário/restauração integral, SQL replay 11/10, segredos/configurações de fontes externas sem API e seis Netlify sem artefatos publicados.
