@@ -1,7 +1,7 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
-  "version": "1.2.5",
-  "build": "CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007",
+  "version": "1.2.5.1",
+  "build": "CR-PM-V1.2.5.1-COFRE-AUDIT-20261010",
   "environment": "canonical",
   "release_status": "official_homologated",
   "base_official": "CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007",
@@ -11,13 +11,16 @@
     "Status do acesso deriva da fonte de continuidade do próprio Gestor.",
     "Controle manual abre o Cloud Run autenticado; nenhuma credencial ou endpoint público de escrita é exposto.",
     "Infraestrutura atualizada para refletir Cloud Run + Cloud Scheduler e independência do notebook.",
-    "Backup automático diário às 03:00 permanece inalterado."
+    "Backup automático diário às 03:00 permanece inalterado.",
+    "Correção somente dos indicadores da Infraestrutura / Cofre Zero com prova Drive 10/10, sem alteração do executor Cloud Run, Cloud Scheduler, lógica financeira ou APP.",
+    "Alertas legados de Docker retirados; cobertura externa GitHub/Netlify/Edge permanece parcial, documentada no Gestor."
   ],
   "gate": {
     "security": "PASS_NO_PUBLIC_WRITE",
-    "cloud_backup_evidence": "PASS_20261007",
+    "cloud_backup_evidence": "DRIVE_PACKAGE_PRESENT_20261010",
     "restore_drill": "PASS_20261005",
-    "owner_publication_authorization": "APPROVED_20261007"
+    "owner_publication_authorization": "APPROVED_20261007",
+    "source_coverage": "PARTIAL_GITHUB_NETLIFY_EDGE"
   },
   "released_at": "2026-10-07",
   "branch": "main",
@@ -34,5 +37,6 @@
     "pr": 42,
     "merge_sha": "e44d82810cd56d03247df9e7e1008ae3d61ce0c2",
     "state": "MERGED_TO_MAIN"
-  }
+  },
+  "patch_note": "Atualização documental/indicadores; rollback checkpoint/cofre-zero-pre-infra-refresh-20261010; exigir checagem visual pós-publicação."
 }
