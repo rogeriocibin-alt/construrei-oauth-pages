@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Use GitHub Actions ephemeral OIDC: no management PAT and no Trello token on runner."""
-import json,os,runpy,urllib.request,urllib.error,urllib.parse
+import json,os,runpy,urllib.request,urllib.error,urllib.parse,base64
 
 BRIDGE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cofre-trello-oidc-readonly-v1"
 AUD="construrei-cofre-trello-readonly-v1"
@@ -34,14 +34,30 @@ def rejected(token,method,path,statuses):
 def main():
     print("CHECK: temporary GitHub OIDC / Supabase read-only bridge",flush=True)
     token=id_token()
+    claims=json.loads(base64.urlsafe_b64decode(token.split(".")[1]+"==="))
+    required={
+      "issuer":claims.get("iss")=="https://token.actions.githubusercontent.com",
+      "audience":claims.get("aud")==AUD,
+      "repository":claims.get("repository")=="rogeriocibin-alt/construrei-oauth-pages",
+      "repository_id":str(claims.get("repository_id"))=="1388982225",
+      "owner_id":str(claims.get("repository_owner_id"))=="324275787",
+      "branch":claims.get("ref")=="refs/heads/checkpoint/cofre-zero-trello-offsite-20261011",
+      "workflow":claims.get("workflow_ref")=="rogeriocibin-alt/construrei-oauth-pages/.github/workflows/cofre-zero-trello-offsite.yml@refs/heads/checkpoint/cofre-zero-trello-offsite-20261011",
+      "event":claims.get("event_name") in ("push","workflow_dispatch"),
+      "run_id":str(claims.get("run_id","")).isdigit(),
+      "runner":claims.get("runner_environment")=="github-hosted"}
+    print("CHECK: OIDC claim checks (no token or claim content)",required,flush=True)
     rejected(None,"GET","/health",(401,403))
+    print("PASS: anonymous denied",flush=True)
     rejected(id_token("construrei-wrong-audience-negative-test"),"GET","/health",(401,403))
+    print("PASS: wrong audience denied",flush=True)
     rejected(token,"POST","/health",(405,))
+    print("PASS: POST denied",flush=True)
     rejected(token,"GET","/not-allowed",(400,))
+    print("PASS: unknown path denied",flush=True)
     health=call("/health",token)
     if not health.get("ready") or health.get("mode")!="OIDC_READ_ONLY":
         raise RuntimeError("OIDC bridge is not ready")
-    member=call("/members/me&fields=username",token) if False else None
     # Query parameters must be passed separately, keeping path allowlist strict.
     url=BRIDGE+"?path=/members/me&fields=username"
     req=urllib.request.Request(url,headers={"Authorization":"Bearer "+token},method="GET")
