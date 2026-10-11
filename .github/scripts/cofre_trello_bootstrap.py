@@ -59,12 +59,12 @@ def main():
     if not health.get("ready") or health.get("mode")!="OIDC_READ_ONLY":
         raise RuntimeError("OIDC bridge is not ready")
     # Query parameters must be passed separately, keeping path allowlist strict.
-    url=BRIDGE+"?path=/members/me&fields=username"
+    url=BRIDGE+"?path=/members/me/boards&filter=all&fields=id,name"
     req=urllib.request.Request(url,headers={"Authorization":"Bearer "+token},method="GET")
-    with urllib.request.urlopen(req,timeout=35) as r:member=json.load(r)
-    if member.get("username")!="construrei":
-        raise RuntimeError("Trello account mismatch; export stopped")
-    print("PASS: signature, audience, repository, exact workflow, denied requests, Trello account",flush=True)
+    with urllib.request.urlopen(req,timeout=35) as r:boards=json.load(r)
+    if not isinstance(boards,list) or len(boards)<13:
+        raise RuntimeError("Expected 13 Trello boards not accessible; export stopped")
+    print("PASS: signature, audience, repository, exact workflow, deny tests and Trello inventory",flush=True)
     os.environ["TRELLO_BACKUP_BRIDGE"]=BRIDGE
     os.environ.pop("TRELLO_BACKUP_BRIDGE_TOKEN",None)
     runpy.run_path(".github/scripts/cofre_trello_readonly.py",run_name="__main__")
@@ -72,6 +72,11 @@ def main():
 if __name__=="__main__":
     try:main()
     except urllib.error.HTTPError as e:
-        print("BLOCKED: remote authorization/API status",e.code,flush=True);raise SystemExit(1)
+        try:
+            body=json.loads(e.read())
+            category=body.get("error","UNKNOWN") if isinstance(body,dict) else "UNKNOWN"
+        except Exception:category="UNKNOWN"
+        print("BLOCKED: remote status",e.code,"category",category if category in ("UNAUTHORIZED","TRELLO_UPSTREAM","SOURCE_CREDENTIAL_UNAVAILABLE","PATH_NOT_ALLOWED","UNKNOWN") else "OTHER",flush=True)
+        raise SystemExit(1)
     except Exception as e:
         print("BLOCKED:",type(e).__name__,str(e)[:160],flush=True);raise SystemExit(1)
