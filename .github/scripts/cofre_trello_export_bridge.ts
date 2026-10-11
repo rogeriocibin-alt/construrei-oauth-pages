@@ -1,6 +1,6 @@
 const json=(value:unknown,status=200)=>new Response(JSON.stringify(value),{status,headers:{"content-type":"application/json","cache-control":"no-store"}});
 const ID="[0-9a-f]{24}";
-const allowed=new RegExp("^(?:/members/me(?:/boards)?|/boards/"+ID+"(?:/(?:cards|lists|labels|actions))?|/cards/"+ID+"/(?:checklists|attachments(?:/"+ID+"/download/[^/]+)?))$");
+const allowed=new RegExp("^(?:/members/me(?:/boards)?|/boards/"+ID+"(?:/(?:cards|lists|labels|actions|customFields))?|/cards/"+ID+"/(?:checklists|attachments(?:/"+ID+"/download/[^/]+)?))$");
 const queryNames=new Set(["filter","fields","limit","before","attachments","attachment_fields","checklists","customFieldItems"]);
 Deno.serve(async(req:Request)=>{
  const service=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
