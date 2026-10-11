@@ -29,3 +29,26 @@
 ## Rollback
 - Mudança adiciona um caminho de backup somente leitura da produção, e o antigo Cloud Run segue intocado.
 - Para desativar agendamento futuro, reverter o merge do workflow novo; nunca apagar `HISTORY_FULL` existente.
+
+
+## Atualização móvel sem dependência do Work — 11/10/2026 (19h30 BRT)
+
+**Entregue e verificado:**
+- Gestor do Projeto → Infraestrutura & TI → **Cofre Zero • Controle Móvel**; link próprio: https://rogeriocibin-alt.github.io/construrei-oauth-pages/gestor-projeto/cofre-mobile/
+- Nova função Supabase `cr-cofre-mobile-status-v1` (JWT habilitado, GET/OPTIONS, sem mutações) consulta somente status agregado do histórico Supabase e dos GitHub Actions. Nenhum segredo administrativo entregue ao navegador.
+- CI `.github/workflows/cofre-mobile-smoke.yml` testa JavaScript, integração real com Supabase/GitHub, bloqueio de POST e link do Gestor. Execução **SUCCESS**: https://github.com/rogeriocibin-alt/construrei-oauth-pages/actions/runs/38180472942
+- Página instalada sob o mesmo escopo do PWA; a alteração na versão canônica limita-se a um link em Infraestrutura & TI. Central, motor de backup Cloud Run e fluxos F00–F09 preservados.
+- A consulta de `cr_internal.cofre_zero_executions` confirma último backup semanal em 11/10/2026 06:00–06:02 UTC, status completed: 136 páginas/11.154 itens, com inventário de 13 quadros Trello. **Não inclui garantia de binários Trello.**
+
+**Correção da dependência de credencial de gerenciamento no PR #47:**
+- Teste anterior falhava com HTTP 401 em `https://api.supabase.com/v1/projects/.../api-keys?reveal=true`; a variável de PAT existia, mas não tinha autorização.
+- Candidata `cofre-trello-oidc-readonly-v1` valida assinatura GitHub OIDC/JWKS, emissor, audiência dedicada, IDs imutáveis do repositório/proprietário, ref exata, workflow_ref, evento e runner. Apenas GET e caminhos Trello permitidos. Verificações negativas sem credencial, audiência diferente, método POST e path fora da lista foram aprovadas no runner 38180825370.
+- Sem PAT permanente no GitHub, sem segredo do Trello no executor e sem depender do Work. Os segredos Trello existentes permanecem exclusivamente no Supabase.
+- O segundo ensaio 38180825370 comprovou leitura do inventário dos 13 quadros. O bloqueio subsequente era um gate local antigo que exigia token fixo. Esse gate foi corrigido no commit `313da252`; a execução `38180875426` foi iniciada para validar o arquivo integral e o readback do Drive. Não afirmar sucesso integral antes de conferir o resultado definitivo.
+- O PR #47 continua DRAFT, sem merge/agenda e sem autorizar alteração de fonte Trello, até validação dos anexos/ZIP/restauração e cópia offsite.
+
+**Controle operacional:**
+- A tela móvel oferece atualização, cópia do checkpoint, histórico e retorno ao Gestor; **não promete um botão manual de backup** sem vínculo real do proprietário ao Supabase Auth/RBAC. Em 11/10, a tabela `cr_rbac_expected_human_users` registra `ROGERIO` validado humanamente, mas `auth_user_id` não vinculado; não aceitar PIN fixo público, URL mágica sem autenticação, credenciais em código ou operação privilegiada com JWT `anon`.
+- Pela conversa do ChatGPT, usar conectores instalados GitHub/Supabase/Trello/Netlify para auditorias e ações permitidas, sem depender da cota do Work. Serviços subjacentes continuam sujeitos às suas próprias credenciais e disponibilidade.
+- Sempre preservar versão homologada, teste isolado, leitura antes de alteração, checkpoint e rollback. A falta dos seis Netlify estáticos continua real; não registrar Netlify 7/7 sem artefatos.
+
