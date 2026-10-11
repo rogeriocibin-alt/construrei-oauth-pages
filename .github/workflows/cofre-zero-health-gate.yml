@@ -10,6 +10,7 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
+      - .github/scripts/cr_f00_f09_staging_smoke.py
       - central-runtime/_shared/cr-checklist-native-20261004.js
       - preview/_shared/cr-checklist-native-20261004.js
       - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
@@ -25,6 +26,7 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
+      - .github/scripts/cr_f00_f09_staging_smoke.py
       - central-runtime/_shared/cr-checklist-native-20261004.js
       - preview/_shared/cr-checklist-native-20261004.js
       - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
@@ -124,4 +126,6 @@ jobs:
           assert new not in "".join((Path("central-runtime") / n / "index.html").read_text(encoding="utf-8") for n in names), "Candidate linked before approval"
           print("PASS: 10 live pages unchanged; exact copy and valid JS; no URL cutover")
           PY
+      - name: Local ephemeral staging smoke of F00-F09 canonical JS URLs
+        run: python3 .github/scripts/cr_f00_f09_staging_smoke.py
 
