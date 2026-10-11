@@ -1,0 +1,62 @@
+name: Cofre Zero | Cloud backup health gate
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 11 * * *'
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cofre-zero-health-gate.yml
+permissions:
+  contents: read
+concurrency:
+  group: cofre-zero-health-gate
+  cancel-in-progress: false
+jobs:
+  health:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify independent latest backup evidence
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json,urllib.request,datetime,sys
+          content=Path('gestor-projeto/cofre-mobile/index.html').read_text()
+          key=re.search(r"const ANON='([^']+)'",content).group(1)
+          url="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-cofre-mobile-status-v1?api=status"
+          req=urllib.request.Request(url,headers={"authorization":"Bearer "+key,"apikey":key})
+          with urllib.request.urlopen(req,timeout=20) as r: report=json.load(r)
+          if not report.get('ok'):raise RuntimeError('No live health report')
+          github=report['sources']['github']
+          sup=report['sources']['supabase']
+          assert github.get('ok') and sup.get('ok'), 'Health sources not accessible'
+          items=github.get('workflows',[])
+          def found(needle):
+            return next((x.get('latest') for x in items if needle in x.get('name','')),None)
+          now=datetime.datetime.now(datetime.timezone.utc)
+          checks=[]
+          for needle in ('Immutable daily full archive','Netlify inventory and published offsite'):
+            item=found(needle)
+            valid=bool(item and item.get('conclusion')=='success')
+            if valid:
+              start=datetime.datetime.fromisoformat(item['created_at'].replace('Z','+00:00'))
+              valid=(now-start).total_seconds()<72*3600
+            checks.append((needle,valid))
+          private=sup.get('private_git') or {}
+          last=private.get('last_uploaded')
+          fresh=False
+          if last:
+            start=datetime.datetime.fromisoformat(last.replace('Z','+00:00'))
+            fresh=(now-start).total_seconds()<72*3600
+          checks.append(('private dashboard Git offsite',bool(private.get('stored') and fresh)))
+          print('## Cofre Zero — daily cloud checks')
+          for name,passed in checks:print(('PASS' if passed else 'FAIL')+' '+name)
+          print('Trello attachments: independent recovery candidate, not included as PASS until end-to-end proof')
+          errors=[name for name,passed in checks if not passed]
+          if errors:raise RuntimeError('Backup gate failed: '+','.join(errors))
+          print('PASS: verified evidence, no notebook or Work required')
+          PY
