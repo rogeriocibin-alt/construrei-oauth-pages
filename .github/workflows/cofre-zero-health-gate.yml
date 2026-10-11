@@ -9,12 +9,16 @@ on:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
+      - .github/scripts/cr_environment_audit.py
+      - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
   pull_request:
     branches: [main]
     paths:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
+      - .github/scripts/cr_environment_audit.py
+      - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
 permissions:
   contents: read
 concurrency:
@@ -80,3 +84,5 @@ jobs:
           persist-credentials: false
       - name: Validate canonical governance without deleting data
         run: python3 .github/scripts/cofre_governance_guard.py
+      - name: Validate three-environment inventory (read-only)
+        run: python3 .github/scripts/cr_environment_audit.py
