@@ -7,7 +7,7 @@ KEY=os.getenv("TRELLO_API_KEY","")
 TOKEN=os.getenv("TRELLO_API_TOKEN","")
 BRIDGE=os.getenv("TRELLO_BACKUP_BRIDGE","")
 BRIDGE_TOKEN=os.getenv("TRELLO_BACKUP_BRIDGE_TOKEN","")
-READY=bool(BRIDGE and BRIDGE_TOKEN) or bool(KEY and TOKEN)
+READY=bool(BRIDGE and os.getenv("ACTIONS_ID_TOKEN_REQUEST_URL") and os.getenv("ACTIONS_ID_TOKEN_REQUEST_TOKEN")) or bool(KEY and TOKEN)
 DEST=pathlib.Path(os.getenv("TRELLO_EXPORT_DIR","trello-private-snapshot"))
 ROOT="https://api.trello.com/1"
 MAX_BYTES=int(os.getenv("TRELLO_MAX_BYTES",str(2*1024*1024*1024)))
@@ -143,7 +143,7 @@ def export():
     return manifest
 def main():
     if not READY:
-        print("BLOCKED: TRELLO_API_KEY / TRELLO_API_TOKEN absent; no Trello operation")
+        print("BLOCKED: neither GitHub OIDC bridge nor direct Trello authorization available")
         return 2
     manifest=export()
     file_index=[]
