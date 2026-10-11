@@ -122,7 +122,7 @@ def export():
                 if not re.fullmatch(r"[0-9a-f]{24}",aid):raise RuntimeError("Invalid attachment ID")
                 original_filename=str(att.get("fileName") or att.get("name") or "attachment")
                 filename=safe_name(original_filename)
-                blob=request("/cards/"+cid+"/attachments/"+aid+"/download/"+urllib.parse.quote(original_filename,safe=""),binary=True)
+                blob=request("/cards/"+cid+"/attachments/"+aid+"/download/"+urllib.parse.quote(urllib.parse.unquote(original_filename),safe=""),binary=True)
                 TOTAL_BYTES+=len(blob)
                 if TOTAL_BYTES>MAX_BYTES:raise RuntimeError("Total attachment limit exceeded; no completed archive published")
                 if att.get("bytes") is not None and len(blob)!=int(att["bytes"]):
