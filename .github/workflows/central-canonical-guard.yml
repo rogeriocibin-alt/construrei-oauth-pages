@@ -34,37 +34,7 @@ on:
       - 'diretoria-master/**'
       - 'admin-tecnico/**'
   pull_request:
-    paths:
-      - 'production/central-homologada-20261001/index.html'
-      - 'central-canonical/current/**'
-      - 'central-canonical/VISUAL_IDENTITY_CANONICAL_20261002.md'
-      - 'central-runtime/**/*.html'
-      - 'central-runtime/ui/**'
-      - 'central/presentation.html'
-      - '.github/workflows/central-canonical-guard.yml'
-      - '.github/scripts/cr_central_full_scope_audit.py'
-      - '.github/scripts/cr_ecosystem_contract_audit.py'
-      - 'docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md'
-      - 'gestor-projeto/project-data.json'
-      - 'gestor-projeto/version.json'
-      - 'gestor-projeto/sw.js'
-      - 'docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json'
-      - '.github/workflows/*.yml'
-      - '.github/workflows/*.yaml'
-      - 'docs/official-links-registry.json'
-      - 'production/central-operacional-v2-ux-r1-2-homologada-20261005/**'
-      - 'production/dashboard-financeiro-v4/**'
-      - 'gestor-projeto/index.html'
-      - 'preview/app-gabi-v21-parecer-logo-20261008/**'
-      - 'checklist-operacional/**'
-      - 'pendencias-app/**'
-      - 'pendencias-wizy-flow/**'
-      - 'pendencias-eder-agora/**'
-      - 'apresentacao/**'
-      - 'documentacao/**'
-      - 'diretoria-master/**'
-      - 'admin-tecnico/**'
-
+    branches: [main]
 permissions:
   contents: read
 
