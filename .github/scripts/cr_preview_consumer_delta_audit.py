@@ -122,12 +122,21 @@ def main():
     priority_provenance = {}
     for name in referenced_union:
         origins = sorted(consumers.get(name, set()))
+        def source_role(kind, rel):
+            if kind == "CANDIDATE_INTERNAL":
+                return "OTHER_PREVIEW_CANDIDATE"
+            if rel.startswith("snapshots/") or rel == "FLOW_BASELINE_MANIFEST.json":
+                return "TRACKED_ARCHIVE_OR_BASELINE_NOT_LIVE_PROOF"
+            return "NON_PREVIEW_CODE_RUNTIME_UNVERIFIED"
+        roles = [source_role(kind, origin) for kind, origin in origins]
         priority_provenance[name] = {
             "static_origin_count": len(origins),
             "origins_sample": [
-                {"kind": kind, "tracked_path": origin}
+                {"kind": kind, "source_role": source_role(kind, origin), "tracked_path": origin}
                 for kind, origin in origins[:6]
             ],
+            "archival_or_baseline_origin_count": roles.count("TRACKED_ARCHIVE_OR_BASELINE_NOT_LIVE_PROOF"),
+            "non_preview_code_runtime_unverified_count": roles.count("NON_PREVIEW_CODE_RUNTIME_UNVERIFIED"),
             "sample_truncated": len(origins) > 6,
             "runtime_or_external_use_verified": False,
             "eligible_for_deletion": False,
@@ -152,6 +161,8 @@ def main():
         "unclassified_referenced_by_other_previews": candidate_chain,
         "unclassified_referenced_by_either_count": len(referenced_union),
         "priority_unclassified_static_origin_provenance": priority_provenance,
+        "unclassified_non_preview_references_are_live_proof": False,
+        "unclassified_with_non_preview_runtime_unverified_sources": sorted(name for name in high_priority if priority_provenance[name]["non_preview_code_runtime_unverified_count"] > 0),
         "sample_duplicate_byte_groups_review_only": byte_duplicate_examples,
         "static_reference_absence_does_not_prove_removability": True,
         "identical_byte_hash_groups": len(identical_groups),
