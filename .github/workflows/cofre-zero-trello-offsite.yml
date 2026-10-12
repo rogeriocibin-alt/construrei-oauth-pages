@@ -43,6 +43,12 @@ jobs:
           chmod 600 "$HOME/.config/rclone/rclone.conf"
           rclone lsd construrei-drive: >/dev/null
 
+      - name: Verify private Drive quota and Trello archive budget before export
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/cofre_trello_capacity_guard.py
+
       - name: GitHub OIDC authorized read-only Trello archive and restore check
         shell: bash
         env:

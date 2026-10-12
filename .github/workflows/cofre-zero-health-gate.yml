@@ -20,6 +20,7 @@ on:
       - '.github/workflows/*.yml'
       - '.github/workflows/*.yaml'
       - .github/scripts/cofre_trello_bootstrap.py
+      - .github/scripts/cofre_trello_capacity_guard.py
       - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
@@ -49,6 +50,7 @@ on:
       - '.github/workflows/*.yml'
       - '.github/workflows/*.yaml'
       - .github/scripts/cofre_trello_bootstrap.py
+      - .github/scripts/cofre_trello_capacity_guard.py
       - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
@@ -158,6 +160,7 @@ jobs:
         run: |
           python3 -m py_compile .github/scripts/cofre_trello_bootstrap.py
           python3 .github/scripts/test_cofre_trello_claims.py
+          python3 .github/scripts/cofre_trello_capacity_guard.py --selftest
       - name: Validate three-environment inventory (read-only)
         run: python3 .github/scripts/cr_environment_audit.py
       - name: Verify byte-identical F00-F09 shared asset candidate
