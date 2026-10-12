@@ -12,6 +12,7 @@ on:
       - .github/scripts/cr_ephemeral_publication_gate.py
       - .github/scripts/cr_static_runtime_dependency_audit.py
       - .github/scripts/cr_sql_restore_preflight.py
+      - .github/scripts/cr_netlify_historical_provenance_guard.py
       - .github/scripts/cr_cofre_health_latest.py
       - .github/scripts/test_cr_cofre_health_latest.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
@@ -39,6 +40,7 @@ on:
       - .github/scripts/cr_ephemeral_publication_gate.py
       - .github/scripts/cr_static_runtime_dependency_audit.py
       - .github/scripts/cr_sql_restore_preflight.py
+      - .github/scripts/cr_netlify_historical_provenance_guard.py
       - .github/scripts/cr_cofre_health_latest.py
       - .github/scripts/test_cr_cofre_health_latest.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
@@ -133,6 +135,8 @@ jobs:
         run: python3 .github/scripts/test_cr_cofre_health_latest.py
       - name: SQL restore preflight tests (synthetic only; no database)
         run: python3 .github/scripts/cr_sql_restore_preflight.py --selftest
+      - name: Protect historical source candidates for Netlify unpublished sites
+        run: python3 .github/scripts/cr_netlify_historical_provenance_guard.py
       - name: Query public workflow history directly to verify pagination fallback
         env:
           GITHUB_TOKEN: ${{ github.token }}
