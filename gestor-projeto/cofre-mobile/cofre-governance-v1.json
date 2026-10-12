@@ -38,7 +38,7 @@
     {
       "domain": "trello",
       "primary": "PR #47 + workflow guarded",
-      "role": "arquivos e anexos integrais so contam apos restauracao; snapshot semanal distinto nao substitui anexo"
+      "role": "Backup Trello completo e anexos validado por main/workflow_dispatch e restore offline; primeira recorrencia semanal schedule 18/10 ainda precisa ser comprovada."
     },
     {
       "domain": "netlify",
@@ -48,7 +48,7 @@
     {
       "domain": "private_financial_dashboard_git",
       "primary": "repositório privado construrei-dashboard-v4-candidate",
-      "role": "espelho Git privado, nao uma segunda versao publicada do financeiro"
+      "role": "Backup Git privado autonomo no proprio repositorio financeiro: rotina agendada OIDC com bundle completo, SHA256 e clone/fsck; nao depende do token opcional do Git offsite publico."
     }
   ],
   "main_repository": "rogeriocibin-alt/construrei-oauth-pages",
@@ -147,19 +147,20 @@
     {
       "system": "GitHub repo privado",
       "job": "private dashboard Git offsite",
-      "status": "ativo_verificado_2026-10-11",
-      "note": "Rotina distinta de codigo privado"
+      "status": "schedule_sucesso_2026-10-12_run_38253959025",
+      "note": "Bundle all refs privado, OIDC upload, remote SHA256 readback e clone --mirror/git fsck PASS; publico sem COFRE_GITHUB_READ_TOKEN nao impede cobertura privada autonoma."
     }
   ],
   "known_recovery_gaps": [
-    "PR47: exportacao integral de anexos Trello ainda sem PASS final",
-    "Restauracao SQL completa em instancia descartavel ainda nao homologada",
-    "Netlify: seis projetos nao possuem deploy publicado recuperavel; inventario nao equivale a conteudo",
-    "Edge Functions: fonte copiada e hashes conferidos nao equivalem a restauracao executavel com configuracoes e segredos"
+    "Recorrencia CAS+193 migracoes: primeiro event=schedule apos PR#87 a verificar em 13/10/2026 (push main PASS em 12/10).",
+    "Recorrencia semanal Trello: primeiro event=schedule a verificar em 18/10/2026 (main manual + readback/offline restore PASS em 12/10).",
+    "Prova integrada offline PG17/ACL/ledger/4531 identidades Storage PASS; ainda nao ha ensaio completo de OAuth/segredos de terceiros, 370 Edge em execucao e fluxo aplicativo/rollback em ambos dispositivos.",
+    "Netlify: 7 projetos, 1 deploy published recuperado; seis historicos sem published e sem qualquer deploy ready/old na API; tres fontes Git relacionadas preservadas, sem afirmar bytes inexistentes.",
+    "Histórico full Git privado PASS na rotina propria em 12/10; workflow do Git publico exibe token opcional privado ausente e isso NAO equivale a falha da rotina independente."
   ],
   "retention": {
     "state": "NOT_ENFORCED",
-    "reason": "Nao apagar copias antigas ate medir volume, custo, janelas de restauracao e provar teste SQL+Trello.",
+    "reason": "Nao excluir historicos sem prova de recorrencia de todos os executores e procedimento de recuperacao do ecossistema completo; restauracao SQL+Storage+ledger offline e Trello ja tiveram PASS parcial/isolado.",
     "default_action": "never_delete_automatically",
     "lifecycle": "propor politica de retencao e so habilitar com protecao de ultima copia valida e restauracao testada"
   },
