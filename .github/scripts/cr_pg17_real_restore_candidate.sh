@@ -44,7 +44,6 @@ docker pull --quiet supabase/postgres:17.6.1.136 >/dev/null
 CID="$(docker run -d --rm --network none --memory 3g --cpus 2 \
   -e POSTGRES_PASSWORD=synthetic-disposable-only \
   -e POSTGRES_DB=postgres \
-  -v "$WORK:/restore:ro" \
   supabase/postgres:17.6.1.136 \
   postgres -c config_file=/etc/postgresql/postgresql.conf)"
 READY=0
@@ -53,6 +52,16 @@ for count in $(seq 1 36); do
   sleep 3
 done
 if test "$READY" -ne 1; then echo 'BLOCKED: isolated Supabase PG17 bootstrap not ready'; exit 5; fi
+# Keep private runner files 0700; copy bytes inside this network-isolated
+# disposable container and assign read-only SQL files to its local postgres user.
+# Never chmod the private Drive artifacts world-readable on the host.
+docker exec -u root "$CID" mkdir -p /restore
+docker cp "$WORK/03_DATABASE" "$CID:/restore/" >/dev/null
+docker exec -u root "$CID" chown -R postgres:postgres /restore
+docker exec -u root "$CID" chmod -R go-rwx /restore
+docker exec -u postgres "$CID" test -r /restore/03_DATABASE/roles.sql
+docker exec -u postgres "$CID" test -r /restore/03_DATABASE/schema.sql
+docker exec -u postgres "$CID" test -r /restore/03_DATABASE/data.sql
 VER="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc 'show server_version_num')"
 test "$VER" -ge 170000 && test "$VER" -lt 180000 || { echo 'BLOCKED: Postgres 17 mismatch'; exit 6; }
 ROLES="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from pg_roles where rolname in ('anon','authenticated','authenticator','supabase_realtime_admin')")"
