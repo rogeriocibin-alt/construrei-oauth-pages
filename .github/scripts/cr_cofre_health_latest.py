@@ -22,7 +22,9 @@ def latest(workflows, needle, getter=None):
     """Return (run-or-None, evidence-source). No success assumptions."""
     for item in workflows:
         if needle in item.get("name", ""):
-            if item.get("latest") is not None:
+            # Pending runs are not restore evidence. Verify the latest completed run.
+            if (item.get("latest") is not None and item["latest"].get("status") == "completed"
+                    and item["latest"].get("branch", item["latest"].get("head_branch")) in (None, "main")):
                 return item["latest"], "edge-summary"
             break
     filename = WORKFLOW_MAP.get(needle)
@@ -31,7 +33,7 @@ def latest(workflows, needle, getter=None):
     api = (
         "https://api.github.com/repos/" + REPO
         + "/actions/workflows/" + quote(filename, safe="")
-        + "/runs?per_page=5"
+        + "/runs?per_page=50"
     )
     if getter is None:
         def getter(url):
@@ -54,7 +56,12 @@ def latest(workflows, needle, getter=None):
     if not isinstance(runs, list):
         raise RuntimeError("Invalid GitHub workflow run response")
     relevant = [r for r in runs if needle in r.get("name", "")]
-    latest_run = max(relevant, key=lambda r: r.get("created_at", "")) if relevant else None
+    # Prefer last completed production execution; never hide completed failures.
+    completed = [r for r in relevant if r.get("status") == "completed"]
+    candidates = completed if completed else relevant
+    main = [r for r in candidates if r.get("head_branch") == "main"]
+    selected = main if main else candidates
+    latest_run = max(selected, key=lambda r: r.get("created_at", "")) if selected else None
     if latest_run is None:
         return None, "github-workflow-history-not-found"
     return {
