@@ -303,6 +303,49 @@ test "$STORAGE" = "4531" || { echo 'BLOCKED: storage metadata count mismatch wit
 test "$AUTH" = "0" || { echo 'BLOCKED: auth user metadata count mismatch'; exit 9; }
 test "$ITEMS" -gt 0 && test "$CHANGES" -gt 0 || { echo 'BLOCKED: restored master log tables empty'; exit 9; }
 test "$MIGRATIONS" = "0" || { echo 'BLOCKED: migration bootstrap unexpectedly populated'; exit 9; }
+# Supabase local bootstrap has different default ACLs than managed production.
+# Do not accept unauthorized post-restore grants. Reconstruct the ONLY
+# production-public application table privilege allowlist, verified readonly
+# against production on 2026-10-12:
+# anon/authenticated SELECT public.app_public_assets; no INSERT/UPDATE/DELETE
+# for those roles on any of 193 application tables. Never touch production.
+INITIAL_ACL="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "
+select
+count(*) filter(where has_table_privilege('anon',c.oid,'SELECT')),
+count(*) filter(where has_table_privilege('authenticated',c.oid,'SELECT'))
+from pg_class c join pg_namespace n on n.oid=c.relnamespace
+where n.nspname in ('public','cr_internal') and c.relkind in ('r','p')")"
+echo "RESTORED_BOOTSTRAP_ACL_SELECT_COUNTS=$INITIAL_ACL"
+docker exec -i -u postgres "$CID" psql -X -q -v ON_ERROR_STOP=1 -U supabase_admin -d postgres <<'SQL'
+DO $restore_privileges$
+DECLARE item record;
+BEGIN
+  FOR item IN
+    SELECT n.nspname AS schema_name,c.relname AS table_name
+    FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+    WHERE n.nspname IN ('public','cr_internal') AND c.relkind IN ('r','p')
+  LOOP
+    EXECUTE format('REVOKE ALL PRIVILEGES ON TABLE %I.%I FROM PUBLIC, anon, authenticated',item.schema_name,item.table_name);
+  END LOOP;
+END
+$restore_privileges$;
+GRANT SELECT ON TABLE public.app_public_assets TO anon, authenticated;
+SQL
+ACL_COUNTS="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "
+select
+  count(*) filter(where has_table_privilege('anon',c.oid,'SELECT')),
+  count(*) filter(where has_table_privilege('anon',c.oid,'INSERT')),
+  count(*) filter(where has_table_privilege('anon',c.oid,'UPDATE')),
+  count(*) filter(where has_table_privilege('anon',c.oid,'DELETE')),
+  count(*) filter(where has_table_privilege('authenticated',c.oid,'SELECT')),
+  count(*) filter(where has_table_privilege('authenticated',c.oid,'INSERT')),
+  count(*) filter(where has_table_privilege('authenticated',c.oid,'UPDATE')),
+  count(*) filter(where has_table_privilege('authenticated',c.oid,'DELETE'))
+from pg_class c join pg_namespace n on n.oid=c.relnamespace
+where n.nspname in ('public','cr_internal') and c.relkind in ('r','p')")"
+test "$ACL_COUNTS" = "1|0|0|0|1|0|0|0" || { echo 'BLOCKED: app role ACL does not match production; no recovery signoff'; exit 9; }
+echo 'PASS: restored 193 application tables reproduce 1 public read-only allowlist, 0 public writes'
+echo 'LAB_ACL_NORMALIZATION: new local-stack default ACLs replaced with production-authorized policy'
 # Verify two real operational tables stay private to anon/authenticated roles
 # exactly as in source. No SQL access and no rows are exposed to any user.
 SECURITY="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "
