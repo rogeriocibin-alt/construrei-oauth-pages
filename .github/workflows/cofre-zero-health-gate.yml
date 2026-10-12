@@ -23,6 +23,7 @@ on:
       - .github/scripts/cofre_trello_bootstrap.py
       - .github/scripts/cofre_trello_capacity_guard.py
       - .github/scripts/cr_history_capacity_guard.py
+      - .github/scripts/cr_migration_ledger_daily.py
       - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
@@ -55,6 +56,7 @@ on:
       - .github/scripts/cofre_trello_bootstrap.py
       - .github/scripts/cofre_trello_capacity_guard.py
       - .github/scripts/cr_history_capacity_guard.py
+      - .github/scripts/cr_migration_ledger_daily.py
       - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
@@ -190,6 +192,8 @@ jobs:
         run: python3 .github/scripts/test_cr_cofre_health_latest.py
       - name: Test bounded immutable daily history offline
         run: python3 .github/scripts/cr_history_capacity_guard.py --selftest
+      - name: Test immutable managed migration ledger and private quota guards (synthetic)
+        run: python3 .github/scripts/cr_migration_ledger_daily.py --selftest
       - name: Test read-only historical delta feasibility (synthetic)
         run: python3 .github/scripts/cr_history_delta_feasibility.py --selftest
       - name: Test immutable CAS history append-only contract (synthetic)
