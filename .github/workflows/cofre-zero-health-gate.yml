@@ -345,6 +345,57 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -qq -y rclone >/dev/null
           bash .github/scripts/cr_pg17_real_restore_candidate.sh
+  isolated_supabase_official_stack_bootstrap:
+    name: Supabase 17 official local stack bootstrap — no user data
+    if: github.event_name == 'pull_request' && github.head_ref == 'checkpoint/cofre-zero-pg17-real-restore-20261012' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 17
+    permissions:
+      contents: read
+    env:
+      SUPABASE_ACCESS_TOKEN: ""
+    steps:
+      - name: Bootstrap real Supabase Auth and Storage internally without accessing production
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          test -z "$SUPABASE_ACCESS_TOKEN" || { echo "BLOCKED: unexpected production access token"; exit 2; }
+          LAB="$(mktemp -d)"
+          cleanup() {
+            cd "$HOME" || :
+            if [ -e "$LAB/supabase/config.toml" ]; then
+              (cd "$LAB" && npx --yes supabase@2.120.0 stop --no-backup >/dev/null 2>&1) || :
+            fi
+            rm -rf "$LAB"
+          }
+          trap cleanup EXIT
+          cd "$LAB"
+          echo "Bootstrapping pinned official local Supabase CLI 2.120.0 with synthetic credentials"
+          npx --yes supabase@2.120.0 init --yes >/dev/null
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("supabase/config.toml")
+          s=p.read_text()
+          if "major_version = 15" not in s:
+              raise SystemExit("BLOCKED: pinned CLI config changed")
+          p.write_text(s.replace("major_version = 15","major_version = 17"))
+          PY
+          npx --yes supabase@2.120.0 start --exclude rest,realtime,functions,studio,mail,analytics,pooler --eager >/dev/null
+          DB="$(docker ps --format '{{.ID}} {{.Names}}' | awk '$2 ~ /^supabase_db_/ {print $1; exit}')"
+          test -n "$DB" || { echo "BLOCKED: Supabase local db container not found"; exit 3; }
+          SQL="SELECT n.nspname, count(*) FILTER (WHERE c.relkind IN ('r','p')) FROM pg_namespace n LEFT JOIN pg_class c ON c.relnamespace=n.oid WHERE n.nspname IN ('auth','storage') GROUP BY n.nspname ORDER BY n.nspname"
+          QUERY="$(docker exec -u postgres "$DB" psql -U postgres -d postgres -Atqc "$SQL")"
+          AUTH="$(printf '%s\n' "$QUERY" | awk -F'|' '$1=="auth"{print $2}')"
+          STORE="$(printf '%s\n' "$QUERY" | awk -F'|' '$1=="storage"{print $2}')"
+          PGVER="$(docker exec -u postgres "$DB" psql -U postgres -d postgres -Atqc 'SHOW server_version_num')"
+          echo "OFFLINE_LAB_PLATFORM_METADATA pg_major=$((PGVER/10000)) auth_tables=$AUTH storage_tables=$STORE"
+          test "$PGVER" -ge 170000 && test "$PGVER" -lt 180000
+          test "$AUTH" -ge 20 && test "$STORE" -ge 7 || {
+            echo "BLOCKED: local stack is not compatible with platform Auth/Storage tables"
+            exit 5
+          }
+          echo "PASS: official Supabase PG17 Auth/Storage local bootstrap without production credentials or SQL"
   isolated_pg17_canary:
     name: Laboratorio Postgres 17 efemero — massa sintetica somente
     if: github.event_name == 'pull_request'
