@@ -377,9 +377,13 @@ jobs:
           from pathlib import Path
           p=Path("supabase/config.toml")
           s=p.read_text()
-          if "major_version = 15" not in s:
-              raise SystemExit("BLOCKED: pinned CLI config changed")
-          p.write_text(s.replace("major_version = 15","major_version = 17"))
+          import re
+          matches=re.findall(r"(?m)^\\s*major_version\\s*=\\s*['\"]?(15|17)['\"]?\\s*$",s)
+          if len(matches)!=1:
+              raise SystemExit("BLOCKED: unsupported PG major version in official config")
+          s=re.sub(r"(?m)^(\\s*major_version\\s*=\\s*)(?:['\"]?15['\"]?|['\"]?17['\"]?)\\s*$",r"\\g<1>17",s,count=1)
+          assert len(re.findall(r"(?m)^\\s*major_version\\s*=\\s*17\\s*$",s))==1
+          p.write_text(s)
           PY
           npx --yes supabase@2.120.0 start --exclude rest,realtime,functions,studio,mail,analytics,pooler --eager >/dev/null
           DB="$(docker ps --format '{{.ID}} {{.Names}}' | awk '$2 ~ /^supabase_db_/ {print $1; exit}')"
