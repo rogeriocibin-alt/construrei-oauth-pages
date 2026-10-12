@@ -49,3 +49,21 @@
 - Audit log e Gestor `cc_items.id=EXEC-COFRE-COVERAGE-20261010` sincronizados. **Nunca** alterar `backup_restore_ok` para true por ausência de erros ou por uma prova isolada.
 
 Última auditoria: `cc_changes.id=536` e `537`, checkpoint #53; PRs #84, #85, #87 e #88 integrados. Sem deletar históricos, sem custos contratados adicionais comprovados; franquias existentes seguem aplicáveis.
+
+## Prova conjunta real no mesmo laboratório — 12/10/2026
+
+A recuperação anterior de SQL (#84), do ledger de migrações (#85) e dos 4.531 binários Storage (#86) era composta de testes independentes. O [PR #90](https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/90) foi integrado após o [run #38286576098](https://github.com/rogeriocibin-alt/construrei-oauth-pages/actions/runs/38286576098) finalizar `completed/success` (Central guard também PASS). **Na mesma instância Supabase/PostgreSQL 17 efêmera e desconectada de todas as redes durante a importação**:
+
+- 3 SQL originais do snapshot imutável `20261012-060012` validados por SHA-256; 193 tabelas operacionais restauradas.
+- 192 tabelas com RLS, 20 políticas; ACL reconstituída somente no laboratório: uma tabela autorizada para leitura pública e nenhuma escrita pública.
+- 193/193 entradas de `supabase_migrations.schema_migrations` recuperadas do CAS privado diário e carregadas no mesmo banco, sem executar os textos SQL de suas migrações.
+- 4.531/4.531 identidades `storage.objects` cruzadas com os caminhos dos arquivos originais do snapshot privado; três binários de posições distintas recuperados e conferidos por tamanho/MD5.
+- Nenhuma gravação no banco operacional, Drive de origem, Netlify ou aplicativos. O ensaio **não** reimplanta OAuth, secrets, funções Edge, apps ou Trello e não comprova UX/cutover/rollback integral. `backup_restore_ok=false` permanece.
+
+### Netlify — conclusão da auditoria de deploys históricos
+
+[Run #38286947877](https://github.com/rogeriocibin-alt/construrei-oauth-pages/actions/runs/38286947877) executou exclusivamente `GET /sites/{id}/deploys` autenticado nos sete projetos, sem criar/restaurar deploy e sem expor IDs nos logs. Encontrou **87 registros: 26 ready e 61 error**. O site `construrei-dashboard` possui **82** registros (26 ready, 56 error). Os outros seis sites somam apenas **5 registros de erro** e **nenhum** deploy bem-sucedido `ready/old`: F01, Knowledge v3 e Agenda v52 têm zero registros; Central Failover v1 tem três erros; Home Reference e F00 Preview têm um erro cada. Logo, não existe artefato histórico bem-sucedido disponível via Netlify nesses seis sites; as três fontes Git preservadas são fontes *relacionadas*, não deploys idênticos. O inventário anterior de um único deploy atualmente published está correto.
+
+Esse diagnóstico **não** prova que o conteúdo de todos os 26 deploys antigos do dashboard foi arquivado byte a byte; somente o atual published foi recuperado como ZIP. Preservar Git/histórico, não criar deploys fictícios nem afirmar 7/7 bytes. A candidata pontual de descoberta [PR #91](https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/91) foi encerrada sem merge, pois a execução já gerou prova e seu job não precisava virar rotina adicional.
+
+**Gates futuros não antecipáveis:** primeiro `event=schedule` do novo arquivo CAS+migrações previsto para 13/10/2026, Trello semanal 18/10/2026. Conferir conclusões reais pelo monitor existente; nenhuma prova `push` substitui cron. Liberação final do ecossistema também requer OAuth/segredos terceiros, Edge e validação UX/rollback fora do laboratório.
