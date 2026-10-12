@@ -3,6 +3,21 @@
 **Responsável pela governança:** Gestor do Projeto CONSTRU-REI  
 **Fase atual:** 0 — inventário e análise, **sem transferência nem exclusão**.
 
+## Decisão da Diretoria — hospedagem ÚNICA, três ESTADOS lógicos, sem custo incremental contratado
+**Atualização:** 11/10/2026 (voz/chat). Esta decisão substitui a interpretação anterior de que os três estados exigiriam três hospedagens ou bancos. **O estado da implementação permanece parcial** até os testes e a promoção da candidata.
+
+- **ÚNICO ambiente online e gravando dados empresariais:** PRODUÇÃO existente (Supabase `CONSTRU-REI Centro de Controle`, Central, APP, Gestor, integrações oficiais). Não clonar banco, 370 Edge Functions, Auth, cron ou Storage para homologação. Infraestruturas externas **já existentes** são inventariadas, não apagadas nem recriadas por este documento.
+- **HOMOLOGAÇÃO = estado versionado, NÃO hospedagem permanente.** Branch Git isolada + commit SHA imutável + artefato temporário dentro do runner CI já disponível, testes estáticos e locais, fixtures fictícias/sanitizadas e *mocks*. O runner termina ao concluir o teste; não hospedar novo servidor, não manter nova instância de banco ou Edge Functions ativa. Interface pode ser validada em navegador contra bundle inerte, sem credencial nem escrita real. Uma eventual prévia em provedor externo só poderá reutilizar a infraestrutura existente após inspeção da proteção e garantia de nenhuma chamada de escrita à produção.
+- **ARQUIVO HISTÓRICO = versão/manifesto no Git mais acervo privado Cofre Zero/Drive já contratado**, com hashes, links para commit/PR, decisão, restore e rollback. Não publicar backups privados ou históricos sensíveis no GitHub Pages; não manter aplicações antigas ligadas, mas **não desligar nada antes de mapear consumidores e comprovar substituição**.
+- **Orçamento:** alvo **R$ 0 de cobrança adicional de infraestrutura**. Ficam proibidos sem aprovação nova e cotação expressa: criar outra organização/projeto/branch faturável Supabase, instância de banco, duplicar Edge Functions em nova infraestrutura, provisionar domínio/deploy pago, servidor permanente, storage pago adicional ou novas rotinas agendadas. Operações existentes podem consumir franquias e recursos do plano atual: **não prometer custo total zero nem cobertura ilimitada**; monitorar quotas e despesas antes de ampliar execução.
+- **Limitação explícita, sem fraude de homologação:** CI/mocks não provam em produção segurança de RLS, Auth/OAuth, migrações SQL, integrações com escrita, financeiro nem recuperação SQL em banco novo. Para esses gates, usar preferencialmente teste efêmero local ou descartável **dentro do orçamento já disponível** e com dados sintéticos; caso não seja tecnicamente viável, marcar `BLOQUEADO_POR_ISOLAMENTO` e **não promover**, em vez de testar escrita na produção. Exceção que possa cobrar exige aprovação explícita prévia.
+- **Gestor é o controle único**: produção/homologação/histórico são campos de estado do ativo/release, não três apps Gestor, cadastros ou bancos mestres. Referenciar registros canônicos de links, regras, release e backups; usar PR/checkpoint como evidência, sem reconstruir dados em outra fonte.
+- **Obrigação de cobertura:** Central inteira e seus links, APP F00–F09, Gabi, Financeiro, Click/Trello/Cora, Agenda, medidores, checklist, WIZY/Éder, Academy, apresentação, salas, técnico/diretoria, Gestor, OAuth/APIs, bancos, jobs, assets e provedores externos. Nenhum recurso é apagável apenas por estar em `preview/`, `archive/` ou `historico/`.
+
+### Pipeline desejado, custo incremental não contratado
+`Git candidata → auditor/CI read-only efêmero + testes simulados → evidências/aceite → release identificado → atualização oficial única → snapshot Cofre Zero com restore → checkpoint automático no Gestor`.
+A **separação lógica** dos três estados já é possível sem nova hospedagem; a **segregação completa de testes de backend** fica condicionada à comprovação de isolamento seguro, e não é uma cobrança presumida.
+
 ## Resultado esperado
 Um só Gestor acessível no celular, com três estados identificáveis por ativo:
 - **PRODUÇÃO:** somente versões realmente homologadas e links oficiais. Não modificar o runtime ou publicar nova versão sem teste e checkpoint.
