@@ -182,3 +182,46 @@ jobs:
           python3 .github/scripts/cr_static_runtime_dependency_audit.py --selftest
           python3 .github/scripts/cr_static_runtime_dependency_audit.py --enforce
 
+
+  isolated_pg17_canary:
+    name: Laboratorio Postgres 17 efemero — massa sintetica somente
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    permissions:
+      contents: read
+    services:
+      pg17_fixture:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: fixture_tester
+          POSTGRES_PASSWORD: synthetic-only-do-not-reuse
+          POSTGRES_DB: isolated_fixture
+        options: >-
+          --health-cmd "pg_isready -U fixture_tester -d isolated_fixture"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    steps:
+      - name: Prove disposable PG17 Docker isolation and SQL rollback (no real data)
+        shell: bash
+        env:
+          PG_FIXTURE_CONTAINER: ${{ job.services.pg17_fixture.id }}
+        run: |
+          set -euo pipefail
+          test -n "$PG_FIXTURE_CONTAINER"
+          version="$(docker exec "$PG_FIXTURE_CONTAINER" psql -U fixture_tester -d isolated_fixture -Atqc 'show server_version_num' | tr -d '[:space:]')"
+          test "$version" -ge 170000
+          test "$version" -lt 180000
+          docker exec -i "$PG_FIXTURE_CONTAINER" psql -U fixture_tester -d isolated_fixture -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE TABLE public.fixture_restore_demo(id integer PRIMARY KEY, value text NOT NULL);
+          INSERT INTO public.fixture_restore_demo VALUES (1, 'synthetic');
+          BEGIN;
+          UPDATE public.fixture_restore_demo SET value='should_rollback' WHERE id=1;
+          ROLLBACK;
+          SQL
+          value="$(docker exec "$PG_FIXTURE_CONTAINER" psql -U fixture_tester -d isolated_fixture -Atqc 'select value from public.fixture_restore_demo where id=1')"
+          test "$value" = "synthetic"
+          echo "PASS: isolated PostgreSQL 17 Docker container and synthetic SQL rollback"
+          echo "NOT A SQL RESTORE: no roles.sql/schema.sql/data.sql from real Cofre Zero imported"
+          echo "No Supabase Auth/Storage bootstrap; no production DB network access or credentials"
