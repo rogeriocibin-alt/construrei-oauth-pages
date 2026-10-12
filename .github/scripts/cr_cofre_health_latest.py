@@ -23,7 +23,8 @@ def latest(workflows, needle, getter=None):
     for item in workflows:
         if needle in item.get("name", ""):
             # Pending runs are not restore evidence. Verify the latest completed run.
-            if item.get("latest") is not None and item["latest"].get("status") == "completed":
+            if (item.get("latest") is not None and item["latest"].get("status") == "completed"
+                    and item["latest"].get("branch", item["latest"].get("head_branch")) in (None, "main")):
                 return item["latest"], "edge-summary"
             break
     filename = WORKFLOW_MAP.get(needle)
