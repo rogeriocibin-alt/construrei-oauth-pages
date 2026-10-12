@@ -17,7 +17,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from cr_history_delta_feasibility import SOURCE, SEED, fetch_inventory, command, evaluate
+from cr_history_delta_feasibility import SOURCE, SEED, fetch_inventory, command, evaluate, parse_inventory
 
 DRIVE_ROOT = "construrei-drive:CONSTRUREI-BACKUP-AUTO"
 CAS_ROOT = DRIVE_ROOT + "/HISTORY_CAS"
@@ -249,6 +249,58 @@ def execute(mode, restore=None, pilot_seed=False):
     return report
 
 
+
+def validate_saved_manifest(doc, seed, cas):
+    """All 4,531 historical references must resolve independent of CURRENT."""
+    if (not isinstance(doc, dict) or doc.get("format") != "CR-CAS-1"
+            or doc.get("immutable_seed_id") != "20261011-060021"
+            or doc.get("source_project") != "yspuaamokjbrosytqjpg"
+            or not re.fullmatch(r"\d{8}-\d{6}", str(doc.get("run_id", "")))):
+        raise ValueError("Unrecognized historical manifest identity")
+    entries = doc.get("entries")
+    if not isinstance(entries, list) or not (5 <= len(entries) <= 200000):
+        raise ValueError("Manifest entries absent or invalid")
+    file_rows = []
+    cas_count = 0
+    for e in entries:
+        if not isinstance(e, dict):
+            raise ValueError("Malformed manifest entry")
+        path, size, md5, store, key = (e.get(k) for k in
+                                       ("path", "bytes", "md5", "store", "key"))
+        file_rows.append({"Path": path, "Size": size, "Hashes": {"MD5": md5}})
+        if store == "seed":
+            if key != path or seed.get(path) != (size, md5):
+                raise ValueError("Immutable seed reference differs from remote")
+        elif store == "cas":
+            if type(size) is not int or not isinstance(md5, str) or not re.fullmatch(r"[0-9a-f]{32}", md5):
+                raise ValueError("Invalid CAS manifest digest")
+            if key != blob_key(size, md5) or cas.get(key) != (size, md5):
+                raise ValueError("CAS entry missing, changed, or misdirected")
+            cas_count += 1
+        else:
+            raise ValueError("Unknown manifest store")
+    index = parse_inventory(file_rows)
+    if doc.get("entry_count") != len(index) or doc.get("cas_entry_count") != cas_count:
+        raise ValueError("Manifest count mismatch")
+    return {"verified_entries": len(index), "verified_cas_entries": cas_count,
+            "independent_of_current": True, "database_replay_passed": False}
+
+
+def verify_manifest(run_id):
+    if not re.fullmatch(r"\d{8}-\d{6}", run_id):
+        raise ValueError("Unsafe historical run ID")
+    raw = command("rclone", "cat", MANIFESTS + "/" + run_id + ".json")
+    doc = json.loads(raw)
+    if doc.get("run_id") != run_id:
+        raise ValueError("Wrong historical run manifest")
+    seed = fetch_inventory(SEED)
+    cas, _ = cas_inventory()
+    checked = validate_saved_manifest(doc, seed, cas)
+    checked["run_id"] = run_id
+    checked["manifest_sha256"] = hashlib.sha256(raw.encode("utf-8")).hexdigest()
+    return checked
+
+
 def selftest():
     src = {"BACKUP_STATUS.txt": (20, "0"*32), "SHA256SUMS.txt": (30, "1"*32),
            "03_DATABASE/data.sql": (100, "2"*32),
@@ -274,7 +326,18 @@ def selftest():
     except ValueError:
         pass
     assert len([e for e in entries if e["store"] == "cas"]) == 2
-    print("PASS: immutable CAS plan, corruption and missing-hash fixtures; no network")
+    doc = {"format": "CR-CAS-1", "source_project": "yspuaamokjbrosytqjpg",
+           "run_id": "20261011-060021", "immutable_seed_id": "20261011-060021",
+           "entry_count": len(src), "cas_entry_count": 2, "entries": entries}
+    complete_cas = {blob_key(v[0], v[1]): v for p, v in src.items()
+                    if p not in seed or seed[p] != v}
+    assert validate_saved_manifest(doc, seed, complete_cas)["verified_entries"] == 6
+    try:
+        validate_saved_manifest(doc, seed, {})
+        raise AssertionError("Missing CAS object accepted")
+    except ValueError:
+        pass
+    print("PASS: immutable CAS plan, independent manifest recovery, corruption fixtures")
 
 
 def main():
@@ -284,10 +347,14 @@ def main():
     group.add_argument("--dry-run", action="store_true")
     group.add_argument("--commit", action="store_true")
     group.add_argument("--pilot-seed", action="store_true")
+    group.add_argument("--verify-manifest", metavar="RUN_ID")
     parser.add_argument("--restore-directory")
     args = parser.parse_args()
     if args.selftest:
         selftest()
+        return
+    if args.verify_manifest:
+        print(json.dumps(verify_manifest(args.verify_manifest), sort_keys=True))
         return
     mode = "commit" if args.commit or args.pilot_seed else "dry-run"
     # Never print paths, names of client data, raw manifest, or user content.
