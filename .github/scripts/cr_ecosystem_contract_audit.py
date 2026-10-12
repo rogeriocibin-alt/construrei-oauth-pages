@@ -119,6 +119,32 @@ def main():
         all(builds.values()) and len(set(builds.values())) == 1
     )
     release["repo_static_conformance_is_not_live_pwa_verification"] = True
+    # app.js is the *running* release classifier used by update prompts and
+    # version chip. Its value may be older than package metadata even when
+    # HTML/SW/version.json agree. Surface it separately; do not silently
+    # rewrite a homologated UI or bypass mobile PWA/cache testing.
+    app_js = (ROOT / "gestor-projeto/app.js").read_text(encoding="utf-8")
+    js_release = re.search(
+        r"(?s)const\s+CURRENT_RELEASE\s*=\s*\{\s*version\s*:\s*'([^']+)'\s*,"
+        r"\s*build\s*:\s*'([^']+)'", app_js)
+    chip_literal = re.search(
+        r"chip\.textContent\s*=\s*'([^']+)'", app_js)
+    release["app_js_release_identity"] = {
+        "version": js_release.group(1) if js_release else None,
+        "build": js_release.group(2) if js_release else None,
+        "chip_label": chip_literal.group(1) if chip_literal else None,
+        "verified_in_live_browser": False,
+    }
+    release["app_js_agrees_with_version_manifest"] = bool(
+        js_release and js_release.group(1) == version.get("version")
+        and js_release.group(2) == version.get("build")
+    )
+    if not release["app_js_agrees_with_version_manifest"]:
+        warnings.append(
+            "Gestor app.js release identity differs from version.json; "
+            "runtime update banner/version chip may be stale. "
+            "Candidate fix requires PWA/cache and mobile/notebook homologation"
+        )
     if not release["repository_builds_consistent"]:
         errors.append("Gestor index / Service Worker / version.json build identities differ")
     if project.get("meta", {}).get("version") != version.get("version"):
