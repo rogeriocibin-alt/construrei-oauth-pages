@@ -59,6 +59,7 @@ on:
       - gestor-projeto/project-data.json
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: cofre-zero-health-gate
   cancel-in-progress: false
@@ -133,6 +134,8 @@ jobs:
       - name: SQL restore preflight tests (synthetic only; no database)
         run: python3 .github/scripts/cr_sql_restore_preflight.py --selftest
       - name: Query public workflow history directly to verify pagination fallback
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           python3 - <<'PY'
           import sys
