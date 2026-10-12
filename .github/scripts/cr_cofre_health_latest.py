@@ -49,8 +49,21 @@ def latest(workflows, needle, getter=None):
             if token:
                 headers["Authorization"] = "Bearer " + token
             req = Request(url, headers=headers)
-            with urlopen(req, timeout=20) as r:
-                return json.load(r)
+            # Bounded retry for transient upstream 5xx/network failures only.
+            # Never replace actual workflow failures with an assumed success.
+            import time
+            from urllib.error import HTTPError, URLError
+            for attempt in range(3):
+                try:
+                    with urlopen(req, timeout=20) as r:
+                        return json.load(r)
+                except HTTPError as exc:
+                    if exc.code not in (500, 502, 503, 504) or attempt == 2:
+                        raise
+                except (URLError, TimeoutError):
+                    if attempt == 2:
+                        raise
+                time.sleep(3 * (attempt + 1))
     payload = getter(api)
     runs = payload.get("workflow_runs", [])
     if not isinstance(runs, list):
