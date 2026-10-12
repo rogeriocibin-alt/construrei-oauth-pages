@@ -25,6 +25,9 @@ jobs:
       SOURCE: construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT
       ARCHIVE_ROOT: construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL
     steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Connect to independent private Google Drive
         shell: bash
         run: |
@@ -90,6 +93,20 @@ jobs:
           echo "storage=$STORAGE_COUNT" >> "$GITHUB_OUTPUT"
           echo "IMMUTABLE_ARCHIVE_AND_READBACK=PASS"
 
+      - name: Preflight downloaded SQL files (no replay, no DB access)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/cr_sql_restore_preflight.py --root "$RUNNER_TEMP/restore-readback" > "$RUNNER_TEMP/sql-restore-preflight.json"
+          python3 - <<'PY'
+          import json,os
+          r=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'sql-restore-preflight.json')))
+          assert r["hashes_verified"]==3 and not r["eligible_for_recovery_signoff"]
+          print("SQL_PREFLIGHT_PASS: 3/3 files, no database replay")
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a",encoding="utf-8") as f:
+              f.write("- SQL manifest preflight: **3/3 SHA256**, no SQL replay; bootstrap Supabase required: **"+str(r["bootstrap_supabase_required"])+"**.\n")
+              f.write("- **SQL RESTORE NOT HOMOLOGATED**: requires isolated PostgreSQL 17/Supabase SQL replay.\n")
+          PY
       - name: Publish audit result
         if: always()
         shell: bash
