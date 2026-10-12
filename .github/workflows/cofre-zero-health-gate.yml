@@ -405,6 +405,58 @@ jobs:
             exit 5
           }
           echo "PASS: official Supabase PG17 Auth/Storage local bootstrap without production credentials or SQL"
+  cofre_storage_binary_full_recovery:
+    name: Cofre Storage 4531/4531 full binary restore SHA256 — private readback
+    if: github.event_name == 'pull_request' && github.head_ref == 'checkpoint/cofre-zero-storage-full-recovery-20261012' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+    steps:
+      - name: Recover all 4531 immutable Storage binary objects and verify each checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          test -n "$RCLONE_CONFIG_B64" || { echo "::error::No existing Drive credential"; exit 2; }
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          ROOT="$(mktemp -d)"
+          trap 'rm -rf "$ROOT"; rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
+          SNAPSHOT="construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL/20261012-060012"
+          rclone copyto "$SNAPSHOT/BACKUP_STATUS.txt" "$ROOT/BACKUP_STATUS.txt"
+          rclone copyto "$SNAPSHOT/SHA256SUMS.txt" "$ROOT/SHA256SUMS.txt"
+          grep -Fxq 'RUN_ID: 20261012-060012' "$ROOT/BACKUP_STATUS.txt"
+          grep -Fxq 'DATABASE_FILES: 3' "$ROOT/BACKUP_STATUS.txt"
+          grep -Fxq 'STORAGE_FILES: 4531' "$ROOT/BACKUP_STATUS.txt"
+          python3 - "$ROOT" <<'PY'
+          import pathlib,sys
+          root=pathlib.Path(sys.argv[1])
+          records=[]
+          for line in (root/"SHA256SUMS.txt").read_text(encoding="utf-8").splitlines(keepends=True):
+              candidate=line[1:] if line.startswith("\\") else line
+              if len(candidate)>=67 and candidate[64:66]=="  " and candidate[66:].startswith("06_STORAGE/"):
+                  records.append(line)
+          if len(records)!=4531:
+              raise SystemExit("BLOCKED: immutable SHA256 manifest does not cover all 4531 Storage binaries")
+          (root/"STORAGE_SHA256SUMS.txt").write_text("".join(records),encoding="utf-8")
+          print("PASS: immutable manifest lists 4531 binary paths and SHA256 hashes")
+          PY
+          mkdir -p "$ROOT/06_STORAGE"
+          rclone copy "$SNAPSHOT/06_STORAGE" "$ROOT/06_STORAGE" --checkers 4 --transfers 4 --retries 3 --retries-sleep 10s >/dev/null
+          COUNT="$(find "$ROOT/06_STORAGE" -type f | wc -l | tr -d ' ')"
+          test "$COUNT" = "4531" || { echo "::error::Storage binary count mismatch in recovered archive"; exit 4; }
+          (cd "$ROOT" && sha256sum --quiet --status -c STORAGE_SHA256SUMS.txt) || {
+            echo "::error::At least one offline recovered binary fails SHA256"; exit 5;
+          }
+          echo "PASS: all 4531 immutable Storage objects downloaded and verified SHA256 byte-for-byte"
+          echo "PASS: entire binary recovery is independent of Supabase production and CURRENT"
+          echo "No files, paths, credentials, or user bytes were printed or published."
   isolated_pg17_canary:
     name: Laboratorio Postgres 17 efemero — massa sintetica somente
     if: github.event_name == 'pull_request'
