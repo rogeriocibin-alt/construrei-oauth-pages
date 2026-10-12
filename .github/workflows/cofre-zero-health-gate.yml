@@ -11,6 +11,7 @@ on:
       - .github/scripts/cr_single_host_zero_incremental_guard.py
       - .github/scripts/cr_ephemeral_publication_gate.py
       - .github/scripts/cr_static_runtime_dependency_audit.py
+      - .github/scripts/cr_sql_restore_preflight.py
       - .github/scripts/cr_cofre_health_latest.py
       - .github/scripts/test_cr_cofre_health_latest.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
@@ -37,6 +38,7 @@ on:
       - .github/scripts/cr_single_host_zero_incremental_guard.py
       - .github/scripts/cr_ephemeral_publication_gate.py
       - .github/scripts/cr_static_runtime_dependency_audit.py
+      - .github/scripts/cr_sql_restore_preflight.py
       - .github/scripts/cr_cofre_health_latest.py
       - .github/scripts/test_cr_cofre_health_latest.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
@@ -128,6 +130,8 @@ jobs:
         run: python3 .github/scripts/cr_single_host_zero_incremental_guard.py
       - name: Test Cofre Zero history pagination and fail-closed behavior (offline)
         run: python3 .github/scripts/test_cr_cofre_health_latest.py
+      - name: SQL restore preflight tests (synthetic only; no database)
+        run: python3 .github/scripts/cr_sql_restore_preflight.py --selftest
       - name: Query public workflow history directly to verify pagination fallback
         run: |
           python3 - <<'PY'
