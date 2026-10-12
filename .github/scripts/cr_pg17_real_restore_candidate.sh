@@ -98,7 +98,7 @@ from pathlib import Path
 import re,sys
 p=Path(sys.argv[1])
 s=p.read_text(errors="replace") if p.is_file() else ""
-errors=[line for line in s.splitlines() if "ERROR:" in line or "FATAL:" in line]
+errors=[line for line in s.splitlines() if re.search(r"(?i)\\b(error|fatal|permission denied|unsupported|unrecognized|aborted|invalid|could not|failed)\\b",line)]
 line=errors[0] if errors else ""
 loc=re.search(r"/(roles|schema|data)\.sql:(\d+)",line)
 lower=line.lower()
@@ -123,6 +123,10 @@ for name,needles in types:
         break
 file=loc.group(1)+".sql" if loc else "unknown"
 line_number=int(loc.group(2)) if loc else 0
+safe_words={"psql","error","fatal","permission","denied","database","role","schema","relation","function","extension","transaction","timeout","syntax","invalid","unsupported","unrecognized","failed","cannot","could","not","connect","postgres","supabase_admin","missing","reserved","superuser","file","directory","ssl","password","authentication","connection","failed","option","stdin","command","too","many","arguments","attempt","conflict","snapshot","statement","user","alter","create","already","exists","table","view","type","event","trigger","parameter","replication","readonly"}
+present=sorted(set(re.findall(r"[a-z_]{3,}",lower)) & safe_words)
+print("SAFE_RESTORE_KEYWORDS",",".join(present[:25]))
+print("SAFE_RESTORE_ERROR_LINES",len(errors))
 print(f"SAFE_RESTORE_DIAGNOSTIC category={category} file={file} line={line_number}")
 print("No SQL, object names, private row data or credentials printed")
 PY
