@@ -116,6 +116,22 @@ def main():
     high_priority = sorted(unclassified & referred_from_non_preview)
     candidate_chain = sorted(unclassified & linked_from_preview)
     referenced_union = sorted(set(high_priority) | set(candidate_chain))
+    # Provenance makes the shortlist actionable without interpreting static
+    # use as runtime activity. Bound source lists so PR logs remain small.
+    # Preserve exact tracked paths; do not resolve external URLs or change code.
+    priority_provenance = {}
+    for name in referenced_union:
+        origins = sorted(consumers.get(name, set()))
+        priority_provenance[name] = {
+            "static_origin_count": len(origins),
+            "origins_sample": [
+                {"kind": kind, "tracked_path": origin}
+                for kind, origin in origins[:6]
+            ],
+            "sample_truncated": len(origins) > 6,
+            "runtime_or_external_use_verified": False,
+            "eligible_for_deletion": False,
+        }
     byte_duplicate_examples = [
         sorted(group)
         for group in sorted(identical_groups, key=lambda g: (-len(g), sorted(g)[0]))
@@ -135,6 +151,7 @@ def main():
         "priority_unclassified_referenced_by_non_preview": high_priority,
         "unclassified_referenced_by_other_previews": candidate_chain,
         "unclassified_referenced_by_either_count": len(referenced_union),
+        "priority_unclassified_static_origin_provenance": priority_provenance,
         "sample_duplicate_byte_groups_review_only": byte_duplicate_examples,
         "static_reference_absence_does_not_prove_removability": True,
         "identical_byte_hash_groups": len(identical_groups),
