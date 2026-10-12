@@ -65,6 +65,18 @@ class BackupHistoryTests(unittest.TestCase):
         self.assertEqual(got["branch"],"main")
         self.assertEqual(got["conclusion"],"failure")
 
+    def test_completed_candidate_edge_does_not_override_main(self):
+        row={"name":"Cofre Zero | Immutable daily full archive",
+             "latest":{"status":"completed","conclusion":"failure",
+                       "branch":"checkpoint/test"}}
+        runs=[{"name":"Cofre Zero | Immutable daily full archive",
+               "status":"completed","conclusion":"success",
+               "created_at":"2026-10-12T12:02:00Z","head_branch":"main"}]
+        got,source=latest([row],"Immutable daily full archive",
+                          lambda _:{"workflow_runs":runs})
+        self.assertEqual(source,"github-workflow-history")
+        self.assertEqual(got["conclusion"],"success")
+
     def test_pending_edge_status_falls_back(self):
         row={"name":"Cofre Zero | Immutable daily full archive",
              "latest":{"status":"in_progress","conclusion":None}}
