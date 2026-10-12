@@ -165,6 +165,22 @@ END
 $lab$;
 SQL
 echo 'LAB_BOOTSTRAP: removed only preinstalled event-trigger name collisions in offline PG17'
+# The immutable schema grants to Supabase platform roles. Validate these
+# against the real project's pg_roles metadata, without reading any passwords.
+# Only missing built-in Supabase roles are created inside this offline lab.
+# Current project verified metadata: functions_admin LOGIN NOINHERIT CREATEROLE,
+# dashboard_user NOLOGIN INHERIT CREATEROLE CREATEDB REPLICATION.
+NEED_FUNCTIONS="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "select count(*) from pg_roles where rolname='supabase_functions_admin'")"
+if test "$NEED_FUNCTIONS" = "0"; then
+  docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -q -v ON_ERROR_STOP=1 \
+    -c 'CREATE ROLE supabase_functions_admin LOGIN NOINHERIT CREATEROLE NOSUPERUSER NOCREATEDB NOREPLICATION NOBYPASSRLS' >/dev/null
+fi
+NEED_DASHBOARD="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "select count(*) from pg_roles where rolname='dashboard_user'")"
+if test "$NEED_DASHBOARD" = "0"; then
+  docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -q -v ON_ERROR_STOP=1 \
+    -c 'CREATE ROLE dashboard_user NOLOGIN INHERIT CREATEROLE CREATEDB REPLICATION NOSUPERUSER NOBYPASSRLS' >/dev/null
+fi
+echo 'LAB_BOOTSTRAP: platform function and dashboard roles now match expected names and privileges'
 # Real restoration of verified private SQL in a disposable network-isolated instance.
 # Suppress all SQL and error payloads to protect customer information in public GitHub logs.
 if ! timeout 780s docker exec -u postgres "$CID" \
