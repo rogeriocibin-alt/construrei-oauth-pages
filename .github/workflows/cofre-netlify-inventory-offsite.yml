@@ -62,7 +62,7 @@ jobs:
           path=root/"HISTORICAL_PROVENANCE.json"
           path.write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding="utf-8")
           with (root/"SHA256SUMS.txt").open("a",encoding="utf-8") as f:
-              f.write(hashlib.sha256(path.read_bytes()).hexdigest()+"  "+path.name+"\\n")
+              f.write(hashlib.sha256(path.read_bytes()).hexdigest()+"  "+path.name+"\n")
           print("PASS: 7 Netlify records, 1 published static, 3 related Git sources, 3 unlocated; no fabricated archives")
           PY
       - name: Private offsite snapshot and readback
