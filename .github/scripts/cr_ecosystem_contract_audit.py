@@ -21,6 +21,7 @@ PROJECT = ROOT / "gestor-projeto/project-data.json"
 VERSION = ROOT / "gestor-projeto/version.json"
 PREVIEW = DOCS / "AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
 OWNERS = DOCS / "MATRIZ_PROPRIEDADE_DADOS_E_ROTEAMENTO_20261012.md"
+EDGE_GRAPH = DOCS / "EDGE_OFFICIAL_LITERAL_GRAPH_20261012.json"
 WORKFLOWS = ROOT / ".github/workflows"
 # All 27 pre-existing governance rules reconciled; refuse future silent drift.
 # Any new rule must appear in both the master index and Gestor fallback.
@@ -41,7 +42,7 @@ def main():
         ROOT / "gestor-projeto/sw.js",
         ROOT / "docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md",
         ROOT / "docs/CONSTRUREI_CURRENT_STATE.md",
-        OWNERS,
+        OWNERS, EDGE_GRAPH,
         ROOT / ".github/scripts/cr_central_full_scope_audit.py",
     ]
     for path in required:
@@ -81,6 +82,31 @@ def main():
         errors.append("Official direct Edge gateway contract changed; require explicit homologation: "
                       + repr({"expected": expected_roots,
                               "observed": dict(direct_edge_counts)}))
+    if EDGE_GRAPH.is_file():
+        graph = load(EDGE_GRAPH)
+        nodes = graph.get("functions", [])
+        node_slugs = [n.get("slug") for n in nodes]
+        all_slugs = set(node_slugs)
+        if (graph.get("artifact") != "CR_OFFICIAL_EDGE_LITERAL_GRAPH_READ_ONLY"
+                or graph.get("retirement_authorized") is not False
+                or graph.get("live_execution_verified") is not False
+                or graph.get("authority") != "DATED_EVIDENCE_ONLY_NOT_A_DEPENDENCY_DATABASE"):
+            errors.append("Edge dated inventory lost its read-only provenance or no-delete gate")
+        if len(nodes) < 11 or len(node_slugs) != len(all_slugs):
+            errors.append("Edge graph baseline shrank or has duplicated slugs")
+        if graph.get("official_entry_routes") != expected_roots:
+            errors.append("Edge graph direct entry route counts drifted from protected aliases")
+        if not set(expected_roots).issubset(all_slugs):
+            errors.append("Official Edge roots missing from dated graph")
+        for node in nodes:
+            if (node.get("status") != "ACTIVE"
+                    or not isinstance(node.get("version"), int)
+                    or not isinstance(node.get("direct_literal_references"), list)):
+                errors.append("Invalid Edge source snapshot node: " + str(node.get("slug")))
+            if not set(node.get("direct_literal_references", [])).issubset(all_slugs):
+                errors.append("Partial Edge snapshot: out-of-scope references in " + str(node.get("slug")))
+        warnings.append("Edge code graph is a dated literal snapshot, not a live authorization or runtime dependency proof")
+
     if OWNERS.is_file():
         owners_text = OWNERS.read_text(encoding="utf-8")
         for required_term in (
@@ -240,6 +266,10 @@ def main():
             "source": "docs/official-links-registry.json",
         },
         "data_ownership_evidence": str(OWNERS.relative_to(ROOT)),
+        "edge_literal_graph_evidence": {"source": str(EDGE_GRAPH.relative_to(ROOT)),
+                                        "snapshot_only": True,
+                                        "nodes": len(nodes) if EDGE_GRAPH.is_file() else 0,
+                                        "no_deletion_authorized": True},
         "official_alias_groups": dict(sorted(collections.Counter(x.get("group", "N/A") for x in aliases).items())),
         "gestor_products_snapshot": len(products),
         "canonical_rule_count": {"index": len(master_ids), "gestor_snapshot": len(gestalt_ids),
