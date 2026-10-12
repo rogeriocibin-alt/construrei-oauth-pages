@@ -141,6 +141,26 @@ jobs:
         run: python3 .github/scripts/test_cr_cofre_health_latest.py
       - name: Test bounded immutable daily history offline
         run: python3 .github/scripts/cr_history_capacity_guard.py --selftest
+      - name: Probe actual Drive capacity in read-only candidate CI
+        if: github.event_name == 'pull_request' && github.head_ref == 'cr-cofre-daily-history-capacity-guard-20261012' && github.event.pull_request.head.repo.full_name == github.repository
+        shell: bash
+        timeout-minutes: 3
+        env:
+          RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+          SOURCE: construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT
+          ARCHIVE_ROOT: construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64" || { echo "::error::Private Drive configuration is missing"; exit 2; }
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+          mkdir -p "$HOME/.config/rclone"
+          chmod 700 "$HOME/.config/rclone"
+          trap 'rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          python3 .github/scripts/cr_history_capacity_guard.py |
+            python3 -c 'import json,sys; p=json.load(sys.stdin); assert p["gate"]=="PASS" and p["read_only"] and not p["deletion_performed"]; print("PASS: Drive quota and CURRENT/HISTORY_FULL sizes verified read-only"); print("Drive free GiB:",round(p["reported_drive_free_bytes"]/(1024**3),2)); print("New snapshot GiB:",round(p["source_bytes"]/(1024**3),2)); print("Historical archive GiB:",round(p["archived_bytes"]/(1024**3),2)); print("No copy/delete/restore performed")'
       - name: SQL restore preflight and COPY header tests (synthetic only)
         run: |
           python3 .github/scripts/cr_sql_restore_preflight.py --selftest
