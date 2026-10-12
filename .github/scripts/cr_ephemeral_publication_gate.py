@@ -10,6 +10,7 @@ import hashlib
 import http.server
 import json
 import os
+import re
 from pathlib import Path, PurePosixPath
 import shutil
 import socketserver
@@ -133,6 +134,38 @@ def main():
             finally:
                 server.shutdown()
                 thread.join(timeout=5)
+        # Read-only consumer scan over potential operational entrypoints.
+        # This catches explicit literal links, not composed/dynamic JS paths.
+        preview_folders = {p["path"].split("/")[1] for p in preview["folders"]}
+        literal_ref = re.compile(rb"preview/([A-Za-z0-9_.~-]+)")
+        live_consumers = {}
+        snapshot_consumers = {}
+        for rel in selected:
+            if not rel.endswith((".html", ".css", ".js", ".json", ".svg")):
+                continue
+            raw = (ROOT / rel).read_bytes()
+            if len(raw) > 3_000_000:
+                continue
+            folders = {m.group(1).decode("ascii", "ignore")
+                       for m in literal_ref.finditer(raw)}
+            found = sorted(folders & preview_folders)
+            if not found:
+                continue
+            # Historical UI record intentionally contains links to older
+            # candidates, which are references, not deletion authorization.
+            dest = snapshot_consumers if rel.startswith("preview/") or rel == "gestor-projeto/project-data.json" else live_consumers
+            for folder in found:
+                dest.setdefault(folder, []).append(rel)
+        directly_excluded = {
+            folder: sorted(set(origins))
+            for folder, origins in live_consumers.items()
+            if folder not in preview_keep
+        }
+        directly_protected = {
+            folder: sorted(set(origins))
+            for folder, origins in live_consumers.items()
+            if folder in preview_keep
+        }
         summary = {
             "kind": "DRY_RUN_LOCAL_ONLY",
             "production_published": False,
@@ -145,6 +178,12 @@ def main():
             "included_bytes": total,
             "excluded_tracked_files": len(all_paths) - len(selected),
             "excluded_preview_files": len(withheld_unclassified),
+            "static_preview_folders_referenced_from_operational_tree": len(live_consumers),
+            "static_preview_folders_referenced_but_excluded_from_stage": len(directly_excluded),
+            "static_preview_refs_to_protected_folders": len(directly_protected),
+            "excluded_but_referenced_folders_sample": dict(list(sorted(directly_excluded.items()))[:20]),
+            "historical_snapshot_preview_ref_folders": len(snapshot_consumers),
+            "static_consumer_scan_complete": False,
             "preview_folders_preserved_in_candidate": len(preview_keep),
             "candidate_manifest_digest": digest.hexdigest(),
             "eligible_for_production_cutover": False,
@@ -163,7 +202,9 @@ def main():
                 f.write("### Publicação: candidata efêmera SEM deploy\n")
                 for k in ("official_aliases_tested", "local_routes_checked",
                           "included_tracked_files", "excluded_preview_files",
-                          "candidate_manifest_digest"):
+                          "candidate_manifest_digest",
+                          "static_preview_folders_referenced_but_excluded_from_stage",
+                          "static_preview_refs_to_protected_folders"):
                     f.write(f"- {k}: \`{summary[k]}\`\n")
                 f.write("- **NOT_FOR_PRODUCTION_CUTOVER**: dependências e UX ainda exigem verificação.\n")
     return 0
