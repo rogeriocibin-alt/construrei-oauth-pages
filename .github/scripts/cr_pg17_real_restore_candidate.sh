@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# CONSTRU-REI Cofre Zero isolated restore proof.
+# No production SQL writes, no database network, no uploaded logs or extracted user data.
+set -euo pipefail
+umask 077
+test -n "$RCLONE_CONFIG_B64" || { echo 'BLOCKED: private Drive authorization absent'; exit 4; }
+test "$GITHUB_EVENT_NAME" = 'pull_request'
+test "$GITHUB_HEAD_REF" = 'checkpoint/cofre-zero-pg17-real-restore-20261012'
+WORK="$(mktemp -d)"
+CID=""
+cleanup() {
+  if test -n "$CID"; then docker rm -fv "$CID" >/dev/null 2>&1 || :; fi
+  rm -rf "$WORK"
+}
+trap cleanup EXIT
+CONFIG="$WORK/rclone.conf"
+printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$CONFIG"
+chmod 600 "$CONFIG"
+REMOTE="construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL/20261012-060012"
+mkdir -p "$WORK/03_DATABASE"
+for file in BACKUP_STATUS.txt SHA256SUMS.txt; do
+  rclone --config "$CONFIG" copyto "$REMOTE/$file" "$WORK/$file" --retries 2 --retries-sleep 2s >/dev/null
+done
+for file in roles.sql schema.sql data.sql; do
+  rclone --config "$CONFIG" copyto "$REMOTE/03_DATABASE/$file" "$WORK/03_DATABASE/$file" --retries 2 --retries-sleep 2s >/dev/null
+done
+python3 .github/scripts/cr_sql_restore_preflight.py --root "$WORK" > "$WORK/preflight.json"
+python3 .github/scripts/cr_sql_copy_inventory.py --root "$WORK" > "$WORK/copy.json"
+python3 - "$WORK" <<'PY'
+import json, pathlib, sys
+folder=pathlib.Path(sys.argv[1])
+status=(folder/"BACKUP_STATUS.txt").read_text()
+assert "RUN_ID: 20261012-060012" in status, "Historical snapshot mismatch"
+pre=json.loads((folder/"preflight.json").read_text())
+inv=json.loads((folder/"copy.json").read_text())
+assert pre["hashes_verified"]==3 and pre["bootstrap_supabase_required"]
+assert inv["copy_headers_total"] > 0
+assert not pre["database_replay_passed"] and not inv["sql_restore_attempted"]
+print("PASS: private SQL SHA256 3/3 and COPY inventory, without exposing row data")
+PY
+# The exact official Supabase PG17 database image; disposable runner only.
+# --network none ensures imported triggers, pg_net and webhooks cannot reach live services.
+docker pull --quiet supabase/postgres:17.6.1.136 >/dev/null
+CID="$(docker run -d --rm --network none --memory 3g --cpus 2 \
+  -e POSTGRES_PASSWORD=synthetic-disposable-only \
+  -e POSTGRES_DB=postgres \
+  -v "$WORK:/restore:ro" \
+  supabase/postgres:17.6.1.136 \
+  postgres -c config_file=/etc/postgresql/postgresql.conf)"
+READY=0
+for count in $(seq 1 36); do
+  if docker exec -u postgres "$CID" pg_isready -U postgres -h /var/run/postgresql >/dev/null 2>&1; then READY=1; break; fi
+  sleep 3
+done
+if test "$READY" -ne 1; then echo 'BLOCKED: isolated Supabase PG17 bootstrap not ready'; exit 5; fi
+VER="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc 'show server_version_num')"
+test "$VER" -ge 170000 && test "$VER" -lt 180000 || { echo 'BLOCKED: Postgres 17 mismatch'; exit 6; }
+ROLES="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from pg_roles where rolname in ('anon','authenticated','authenticator','supabase_realtime_admin')")"
+SCHEMAS="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from pg_namespace where nspname in ('auth','storage')")"
+EXTS="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from pg_available_extensions where name in ('pg_cron','pg_net','http','pg_stat_statements','pgcrypto','supabase_vault','uuid-ossp')")"
+echo "PG17_BOOTSTRAP roles=$ROLES schemas=$SCHEMAS available_extensions=$EXTS"
+if test "$ROLES" -ne 4 || test "$SCHEMAS" -ne 2 || test "$EXTS" -ne 7; then
+  echo 'BLOCKED: official image lacks one or more application Supabase initialization prerequisites'
+  exit 7
+fi
+# Real restoration of verified private SQL in a disposable network-isolated instance.
+# Suppress all SQL and error payloads to protect customer information in public GitHub logs.
+if ! timeout 780s docker exec -u postgres "$CID" \
+  bash -c "psql -X -q --single-transaction -v ON_ERROR_STOP=1 -U postgres -d postgres \
+    -f /restore/03_DATABASE/roles.sql \
+    -f /restore/03_DATABASE/schema.sql \
+    -c 'SET session_replication_role = replica' \
+    -f /restore/03_DATABASE/data.sql >/tmp/cofre-restore.log 2>&1"; then
+  echo 'BLOCKED: real SQL replay failed in isolated Supabase PG17; private error output suppressed'
+  exit 8
+fi
+TABLES="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from information_schema.tables where table_schema in ('public','cr_internal') and table_type='BASE TABLE'")"
+AUTH="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc 'select count(*) from auth.users')"
+STORAGE="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc 'select count(*) from storage.objects')"
+test "$TABLES" -ge 150
+echo "PASS: isolated SQL E2E replay completed with PG17; restored application tables=$TABLES"
+echo "PASS: auth and storage metadata queryable (only aggregate row counts were checked)"
+echo "NOT COVERED: Storage binaries, Auth OAuth providers, live DNS, edge functions or user logins"
