@@ -170,7 +170,8 @@ jobs:
           assert d["copy_headers_total"] > 0 and not d["sql_restore_attempted"]
           print("PASS: CAS COPY structural compatibility, no PII")
           PY
-          python3 .github/scripts/cr_history_cas_append.py --verify-manifest "${{ steps.cas_canary.outputs.run_id }}" |
+          RUN_ID="$(python3 -c 'import json,os; print(json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"cas-report.json")))["run_id"])')"
+          python3 .github/scripts/cr_history_cas_append.py --verify-manifest "$RUN_ID" |
             python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["verified_entries"]>=5 and d["independent_of_current"] and not d["database_replay_passed"]; print("PASS: ALL CAS/seed references available by independent MD5/size catalog")'
       - name: Surface CAS canary result without masking full backup status
         if: always()
