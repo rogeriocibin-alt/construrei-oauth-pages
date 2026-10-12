@@ -98,6 +98,17 @@
       "evidence": "Implementação sem evidência não equivale a conclusão/homologação."
     },
     {
+      "id": "GOV-006",
+      "label": "Histórico preservado: versões substituídas, regressões e recuperações continuam rastreáveis",
+      "category": "Continuidade",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
+      "status": "preserved",
+      "date": "2026-10-07",
+      "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+      "evidence": "Histórico não é apagado para simplificar o estado atual; evidências e recuperações permanecem acessíveis."
+    },
+    {
       "id": "CONT-001",
       "label": "Checkpoint de continuidade aproximadamente a cada 10 minutos e antes de pausas/troca de dispositivo quando possível",
       "category": "Continuidade",
@@ -129,6 +140,17 @@
       "date": "2026-10-07",
       "source": "gestor-projeto/project-data.json",
       "evidence": "Itens não-APP não podem ser lançados nas listas APP/WIZY/Éder."
+    },
+    {
+      "id": "PEND-003",
+      "label": "Homologação ou promoção atualiza o Banco Mestre de pendências no mesmo ciclo",
+      "category": "Pendências",
+      "class": "FUNDAMENTAL",
+      "criticality": "P0",
+      "status": "preserved",
+      "date": "2026-10-07",
+      "source": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+      "evidence": "Homologação, promoção, congelamento ou validação explícita atualiza status, evidência, próxima ação e checkpoint imediatamente; APP/WIZY/Éder só recebem recorte permitido."
     },
     {
       "id": "AUD-001",
