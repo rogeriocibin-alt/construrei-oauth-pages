@@ -31,9 +31,12 @@ def parse_inventory(items):
                 or "\\" in path or "//" in path or any(p in ("", ".", "..") for p in path.split("/"))
                 or len(path) > 1024 or path in indexed):
             raise ValueError("Unsafe or duplicated relative path")
-        if type(size) is not int or size < 0 or not isinstance(md5, str) or not HEX_MD5.fullmatch(md5):
-            raise ValueError("Missing or invalid immutable size/MD5 metadata")
-        indexed[path] = (size, md5.lower())
+        if type(size) is not int or size < 0:
+            raise ValueError("Missing or invalid file size metadata")
+        if md5 is not None and (not isinstance(md5, str) or not HEX_MD5.fullmatch(md5)):
+            raise ValueError("Invalid reported MD5; cannot trust metadata")
+        # Drive may omit MD5 for some objects. Treat as CHANGED, never as identical.
+        indexed[path] = (size, md5.lower() if md5 else None)
     if not all(path in indexed for path in REQUIRED):
         raise ValueError("Required backup files absent")
     if not any(p.startswith("06_STORAGE/") for p in indexed):
@@ -44,8 +47,8 @@ def parse_inventory(items):
 def evaluate(source, seed):
     if not source or not seed:
         raise ValueError("Source or seed inventory empty")
-    same = [p for p in source if source[p] == seed.get(p)]
-    changed = [p for p in source if source[p] != seed.get(p)]
+    same = [p for p in source if source[p][1] is not None and source[p] == seed.get(p)]
+    changed = [p for p in source if p not in set(same)]
     # Append-only CAS would store changed bytes; no deletion or overwrite of seed.
     total = sum(size for size, _ in source.values())
     diff = sum(source[p][0] for p in changed)
@@ -54,6 +57,9 @@ def evaluate(source, seed):
         "identical_files": len(same), "changed_or_new_files": len(changed),
         "removed_from_current_files": len(set(seed)-set(source)),
         "current_size_bytes": total, "estimated_delta_bytes": diff,
+        "source_without_md5_files": sum(h is None for _, h in source.values()),
+        "source_without_md5_bytes": sum(s for s, h in source.values() if h is None),
+        "seed_without_md5_files": sum(h is None for _, h in seed.values()),
         "estimated_storage_saving_fraction": round(1-diff/total, 6) if total else 0,
         "eligible_for_cutover": False, "recovery_verified": False,
     }
@@ -101,11 +107,14 @@ def selftest():
     assert report["estimated_delta_bytes"] == 120
     assert report["current_size_bytes"] == 620
     assert not report["eligible_for_cutover"]
+    missing = [dict(base[0], Hashes={})] + base[1:]
+    force = evaluate(parse_inventory(missing), parse_inventory(base))
+    assert force["source_without_md5_files"] == 1 and force["changed_or_new_files"] == 1
     bad = [
         base[:-1],
         base + [base[0]],
         [dict(base[0], Path="../escape")] + base[1:],
-        [dict(base[0], Hashes={})] + base[1:],
+        [dict(base[0], Hashes={"MD5": "invalid-md5"})] + base[1:],
         [dict(base[0], Size=True)] + base[1:],
     ]
     for case in bad:
