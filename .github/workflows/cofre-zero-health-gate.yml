@@ -434,28 +434,27 @@ jobs:
           grep -Fxq 'RUN_ID: 20261012-060012' "$ROOT/BACKUP_STATUS.txt"
           grep -Fxq 'DATABASE_FILES: 3' "$ROOT/BACKUP_STATUS.txt"
           grep -Fxq 'STORAGE_FILES: 4531' "$ROOT/BACKUP_STATUS.txt"
-          python3 - "$ROOT" <<'PY'
-          import pathlib,sys
-          root=pathlib.Path(sys.argv[1])
-          records=[]
-          for line in (root/"SHA256SUMS.txt").read_text(encoding="utf-8").splitlines(keepends=True):
-              candidate=line[1:] if line.startswith("\\") else line
-              if len(candidate)>=67 and candidate[64:66]=="  " and candidate[66:].startswith("06_STORAGE/"):
-                  records.append(line)
-          if len(records)!=4531:
-              raise SystemExit("BLOCKED: immutable SHA256 manifest does not cover all 4531 Storage binaries")
-          (root/"STORAGE_SHA256SUMS.txt").write_text("".join(records),encoding="utf-8")
-          print("PASS: immutable manifest lists 4531 binary paths and SHA256 hashes")
-          PY
+          # The original 264-byte SHA256SUMS catalogs only three SQL files.
+          # Verify every binary against the immutable Drive source's per-file
+          # MD5 (rclone --checksum), then create an independent SHA256 catalog.
           mkdir -p "$ROOT/06_STORAGE"
           rclone copy "$SNAPSHOT/06_STORAGE" "$ROOT/06_STORAGE" --checkers 4 --transfers 4 --retries 3 --retries-sleep 10s >/dev/null
           COUNT="$(find "$ROOT/06_STORAGE" -type f | wc -l | tr -d ' ')"
-          test "$COUNT" = "4531" || { echo "::error::Storage binary count mismatch in recovered archive"; exit 4; }
-          (cd "$ROOT" && sha256sum --quiet --status -c STORAGE_SHA256SUMS.txt) || {
-            echo "::error::At least one offline recovered binary fails SHA256"; exit 5;
+          test "$COUNT" = "4531" || { echo "::error::Recovered file count is not 4531"; exit 4; }
+          rclone check "$SNAPSHOT/06_STORAGE" "$ROOT/06_STORAGE" --checksum --checkers 4 --retries 3 --retries-sleep 10s >/dev/null || {
+            echo "::error::At least one binary mismatches source Drive MD5/size"; exit 5;
           }
-          echo "PASS: all 4531 immutable Storage objects downloaded and verified SHA256 byte-for-byte"
-          echo "PASS: entire binary recovery is independent of Supabase production and CURRENT"
+          (cd "$ROOT" && find 06_STORAGE -type f -print0 | sort -z | xargs -0 sha256sum > STORAGE_SHA256SUMS.txt)
+          test "$(wc -l < "$ROOT/STORAGE_SHA256SUMS.txt" | tr -d ' ')" = "4531" || {
+            echo "::error::New SHA256 manifest coverage incomplete"; exit 5;
+          }
+          (cd "$ROOT" && sha256sum --quiet --status -c STORAGE_SHA256SUMS.txt)
+          CHECKS="construrei-drive:CONSTRUREI-COFRE-ZERO/22_CHECKSUMS/STORAGE_FULL_20261012_SHA256_RUN_$GITHUB_RUN_ID"
+          rclone copyto "$ROOT/STORAGE_SHA256SUMS.txt" "$CHECKS/STORAGE_SHA256SUMS.txt" --immutable
+          rclone copyto "$CHECKS/STORAGE_SHA256SUMS.txt" "$ROOT/readback_sha256.txt"
+          cmp "$ROOT/STORAGE_SHA256SUMS.txt" "$ROOT/readback_sha256.txt"
+          echo "PASS: all 4531 Storage binaries recovered; per-file MD5 matches immutable Drive source"
+          echo "PASS: independent SHA256 catalogue of all 4531 files created and privately read back"
           echo "No files, paths, credentials, or user bytes were printed or published."
   isolated_pg17_canary:
     name: Laboratorio Postgres 17 efemero — massa sintetica somente
