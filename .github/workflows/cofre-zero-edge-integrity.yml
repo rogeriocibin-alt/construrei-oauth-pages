@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - checkpoint/cofre-zero-edge-integrity-20261011
+      - checkpoint/cofre-zero-edge-integrity-20261012
     paths:
       - .github/workflows/cofre-zero-edge-integrity.yml
 
