@@ -98,7 +98,7 @@ from pathlib import Path
 import re,sys
 p=Path(sys.argv[1])
 s=p.read_text(errors="replace") if p.is_file() else ""
-errors=[line for line in s.splitlines() if re.search(r"(?i)\\b(error|fatal|permission denied|unsupported|unrecognized|aborted|invalid|could not|failed)\\b",line)]
+errors=[line for line in s.splitlines() if any(token in line.lower() for token in ("error", "fatal", "permission denied", "unsupported", "unrecognized", "aborted", "invalid", "could not", "failed"))]
 line=errors[0] if errors else ""
 loc=re.search(r"/(roles|schema|data)\.sql:(\d+)",line)
 lower=line.lower()
