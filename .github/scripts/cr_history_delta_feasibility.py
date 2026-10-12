@@ -48,7 +48,8 @@ def evaluate(source, seed):
     if not source or not seed:
         raise ValueError("Source or seed inventory empty")
     same = [p for p in source if source[p][1] is not None and source[p] == seed.get(p)]
-    changed = [p for p in source if p not in set(same)]
+    identical = set(same)
+    changed = [p for p in source if p not in identical]
     # Append-only CAS would store changed bytes; no deletion or overwrite of seed.
     total = sum(size for size, _ in source.values())
     diff = sum(source[p][0] for p in changed)
@@ -60,6 +61,9 @@ def evaluate(source, seed):
         "source_without_md5_files": sum(h is None for _, h in source.values()),
         "source_without_md5_bytes": sum(s for s, h in source.values() if h is None),
         "seed_without_md5_files": sum(h is None for _, h in seed.values()),
+        "size_equal_files": sum(source[p][0] == seed[p][0] for p in source if p in seed),
+        "size_comparable_files": sum(p in seed for p in source),
+        "md5_comparable_files": sum(source[p][1] is not None and seed[p][1] is not None for p in source if p in seed),
         "estimated_storage_saving_fraction": round(1-diff/total, 6) if total else 0,
         "eligible_for_cutover": False, "recovery_verified": False,
     }
