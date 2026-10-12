@@ -176,5 +176,5 @@ jobs:
       - name: Audit literal first-party asset references (read-only, no cutover)
         run: |
           python3 .github/scripts/cr_static_runtime_dependency_audit.py --selftest
-          python3 .github/scripts/cr_static_runtime_dependency_audit.py
+          python3 .github/scripts/cr_static_runtime_dependency_audit.py --enforce
 

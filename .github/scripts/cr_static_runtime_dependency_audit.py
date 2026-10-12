@@ -25,6 +25,31 @@ JS = re.compile(
 DYNAMIC = re.compile(r"preview\s*/\s*(?:\$\{|['\"\x60]|\+|\s|$)", re.I)
 
 
+# CI has proved the following existing baseline in run 38196805647 (PR #66).
+# These are BUDGETS FOR NEW REGRESSIONS, not proof that existing 26
+# missing references are harmless. Every exception remains an open issue.
+BASELINE_MISSING_REFERENCES = 26
+BASELINE_CURRENT_CENTRAL_MISSING = 3
+CURRENT_CENTRAL = "production/central-operacional-v2-ux-r1-2-homologada-20261005/"
+GABI_V21 = "preview/app-gabi-v21-parecer-logo-20261008/index.html"
+GABI_V20 = "preview/app-gabi-v20-documentos-f02-20261008/index.html"
+
+
+def regression_findings(missing, withheld, included):
+    """Fail on *new* missing links or exclusion of known live dependencies."""
+    current_missing = {p for p in missing if p[0].startswith(CURRENT_CENTRAL)}
+    failures = []
+    if withheld:
+        failures.append("Existing first-party files omitted from ephemeral stage: " + str(len(withheld)))
+    if len(missing) > BASELINE_MISSING_REFERENCES:
+        failures.append("Missing first-party links rose above 26: " + str(len(missing)))
+    if len(current_missing) > BASELINE_CURRENT_CENTRAL_MISSING:
+        failures.append("Current canonical Central missing links rose above 3: " + str(len(current_missing)))
+    if (GABI_V21, GABI_V20) not in included:
+        failures.append("Gabi v21 -> v20 iframe dependency not present in stage")
+    return failures
+
+
 def refs_css(s):
     return [a or b for a, b in CSS.findall(s)]
 
@@ -168,6 +193,10 @@ def main():
         "literal_refs_included": len(counts["included"]),
         "repo_files_omitted_from_candidate": len(counts["withheld"]),
         "unresolved_literals_not_in_repo": len(counts["missing"]),
+        "canonical_current_central_missing": len({p for p in counts["missing"] if p[0].startswith(CURRENT_CENTRAL)}),
+        "static_regression_budget": {"missing_references": BASELINE_MISSING_REFERENCES,
+                                     "canonical_current_central": BASELINE_CURRENT_CENTRAL_MISSING,
+                                     "withheld_references": 0},
         "dynamic_preview_hint_files": len(counts["dynamic_preview_hints"]),
         "dynamic_preview_hint_sample": sorted(counts["dynamic_preview_hints"])[:20],
         "withheld_sample": [dict(origin=a,target=b,kind=c) for a,b,c in sorted(examples["withheld"])[:25]],
@@ -182,7 +211,11 @@ def main():
             "No deletions, migrations or publication approved by this result",
         ],
     }
+    findings = regression_findings(counts["missing"], counts["withheld"], counts["included"])
+    result["static_regressions_detected"] = findings
     print(json.dumps(result, ensure_ascii=False, indent=2))
+    if "--enforce" in __import__("sys").argv and findings:
+        raise RuntimeError("STATIC_REGRESSION_BLOCK: " + " | ".join(findings))
     return result
 
 
@@ -199,6 +232,13 @@ def selftest():
            '<script>fetch("./data.json");navigator.serviceWorker.register("./sw.js")</script>')
     assert {"./a.css","./b.svg","./data.json","./sw.js"} <= {x[1] for x in p.urls}
     assert refs_js("import './a.js'; import x from '../b.js';") == ["./a.js", "../b.js"]
+    baseline_included = {(GABI_V21, GABI_V20)}
+    baseline_missing = {(CURRENT_CENTRAL + "clean-native.css", "a" + str(i)) for i in range(3)}
+    baseline_missing |= {("old/" + str(i), "missing/" + str(i)) for i in range(23)}
+    assert regression_findings(baseline_missing, set(), baseline_included) == []
+    assert regression_findings(baseline_missing | {("x", "new")}, set(), baseline_included)
+    assert regression_findings(baseline_missing, {("x", "withheld")}, baseline_included)
+    assert regression_findings(baseline_missing, set(), set())
     print("PASS: scanner offline selftest")
 
 
