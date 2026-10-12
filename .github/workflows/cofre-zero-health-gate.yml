@@ -390,7 +390,7 @@ jobs:
           assert validated.get("db",{}).get("major_version")==17
           p.write_text(s)
           PY
-          npx --yes supabase@2.120.0 start --exclude rest,realtime,functions,studio,mail,analytics,pooler --eager >/dev/null
+          npx --yes supabase@2.120.0 start --exclude realtime,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor >/dev/null
           DB="$(docker ps --format '{{.ID}} {{.Names}}' | awk '$2 ~ /^supabase_db_/ {print $1; exit}')"
           test -n "$DB" || { echo "BLOCKED: Supabase local db container not found"; exit 3; }
           SQL="SELECT n.nspname, count(*) FILTER (WHERE c.relkind IN ('r','p')) FROM pg_namespace n LEFT JOIN pg_class c ON c.relnamespace=n.oid WHERE n.nspname IN ('auth','storage') GROUP BY n.nspname ORDER BY n.nspname"
