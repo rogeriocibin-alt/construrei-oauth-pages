@@ -42,11 +42,11 @@ Um só Gestor acessível no celular, com três estados identificáveis por ativo
 - Classificar cada pasta em `PRODUCTION`, `HOMOLOGATION_CANDIDATE`, `ARCHIVE_CANDIDATE` ou `UNREVIEWED`. **Nunca converter "antigo" automaticamente em "descartável".**
 - Critério de saída: relatório de conflitos e lista de dependências revisados, sem arquivos removidos.
 
-### Etapa 2 — Homologação realmente isolada
-- Criar a publicação de teste separada e, onde necessário, com acesso autenticado; não depender da pasta `preview/` estar na própria `main`.
-- Usar branch candidata e artefato imutável identificados por commit; credenciais de produção não entram na candidata.
-- Tests: endpoints, UX notebook/celular, navegação/voltar, avatares/identidade, integração e travas de regressão; só promover **o commit validado**.
-- Critério de saída: preview acessível sem afetar produção, com rollback e prova de que nenhum roteamento oficial aponta para candidato.
+### Etapa 2 — Homologação efêmera e isolada logicamente (sem hospedagem adicional)
+- Montar build temporário somente em branch/runner CI ou prévia segura de infraestrutura já contratada, sem segunda hospedagem permanente; não depender de `main/preview/` como isolamento e não disponibilizar backend de produção para escritas de teste.
+- Usar branch candidata e artefato imutável identificados por commit, fixtures fictícias e mocks; credenciais e dados pessoais/financeiros de produção não entram na candidata.
+- Testes disponíveis sem custos adicionais: contratos, API simulada, UX notebook/celular, navegação/voltar, identidade e regressão. Operações que exijam banco/Auth/RLS e escrita real ficam **BLOQUEADAS** sem isolamento comprovado e autorização para eventual despesa; só promover **o commit devidamente validado**.
+- Critério de saída: candidata reproduzível e testada de modo inerte, rollback documentado e prova de ausência de chamadas de escrita à produção; testes E2E dependentes de backend real continuam bloqueados até alternativa segura.
 
 ### Etapa 3 — Arquivo recuperável e segmentação da publicação
 - Criar acervo externo privado com manifesto, checksums e restauração isolada, vinculado ao Gestor.
@@ -73,7 +73,7 @@ O trabalho técnico pode ser solicitado **neste mesmo chat por escrito** após e
 
 ## Provas exigidas para considerar a arquitetura concluída
 - [ ] Inventário automatizado no CI e lista de referências críticas.
-- [ ] Homologação em ambiente independente, sem tocar produção.
+- [ ] Homologação com artefato de CI efêmero e dados fictícios, sem tocar produção; gates E2E de escrita explicitamente bloqueados até isolamento viável e autorizado.
 - [ ] Acervo com checksum e restauração isolada.
 - [ ] Publicação de produção restrita ao conjunto oficial.
 - [ ] Teste de rollback e navegação no celular/notebook.
