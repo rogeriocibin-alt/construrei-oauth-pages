@@ -59,6 +59,21 @@ ROLES="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "sele
 SCHEMAS="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from pg_namespace where nspname in ('auth','storage')")"
 EXTS="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from pg_available_extensions where name in ('pg_cron','pg_net','http','pg_stat_statements','pgcrypto','supabase_vault','uuid-ossp')")"
 echo "PG17_BOOTSTRAP roles=$ROLES schemas=$SCHEMAS available_extensions=$EXTS"
+# Platform production metadata verified 2026-10-12: supabase_realtime_admin is
+# NOLOGIN/NOSUPERUSER/NOCREATEDB/NOCREATEROLE/NOINHERIT/NOREPLICATION.
+# Image may omit that role without Realtime migrations. Recreate *only* this exact
+# metadata prerequisite in an offline, disposable lab, never production.
+if test "$ROLES" -eq 3; then
+  MISSING="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select string_agg(name,',') from (values ('anon'),('authenticated'),('authenticator'),('supabase_realtime_admin')) as required(name) where not exists (select 1 from pg_roles r where r.rolname=required.name)")"
+  if test "$MISSING" = 'supabase_realtime_admin'; then
+    docker exec -u postgres "$CID" psql -U postgres -d postgres -q -v ON_ERROR_STOP=1 -c 'CREATE ROLE supabase_realtime_admin NOLOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION' >/dev/null
+    echo 'LAB_BOOTSTRAP: recreated only the omitted Supabase Realtime no-login role'
+    ROLES=4
+  else
+    echo 'BLOCKED: missing unknown Supabase role; no attempted workaround'
+    exit 7
+  fi
+fi
 if test "$ROLES" -ne 4 || test "$SCHEMAS" -ne 2 || test "$EXTS" -ne 7; then
   echo 'BLOCKED: official image lacks one or more application Supabase initialization prerequisites'
   exit 7
