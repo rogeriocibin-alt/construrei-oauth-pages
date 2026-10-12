@@ -21,6 +21,7 @@ on:
       - '.github/workflows/*.yaml'
       - .github/scripts/cofre_trello_bootstrap.py
       - .github/scripts/cofre_trello_capacity_guard.py
+      - .github/scripts/cr_history_capacity_guard.py
       - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
@@ -51,6 +52,7 @@ on:
       - '.github/workflows/*.yaml'
       - .github/scripts/cofre_trello_bootstrap.py
       - .github/scripts/cofre_trello_capacity_guard.py
+      - .github/scripts/cr_history_capacity_guard.py
       - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
@@ -137,6 +139,8 @@ jobs:
         run: python3 .github/scripts/cr_single_host_zero_incremental_guard.py
       - name: Test Cofre Zero history pagination and fail-closed behavior (offline)
         run: python3 .github/scripts/test_cr_cofre_health_latest.py
+      - name: Test bounded immutable daily history offline
+        run: python3 .github/scripts/cr_history_capacity_guard.py --selftest
       - name: SQL restore preflight and COPY header tests (synthetic only)
         run: |
           python3 .github/scripts/cr_sql_restore_preflight.py --selftest
