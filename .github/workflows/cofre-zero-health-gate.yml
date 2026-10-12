@@ -405,6 +405,103 @@ jobs:
             exit 5
           }
           echo "PASS: official Supabase PG17 Auth/Storage local bootstrap without production credentials or SQL"
+  cofre_migration_ledger_export_once:
+    name: Cofre migration ledger — read-only capture and private recovery proof
+    if: github.event_name == 'pull_request' && github.head_ref == 'checkpoint/cofre-zero-migration-ledger-20261012' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+    steps:
+      - name: Read-only migration snapshot, private Drive append-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          test -n "$SUPABASE_DB_URL" || { echo "::error::Missing DB secret"; exit 2; }
+          test -n "$RCLONE_CONFIG_B64" || { echo "::error::Missing private Drive secret"; exit 2; }
+          WORK="$(mktemp -d)"
+          CID=""
+          cleanup() {
+            if test -n "$CID"; then docker rm -f "$CID" >/dev/null 2>&1 || :; fi
+            rm -rf "$WORK"
+            rm -f "$HOME/.config/rclone/rclone.conf"
+          }
+          trap cleanup EXIT
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone curl ca-certificates gnupg >/dev/null
+          sudo install -d -m 0755 /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg >/dev/null
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] https://apt.postgresql.org/pub/repos/apt noble-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17 >/dev/null
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone lsd construrei-drive: >/dev/null
+          PGOPTIONS='-c default_transaction_read_only=on' /usr/lib/postgresql/17/bin/pg_dump "$SUPABASE_DB_URL" \
+            --data-only --quote-all-identifiers --no-owner --no-privileges \
+            --table='supabase_migrations.schema_migrations' \
+            --file="$WORK/schema_migrations.sql" >/dev/null 2>"$WORK/pg-errors-private.txt" || {
+              echo 'BLOCKED: read-only migration-history export failed; details withheld'; exit 3;
+            }
+          python3 - "$WORK/schema_migrations.sql" <<'PY'
+          import sys
+          from pathlib import Path
+          p=Path(sys.argv[1])
+          inside=False
+          rows=0
+          headers=0
+          for line in p.open(encoding="utf-8",errors="strict"):
+              if not inside and line.startswith("COPY ") and "schema_migrations" in line and "FROM stdin;" in line:
+                  inside=True
+                  headers+=1
+                  continue
+              if inside and line.rstrip("\r\n")==r"\.":
+                  inside=False
+                  continue
+              if inside:
+                  rows+=1
+          if inside or headers!=1 or rows!=193:
+              raise SystemExit("BLOCKED: migration COPY inventory does not match 193 source records")
+          print("PASS: read-only exported all 193 managed migration-history records")
+          PY
+          (cd "$WORK" && sha256sum schema_migrations.sql > SHA256SUMS.txt)
+          printf 'FORMAT: CR_COFRE_MIGRATIONS_FULL_V1\nSOURCE_PROJECT: yspuaamokjbrosytqjpg\nSOURCE_RECORDS: 193\nRESTORE_BOUNDARY: Lab only; no migrations applied to production\n' > "$WORK/RESTORE_SCOPE.txt"
+          DEST="construrei-drive:CONSTRUREI-COFRE-ZERO/03_DATABASE/MIGRATIONS_HISTORY_FULL/RUN_$GITHUB_RUN_ID"
+          rclone copy "$WORK/schema_migrations.sql" "$DEST" --immutable --transfers 1
+          rclone copy "$WORK/SHA256SUMS.txt" "$DEST" --immutable --transfers 1
+          rclone copy "$WORK/RESTORE_SCOPE.txt" "$DEST" --immutable --transfers 1
+          rclone check "$WORK" "$DEST" --include "/schema_migrations.sql" --checkers 2
+          mkdir -p "$RUNNER_TEMP/migration-readback"
+          rclone copy "$DEST" "$RUNNER_TEMP/migration-readback" --checkers 2 --transfers 1
+          (cd "$RUNNER_TEMP/migration-readback" && sha256sum --status -c SHA256SUMS.txt)
+          # Replay ONLY the stored migration ledger rows, not their SQL statements.
+          # Offline container, ephemeral data, network disconnected from the start.
+          docker pull --quiet postgres:17.6 >/dev/null
+          CID="$(docker run -d --rm --network none -e POSTGRES_PASSWORD=synthetic-private-only postgres:17.6)"
+          READY=0
+          for attempt in $(seq 1 30); do
+            if docker exec "$CID" pg_isready -U postgres >/dev/null 2>&1; then READY=1; break; fi
+            sleep 2
+          done
+          test "$READY" = 1 || { echo 'BLOCKED: offline PostgreSQL 17 not ready'; exit 5; }
+          docker exec "$CID" psql -X -q -v ON_ERROR_STOP=1 -U postgres -d postgres \
+            -c 'CREATE SCHEMA supabase_migrations; CREATE TABLE supabase_migrations.schema_migrations(
+              version text PRIMARY KEY,statements text[],name text,created_by text,
+              idempotency_key text UNIQUE,rollback text[])' >/dev/null
+          docker cp "$RUNNER_TEMP/migration-readback/schema_migrations.sql" "$CID:/tmp/schema_migrations.sql"
+          docker exec "$CID" psql -X -q -v ON_ERROR_STOP=1 -U postgres -d postgres \
+            -f /tmp/schema_migrations.sql >/dev/null
+          REPLAY_COUNT="$(docker exec "$CID" psql -X -A -t -U postgres -d postgres \
+            -c 'select count(*) from supabase_migrations.schema_migrations')"
+          test "$REPLAY_COUNT" = 193 || { echo 'BLOCKED: migration history replay differs from 193'; exit 6; }
+          echo 'PASS: 193/193 migration ledger rows restored in network-free Postgres17; SQL statement contents never executed'
+          echo "PASS: 193 migration rows archived with SHA256 and full private Drive readback"
+          echo "No SQL contents, migration names, or user records printed or committed."
   isolated_pg17_canary:
     name: Laboratorio Postgres 17 efemero — massa sintetica somente
     if: github.event_name == 'pull_request'
