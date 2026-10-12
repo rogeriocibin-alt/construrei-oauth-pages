@@ -129,6 +129,16 @@ if test "$PUB_COUNT" -gt 0; then
     -c 'DROP PUBLICATION IF EXISTS supabase_realtime; DROP PUBLICATION IF EXISTS supabase_realtime_messages_publication' >/dev/null
 fi
 echo "LAB_BOOTSTRAP: cleared $PUB_COUNT pre-installed Realtime publications; immutable SQL recreates them"
+# The managed platform owns a SECURITY DEFINER event-trigger function as postgres,
+# while this self-hosted image marks postgres NOSUPERUSER. PG17 rejects CREATE
+# EVENT TRIGGER when function ownership lacks superuser permission. Adapt only
+# this disposable --network none lab to PostgreSQL native restore privilege model.
+# This is not an alteration to the managed production project's postgres role.
+docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -q -v ON_ERROR_STOP=1 \
+  -c 'ALTER ROLE postgres SUPERUSER' >/dev/null
+LAB_PG_SUPER="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "select count(*) from pg_roles where rolname='postgres' and rolsuper")"
+test "$LAB_PG_SUPER" = "1" || { echo 'BLOCKED: disposable lab superuser prerequisite missing'; exit 7; }
+echo 'LAB_BOOTSTRAP: privileged postgres role only inside disposable offline PG17 container'
 # Real restoration of verified private SQL in a disposable network-isolated instance.
 # Suppress all SQL and error payloads to protect customer information in public GitHub logs.
 if ! timeout 780s docker exec -u postgres "$CID" \
