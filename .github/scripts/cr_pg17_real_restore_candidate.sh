@@ -10,6 +10,9 @@ WORK="$(mktemp -d)"
 CID=""
 cleanup() {
   if test -n "$CID"; then docker rm -fv "$CID" >/dev/null 2>&1 || :; fi
+  if test -e "$WORK/local-stack/supabase/config.toml"; then
+    (cd "$WORK/local-stack" && npx --yes supabase@2.120.0 stop --no-backup >/dev/null 2>&1) || :
+  fi
   rm -rf "$WORK"
 }
 trap cleanup EXIT
@@ -38,20 +41,55 @@ assert inv["copy_headers_total"] > 0
 assert not pre["database_replay_passed"] and not inv["sql_restore_attempted"]
 print("PASS: private SQL SHA256 3/3 and COPY inventory, without exposing row data")
 PY
-# The exact official Supabase PG17 database image; disposable runner only.
-# --network none ensures imported triggers, pg_net and webhooks cannot reach live services.
-docker pull --quiet supabase/postgres:17.6.1.136 >/dev/null
-CID="$(docker run -d --rm --network none --memory 3g --cpus 2 \
-  -e POSTGRES_PASSWORD=synthetic-disposable-only \
-  -e POSTGRES_DB=postgres \
-  supabase/postgres:17.6.1.136 \
-  postgres -c config_file=/etc/postgresql/postgresql.conf)"
+# Official Supabase CLI stack is required: bare PG17 image has zero managed
+# Auth and Storage tables. This project is NEVER linked to production.
+# Verify Auth + Storage bootstrap before importing private data.
+test -z "$SUPABASE_ACCESS_TOKEN" || { echo 'BLOCKED: unexpected production API token'; exit 8; }
+mkdir -p "$WORK/local-stack"
+pushd "$WORK/local-stack" >/dev/null
+npx --yes supabase@2.120.0 init --yes >/dev/null
+python3 - <<'PY'
+from pathlib import Path
+import tomllib,re
+p=Path("supabase/config.toml")
+s=p.read_text()
+initial=tomllib.loads(s)
+if "db" not in initial:
+    s=s.rstrip()+"\n[db]\nmajor_version = 17\n"
+elif "major_version" not in initial["db"]:
+    s=s.replace("[db]","[db]\nmajor_version = 17",1)
+else:
+    s=re.sub(r"(?m)^(\s*major_version\s*=\s*).*$",r"\g<1>17",s,count=1)
+assert tomllib.loads(s).get("db",{}).get("major_version")==17
+p.write_text(s)
+PY
+npx --yes supabase@2.120.0 start --exclude realtime,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor >/dev/null
+popd >/dev/null
+CID="$(docker ps --format '{{.ID}} {{.Names}}' | awk '$2 ~ /^supabase_db_/ {print $1; exit}')"
+test -n "$CID" || { echo 'BLOCKED: official PG17 local database missing'; exit 8; }
+# Halt all platform services before importing user data. The source backup
+# has NOT been made visible/mounted to any service container.
+while IFS= read -r name; do
+  test -n "$name" || continue
+  docker stop "$name" >/dev/null
+done < <(docker ps --format '{{.Names}}' | grep '^supabase_' | grep -v '^supabase_db_' || :)
+NETWORKS="$(docker inspect "$CID" --format '{{range $network, $value := .NetworkSettings.Networks}}{{$network}} {{end}}')"
+for network in $NETWORKS; do docker network disconnect -f "$network" "$CID"; done
+NETWORK_COUNT="$(docker inspect "$CID" --format '{{len .NetworkSettings.Networks}}')"
+test "$NETWORK_COUNT" = "0" || { echo 'BLOCKED: isolated database still has networking'; exit 8; }
+echo 'PASS: compatible official Supabase stack bootstrapped; platform services stopped; DB network fully disconnected'
 READY=0
 for count in $(seq 1 36); do
   if docker exec -u postgres "$CID" pg_isready -U postgres -h /var/run/postgresql >/dev/null 2>&1; then READY=1; break; fi
   sleep 3
 done
 if test "$READY" -ne 1; then echo 'BLOCKED: isolated Supabase PG17 bootstrap not ready'; exit 5; fi
+
+AUTH_COUNT="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='auth' and c.relkind in ('r','p')")"
+STORAGE_COUNT="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='storage' and c.relkind in ('r','p')")"
+echo "PLATFORM_BOOTSTRAP auth_tables=$AUTH_COUNT storage_tables=$STORAGE_COUNT"
+test "$AUTH_COUNT" -ge 27 && test "$STORAGE_COUNT" -ge 8 || { echo 'BLOCKED: official Auth/Storage migrations incomplete'; exit 5; }
+
 # Keep private runner files 0700; copy bytes inside this network-isolated
 # disposable container and assign read-only SQL files to its local postgres user.
 # Never chmod the private Drive artifacts world-readable on the host.
