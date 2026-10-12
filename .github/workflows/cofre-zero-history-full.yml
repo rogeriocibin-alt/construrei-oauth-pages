@@ -40,6 +40,12 @@ jobs:
           chmod 600 "$HOME/.config/rclone/rclone.conf"
           rclone lsd construrei-drive: >/dev/null
 
+      - name: Verify Drive quota and bounded daily history before copying
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/cr_history_capacity_guard.py
+
       - name: Preserve, verify, and recovery-test full daily archive
         id: snapshot
         shell: bash
