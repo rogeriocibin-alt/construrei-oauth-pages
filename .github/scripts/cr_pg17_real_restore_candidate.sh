@@ -143,7 +143,7 @@ echo 'LAB_BOOTSTRAP: privileged postgres role only inside disposable offline PG1
 # immutable SQL creates its OWN corresponding trigger definitions. Remove only
 # the exact conflicting names in this network-isolated disposable database.
 # Every trigger is recreated by schema.sql; never touch production.
-docker exec -u postgres "$CID" psql -X -q -U supabase_admin -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+docker exec -i -u postgres "$CID" psql -X -q -U supabase_admin -d postgres -v ON_ERROR_STOP=1 <<'SQL'
 DO $lab$
 DECLARE trigger_name text;
 BEGIN
