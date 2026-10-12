@@ -110,6 +110,16 @@ def main():
         name for name, refs in consumers.items()
         if any(kind == "CANDIDATE_INTERNAL" for kind, _ in refs)
     }
+    # Prioritize investigation without changing inventory, links, or removal flags.
+    # Source paths are already public in the tracked repository. A static
+    # reference can be dead code; its absence never authorizes deletion.
+    high_priority = sorted(unclassified & referred_from_non_preview)
+    candidate_chain = sorted(unclassified & linked_from_preview)
+    referenced_union = sorted(set(high_priority) | set(candidate_chain))
+    byte_duplicate_examples = [
+        sorted(group)
+        for group in sorted(identical_groups, key=lambda g: (-len(g), sorted(g)[0]))
+    ][:10]
     result = {
         "audit": "CR_PREVIEW_CONSUMER_DELTA_READ_ONLY",
         "status": "PASS_INVENTORY_ONLY" if not errors else "FAIL_CLOSED",
@@ -122,6 +132,11 @@ def main():
         "static_refs_from_other_previews": len(linked_from_preview),
         "unclassified_with_non_preview_ref": len(unclassified & referred_from_non_preview),
         "unclassified_with_internal_preview_ref": len(unclassified & linked_from_preview),
+        "priority_unclassified_referenced_by_non_preview": high_priority,
+        "unclassified_referenced_by_other_previews": candidate_chain,
+        "unclassified_referenced_by_either_count": len(referenced_union),
+        "sample_duplicate_byte_groups_review_only": byte_duplicate_examples,
+        "static_reference_absence_does_not_prove_removability": True,
         "identical_byte_hash_groups": len(identical_groups),
         "identical_byte_hash_paths": sum(len(g) for g in identical_groups),
         "no_static_reference_is_not_proof_of_disuse": True,
