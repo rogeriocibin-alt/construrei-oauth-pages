@@ -5,6 +5,16 @@
 **Responsável pela decisão:** Diretoria CONSTRU-REI.  
 **Relação:** complementa, **não substitui**, o Índice Mestre de Regras (GOV-001 etc.), o cadastro oficial de links, o plano de três ambientes e o checkpoint #53.
 
+## Decisão complementar da Diretoria: UM ambiente hospedado, três estados de governança
+**Atualização 11/10/2026 — política de custo incremental zero.** Esta decisão é aplicável ao ecossistema inteiro e especializa o plano existente `docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md`. Não cria segundo plano nem nova instância de Gestor.
+
+- **Produção:** somente runtime oficial permanentemente hospedado; preserva URLs, banco Supabase, APIs, integrações e Cofre Zero já existentes.
+- **Homologação:** branch candidata/versionamento e testes em runners temporários com fixtures/mocks, sem servidor/banco/370 Edge Functions duplicados e sem link público permanente de aplicativo de teste. Visuais e fluxos sem backend real podem ser exercitados localmente; E2E de escrita/Auth/RLS exige infraestrutura verdadeiramente isolada, eventualmente efêmera, ou permanece **BLOQUEADO**, nunca utiliza clientes reais como massa de testes. Não chamar mock de homologação E2E.
+- **Arquivo:** commits, tags, PRs, checkpoints, manifesto assinado/hash e backups privados já cobertos pelo Cofre Zero/Drive; **não servir conteúdo sensível no Pages** e não deixar sistemas antigos ligados por hábito. Preservar dependências e rollback antes de qualquer retirada.
+- **Custo e risco:** nenhuma criação paga (branch Supabase, DB, projeto, Storage, server, horário extra ou deploy de provedor) sem uma nova decisão expressa após cotação; reusar serviços e quotas atuais. Meta R$ 0 incremental **não é garantia de que o plano existente nunca terá consumo variável ou limite de franquia**. Informar consumo e bloqueios reais, sem gerar cobrança silenciosa.
+- **Control plane:** Gestor mantém apenas **um catálogo lógico** de ativos com `estado_de_vida` (PRODUÇÃO/HOMOLOGAÇÃO/HISTÓRICO/INDETERMINADO), commit, origem, proprietário, dependências, prova de aprovação, backup, restore e rollback; não cria nova fonte de informações de negócio.
+- **Execução:** sem exclusões automáticas, sem ativação de novo Supabase, sem novos agendamentos e sem promoção de candidate não homologada. O padrão de CI/ambiente de teste custa apenas o que já for coberto pelas franquias existentes e passa por gates read-only.
+
 ## 1. Resumo executivo e decisão arquitetural proposta
 **Um produto, dois planos, três estados do ciclo de vida e uma trilha de implantação comercial.**
 
