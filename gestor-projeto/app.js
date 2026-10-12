@@ -14,7 +14,7 @@ const VIEW_TITLES={
   audits:'Auditorias',governance:'Governança',search:'Busca'
 };
 
-const CURRENT_RELEASE={version:'1.2.4',build:'CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007',environment:'canonical'};
+const CURRENT_RELEASE={version:'1.2.5.3',build:'CR-PM-V1.2.5.3-RELEASE-IDENTITY-20261012',environment:'homologation'};
 const PM_API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-project-manager-v1-api-candidate-20261003';
 const PM_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcHVhYW1va2picm9zeXRxanBnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4ODIwODEsImV4cCI6MjEwMzQ1ODA4MX0.flOLkvsLqDicDUgXaD3qIfwS8XtP8FNMKUMUF6XOCEc';
 const state={data:null,view:'now',versionFilter:'all',pendingFilter:'all',historyFilter:'all',canonicalFilter:'all',search:'',liveBranches:null,liveSync:null,remoteRelease:null,pmLive:null,pmSync:null};
@@ -610,7 +610,7 @@ function renderAudits(){
 
 function syncReleaseUi(meta=CURRENT_RELEASE){
   const chip=$('#versionChip');
-  if(chip) chip.textContent='V1.2.4 • OFICIAL';
+  if(chip) chip.textContent='V'+String(meta?.version||CURRENT_RELEASE.version)+' • '+(CURRENT_RELEASE.environment==='homologation'?'CANDIDATA':'OFICIAL');
 }
 
 function releaseNotesHtml(meta){
