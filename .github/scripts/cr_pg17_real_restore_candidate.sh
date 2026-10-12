@@ -44,7 +44,7 @@ PY
 # Official Supabase CLI stack is required: bare PG17 image has zero managed
 # Auth and Storage tables. This project is NEVER linked to production.
 # Verify Auth + Storage bootstrap before importing private data.
-test -z "$SUPABASE_ACCESS_TOKEN" || { echo 'BLOCKED: unexpected production API token'; exit 8; }
+test -z "${SUPABASE_ACCESS_TOKEN:-}" || { echo 'BLOCKED: unexpected production API token'; exit 8; }
 mkdir -p "$WORK/local-stack"
 pushd "$WORK/local-stack" >/dev/null
 npx --yes supabase@2.120.0 init --yes >/dev/null
