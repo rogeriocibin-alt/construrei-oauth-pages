@@ -320,6 +320,29 @@ jobs:
           python3 .github/scripts/cr_static_runtime_dependency_audit.py --enforce
 
 
+  isolated_supabase_pg17_real_replay:
+    name: Cofre PG17 real SQL replay — candidate only, network isolated
+    if: github.event_name == 'pull_request' && github.head_ref == 'checkpoint/cofre-zero-pg17-real-restore-20261012' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify isolated PG17 replay runner script syntax
+        run: bash -n .github/scripts/cr_pg17_real_restore_candidate.sh
+      - name: Restore read-only private SQL into disposable offline Supabase PG17
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64"
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y rclone >/dev/null
+          bash .github/scripts/cr_pg17_real_restore_candidate.sh
   isolated_pg17_canary:
     name: Laboratorio Postgres 17 efemero — massa sintetica somente
     if: github.event_name == 'pull_request'
