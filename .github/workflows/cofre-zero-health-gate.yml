@@ -21,6 +21,7 @@ on:
       - '.github/workflows/*.yaml'
       - .github/scripts/cofre_trello_bootstrap.py
       - .github/scripts/cofre_trello_capacity_guard.py
+      - 'security/contracts/trello-webhook-signature*.mjs'
       - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
@@ -51,6 +52,7 @@ on:
       - '.github/workflows/*.yaml'
       - .github/scripts/cofre_trello_bootstrap.py
       - .github/scripts/cofre_trello_capacity_guard.py
+      - 'security/contracts/trello-webhook-signature*.mjs'
       - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
@@ -156,6 +158,10 @@ jobs:
           assert run['status']=='completed' and run['conclusion']=='success', 'Latest archive not verified as successful'
           print('PASS: workflow-specific GH history accessible, provenance='+str(run.get('branch')))
           PY
+      - name: Verify Trello webhook signature contract (synthetic, no network or secrets)
+        run: |
+          node --check security/contracts/trello-webhook-signature.mjs
+          node --test security/contracts/trello-webhook-signature.test.mjs
       - name: Verify Trello OIDC identities (offline, no secrets)
         run: |
           python3 -m py_compile .github/scripts/cofre_trello_bootstrap.py
