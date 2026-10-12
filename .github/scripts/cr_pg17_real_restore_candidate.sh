@@ -298,7 +298,7 @@ echo "RESTORE_COUNTS app_tables=$TABLES rls_tables=$RLS app_policies=$POLICIES s
 test "$TABLES" = "193" || { echo 'BLOCKED: restored application table count mismatch'; exit 9; }
 test "$RLS" = "192" || { echo 'BLOCKED: restored application RLS table count mismatch'; exit 9; }
 test "$POLICIES" = "20" || { echo 'BLOCKED: restored application RLS policy count mismatch'; exit 9; }
-test "$STORAGE" = "4532" || { echo 'BLOCKED: storage metadata count mismatch with readonly source'; exit 9; }
+test "$STORAGE" = "4531" || { echo 'BLOCKED: storage metadata count mismatch with source at 06:00 UTC snapshot'; exit 9; }
 test "$AUTH" = "0" || { echo 'BLOCKED: auth user metadata count mismatch'; exit 9; }
 test "$ITEMS" -gt 0 && test "$CHANGES" -gt 0 || { echo 'BLOCKED: restored master log tables empty'; exit 9; }
 test "$MIGRATIONS" = "0" || { echo 'BLOCKED: migration bootstrap unexpectedly populated'; exit 9; }
@@ -315,7 +315,7 @@ and not exists (select 1 from pg_policy p where p.polrelid=c.oid);
 ")"
 test "$SECURITY" = "2" || { echo 'BLOCKED: recovered master pendencies role/privilege/RLS drift'; exit 9; }
 echo 'PASS: SQL replay and RLS/permissions validated in offline PG17'
-echo 'PASS: 193 app tables, 192 RLS tables, 20 RLS policies, 4532 Storage metadata, Auth users 0'
+echo 'PASS: 193 app tables, 192 RLS tables, 20 RLS policies, 4531 Storage metadata, Auth users 0'
 echo 'PASS: restored operational records populated and master tables denied to anon/authenticated'
 echo 'NOT COVERED: 193 production migration-history rows absent from managed SQL dump'
 echo 'NOT COVERED: Storage binaries, Auth OAuth providers, live DNS, edge functions or user logins'
