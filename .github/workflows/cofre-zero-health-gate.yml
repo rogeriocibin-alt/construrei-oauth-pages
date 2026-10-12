@@ -9,6 +9,7 @@ on:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_agent_architecture_contract_guard.py
+      - .github/scripts/cr_preview_consumer_delta_audit.py
       - docs/CONTRATO_DESENVOLVIMENTO_SANEAMENTO_20261012.md
       - AGENTS.md
       - CLAUDE.md
@@ -50,6 +51,7 @@ on:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_agent_architecture_contract_guard.py
+      - .github/scripts/cr_preview_consumer_delta_audit.py
       - docs/CONTRATO_DESENVOLVIMENTO_SANEAMENTO_20261012.md
       - AGENTS.md
       - CLAUDE.md
@@ -174,6 +176,8 @@ jobs:
         run: python3 .github/scripts/cofre_governance_guard.py
       - name: Enforce the approved architecture on every registered agent (offline)
         run: python3 .github/scripts/cr_agent_architecture_contract_guard.py
+      - name: Classify preview consumers and byte-identical candidates without removal
+        run: python3 .github/scripts/cr_preview_consumer_delta_audit.py
       - name: Verify existing GitHub scheduled workflows are active
         env:
           GH_TOKEN: ${{ github.token }}
