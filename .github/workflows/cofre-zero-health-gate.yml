@@ -8,6 +8,11 @@ on:
     paths:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
+      - .github/scripts/cr_agent_architecture_contract_guard.py
+      - docs/CONTRATO_DESENVOLVIMENTO_SANEAMENTO_20261012.md
+      - 'agents/**'
+      - docs/AGENTS_REGISTRY.md
+      - docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md
       - .github/scripts/cr_single_host_zero_incremental_guard.py
       - .github/scripts/cr_ephemeral_publication_gate.py
       - .github/scripts/cr_static_runtime_dependency_audit.py
@@ -41,6 +46,11 @@ on:
     paths:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
+      - .github/scripts/cr_agent_architecture_contract_guard.py
+      - docs/CONTRATO_DESENVOLVIMENTO_SANEAMENTO_20261012.md
+      - 'agents/**'
+      - docs/AGENTS_REGISTRY.md
+      - docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md
       - .github/scripts/cr_single_host_zero_incremental_guard.py
       - .github/scripts/cr_ephemeral_publication_gate.py
       - .github/scripts/cr_static_runtime_dependency_audit.py
@@ -156,6 +166,8 @@ jobs:
           persist-credentials: false
       - name: Validate canonical governance without deleting data
         run: python3 .github/scripts/cofre_governance_guard.py
+      - name: Enforce the approved architecture on every registered agent (offline)
+        run: python3 .github/scripts/cr_agent_architecture_contract_guard.py
       - name: Verify existing GitHub scheduled workflows are active
         env:
           GH_TOKEN: ${{ github.token }}
