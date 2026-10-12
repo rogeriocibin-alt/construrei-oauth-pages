@@ -135,6 +135,53 @@ jobs:
           with open(os.environ["GITHUB_STEP_SUMMARY"],"a",encoding="utf-8") as f:
               f.write("- "+summary+"\n")
           PY
+      - name: Canary CAS immutable daily delta after full recovery (non-blocking)
+        id: cas_canary
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/restore-cas"
+          python3 .github/scripts/cr_history_cas_append.py --commit --restore-directory "$RUNNER_TEMP/restore-cas" > "$RUNNER_TEMP/cas-report.json"
+          python3 - <<'PY'
+          import json,os
+          p=os.path.join(os.environ["RUNNER_TEMP"],"cas-report.json")
+          r=json.load(open(p,encoding="utf-8"))
+          assert r["snapshot_complete"] and r["append_only"] and r["readback_sql"]==3 and r["readback_storage"]==3
+          print("PASS: CAS daily immutable manifest + 3 SQL / 3 Storage samples")
+          print("Objects added:",r["new_object_count"])
+          print("New unique GiB:",round(r["estimated_new_object_bytes"]/1024**3,3))
+          print("Manifest SHA256:",r["manifest_sha256"])
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as output:
+              output.write("run_id="+r["run_id"]+"\n")
+              output.write("manifest_sha256="+r["manifest_sha256"]+"\n")
+          PY
+          python3 .github/scripts/cr_sql_restore_preflight.py --root "$RUNNER_TEMP/restore-cas" > "$RUNNER_TEMP/cas-sql-preflight.json"
+          python3 - <<'PY'
+          import json,os
+          d=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"cas-sql-preflight.json")))
+          assert d["hashes_verified"]==3 and not d["eligible_for_recovery_signoff"]
+          print("PASS: CAS SQL 3/3 SHA256, no database replay")
+          PY
+          python3 .github/scripts/cr_sql_copy_inventory.py --root "$RUNNER_TEMP/restore-cas" > "$RUNNER_TEMP/cas-copy-headers.json"
+          python3 - <<'PY'
+          import json,os
+          d=json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"cas-copy-headers.json")))
+          assert d["copy_headers_total"] > 0 and not d["sql_restore_attempted"]
+          print("PASS: CAS COPY structural compatibility, no PII")
+          PY
+          RUN_ID="$(python3 -c 'import json,os; print(json.load(open(os.path.join(os.environ["RUNNER_TEMP"],"cas-report.json")))["run_id"])')"
+          python3 .github/scripts/cr_history_cas_append.py --verify-manifest "$RUN_ID" |
+            python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["verified_entries"]>=5 and d["independent_of_current"] and not d["database_replay_passed"]; print("PASS: ALL CAS/seed references available by independent MD5/size catalog")'
+      - name: Surface CAS canary result without masking full backup status
+        if: always()
+        shell: bash
+        run: |
+          if [[ "${{ steps.cas_canary.outcome }}" == success ]]; then
+            echo "CAS_CANARY=PASS; immutable daily history full snapshot remains in force"
+          else
+            echo "::warning::CAS canary failed or did not run; full HISTORY_FULL outcome is independent"
+          fi
       - name: Publish audit result
         if: always()
         shell: bash
