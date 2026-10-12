@@ -1,6 +1,6 @@
 # ADR — Arquitetura-mestra do ecossistema CONSTRU-REI, governança e evolução SaaS
 **Data:** 11/10/2026 — America/Sao_Paulo  
-**Estado:** PROPOSTA PARA REVISÃO / SEM PROMOÇÃO / SEM EXECUÇÃO DE MIGRAÇÃO  
+**Estado:** DIRETRIZ DE CUSTO/TOPOLOGIA DEFINIDA PELA DIRETORIA; IMPLEMENTAÇÃO AINDA EM CANDIDATA / SEM PROMOÇÃO / SEM EXECUÇÃO DE MIGRAÇÃO  
 **Escopo:** Central, APP/F00–F09, Gestor, financeiro, painéis, pendências, salas, documentação, backups, integrações e futura oferta B2B.  
 **Responsável pela decisão:** Diretoria CONSTRU-REI.  
 **Relação:** complementa, **não substitui**, o Índice Mestre de Regras (GOV-001 etc.), o cadastro oficial de links, o plano de três ambientes e o checkpoint #53.
@@ -27,14 +27,14 @@
 
 ## 2. Constatações baseadas nos artefatos verificados em 11/10
 - `docs/official-links-registry.json` é o cadastro canônico existente de **39 aliases oficiais**; muitos aliases compartilham destinos Supabase e outros apontam para GitHub Pages ou Vercel. Não criar segundo cadastro de links.
-- PR #58 (`cr-central-full-contract-audit-20261011`): auditoria proposta para os 39 aliases e 21 grupos de funções; **ainda não integrada**. É validação estrutural estática, não aferição financeira nem prova de login.
+- PR #58 (`cr-central-full-contract-audit-20261011`) **integrado** (commit `cbb8f87c7d1d9020e51439a49222d1ac5b91cb0c`): valida 39 aliases, 21 grupos e contratos do Gestor no CI. É validação estrutural estática, não aferição financeira nem prova de login.
 - PR #56 (`cr-homolog-f00-f09-canonic-v1-20261011`): **DRAFT**, sem homologação visual isolada e sem autorização de promoção. PR #57 (guard da Central) já integrado.
 - O checkpoint #53 e `docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md` deixam claro que os ambientes **ainda não estão fisicamente isolados**; 121 subpastas em `preview/`, com dependências que impedem remoção automática.
 - O Gestor já possui cockpit, pendências de projeto, decisões, versões, governança, infraestrutura, agentes, histórico e Cofre Zero. `gestor-projeto/app.js` busca snapshot de uma API Supabase e tem fallback versionado; isso não prova que todas as telas dependem de uma única fonte persistente.
 - **Desvio objetivo de metadados:** `gestor-projeto/app.js` declara `CURRENT_RELEASE.version=1.2.4`; `gestor-projeto/version.json` declara `1.2.5.2`; `gestor-projeto/project-data.json` contém referência a `V1.2.7`. Necessária reconciliação do significado (interface, pacote, conteúdo, versão publicada) com única release efetiva imutável e campos semânticos diferenciados. Não concluir perda ou corrupção só por esse achado.
 - O alias `central/` redireciona normalmente ao caminho GitHub Pages de produção; seu registro de links também referencia um endpoint técnico Supabase. Validar a distinção entre destino de navegação, endpoint de API e origem do runtime; não presumir erro sem teste funcional.
 - O inventário de infraestrutura é um **snapshot** com escopo de contas conectadas; não serve, isoladamente, para garantir cobertura de todo domínio/projeto externo.
-- Cofre Zero automatizado existe, mas recuperação integral Trello/anexos, SQL e serviços externos ainda tem lacunas documentadas: não declarar proteção total.
+- Cofre Zero automatizado existe. A restauração **offline** do Trello com 13 quadros, 1.721 cartões e 4.055 anexos passou no PR #47; **não** equivale a restaurar num workspace Trello novo nem à prova recorrente. SQL em banco descartável, cobertura externa e demais integrações ainda têm lacunas: não declarar proteção total.
 - **Nenhum teste de segurança multi-tenant, RLS completo, OAuth empresarial, isolamento real das bases, restauração por cliente ou billing foi comprovado por esta ADR.**
 
 ## 3. Mapa de responsabilidades e destino funcional
@@ -62,7 +62,7 @@ Para cada entidade de negócio ou técnica, criar **matriz de propriedade**, nã
 ## 5. Release único e segregação verdadeira
 - Manter CI/Git como cadeia de evidência; gerar **um manifesto de release** por build promovido (produto, módulo, git commit SHA, artefato SHA256, URL canônica, schema API, migração, ambiente, status, aprovação, hora, rollback, evidências).
 - O Gestor consulta e mostra o manifesto; Central mostra somente a versão operacional aplicável. `app.js`, `version.json`, `project-data.json` devem consumir metadados de mesma origem **ou ter papéis de versão expressamente distintos**, sem afirmar semânticas contraditórias.
-- PUBLICAR: build promovido em deploy de produção a partir de allowlist de artefatos; homologação em deploy + domínio/rotas + credenciais + banco de teste segregados; arquivo em repositório/acervo privado recuperável, **não no site oficial**. Preservar antigos destinos enquanto houver dependências.
+- PUBLICAR: somente build promovido em deploy de produção a partir de allowlist. Homologação padrão ocorre em branch/runner CI efêmero e fixture fictícia **sem novo deploy, banco ou cobrança**; integração de escrita/Auth/RLS requer ambiente de teste verdadeiramente isolado e autorização distinta, ou fica bloqueada. Arquivo no Git/acervo privado recuperável, **não no site oficial**. Preservar antigos destinos enquanto houver dependências.
 - Gates: contratos dos 39 aliases/21 grupos como cobertura **mínima**; testes HTTP externos e auth, RLS/autorização por papel, navegação notebook/celular/PWA, offline e cache/SW, F00–F09/APP Gabi, agenda, Click, Trello, Cora, financeiro, rollback, restore e nenhuma rota oficial apontando para `preview/`.
 - Qualquer promoção exige commit testado, resultados reproduzíveis e homologação de negócio; reversão isolada por módulo sem regressão global.
 
