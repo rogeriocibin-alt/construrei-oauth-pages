@@ -178,11 +178,20 @@ def execute(mode, restore=None, pilot_seed=False):
         raise ValueError("Backup status size differs from source inventory")
     cas, _ = cas_inventory()
     entries, missing = plan(src, seed, cas)
+    manifest = {
+        "format": "CR-CAS-1", "run_id": run_id, "source_project": "yspuaamokjbrosytqjpg",
+        "immutable_seed_id": "20261011-060021",
+        "entry_count": len(entries),
+        "cas_entry_count": sum(e["store"] == "cas" for e in entries),
+        "entries": entries,
+    }
+    manifest_bytes = (json.dumps(manifest, sort_keys=True,
+                                 separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8")
     full = remote_bytes(HISTORY_FULL)
     previous_cas = remote_bytes(CAS_ROOT) if "HISTORY_CAS/" in existing_children(DRIVE_ROOT) else 0
     addition = sum(size for _, size, _ in missing.values())
-    # Include a conservative 2 MiB reserve for append-only manifest metadata.
-    free = quota_guard(addition + 2 * 1024**2, previous_cas, full)
+    # Exact serialized manifest size is included; never assume a fixed 2 MiB.
+    free = quota_guard(addition + len(manifest_bytes), previous_cas, full)
     report = evaluate(src, seed)
     report.update({
         "run_id": run_id, "new_object_count": len(missing),
@@ -208,13 +217,6 @@ def execute(mode, restore=None, pilot_seed=False):
     elif run_id[:8] != datetime.now(timezone.utc).strftime("%Y%m%d"):
         raise ValueError("Stale source snapshot; no archive written")
 
-    manifest = {
-        "format": "CR-CAS-1", "run_id": run_id, "source_project": "yspuaamokjbrosytqjpg",
-        "immutable_seed_id": "20261011-060021",
-        "entry_count": len(entries), "cas_entry_count": sum(e["store"] == "cas" for e in entries), "entries": entries,
-    }
-    manifest_bytes = (json.dumps(manifest, sort_keys=True,
-                                 separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8")
     present_manifests = inventory_manifest_files()
     if run_id + ".json" in present_manifests:
         for e in entries:
