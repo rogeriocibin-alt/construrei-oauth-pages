@@ -12,7 +12,7 @@ from pathlib import PurePosixPath
 from urllib.parse import urlsplit, unquote
 from cr_ephemeral_publication_gate import (
     ROOT, REGISTRY, PREVIEW, PUBLIC_ROOT_FILES, PUBLIC_SUPPORT,
-    PROTECTED_PREVIEW_STATES, tracked,
+    PROTECTED_PREVIEW_STATES, REQUIRED_TRANSITIVE_PREVIEW, tracked,
 )
 
 HOST = "rogeriocibin-alt.github.io"
@@ -110,6 +110,10 @@ def main():
     assert len(slugs) == len(registry["links"]) == 39
     assert len(inventory["folders"]) == inventory["folder_count"] == 121
     assert len(keep) == 12
+    assert REQUIRED_TRANSITIVE_PREVIEW <= {x["path"].strip("/").split("/")[1] for x in inventory["folders"]}
+    assert REQUIRED_TRANSITIVE_PREVIEW.isdisjoint(keep)
+    keep |= REQUIRED_TRANSITIVE_PREVIEW
+    assert len(keep) == 13
     files = set(tracked())
     staged = set()
     for rel in files:
