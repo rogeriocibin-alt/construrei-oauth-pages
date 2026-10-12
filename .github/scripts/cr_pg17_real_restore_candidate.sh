@@ -172,6 +172,15 @@ line_number=int(loc.group(2)) if loc else 0
 safe_words={"psql","error","fatal","permission","denied","database","role","schema","relation","function","extension","transaction","timeout","syntax","invalid","unsupported","unrecognized","failed","cannot","could","not","connect","postgres","supabase_admin","missing","reserved","superuser","file","directory","ssl","password","authentication","connection","failed","option","stdin","command","too","many","arguments","attempt","conflict","snapshot","statement","user","alter","create","already","exists","table","view","type","event","trigger","parameter","replication","readonly"}
 present=sorted(set(re.findall(r"[a-z_]{3,}",lower)) & safe_words)
 print("SAFE_RESTORE_KEYWORDS",",".join(present[:25]))
+print("SAFE_EVENT_TRIGGER_FLAGS", {
+ "superuser_required": any(s in lower for s in ("must be superuser","must be a superuser","only superusers","superuser privileges")),
+ "function_exec_denied": "permission denied for function" in lower,
+ "function_not_event_trigger": "return type event_trigger" in lower,
+ "function_owner_invalid": "owned by superuser" in lower,
+ "already_exists": "already exists" in lower,
+ "event_trigger_restricted": "event trigger" in lower,
+ "is_create_event_trigger": line_number == 16062,
+})
 print("SAFE_RESTORE_ERROR_LINES",len(errors))
 print(f"SAFE_RESTORE_DIAGNOSTIC category={category} file={file} line={line_number}")
 print("No SQL, object names, private row data or credentials printed")
