@@ -172,6 +172,9 @@ jobs:
             python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["hashes_verified"]==3 and not x["eligible_for_recovery_signoff"]; print("PASS: 3/3 SQL SHA256 from CAS manifest; SQL E2E NOT RESTORED")'
           python3 .github/scripts/cr_sql_copy_inventory.py --root "$RUNNER_TEMP/cas-pilot" |
             python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["copy_headers_total"]>0 and not x["sql_restore_attempted"]; print("PASS: CAS SQL COPY metadata")'
+          python3 .github/scripts/cr_history_cas_append.py --verify-manifest 20261011-060021 |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["verified_entries"]==4531 and x["independent_of_current"] and not x["database_replay_passed"]; print("PASS: 4531/4531 immutable historical references resolvable independently of CURRENT"); print("Manifest SHA256:",x["manifest_sha256"])'
+
 
       - name: Probe actual history dedup feasibility without writing (candidate only)
         if: github.event_name == 'pull_request' && github.head_ref == 'cr-cofre-cas-delta-feasibility-20261012' && github.event.pull_request.head.repo.full_name == github.repository
