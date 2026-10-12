@@ -34,6 +34,11 @@ jobs:
           if not pr.get("merged_at"):
             print("SKIP: full Trello binary restore not yet verified and merged; never claim 100%.")
             raise SystemExit(0)
+          evidence=get("/actions/runs/38180968850")
+          if not (evidence.get("conclusion")=="success" and
+                  evidence.get("workflow_id")==381380663 and
+                  evidence.get("head_sha")=="ae8ef98f2a8ac6220552e524e9df132d9c253a04"):
+            raise RuntimeError("Trello recovery proof is not valid; no dispatch")
           workflow=get("/actions/workflows/cofre-zero-trello-offsite.yml")
           assert workflow.get("state")=="active"
           body=json.dumps({"ref":"main"}).encode()
