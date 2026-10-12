@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - checkpoint/cofre-zero-archive-full-20261011
+      - checkpoint/cofre-zero-cas-only-20261012
       - main
     paths:
       - .github/workflows/cofre-zero-history-full.yml
