@@ -58,7 +58,7 @@ def read_json(argv):
 def probe():
     source = os.environ.get("SOURCE", "")
     archive = os.environ.get("ARCHIVE_ROOT", "")
-    if not source.startswith("construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT"):
+    if source != "construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT":
         raise ValueError("Unexpected source path: fail closed")
     if archive != "construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL":
         raise ValueError("Unexpected archive path: fail closed")
