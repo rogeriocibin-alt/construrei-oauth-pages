@@ -31,22 +31,43 @@ def rejected(token,method,path,statuses):
         raise RuntimeError("Authorization negative test failed with unexpected status") from None
     raise RuntimeError("Access-control negative test unexpectedly accepted")
 
+# Mirror the ACTIVE Supabase OIDC policy: exact, already authorized refs only.
+# No wildcard refs, no new credentials and no privilege expansion.
+ALLOWED_REFS = frozenset((
+    "refs/heads/checkpoint/cofre-zero-trello-offsite-20261011",
+    "refs/heads/main",
+))
+WORKFLOW_REF_PREFIX = (
+    "rogeriocibin-alt/construrei-oauth-pages/"
+    ".github/workflows/cofre-zero-trello-offsite.yml@"
+)
+
+def check_oidc_claims(claims):
+    ref = str(claims.get("ref", ""))
+    return {
+        "issuer": claims.get("iss") == "https://token.actions.githubusercontent.com",
+        "audience": claims.get("aud") == AUD,
+        "repository": claims.get("repository") == "rogeriocibin-alt/construrei-oauth-pages",
+        "repository_id": str(claims.get("repository_id")) == "1388982225",
+        "owner_id": str(claims.get("repository_owner_id")) == "324275787",
+        "branch": ref in ALLOWED_REFS,
+        "workflow": claims.get("workflow_ref") == WORKFLOW_REF_PREFIX + ref,
+        "event": claims.get("event_name") in ("push", "workflow_dispatch", "schedule"),
+        "run_id": str(claims.get("run_id", "")).isdigit(),
+        "runner": claims.get("runner_environment") == "github-hosted",
+    }
+
 def main():
     print("CHECK: temporary GitHub OIDC / Supabase read-only bridge",flush=True)
     token=id_token()
     claims=json.loads(base64.urlsafe_b64decode(token.split(".")[1]+"==="))
-    required={
-      "issuer":claims.get("iss")=="https://token.actions.githubusercontent.com",
-      "audience":claims.get("aud")==AUD,
-      "repository":claims.get("repository")=="rogeriocibin-alt/construrei-oauth-pages",
-      "repository_id":str(claims.get("repository_id"))=="1388982225",
-      "owner_id":str(claims.get("repository_owner_id"))=="324275787",
-      "branch":claims.get("ref")=="refs/heads/checkpoint/cofre-zero-trello-offsite-20261011",
-      "workflow":claims.get("workflow_ref")=="rogeriocibin-alt/construrei-oauth-pages/.github/workflows/cofre-zero-trello-offsite.yml@refs/heads/checkpoint/cofre-zero-trello-offsite-20261011",
-      "event":claims.get("event_name") in ("push","workflow_dispatch"),
-      "run_id":str(claims.get("run_id","")).isdigit(),
-      "runner":claims.get("runner_environment")=="github-hosted"}
-    print("CHECK: OIDC claim checks (no token or claim content)",required,flush=True)
+    required=check_oidc_claims(claims)
+    # Validate locally AND at the remote Edge authorization boundary.
+    # Previous version logged false checks without enforcing them.
+    if not all(required.values()):
+        rejected_claims = sorted(name for name, ok in required.items() if not ok)
+        raise RuntimeError("OIDC claim mismatch (no token data disclosed): " + ",".join(rejected_claims))
+    print("PASS: exact OIDC claim checks (no token or claim content)",flush=True)
     rejected(None,"GET","/health",(401,403))
     print("PASS: anonymous denied",flush=True)
     rejected(id_token("construrei-wrong-audience-negative-test"),"GET","/health",(401,403))

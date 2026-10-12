@@ -8,6 +8,8 @@ on:
     paths:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
+      - .github/scripts/cofre_trello_bootstrap.py
+      - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
       - .github/scripts/cr_f00_f09_staging_smoke.py
@@ -24,6 +26,8 @@ on:
     paths:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
+      - .github/scripts/cofre_trello_bootstrap.py
+      - .github/scripts/test_cofre_trello_claims.py
       - gestor-projeto/cofre-mobile/cofre-governance-v1.json
       - .github/scripts/cr_environment_audit.py
       - .github/scripts/cr_f00_f09_staging_smoke.py
@@ -100,6 +104,10 @@ jobs:
           persist-credentials: false
       - name: Validate canonical governance without deleting data
         run: python3 .github/scripts/cofre_governance_guard.py
+      - name: Verify Trello OIDC identities (offline, no secrets)
+        run: |
+          python3 -m py_compile .github/scripts/cofre_trello_bootstrap.py
+          python3 .github/scripts/test_cofre_trello_claims.py
       - name: Validate three-environment inventory (read-only)
         run: python3 .github/scripts/cr_environment_audit.py
       - name: Verify byte-identical F00-F09 shared asset candidate
