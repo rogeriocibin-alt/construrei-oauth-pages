@@ -8,6 +8,7 @@ Production cutover requires an isolated readback/recovery gate.
 """
 import argparse
 import hashlib
+import filecmp
 import json
 import os
 import re
@@ -162,7 +163,7 @@ def materialize_recovery_sample(entries, target):
         current_path = Path(target) / ("current-object-" + str(idx))
         command("rclone", "copyto", locate(item), str(target_path))
         command("rclone", "copyto", SOURCE + "/" + item["path"], str(current_path))
-        if target_path.read_bytes() != current_path.read_bytes():
+        if not filecmp.cmp(str(target_path), str(current_path), shallow=False):
             raise ValueError("Storage readback sample differs")
     # Preflight scripts separately validate all three SQL SHA256, structure/COPY headers.
     return 3
@@ -203,12 +204,15 @@ def execute(mode, restore=None):
     manifest = {
         "format": "CR-CAS-1", "run_id": run_id, "source_project": "yspuaamokjbrosytqjpg",
         "immutable_seed_id": "20261011-060021",
-        "entry_count": len(entries), "objects_added": len(missing), "entries": entries,
+        "entry_count": len(entries), "cas_entry_count": sum(e["store"] == "cas" for e in entries), "entries": entries,
     }
     manifest_bytes = (json.dumps(manifest, sort_keys=True,
                                  separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8")
     present_manifests = inventory_manifest_files()
     if run_id + ".json" in present_manifests:
+        for e in entries:
+            if e["store"] == "cas" and cas.get(e["key"]) != (e["bytes"], e["md5"]):
+                raise ValueError("Existing manifest CAS reference missing or corrupt")
         remote_bytes_data = command("rclone", "cat", MANIFESTS + "/" + run_id + ".json").encode("utf-8")
         if remote_bytes_data != manifest_bytes:
             raise ValueError("Immutable daily manifest exists but has different content")
