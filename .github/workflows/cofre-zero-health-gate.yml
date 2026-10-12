@@ -548,3 +548,24 @@ jobs:
           echo "PASS: isolated PostgreSQL 17 Docker container and synthetic SQL rollback"
           echo "NOT A SQL RESTORE: no roles.sql/schema.sql/data.sql from real Cofre Zero imported"
           echo "No Supabase Auth/Storage bootstrap; no production DB network access or credentials"
+
+  netlify_historical_deploys_readonly:
+    name: Cofre Netlify — historical deploys only (GET, no deployment)
+    if: github.event_name == 'pull_request' && github.head_ref == 'checkpoint/cofre-netlify-historical-deploy-probe-20261012' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Inspect historical Netlify deployment records without source leakage
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$NETLIFY_AUTH_TOKEN"
+          python3 -m py_compile .github/scripts/cr_netlify_historical_deploy_probe.py
+          python3 .github/scripts/cr_netlify_historical_deploy_probe.py
