@@ -13,6 +13,7 @@ on:
       - .github/scripts/cr_static_runtime_dependency_audit.py
       - .github/scripts/cr_sql_restore_preflight.py
       - .github/scripts/cr_sql_copy_inventory.py
+      - .github/scripts/cr_pg17_real_restore_candidate.sh
       - .github/scripts/cr_netlify_historical_provenance_guard.py
       - .github/scripts/cr_cofre_health_latest.py
       - .github/scripts/test_cr_cofre_health_latest.py
@@ -44,6 +45,7 @@ on:
       - .github/scripts/cr_static_runtime_dependency_audit.py
       - .github/scripts/cr_sql_restore_preflight.py
       - .github/scripts/cr_sql_copy_inventory.py
+      - .github/scripts/cr_pg17_real_restore_candidate.sh
       - .github/scripts/cr_netlify_historical_provenance_guard.py
       - .github/scripts/cr_cofre_health_latest.py
       - .github/scripts/test_cr_cofre_health_latest.py
