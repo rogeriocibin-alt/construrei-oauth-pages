@@ -92,6 +92,32 @@ if test "$ROLES" -ne 4 || test "$SCHEMAS" -ne 2 || test "$EXTS" -ne 7; then
   echo 'BLOCKED: official image lacks one or more application Supabase initialization prerequisites'
   exit 7
 fi
+# The CLI SQL dump excludes Supabase-managed migration table DDL, while one
+# CONSTRU-REI view references it. Read-only prod metadata checked 2026-10-12:
+# version text PK, statements text[], name text, created_by text,
+# idempotency_key text UNIQUE, rollback text[]. 193 source migration records.
+# Bootstrap ONLY schema shape in ephemeral PG17; this does not restore history.
+docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -q -v ON_ERROR_STOP=1 \
+  -c 'CREATE SCHEMA IF NOT EXISTS supabase_migrations;
+      CREATE TABLE IF NOT EXISTS supabase_migrations.schema_migrations(
+        version text PRIMARY KEY,
+        statements text[],
+        name text,
+        created_by text,
+        idempotency_key text UNIQUE,
+        rollback text[]
+      )' >/dev/null
+python3 - "$WORK/03_DATABASE/data.sql" <<'PY'
+import sys
+included=False
+with open(sys.argv[1], "r", encoding="utf-8", errors="replace") as f:
+    for line in f:
+        if line.startswith("COPY ") and "supabase_migrations" in line and "schema_migrations" in line:
+            included=True
+            break
+print("MIGRATION_HISTORY_DATA_INCLUDED_IN_MAIN_DUMP",included)
+PY
+echo 'LAB_BOOTSTRAP: mirrored Supabase migration table structure only, no fabricated history'
 # Real restoration of verified private SQL in a disposable network-isolated instance.
 # Suppress all SQL and error payloads to protect customer information in public GitHub logs.
 if ! timeout 780s docker exec -u postgres "$CID" \
