@@ -41,6 +41,11 @@ PROTECTED_PREVIEW_STATES = {
     "PRODUCTION_STYLESHEET_REFERENCE",
 }
 
+# Static review PR #65: Gabi v21 embeds v20 in a live iframe.
+# Preserve this one direct dependency in the disposable stage only.
+# Do not treat v20 as an approved permanent archive or deletion candidate.
+REQUIRED_TRANSITIVE_PREVIEW = {"app-gabi-v20-documentos-f02-20261008"}
+
 def tracked():
     raw = subprocess.check_output(["git", "-C", str(ROOT), "ls-files", "-z"])
     result = [p.decode("utf-8") for p in raw.split(b"\0") if p]
@@ -58,6 +63,11 @@ def main():
     preview_keep = {p["path"].rstrip("/").split("/")[1] for p in preview["folders"]
                     if p["status"] in PROTECTED_PREVIEW_STATES}
     assert len(preview_keep) == 12, "Review protected preview inventory drift before staging."
+    inventory_folders = {p["path"].strip("/").split("/")[1] for p in preview["folders"]}
+    assert REQUIRED_TRANSITIVE_PREVIEW <= inventory_folders, "Required Gabi v20 dependency missing"
+    assert REQUIRED_TRANSITIVE_PREVIEW.isdisjoint(preview_keep), "Reclassify approved runtime dependencies first"
+    preview_keep |= REQUIRED_TRANSITIVE_PREVIEW
+    assert len(preview_keep) == 13, "Review stage runtime dependency closure"
     all_paths = tracked()
     all_set = set(all_paths)
     expected = {f"{slug}/index.html" for slug in slugs}
@@ -67,6 +77,7 @@ def main():
         "gestor-projeto/index.html",
         "preview/_shared/cr-checklist-native-20261004.js",
         "preview/app-gabi-v21-parecer-logo-20261008/index.html",
+        "preview/app-gabi-v20-documentos-f02-20261008/index.html",
     }
     absent = sorted(expected - all_set)
     assert not absent, "Cannot stage missing official routes/dependencies: " + repr(absent)
@@ -185,6 +196,7 @@ def main():
             "historical_snapshot_preview_ref_folders": len(snapshot_consumers),
             "static_consumer_scan_complete": False,
             "preview_folders_preserved_in_candidate": len(preview_keep),
+            "transitive_preview_dependency_folders": sorted(REQUIRED_TRANSITIVE_PREVIEW),
             "candidate_manifest_digest": digest.hexdigest(),
             "eligible_for_production_cutover": False,
             "next_gate": "Review remaining unclassified runtime dependencies; then UX mobile/notebook and rollback. Do not publish automatically.",
