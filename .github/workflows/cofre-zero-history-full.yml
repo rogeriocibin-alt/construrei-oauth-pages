@@ -107,6 +107,28 @@ jobs:
               f.write("- SQL manifest preflight: **3/3 SHA256**, no SQL replay; bootstrap Supabase required: **"+str(r["bootstrap_supabase_required"])+"**.\n")
               f.write("- **SQL RESTORE NOT HOMOLOGATED**: requires isolated PostgreSQL 17/Supabase SQL replay.\n")
           PY
+      - name: Check SQL COPY compatibility metadata (no database, no data disclosure)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/cr_sql_copy_inventory.py --root "$RUNNER_TEMP/restore-readback" > "$RUNNER_TEMP/sql-copy-inventory.json"
+          python3 - <<'PY'
+          import json, os
+          p=os.path.join(os.environ["RUNNER_TEMP"],"sql-copy-inventory.json")
+          result=json.load(open(p, encoding="utf-8"))
+          groups=result["copy_headers_by_group"]
+          assert result["copy_headers_total"] == sum(groups.values()) and result["copy_headers_total"] > 0
+          assert result["row_content_examined"] is False
+          assert result["sql_restore_attempted"] is False
+          assert result["eligible_for_recovery_signoff"] is False
+          summary=("SQL COPY structure: %d blocks (Auth=%d, Storage=%d, others=%d); "
+                   "PG17 timeout setting=%s; NOT RESTORED" %
+                   (result["copy_headers_total"],groups["auth"],groups["storage"],
+                    groups["other"],result["pg17_transaction_timeout_setting"]))
+          print(summary)
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a",encoding="utf-8") as f:
+              f.write("- "+summary+"\n")
+          PY
       - name: Publish audit result
         if: always()
         shell: bash
