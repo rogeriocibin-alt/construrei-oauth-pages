@@ -13,6 +13,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -169,7 +170,7 @@ def materialize_recovery_sample(entries, target):
     return 3
 
 
-def execute(mode, restore=None):
+def execute(mode, restore=None, pilot_seed=False):
     run_id, status = read_source_status()
     src = fetch_inventory(SOURCE)
     seed = fetch_inventory(SEED)
@@ -180,7 +181,8 @@ def execute(mode, restore=None):
     full = remote_bytes(HISTORY_FULL)
     previous_cas = remote_bytes(CAS_ROOT) if "HISTORY_CAS/" in existing_children(DRIVE_ROOT) else 0
     addition = sum(size for _, size, _ in missing.values())
-    free = quota_guard(addition, previous_cas, full)
+    # Include a conservative 2 MiB reserve for append-only manifest metadata.
+    free = quota_guard(addition + 2 * 1024**2, previous_cas, full)
     report = evaluate(src, seed)
     report.update({
         "run_id": run_id, "new_object_count": len(missing),
@@ -198,7 +200,12 @@ def execute(mode, restore=None):
     if not re.fullmatch(r"\d{8}-\d{6}", run_id):
         raise ValueError("Unsafe manifest ID")
     from datetime import datetime, timezone
-    if run_id[:8] != datetime.now(timezone.utc).strftime("%Y%m%d"):
+    if pilot_seed:
+        if (run_id != "20261011-060021" or missing
+                or len(entries) != len(seed)
+                or any(e["store"] != "seed" for e in entries)):
+            raise ValueError("Seed-only pilot preconditions not fulfilled")
+    elif run_id[:8] != datetime.now(timezone.utc).strftime("%Y%m%d"):
         raise ValueError("Stale source snapshot; no archive written")
 
     manifest = {
@@ -274,16 +281,22 @@ def main():
     group.add_argument("--selftest", action="store_true")
     group.add_argument("--dry-run", action="store_true")
     group.add_argument("--commit", action="store_true")
+    group.add_argument("--pilot-seed", action="store_true")
     parser.add_argument("--restore-directory")
     args = parser.parse_args()
     if args.selftest:
         selftest()
         return
-    mode = "commit" if args.commit else "dry-run"
+    mode = "commit" if args.commit or args.pilot_seed else "dry-run"
     # Never print paths, names of client data, raw manifest, or user content.
-    result = execute(mode, restore=args.restore_directory)
+    result = execute(mode, restore=args.restore_directory, pilot_seed=args.pilot_seed)
     print(json.dumps({k: v for k, v in result.items() if k != "source_project"}, sort_keys=True))
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as exc:
+        # Avoid accidental disclosure of backup paths or credentials through tracebacks.
+        print("CAS_OPERATION_ABORTED: " + type(exc).__name__, file=sys.stderr)
+        raise SystemExit(2) from None
