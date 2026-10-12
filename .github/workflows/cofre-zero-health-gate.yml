@@ -143,6 +143,39 @@ jobs:
         run: python3 .github/scripts/cr_history_capacity_guard.py --selftest
       - name: Test read-only historical delta feasibility (synthetic)
         run: python3 .github/scripts/cr_history_delta_feasibility.py --selftest
+      - name: Test immutable CAS history append-only contract (synthetic)
+        run: |
+          python3 -m py_compile .github/scripts/cr_history_cas_append.py
+          python3 .github/scripts/cr_history_cas_append.py --selftest
+      - name: Probe CAS read-only then pilot immutable seed manifest and recovery
+        if: github.event_name == 'pull_request' && github.head_ref == 'cr-cofre-incremental-cas-20261012' && github.event.pull_request.head.repo.full_name == github.repository
+        shell: bash
+        timeout-minutes: 5
+        env:
+          RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+          mkdir -p "$HOME/.config/rclone"
+          chmod 700 "$HOME/.config/rclone"
+          trap 'rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          python3 .github/scripts/cr_history_cas_append.py --dry-run |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["mode"]=="dry-run" and not x["approved_for_cutover"]; print("CAS_DRY_RUN=PASS"); print("Source files:",x["source_files"]); print("New immutable bytes GiB:",round(x["estimated_new_object_bytes"]/1024**3,3)); print("Reference seed matches:",x["identical_files"]); print("Expected new objects:",x["new_object_count"]); print("DRY-RUN ONLY: NO WRITES")'
+          mkdir -p "$RUNNER_TEMP/cas-pilot"
+          python3 .github/scripts/cr_history_cas_append.py --pilot-seed --restore-directory "$RUNNER_TEMP/cas-pilot" |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["snapshot_complete"] and x["append_only"] and x["readback_sql"]==3 and x["readback_storage"]==3; print("PASS: seed-only immutable CAS manifest uploaded and read back"); print("Recovery sample: 3 SQL and 3 Storage objects")'
+          python3 .github/scripts/cr_sql_restore_preflight.py --root "$RUNNER_TEMP/cas-pilot" |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["hashes_verified"]==3 and not x["eligible_for_recovery_signoff"]; print("PASS: 3/3 SQL SHA256 from CAS manifest; SQL E2E NOT RESTORED")'
+          python3 .github/scripts/cr_sql_copy_inventory.py --root "$RUNNER_TEMP/cas-pilot" |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["copy_headers_total"]>0 and not x["sql_restore_attempted"]; print("PASS: CAS SQL COPY metadata")'
+          python3 .github/scripts/cr_history_cas_append.py --verify-manifest 20261011-060021 |
+            python3 -c 'import json,sys; x=json.load(sys.stdin); assert x["verified_entries"]==4531 and x["independent_of_current"] and not x["database_replay_passed"]; print("PASS: 4531/4531 immutable historical references resolvable independently of CURRENT"); print("Manifest SHA256:",x["manifest_sha256"])'
+
+
       - name: Probe actual history dedup feasibility without writing (candidate only)
         if: github.event_name == 'pull_request' && github.head_ref == 'cr-cofre-cas-delta-feasibility-20261012' && github.event.pull_request.head.repo.full_name == github.repository
         shell: bash
