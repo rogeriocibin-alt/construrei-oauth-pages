@@ -81,6 +81,8 @@ jobs:
         with:
           persist-credentials: false
       - name: Verify independent latest backup evidence
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -89,11 +91,26 @@ jobs:
           key=re.search(r"const ANON='([^']+)'",content).group(1)
           url="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-cofre-mobile-status-v1?api=status"
           req=urllib.request.Request(url,headers={"authorization":"Bearer "+key,"apikey":key})
-          with urllib.request.urlopen(req,timeout=20) as r: report=json.load(r)
+          # Retry bounded transient edge errors; never turn an outage into PASS.
+          import urllib.error,time
+          for attempt in range(3):
+            try:
+              with urllib.request.urlopen(req,timeout=20) as r: report=json.load(r)
+              break
+            except urllib.error.HTTPError as exc:
+              if exc.code not in (500,502,503,504) or attempt==2: raise
+            except (urllib.error.URLError,TimeoutError):
+              if attempt==2: raise
+            time.sleep(3*(attempt+1))
           if not report.get('ok'):raise RuntimeError('No live health report')
           github=report['sources']['github']
           sup=report['sources']['supabase']
-          assert github.get('ok') and sup.get('ok'), 'Health sources not accessible'
+          # Supabase/private Git proof must be fresh. GitHub metadata from
+          # unauthenticated Edge may rate-limit; authenticate direct REST fallback.
+          assert sup.get('ok'), 'Supabase/private backup evidence unavailable'
+          if not github.get('ok'):
+            print('WARNING: Edge GitHub source unavailable; use authenticated GitHub workflow history')
+            github={'workflows':[]}
           import sys
           sys.path.insert(0,str(Path(".github/scripts").resolve()))
           from cr_cofre_health_latest import latest
