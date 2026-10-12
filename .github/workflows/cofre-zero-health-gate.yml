@@ -548,3 +548,28 @@ jobs:
           echo "PASS: isolated PostgreSQL 17 Docker container and synthetic SQL rollback"
           echo "NOT A SQL RESTORE: no roles.sql/schema.sql/data.sql from real Cofre Zero imported"
           echo "No Supabase Auth/Storage bootstrap; no production DB network access or credentials"
+
+  isolated_integrated_pg17_recovery:
+    name: Cofre E2E offline — SQL + RLS + migrations + Storage crosswalk
+    if: github.event_name == 'pull_request' && github.head_ref == 'checkpoint/cofre-zero-integrated-lab-20261012' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+      SUPABASE_ACCESS_TOKEN: ""
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check integrated offline PG17 restore syntax
+        run: bash -n .github/scripts/cr_pg17_integrated_restore_candidate.sh
+      - name: Restore original SQL and ledger, crosswalk Storage using ONE offline database
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+          bash .github/scripts/cr_pg17_integrated_restore_candidate.sh
