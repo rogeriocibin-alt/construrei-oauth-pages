@@ -12,6 +12,14 @@ on:
       - 'central/presentation.html'
       - '.github/workflows/central-canonical-guard.yml'
       - '.github/scripts/cr_central_full_scope_audit.py'
+      - '.github/scripts/cr_ecosystem_contract_audit.py'
+      - 'docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md'
+      - 'gestor-projeto/project-data.json'
+      - 'gestor-projeto/version.json'
+      - 'gestor-projeto/sw.js'
+      - 'docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json'
+      - '.github/workflows/*.yml'
+      - '.github/workflows/*.yaml'
       - 'docs/official-links-registry.json'
       - 'production/central-operacional-v2-ux-r1-2-homologada-20261005/**'
       - 'production/dashboard-financeiro-v4/**'
@@ -35,6 +43,14 @@ on:
       - 'central/presentation.html'
       - '.github/workflows/central-canonical-guard.yml'
       - '.github/scripts/cr_central_full_scope_audit.py'
+      - '.github/scripts/cr_ecosystem_contract_audit.py'
+      - 'docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md'
+      - 'gestor-projeto/project-data.json'
+      - 'gestor-projeto/version.json'
+      - 'gestor-projeto/sw.js'
+      - 'docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json'
+      - '.github/workflows/*.yml'
+      - '.github/workflows/*.yaml'
       - 'docs/official-links-registry.json'
       - 'production/central-operacional-v2-ux-r1-2-homologada-20261005/**'
       - 'production/dashboard-financeiro-v4/**'
@@ -124,3 +140,5 @@ jobs:
           persist-credentials: false
       - name: Audit all official aliases and embedded business modules
         run: python3 .github/scripts/cr_central_full_scope_audit.py
+      - name: Audit Gestor, official rules, preview dependencies and backup workflow catalogue
+        run: python3 .github/scripts/cr_ecosystem_contract_audit.py
