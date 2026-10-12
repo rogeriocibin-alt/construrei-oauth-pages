@@ -43,6 +43,28 @@ jobs:
         run: |
           set -euo pipefail
           python3 .github/scripts/cofre_netlify_inventory_offsite.py
+      - name: Preserve seven-site provenance manifest with published-only coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,os,sys
+          from pathlib import Path
+          sys.path.insert(0,".github/scripts")
+          from cr_netlify_historical_provenance_guard import build
+          root=Path(os.environ["COFRE_OUTPUT_DIR"])
+          audit=build()
+          inventory=json.loads((root/"INVENTORY.json").read_text(encoding="utf-8"))
+          assert inventory["inventoried_sites"] == audit["registered_sites"] == 7
+          assert inventory["published_static_verified"] == 1 and inventory["without_published_deploy"] == 6
+          assert audit["git_related_source_candidate_sites"] == 3
+          assert len(audit["no_identical_source_identified_sites"]) == 3
+          path=root/"HISTORICAL_PROVENANCE.json"
+          path.write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding="utf-8")
+          with (root/"SHA256SUMS.txt").open("a",encoding="utf-8") as f:
+              f.write(hashlib.sha256(path.read_bytes()).hexdigest()+"  "+path.name+"\\n")
+          print("PASS: 7 Netlify records, 1 published static, 3 related Git sources, 3 unlocated; no fabricated archives")
+          PY
       - name: Private offsite snapshot and readback
         shell: bash
         run: |
@@ -60,6 +82,9 @@ jobs:
           doc=json.loads((p/"INVENTORY.json").read_text())
           assert doc["registered_sites"]==7 and doc["inventoried_sites"]==7
           assert doc["status"]=="PASS_INVENTORY_WITH_PUBLISHED_STATIC"
+          provenance=json.loads((p/"HISTORICAL_PROVENANCE.json").read_text(encoding="utf-8"))
+          assert provenance["registered_sites"]==7 and provenance["git_related_source_candidate_sites"]==3
+          assert doc["published_static_verified"]==1 and doc["without_published_deploy"]==6
           for s in doc["sites"]:
               if s["state"]=="STATIC_VERIFIED":
                   with zipfile.ZipFile(p/s["archive"]) as z:
