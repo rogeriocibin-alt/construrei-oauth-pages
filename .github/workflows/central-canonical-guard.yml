@@ -11,6 +11,20 @@ on:
       - 'central-runtime/ui/**'
       - 'central/presentation.html'
       - '.github/workflows/central-canonical-guard.yml'
+      - '.github/scripts/cr_central_full_scope_audit.py'
+      - 'docs/official-links-registry.json'
+      - 'production/central-operacional-v2-ux-r1-2-homologada-20261005/**'
+      - 'production/dashboard-financeiro-v4/**'
+      - 'gestor-projeto/index.html'
+      - 'preview/app-gabi-v21-parecer-logo-20261008/**'
+      - 'checklist-operacional/**'
+      - 'pendencias-app/**'
+      - 'pendencias-wizy-flow/**'
+      - 'pendencias-eder-agora/**'
+      - 'apresentacao/**'
+      - 'documentacao/**'
+      - 'diretoria-master/**'
+      - 'admin-tecnico/**'
   pull_request:
     paths:
       - 'production/central-homologada-20261001/index.html'
@@ -20,6 +34,20 @@ on:
       - 'central-runtime/ui/**'
       - 'central/presentation.html'
       - '.github/workflows/central-canonical-guard.yml'
+      - '.github/scripts/cr_central_full_scope_audit.py'
+      - 'docs/official-links-registry.json'
+      - 'production/central-operacional-v2-ux-r1-2-homologada-20261005/**'
+      - 'production/dashboard-financeiro-v4/**'
+      - 'gestor-projeto/index.html'
+      - 'preview/app-gabi-v21-parecer-logo-20261008/**'
+      - 'checklist-operacional/**'
+      - 'pendencias-app/**'
+      - 'pendencias-wizy-flow/**'
+      - 'pendencias-eder-agora/**'
+      - 'apresentacao/**'
+      - 'documentacao/**'
+      - 'diretoria-master/**'
+      - 'admin-tecnico/**'
 
 permissions:
   contents: read
@@ -85,3 +113,14 @@ jobs:
             echo "ERROR: institutional presentation bypasses the canonical design system."
             exit 1
           }
+
+  verify-full-central-scope:
+    name: Contratos oficiais da Central inteira (links + funcoes)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Audit all official aliases and embedded business modules
+        run: python3 .github/scripts/cr_central_full_scope_audit.py
