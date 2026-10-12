@@ -48,7 +48,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import hashlib,json,os,sys
+          import hashlib,json,os,sys,zipfile
           from pathlib import Path
           sys.path.insert(0,".github/scripts")
           from cr_netlify_historical_provenance_guard import build
@@ -63,7 +63,24 @@ jobs:
           path.write_text(json.dumps(audit,ensure_ascii=False,indent=2),encoding="utf-8")
           with (root/"SHA256SUMS.txt").open("a",encoding="utf-8") as f:
               f.write(hashlib.sha256(path.read_bytes()).hexdigest()+"  "+path.name+"\n")
-          print("PASS: 7 Netlify records, 1 published static, 3 related Git sources, 3 unlocated; no fabricated archives")
+          # Package exactly the three Git source candidates as SOURCES, never
+          # as fictitious published Netlify deploy archives.
+          # The provenance guard already verifies each source path + SHA256.
+          source_zip=root/"HISTORICAL_GIT_SOURCE_CANDIDATES.zip"
+          with zipfile.ZipFile(source_zip,"w",compression=zipfile.ZIP_DEFLATED) as output:
+              for entry in audit["related_source_candidates"]:
+                  for f in entry["files"]:
+                      source=Path(f["path"])
+                      data=source.read_bytes()
+                      assert len(data)==f["bytes"] and hashlib.sha256(data).hexdigest()==f["sha256"]
+                      assert not source.is_symlink()
+                      output.writestr(f["path"],data)
+          with (root/"SHA256SUMS.txt").open("a",encoding="utf-8") as f:
+              f.write(hashlib.sha256(source_zip.read_bytes()).hexdigest()+"  "+source_zip.name+"\n")
+          with zipfile.ZipFile(source_zip) as z:
+              assert len(z.namelist())==3 and z.testzip() is None
+          print("PASS: Netlify inventory 7, one published static, three Git source candidates archived (NOT deployed), three no identical source")
+
           PY
       - name: Private offsite snapshot and readback
         shell: bash
@@ -85,6 +102,16 @@ jobs:
           provenance=json.loads((p/"HISTORICAL_PROVENANCE.json").read_text(encoding="utf-8"))
           assert provenance["registered_sites"]==7 and provenance["git_related_source_candidate_sites"]==3
           assert doc["published_static_verified"]==1 and doc["without_published_deploy"]==6
+          source_pack=p/"HISTORICAL_GIT_SOURCE_CANDIDATES.zip"
+          with zipfile.ZipFile(source_pack) as z:
+              assert z.testzip() is None
+              expected=[f for item in provenance["related_source_candidates"] for f in item["files"]]
+              assert len(expected)==3 and sorted(z.namelist())==sorted(f["path"] for f in expected)
+              import hashlib
+              for f in expected:
+                  payload=z.read(f["path"])
+                  assert len(payload)==f["bytes"] and hashlib.sha256(payload).hexdigest()==f["sha256"]
+          print("PASS: all three historical Git source candidates independently recovered from private Drive; not Netlify deploys")
           for s in doc["sites"]:
               if s["state"]=="STATIC_VERIFIED":
                   with zipfile.ZipFile(p/s["archive"]) as z:
