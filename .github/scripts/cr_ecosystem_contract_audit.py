@@ -21,9 +21,10 @@ PROJECT = ROOT / "gestor-projeto/project-data.json"
 VERSION = ROOT / "gestor-projeto/version.json"
 PREVIEW = DOCS / "AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
 WORKFLOWS = ROOT / ".github/workflows"
-# Existing, documented discrepancy: ALLOWED TEMPORARILY, never silently healed.
-KNOWN_DOC_ONLY = {"GOV-006", "PEND-003"}
-KNOWN_GESTOR_ONLY = {"FLOW-001"}
+# All 27 pre-existing governance rules reconciled; refuse future silent drift.
+# Any new rule must appear in both the master index and Gestor fallback.
+KNOWN_DOC_ONLY = set()
+KNOWN_GESTOR_ONLY = set()
 MIN_ALIASES = 39
 MIN_WORKFLOWS = 11
 
@@ -72,6 +73,8 @@ def main():
             errors.append(label + " has duplicated rule IDs")
         if not ids:
             errors.append(label + " has no rule IDs")
+    if len(master_ids) < 27 or len(gestalt_ids) < 27:
+        errors.append("Canonical 27/27 reconciled baseline shrank unexpectedly")
     doc_only = set(master_ids) - set(gestalt_ids)
     gestor_only = set(gestalt_ids) - set(master_ids)
     unexpected_doc = doc_only - KNOWN_DOC_ONLY
