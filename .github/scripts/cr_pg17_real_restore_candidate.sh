@@ -118,6 +118,17 @@ with open(sys.argv[1], "r", encoding="utf-8", errors="replace") as f:
 print("MIGRATION_HISTORY_DATA_INCLUDED_IN_MAIN_DUMP",included)
 PY
 echo 'LAB_BOOTSTRAP: mirrored Supabase migration table structure only, no fabricated history'
+# Official image bootstraps Supabase Realtime publications, while our verified
+# schema.sql creates these exact two publications itself (lines 13983/13989).
+# Clear only these names INSIDE the disposable network-isolated container,
+# allowing the immutable backup to recreate authentic publication settings.
+# No change whatsoever to actual Supabase production or source SQL files.
+PUB_COUNT="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "select count(*) from pg_publication where pubname in ('supabase_realtime','supabase_realtime_messages_publication')")"
+if test "$PUB_COUNT" -gt 0; then
+  docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -q -v ON_ERROR_STOP=1 \
+    -c 'DROP PUBLICATION IF EXISTS supabase_realtime; DROP PUBLICATION IF EXISTS supabase_realtime_messages_publication' >/dev/null
+fi
+echo "LAB_BOOTSTRAP: cleared $PUB_COUNT pre-installed Realtime publications; immutable SQL recreates them"
 # Real restoration of verified private SQL in a disposable network-isolated instance.
 # Suppress all SQL and error payloads to protect customer information in public GitHub logs.
 if ! timeout 780s docker exec -u postgres "$CID" \
