@@ -441,7 +441,9 @@ with tempfile.TemporaryDirectory() as td:
         call(["rclone","--config",config,"copyto",remote+"/06_STORAGE/"+path,str(target)])
         row=paths[path]
         assert target.stat().st_size == row["Size"], "Recovered Storage size mismatch"
-        assert hashlib.md5(target.read_bytes()).hexdigest()==row["Hashes"]["MD5"].lower(), "Recovered Storage MD5 mismatch"
+        hashes={str(key).lower():str(value).lower() for key,value in (row.get("Hashes") or {}).items()}
+        assert "md5" in hashes, "No verifiable MD5 in original immutable snapshot"
+        assert hashlib.md5(target.read_bytes()).hexdigest()==hashes["md5"], "Recovered Storage MD5 mismatch"
 print("PASS: 4531/4531 database Storage object identities mapped to immutable bin files")
 print("PASS: three distributed Storage binary bodies restored/MD5 checked in SAME isolation session")
 PY
