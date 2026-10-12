@@ -10,6 +10,7 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_single_host_zero_incremental_guard.py
       - .github/scripts/cr_ephemeral_publication_gate.py
+      - .github/scripts/cr_static_runtime_dependency_audit.py
       - .github/scripts/cr_cofre_health_latest.py
       - .github/scripts/test_cr_cofre_health_latest.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
@@ -35,6 +36,7 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_single_host_zero_incremental_guard.py
       - .github/scripts/cr_ephemeral_publication_gate.py
+      - .github/scripts/cr_static_runtime_dependency_audit.py
       - .github/scripts/cr_cofre_health_latest.py
       - .github/scripts/test_cr_cofre_health_latest.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
@@ -171,4 +173,8 @@ jobs:
         run: python3 .github/scripts/cr_f00_f09_staging_smoke.py
       - name: Build isolated ephemeral public package and smoke 39 aliases (no deploy)
         run: python3 .github/scripts/cr_ephemeral_publication_gate.py
+      - name: Audit literal first-party asset references (read-only, no cutover)
+        run: |
+          python3 .github/scripts/cr_static_runtime_dependency_audit.py --selftest
+          python3 .github/scripts/cr_static_runtime_dependency_audit.py
 
