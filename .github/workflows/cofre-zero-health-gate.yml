@@ -47,46 +47,6 @@ on:
       - gestor-projeto/project-data.json
   pull_request:
     branches: [main]
-    paths:
-      - .github/workflows/cofre-zero-health-gate.yml
-      - .github/scripts/cofre_governance_guard.py
-      - .github/scripts/cr_agent_architecture_contract_guard.py
-      - .github/scripts/cr_preview_consumer_delta_audit.py
-      - docs/CONTRATO_DESENVOLVIMENTO_SANEAMENTO_20261012.md
-      - AGENTS.md
-      - CLAUDE.md
-      - .github/copilot-instructions.md
-      - 'agents/**'
-      - docs/AGENTS_REGISTRY.md
-      - docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md
-      - .github/scripts/cr_single_host_zero_incremental_guard.py
-      - .github/scripts/cr_ephemeral_publication_gate.py
-      - .github/scripts/cr_static_runtime_dependency_audit.py
-      - .github/scripts/cr_sql_restore_preflight.py
-      - .github/scripts/cr_sql_copy_inventory.py
-      - .github/scripts/cr_pg17_real_restore_candidate.sh
-      - .github/scripts/cr_netlify_historical_provenance_guard.py
-      - .github/scripts/cr_cofre_health_latest.py
-      - .github/scripts/test_cr_cofre_health_latest.py
-      - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
-      - '.github/workflows/*.yml'
-      - '.github/workflows/*.yaml'
-      - .github/scripts/cofre_trello_bootstrap.py
-      - .github/scripts/cofre_trello_capacity_guard.py
-      - .github/scripts/cr_history_capacity_guard.py
-      - .github/scripts/cr_migration_ledger_daily.py
-      - .github/scripts/test_cofre_trello_claims.py
-      - gestor-projeto/cofre-mobile/cofre-governance-v1.json
-      - .github/scripts/cr_environment_audit.py
-      - .github/scripts/cr_f00_f09_staging_smoke.py
-      - central-runtime/_shared/cr-checklist-native-20261004.js
-      - preview/_shared/cr-checklist-native-20261004.js
-      - docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md
-      - docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json
-      - 'preview/**'
-      - 'production/**'
-      - 'central-runtime/**'
-      - gestor-projeto/project-data.json
 permissions:
   contents: read
   actions: read

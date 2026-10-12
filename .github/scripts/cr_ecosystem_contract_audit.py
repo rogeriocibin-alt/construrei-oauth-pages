@@ -101,6 +101,29 @@ def main():
         errors.append("Gestor release metadata is incomplete")
     warnings.append("Gestor release semantics/runtime still require reconciliation and live check")
 
+    # Release identity in repository source: the service worker cache key and
+    # HTML build marker must match version.json. project-data.json is a
+    # separate dated governance snapshot and may retain another version label.
+    # Do not mutate it or claim this proves what is served behind a PWA cache.
+    index_text = (ROOT / "gestor-projeto/index.html").read_text(encoding="utf-8")
+    sw_text = (ROOT / "gestor-projeto/sw.js").read_text(encoding="utf-8")
+    index_build = re.search(r'<meta\s+name="cr-build"\s+content="([^"]+)"', index_text)
+    sw_build = re.search(r"""(?m)^\s*const\s+BUILD\s*=\s*['"]([^'"]+)['"]""", sw_text)
+    builds = {
+        "version_json_build": version.get("build"),
+        "index_meta_build": index_build.group(1) if index_build else None,
+        "service_worker_cache_build": sw_build.group(1) if sw_build else None,
+    }
+    release["repository_build_contract"] = builds
+    release["repository_builds_consistent"] = (
+        all(builds.values()) and len(set(builds.values())) == 1
+    )
+    release["repo_static_conformance_is_not_live_pwa_verification"] = True
+    if not release["repository_builds_consistent"]:
+        errors.append("Gestor index / Service Worker / version.json build identities differ")
+    if project.get("meta", {}).get("version") != version.get("version"):
+        warnings.append("Snapshot project-data has independent version metadata; never auto-promote snapshot as published runtime")
+
     active = preview.get("production_contracts", [])
     if not active:
         errors.append("Known production dependencies on preview/ lost from snapshot")
