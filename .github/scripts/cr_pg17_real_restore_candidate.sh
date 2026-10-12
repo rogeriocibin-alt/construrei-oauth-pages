@@ -91,7 +91,42 @@ if ! timeout 780s docker exec -u postgres "$CID" \
     -f /restore/03_DATABASE/schema.sql \
     -c 'SET session_replication_role = replica' \
     -f /restore/03_DATABASE/data.sql >/tmp/cofre-restore.log 2>&1"; then
-  echo 'BLOCKED: real SQL replay failed in isolated Supabase PG17; private error output suppressed'
+  # Transfer error log only into runner ephemeral memory, never print SQL/row contents.
+  docker cp "$CID:/tmp/cofre-restore.log" "$WORK/replay-error.log" >/dev/null 2>&1 || :
+  python3 - "$WORK/replay-error.log" <<'PY'
+from pathlib import Path
+import re,sys
+p=Path(sys.argv[1])
+s=p.read_text(errors="replace") if p.is_file() else ""
+errors=[line for line in s.splitlines() if "ERROR:" in line or "FATAL:" in line]
+line=errors[0] if errors else ""
+loc=re.search(r"/(roles|schema|data)\.sql:(\d+)",line)
+lower=line.lower()
+types=[
+  ("role_missing",("role ","does not exist")),
+  ("schema_missing",("schema ","does not exist")),
+  ("relation_missing",("relation ","does not exist")),
+  ("extension_missing",("extension ","not available")),
+  ("permission_denied",("permission denied",)),
+  ("already_exists",("already exists",)),
+  ("undefined_function",("function ","does not exist")),
+  ("undefined_column",("column ","does not exist")),
+  ("undefined_type",("type ","does not exist")),
+  ("foreign_key",("foreign key",)),
+  ("sql_syntax",("syntax error",)),
+  ("reserved_role",("reserved role",)),
+]
+category="other_sql_error"
+for name,needles in types:
+    if all(w in lower for w in needles):
+        category=name
+        break
+file=loc.group(1)+".sql" if loc else "unknown"
+line_number=int(loc.group(2)) if loc else 0
+print(f"SAFE_RESTORE_DIAGNOSTIC category={category} file={file} line={line_number}")
+print("No SQL, object names, private row data or credentials printed")
+PY
+  echo 'BLOCKED: real SQL replay failed in isolated Supabase PG17; private content withheld'
   exit 8
 fi
 TABLES="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from information_schema.tables where table_schema in ('public','cr_internal') and table_type='BASE TABLE'")"
