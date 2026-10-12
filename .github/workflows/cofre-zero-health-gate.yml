@@ -424,7 +424,13 @@ jobs:
           test -n "$SUPABASE_DB_URL" || { echo "::error::Missing DB secret"; exit 2; }
           test -n "$RCLONE_CONFIG_B64" || { echo "::error::Missing private Drive secret"; exit 2; }
           WORK="$(mktemp -d)"
-          trap 'rm -rf "$WORK"; rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
+          CID=""
+          cleanup() {
+            if test -n "$CID"; then docker rm -f "$CID" >/dev/null 2>&1 || :; fi
+            rm -rf "$WORK"
+            rm -f "$HOME/.config/rclone/rclone.conf"
+          }
+          trap cleanup EXIT
           sudo apt-get update -qq
           sudo apt-get install -y -qq rclone curl ca-certificates gnupg >/dev/null
           sudo install -d -m 0755 /usr/share/postgresql-common/pgdg
@@ -473,6 +479,27 @@ jobs:
           mkdir -p "$RUNNER_TEMP/migration-readback"
           rclone copy "$DEST" "$RUNNER_TEMP/migration-readback" --checkers 2 --transfers 1
           (cd "$RUNNER_TEMP/migration-readback" && sha256sum --status -c SHA256SUMS.txt)
+          # Replay ONLY the stored migration ledger rows, not their SQL statements.
+          # Offline container, ephemeral data, network disconnected from the start.
+          docker pull --quiet postgres:17.6 >/dev/null
+          CID="$(docker run -d --rm --network none -e POSTGRES_PASSWORD=synthetic-private-only postgres:17.6)"
+          READY=0
+          for attempt in $(seq 1 30); do
+            if docker exec "$CID" pg_isready -U postgres >/dev/null 2>&1; then READY=1; break; fi
+            sleep 2
+          done
+          test "$READY" = 1 || { echo 'BLOCKED: offline PostgreSQL 17 not ready'; exit 5; }
+          docker exec "$CID" psql -X -q -v ON_ERROR_STOP=1 -U postgres -d postgres \
+            -c 'CREATE SCHEMA supabase_migrations; CREATE TABLE supabase_migrations.schema_migrations(
+              version text PRIMARY KEY,statements text[],name text,created_by text,
+              idempotency_key text UNIQUE,rollback text[])' >/dev/null
+          docker cp "$RUNNER_TEMP/migration-readback/schema_migrations.sql" "$CID:/tmp/schema_migrations.sql"
+          docker exec "$CID" psql -X -q -v ON_ERROR_STOP=1 -U postgres -d postgres \
+            -f /tmp/schema_migrations.sql >/dev/null
+          REPLAY_COUNT="$(docker exec "$CID" psql -X -A -t -U postgres -d postgres \
+            -c 'select count(*) from supabase_migrations.schema_migrations')"
+          test "$REPLAY_COUNT" = 193 || { echo 'BLOCKED: migration history replay differs from 193'; exit 6; }
+          echo 'PASS: 193/193 migration ledger rows restored in network-free Postgres17; SQL statement contents never executed'
           echo "PASS: 193 migration rows archived with SHA256 and full private Drive readback"
           echo "No SQL contents, migration names, or user records printed or committed."
   isolated_pg17_canary:
