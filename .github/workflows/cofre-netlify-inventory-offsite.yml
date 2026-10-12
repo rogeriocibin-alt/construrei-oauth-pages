@@ -70,7 +70,7 @@ jobs:
           with zipfile.ZipFile(source_zip,"w",compression=zipfile.ZIP_DEFLATED) as output:
               for entry in audit["related_source_candidates"]:
                   for f in entry["files"]:
-                      source=pathlib.Path(f["path"])
+                      source=Path(f["path"])
                       data=source.read_bytes()
                       assert len(data)==f["bytes"] and hashlib.sha256(data).hexdigest()==f["sha256"]
                       assert not source.is_symlink()
