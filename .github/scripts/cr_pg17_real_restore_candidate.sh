@@ -63,10 +63,15 @@ echo "PG17_BOOTSTRAP roles=$ROLES schemas=$SCHEMAS available_extensions=$EXTS"
 # NOLOGIN/NOSUPERUSER/NOCREATEDB/NOCREATEROLE/NOINHERIT/NOREPLICATION.
 # Image may omit that role without Realtime migrations. Recreate *only* this exact
 # metadata prerequisite in an offline, disposable lab, never production.
+# In the official Supabase PG17 image postgres has no SUPERUSER; supabase_admin does.
+# This exact role hierarchy was independently verified in production (read-only).
+IS_ADMIN_SUPER="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from pg_roles where rolname='supabase_admin' and rolsuper and rolcanlogin")"
+test "$IS_ADMIN_SUPER" = "1" || { echo 'BLOCKED: native Supabase admin role absent'; exit 7; }
+docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc 'select 1' >/dev/null || { echo 'BLOCKED: isolated admin session unavailable'; exit 7; }
 if test "$ROLES" -eq 3; then
   MISSING="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select string_agg(name,',') from (values ('anon'),('authenticated'),('authenticator'),('supabase_realtime_admin')) as required(name) where not exists (select 1 from pg_roles r where r.rolname=required.name)")"
   if test "$MISSING" = 'supabase_realtime_admin'; then
-    docker exec -u postgres "$CID" psql -U postgres -d postgres -q -v ON_ERROR_STOP=1 -c 'CREATE ROLE supabase_realtime_admin NOLOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION' >/dev/null
+    docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -q -v ON_ERROR_STOP=1 -c 'CREATE ROLE supabase_realtime_admin NOLOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION' >/dev/null
     echo 'LAB_BOOTSTRAP: recreated only the omitted Supabase Realtime no-login role'
     ROLES=4
   else
@@ -81,7 +86,7 @@ fi
 # Real restoration of verified private SQL in a disposable network-isolated instance.
 # Suppress all SQL and error payloads to protect customer information in public GitHub logs.
 if ! timeout 780s docker exec -u postgres "$CID" \
-  bash -c "psql -X -q --single-transaction -v ON_ERROR_STOP=1 -U postgres -d postgres \
+  bash -c "psql -X -q --single-transaction -v ON_ERROR_STOP=1 -U supabase_admin -d postgres \
     -f /restore/03_DATABASE/roles.sql \
     -f /restore/03_DATABASE/schema.sql \
     -c 'SET session_replication_role = replica' \
@@ -90,8 +95,8 @@ if ! timeout 780s docker exec -u postgres "$CID" \
   exit 8
 fi
 TABLES="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from information_schema.tables where table_schema in ('public','cr_internal') and table_type='BASE TABLE'")"
-AUTH="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc 'select count(*) from auth.users')"
-STORAGE="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc 'select count(*) from storage.objects')"
+AUTH="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc 'select count(*) from auth.users')"
+STORAGE="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc 'select count(*) from storage.objects')"
 test "$TABLES" -ge 150
 echo "PASS: isolated SQL E2E replay completed with PG17; restored application tables=$TABLES"
 echo "PASS: auth and storage metadata queryable (only aggregate row counts were checked)"
