@@ -37,6 +37,45 @@ class BackupHistoryTests(unittest.TestCase):
         ]})
         self.assertEqual(got["conclusion"], "failure")
 
+    def test_pending_candidate_does_not_override_completed_main(self):
+        runs = [
+            {"name":"Cofre Zero | Immutable daily full archive",
+             "status":"in_progress","conclusion":None,
+             "created_at":"2026-10-12T12:10:00Z","head_branch":"checkpoint/test"},
+            {"name":"Cofre Zero | Immutable daily full archive",
+             "status":"completed","conclusion":"success",
+             "created_at":"2026-10-12T12:02:00Z","head_branch":"main"},
+        ]
+        got,_=latest([], "Immutable daily full archive",
+                     lambda _:{"workflow_runs":runs})
+        self.assertEqual(got["branch"],"main")
+        self.assertEqual(got["conclusion"],"success")
+
+    def test_completed_main_failure_blocks_regardless_of_candidate_success(self):
+        runs = [
+            {"name":"Cofre Zero | Immutable daily full archive",
+             "status":"completed","conclusion":"success",
+             "created_at":"2026-10-12T12:10:00Z","head_branch":"checkpoint/test"},
+            {"name":"Cofre Zero | Immutable daily full archive",
+             "status":"completed","conclusion":"failure",
+             "created_at":"2026-10-12T12:02:00Z","head_branch":"main"},
+        ]
+        got,_=latest([], "Immutable daily full archive",
+                     lambda _:{"workflow_runs":runs})
+        self.assertEqual(got["branch"],"main")
+        self.assertEqual(got["conclusion"],"failure")
+
+    def test_pending_edge_status_falls_back(self):
+        row={"name":"Cofre Zero | Immutable daily full archive",
+             "latest":{"status":"in_progress","conclusion":None}}
+        runs=[{"name":"Cofre Zero | Immutable daily full archive",
+               "status":"completed","conclusion":"success",
+               "created_at":"2026-10-12T12:02:00Z","head_branch":"main"}]
+        got,source=latest([row],"Immutable daily full archive",
+                          lambda _:{"workflow_runs":runs})
+        self.assertEqual(source,"github-workflow-history")
+        self.assertEqual(got["conclusion"],"success")
+
     def test_no_runs_means_no_evidence(self):
         got, source = latest([], "Immutable daily full archive",
                              lambda _: {"workflow_runs": []})
