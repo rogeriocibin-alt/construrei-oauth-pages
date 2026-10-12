@@ -141,6 +141,25 @@ jobs:
         run: python3 .github/scripts/test_cr_cofre_health_latest.py
       - name: Test bounded immutable daily history offline
         run: python3 .github/scripts/cr_history_capacity_guard.py --selftest
+      - name: Test read-only historical delta feasibility (synthetic)
+        run: python3 .github/scripts/cr_history_delta_feasibility.py --selftest
+      - name: Probe actual history dedup feasibility without writing (candidate only)
+        if: github.event_name == 'pull_request' && github.head_ref == 'cr-cofre-cas-delta-feasibility-20261012' && github.event.pull_request.head.repo.full_name == github.repository
+        shell: bash
+        timeout-minutes: 5
+        env:
+          RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64" || { echo "::error::Drive config unavailable"; exit 2; }
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+          mkdir -p "$HOME/.config/rclone"
+          chmod 700 "$HOME/.config/rclone"
+          trap 'rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          python3 .github/scripts/cr_history_delta_feasibility.py | python3 -c 'import json,sys; p=json.load(sys.stdin); assert p["read_only"] and not p["eligible_for_cutover"]; print("READONLY_DEDUP_PROBE=PASS"); print("Source files:",p["source_files"]); print("Unchanged vs immutable seed:",p["identical_files"]); print("Changed/new:",p["changed_or_new_files"]); print("Source missing MD5:",p["source_without_md5_files"]); print("Seed missing MD5:",p["seed_without_md5_files"]); print("Comparable MD5:",p["md5_comparable_files"]); print("Files equal-size:",p["size_equal_files"]); print("Full GiB:",round(p["current_size_bytes"]/1024**3,3)); print("Estimated CAS delta GiB:",round(p["estimated_delta_bytes"]/1024**3,3)); print("NO WRITE, NO CUTOVER")'
       - name: Probe actual Drive capacity in read-only candidate CI
         if: github.event_name == 'pull_request' && github.head_ref == 'cr-cofre-daily-history-capacity-guard-20261012' && github.event.pull_request.head.repo.full_name == github.repository
         shell: bash
