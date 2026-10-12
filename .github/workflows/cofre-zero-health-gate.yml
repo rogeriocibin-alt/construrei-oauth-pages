@@ -378,12 +378,17 @@ jobs:
           p=Path("supabase/config.toml")
           s=p.read_text()
           import re
-          lines=s.splitlines()
-          matches=[i for i,line in enumerate(lines) if re.match(r"^\\s*major_version\\s*=",line)]
-          if len(matches)!=1:
-              raise SystemExit("BLOCKED: official config has missing/duplicated major_version")
-          lines[matches[0]]="major_version = 17"
-          p.write_text("\\n".join(lines)+"\\n")
+          import tomllib
+          initial=tomllib.loads(s)
+          if "db" not in initial:
+              s=s.rstrip()+"\\n[db]\\nmajor_version = 17\\n"
+          elif "major_version" not in initial["db"]:
+              s=s.replace("[db]","[db]\\nmajor_version = 17",1)
+          else:
+              s=re.sub(r"(?m)^(\\s*major_version\\s*=\\s*).*$",r"\\g<1>17",s,count=1)
+          validated=tomllib.loads(s)
+          assert validated.get("db",{}).get("major_version")==17
+          p.write_text(s)
           PY
           npx --yes supabase@2.120.0 start --exclude rest,realtime,functions,studio,mail,analytics,pooler --eager >/dev/null
           DB="$(docker ps --format '{{.ID}} {{.Names}}' | awk '$2 ~ /^supabase_db_/ {print $1; exit}')"
