@@ -10,6 +10,8 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_single_host_zero_incremental_guard.py
       - .github/scripts/cr_ephemeral_publication_gate.py
+      - .github/scripts/cr_cofre_health_latest.py
+      - .github/scripts/test_cr_cofre_health_latest.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
       - '.github/workflows/*.yml'
       - '.github/workflows/*.yaml'
@@ -33,6 +35,8 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_single_host_zero_incremental_guard.py
       - .github/scripts/cr_ephemeral_publication_gate.py
+      - .github/scripts/cr_cofre_health_latest.py
+      - .github/scripts/test_cr_cofre_health_latest.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
       - '.github/workflows/*.yml'
       - '.github/workflows/*.yaml'
@@ -77,14 +81,18 @@ jobs:
           github=report['sources']['github']
           sup=report['sources']['supabase']
           assert github.get('ok') and sup.get('ok'), 'Health sources not accessible'
-          items=github.get('workflows',[])
-          def found(needle):
-            return next((x.get('latest') for x in items if needle in x.get('name','')),None)
+          import sys
+          sys.path.insert(0,str(Path(".github/scripts").resolve()))
+          from cr_cofre_health_latest import latest
+          items=github.get("workflows",[])
           now=datetime.datetime.now(datetime.timezone.utc)
           checks=[]
-          for needle in ('Immutable daily full archive','Netlify inventory and published offsite'):
-            item=found(needle)
-            valid=bool(item and item.get('conclusion')=='success')
+          for needle in ("Immutable daily full archive","Netlify inventory and published offsite"):
+            item,source=latest(items,needle)
+            print("EVIDENCE",needle,"source",source,"branch",item.get("branch") if item else "missing")
+            if needle=="Immutable daily full archive" and item and item.get("branch") not in (None,"main"):
+              print("WARNING: last verified archive is candidate-branch evidence; main scheduled run is not yet proven")
+            valid=bool(item and item.get("status")=="completed" and item.get("conclusion")=="success")
             if valid:
               start=datetime.datetime.fromisoformat(item['created_at'].replace('Z','+00:00'))
               valid=(now-start).total_seconds()<72*3600
@@ -116,6 +124,19 @@ jobs:
         run: python3 .github/scripts/cofre_governance_guard.py
       - name: Enforce one-host and no-new-paid-schedule policy (read-only)
         run: python3 .github/scripts/cr_single_host_zero_incremental_guard.py
+      - name: Test Cofre Zero history pagination and fail-closed behavior (offline)
+        run: python3 .github/scripts/test_cr_cofre_health_latest.py
+      - name: Query public workflow history directly to verify pagination fallback
+        run: |
+          python3 - <<'PY'
+          import sys
+          sys.path.insert(0,'.github/scripts')
+          from cr_cofre_health_latest import latest
+          run,source=latest([],'Immutable daily full archive')
+          assert source=='github-workflow-history' and run is not None, 'Archive history not independently retrievable'
+          assert run['status']=='completed' and run['conclusion']=='success', 'Latest archive not verified as successful'
+          print('PASS: workflow-specific GH history accessible, provenance='+str(run.get('branch')))
+          PY
       - name: Verify Trello OIDC identities (offline, no secrets)
         run: |
           python3 -m py_compile .github/scripts/cofre_trello_bootstrap.py
