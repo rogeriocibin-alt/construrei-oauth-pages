@@ -27,7 +27,7 @@ APPROVED_CRONS = {
     "cofre-zero-edge-integrity.yml": [],
     "cofre-zero-git-offsite.yml": ["37 6 * * 0"],
     "cofre-zero-health-gate.yml": ["30 11 * * *"],
-    "cofre-zero-history-full.yml": ["32 6 * * *"],
+    "cofre-zero-history-full.yml": ["47 6 * * *"],
     "cofre-zero-trello-offsite.yml": [],
     "construrei-cloud-backup.yml": [],
 }

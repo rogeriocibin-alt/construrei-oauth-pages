@@ -2,10 +2,11 @@ name: Cofre Zero | Immutable daily full archive
 on:
   workflow_dispatch:
   schedule:
-    - cron: '32 6 * * *'
+    - cron: '47 6 * * *'
   push:
     branches:
       - checkpoint/cofre-zero-archive-full-20261011
+      - main
     paths:
       - .github/workflows/cofre-zero-history-full.yml
 

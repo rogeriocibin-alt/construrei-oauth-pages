@@ -56,7 +56,7 @@
     {
       "id": "daily_history",
       "path": "cofre-zero-history-full.yml",
-      "cron_utc": "32 6 * * *",
+      "cron_utc": "47 6 * * *",
       "function": "arquivar CURRENT depois do Cloud Run",
       "classification": "active_backup"
     },
