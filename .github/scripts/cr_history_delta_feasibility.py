@@ -26,7 +26,7 @@ def parse_inventory(items):
             raise ValueError("Invalid file metadata")
         path, size = item.get("Path"), item.get("Size")
         hashes = item.get("Hashes")
-        md5 = hashes.get("MD5") if isinstance(hashes, dict) else None
+        md5 = next((value for key, value in hashes.items() if key.lower() == "md5"), None) if isinstance(hashes, dict) else None
         if (not isinstance(path, str) or not path or path.startswith("/")
                 or "\\" in path or "//" in path or any(p in ("", ".", "..") for p in path.split("/"))
                 or len(path) > 1024 or path in indexed):
