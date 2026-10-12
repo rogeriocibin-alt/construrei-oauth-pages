@@ -152,6 +152,36 @@ jobs:
           persist-credentials: false
       - name: Validate canonical governance without deleting data
         run: python3 .github/scripts/cofre_governance_guard.py
+      - name: Verify existing GitHub scheduled workflows are active
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from urllib.error import HTTPError
+          repo='rogeriocibin-alt/construrei-oauth-pages'
+          names=['cofre-zero-history-full.yml','cofre-netlify-inventory-offsite.yml',
+                 'cofre-zero-git-offsite.yml','cofre-trello-weekly-dispatch.yml',
+                 'cofre-zero-health-gate.yml']
+          headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],
+                   'Accept':'application/vnd.github+json',
+                   'X-GitHub-Api-Version':'2022-11-28'}
+          states={}
+          for name in names:
+              endpoint='https://api.github.com/repos/'+repo+'/actions/workflows/'+name
+              req=urllib.request.Request(endpoint,headers=headers)
+              try:
+                  with urllib.request.urlopen(req,timeout=20) as response:
+                      item=json.load(response)
+              except HTTPError as exc:
+                  print('GITHUB_WORKFLOW_STATE_UNAVAILABLE',name,exc.code)
+                  raise
+              states[name]=item.get('state')
+              print('WORKFLOW_STATUS',name,states[name])
+          if len(states)!=5 or any(state!='active' for state in states.values()):
+              raise RuntimeError('Some existing scheduled backup workflows are not active')
+          print('PASS: all five existing GitHub schedules enabled; next event=schedule still unproven')
+          PY
       - name: Enforce one-host and no-new-paid-schedule policy (read-only)
         run: python3 .github/scripts/cr_single_host_zero_incremental_guard.py
       - name: Test Cofre Zero history pagination and fail-closed behavior (offline)
