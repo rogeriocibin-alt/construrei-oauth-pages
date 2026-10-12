@@ -278,10 +278,44 @@ PY
   echo 'BLOCKED: real SQL replay failed in isolated Supabase PG17; private content withheld'
   exit 8
 fi
-TABLES="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -Atqc "select count(*) from information_schema.tables where table_schema in ('public','cr_internal') and table_type='BASE TABLE'")"
-AUTH="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc 'select count(*) from auth.users')"
-STORAGE="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc 'select count(*) from storage.objects')"
-test "$TABLES" -ge 150
-echo "PASS: isolated SQL E2E replay completed with PG17; restored application tables=$TABLES"
-echo "PASS: auth and storage metadata queryable (only aggregate row counts were checked)"
-echo "NOT COVERED: Storage binaries, Auth OAuth providers, live DNS, edge functions or user logins"
+# Compare restored structure and metadata against readonly production aggregates
+# recorded on 2026-10-12, never query or print actual customer rows.
+AGG="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "
+select
+  (select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace
+   where c.relkind in ('r','p') and n.nspname in ('public','cr_internal')),
+  (select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace
+   where c.relkind in ('r','p') and n.nspname in ('public','cr_internal') and c.relrowsecurity),
+  (select count(*) from pg_policies where schemaname in ('public','cr_internal')),
+  (select count(*) from storage.objects),
+  (select count(*) from auth.users),
+  (select count(*) from public.cc_items),
+  (select count(*) from public.cc_changes),
+  (select count(*) from supabase_migrations.schema_migrations);
+")"
+IFS='|' read -r TABLES RLS POLICIES STORAGE AUTH ITEMS CHANGES MIGRATIONS <<<"$AGG"
+echo "RESTORE_COUNTS app_tables=$TABLES rls_tables=$RLS app_policies=$POLICIES storage_metadata=$STORAGE auth_users=$AUTH"
+test "$TABLES" = "193" || { echo 'BLOCKED: restored application table count mismatch'; exit 9; }
+test "$RLS" = "192" || { echo 'BLOCKED: restored application RLS table count mismatch'; exit 9; }
+test "$POLICIES" = "20" || { echo 'BLOCKED: restored application RLS policy count mismatch'; exit 9; }
+test "$STORAGE" = "4532" || { echo 'BLOCKED: storage metadata count mismatch with readonly source'; exit 9; }
+test "$AUTH" = "0" || { echo 'BLOCKED: auth user metadata count mismatch'; exit 9; }
+test "$ITEMS" -gt 0 && test "$CHANGES" -gt 0 || { echo 'BLOCKED: restored master log tables empty'; exit 9; }
+test "$MIGRATIONS" = "0" || { echo 'BLOCKED: migration bootstrap unexpectedly populated'; exit 9; }
+# Verify two real operational tables stay private to anon/authenticated roles
+# exactly as in source. No SQL access and no rows are exposed to any user.
+SECURITY="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "
+select count(*) from pg_class c
+join pg_namespace n on n.oid=c.relnamespace
+where n.nspname='public' and c.relname in ('cc_items','cc_changes')
+and c.relrowsecurity and not c.relforcerowsecurity
+and not has_table_privilege('anon',c.oid,'SELECT')
+and not has_table_privilege('authenticated',c.oid,'SELECT')
+and not exists (select 1 from pg_policy p where p.polrelid=c.oid);
+")"
+test "$SECURITY" = "2" || { echo 'BLOCKED: recovered master pendencies role/privilege/RLS drift'; exit 9; }
+echo 'PASS: SQL replay and RLS/permissions validated in offline PG17'
+echo 'PASS: 193 app tables, 192 RLS tables, 20 RLS policies, 4532 Storage metadata, Auth users 0'
+echo 'PASS: restored operational records populated and master tables denied to anon/authenticated'
+echo 'NOT COVERED: 193 production migration-history rows absent from managed SQL dump'
+echo 'NOT COVERED: Storage binaries, Auth OAuth providers, live DNS, edge functions or user logins'
