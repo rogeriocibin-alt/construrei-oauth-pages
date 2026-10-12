@@ -139,6 +139,32 @@ docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -q -v ON_ERROR
 LAB_PG_SUPER="$(docker exec -u postgres "$CID" psql -U supabase_admin -d postgres -Atqc "select count(*) from pg_roles where rolname='postgres' and rolsuper")"
 test "$LAB_PG_SUPER" = "1" || { echo 'BLOCKED: disposable lab superuser prerequisite missing'; exit 7; }
 echo 'LAB_BOOTSTRAP: privileged postgres role only inside disposable offline PG17 container'
+# Supabase image ships a subset of extension/REST API event triggers; the
+# immutable SQL creates its OWN corresponding trigger definitions. Remove only
+# the exact conflicting names in this network-isolated disposable database.
+# Every trigger is recreated by schema.sql; never touch production.
+docker exec -u postgres "$CID" psql -X -q -U supabase_admin -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+DO $lab$
+DECLARE trigger_name text;
+BEGIN
+  FOR trigger_name IN
+    SELECT evtname FROM pg_event_trigger
+    WHERE evtname IN (
+      'cr_auto_enable_rls_public',
+      'issue_graphql_placeholder',
+      'issue_pg_cron_access',
+      'issue_pg_graphql_access',
+      'issue_pg_net_access',
+      'pgrst_ddl_watch',
+      'pgrst_drop_watch'
+    )
+  LOOP
+    EXECUTE format('DROP EVENT TRIGGER %I', trigger_name);
+  END LOOP;
+END
+$lab$;
+SQL
+echo 'LAB_BOOTSTRAP: removed only preinstalled event-trigger name collisions in offline PG17'
 # Real restoration of verified private SQL in a disposable network-isolated instance.
 # Suppress all SQL and error payloads to protect customer information in public GitHub logs.
 if ! timeout 780s docker exec -u postgres "$CID" \
