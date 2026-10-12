@@ -9,6 +9,7 @@ on:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_single_host_zero_incremental_guard.py
+      - .github/scripts/cr_ephemeral_publication_gate.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
       - '.github/workflows/*.yml'
       - '.github/workflows/*.yaml'
@@ -31,6 +32,7 @@ on:
       - .github/workflows/cofre-zero-health-gate.yml
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_single_host_zero_incremental_guard.py
+      - .github/scripts/cr_ephemeral_publication_gate.py
       - docs/ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md
       - '.github/workflows/*.yml'
       - '.github/workflows/*.yaml'
@@ -146,4 +148,6 @@ jobs:
           PY
       - name: Local ephemeral staging smoke of F00-F09 canonical JS URLs
         run: python3 .github/scripts/cr_f00_f09_staging_smoke.py
+      - name: Build isolated ephemeral public package and smoke 39 aliases (no deploy)
+        run: python3 .github/scripts/cr_ephemeral_publication_gate.py
 
