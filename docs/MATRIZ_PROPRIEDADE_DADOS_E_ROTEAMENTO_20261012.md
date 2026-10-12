@@ -41,6 +41,14 @@ Análise cruzada somente leitura do catálogo oficial em 12/10:
 - **Regra antirregressão CI:** o auditor de ecossistema mantém esses 35 destinos e 2 raízes sob controle. Qualquer novo endpoint, remoção ou desvio exige mudança de contrato e homologação por PR; não fazer `DELETE` ou deploy para resolver discrepâncias.
 - Próxima classificação read-only: dependências indiretas partindo das **2 raízes oficiais**, rotas internas, Agenda, Cora, Trello, WIZY/Éder e Financeiro, comparando também Netlify/Vercel/Google Drive. Registrar evidência por slug sem presumir que ausência de link literal significa desuso.
 
+### Inventário dependente do código vivo (snapshot read-only de 12/10)
+
+O arquivo [`EDGE_OFFICIAL_LITERAL_GRAPH_20261012.json`](EDGE_OFFICIAL_LITERAL_GRAPH_20261012.json) guarda **somente metadados e slugs observados**, sem copiar código-fonte ou credenciais. A leitura autenticada do Supabase cobriu o código das 2 raízes e das funções referenciadas, percorrendo 3 camadas: **11 funções ativas**, **20 ocorrências de arestas literais únicas por origem/destino** (incluindo autorreferências) e nenhuma referência literal fora desse conjunto entre as funções lidas. Exemplo de cadeia: `centro-operacoes` → `central-gestao-api` → `acervo343-inspect-secure-candidate-20260921`; `central-atendimento` → `central-atendimento-router-audit` → `cr-flow-runtime-v2`.
+
+**Não significa que só existam onze funções utilizadas.** Referências construídas dinamicamente, jobs, integrações, SDKs, credenciais de terceiros e consumidores externos não foram mapeados integralmente. Nenhuma função recebeu `can_remove=true`. Manter todas as funções intactas e priorizar análise de acesso autenticado, principalmente nos pontos de escrita. A configuração observada no Supabase indica `verify_jwt=false` nas funções amostradas; isso é um **gatilho de inspeção de autorização server-side**, não prova de vulnerabilidade ou de ausência de proteção. Não publicar detalhes de tokens ou código-fonte da análise.
+
+O snapshot é uma **evidência datada**, não o dono da configuração em execução. O CI valida integridade e caráter não destrutivo desse registro, mas somente consulta autenticada futura pode confirmar versão, atividade e efetiva segurança das funções.
+
 ## 4. Ordem de execução sem duplicar desenvolvimento
 
 1. **P0 administrativo:** configurar proteção de branch pública; GitHub retornou HTTP 403 para rulesets do financeiro privado com exigência de GitHub Pro — **não contratar, não abrir acesso público** sem decisão.

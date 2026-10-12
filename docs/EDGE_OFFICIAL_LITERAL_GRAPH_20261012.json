@@ -1,0 +1,121 @@
+{
+  "artifact": "CR_OFFICIAL_EDGE_LITERAL_GRAPH_READ_ONLY",
+  "snapshot_date": "2026-10-12",
+  "source": "Authenticated Supabase Edge code content and function list read by connector",
+  "source_project_ref": "yspuaamokjbrosytqjpg",
+  "authority": "DATED_EVIDENCE_ONLY_NOT_A_DEPENDENCY_DATABASE",
+  "live_execution_verified": false,
+  "security_verified": false,
+  "retirement_authorized": false,
+  "levels_inspected": 3,
+  "official_direct_aliases": 35,
+  "official_alias_total": 39,
+  "official_entry_routes": {
+    "centro-operacoes": 24,
+    "central-atendimento": 11
+  },
+  "limitations": [
+    "Static literal URL path only; strings may be unused",
+    "Dynamically constructed URLs, SDK invocations, cron, external clients and OAuth not exhaustively scanned",
+    "An empty direct_literal_references list is not evidence of disuse",
+    "No database mutation or production invocation"
+  ],
+  "functions": [
+    {
+      "slug": "acervo343-inspect-secure-candidate-20260921",
+      "version": 8,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "acervo343-inspect-secure-candidate-20260921",
+        "central-gestao-api"
+      ]
+    },
+    {
+      "slug": "central-atendimento",
+      "version": 160,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "central-atendimento-router-audit"
+      ]
+    },
+    {
+      "slug": "central-atendimento-router-audit",
+      "version": 87,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "central-atendimento",
+        "cr-flow-runtime-v2"
+      ]
+    },
+    {
+      "slug": "central-evidencia-upload",
+      "version": 18,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "central-gestao-api"
+      ]
+    },
+    {
+      "slug": "central-gestao-api",
+      "version": 23,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "acervo343-inspect-secure-candidate-20260921"
+      ]
+    },
+    {
+      "slug": "central-pendencias-cockpit",
+      "version": 19,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "central-gestao-api"
+      ]
+    },
+    {
+      "slug": "central-pendencias-write",
+      "version": 20,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "central-gestao-api"
+      ]
+    },
+    {
+      "slug": "centro-operacoes",
+      "version": 291,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "central-atendimento",
+        "central-evidencia-upload",
+        "central-gestao-api",
+        "central-pendencias-cockpit",
+        "central-pendencias-write",
+        "centro-operacoes",
+        "construrei-logo",
+        "sala-equipe-r12-candidate"
+      ]
+    },
+    {
+      "slug": "construrei-logo",
+      "version": 31,
+      "status": "ACTIVE",
+      "direct_literal_references": []
+    },
+    {
+      "slug": "cr-flow-runtime-v2",
+      "version": 17,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "central-atendimento"
+      ]
+    },
+    {
+      "slug": "sala-equipe-r12-candidate",
+      "version": 11,
+      "status": "ACTIVE",
+      "direct_literal_references": [
+        "centro-operacoes",
+        "construrei-logo"
+      ]
+    }
+  ]
+}
