@@ -20,6 +20,7 @@ LINKS = DOCS / "official-links-registry.json"
 PROJECT = ROOT / "gestor-projeto/project-data.json"
 VERSION = ROOT / "gestor-projeto/version.json"
 PREVIEW = DOCS / "AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
+OWNERS = DOCS / "MATRIZ_PROPRIEDADE_DADOS_E_ROTEAMENTO_20261012.md"
 WORKFLOWS = ROOT / ".github/workflows"
 # All 27 pre-existing governance rules reconciled; refuse future silent drift.
 # Any new rule must appear in both the master index and Gestor fallback.
@@ -40,6 +41,7 @@ def main():
         ROOT / "gestor-projeto/sw.js",
         ROOT / "docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md",
         ROOT / "docs/CONSTRUREI_CURRENT_STATE.md",
+        OWNERS,
         ROOT / ".github/scripts/cr_central_full_scope_audit.py",
     ]
     for path in required:
@@ -61,6 +63,33 @@ def main():
     for item in aliases:
         if urlsplit(item.get("target", "")).scheme != "https":
             errors.append("Non-HTTPS target registered for alias " + item.get("slug", "<unnamed>"))
+
+    # The existing 39 public aliases fan into two direct Edge roots for the
+    # majority of routes. Protect direct roots from accidental redirects,
+    # *without* inferring that other Edge functions have zero consumers.
+    direct_edge_counts = collections.Counter()
+    for item in aliases:
+        target = urlsplit(item.get("target", ""))
+        if (target.netloc == "yspuaamokjbrosytqjpg.supabase.co"
+                and target.path.startswith("/functions/v1/")):
+            slug = target.path[len("/functions/v1/"):].split("/")[0]
+            if slug:
+                direct_edge_counts[slug] += 1
+    direct_edge_count = sum(direct_edge_counts.values())
+    expected_roots = {"centro-operacoes": 24, "central-atendimento": 11}
+    if len(aliases) == 39 and dict(direct_edge_counts) != expected_roots:
+        errors.append("Official direct Edge gateway contract changed; require explicit homologation: "
+                      + repr({"expected": expected_roots,
+                              "observed": dict(direct_edge_counts)}))
+    if OWNERS.is_file():
+        owners_text = OWNERS.read_text(encoding="utf-8")
+        for required_term in (
+            "Matriz de propriedade", "35", "centro-operacoes",
+            "central-atendimento", "Trello", "Google Calendar",
+            "Click", "idempotency_key", "não",
+        ):
+            if required_term not in owners_text:
+                errors.append("Source-of-truth evidence lacks: " + required_term)
 
     # Index is the written authority; PWA JSON is a projection/fallback, not another rule master.
     master_ids = re.findall(
@@ -203,6 +232,14 @@ def main():
             "workflow_definitions": ".github/workflows/ (configured, execution unverified)",
         },
         "official_aliases": len(aliases),
+        "official_direct_edge_gateway": {
+            "route_count": direct_edge_count,
+            "root_slug_counts": dict(sorted(direct_edge_counts.items())),
+            "direct_roots_only_not_internal_dependencies": True,
+            "approval_to_decommission_any_function": False,
+            "source": "docs/official-links-registry.json",
+        },
+        "data_ownership_evidence": str(OWNERS.relative_to(ROOT)),
         "official_alias_groups": dict(sorted(collections.Counter(x.get("group", "N/A") for x in aliases).items())),
         "gestor_products_snapshot": len(products),
         "canonical_rule_count": {"index": len(master_ids), "gestor_snapshot": len(gestalt_ids),
