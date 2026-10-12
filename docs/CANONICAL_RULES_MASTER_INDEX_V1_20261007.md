@@ -162,6 +162,12 @@ Não reintroduzir MutationObserver global na camada humana/Documentação. Obser
 **Domínio:** Arquitetura  
 Aliases públicos amigáveis são a camada de acesso. Endpoints técnicos canônicos permanecem preservados e não são renomeados/excluídos por conveniência.
 
+### FLOW-001 — Namespace e antirregressão da esteira F00–F09
+**Classe:** DOMÍNIO  
+**Domínio:** APP / F00–F09  
+**Fonte de evidência:** `CHECKPOINT_FULL_FLOW_F00_F09_CENTRAL_HOMOLOGATED_20261001`  
+As etapas F00→F09 utilizam o namespace canônico da esteira homologada. Evoluções não alteram silenciosamente lógica, roteamento ou fluxos aprovados; mudanças exigem candidata isolada, testes, validação e promoção explícita. Este registro preserva a regra já existente no Gestor, sem criar nova regra operacional.
+
 ### PEND-003 — Pós-homologação atualiza pendências automaticamente
 **Classe:** FUNDAMENTAL  
 **Domínio:** Pendências / Governança  
