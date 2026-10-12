@@ -11,43 +11,18 @@ CID=""
 cleanup() {
   if test -n "$CID"; then docker rm -fv "$CID" >/dev/null 2>&1 || :; fi
   if test -e "$WORK/local-stack/supabase/config.toml"; then
-    (cd "$WORK/local-stack" && npx --yes supabase@2.120.0 stop --no-backup >/dev/null 2>&1) || :
+    (cd "$WORK/local-stack" && env -u RCLONE_CONFIG_B64 npx --yes supabase@2.120.0 stop --no-backup >/dev/null 2>&1) || :
   fi
   rm -rf "$WORK"
 }
 trap cleanup EXIT
-CONFIG="$WORK/rclone.conf"
-printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$CONFIG"
-chmod 600 "$CONFIG"
-REMOTE="construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL/20261012-060012"
-mkdir -p "$WORK/03_DATABASE"
-for file in BACKUP_STATUS.txt SHA256SUMS.txt; do
-  rclone --config "$CONFIG" copyto "$REMOTE/$file" "$WORK/$file" --retries 2 --retries-sleep 2s >/dev/null
-done
-for file in roles.sql schema.sql data.sql; do
-  rclone --config "$CONFIG" copyto "$REMOTE/03_DATABASE/$file" "$WORK/03_DATABASE/$file" --retries 2 --retries-sleep 2s >/dev/null
-done
-python3 .github/scripts/cr_sql_restore_preflight.py --root "$WORK" > "$WORK/preflight.json"
-python3 .github/scripts/cr_sql_copy_inventory.py --root "$WORK" > "$WORK/copy.json"
-python3 - "$WORK" <<'PY'
-import json, pathlib, sys
-folder=pathlib.Path(sys.argv[1])
-status=(folder/"BACKUP_STATUS.txt").read_text()
-assert "RUN_ID: 20261012-060012" in status, "Historical snapshot mismatch"
-pre=json.loads((folder/"preflight.json").read_text())
-inv=json.loads((folder/"copy.json").read_text())
-assert pre["hashes_verified"]==3 and pre["bootstrap_supabase_required"]
-assert inv["copy_headers_total"] > 0
-assert not pre["database_replay_passed"] and not inv["sql_restore_attempted"]
-print("PASS: private SQL SHA256 3/3 and COPY inventory, without exposing row data")
-PY
 # Official Supabase CLI stack is required: bare PG17 image has zero managed
 # Auth and Storage tables. This project is NEVER linked to production.
 # Verify Auth + Storage bootstrap before importing private data.
 test -z "${SUPABASE_ACCESS_TOKEN:-}" || { echo 'BLOCKED: unexpected production API token'; exit 8; }
 mkdir -p "$WORK/local-stack"
 pushd "$WORK/local-stack" >/dev/null
-npx --yes supabase@2.120.0 init --yes >/dev/null
+env -u RCLONE_CONFIG_B64 npx --yes supabase@2.120.0 init --yes >/dev/null
 python3 - <<'PY'
 from pathlib import Path
 import tomllib,re
@@ -63,7 +38,7 @@ else:
 assert tomllib.loads(s).get("db",{}).get("major_version")==17
 p.write_text(s)
 PY
-npx --yes supabase@2.120.0 start --exclude realtime,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor >/dev/null
+env -u RCLONE_CONFIG_B64 npx --yes supabase@2.120.0 start --exclude realtime,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor >/dev/null
 popd >/dev/null
 CID="$(docker ps --format '{{.ID}} {{.Names}}' | awk '$2 ~ /^supabase_db_/ {print $1; exit}')"
 test -n "$CID" || { echo 'BLOCKED: official PG17 local database missing'; exit 8; }
@@ -90,6 +65,32 @@ STORAGE_COUNT="$(docker exec -u postgres "$CID" psql -U postgres -d postgres -At
 echo "PLATFORM_BOOTSTRAP auth_tables=$AUTH_COUNT storage_tables=$STORAGE_COUNT"
 test "$AUTH_COUNT" -ge 27 && test "$STORAGE_COUNT" -ge 8 || { echo 'BLOCKED: official Auth/Storage migrations incomplete'; exit 5; }
 
+# Fetch private SQL only AFTER official CLI initialization and DB network isolation.
+CONFIG="$WORK/rclone.conf"
+printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$CONFIG"
+chmod 600 "$CONFIG"
+REMOTE="construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL/20261012-060012"
+mkdir -p "$WORK/03_DATABASE"
+for file in BACKUP_STATUS.txt SHA256SUMS.txt; do
+  rclone --config "$CONFIG" copyto "$REMOTE/$file" "$WORK/$file" --retries 2 --retries-sleep 2s >/dev/null
+done
+for file in roles.sql schema.sql data.sql; do
+  rclone --config "$CONFIG" copyto "$REMOTE/03_DATABASE/$file" "$WORK/03_DATABASE/$file" --retries 2 --retries-sleep 2s >/dev/null
+done
+python3 .github/scripts/cr_sql_restore_preflight.py --root "$WORK" > "$WORK/preflight.json"
+python3 .github/scripts/cr_sql_copy_inventory.py --root "$WORK" > "$WORK/copy.json"
+python3 - "$WORK" <<'PY'
+import json, pathlib, sys
+folder=pathlib.Path(sys.argv[1])
+status=(folder/"BACKUP_STATUS.txt").read_text()
+assert "RUN_ID: 20261012-060012" in status, "Historical snapshot mismatch"
+pre=json.loads((folder/"preflight.json").read_text())
+inv=json.loads((folder/"copy.json").read_text())
+assert pre["hashes_verified"]==3 and pre["bootstrap_supabase_required"]
+assert inv["copy_headers_total"] > 0
+assert not pre["database_replay_passed"] and not inv["sql_restore_attempted"]
+print("PASS: private SQL SHA256 after offline Supabase bootstrap; no row data logged")
+PY
 # Keep private runner files 0700; copy bytes inside this network-isolated
 # disposable container and assign read-only SQL files to its local postgres user.
 # Never chmod the private Drive artifacts world-readable on the host.
