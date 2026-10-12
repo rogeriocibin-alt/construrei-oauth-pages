@@ -55,6 +55,13 @@ def main():
         if not re.search(r"(?m)^### " + re.escape(rule_id) + r"\s+[—–-]", rules):
             problems.append("Regra canonica ausente: " + rule_id)
 
+    # Entrypoints conhecidos de agentes externos: obrigatorios, mas nao garantem
+    # enforcement em ferramentas desligadas ou bypass via API/admin.
+    for rel in ("AGENTS.md", "CLAUDE.md", ".github/copilot-instructions.md"):
+        entry = ROOT / rel
+        if not entry.is_file() or POLICY_MARKER not in entry.read_text(encoding="utf-8"):
+            problems.append("Instrucao de ferramenta externa ausente ou desatualizada: " + rel)
+
     present = set()
     for entry in AGENTS.iterdir():
         if not entry.is_dir():

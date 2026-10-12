@@ -10,6 +10,9 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_agent_architecture_contract_guard.py
       - docs/CONTRATO_DESENVOLVIMENTO_SANEAMENTO_20261012.md
+      - AGENTS.md
+      - CLAUDE.md
+      - .github/copilot-instructions.md
       - 'agents/**'
       - docs/AGENTS_REGISTRY.md
       - docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md
@@ -48,6 +51,9 @@ on:
       - .github/scripts/cofre_governance_guard.py
       - .github/scripts/cr_agent_architecture_contract_guard.py
       - docs/CONTRATO_DESENVOLVIMENTO_SANEAMENTO_20261012.md
+      - AGENTS.md
+      - CLAUDE.md
+      - .github/copilot-instructions.md
       - 'agents/**'
       - docs/AGENTS_REGISTRY.md
       - docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md
