@@ -1,0 +1,185 @@
+#!/usr/bin/env python3
+"""Ecossistema CONSTRU-REI: contract inventory / drift gate (read-only).
+
+This consumes EXISTING canonical sources; it is not a second master database.
+It does not check live URLs, credentials, finance amounts, cross-tenant security
+or backup restore. It never writes into application code or production data.
+"""
+import collections
+import json
+import os
+import re
+import sys
+from pathlib import Path
+from urllib.parse import urlsplit
+
+ROOT = Path(__file__).resolve().parents[2]
+DOCS = ROOT / "docs"
+RULES = DOCS / "CANONICAL_RULES_MASTER_INDEX_V1_20261007.md"
+LINKS = DOCS / "official-links-registry.json"
+PROJECT = ROOT / "gestor-projeto/project-data.json"
+VERSION = ROOT / "gestor-projeto/version.json"
+PREVIEW = DOCS / "AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
+WORKFLOWS = ROOT / ".github/workflows"
+# Existing, documented discrepancy: ALLOWED TEMPORARILY, never silently healed.
+KNOWN_DOC_ONLY = {"GOV-006", "PEND-003"}
+KNOWN_GESTOR_ONLY = {"FLOW-001"}
+MIN_ALIASES = 39
+MIN_WORKFLOWS = 11
+
+def load(path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+def main():
+    errors = []
+    warnings = []
+    required = [
+        RULES, LINKS, PROJECT, VERSION, PREVIEW,
+        ROOT / "gestor-projeto/index.html",
+        ROOT / "gestor-projeto/sw.js",
+        ROOT / "docs/ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md",
+        ROOT / "docs/CONSTRUREI_CURRENT_STATE.md",
+        ROOT / ".github/scripts/cr_central_full_scope_audit.py",
+    ]
+    for path in required:
+        if not path.is_file():
+            errors.append("Required master or protected component missing: " + str(path.relative_to(ROOT)))
+    if errors:
+        print(json.dumps({"errors": errors}, ensure_ascii=False, indent=2))
+        return 1
+
+    reg, project, version, preview = map(load, (LINKS, PROJECT, VERSION, PREVIEW))
+    aliases = reg.get("links", [])
+    slugs = [item.get("slug", "") for item in aliases]
+    if len(aliases) < MIN_ALIASES:
+        errors.append("The existing official alias catalogue shrank below its agreed baseline")
+    if len(slugs) != len(set(slugs)):
+        errors.append("Duplicate official alias slug")
+    if not {"central", "gestor-projeto", "app-construrei", "gestao-financeira"}.issubset(slugs):
+        errors.append("Official Central / Gestor / APP / Financeiro access missing")
+    for item in aliases:
+        if urlsplit(item.get("target", "")).scheme != "https":
+            errors.append("Non-HTTPS target registered for alias " + item.get("slug", "<unnamed>"))
+
+    # Index is the written authority; PWA JSON is a projection/fallback, not another rule master.
+    master_ids = re.findall(
+        r"^###\s+([A-Z][A-Z0-9]*-\d{3})\s+[—–-]",
+        RULES.read_text(encoding="utf-8"), flags=re.MULTILINE,
+    )
+    gestalt_ids = [r.get("id") for r in project.get("canonical_rules", [])]
+    for label, ids in (("Index", master_ids), ("Gestor snapshot", gestalt_ids)):
+        if len(ids) != len(set(ids)):
+            errors.append(label + " has duplicated rule IDs")
+        if not ids:
+            errors.append(label + " has no rule IDs")
+    doc_only = set(master_ids) - set(gestalt_ids)
+    gestor_only = set(gestalt_ids) - set(master_ids)
+    unexpected_doc = doc_only - KNOWN_DOC_ONLY
+    unexpected_gestor = gestor_only - KNOWN_GESTOR_ONLY
+    if unexpected_doc or unexpected_gestor:
+        errors.append("Unregistered drift in canonical rule IDs: " +
+                      repr({"index_only": sorted(unexpected_doc),
+                            "gestor_only": sorted(unexpected_gestor)}))
+    if doc_only or gestor_only:
+        warnings.append("Pre-existing rule drift, owner reconciliation required; no rule was deleted")
+    if not {"GOV-001", "GOV-003", "GOV-004", "ARCH-001", "ARCH-002",
+            "PEND-001", "DEV-001", "LINK-001"}.issubset(master_ids):
+        errors.append("Fundamental governance controls disappeared from Index Master")
+
+    # Only extract semantics; don't declare different version fields corrupt.
+    release = {
+        "version_json": version.get("version"),
+        "version_build": version.get("build"),
+        "gestor_snapshot_label": project.get("meta", {}).get("version"),
+        "gestor_snapshot_build": project.get("meta", {}).get("build"),
+        "source_of_live_release": "NOT_VERIFIED_BY_STATIC_AUDIT",
+    }
+    if not release["version_json"] or not release["version_build"]:
+        errors.append("Gestor release metadata is incomplete")
+    warnings.append("Gestor release semantics/runtime still require reconciliation and live check")
+
+    active = preview.get("production_contracts", [])
+    if not active:
+        errors.append("Known production dependencies on preview/ lost from snapshot")
+    for dep in active:
+        src = dep.get("source", "")
+        if not src.startswith("preview/"):
+            errors.append("Preview dependency record lacks a preview/ path")
+        if dep.get("id") in {"f00_f09_checklist_script", "central_official_app_gabi"}:
+            if not (ROOT / src).exists():
+                errors.append("Protected operational preview dependency missing: " + src)
+    folders = preview.get("folders", [])
+    if len(folders) != preview.get("folder_count"):
+        errors.append("Preview inventory folder count inconsistent")
+    if any(f.get("authorized_to_delete") or f.get("authorized_to_move") for f in folders):
+        errors.append("An unapproved preview move/delete flag was introduced")
+    # Counts are snapshot evidence, not the full live deployment inventory.
+    status = collections.Counter(f.get("status", "UNREVIEWED") for f in folders)
+    warnings.append("preview/ inventory is a dated Git snapshot, not a proven runtime dependency graph")
+
+    workflow_files = sorted([*WORKFLOWS.glob("*.yml"), *WORKFLOWS.glob("*.yaml")])
+    if len(workflow_files) < MIN_WORKFLOWS:
+        errors.append("Previously-known GitHub workflow set unexpectedly shrank")
+    workflows = []
+    crons = collections.defaultdict(list)
+    for file in workflow_files:
+        raw = file.read_text(encoding="utf-8")
+        # Inventory only. Cron text is not evidence that runs succeeded.
+        expressions = re.findall(r'^\s*-\s*cron:\s*["\x27]?([^"\x27\n#]+)', raw, re.MULTILINE)
+        for expression in expressions:
+            crons[expression.strip()].append(file.name)
+        workflows.append({"name": file.name, "cron_expressions": expressions,
+                          "configured_only": True})
+    shared_schedules = {k: v for k, v in crons.items() if len(v) > 1}
+    if shared_schedules:
+        warnings.append("Multiple GitHub workflows share cron expressions; review purpose before consolidating")
+    warnings.append("Cloud Scheduler, Supabase, Netlify, Trello and SQL restoration need separate authenticated checks")
+
+    products = project.get("products", [])
+    product_ids = [p.get("id") for p in products]
+    if len(product_ids) != len(set(product_ids)):
+        errors.append("Duplicated Gestor product IDs")
+    if not {"central", "gestor", "app", "dashboard"}.issubset(product_ids):
+        errors.append("Critical product absent from Gestor fallback")
+    evidence = {
+        "audit": "ECOSYSTEM_CONTRACT_STATIC_ONLY",
+        "data_authorities": {
+            "links": "docs/official-links-registry.json",
+            "governance_rules": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
+            "gestor_snapshot": "gestor-projeto/project-data.json (projection, not verified live)",
+            "preview_snapshot": "docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json",
+            "workflow_definitions": ".github/workflows/ (configured, execution unverified)",
+        },
+        "official_aliases": len(aliases),
+        "official_alias_groups": dict(sorted(collections.Counter(x.get("group", "N/A") for x in aliases).items())),
+        "gestor_products_snapshot": len(products),
+        "canonical_rule_count": {"index": len(master_ids), "gestor_snapshot": len(gestalt_ids),
+                                 "index_only": sorted(doc_only), "gestor_only": sorted(gestor_only)},
+        "gestor_version_metadata": release,
+        "preview_snapshot": {"folders": len(folders), "status_counts": dict(sorted(status.items())),
+                             "protected_runtime_references": len(active), "approved_to_move": 0},
+        "github_workflow_inventory": workflows,
+        "shared_cron_expressions_for_review": shared_schedules,
+        "production_modified": False,
+        "external_live_verification": False,
+        "restore_tested": False,
+        "warnings": warnings,
+        "errors": errors,
+    }
+    print(json.dumps(evidence, ensure_ascii=False, indent=2))
+    summary = (
+        "### CONSTRU-REI | contrato de ecossistema (auditoria estática)\n"
+        f"- Links oficiais: **{len(aliases)}**; produtos do Gestor no snapshot: **{len(products)}**\n"
+        f"- Regras: Índice **{len(master_ids)}**, Gestor fallback **{len(gestalt_ids)}**; "
+        f"diferenças conhecidas: {', '.join(sorted(doc_only | gestor_only)) or 'nenhuma'}\n"
+        f"- Inventário preview/: **{len(folders)}** pastas; workflows GitHub configurados: **{len(workflow_files)}**\n"
+        f"- Alertas: **{len(warnings)}** | erros contratuais: **{len(errors)}**\n"
+        "- **Sem** teste de login, saldo, APIs vivas, backup/restore ou isolamento físico de ambientes.\n"
+    )
+    if os.environ.get("GITHUB_STEP_SUMMARY"):
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
+            out.write(summary)
+    return 1 if errors else 0
+
+if __name__ == "__main__":
+    sys.exit(main())
