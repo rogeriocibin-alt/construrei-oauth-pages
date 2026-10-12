@@ -378,12 +378,12 @@ jobs:
           p=Path("supabase/config.toml")
           s=p.read_text()
           import re
-          matches=re.findall(r"(?m)^\\s*major_version\\s*=\\s*['\"]?(15|17)['\"]?\\s*$",s)
+          lines=s.splitlines()
+          matches=[i for i,line in enumerate(lines) if re.match(r"^\\s*major_version\\s*=",line)]
           if len(matches)!=1:
-              raise SystemExit("BLOCKED: unsupported PG major version in official config")
-          s=re.sub(r"(?m)^(\\s*major_version\\s*=\\s*)(?:['\"]?15['\"]?|['\"]?17['\"]?)\\s*$",r"\\g<1>17",s,count=1)
-          assert len(re.findall(r"(?m)^\\s*major_version\\s*=\\s*17\\s*$",s))==1
-          p.write_text(s)
+              raise SystemExit("BLOCKED: official config has missing/duplicated major_version")
+          lines[matches[0]]="major_version = 17"
+          p.write_text("\\n".join(lines)+"\\n")
           PY
           npx --yes supabase@2.120.0 start --exclude rest,realtime,functions,studio,mail,analytics,pooler --eager >/dev/null
           DB="$(docker ps --format '{{.ID}} {{.Names}}' | awk '$2 ~ /^supabase_db_/ {print $1; exit}')"
