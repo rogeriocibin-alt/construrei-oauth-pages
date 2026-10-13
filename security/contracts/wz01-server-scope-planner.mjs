@@ -245,3 +245,39 @@ export async function verifyScopedListFromTrustedAdapters({
     });
   } catch { return ADAPTER_ERROR; }
 }
+
+
+/**
+ * Restricted, offline read of the EXISTING 12-row RBAC permission matrix.
+ * This helper validates the meaning of one rule, but grants NO authenticated
+ * user access. ACTIVE + NONE is a DENIAL; ACTIVE alone is never a grant.
+ * Deliberately map only the known Gabi F01/F02 permissions. Other role
+ * operations require an independently reviewed/approved action matrix.
+ * Caller must obtain role and matrix row through trusted server-side reads.
+ */
+const RBAC_RULES = Object.freeze({
+  'F01:list': Object.freeze({area:'F01_TRIAGEM',level:'READ'}),
+  'F01:get': Object.freeze({area:'F01_TRIAGEM',level:'READ'}),
+  'F01:route': Object.freeze({area:'F01_TRIAGEM',level:'WRITE'}),
+  'F02:list': Object.freeze({area:'F02_ORCAMENTO',level:'READ'}),
+  'F02:get': Object.freeze({area:'F02_ORCAMENTO',level:'READ'}),
+  'F02:budget-save': Object.freeze({area:'F02_ORCAMENTO',level:'WRITE'}),
+});
+const RBAC_LEVEL = Object.freeze({NONE:0,READ:1,WRITE:2,MANAGE:3});
+export function verifyLegacyRbacRule({flowCode,action,roleCode,row} = {}) {
+  if (typeof flowCode !== 'string' || typeof action !== 'string' ||
+      !safeAction(action)) return DENY;
+  const policy = RBAC_RULES[flowCode + ':' + action];
+  if (!policy || roleCode !== 'OPERACAO_ATENDIMENTO_GABI' ||
+      !row || row.role_code !== roleCode ||
+      row.permission_code !== 'RBAC-PERM-GABI-' + flowCode ||
+      row.area_code !== policy.area ||
+      row.status !== 'ACTIVE' ||
+      !Object.hasOwn(RBAC_LEVEL,row.access_level) ||
+      RBAC_LEVEL[row.access_level] < RBAC_LEVEL[policy.level]) return DENY;
+  return Object.freeze({
+    ok:true,flowCode,action,roleCode,areaCode:policy.area,
+    permissionCode:row.permission_code,requiredLevel:policy.level,
+    evidenceOnly:true,approvedForLiveDeployment:false,
+  });
+}
