@@ -29,3 +29,14 @@ Branch: `candidate/fin-cora-verified-manual-20261013`
 
 ## Estado formal
 `VISUAL_APROVADO` / `CANDIDATA_ISOLADA` / `INTEGRACAO_PENDENTE` / `PRODUCAO_INALTERADA`.
+
+
+## Auditoria de integração — 13/10/2026
+- Supabase existente: `yspuaamokjbrosytqjpg` (CONSTRU-REI Centro de Controle), ativo; não foi criado projeto novo.
+- `cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007` v3 já valida `x-cr-session` contra `central-gestao-api?api=me`, mas esta autenticação por si só não prova autorização do usuário para ajustar o saldo global. `verify_jwt=false` exige atenção especial ao controle interno.
+- Fluxo Cora Manual existente já faz operações Trello; NÃO testar escrita real para simular homologação.
+- PR #115 ainda usa `localStorage` para `CORA_VERIFIED_KEY` e `CORA_PROJECTED_KEY`. Isso não sincroniza aparelhos e a projeção local não é fonte contábil.
+- A listagem de tabelas públicas existentes não identificou uma entidade específica de saldo Cora centralizado. Não se deve presumir que uma tabela genérica permite lançamento seguro. Persistência centralizada requer contrato de API e modelo de autorização/auditoria, com idempotência e controle de concorrência.
+- Não foram executadas migrações, alterações financeiras em banco, deploy de Edge Functions nem merge. Link oficial permanece intacto.
+- Antes de promover: definir registro central (saldo em centavos, data da verificação, operador, justificativa e versão), autenticação da diretoria, trilha de auditoria append-only, concorrência otimista; separar saldo bancário verificado de projeção, preservar movimentos Trello e efetuar testes integrados autorizados sem movimentação real.
+- Estado final desta auditoria: `VISUAL_APROVADO`, `BACKEND_NAO_HOMOLOGADO`, `PROMOCAO_BLOQUEADA_POR_SEGURANCA`. Prosseguir apenas depois de implementação testada em isolamento, sem dependência de aparelho e sem operação financeira fictícia em produção.
