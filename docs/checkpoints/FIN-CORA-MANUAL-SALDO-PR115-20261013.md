@@ -40,3 +40,13 @@ Branch: `candidate/fin-cora-verified-manual-20261013`
 - Não foram executadas migrações, alterações financeiras em banco, deploy de Edge Functions nem merge. Link oficial permanece intacto.
 - Antes de promover: definir registro central (saldo em centavos, data da verificação, operador, justificativa e versão), autenticação da diretoria, trilha de auditoria append-only, concorrência otimista; separar saldo bancário verificado de projeção, preservar movimentos Trello e efetuar testes integrados autorizados sem movimentação real.
 - Estado final desta auditoria: `VISUAL_APROVADO`, `BACKEND_NAO_HOMOLOGADO`, `PROMOCAO_BLOQUEADA_POR_SEGURANCA`. Prosseguir apenas depois de implementação testada em isolamento, sem dependência de aparelho e sem operação financeira fictícia em produção.
+
+
+## Continuidade 13/10/2026 — integração da interface V11
+- Commit `3a8585f79f2de7113ccdeea6afac7e86a7f47751`: interface do dashboard completo conectada na candidata aos contratos `api=cora-verified-balance` (GET) e `api=cora-verified-balance-update` (POST).
+- Botão visual no mesmo bloco `SALDO CORA VERIFICADO`; CSS existente `manualbtn`, preservando sete abas, logo, cards, componentes e fluxos Trello.
+- Carregamento ao autenticar. Fail-closed: indisponibilidade de API ou saldo sem base central desabilita edição; nenhuma escrita local substitui a gravação central do saldo verificado.
+- Escrita depende de `expected_version`, `action_id`, `reason` e perfil Diretoria. A confirmação retorna antes da atualização da tela.
+- Schema e gateway **apenas versionados como arquivos candidatos**, não executados/deployados. Portanto botão no dashboard oficial ainda não aparece e candidato ainda não deve ser promovido.
+- Validação estática de código realizada por inspeção; teste integrado com banco e navegador ainda não comprovado.
+- Não executar PR merge antes de disponibilizar backend, revisar constraints de RLS, realizar testes de auth, concorrência, API indisponível, histórico e front, e passar pelo gate de homologação.
