@@ -237,7 +237,7 @@ const verifiedLabAdapters=()=>({
   findMembership:async({authUserId})=>({
     authUserId,workspaceId:SCOPE_W,active:true,humanValidated:true,
   }),
-  findHandoffByToken:async()=>({case_id:SCOPE_C}),
+  findHandoffByToken:async({token})=>({case_id:SCOPE_C,token}),
   findCaseById:async({caseId})=>({case_id:caseId,workspace_id:SCOPE_W}),
   getActionPermission:async({authUserId,action})=>({
     authUserId,action,allowed:true,
@@ -301,6 +301,9 @@ test('WZ-01 adapter seam: token is locator, never an authorization grant',async(
   const wrongCase=verifiedLabAdapters();
   wrongCase.findHandoffByToken=async()=>({case_id:null,case_number:'fictional-26'});
   assert.equal((await checkAdapter({adapters:wrongCase})).status,403);
+  const wrongToken=verifiedLabAdapters();
+  wrongToken.findHandoffByToken=async()=>({case_id:SCOPE_C,token:'another-handoff'});
+  assert.equal((await checkAdapter({adapters:wrongToken})).status,403);
 });
 
 test('WZ-01 adapter seam: no cross-tenant read, forged actor or role escalation',async()=>{
