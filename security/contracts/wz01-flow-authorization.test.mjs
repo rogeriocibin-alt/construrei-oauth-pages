@@ -100,3 +100,93 @@ test('known transitions pass only when authorized and scoped',async()=>{
     assert.equal(result.caseId,CASE);
   }
 });
+
+
+import { verifyServerCaseScope as verifyScope, scopeContractStatus }
+  from './wz01-server-scope-planner.mjs';
+
+const SCOPE_U='11111111-1111-4111-8111-111111111111';
+const SCOPE_C='22222222-2222-4222-8222-222222222222';
+const SCOPE_W='33333333-3333-4333-8333-333333333333';
+const SCOPE_OTHER='44444444-4444-4444-8444-444444444444';
+const scopeFixture=()=>({
+  principal:{serverVerified:true,sessionActive:true,userId:SCOPE_U},
+  membership:{serverVerified:true,active:true,humanValidated:true,
+    authUserId:SCOPE_U,workspaceId:SCOPE_W},
+  handoff:{case_id:SCOPE_C},
+  caseRecord:{case_id:SCOPE_C,workspace_id:SCOPE_W},
+  rolePermission:{serverVerified:true,allowed:true,authUserId:SCOPE_U,action:'get'},
+  assignment:{serverVerified:true,allowed:true,authUserId:SCOPE_U,
+    caseId:SCOPE_C,workspaceId:SCOPE_W,action:'get'},
+  action:'get',
+});
+const scopeReject=(patch)=>{
+  const input=scopeFixture();
+  for(const [key, value] of Object.entries(patch)) input[key]=value;
+  const out=verifyScope(input);
+  assert.deepEqual(out,{ok:false,status:403,code:'SCOPE_NOT_VERIFIED'});
+};
+
+test('WZ-01 scope: verified workspace case is permitted for this synthetic contract only',()=>{
+  const result=verifyScope(scopeFixture());
+  assert.equal(result.ok,true);
+  assert.equal(result.actor,SCOPE_U);
+  assert.equal(result.caseId,SCOPE_C);
+  assert.equal(result.workspaceId,SCOPE_W);
+  assert.equal(result.mustScopeEveryReadAndWrite,true);
+  assert.equal(result.approvedForLiveDeployment,false);
+  assert.equal(scopeContractStatus.productionWiringApproved,false);
+});
+
+test('WZ-01 scope: missing/revoked principal or human membership never passes',()=>{
+  const f=scopeFixture();
+  scopeReject({principal:null});
+  scopeReject({principal:{...f.principal,sessionActive:false}});
+  scopeReject({principal:{...f.principal,serverVerified:false}});
+  scopeReject({membership:null});
+  scopeReject({membership:{...f.membership,humanValidated:false}});
+  scopeReject({membership:{...f.membership,active:false}});
+  scopeReject({membership:{...f.membership,authUserId:SCOPE_OTHER}});
+  scopeReject({membership:{...f.membership,serverVerified:false}});
+});
+
+test('WZ-01 scope: missing FK, legacy case number, wrong case or tenant fails closed',()=>{
+  const f=scopeFixture();
+  scopeReject({handoff:{case_id:null,case_number:'fictional-26'}});
+  scopeReject({handoff:{case_id:undefined,case_number:'fictional-26'}});
+  scopeReject({handoff:{case_id:SCOPE_OTHER}});
+  scopeReject({caseRecord:{...f.caseRecord,workspace_id:null}});
+  scopeReject({caseRecord:{...f.caseRecord,workspace_id:SCOPE_OTHER}});
+  scopeReject({membership:{...f.membership,workspaceId:SCOPE_OTHER}});
+});
+
+test('WZ-01 scope: assignment and action grant are independently required',()=>{
+  const f=scopeFixture();
+  scopeReject({assignment:null});
+  scopeReject({assignment:{...f.assignment,serverVerified:false}});
+  scopeReject({assignment:{...f.assignment,allowed:false}});
+  scopeReject({assignment:{...f.assignment,authUserId:SCOPE_OTHER}});
+  scopeReject({assignment:{...f.assignment,workspaceId:SCOPE_OTHER}});
+  scopeReject({assignment:{...f.assignment,caseId:SCOPE_OTHER}});
+  scopeReject({rolePermission:null});
+  scopeReject({rolePermission:{...f.rolePermission,allowed:false}});
+  scopeReject({rolePermission:{...f.rolePermission,action:'route'}});
+  scopeReject({action:'flow-save'});
+});
+
+test('WZ-01 scope: unscoped list, health and unknown action cannot use case grant',()=>{
+  scopeReject({action:'list'});
+  scopeReject({action:'health'});
+  scopeReject({action:'get-everything'});
+  scopeReject({action:'admin'});
+});
+
+test('WZ-01 scope: caller-submitted actor/tenant cannot override trusted identifiers',()=>{
+  const fixture=scopeFixture();
+  const result=verifyScope({...fixture,
+    actor:SCOPE_OTHER,tenantId:SCOPE_OTHER,
+    body:{userId:SCOPE_OTHER,workspaceId:SCOPE_OTHER,caseId:SCOPE_OTHER}});
+  assert.equal(result.ok,true);
+  assert.equal(result.actor,SCOPE_U);
+  assert.equal(result.workspaceId,SCOPE_W);
+});
