@@ -1474,7 +1474,7 @@ function hunt(c){return /infiltra|vazamento|umidade/i.test([c?.problem,c?.title,
 const work="01. CAÇA-VAZAMENTOS — investigação técnica para diagnóstico e localização de vazamentos ocultos e infiltrações, com recursos como geofone, câmera termográfica, detector de umidade e testes pertinentes, buscando evitar quebras desnecessárias.\n02. Inspecionar, conforme pertinência técnica, redes de água fria e quente, esgoto, registros, conexões, louças sanitárias e pontos de consumo associados à ocorrência.";
 const remarks="O valor cobre exclusivamente investigação, localização e diagnóstico. Não inclui reparos hidráulicos, substituição de tubulações ou componentes, impermeabilização, recomposição de alvenaria, revestimentos, pisos, forros ou pintura. Abertura técnica exige autorização prévia; recomposição será orçada à parte. Após o diagnóstico, eventual reparo dependerá de orçamento complementar e aprovação. A garantia do diagnóstico limita-se à região identificada, sem abranger novas ocorrências ou vícios estruturais preexistentes.";
 function fill(){const c=active();if(!c||!hunt(c)||c.qaDraft)return;const a=document.getElementById("qaF02Services"),b=document.getElementById("qaF02Materials"),d=document.getElementById("qaF02Notes");if(!a||!b||!d)return;a.value=work;b.value="Equipamentos técnicos de inspeção conforme o diagnóstico. Materiais de reparo: não inclusos nesta fase.";d.value=remarks;const s=document.getElementById("qaF02Status");if(s)s.textContent="Caça-vazamentos identificado: preço comercial padrão R$ 800,00. Conferir e salvar antes de gerar PDF."}
-function doc(kind){const c=active();if(!c){alert("Abra primeiro um chamado.");return}const title=kind==="budget"?"PRÉ-ORÇAMENTO COMERCIAL":"PARECER TÉCNICO PRELIMINAR",price=kind==="budget"&&hunt(c),services=val("qaF02Services"),materials=val("qaF02Materials"),notes=val("qaF02Notes");if(!services.trim()){alert("Revise o escopo no F02 antes de gerar o documento.");return}
+function doc(kind){const c=active();if(!c){alert("Abra primeiro um chamado.");return}const title=kind==="budget"?"PRÉ-ORÇAMENTO COMERCIAL":"PARECER TÉCNICO PRELIMINAR",price=kind==="budget"&&hunt(c),services=val("qaF02Services"),materials=val("qaF02Materials"),notes=kind==="report"?val("qaF02Notes").split(/(?<=[.!?])\s+|\n+/).filter(x=>!/R\$\s*\d|\b(valor|preço|orçamento|pagamento|total|custo|imposto|margem)\b/i.test(x)).join(" "):val("qaF02Notes");if(!services.trim()){alert("Revise o escopo no F02 antes de gerar o documento.");return}
 const W=window.open("","_blank");if(!W){alert("Permita pop-ups para abrir a prévia de impressão/PDF.");return}
 const q=s=>esc(s).replace(/\n/g,"<br>");
 const body='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>'+title+' - '+esc(c.case_number)+'</title><style>@page{size:A4;margin:17mm}body{font:12px Arial,sans-serif;color:#0a2540}header{border-bottom:4px solid #d3ab38;padding-bottom:13px;margin-bottom:18px}h1{font-size:20px;color:#102a51;margin:5px 0}h2{font-size:13px;background:#103d6b;color:white;padding:7px}p{line-height:1.5}section{margin:13px 0}.brand{color:#073975;font-weight:900;font-size:19px}.meta{font-size:11px;color:#456}strong{color:#103d6b}.total{border-top:2px solid #c7a132;text-align:right;font-size:18px;padding:12px}.warn{color:#a35b00;font-weight:bold}button{margin:10px;padding:10px;background:#123b65;color:white;border:0}pre{font:inherit;white-space:pre-wrap}@media print{button{display:none}}</style></head><body><header><div class="brand">CONSTRU-REI</div><div>BOOM NEGÓCIOS · CNPJ 32.329.721/0001-36</div><div class="meta">Rua Luiz Antonieto, 221 · Jardim das Américas · Curitiba/PR</div></header><h1>'+title+'</h1><p class="warn">DOCUMENTO FICTÍCIO DE TESTE · NÃO É PROPOSTA APROVADA</p><p><strong>Chamado:</strong> '+esc(c.case_number)+'<br><strong>Cliente:</strong> '+esc(c.client)+'<br><strong>Imóvel:</strong> '+esc(c.address)+'<br><strong>Ocorrência:</strong> '+esc(c.problem)+'</p><section><h2>Serviços / mão de obra</h2><p>'+q(services)+'</p></section><section><h2>Materiais e verificações</h2><p>'+q(materials)+'</p></section><section><h2>Observações técnicas</h2><p>'+q(notes)+'</p></section>'+(kind==="budget"?'<section><h2>Condições comerciais</h2><p>Validade: 30 dias, sujeita a conferência antes do envio. Serviços adicionais sujeitos a orçamento complementar.</p><p class="total">'+(price?'Total previsto: R$ 800,00':'Valor: sujeito à revisão comercial')+'</p></section>':'<p><strong>Natureza:</strong> Parecer preliminar baseado na triagem; não comprova a origem e não substitui vistoria técnica.</p>')+'<button onclick="window.print()">Imprimir / Salvar como PDF</button></body></html>';
@@ -1532,88 +1532,71 @@ function init(){
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
-</script><script id="orca-rei-gemini-r3">
+</script><script id="orca-rei-local-r6">
 (function(){
 "use strict";
-const endpoint="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-gemini-r5-restricted-20261013";
-const externalCallsEnabled=false; // Controle explícito: nenhuma chamada Gemini até confirmação do billing e habilitação administrativa.
-const el=id=>document.getElementById(id);
-const val=id=>String(el(id)?.value||"").trim();
-let approved=null;
-const supabaseBase="https://yspuaamokjbrosytqjpg.supabase.co";
-const publishableKey="sb_publishable_CKRScNxEWURNGv4Mz269hg_zdQEmwzS";
-let accessToken=null;
-function token(){return accessToken}
-async function login(email,password){
- const r=await fetch(supabaseBase+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"content-type":"application/json","apikey":publishableKey},body:JSON.stringify({email,password})});
- const d=await r.json().catch(()=>({}));
- if(!r.ok||!d.access_token)throw Error(d.msg||d.error_description||"Credenciais inválidas");
- const v=await fetch(supabaseBase+"/auth/v1/user",{headers:{"apikey":publishableKey,"authorization":"Bearer "+d.access_token}});
- if(!v.ok)throw Error("Não foi possível validar o usuário");
- accessToken=d.access_token;
- return (await v.json()).email||"Conta autenticada";
+const get=id=>document.getElementById(id);
+const value=id=>String(get(id)?.value||"").trim();
+const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money=/\\bR\\$\\s*\\d[\\d.,]*/gi;
+const fields={services:"qaF02Services",materials:"qaF02Materials",notes:"qaF02Notes"};
+function clean(x){return String(x||"").replace(/\\r/g,"").split("\\n").map(y=>y.trim().replace(/\\s{2,}/g," ")).filter(Boolean).join("\\n")}
+function normalizeReport(text){
+return clean(text).split(/(?<=[.!?])\\s+|\\n+/).filter(sentence=>!(/\\bR\\$\\s*\\d|\\b(?:pre[cç]o|valor|or[cç]amento|pagamento|desconto|total|custo|tributo|imposto|margem)\\b/i.test(sentence))).join(" ").trim();
 }
-function make(parent,tag,content){const n=document.createElement(tag);if(content)n.textContent=content;parent.appendChild(n);return n}
+function proposal(before){
+const services=clean(before.services),materials=clean(before.materials),notes=clean(before.notes);
+const exclusions=/n[aã]o (?:est[aã]o )?inclu[ií]d|n[aã]o contemplad|fora do escopo/i.test(notes);
+const suspicious=/infiltra|vazamento|umidade/i.test([services,notes].join(" "));
+const risks=[];
+if(!services)risks.push("Falta descrição dos serviços.");
+if(!materials)risks.push("Materiais e equipamentos ainda não estão definidos.");
+if(!notes)risks.push("Condições técnicas e limitações ainda não estão descritas.");
+if(!exclusions)risks.push("Conferir exclusões de escopo e eventuais reparos complementares.");
+if(suspicious)risks.push("Não apresentar hipótese de infiltração como diagnóstico comprovado.");
+const report=[
+"OBJETO DA ANÁLISE",
+services||"Escopo pendente de descrição.",
+"VERIFICAÇÕES E RECURSOS TÉCNICOS",
+materials||"Recursos sujeitos à confirmação técnica.",
+"RESSALVAS E LIMITAÇÕES",
+normalizeReport(notes)||"Parecer preliminar sujeito à vistoria e confirmação dos elementos observados.",
+"CONCLUSÃO PRELIMINAR",
+"Os dados apresentados constituem informações preliminares de atendimento. A definição da causa, a extensão da intervenção e as recomendações definitivas dependem de verificação técnica e registro dos achados."
+].join("\\n\\n");
+return {services,materials,notes,report,warnings:risks};
+}
 function setup(){
-const container=el("v20Docs");if(!container||el("orcaReiAdjust"))return;
-const auth=make(container,"section");auth.style.cssText="padding:12px;margin:10px 0;border:1px solid #567c9a;border-radius:10px;background:#0b2746;color:#fff";
-make(auth,"strong","Acesso ORÇA-REI — conta Supabase existente");
-make(auth,"p","Entre com uma conta já autorizada. Senhas não são guardadas pela candidata. Esta tela não cria usuários e não ativa consumo pago.");
-const email=make(auth,"input");email.type="email";email.autocomplete="username";email.placeholder="E-mail da conta Supabase";email.className="input";email.style.margin="5px 0";
-const password=make(auth,"input");password.type="password";password.autocomplete="current-password";password.placeholder="Senha";password.className="input";password.style.margin="5px 0";
-const enter=make(auth,"button","Autenticar conta existente");enter.type="button";enter.className="btn";
-const authStatus=make(auth,"p","Não autenticado — IA desabilitada.");
-enter.onclick=async()=>{enter.disabled=true;authStatus.textContent="Validando autenticação...";
-try{const who=await login(email.value.trim(),password.value);password.value="";authStatus.textContent="Sessão autenticada: "+who+". A análise Gemini permanece suspensa até confirmação de custo zero e autorização individual."}
-catch(e){accessToken=null;authStatus.textContent="Acesso não confirmado: "+e.message}
-finally{enter.disabled=false}};
-const diagnose=make(auth,"button","Verificar conexão sem gastar tokens");diagnose.className="btn gold";diagnose.type="button";diagnose.style.margin="8px 6px 0 0";
-diagnose.onclick=async()=>{if(!token()){authStatus.textContent="Faça login com conta Supabase existente antes do diagnóstico.";return}
-diagnose.disabled=true;authStatus.textContent="Verificando conexão protegida, sem acionar Gemini...";
-try{const response=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json","authorization":"Bearer "+token(),"x-orca-diagnostic":"status"},body:"{}"});
-const data=await response.json().catch(()=>({}));
-if(!response.ok){authStatus.textContent="Diagnóstico: "+(data.error||"HTTP "+response.status)+". Nenhuma chamada Gemini realizada.";return}
-authStatus.textContent="Autenticação e autorização válidas. Chave Gemini "+(data.key_configured?"presente":"não configurada")+". Chamadas ao Gemini "+(data.model_calls_enabled?"habilitadas no servidor":"bloqueadas no servidor")+". Nenhum token consumido neste diagnóstico."}
-catch(e){authStatus.textContent="Diagnóstico indisponível: "+e.message}finally{diagnose.disabled=false}};
-const exit=make(auth,"button","Encerrar sessão");exit.className="btn ghost";exit.type="button";exit.style.marginLeft="8px";exit.onclick=()=>{accessToken=null;password.value="";authStatus.textContent="Sessão encerrada.";};
-
-const button=make(container,"button","Ajustar com ORÇA-REI (aguardando ativação segura)");button.id="orcaReiAdjust";button.type="button";button.className="btn gold";button.style.margin="8px 8px 8px 0";button.disabled=!externalCallsEnabled;button.title="Bloqueado preventivamente: não há autenticação operacional nem comprovação de modalidade Gemini gratuita.";
-const budget=el("v20Budget");container.insertBefore(button,budget);
-const panel=make(container,"section");panel.id="orcaReiPanel";panel.style.cssText="display:none;margin:12px 0;padding:15px;border:2px solid #2277c7;border-radius:12px;background:#fff;color:#102b4d;box-shadow:0 3px 14px #0001";
-const status=make(container,"div","ORÇA-REI R5: autenticação de conta existente disponível; IA bloqueada preventivamente. Gemini não executado; sem custos de modelo gerados por esta candidata. Autenticação operacional e elegibilidade da modalidade gratuita ainda não verificadas. Orçamento e PDF originais preservados.");status.id="orcaReiStatus";status.setAttribute("role","status");status.style.cssText="padding:7px 0;color:#1b527d;font-weight:700;font-size:12px";
-const title=make(panel,"h3","Revisão proposta pelo ORÇA-REI");title.style.cssText="margin:0 0 9px;color:#08477d";
-make(panel,"p","Compare e revise antes de aplicar. Os PDFs e a versão atual não são alterados automaticamente.");
-const out={};for(const [id,label] of [["services","Serviços / mão de obra"],["materials","Materiais / verificações"],["notes","Observações técnicas"],["report","Parecer técnico (sem valores)"]]){
-const labelEl=make(panel,"label",label);labelEl.style.cssText="display:block;font-weight:800;color:#163b66;margin:12px 0 3px";
-const t=make(panel,"textarea");t.rows=id==="report"?8:5;t.style.cssText="display:block;width:100%;font:13px Arial,sans-serif;line-height:1.5;padding:10px;color:#092c57;background:#f9fcff;border:1px solid #9fc3e5;border-radius:8px";out[id]=t;
+const host=get("v20Docs");if(!host||get("orcaReiAdjust"))return;
+const button=document.createElement("button");button.id="orcaReiAdjust";button.type="button";button.className="btn gold";button.textContent="Ajustar com ORÇA-REI";button.style.margin="8px 8px 8px 0";
+host.insertBefore(button,get("v20Budget"));
+const status=document.createElement("p");status.id="orcaReiStatus";status.setAttribute("role","status");status.style.cssText="width:100%;font-size:12px;color:#315c8a";status.textContent="Revisão local sem custo. IA Gemini não ativada nesta candidata.";
+host.appendChild(status);
+const panel=document.createElement("section");panel.id="orcaReiPanel";panel.hidden=true;panel.style.cssText="width:100%;border:1px solid #a5c8ee;border-radius:12px;background:#f6fbff;padding:14px;color:#07165b";
+const title=document.createElement("h3");title.textContent="Prévia de ajuste técnico • ORÇA-REI local";panel.appendChild(title);
+const description=document.createElement("p");description.textContent="Modo local: organiza o texto existente e identifica lacunas. Não é uma análise do Gemini, não pesquisa na web nem acrescenta fundamentações externas.";panel.appendChild(description);
+const out={};
+for(const [key,label] of [["services","Serviços / mão de obra"],["materials","Materiais / verificações"],["notes","Observações técnicas"],["report","Parecer sem valores (prévia)"]]){
+const l=document.createElement("label");l.textContent=label;l.style.cssText="display:block;font-weight:800;margin:10px 0 4px";panel.appendChild(l);
+const t=document.createElement("textarea");t.rows=key==="report"?9:4;t.style.cssText="display:block;width:100%;border:1px solid #bcd5ec;border-radius:8px;background:white;color:#07165b;padding:10px;line-height:1.5";panel.appendChild(t);out[key]=t;
 }
-const warnings=make(panel,"div");warnings.style.cssText="font-size:12px;color:#75500b;margin-top:12px";
-const apply=make(panel,"button","Aplicar revisão aos textos do pré-orçamento");apply.className="btn";apply.style.cssText="margin:10px 5px 0 0;background:#0c67ba;color:white";
-const close=make(panel,"button","Fechar prévia");close.className="btn";close.style.cssText="margin:10px 0 0";
-close.onclick=()=>{panel.style.display="none"};
-apply.onclick=()=>{if(!approved){status.textContent="Nenhuma resposta Gemini aprovada para aplicar.";return}
-for(const [src,dest] of [["services","qaF02Services"],["materials","qaF02Materials"],["notes","qaF02Notes"]]){if(val(dest)!==approved.before[src]){status.textContent="Os campos mudaram desde a análise. Gere nova revisão antes de aplicar.";return}}
-for(const [src,dest] of [["services","qaF02Services"],["materials","qaF02Materials"],["notes","qaF02Notes"]]){if(el(dest))el(dest).value=out[src].value}
-status.textContent="Revisão aplicada apenas aos campos editáveis. Salve o rascunho se aprovar. O parecer permanece em prévia separada.";
-approved=null;
+const warnings=document.createElement("p");panel.appendChild(warnings);
+const apply=document.createElement("button");apply.type="button";apply.className="btn gold";apply.textContent="Aplicar ajustes revisados";panel.appendChild(apply);
+const close=document.createElement("button");close.type="button";close.className="btn";close.textContent="Fechar prévia";close.style.marginLeft="8px";panel.appendChild(close);
+host.appendChild(panel);let snapshot=null;
+button.onclick=()=>{
+const before=Object.fromEntries(Object.entries(fields).map(([k,id])=>[k,value(id)]));
+const proposed=proposal(before);snapshot=before;
+for(const key of Object.keys(out))out[key].value=proposed[key];
+warnings.textContent=proposed.warnings.length?"Conferir: "+proposed.warnings.join(" • "):"Nenhuma lacuna básica identificada.";
+panel.hidden=false;status.textContent="Prévia local preparada, sem alterar o rascunho. Revise e aplique somente se estiver melhor.";panel.scrollIntoView({behavior:"smooth",block:"nearest"});
 };
-button.onclick=async()=>{
-if(!externalCallsEnabled){status.textContent="Chamada impedida pela política de custo zero; nenhum texto alterado.";return}
-approved=null;panel.style.display="none";
-const t=token();if(!t){status.textContent="Gemini não acionado: é necessária uma sessão Supabase autenticada. O APP Atendimento V20 funciona em modo fictício local; não há login Supabase nesta tela.";return}
-const input={services:val("qaF02Services"),materials:val("qaF02Materials"),notes:val("qaF02Notes"),case_number:el("qaF02Case")?.textContent||""};
-if(!(input.services||input.materials||input.notes)){status.textContent="Preencha o pré-orçamento primeiro.";return}
-button.disabled=true;status.textContent="ORÇA-REI analisando com Gemini...";
-try{
-const response=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json",authorization:"Bearer "+t},body:JSON.stringify({input})});
-const payload=await response.json().catch(()=>({}));
-if(!response.ok){const errors={authentication_required:"Autenticação ausente",invalid_session:"Sessão expirada",gemini_not_configured:"Chave Gemini ainda não configurada no servidor",model_unavailable:"Modelo Gemini indisponível",auth_configuration_missing:"Configuração de autenticação incompleta"};throw Error(errors[payload.error]||payload.error||"HTTP "+response.status)}
-if(!payload.ok||payload.provider!=="gemini")throw Error("Resposta não comprovada pelo Gemini");
-const r=payload.result||{};for(const field of Object.keys(out))out[field].value=String(r[field]||"");
-warnings.textContent=(r.warnings||[]).join(" • ")+" | "+(r.research_status||"Pesquisa externa não realizada");
-approved={before:input};panel.style.display="block";
-status.textContent="Gemini executado ("+(payload.model||"modelo")+") • Revisão pronta • Aplicação manual";
-}catch(e){status.textContent="Nenhum texto alterado: "+e.message}finally{button.disabled=false}
+close.onclick=()=>{panel.hidden=true};
+apply.onclick=()=>{
+if(!snapshot)return;
+for(const [k,id] of Object.entries(fields))if(value(id)!==snapshot[k]){status.textContent="O rascunho mudou; refaça a revisão para evitar sobreposição.";return;}
+for(const [k,id] of Object.entries(fields))get(id).value=out[k].value;
+panel.hidden=true;snapshot=null;status.textContent="Ajustes aplicados no rascunho, ainda não salvos. Confira e clique em Salvar rascunho fictício.";
 };
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});else setup();
