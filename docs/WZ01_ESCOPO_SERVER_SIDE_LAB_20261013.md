@@ -93,3 +93,20 @@ Adicionado contrato puro `verifyLegacyRbacRule` sem rede/banco, restrito a regra
 Testes sintéticos incluem permissões Gabi READ/WRITE para F01/F02 e negativos contra `NONE`, `READ` para escrita, role/área/código trocados, desativação, fluxo F03 e ações desconhecidas. A matriz real pode evoluir: não copiar os dados de laboratório diretamente para Edge. Sem novas funções ou objetos no banco; nenhum endpoint alterado.
 
 Critérios restantes: autoridade do login validada pelo servidor; associação Auth humano e workspace; resolução de 13 handoffs sem FK e três casos sem workspace mediante prova explícita (não backfill automático); ACL de caso real; mapeamento final por ação/fluxo, E2E de negativas e aprovação antes da implantação.
+
+
+## 13/10 — Fechamento técnico da compatibilidade de rotas v17 (candidata #114)
+
+**Fonte observada diretamente:** `cr-flow-runtime-v2` implantada, versão 17, `verify_jwt=false`, 14 rotas POST privadas. Esta versão continua **inalterada** em produção. Os arquivos desta seção são somente scripts de laboratório com testes sintéticos.
+
+- `security/contracts/wz01-supabase-auth-principal.mjs`: utiliza exclusivamente o **Supabase Auth existente**, injetado pelo servidor; `auth.getUser(accessToken)` valida token/usuário. Não permite identidade em `user_metadata`, corpo, `actor` ou `workspace_id` do cliente. A integração real no runtime não foi instalada.
+- `security/contracts/wz01-runtime-v17-perimeter.mjs`: manifesto explícito das **14 rotas**, método HTTP, controle de fase, acesso por caso e escopo de listagem. A consulta `list` somente pode seguir um plano com `workspace_id` **e** `case_id` autorizado, nunca `service_role.select('*')` indiscriminado.
+- **Onze** rotas de caso têm um plano que requer principal verificado, membership, caso, permissão de operação e atribuição verificada antes de qualquer acesso.
+- As exceções reais da v17 são `budget-audit` (permite execução sem token) e `ai-assist` (não usa token de caso). Ficam **deliberadamente bloqueadas no novo plano**, até haver contrato autenticado específico e teste de UX; não se deve implantar esta candidata cegamente, pois quebraria essas funcionalidades.
+- Os testes do arquivo `wz01-flow-authorization.test.mjs` cobrem todas as rotas inventariadas, token ausente/errado, enumeração de ações, `GET/POST/OPTIONS`, workspace divergente, atribuição ausente e exceções.
+- O projeto `CONSTRU-REI Centro de Controle` registra 4 perfis esperados, **0 Auth users**, **0 auth_user_id vinculados** e 2 validações humanas registradas na consulta de 13/10; tabelas `cr_flow_handoffs`, `cr_cases_v1` e `cr_rbac_expected_human_users` têm RLS ativado. RLS **não neutraliza** a chave privilegiada da função v17.
+- Nenhum vínculo Auth/workspace/caso pode ser deduzido de nomes, números de atendimento ou tokens. **Não** criar ou cadastrar usuários falsos, realizar migração de dados por inferência ou alterar permissões sem validação da pessoa.
+
+**Gate de promoção NÃO atendido**: suporte real para os adaptadores de membership e atribuição, tratamento dos casos legados sem relacionamento, rotas tokenless redesenhadas/compatíveis, verificação de RLS/SQL das leituras e escritas e testes E2E em ambiente isolado. Não confundir o sucesso dos testes de laboratório com conclusão P0.
+
+**Controle de produção:** nenhuma publicação, alteração de Auth, Supabase Edge, Google Cloud, Central, F02, dados financeiros ou backups foi feita por esta candidata. `main` permanece fora da PR #114.
