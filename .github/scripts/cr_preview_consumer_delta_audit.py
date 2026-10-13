@@ -3,7 +3,7 @@
 
 Nao remove, move, hospeda, implanta, publica, altera banco ou autoriza limpeza.
 Relacoes estaticas e identidade de bytes sao INDICIOS, nunca prova de desuso.
-Fonte do inventario: docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json.
+Fonte do inventario: docs/AMBIENTES_PREVIEW_INVENTARIO_20261013.json.
 """
 import hashlib
 import json
@@ -14,7 +14,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-INVENTORY = ROOT / "docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
+INVENTORY = ROOT / "docs/AMBIENTES_PREVIEW_INVENTARIO_20261013.json"
 LINKS = ROOT / "docs/official-links-registry.json"
 # Conservative literal paths only: dynamic JS, URLs assembled at runtime,
 # service workers, external consumers, pinned revisions remain out of scope.
@@ -38,7 +38,7 @@ def main():
     aliases = {item["slug"] for item in links}
     entries = inventory.get("folders", [])
     names = [item["path"].strip("/").split("/")[1] for item in entries]
-    if len(entries) != 121 or len(set(names)) != 121:
+    if len(entries) != 123 or len(set(names)) != 123:
         errors.append("Inventario preview alterado: requer reconciliacao")
     if len(links) != len(aliases) or len(aliases) != 39:
         errors.append("Catalogo de aliases requer reconciliacao")
