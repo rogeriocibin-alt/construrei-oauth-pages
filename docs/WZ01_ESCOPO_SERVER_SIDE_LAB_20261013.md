@@ -83,3 +83,13 @@ Próxima etapa de execução técnica sem ação humana: especificar adaptadores
 **Alçada reservada à Diretoria:** confirmar os quatro usuários reais e permitir emissão/vinculação de credenciais próprias, não compartilhadas; duas validações humanas antigas não substituem Auth novo. Aprovar a matriz final de acesso após demonstração de segurança e UX. **Todo desenho, prova, consulta, mapeamento, implementação candidata e troubleshooting são responsabilidade técnica.**
 
 **Limite expresso de autorização:** o consentimento geral para prosseguir não cria vínculo fictício nem autoriza divulgar credenciais ou derrubar o APP. Os módulos atuais permanecem homologados enquanto o ambiente candidato não atingir os critérios acima.
+
+## Evidência 13/10 — interpretação segura da matriz RBAC real
+
+Consulta apenas leitura da tabela `public.cr_rbac_permission_matrix`: 12 linhas para quatro papéis humanos. Os campos disponíveis são `role_code`, `permission_code`, `area_code`, `access_level`, `status`, evidências e metadados. Uma regra `status=ACTIVE` com `access_level=NONE` **é negação explícita**, não autorização; isto ocorre em áreas sensíveis para Fabrício e no GRC para operação. A tabela não contém por si só `auth_user_id`, `workspace_id` nem vínculo a caso, logo NÃO é ACL de usuário.
+
+Adicionado contrato puro `verifyLegacyRbacRule` sem rede/banco, restrito a regras F01/F02 comprovadamente existentes para o papel `OPERACAO_ATENDIMENTO_GABI`. Ele exige a correspondência exata `role_code`, `permission_code`, `area_code`, `status=ACTIVE`, `access_level` mínimo de `READ`/`WRITE` por operação. Ações, fluxos, roles e status sem mapeamento são negados. Retorno inclui `evidenceOnly=true` e `approvedForLiveDeployment=false`; mesmo a validação de uma regra **não autoriza** nenhuma pessoa sem Auth e ACL verificáveis.
+
+Testes sintéticos incluem permissões Gabi READ/WRITE para F01/F02 e negativos contra `NONE`, `READ` para escrita, role/área/código trocados, desativação, fluxo F03 e ações desconhecidas. A matriz real pode evoluir: não copiar os dados de laboratório diretamente para Edge. Sem novas funções ou objetos no banco; nenhum endpoint alterado.
+
+Critérios restantes: autoridade do login validada pelo servidor; associação Auth humano e workspace; resolução de 13 handoffs sem FK e três casos sem workspace mediante prova explícita (não backfill automático); ACL de caso real; mapeamento final por ação/fluxo, E2E de negativas e aprovação antes da implantação.
