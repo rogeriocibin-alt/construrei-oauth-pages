@@ -49,6 +49,14 @@ def evaluate(key: str, status: int, destination: str | None) -> tuple[str, str]:
     return "PASS", "Redirect is the known production destination"
 
 
+def evaluate_page(status: int) -> tuple[str, str]:
+    if status == 200:
+        return "PASS", "Canonical public page responded 200"
+    if status in (401, 403, 404, 410):
+        return "FAIL", "Known canonical page is inaccessible or missing"
+    return "UNVERIFIED", "Page did not return a definitive public 200"
+
+
 def self_test() -> None:
     for key, (path, _) in ROUTES.items():
         state, _ = evaluate(key, 302, PAGES + path)
@@ -62,7 +70,12 @@ def self_test() -> None:
     for key, code, url in checks:
         assert evaluate(key, code, url)[0] == "FAIL", key
     assert evaluate("f00", 503, None)[0] == "UNVERIFIED"
-    print("PASS: known routes and 4 negative redirect regression cases")
+    assert evaluate_page(200)[0] == "PASS"
+    for status in (401, 403, 404, 410):
+        assert evaluate_page(status)[0] == "FAIL"
+    for status in (302, 503):
+        assert evaluate_page(status)[0] == "UNVERIFIED"
+    print("PASS: redirect regression and public page availability classifications")
 
 
 def probe() -> int:
@@ -88,6 +101,40 @@ def probe() -> int:
             "route": key, "status": result, "http_status": status,
             "reason": reason,
         })
+    # Verify only the four preapproved static page URLs. Never follow links,
+    # execute scripts, submit forms or inspect a response body.
+    targets = []
+    for observation in observations:
+        key = observation["route"]
+        if observation["status"] not in ("PASS", "WARNING"):
+            targets.append({
+                "route": key, "status": "UNVERIFIED",
+                "reason": "Redirect not verified; destination not probed"
+            })
+            continue
+        path, _ = ROUTES[key]
+        request = urllib.request.Request(
+            PAGES + path, method="HEAD",
+            headers={"User-Agent": "CONSTRU-REI-Canonical-ReadOnly-CI/1"},
+        )
+        try:
+            with opener.open(request, timeout=9) as response:
+                target_status = response.status
+        except urllib.error.HTTPError as exc:
+            target_status = exc.code
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            targets.append({
+                "route": key, "status": "UNVERIFIED",
+                "reason": "Public page response unavailable: " + type(exc).__name__
+            })
+            continue
+        state, reason = evaluate_page(target_status)
+        targets.append({
+            "route": key, "status": state,
+            "http_status": target_status, "reason": reason,
+        })
+    target_counts = {x: sum(r["status"] == x for r in targets)
+                     for x in ("PASS", "FAIL", "UNVERIFIED")}
     counts = {x: sum(r["status"] == x for r in observations)
               for x in ("PASS", "FAIL", "WARNING", "UNVERIFIED")}
     print(json.dumps({
@@ -98,6 +145,9 @@ def probe() -> int:
         "not_full_e2e_or_authorization_test": True,
         "known_app_preview_not_approved": True,
         "counts": counts, "checks": observations,
+        "destination_page_counts": target_counts,
+        "destination_page_checks": targets,
+        "destination_page_request_type": "HEAD only, no body, no redirects followed",
     }, ensure_ascii=False, indent=2))
     # Surface persistent debt where operators see workflow health, not only logs.
     # These annotations reveal no headers, credentials, query payload or user data.
@@ -110,6 +160,15 @@ def probe() -> int:
             print("::error title=CONSTRU-REI route drift::"
                   + observation["route"]+" — "+observation["reason"])
 
+    for observation in targets:
+        state = observation["status"]
+        if state == "FAIL":
+            print("::error title=CONSTRU-REI page inaccessible::"
+                  + observation["route"] + " — " + observation["reason"])
+        elif state == "UNVERIFIED":
+            print("::warning title=CONSTRU-REI page unverified::"
+                  + observation["route"] + " — " + observation["reason"])
+
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:
         lines = [
@@ -119,6 +178,16 @@ def probe() -> int:
             "|---|---|---|",
         ]
         for observation in observations:
+            lines.append("| "+observation["route"]+" | "+observation["status"]
+                         +" | "+observation["reason"]+" |")
+        lines += [
+            "",
+            "### Disponibilidade das páginas de destino",
+            "",
+            "| Página | Resultado HEAD | Observação |",
+            "|---|---|---|",
+        ]
+        for observation in targets:
             lines.append("| "+observation["route"]+" | "+observation["status"]
                          +" | "+observation["reason"]+" |")
         lines += [
@@ -134,8 +203,8 @@ def probe() -> int:
         ]
         with open(summary, "a", encoding="utf-8") as fp:
             fp.write("\n".join(lines))
-    if counts["FAIL"]:
-        print("FAIL CLOSED: unexpected official redirect destination", file=sys.stderr)
+    if counts["FAIL"] or target_counts["FAIL"]:
+        print("FAIL CLOSED: unexpected redirect or inaccessible official page", file=sys.stderr)
         return 1
     return 0
 
