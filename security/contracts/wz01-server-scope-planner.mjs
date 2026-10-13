@@ -141,7 +141,7 @@ export async function verifyCaseScopeFromTrustedAdapters({
     const handoff = await adapters.findHandoffByToken({
       token:handoffToken,
     });
-    if (!handoff || !uuid(handoff.case_id)) return DENY;
+    if (!handoff || handoff.token !== handoffToken || !uuid(handoff.case_id)) return DENY;
     const caseRecord = await adapters.findCaseById({
       caseId:handoff.case_id,
     });
