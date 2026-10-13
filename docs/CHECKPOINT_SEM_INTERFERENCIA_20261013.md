@@ -92,3 +92,18 @@ Comparação pontual Supabase, 05:00 a 08:00 UTC: 12/10 `storage_logs=6807`, `ed
 Bloqueio separado: os 6 sites Netlify sem deploy recuperável não devem ser replicados artificialmente. Apenas o dashboard possui deploy `ready` identificado no conector; documentação preserva fontes Git históricas relacionadas quando disponíveis. A decisão humana de recriar um serviço só deve surgir depois de inventário de consumidores, sem necessidade de excluir ou despublicar qualquer URL nesta rodada.
 
 **Regra de responsabilidade:** engenharia/inventário/contratos/testes/checkpoint → executores técnicos; concessão de acesso GCP, vínculo de contas humanas Auth e homologação final de mudanças operacionais → Diretoria. Nenhuma aprovação adicional é necessária apenas para manter candidatas isoladas e executar testes de laboratório.
+
+## 9. Auditoria incremental de duplicidade e deriva de previews
+
+**Inventário verificado somente por leitura da árvore Git `main`** (árvore SHA `4023a924a15a7c93c8540eb4b8156b8e0182bb24`, 13/10/2026): `truncated=false`, 1.164 objetos no tree, 357 blobs `preview/`, 22.920.888 bytes lógicos, 123 diretórios imediatos.
+
+O inventário canônico anterior `docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json` declara 355 arquivos, 22.656.682 bytes, 121 diretórios. **Todas as 121 pastas antigas conferiram exatamente em número de arquivos e bytes**. As diferenças decorrem de duas candidatas novas em `main`:
+
+- `preview/app-atendimento-f02-orca-rei-ajustar-candidate-20261013/`
+- `preview/app-atendimento-f02-orca-rei-r2-20261013/`
+
+Dedupe comprovado por Git blob SHA (bytes idênticos, não por nome): 39 grupos de arquivos repetidos entre previews, representando **2.435.402 bytes de repetição lógica de caminho**; 120 arquivos de preview também são byte-idênticos a pelo menos um arquivo fora de preview. Exemplos representativos: ícones SVG repetidos do Gestor, `central.css`, apresentações e `project-data.json` já encontrados em versões históricas/produção. Git pode armazenar um único blob físico para caminhos distintos; não interpretar esse número como economia de armazenamento.
+
+**Decisão técnica segura:** nenhuma exclusão, renomeação, alteração de URL, reescrita da versão histórica ou update de `docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json` em produção nesta candidata. O inventário antigo está datado 11/10, não é prova de integridade absoluta de `main` atual. As duas novas candidatas F02 exigem classificação explícita da dependência antes de qualquer higienização. A própria auditoria de 39 aliases/21 módulos, consumidores externos, PWA/cache, pinned refs, rollback e dispositivos continua mandatória. Não confundir duplicidade por hash com desuso.
+
+**Responsabilidade:** o saneamento e atualização isolada futura do inventário cabem à engenharia, não à Diretoria; registrar delta no item mestre `ARCH-SAN-20261012`. Não adicionar tarefas duplicadas nem criar um novo master. `PR #113` continua exclusivamente com três arquivos (este documento, script de guard e testes) e não altera qualquer artefato executável em produção.
