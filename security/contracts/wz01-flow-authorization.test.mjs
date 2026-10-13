@@ -115,7 +115,7 @@ const scopeFixture=()=>({
     authUserId:SCOPE_U,workspaceId:SCOPE_W},
   handoff:{serverVerified:true,case_id:SCOPE_C},
   caseRecord:{serverVerified:true,case_id:SCOPE_C,workspace_id:SCOPE_W},
-  rolePermission:{serverVerified:true,allowed:true,authUserId:SCOPE_U,action:'get'},
+  rolePermission:{serverVerified:true,allowed:true,authUserId:SCOPE_U,workspaceId:SCOPE_W,action:'get'},
   assignment:{serverVerified:true,allowed:true,authUserId:SCOPE_U,
     caseId:SCOPE_C,workspaceId:SCOPE_W,action:'get'},
   action:'get',
@@ -175,6 +175,7 @@ test('WZ-01 scope: assignment and action grant are independently required',()=>{
   scopeReject({rolePermission:null});
   scopeReject({rolePermission:{...f.rolePermission,allowed:false}});
   scopeReject({rolePermission:{...f.rolePermission,action:'route'}});
+  scopeReject({rolePermission:{...f.rolePermission,workspaceId:SCOPE_OTHER}});
   scopeReject({action:'flow-save'});
 });
 
@@ -239,8 +240,8 @@ const verifiedLabAdapters=()=>({
   }),
   findHandoffByToken:async({token})=>({case_id:SCOPE_C,token}),
   findCaseById:async({caseId})=>({case_id:caseId,workspace_id:SCOPE_W}),
-  getActionPermission:async({authUserId,action})=>({
-    authUserId,action,allowed:true,
+  getActionPermission:async({authUserId,workspaceId,action})=>({
+    authUserId,workspaceId,action,allowed:true,
   }),
   getCaseAssignment:async({authUserId,caseId,workspaceId,action})=>({
     authUserId,caseId,workspaceId,action,allowed:true,
@@ -311,13 +312,16 @@ test('WZ-01 adapter seam: no cross-tenant read, forged actor or role escalation'
   a.findCaseById=async({caseId})=>({case_id:caseId,workspace_id:SCOPE_OTHER});
   assert.equal((await checkAdapter({adapters:a})).status,403);
   a=verifiedLabAdapters();
-  a.getActionPermission=async({action})=>({allowed:true,action,authUserId:SCOPE_OTHER});
+  a.getActionPermission=async({action,workspaceId})=>({allowed:true,action,workspaceId,authUserId:SCOPE_OTHER});
   assert.equal((await checkAdapter({adapters:a})).status,403);
   a=verifiedLabAdapters();
   a.getCaseAssignment=async({authUserId,caseId,workspaceId})=>({
     authUserId,caseId,workspaceId,allowed:true,action:'flow-save',
   });
   assert.equal((await checkAdapter({adapters:a})).status,403);
+  const otherGrant=verifiedLabAdapters();
+  otherGrant.getActionPermission=async({authUserId,action})=>({authUserId,action,workspaceId:SCOPE_OTHER,allowed:true});
+  assert.equal((await checkAdapter({adapters:otherGrant})).status,403);
   const authorized=await checkAdapter({
     actor:SCOPE_OTHER,tenantId:SCOPE_OTHER,
     role:'ADMIN',body:{userId:SCOPE_OTHER,tenantId:SCOPE_OTHER,role:'ADMIN'},
