@@ -13,6 +13,7 @@ on:
       - '.github/workflows/central-canonical-guard.yml'
       - '.github/scripts/cr_central_full_scope_audit.py'
       - '.github/scripts/cr_ecosystem_contract_audit.py'
+      - '.github/scripts/cr_public_router_liveness_audit.py'
       - 'docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md'
       - 'gestor-projeto/project-data.json'
       - 'gestor-projeto/version.json'
@@ -112,3 +113,7 @@ jobs:
         run: python3 .github/scripts/cr_central_full_scope_audit.py
       - name: Audit Gestor, official rules, preview dependencies and backup workflow catalogue
         run: python3 .github/scripts/cr_ecosystem_contract_audit.py
+      - name: Validate public router regression logic without any network or data
+        run: python3 .github/scripts/cr_public_router_liveness_audit.py --self-test
+      - name: Probe only public Edge redirect headers; warn on known APP preview
+        run: python3 .github/scripts/cr_public_router_liveness_audit.py --probe
