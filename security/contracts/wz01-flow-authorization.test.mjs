@@ -556,3 +556,93 @@ test('WZ-01 Supabase Auth: identity validation does not bypass workspace and cas
   const noCaseGrant={...adapters,getCaseAssignment:async()=>null};
   assert.equal((await checkAdapter({adapters:noCaseGrant})).status,403);
 });
+
+
+import {runtimeV17Manifest,planRuntimeV17Request}
+  from './wz01-runtime-v17-perimeter.mjs';
+
+const runtimeCase=(api,overrides={})=>planRuntimeV17Request({
+  method:'POST',api,
+  body:{token:'fictional-unique-handoff',flow_code:'F04'},
+  authorization:TOKEN,adapters:verifiedLabAdapters(),...overrides,
+});
+
+test('WZ-01 v17 manifest: every inspected route explicitly classified',()=>{
+  assert.equal(runtimeV17Manifest.inspectedVersion,17);
+  assert.equal(runtimeV17Manifest.verifyJwtAtInspection,false);
+  assert.equal(runtimeV17Manifest.observedPrivateOperations.length,14);
+  assert.deepEqual(new Set(runtimeV17Manifest.observedPrivateOperations),
+    new Set(ops.private));
+  assert.equal(runtimeV17Manifest.productionWiringApproved,false);
+  assert.deepEqual(runtimeV17Manifest.exceptionalOperations,['budget-audit','ai-assist']);
+});
+
+test('WZ-01 v17 perimeter: health preflight only; GET list and unknown routes denied',async()=>{
+  const r=(x)=>planRuntimeV17Request(x);
+  assert.equal((await r({method:'GET',api:'health'})).healthOnly,true);
+  assert.equal((await r({method:'OPTIONS',api:'get'})).preflightOnly,true);
+  assert.equal((await r({method:'GET',api:'list'})).status,405);
+  assert.equal((await r({method:'POST',api:'health',body:{}})).status,403);
+  assert.equal((await r({method:'POST',api:'new-admin',body:{}})).status,403);
+  assert.equal((await r({method:'DELETE',api:'route'})).status,405);
+  assert.equal((await r({method:'POST',api:'get'})).status,400);
+});
+
+test('WZ-01 v17 perimeter: all 11 case-bound routes return scoped plans only',async()=>{
+  for(const api of runtimeV17Manifest.caseScopedOperations) {
+    const result=await runtimeCase(api);
+    assert.equal(result.ok,true,api);
+    assert.equal(result.actor,SCOPE_U,api);
+    assert.equal(result.workspaceId,SCOPE_W,api);
+    assert.equal(result.caseId,SCOPE_C,api);
+    assert.equal(result.queryMode,'SCOPED_CASE_PLAN_ONLY',api);
+    assert.equal(result.approvedForLiveDeployment,false);
+    assert.equal(Object.hasOwn(result,'rows'),false);
+  }
+});
+
+test('WZ-01 v17 perimeter: legacy tokenless AI/audit operations remain blocked',async()=>{
+  for(const api of runtimeV17Manifest.exceptionalOperations) {
+    const out=await runtimeCase(api);
+    assert.deepEqual(out,{ok:false,status:403,
+      code:'EXCEPTIONAL_ROUTE_REQUIRES_REDESIGN'});
+    const noToken=await runtimeCase(api,{body:{context:'synthetic'}});
+    assert.equal(noToken.status,403);
+  }
+});
+
+test('WZ-01 v17 perimeter: list enforces phase and per-case authorization plans',async()=>{
+  const r=(overrides={})=>planRuntimeV17Request({
+    method:'POST',api:'list',body:{phase:'F02'},authorization:TOKEN,
+    adapters:listAdapters(),...overrides,
+  });
+  const success=await r();
+  assert.equal(success.ok,true);
+  assert.equal(success.phase,'F02');
+  assert.equal(success.workspaceId,SCOPE_W);
+  assert.deepEqual(success.caseIds,[SCOPE_C]);
+  assert.equal(success.queryMode,'SCOPED_LIST_PLAN_ONLY');
+  assert.equal(Object.hasOwn(success,'rows'),false);
+  assert.equal((await r({body:{phase:'F09'}})).status,400);
+  assert.equal((await r({body:{phase:'invalid'}})).status,400);
+  assert.equal((await r({authorization:null})).status,401);
+  const a=listAdapters();
+  a.getAuthorizedCaseIds=async()=>({mode:'all-tenants',caseIds:[SCOPE_C]});
+  assert.equal((await r({adapters:a})).status,403);
+});
+
+test('WZ-01 v17 perimeter: malformed, cross-workspace and missing case bindings denied',async()=>{
+  assert.equal((await runtimeCase('get',{authorization:null})).status,401);
+  assert.equal((await runtimeCase('get',{body:{}})).status,403);
+  assert.equal((await runtimeCase('flow-save',{body:{token:'fictional-unique-handoff',flow_code:'F01'}})).status,400);
+  assert.equal((await runtimeCase('flow-advance',{body:{token:'fictional-unique-handoff',flow_code:'F10'}})).status,400);
+  const wrongWorkspace=verifiedLabAdapters();
+  wrongWorkspace.findCaseById=async({caseId})=>({case_id:caseId,workspace_id:SCOPE_OTHER});
+  assert.equal((await runtimeCase('route',{adapters:wrongWorkspace})).status,403);
+  const noAssignment=verifiedLabAdapters();
+  noAssignment.getCaseAssignment=async()=>null;
+  assert.equal((await runtimeCase('budget-release',{adapters:noAssignment})).status,403);
+  const nullFk=verifiedLabAdapters();
+  nullFk.findHandoffByToken=async({token})=>({token,case_id:null});
+  assert.equal((await runtimeCase('flow-state',{adapters:nullFk})).status,403);
+});
