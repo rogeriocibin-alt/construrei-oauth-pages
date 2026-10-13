@@ -85,10 +85,10 @@ def main():
     assert OUTPUT.exists(), "Official plan absent"
     assert len(preview) > 0 and total_bytes > 0, "Inventory failed or unexpected empty checkout"
     # Contract registry — never move a preview without checking its real consumers.
-    registry_path = ROOT / "docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
+    registry_path = ROOT / "docs/AMBIENTES_PREVIEW_INVENTARIO_20261013.json"
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
     listed = registry["folders"]
-    assert len(listed) == registry["folder_count"] == 121, "Preview registry incomplete"
+    assert len(listed) == registry["folder_count"] == 123, "Preview registry incomplete"
     assert len({e["path"] for e in listed}) == len(listed), "Duplicate registry paths"
     assert all(not e["authorized_to_move"] and not e["authorized_to_delete"] for e in listed), "Unauthorized migration flag"
     actual_dirs = {item[0].split("/")[1] for item in preview}
