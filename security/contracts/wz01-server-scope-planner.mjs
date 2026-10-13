@@ -63,7 +63,8 @@ export function verifyServerCaseScope({
   if (!rolePermission || rolePermission.serverVerified !== true ||
       rolePermission.allowed !== true ||
       rolePermission.action !== action ||
-      rolePermission.authUserId !== principal.userId) return DENY;
+      rolePermission.authUserId !== principal.userId ||
+      rolePermission.workspaceId !== caseRecord.workspace_id) return DENY;
 
   if (!assignment || assignment.serverVerified !== true ||
       assignment.allowed !== true ||
@@ -150,7 +151,7 @@ export async function verifyCaseScopeFromTrustedAdapters({
         caseRecord.workspace_id !== membership.workspaceId) return DENY;
 
     const rolePermission = await adapters.getActionPermission({
-      authUserId:principal.userId, action,
+      authUserId:principal.userId, workspaceId:membership.workspaceId, action,
     });
     const assignment = await adapters.getCaseAssignment({
       authUserId:principal.userId, caseId:caseRecord.case_id,
@@ -166,7 +167,8 @@ export async function verifyCaseScopeFromTrustedAdapters({
       caseRecord:{serverVerified:true,case_id:caseRecord.case_id,
         workspace_id:caseRecord.workspace_id},
       rolePermission:{serverVerified:true,allowed:rolePermission?.allowed,
-        action:rolePermission?.action,authUserId:rolePermission?.authUserId},
+        action:rolePermission?.action,authUserId:rolePermission?.authUserId,
+        workspaceId:rolePermission?.workspaceId},
       assignment:{serverVerified:true,allowed:assignment?.allowed,
         action:assignment?.action,authUserId:assignment?.authUserId,
         workspaceId:assignment?.workspaceId,caseId:assignment?.caseId},
