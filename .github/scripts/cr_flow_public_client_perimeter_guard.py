@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Static, read-only regression gate for published F00–F09 Edge destinations."""
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -8,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 FLOW = ROOT / "production/flow-canonical-20261001"
 PATTERN = re.compile(r"/functions/v1/([a-z][a-z0-9-]*)")
+SESSION_MARKER = re.compile(r"authorization|x-f00-key|auth\.getsession|auth\.getuser|signinwith", re.IGNORECASE)
 EXPECTED = {
     "f00": {"cr-f00-intake"},
     "f01": {"cr-flow-runtime-v2"},
@@ -35,7 +37,9 @@ def self_test():
         assert introduced == ["unknown-new-service"]
         _, missing, _ = compare(flow, "")
         assert missing == sorted(targets)
-    print("PASS: ten baseline routes and twenty negative routing tests")
+    assert not SESSION_MARKER.search('headers: {"content-type": "application/json"}')
+    assert SESSION_MARKER.search('headers: {Authorization: sessionToken}')
+    print("PASS: ten baseline routes, twenty negative routing tests, and marker classification")
 
 
 def main():
@@ -49,7 +53,8 @@ def main():
             continue
         content = source.read_text(encoding="utf-8")
         observed, missing, introduced = compare(flow, content)
-        findings.append({"flow": flow, "edge_targets": sorted(observed)})
+        findings.append({"flow": flow, "edge_targets": sorted(observed),
+                         "client_session_marker_present": bool(SESSION_MARKER.search(content))})
         if missing or introduced:
             errors.append({"flow": flow, "missing": missing, "introduced": introduced})
     print(json.dumps({
@@ -61,6 +66,18 @@ def main():
         "auth_approval_status": "P0_WZ_01_PENDING",
         "routes": findings, "errors": errors
     }, ensure_ascii=False, indent=2))
+    no_marker = [item["flow"] for item in findings if not item["client_session_marker_present"]]
+    if no_marker:
+        print("::warning title=CONSTRU-REI WZ-01 P0::Official clients lack visible session markers: "
+              + ", ".join(no_marker) + ". Static hint only; Edge authorization unverified.")
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        with open(summary, "a", encoding="utf-8") as f:
+            f.write("\n## WZ-01 • F00–F09 security (static check only)\n\n")
+            f.write(f"- HTML pages inspected: **{len(findings)}** / 10\n")
+            f.write(f"- Pages without a recognizable session marker: **{len(no_marker)}**\n")
+            f.write("- **P0 OPEN**: a marker does not prove identity, role or tenant authorization.\n")
+            f.write("- No live cases, API endpoints or production settings probed or modified.\n")
     return int(bool(errors))
 
 
