@@ -100,8 +100,8 @@ def main():
                  if item["status"] in PROTECTED} | TRANSITIVE
     unclassified = {name for name, item in zip(names, entries)
                     if item["status"] == "UNCLASSIFIED_REVIEW_ONLY"}
-    if len(protected - TRANSITIVE) != 12 or len(unclassified) != 109:
-        errors.append("Base 12 protegidos/109 por revisar mudou: rever inventario")
+    if len(protected - TRANSITIVE) != 12 or len(unclassified) != 111:
+        errors.append("Base 12 protegidos/111 por revisar mudou: rever inventario")
     referred_from_non_preview = {
         name for name, refs in consumers.items()
         if any(kind == "NON_PREVIEW_STATIC" for kind, _ in refs)
