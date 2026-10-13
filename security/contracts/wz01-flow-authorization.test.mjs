@@ -490,3 +490,69 @@ test('WZ-01 legacy RBAC: stale, forged, unmapped or cross-flow rule fails',()=>{
       JSON.stringify(patch));
   }
 });
+
+
+import { makeSupabaseAuthSessionVerifier, authBridgeReadiness }
+  from './wz01-supabase-auth-principal.mjs';
+
+test('WZ-01 Supabase Auth: verified principal comes only from getUser, never user_metadata',async()=>{
+  const calls=[];
+  const client={auth:{getUser:async(accessToken)=>{
+    calls.push(accessToken);
+    return {data:{user:{id:SCOPE_U,user_metadata:{
+      user_id:SCOPE_OTHER,role:'ADMIN',workspace_id:SCOPE_OTHER,
+    }}},error:null};
+  }}};
+  const verifySession=makeSupabaseAuthSessionVerifier({authClient:client});
+  const identity=await verifySession({accessToken:'synthetic-session-token-123',
+    userId:SCOPE_OTHER,role:'ADMIN',workspaceId:SCOPE_OTHER});
+  assert.deepEqual(identity,{userId:SCOPE_U,sessionActive:true});
+  assert.deepEqual(calls,['synthetic-session-token-123']);
+  assert.equal(Object.hasOwn(identity,'role'),false);
+  assert.equal(Object.hasOwn(identity,'workspaceId'),false);
+  assert.equal(Object.isFrozen(identity),true);
+  assert.equal(authBridgeReadiness.productionWiringApproved,false);
+  assert.equal(authBridgeReadiness.provesCaseAssignment,false);
+});
+
+test('WZ-01 Supabase Auth: invalid, malformed or revoked tokens fail closed',async()=>{
+  let calls=0;
+  const verifySession=makeSupabaseAuthSessionVerifier({authClient:{auth:{
+    getUser:async()=>{
+      calls++;
+      return {data:{user:null},error:{message:'synthetic revoked token'}};
+    },
+  }}});
+  for(const token of [null,'', 'bad token','short','\n injected','a'.repeat(8193)]) {
+    assert.deepEqual(await verifySession({accessToken:token}),{sessionActive:false});
+  }
+  assert.equal(calls,0,'Malformed tokens must never reach the provider');
+  assert.deepEqual(await verifySession({accessToken:'synthetic-session-token-123'}),{sessionActive:false});
+  assert.equal(calls,1);
+  const badId=makeSupabaseAuthSessionVerifier({authClient:{auth:{
+    getUser:async()=>({data:{user:{id:'not-a-uuid'}},error:null}),
+  }}});
+  assert.deepEqual(await badId({accessToken:'synthetic-session-token-123'}),{sessionActive:false});
+  const failed=makeSupabaseAuthSessionVerifier({authClient:{auth:{
+    getUser:async()=>{throw Error('provider private detail MUST_NOT_LEAK');},
+  }}});
+  const denied=await failed({accessToken:'synthetic-session-token-123'});
+  assert.deepEqual(denied,{sessionActive:false});
+  assert.equal(JSON.stringify(denied).includes('MUST_NOT_LEAK'),false);
+  assert.throws(()=>makeSupabaseAuthSessionVerifier({}),TypeError);
+});
+
+test('WZ-01 Supabase Auth: identity validation does not bypass workspace and case grants',async()=>{
+  const verifier=makeSupabaseAuthSessionVerifier({authClient:{auth:{
+    getUser:async()=>({data:{user:{id:SCOPE_U}},error:null}),
+  }}});
+  const adapters={...verifiedLabAdapters(),verifySession:verifier};
+  const approved=await checkAdapter({adapters,actor:SCOPE_OTHER,tenantId:SCOPE_OTHER});
+  assert.equal(approved.ok,true);
+  assert.equal(approved.actor,SCOPE_U);
+  assert.equal(approved.approvedForLiveDeployment,false);
+  const noMembership={...adapters,findMembership:async()=>null};
+  assert.equal((await checkAdapter({adapters:noMembership})).status,403);
+  const noCaseGrant={...adapters,getCaseAssignment:async()=>null};
+  assert.equal((await checkAdapter({adapters:noCaseGrant})).status,403);
+});
