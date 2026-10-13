@@ -1567,6 +1567,14 @@ enter.onclick=async()=>{enter.disabled=true;authStatus.textContent="Validando au
 try{const who=await login(email.value.trim(),password.value);password.value="";authStatus.textContent="Sessão autenticada: "+who+". A análise Gemini permanece suspensa até confirmação de custo zero e autorização individual."}
 catch(e){accessToken=null;authStatus.textContent="Acesso não confirmado: "+e.message}
 finally{enter.disabled=false}};
+const diagnose=make(auth,"button","Verificar conexão sem gastar tokens");diagnose.className="btn gold";diagnose.type="button";diagnose.style.margin="8px 6px 0 0";
+diagnose.onclick=async()=>{if(!token()){authStatus.textContent="Faça login com conta Supabase existente antes do diagnóstico.";return}
+diagnose.disabled=true;authStatus.textContent="Verificando conexão protegida, sem acionar Gemini...";
+try{const response=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json","authorization":"Bearer "+token(),"x-orca-diagnostic":"status"},body:"{}"});
+const data=await response.json().catch(()=>({}));
+if(!response.ok){authStatus.textContent="Diagnóstico: "+(data.error||"HTTP "+response.status)+". Nenhuma chamada Gemini realizada.";return}
+authStatus.textContent="Autenticação e autorização válidas. Chave Gemini "+(data.key_configured?"presente":"não configurada")+". Chamadas ao Gemini "+(data.model_calls_enabled?"habilitadas no servidor":"bloqueadas no servidor")+". Nenhum token consumido neste diagnóstico."}
+catch(e){authStatus.textContent="Diagnóstico indisponível: "+e.message}finally{diagnose.disabled=false}};
 const exit=make(auth,"button","Encerrar sessão");exit.className="btn ghost";exit.type="button";exit.style.marginLeft="8px";exit.onclick=()=>{accessToken=null;password.value="";authStatus.textContent="Sessão encerrada.";};
 
 const button=make(container,"button","Ajustar com ORÇA-REI (aguardando ativação segura)");button.id="orcaReiAdjust";button.type="button";button.className="btn gold";button.style.margin="8px 8px 8px 0";button.disabled=!externalCallsEnabled;button.title="Bloqueado preventivamente: não há autenticação operacional nem comprovação de modalidade Gemini gratuita.";
