@@ -35,3 +35,15 @@ Referência Supabase: https://supabase.com/docs/guides/troubleshooting/why-is-my
 Esta função é um **validador lógico de entrada supostamente confiável**, NÃO verifica sozinha que os objetos vieram do servidor; deve ser conectada a adaptadores auditados, com proteção de todas as consultas. Nenhuma evidência sintética permite declarar WZ-01 resolvido.
 
 Retorno seguro: fechar o draft PR e não alterar main. Não foi publicada uma API ou versão visual.
+
+## 13/10 — Encadeamento de adaptadores de segurança (candidata isolada)
+
+Função pura de laboratório: verifyCaseScopeFromTrustedAdapters() no contrato de segurança, com seis callbacks que DEVEM ser fornecidos pelo servidor: verifySession, findMembership, findHandoffByToken, findCaseById, getActionPermission e getCaseAssignment. Uma falha em qualquer etapa impede a autorização.
+
+Esquema REAL confirmado por leitura de metadados, sem SQL de escrita: cr_flow_handoffs.token é texto e apenas LOCALIZA o registro; case_id é UUID nullable. cr_cases_v1.case_id é UUID obrigatório, workspace_id UUID nullable. cr_rbac_expected_human_users.auth_user_id é UUID nullable. Posse do token ou case_number não concede acesso, e não existe campo handoff_id UUID nesse esquema.
+
+Ordem de decisão: bearer validado por sessão revogável; identidade humana validada e ativa; membership por workspace; token usado somente para encontrar handoff com FK válida; case real no mesmo workspace; permissão de ação e atribuição pessoal de caso confirmadas por consultas independentes. list global é negada; erros de adaptador retornam 503 sem dados internos.
+
+Quatro suítes sintéticas novas verificam sequência dos seis callbacks, sucesso restrito, negativas de sessão/token/identidade/tenant/caso/atribuição e ausência de vazamento de exceções. Nenhum dado pessoal, credential, serviço, função Edge ou runtime foi tocado.
+
+LIMITES: o código não comprova origem dos callbacks nem executa SQL/RLS/Auth reais. Nenhum adaptador real foi implementado; não é middleware pronto; approvedForLiveDeployment=false permanece. Ainda requer mapeamento Auth humano, revisão de vínculos legados, RLS/consulta escopada, E2E negativo, rollback e homologação das 10 telas antes de qualquer promoção. WZ-01 permanece P0 aberto.
