@@ -102,7 +102,7 @@ test('known transitions pass only when authorized and scoped',async()=>{
 });
 
 
-import { verifyServerCaseScope as verifyScope, verifyCaseScopeFromTrustedAdapters as verifyAdapters, verifyScopedListFromTrustedAdapters as verifyList, scopeContractStatus }
+import { verifyServerCaseScope as verifyScope, verifyCaseScopeFromTrustedAdapters as verifyAdapters, verifyScopedListFromTrustedAdapters as verifyList, verifyLegacyRbacRule as verifyRbac, scopeContractStatus }
   from './wz01-server-scope-planner.mjs';
 
 const SCOPE_U='11111111-1111-4111-8111-111111111111';
@@ -433,4 +433,60 @@ test('WZ-01 list: fail closed on revoked principal and missing/error adapters',a
   const denied=await checkList({adapters:err});
   assert.deepEqual(denied,{ok:false,status:503,code:'SERVER_ADAPTER_ERROR'});
   assert.equal(JSON.stringify(denied).includes('MUST_NOT_LEAK'),false);
+});
+
+
+test('WZ-01 actual RBAC schema: only explicitly mapped Gabi F01/F02 grants',()=>{
+  const f01={role_code:'OPERACAO_ATENDIMENTO_GABI',
+    permission_code:'RBAC-PERM-GABI-F01',area_code:'F01_TRIAGEM',
+    status:'ACTIVE',access_level:'WRITE'};
+  const f02={...f01,permission_code:'RBAC-PERM-GABI-F02',area_code:'F02_ORCAMENTO'};
+  for(const [flowCode,action,row] of [
+    ['F01','list',f01],['F01','get',f01],['F01','route',f01],
+    ['F02','list',f02],['F02','get',f02],['F02','budget-save',f02],
+  ]) {
+    const result=verifyRbac({flowCode,action,
+      roleCode:'OPERACAO_ATENDIMENTO_GABI',row});
+    assert.equal(result.ok,true,flowCode+':'+action);
+    assert.equal(result.evidenceOnly,true);
+    assert.equal(result.approvedForLiveDeployment,false);
+  }
+});
+test('WZ-01 legacy RBAC: active NONE is a DENY, not a grant',()=>{
+  const forbidden={role_code:'OPERACAO_CAMPO_FABRICIO',
+    permission_code:'RBAC-PERM-ANON-SENSITIVE',area_code:'APIS_SENSIVEIS',
+    access_level:'NONE',status:'ACTIVE'};
+  assert.equal(verifyRbac({flowCode:'F01',action:'list',
+    roleCode:'OPERACAO_CAMPO_FABRICIO',row:forbidden}).status,403);
+  const g={role_code:'OPERACAO_ATENDIMENTO_GABI',
+    permission_code:'RBAC-PERM-GABI-F01',area_code:'F01_TRIAGEM',
+    status:'ACTIVE',access_level:'NONE'};
+  assert.equal(verifyRbac({flowCode:'F01',action:'list',
+    roleCode:'OPERACAO_ATENDIMENTO_GABI',row:g}).status,403);
+  assert.equal(verifyRbac({flowCode:'F01',action:'route',
+    roleCode:'OPERACAO_ATENDIMENTO_GABI',
+    row:{...g,access_level:'READ'}}).status,403);
+});
+test('WZ-01 legacy RBAC: stale, forged, unmapped or cross-flow rule fails',()=>{
+  const g={role_code:'OPERACAO_ATENDIMENTO_GABI',
+    permission_code:'RBAC-PERM-GABI-F01',area_code:'F01_TRIAGEM',
+    status:'ACTIVE',access_level:'WRITE'};
+  const base={flowCode:'F01',action:'get',roleCode:'OPERACAO_ATENDIMENTO_GABI',row:g};
+  for(const patch of [
+    {roleCode:'ADMIN_MASTER_ROGERIO'},
+    {row:{...g,status:'REVOKED'}},
+    {row:{...g,permission_code:'RBAC-PERM-ROGERIO-CENTRAL'}},
+    {row:{...g,area_code:'F02_ORCAMENTO'}},
+    {row:{...g,access_level:'UNRESTRICTED'}},
+    {row:{...g,role_code:'ADMIN_MASTER_ROGERIO'}},
+    {row:null},
+    {flowCode:'F02'},
+    {flowCode:'F03'},
+    {action:'budget-release'},
+    {action:'flow-save'},
+    {action:'admin-bypass'},
+  ]) {
+    assert.equal(verifyRbac({...base,...patch}).status,403,
+      JSON.stringify(patch));
+  }
 });
