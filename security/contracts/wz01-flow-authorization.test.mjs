@@ -113,8 +113,8 @@ const scopeFixture=()=>({
   principal:{serverVerified:true,sessionActive:true,userId:SCOPE_U},
   membership:{serverVerified:true,active:true,humanValidated:true,
     authUserId:SCOPE_U,workspaceId:SCOPE_W},
-  handoff:{case_id:SCOPE_C},
-  caseRecord:{case_id:SCOPE_C,workspace_id:SCOPE_W},
+  handoff:{serverVerified:true,case_id:SCOPE_C},
+  caseRecord:{serverVerified:true,case_id:SCOPE_C,workspace_id:SCOPE_W},
   rolePermission:{serverVerified:true,allowed:true,authUserId:SCOPE_U,action:'get'},
   assignment:{serverVerified:true,allowed:true,authUserId:SCOPE_U,
     caseId:SCOPE_C,workspaceId:SCOPE_W,action:'get'},
@@ -155,6 +155,10 @@ test('WZ-01 scope: missing FK, legacy case number, wrong case or tenant fails cl
   scopeReject({handoff:{case_id:null,case_number:'fictional-26'}});
   scopeReject({handoff:{case_id:undefined,case_number:'fictional-26'}});
   scopeReject({handoff:{case_id:SCOPE_OTHER}});
+  scopeReject({handoff:{case_id:SCOPE_C}});
+  scopeReject({handoff:{...f.handoff,serverVerified:false}});
+  scopeReject({caseRecord:{case_id:SCOPE_C,workspace_id:SCOPE_W}});
+  scopeReject({caseRecord:{...f.caseRecord,serverVerified:false}});
   scopeReject({caseRecord:{...f.caseRecord,workspace_id:null}});
   scopeReject({caseRecord:{...f.caseRecord,workspace_id:SCOPE_OTHER}});
   scopeReject({membership:{...f.membership,workspaceId:SCOPE_OTHER}});
