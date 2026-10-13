@@ -194,3 +194,37 @@ test('WZ-01 scope: caller-submitted actor/tenant cannot override trusted identif
   assert.equal(result.actor,SCOPE_U);
   assert.equal(result.workspaceId,SCOPE_W);
 });
+
+test('WZ-01 scope: malformed identities and partial trusted objects fail closed',()=>{
+  const f=scopeFixture();
+  for (const principal of [
+    {...f.principal, userId:'not-a-uuid'},
+    {...f.principal, userId:null},
+    {...f.principal, serverVerified:'true'},
+    {...f.principal, sessionActive:1},
+  ]) scopeReject({principal});
+  for (const membership of [
+    {...f.membership, authUserId:'not-a-uuid'},
+    {...f.membership, workspaceId:'not-a-uuid'},
+    {...f.membership, serverVerified:1},
+    {...f.membership, humanValidated:'true'},
+  ]) scopeReject({membership});
+  scopeReject({caseRecord:{...f.caseRecord, case_id:'legacy-case-26'}});
+  scopeReject({handoff:{...f.handoff, case_id:'legacy-case-26'}});
+});
+
+test('WZ-01 scope: wrong grant identity, assignment action and workspace are rejected',()=>{
+  const f=scopeFixture();
+  scopeReject({rolePermission:{...f.rolePermission, authUserId:SCOPE_OTHER}});
+  scopeReject({rolePermission:{...f.rolePermission, serverVerified:'true'}});
+  scopeReject({assignment:{...f.assignment, action:'flow-save'}});
+  scopeReject({assignment:{...f.assignment, serverVerified:'true'}});
+  scopeReject({assignment:{...f.assignment, workspaceId:null}});
+  assert.deepEqual(scopeContractStatus,{
+    syntheticOnly:true,
+    realSessionVerified:false,
+    liveAdaptersImplemented:false,
+    legacyBackfillApproved:false,
+    productionWiringApproved:false,
+  });
+});
