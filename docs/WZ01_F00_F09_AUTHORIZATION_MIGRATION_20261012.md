@@ -48,3 +48,11 @@ Segredos service_role jamais chegam ao navegador. Recomendação arquitetural: p
 **Critério final:** zero leitura/escrita privada sem identidade válida e permissão para o caso/tenant; verificação de revogação; actor confiável; dez páginas E2E; backups e rollback testados. Até prova final, manter **P0 aberto**.
 
 **Escopo desta alteração:** alerta em CI existente e documentação apenas. Nenhuma alteração de Edge, banco, URLs, acessos, custos, backup, cron ou produção. **Não é uma correção de autenticação**.
+
+## Entrega técnica incremental: contrato isolado executável
+
+- O arquivo `security/contracts/wz01-flow-authorization.mjs` implementa uma política pura de **negação por padrão**, que rejeita sessão inválida/revogada/vencida, usuário inativo, cargo sem permissão, caso de outro tenant e acesso a caso não atribuído; deriva o ator do principal autenticado no servidor, nunca do body enviado pelo navegador.
+- A suíte `security/contracts/wz01-flow-authorization.test.mjs` usa fixtures totalmente sintéticas e roda no **Central Canonical Guard existente**, sem workflow, serviço, função Edge ou banco adicional.
+- **Não integrada à produção**: as funções atuais continuam inalteradas. A API de autorização precisa de adaptadores server-side reais que verifiquem sessão, papel, tenant e permissão por caso; o código oferece contrato, não infraestrutura de identidade.
+- **Bloqueio estrutural identificado**: o inventário de colunas das tabelas `cr_flow_handoffs` / `cr_f00_cases` / `cr_f00_operators` não evidenciou relação explícita entre caso e organização/usuário em colunas dedicadas. Não improvisar `tenant_id` nem conceder políticas globais. Antes de integrar, provar chave canônica de vinculação, migração reconciliável/backfill e autorização read/write por caso, mantendo compatibilidade dos 10 clientes. Não criar tabela/coluna ou alterar RLS automaticamente.
+- A execução CI dos fixtures comprova apenas a semântica do contrato isolado, **não** autenticação real, compatibilidade do navegador, logs de produção ou correção P0.
