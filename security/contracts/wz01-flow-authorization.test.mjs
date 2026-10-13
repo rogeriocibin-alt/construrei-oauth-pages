@@ -372,6 +372,8 @@ test('WZ-01 list: returns bounded actor/workspace/case predicate, never data',as
   assert.deepEqual(a.caseIds,[SCOPE_C]);
   assert.equal(a.mustApplyWorkspaceAndCaseFilter,true);
   assert.equal(a.approvedForLiveDeployment,false);
+  assert.equal(a.mayQueryDatabase,true);
+  assert.equal(a.emptyResult,false);
   assert.equal(Object.hasOwn(a,'rows'),false);
   assert.equal(Object.isFrozen(a.caseIds),true);
 });
@@ -416,6 +418,8 @@ test('WZ-01 list: reject invalid, repeated and unbounded case lists',async()=>{
   const permittedEmpty=await checkList({adapters:empty});
   assert.equal(permittedEmpty.ok,true);
   assert.deepEqual(permittedEmpty.caseIds,[]);
+  assert.equal(permittedEmpty.mayQueryDatabase,false);
+  assert.equal(permittedEmpty.emptyResult,true);
 });
 test('WZ-01 list: fail closed on revoked principal and missing/error adapters',async()=>{
   const missing=listAdapters();
