@@ -102,7 +102,7 @@ test('known transitions pass only when authorized and scoped',async()=>{
 });
 
 
-import { verifyServerCaseScope as verifyScope, scopeContractStatus }
+import { verifyServerCaseScope as verifyScope, verifyCaseScopeFromTrustedAdapters as verifyAdapters, scopeContractStatus }
   from './wz01-server-scope-planner.mjs';
 
 const SCOPE_U='11111111-1111-4111-8111-111111111111';
@@ -227,4 +227,114 @@ test('WZ-01 scope: wrong grant identity, assignment action and workspace are rej
     legacyBackfillApproved:false,
     productionWiringApproved:false,
   });
+});
+
+
+const verifiedLabAdapters=()=>({
+  verifySession:async({accessToken})=>({
+    userId:SCOPE_U,sessionActive:accessToken==='synthetic-session-token-123',
+  }),
+  findMembership:async({authUserId})=>({
+    authUserId,workspaceId:SCOPE_W,active:true,humanValidated:true,
+  }),
+  findHandoffByToken:async()=>({case_id:SCOPE_C}),
+  findCaseById:async({caseId})=>({case_id:caseId,workspace_id:SCOPE_W}),
+  getActionPermission:async({authUserId,action})=>({
+    authUserId,action,allowed:true,
+  }),
+  getCaseAssignment:async({authUserId,caseId,workspaceId,action})=>({
+    authUserId,caseId,workspaceId,action,allowed:true,
+  }),
+});
+const checkAdapter=(changes={})=>verifyAdapters({
+  action:'get',authorization:TOKEN,handoffToken:'fictional-unique-handoff',
+  adapters:verifiedLabAdapters(),...changes,
+});
+
+test('WZ-01 adapter seam: six independent verified lookups scoped to one case',async()=>{
+  const calls=[];
+  const adapters=verifiedLabAdapters();
+  for (const key of Object.keys(adapters)) {
+    const original=adapters[key];
+    adapters[key]=async (args)=>{
+      calls.push({key,args});
+      return original(args);
+    };
+  }
+  const result=await checkAdapter({adapters});
+  assert.equal(result.ok,true);
+  assert.equal(result.approvedForLiveDeployment,false);
+  assert.equal(result.actor,SCOPE_U);
+  assert.equal(result.caseId,SCOPE_C);
+  assert.equal(result.workspaceId,SCOPE_W);
+  assert.deepEqual(calls.map(x=>x.key),[
+    'verifySession','findMembership','findHandoffByToken',
+    'findCaseById','getActionPermission','getCaseAssignment',
+  ]);
+  assert.deepEqual(calls[2].args,{token:'fictional-unique-handoff'});
+  assert.deepEqual(calls[3].args,{caseId:SCOPE_C});
+  assert.deepEqual(calls[5].args,{
+    authUserId:SCOPE_U,caseId:SCOPE_C,workspaceId:SCOPE_W,action:'get',
+  });
+  assert.equal(scopeContractStatus.productionWiringApproved,false);
+});
+
+test('WZ-01 adapter seam: token is locator, never an authorization grant',async()=>{
+  const fixtures=[
+    {authorization:null},
+    {authorization:'Basic synthetic-session-token-123'},
+    {authorization:'Bearer missing'},
+    {handoffToken:''},
+    {handoffToken:'short'},
+    {handoffToken:'unsafe token with spaces'},
+    {action:'list'},
+    {action:'admin'},
+    {action:'health'},
+  ];
+  for (const fields of fixtures) {
+    const response=await checkAdapter(fields);
+    assert.equal(response.ok,false,JSON.stringify(fields));
+  }
+  const adapters=verifiedLabAdapters();
+  adapters.findMembership=async()=>null;
+  assert.equal((await checkAdapter({adapters})).status,403);
+  const wrongCase=verifiedLabAdapters();
+  wrongCase.findHandoffByToken=async()=>({case_id:null,case_number:'fictional-26'});
+  assert.equal((await checkAdapter({adapters:wrongCase})).status,403);
+});
+
+test('WZ-01 adapter seam: no cross-tenant read, forged actor or role escalation',async()=>{
+  let a=verifiedLabAdapters();
+  a.findCaseById=async({caseId})=>({case_id:caseId,workspace_id:SCOPE_OTHER});
+  assert.equal((await checkAdapter({adapters:a})).status,403);
+  a=verifiedLabAdapters();
+  a.getActionPermission=async({action})=>({allowed:true,action,authUserId:SCOPE_OTHER});
+  assert.equal((await checkAdapter({adapters:a})).status,403);
+  a=verifiedLabAdapters();
+  a.getCaseAssignment=async({authUserId,caseId,workspaceId})=>({
+    authUserId,caseId,workspaceId,allowed:true,action:'flow-save',
+  });
+  assert.equal((await checkAdapter({adapters:a})).status,403);
+  const authorized=await checkAdapter({
+    actor:SCOPE_OTHER,tenantId:SCOPE_OTHER,
+    role:'ADMIN',body:{userId:SCOPE_OTHER,tenantId:SCOPE_OTHER,role:'ADMIN'},
+  });
+  assert.equal(authorized.ok,true);
+  assert.equal(authorized.actor,SCOPE_U);
+});
+
+test('WZ-01 adapter seam: missing and failing callbacks cannot authorize',async()=>{
+  const empty=await checkAdapter({adapters:{}});
+  assert.deepEqual(empty,{ok:false,status:503,code:'SERVER_ADAPTERS_UNAVAILABLE'});
+  const bad=verifiedLabAdapters();
+  bad.findCaseById=async()=>{throw Error('private query text MUST_NOT_LEAK');};
+  const denied=await checkAdapter({adapters:bad});
+  assert.deepEqual(denied,{ok:false,status:503,code:'SERVER_ADAPTER_ERROR'});
+  assert.equal(JSON.stringify(denied).includes('MUST_NOT_LEAK'),false);
+  const expired=verifiedLabAdapters();
+  expired.verifySession=async()=>({userId:SCOPE_U,sessionActive:false});
+  assert.equal((await checkAdapter({adapters:expired})).status,401);
+  const nullAssignment=verifiedLabAdapters();
+  nullAssignment.getCaseAssignment=async()=>null;
+  assert.equal((await checkAdapter({adapters:nullAssignment})).status,403);
 });
