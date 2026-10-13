@@ -1532,71 +1532,54 @@ function init(){
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
-</script><script id="orca-rei-local-r6">
+</script><script id="orca-rei-gemini-r7">
 (function(){
 "use strict";
-const get=id=>document.getElementById(id);
-const value=id=>String(get(id)?.value||"").trim();
-const esc=t=>String(t||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const money=/\\bR\\$\\s*\\d[\\d.,]*/gi;
-const fields={services:"qaF02Services",materials:"qaF02Materials",notes:"qaF02Notes"};
-function clean(x){return String(x||"").replace(/\\r/g,"").split("\\n").map(y=>y.trim().replace(/\\s{2,}/g," ")).filter(Boolean).join("\\n")}
-function normalizeReport(text){
-return clean(text).split(/(?<=[.!?])\\s+|\\n+/).filter(sentence=>!(/\\bR\\$\\s*\\d|\\b(?:pre[cç]o|valor|or[cç]amento|pagamento|desconto|total|custo|tributo|imposto|margem)\\b/i.test(sentence))).join(" ").trim();
-}
-function proposal(before){
-const services=clean(before.services),materials=clean(before.materials),notes=clean(before.notes);
-const exclusions=/n[aã]o (?:est[aã]o )?inclu[ií]d|n[aã]o contemplad|fora do escopo/i.test(notes);
-const suspicious=/infiltra|vazamento|umidade/i.test([services,notes].join(" "));
-const risks=[];
-if(!services)risks.push("Falta descrição dos serviços.");
-if(!materials)risks.push("Materiais e equipamentos ainda não estão definidos.");
-if(!notes)risks.push("Condições técnicas e limitações ainda não estão descritas.");
-if(!exclusions)risks.push("Conferir exclusões de escopo e eventuais reparos complementares.");
-if(suspicious)risks.push("Não apresentar hipótese de infiltração como diagnóstico comprovado.");
-const report=[
-"OBJETO DA ANÁLISE",
-services||"Escopo pendente de descrição.",
-"VERIFICAÇÕES E RECURSOS TÉCNICOS",
-materials||"Recursos sujeitos à confirmação técnica.",
-"RESSALVAS E LIMITAÇÕES",
-normalizeReport(notes)||"Parecer preliminar sujeito à vistoria e confirmação dos elementos observados.",
-"CONCLUSÃO PRELIMINAR",
-"Os dados apresentados constituem informações preliminares de atendimento. A definição da causa, a extensão da intervenção e as recomendações definitivas dependem de verificação técnica e registro dos achados."
-].join("\\n\\n");
-return {services,materials,notes,report,warnings:risks};
-}
+const $=id=>document.getElementById(id), get=id=>String($(id)?.value||"").trim();
+const SUPA="https://yspuaamokjbrosytqjpg.supabase.co",FN=SUPA+"/functions/v1/cr-orca-rei-gemini-r5-restricted-20261013",ANON="sb_publishable_CKRScNxEWURNGv4Mz269hg_zdQEmwzS";
+let jwt="", snapshot=null, report="";
+const css=document.createElement("style");css.textContent="#orcaModal{position:fixed;inset:0;z-index:99999;background:#061b46aa;display:flex;align-items:center;justify-content:center;padding:12px}#orcaModal[hidden],#orcaPreview[hidden]{display:none!important}#orcaModalCard{background:#fff;border:2px solid #0877f9;border-radius:14px;padding:18px;width:min(430px,96vw);color:#07165b;box-shadow:0 18px 50px #0004}#orcaModalCard input{width:100%;margin:6px 0;padding:10px;border:1px solid #a3c4e2;border-radius:8px;color:#07165b;background:white}#orcaPreview{width:100%;border:1px solid #9fc3e5;border-radius:12px;padding:14px;background:#f6fbff;color:#07165b}#orcaPreview textarea{width:100%;min-height:108px;margin-top:4px;margin-bottom:10px;background:white;color:#07165b;border:1px solid #abc9e3;border-radius:8px;padding:9px;font-size:13px}";document.head.appendChild(css);
+function make(parent,tag,label){const e=document.createElement(tag);if(label)e.textContent=label;parent.appendChild(e);return e}
 function setup(){
-const host=get("v20Docs");if(!host||get("orcaReiAdjust"))return;
-const button=document.createElement("button");button.id="orcaReiAdjust";button.type="button";button.className="btn gold";button.textContent="Ajustar com ORÇA-REI";button.style.margin="8px 8px 8px 0";
-host.insertBefore(button,get("v20Budget"));
-const status=document.createElement("p");status.id="orcaReiStatus";status.setAttribute("role","status");status.style.cssText="width:100%;font-size:12px;color:#315c8a";status.textContent="Revisão local sem custo. IA Gemini não ativada nesta candidata.";
-host.appendChild(status);
-const panel=document.createElement("section");panel.id="orcaReiPanel";panel.hidden=true;panel.style.cssText="width:100%;border:1px solid #a5c8ee;border-radius:12px;background:#f6fbff;padding:14px;color:#07165b";
-const title=document.createElement("h3");title.textContent="Prévia de ajuste técnico • ORÇA-REI local";panel.appendChild(title);
-const description=document.createElement("p");description.textContent="Modo local: organiza o texto existente e identifica lacunas. Não é uma análise do Gemini, não pesquisa na web nem acrescenta fundamentações externas.";panel.appendChild(description);
-const out={};
-for(const [key,label] of [["services","Serviços / mão de obra"],["materials","Materiais / verificações"],["notes","Observações técnicas"],["report","Parecer sem valores (prévia)"]]){
-const l=document.createElement("label");l.textContent=label;l.style.cssText="display:block;font-weight:800;margin:10px 0 4px";panel.appendChild(l);
-const t=document.createElement("textarea");t.rows=key==="report"?9:4;t.style.cssText="display:block;width:100%;border:1px solid #bcd5ec;border-radius:8px;background:white;color:#07165b;padding:10px;line-height:1.5";panel.appendChild(t);out[key]=t;
+const host=$("v20Docs");if(!host)return;
+const b=make(host,"button","Ajustar com ORÇA-REI");b.id="orcaReiAdjust";b.type="button";b.className="btn gold";host.insertBefore(b,$("v20Budget"));
+const state=make(host,"p","ORÇA-REI: aguardando autenticação autorizada e liberação controlada do Gemini.");state.id="orcaReiStatus";state.style.cssText="width:100%;font-size:12px;color:#315c8a";
+const preview=make(host,"section");preview.id="orcaPreview";preview.hidden=true;const title=make(preview,"h3","Revisão gerada pelo Gemini — prévia");title.style.marginTop="0";
+const out={};for(const [key,label] of [["services","Serviços / mão de obra"],["materials","Materiais / verificações"],["notes","Observações técnicas"],["report","Parecer técnico sem valores"]]){const l=make(preview,"label",label);l.style.fontWeight="800";const t=make(preview,"textarea");t.rows=key==="report"?9:5;out[key]=t}
+const warnings=make(preview,"p");const apply=make(preview,"button","Aplicar no rascunho");apply.className="btn gold";const close=make(preview,"button","Fechar");close.className="btn";close.style.marginLeft="6px";close.onclick=()=>preview.hidden=true;
+const modal=make(document.body,"div");modal.id="orcaModal";modal.hidden=true;const card=make(modal,"div");card.id="orcaModalCard";make(card,"h3","Autenticar ORÇA-REI");make(card,"p","Acesso restrito via Supabase. A sessão fica apenas na memória desta aba. Nenhuma chave Gemini é exibida.");
+const email=make(card,"input");email.placeholder="E-mail cadastrado";email.type="email";email.autocomplete="username";
+const pass=make(card,"input");pass.placeholder="Senha da conta Supabase";pass.type="password";pass.autocomplete="current-password";
+const auth=make(card,"button","Entrar");auth.className="btn gold";const cancel=make(card,"button","Cancelar");cancel.className="btn";cancel.style.marginLeft="8px";const info=make(card,"p");info.style.fontSize="12px";cancel.onclick=()=>modal.hidden=true;
+async function invoke(path,headers={},body="{}"){
+const r=await fetch(path,{method:"POST",headers:{"content-type":"application/json",apikey:ANON,...headers},body});const d=await r.json().catch(()=>({}));return {ok:r.ok,status:r.status,data:d};
 }
-const warnings=document.createElement("p");panel.appendChild(warnings);
-const apply=document.createElement("button");apply.type="button";apply.className="btn gold";apply.textContent="Aplicar ajustes revisados";panel.appendChild(apply);
-const close=document.createElement("button");close.type="button";close.className="btn";close.textContent="Fechar prévia";close.style.marginLeft="8px";panel.appendChild(close);
-host.appendChild(panel);let snapshot=null;
-button.onclick=()=>{
-const before=Object.fromEntries(Object.entries(fields).map(([k,id])=>[k,value(id)]));
-const proposed=proposal(before);snapshot=before;
-for(const key of Object.keys(out))out[key].value=proposed[key];
-warnings.textContent=proposed.warnings.length?"Conferir: "+proposed.warnings.join(" • "):"Nenhuma lacuna básica identificada.";
-panel.hidden=false;status.textContent="Prévia local preparada, sem alterar o rascunho. Revise e aplique somente se estiver melhor.";panel.scrollIntoView({behavior:"smooth",block:"nearest"});
-};
-close.onclick=()=>{panel.hidden=true};
-apply.onclick=()=>{
-if(!snapshot)return;
-for(const [k,id] of Object.entries(fields))if(value(id)!==snapshot[k]){status.textContent="O rascunho mudou; refaça a revisão para evitar sobreposição.";return;}
-for(const [k,id] of Object.entries(fields))get(id).value=out[k].value;
-panel.hidden=true;snapshot=null;status.textContent="Ajustes aplicados no rascunho, ainda não salvos. Confira e clique em Salvar rascunho fictício.";
+async function check(){
+const r=await invoke(FN,{"authorization":"Bearer "+jwt,"x-orca-diagnostic":"status"});
+if(!r.ok){const x=r.data.error||"HTTP "+r.status;throw Error(x==="not_authorized_for_orca_rei"?"Sua conta não está na lista de autorização do ORÇA-REI.":x)}
+if(!r.data.key_configured)throw Error("Chave Gemini não configurada no servidor.");
+if(!r.data.model_calls_enabled)throw Error("Gemini bloqueado administrativamente no servidor para evitar cobrança. Não é possível gerar IA real até validar faturamento.");
+return r.data;
+}
+async function generate(){
+const input={services:get("qaF02Services"),materials:get("qaF02Materials"),notes:get("qaF02Notes"),case_number:$("qaF02Case")?.textContent||""};
+if(!input.services){state.textContent="Descreva os serviços antes de ajustar.";return}
+b.disabled=true;state.textContent="Verificando autorização e política de custo...";
+try{const diag=await check();state.textContent="Gerando revisão Gemini...";
+const r=await invoke(FN,{"authorization":"Bearer "+jwt},JSON.stringify({input}));if(!r.ok)throw Error(r.data.error||"HTTP "+r.status);
+if(!r.data.ok||r.data.provider!=="gemini"||!r.data.result)throw Error("Resposta não comprovada pelo Gemini.");
+const o=r.data.result;for(const k of Object.keys(out))out[k].value=String(o[k]||"");
+snapshot=input;report=out.report.value;warnings.textContent=[...(o.warnings||[]),o.research_status||""].join(" • ");
+preview.hidden=false;state.textContent="Resposta real Gemini ("+(r.data.model||diag.model)+") recebida. Revise antes de aplicar.";preview.scrollIntoView({behavior:"smooth",block:"nearest"});
+}catch(e){state.textContent="ORÇA-REI não executado: "+e.message}finally{b.disabled=false}}
+auth.onclick=async()=>{info.textContent="Autenticando...";auth.disabled=true;
+try{const r=await invoke(SUPA+"/auth/v1/token?grant_type=password",{},JSON.stringify({email:email.value.trim(),password:pass.value}));if(!r.ok||!r.data.access_token)throw Error(r.data.error_description||r.data.msg||"Credenciais não aceitas pelo Supabase.");
+jwt=r.data.access_token;pass.value="";modal.hidden=true;state.textContent="Sessão autenticada. Validando habilitação do Gemini...";await generate();
+}catch(e){info.textContent="Não foi possível autenticar: "+e.message;state.textContent="Autenticação pendente.";jwt=""}finally{auth.disabled=false}};
+b.onclick=()=>{if(jwt)generate();else{modal.hidden=false;email.focus()}};
+apply.onclick=()=>{if(!snapshot)return;for(const [k,id] of [["services","qaF02Services"],["materials","qaF02Materials"],["notes","qaF02Notes"]])if(get(id)!==snapshot[k]){state.textContent="Rascunho alterado durante a revisão. Gere uma nova proposta.";return}
+for(const [k,id] of [["services","qaF02Services"],["materials","qaF02Materials"],["notes","qaF02Notes"]])$(id).value=out[k].value;
+window.__orcaReiReportDraft=out.report.value;preview.hidden=true;snapshot=null;state.textContent="Proposta Gemini aplicada ao rascunho; salve se aprovar. Parecer armazenado somente nesta aba.";
 };
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});else setup();
