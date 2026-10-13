@@ -1532,7 +1532,7 @@ function init(){
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
-</script><script id="orca-rei-gemini-r7">
+</script><script id="orca-rei-gemini-r8">
 (function(){
 "use strict";
 const $=id=>document.getElementById(id), get=id=>String($(id)?.value||"").trim();
@@ -1547,10 +1547,21 @@ const state=make(host,"p","ORÇA-REI: aguardando autenticação autorizada e lib
 const preview=make(host,"section");preview.id="orcaPreview";preview.hidden=true;const title=make(preview,"h3","Revisão gerada pelo Gemini — prévia");title.style.marginTop="0";
 const out={};for(const [key,label] of [["services","Serviços / mão de obra"],["materials","Materiais / verificações"],["notes","Observações técnicas"],["report","Parecer técnico sem valores"]]){const l=make(preview,"label",label);l.style.fontWeight="800";const t=make(preview,"textarea");t.rows=key==="report"?9:5;out[key]=t}
 const warnings=make(preview,"p");const apply=make(preview,"button","Aplicar no rascunho");apply.className="btn gold";const close=make(preview,"button","Fechar");close.className="btn";close.style.marginLeft="6px";close.onclick=()=>preview.hidden=true;
-const modal=make(document.body,"div");modal.id="orcaModal";modal.hidden=true;const card=make(modal,"div");card.id="orcaModalCard";make(card,"h3","Autenticar ORÇA-REI");make(card,"p","Acesso restrito via Supabase. A sessão fica apenas na memória desta aba. Nenhuma chave Gemini é exibida.");
-const email=make(card,"input");email.placeholder="E-mail cadastrado";email.type="email";email.autocomplete="username";
-const pass=make(card,"input");pass.placeholder="Senha da conta Supabase";pass.type="password";pass.autocomplete="current-password";
-const auth=make(card,"button","Entrar");auth.className="btn gold";const cancel=make(card,"button","Cancelar");cancel.className="btn";cancel.style.marginLeft="8px";const info=make(card,"p");info.style.fontSize="12px";cancel.onclick=()=>modal.hidden=true;
+const modal=make(document.body,"div");modal.id="orcaModal";modal.hidden=true;
+const card=make(modal,"div");card.id="orcaModalCard";
+make(card,"h3","Acesso Google • ORÇA-REI");
+make(card,"p","Use a conta Google autorizada. Nenhuma senha ou chave Gemini é solicitada pelo aplicativo.");
+const auth=make(card,"button","Continuar com Google");auth.className="btn gold";
+const cancel=make(card,"button","Cancelar");cancel.className="btn";cancel.style.marginLeft="8px";
+const info=make(card,"p");info.style.fontSize="12px";
+cancel.onclick=()=>modal.hidden=true;
+function consumeOAuth(){
+const h=new URLSearchParams(location.hash.slice(1));
+const token=h.get("access_token"),error=h.get("error_description")||h.get("error");
+if(token){jwt=token;history.replaceState(null,"",location.pathname+location.search);state.textContent="Sessão Google recebida. Clique em Ajustar com ORÇA-REI.";return}
+if(error){history.replaceState(null,"",location.pathname+location.search);state.textContent="Autenticação Google não concluída: "+error;}
+}
+consumeOAuth();
 async function invoke(path,headers={},body="{}"){
 const r=await fetch(path,{method:"POST",headers:{"content-type":"application/json",apikey:ANON,...headers},body});const d=await r.json().catch(()=>({}));return {ok:r.ok,status:r.status,data:d};
 }
@@ -1572,11 +1583,8 @@ const o=r.data.result;for(const k of Object.keys(out))out[k].value=String(o[k]||
 snapshot=input;report=out.report.value;warnings.textContent=[...(o.warnings||[]),o.research_status||""].join(" • ");
 preview.hidden=false;state.textContent="Resposta real Gemini ("+(r.data.model||diag.model)+") recebida. Revise antes de aplicar.";preview.scrollIntoView({behavior:"smooth",block:"nearest"});
 }catch(e){state.textContent="ORÇA-REI não executado: "+e.message}finally{b.disabled=false}}
-auth.onclick=async()=>{info.textContent="Autenticando...";auth.disabled=true;
-try{const r=await invoke(SUPA+"/auth/v1/token?grant_type=password",{},JSON.stringify({email:email.value.trim(),password:pass.value}));if(!r.ok||!r.data.access_token)throw Error(r.data.error_description||r.data.msg||"Credenciais não aceitas pelo Supabase.");
-jwt=r.data.access_token;pass.value="";modal.hidden=true;state.textContent="Sessão autenticada. Validando habilitação do Gemini...";await generate();
-}catch(e){info.textContent="Não foi possível autenticar: "+e.message;state.textContent="Autenticação pendente.";jwt=""}finally{auth.disabled=false}};
-b.onclick=()=>{if(jwt)generate();else{modal.hidden=false;email.focus()}};
+auth.onclick=()=>{const redirect=location.origin+location.pathname;const url=SUPA+"/auth/v1/authorize?provider=google&redirect_to="+encodeURIComponent(redirect);location.assign(url)};
+b.onclick=()=>{if(jwt)generate();else{modal.hidden=false;info.textContent="O Google retornará para esta candidata. Se o endereço não estiver autorizado no Supabase, o administrador deverá incluí-lo na lista de redirecionamentos.";auth.focus()}};
 apply.onclick=()=>{if(!snapshot)return;for(const [k,id] of [["services","qaF02Services"],["materials","qaF02Materials"],["notes","qaF02Notes"]])if(get(id)!==snapshot[k]){state.textContent="Rascunho alterado durante a revisão. Gere uma nova proposta.";return}
 for(const [k,id] of [["services","qaF02Services"],["materials","qaF02Materials"],["notes","qaF02Notes"]])$(id).value=out[k].value;
 window.__orcaReiReportDraft=out.report.value;preview.hidden=true;snapshot=null;state.textContent="Proposta Gemini aplicada ao rascunho; salve se aprovar. Parecer armazenado somente nesta aba.";
