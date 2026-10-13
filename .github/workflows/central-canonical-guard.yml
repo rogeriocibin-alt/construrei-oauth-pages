@@ -15,6 +15,7 @@ on:
       - '.github/scripts/cr_ecosystem_contract_audit.py'
       - '.github/scripts/cr_public_router_liveness_audit.py'
       - '.github/scripts/cr_flow_public_client_perimeter_guard.py'
+      - 'security/contracts/wz01-flow-authorization*.mjs'
       - 'production/flow-canonical-20261001/**'
       - 'docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md'
       - 'gestor-projeto/project-data.json'
@@ -117,6 +118,10 @@ jobs:
         run: python3 .github/scripts/cr_ecosystem_contract_audit.py
       - name: Enforce F00-F09 official client Edge route contract (offline)
         run: python3 .github/scripts/cr_flow_public_client_perimeter_guard.py
+      - name: Exercise isolated WZ-01 authorization deny-by-default contract (synthetic)
+        run: |
+          node --check security/contracts/wz01-flow-authorization.mjs
+          node --test security/contracts/wz01-flow-authorization.test.mjs
       - name: Validate public router regression logic without any network or data
         run: python3 .github/scripts/cr_public_router_liveness_audit.py --self-test
       - name: Probe only public Edge redirect headers; warn on known APP preview
