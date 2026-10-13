@@ -188,3 +188,57 @@ export const scopeContractStatus = Object.freeze({
   legacyBackfillApproved: false,
   productionWiringApproved: false,
 });
+
+/**
+ * CANDIDATE ONLY: list planning requires a validated per-case ACL, not a
+ * service-role select(*) on all handoffs or wildcard membership.
+ * The function returns a predicate PLAN, never reads or exposes case data.
+ * Production still needs audited SQL enforcing BOTH workspace and case IDs.
+ */
+const LIST_ADAPTERS = Object.freeze([
+  'verifySession','findMembership','getActionPermission','getAuthorizedCaseIds',
+]);
+export async function verifyScopedListFromTrustedAdapters({
+  action,authorization,adapters,
+} = {}) {
+  if (action !== 'list') return DENY;
+  const match = typeof authorization === 'string'
+    ? BEARER.exec(authorization) : null;
+  if (!match) return INVALID_SESSION;
+  if (!adapters || typeof adapters !== 'object' ||
+      LIST_ADAPTERS.some(key => typeof adapters[key] !== 'function'))
+    return ADAPTER_UNAVAILABLE;
+  try {
+    const principal = await adapters.verifySession({accessToken:match[1]});
+    if (!principal || !uuid(principal.userId) ||
+        principal.sessionActive !== true) return INVALID_SESSION;
+    const membership = await adapters.findMembership({authUserId:principal.userId});
+    if (!membership || membership.active !== true ||
+        membership.humanValidated !== true ||
+        membership.authUserId !== principal.userId ||
+        !uuid(membership.workspaceId)) return DENY;
+    const rolePermission = await adapters.getActionPermission({
+      authUserId:principal.userId,workspaceId:membership.workspaceId,action:'list',
+    });
+    if (!rolePermission || rolePermission.allowed !== true ||
+        rolePermission.authUserId !== principal.userId ||
+        rolePermission.workspaceId !== membership.workspaceId ||
+        rolePermission.action !== 'list') return DENY;
+    const scope = await adapters.getAuthorizedCaseIds({
+      authUserId:principal.userId,workspaceId:membership.workspaceId,action:'list',
+    });
+    if (!scope || scope.authUserId !== principal.userId ||
+        scope.workspaceId !== membership.workspaceId ||
+        scope.action !== 'list' || scope.mode !== 'assigned-cases-only' ||
+        !Array.isArray(scope.caseIds) || scope.caseIds.length > 500 ||
+        !scope.caseIds.every(uuid) ||
+        new Set(scope.caseIds).size !== scope.caseIds.length) return DENY;
+    return Object.freeze({
+      ok:true,action:'list',actor:principal.userId,
+      workspaceId:membership.workspaceId,
+      caseIds:Object.freeze([...scope.caseIds]),
+      mustApplyWorkspaceAndCaseFilter:true,
+      approvedForLiveDeployment:false,
+    });
+  } catch { return ADAPTER_ERROR; }
+}
