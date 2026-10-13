@@ -102,7 +102,7 @@ test('known transitions pass only when authorized and scoped',async()=>{
 });
 
 
-import { verifyServerCaseScope as verifyScope, verifyCaseScopeFromTrustedAdapters as verifyAdapters, scopeContractStatus }
+import { verifyServerCaseScope as verifyScope, verifyCaseScopeFromTrustedAdapters as verifyAdapters, verifyScopedListFromTrustedAdapters as verifyList, scopeContractStatus }
   from './wz01-server-scope-planner.mjs';
 
 const SCOPE_U='11111111-1111-4111-8111-111111111111';
@@ -344,4 +344,89 @@ test('WZ-01 adapter seam: missing and failing callbacks cannot authorize',async(
   const nullAssignment=verifiedLabAdapters();
   nullAssignment.getCaseAssignment=async()=>null;
   assert.equal((await checkAdapter({adapters:nullAssignment})).status,403);
+});
+
+
+const listAdapters=()=>({
+  verifySession:async({accessToken})=>({
+    userId:SCOPE_U,sessionActive:accessToken==='synthetic-session-token-123',
+  }),
+  findMembership:async({authUserId})=>({
+    authUserId,workspaceId:SCOPE_W,active:true,humanValidated:true,
+  }),
+  getActionPermission:async({authUserId,workspaceId,action})=>({
+    allowed:true,authUserId,workspaceId,action,
+  }),
+  getAuthorizedCaseIds:async({authUserId,workspaceId,action})=>({
+    authUserId,workspaceId,action,mode:'assigned-cases-only',caseIds:[SCOPE_C],
+  }),
+});
+const checkList=(patch={})=>verifyList({
+  action:'list',authorization:TOKEN,adapters:listAdapters(),...patch,
+});
+test('WZ-01 list: returns bounded actor/workspace/case predicate, never data',async()=>{
+  const a=await checkList();
+  assert.equal(a.ok,true);
+  assert.equal(a.actor,SCOPE_U);
+  assert.equal(a.workspaceId,SCOPE_W);
+  assert.deepEqual(a.caseIds,[SCOPE_C]);
+  assert.equal(a.mustApplyWorkspaceAndCaseFilter,true);
+  assert.equal(a.approvedForLiveDeployment,false);
+  assert.equal(Object.hasOwn(a,'rows'),false);
+  assert.equal(Object.isFrozen(a.caseIds),true);
+});
+test('WZ-01 list: deny anonymous, cross-workspace grant and forged scope',async()=>{
+  assert.equal((await checkList({authorization:null})).status,401);
+  assert.equal((await checkList({action:'get'})).status,403);
+  let x=listAdapters();
+  x.getActionPermission=async({authUserId,action})=>({
+    allowed:true,authUserId,action,workspaceId:SCOPE_OTHER,
+  });
+  assert.equal((await checkList({adapters:x})).status,403);
+  x=listAdapters();
+  x.getAuthorizedCaseIds=async({authUserId,action})=>({
+    authUserId,action,workspaceId:SCOPE_OTHER,
+    mode:'assigned-cases-only',caseIds:[SCOPE_C],
+  });
+  assert.equal((await checkList({adapters:x})).status,403);
+  x=listAdapters();
+  x.getAuthorizedCaseIds=async({authUserId,workspaceId,action})=>({
+    authUserId,workspaceId,action,mode:'all-tenants',caseIds:[SCOPE_C],
+  });
+  assert.equal((await checkList({adapters:x})).status,403);
+});
+test('WZ-01 list: reject invalid, repeated and unbounded case lists',async()=>{
+  const cases=[
+    null,
+    [SCOPE_C,SCOPE_C],
+    [SCOPE_C,'legacy-case-number'],
+    Array(501).fill(SCOPE_C),
+  ];
+  for (const caseIds of cases) {
+    const a=listAdapters();
+    a.getAuthorizedCaseIds=async({authUserId,workspaceId,action})=>({
+      authUserId,workspaceId,action,mode:'assigned-cases-only',caseIds,
+    });
+    assert.equal((await checkList({adapters:a})).status,403);
+  }
+  const empty=listAdapters();
+  empty.getAuthorizedCaseIds=async({authUserId,workspaceId,action})=>({
+    authUserId,workspaceId,action,mode:'assigned-cases-only',caseIds:[],
+  });
+  const permittedEmpty=await checkList({adapters:empty});
+  assert.equal(permittedEmpty.ok,true);
+  assert.deepEqual(permittedEmpty.caseIds,[]);
+});
+test('WZ-01 list: fail closed on revoked principal and missing/error adapters',async()=>{
+  const missing=listAdapters();
+  delete missing.getAuthorizedCaseIds;
+  assert.equal((await checkList({adapters:missing})).status,503);
+  const revoked=listAdapters();
+  revoked.verifySession=async()=>({userId:SCOPE_U,sessionActive:false});
+  assert.equal((await checkList({adapters:revoked})).status,401);
+  const err=listAdapters();
+  err.getAuthorizedCaseIds=async()=>{throw Error('secret query MUST_NOT_LEAK');};
+  const denied=await checkList({adapters:err});
+  assert.deepEqual(denied,{ok:false,status:503,code:'SERVER_ADAPTER_ERROR'});
+  assert.equal(JSON.stringify(denied).includes('MUST_NOT_LEAK'),false);
 });
