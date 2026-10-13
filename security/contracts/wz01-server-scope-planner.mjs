@@ -237,6 +237,9 @@ export async function verifyScopedListFromTrustedAdapters({
       ok:true,action:'list',actor:principal.userId,
       workspaceId:membership.workspaceId,
       caseIds:Object.freeze([...scope.caseIds]),
+      // Empty ACL is 0 rows. Never build a query with the case filter omitted.
+      mayQueryDatabase:scope.caseIds.length > 0,
+      emptyResult:scope.caseIds.length === 0,
       mustApplyWorkspaceAndCaseFilter:true,
       approvedForLiveDeployment:false,
     });
