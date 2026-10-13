@@ -47,3 +47,18 @@ Ordem de decisão: bearer validado por sessão revogável; identidade humana val
 Quatro suítes sintéticas novas verificam sequência dos seis callbacks, sucesso restrito, negativas de sessão/token/identidade/tenant/caso/atribuição e ausência de vazamento de exceções. Nenhum dado pessoal, credential, serviço, função Edge ou runtime foi tocado.
 
 LIMITES: o código não comprova origem dos callbacks nem executa SQL/RLS/Auth reais. Nenhum adaptador real foi implementado; não é middleware pronto; approvedForLiveDeployment=false permanece. Ainda requer mapeamento Auth humano, revisão de vínculos legados, RLS/consulta escopada, E2E negativo, rollback e homologação das 10 telas antes de qualquer promoção. WZ-01 permanece P0 aberto.
+
+## 13/10 — Listagem privada com predicado por caso
+
+A interface F01/F02/F03 exige uma lista de chamados, mas a leitura indiscriminada não é aceitável. A função LAB `verifyScopedListFromTrustedAdapters()` produz SOMENTE um plano de predicados com Auth ativo, vínculo humano/workspace, permissão `list` no mesmo workspace e lista explícita de IDs de casos autorizados para esse humano.
+
+- Aceita exclusivamente modo `assigned-cases-only`, nunca wildcard global.
+- Exige UUIDs válidos, sem repetição, no máximo 500 IDs por solicitação; lista vazia é autorizada como 0 resultados, não como acesso geral.
+- Retorna IDs e workspace verificados por callback de confiança do servidor, nunca registros de clientes, e exige que TODO SELECT real aplique filtros de workspace E caso.
+- Falha fechada com sessão revogada, grant de outro workspace, dados incompletos e erro de consulta. `approvedForLiveDeployment=false`.
+
+CI: `Central Canonical Guard` commit `1a360690721c1474c1f556cf08ea1a67d9554544`, run #38473069431, PASS em 13/10/2026. São testes sintéticos; a coleta da lista e seu SQL real **NÃO** estão implementados nem foram acessados. Não publicar o laboratório como endpoint.
+
+Read-only no banco oficial confirmou quatro perfis esperados, dois validados como humanos e nenhum vínculo Auth ou conta em Auth; ainda há 13 handoffs sem `case_id` e três casos sem workspace. A contagem serve exclusivamente ao planejamento de migração. NÃO fazer backfill automático pelo número do chamado, e NÃO criar contas por suposição.
+
+Próxima etapa de execução técnica sem ação humana: especificar adaptadores de Auth/ACL reais sobre dados existentes, preparar queries seguras e contrato de compatibilidade isolado. Única dependência humana para ativação: confirmar identidade e o vínculo das pessoas no onboarding, aprovar as permissões efetivas e testar posteriormente as quatro jornadas em dispositivos homologados. Sem novos servidores, Edge, Secret, DB ou autorização de produção nesta PR.
