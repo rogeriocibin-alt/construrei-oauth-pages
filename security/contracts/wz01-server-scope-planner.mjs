@@ -52,8 +52,8 @@ export function verifyServerCaseScope({
 
   // caseNumber, free text, phone, customer name and token alone are never
   // acceptable legacy join keys or authorization evidence.
-  if (!handoff || !uuid(handoff.case_id) ||
-      !caseRecord || !uuid(caseRecord.case_id) ||
+  if (!handoff || handoff.serverVerified !== true || !uuid(handoff.case_id) ||
+      !caseRecord || caseRecord.serverVerified !== true || !uuid(caseRecord.case_id) ||
       !uuid(caseRecord.workspace_id) ||
       handoff.case_id !== caseRecord.case_id ||
       membership.workspaceId !== caseRecord.workspace_id) return DENY;
