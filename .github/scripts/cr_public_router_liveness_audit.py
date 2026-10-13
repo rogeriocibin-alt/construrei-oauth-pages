@@ -9,6 +9,7 @@ Network unavailability is NOT proof of a healthy route.
 from __future__ import annotations
 
 import json
+import os
 import sys
 import urllib.error
 import urllib.parse
@@ -98,6 +99,41 @@ def probe() -> int:
         "known_app_preview_not_approved": True,
         "counts": counts, "checks": observations,
     }, ensure_ascii=False, indent=2))
+    # Surface persistent debt where operators see workflow health, not only logs.
+    # These annotations reveal no headers, credentials, query payload or user data.
+    for observation in observations:
+        state = observation["status"]
+        if state in ("WARNING", "UNVERIFIED"):
+            print("::warning title=CONSTRU-REI route "+state+"::"
+                  + observation["route"]+" — "+observation["reason"])
+        elif state == "FAIL":
+            print("::error title=CONSTRU-REI route drift::"
+                  + observation["route"]+" — "+observation["reason"])
+
+    summary = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary:
+        lines = [
+            "## CONSTRU-REI • Roteamento oficial (somente HEAD)",
+            "",
+            "| Rota | Resultado | Observação |",
+            "|---|---|---|",
+        ]
+        for observation in observations:
+            lines.append("| "+observation["route"]+" | "+observation["status"]
+                         +" | "+observation["reason"]+" |")
+        lines += [
+            "",
+            "**"+str(counts["PASS"])+" PASS; "+str(counts["WARNING"])
+            +" WARNING; "+str(counts["FAIL"])+" FAIL; "
+            +str(counts["UNVERIFIED"])+" UNVERIFIED.**",
+            "",
+            "Aviso de APP em preview **não representa homologação**. "
+            "Sem teste E2E, autenticação ou escrita.",
+            "Se houver UNVERIFIED, a observação de rede ficou incompleta.",
+            "",
+        ]
+        with open(summary, "a", encoding="utf-8") as fp:
+            fp.write("\n".join(lines))
     if counts["FAIL"]:
         print("FAIL CLOSED: unexpected official redirect destination", file=sys.stderr)
         return 1
