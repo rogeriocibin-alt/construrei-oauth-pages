@@ -268,6 +268,18 @@ jobs:
           bash .github/scripts/cr_cofre_fallback_dump.sh "$WORK"
           python3 .github/scripts/cr_cofre_direct_cas_fallback.py --dry-run \
             --work-dir "$WORK" --run-id "$RUN_ID" --max-new-bytes 268435456 > "$WORK/preview.json"
+          # SQL must pass structure/hash/COPY gates BEFORE an immutable manifest is committed.
+          python3 .github/scripts/cr_sql_restore_preflight.py --root "$WORK" > "$WORK/sql-proof.json"
+          python3 .github/scripts/cr_sql_copy_inventory.py --root "$WORK" > "$WORK/sql-copy-proof.json"
+          python3 - "$WORK" <<'PY'
+          import json,sys,pathlib
+          root=pathlib.Path(sys.argv[1])
+          sql=json.loads((root/"sql-proof.json").read_text())
+          cp=json.loads((root/"sql-copy-proof.json").read_text())
+          assert sql["hashes_verified"]==3 and cp["copy_headers_total"]>0
+          assert not sql["eligible_for_recovery_signoff"] and not cp["sql_restore_attempted"]
+          print("SQL_PREFLIGHT_BEFORE_CAS_COMMIT=PASS")
+          PY
           python3 .github/scripts/cr_cofre_direct_cas_fallback.py --commit \
             --work-dir "$WORK" --run-id "$RUN_ID" --max-new-bytes 268435456 > "$WORK/result.json"
           python3 .github/scripts/cr_sql_restore_preflight.py --root "$WORK" > "$WORK/sql-proof.json"
