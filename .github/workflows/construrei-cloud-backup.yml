@@ -1,7 +1,16 @@
-name: CONSTRU-REI Cloud Backup
+name: Cofre Zero | Canonical change-driven backup
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/**'
+      - 'production/**'
+      - 'central-runtime/**'
+      - 'gestor-projeto/**'
+      - '.github/scripts/**'
+      - '!**/*.md'
 
 permissions:
   contents: read
@@ -62,7 +71,7 @@ jobs:
           set -euo pipefail
           RUN_ID="$(date -u +'%Y%m%d-%H%M%S')"
           ROOT="$RUNNER_TEMP/CONSTRUREI-BACKUP-AUTO"
-          WORK="$ROOT/WORK/DAILY_$RUN_ID"
+          WORK="$ROOT/WORK/CHANGE_$RUN_ID"
           mkdir -p "$WORK/03_DATABASE" "$WORK/06_STORAGE" "$RUNNER_TEMP/supabase/.temp"
           printf '%s\n' "$PROJECT_REF" > "$RUNNER_TEMP/supabase/.temp/project-ref"
           echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
@@ -164,7 +173,7 @@ jobs:
             echo "SOURCE_PROJECT: $PROJECT_REF"
           } > BACKUP_STATUS.txt
 
-      - name: Publish immutable, complete daily recovery point first
+      - name: Publish immutable recovery point only for meaningful change
         shell: bash
         run: |
           set -euo pipefail
@@ -180,7 +189,7 @@ jobs:
           cmp "$WORK/BACKUP_STATUS.txt" "$RUNNER_TEMP/archive-status-readback.txt"
           rclone copyto "$SNAPSHOT/SHA256SUMS.txt" "$RUNNER_TEMP/archive-sha-readback.txt"
           cmp "$WORK/SHA256SUMS.txt" "$RUNNER_TEMP/archive-sha-readback.txt"
-          echo "Immutable full recovery point verified: HISTORY_FULL/$RUN_ID"
+          echo "Immutable change recovery point verified: HISTORY_FULL/$RUN_ID"
 
       - name: Update CURRENT only after full history passes verification
         shell: bash
