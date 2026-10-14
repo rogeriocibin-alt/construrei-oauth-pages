@@ -52,6 +52,7 @@ EOF
 
 rclone sync "$WORK" "$REMOTE" \
   --exclude "/06_STORAGE/**" \
+  --exclude "/BACKUP_STATUS.txt" \
   --backup-dir "$HISTORY" \
   --create-empty-src-dirs
 
@@ -59,7 +60,7 @@ rclone sync construrei-s3: "$REMOTE/06_STORAGE" \
   --backup-dir "$HISTORY/06_STORAGE" \
   --create-empty-src-dirs
 
-rclone check "$WORK" "$REMOTE" --exclude "/06_STORAGE/**"
+rclone check "$WORK" "$REMOTE" --exclude "/06_STORAGE/**" --exclude "/BACKUP_STATUS.txt"
 rclone check construrei-s3: "$REMOTE/06_STORAGE"
 
 RESTORE="$ROOT/RESTORE-DRILL-$RUN_ID"
@@ -81,6 +82,15 @@ for rel in "${SAMPLES[@]}"; do
   rclone copyto "$REMOTE/06_STORAGE/$rel" "$dst"
   test "$(sha256sum "$src" | awk '{print $1}')" = "$(sha256sum "$dst" | awk '{print $1}')"
 done
+
+# A status file is a completion marker, not a progress marker.
+# Keep CURRENT's previous marker unchanged until all SQL and Storage readbacks pass.
+if rclone lsf "$REMOTE" --files-only | grep -Fxq 'BACKUP_STATUS.txt'; then
+  rclone copyto "$REMOTE/BACKUP_STATUS.txt" "$HISTORY/BACKUP_STATUS.txt" --immutable
+fi
+rclone copyto "$WORK/BACKUP_STATUS.txt" "$REMOTE/BACKUP_STATUS.txt"
+rclone copyto "$REMOTE/BACKUP_STATUS.txt" "$RESTORE/BACKUP_STATUS-READBACK.txt"
+cmp "$WORK/BACKUP_STATUS.txt" "$RESTORE/BACKUP_STATUS-READBACK.txt"
 
 echo "RESTORE_DRILL=PASS"
 echo "RUN_ID=$RUN_ID"
