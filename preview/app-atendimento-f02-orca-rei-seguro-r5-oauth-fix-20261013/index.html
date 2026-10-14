@@ -1634,9 +1634,17 @@ function init(){
  const apply=make(panel,"button","Aplicar somente os textos revisados");apply.type="button";apply.className="btn gold";
  const dismiss=make(panel,"button","Fechar prévia");dismiss.type="button";dismiss.className="btn";
  dismiss.onclick=()=>panel.hidden=true;
- async function startOAuth(){
-  signIn.disabled=true;status.textContent="Iniciando login Google seguro...";
+ async function googleProviderEnabled(){
+ const r=await fetch(SUPA+"/auth/v1/settings",{headers:{"apikey":ANON},cache:"no-store"});
+ if(!r.ok)throw new Error("Não foi possível verificar o provedor Google (HTTP "+r.status+").");
+ const settings=await r.json();
+ return settings?.external?.google===true;
+}
+async function startOAuth(){
+  signIn.disabled=true;status.textContent="Conferindo login Google no Supabase...";
   try{
+   const googleEnabled=await googleProviderEnabled();
+   if(!googleEnabled)throw new Error("O login Google está desativado no Supabase; nenhuma autenticação foi iniciada.");
    const c=await sdk();
    const url=location.origin+location.pathname; // exact candidate URL
    const {error}=await c.auth.signInWithOAuth({provider:"google",options:{redirectTo:url,skipBrowserRedirect:false}});
@@ -1690,6 +1698,9 @@ function init(){
  };
  // Supabase SDK recognizes PKCE ?code=... after OAuth, handles token renewal and cleanup.
  if(new URLSearchParams(location.search).has("error_description"))status.textContent="Google recusou o retorno; verifique URL autorizada no Supabase.";
+ googleProviderEnabled().then(enabled=>{
+  if(!enabled)status.textContent="Login Google desativado na configuração do Supabase. O orçamento e os PDFs continuam disponíveis; Gemini não foi acionado.";
+ }).catch(()=>{status.textContent="Verificação do Google indisponível; nenhuma chamada ao Gemini foi feita."});
  sdk().then(async c=>{
   c.auth.onAuthStateChange((event,session)=>{
    if(event==="SIGNED_IN" && session?.user?.email)status.textContent="Conta Google conectada: "+session.user.email+". Você pode ajustar o orçamento.";
