@@ -3,7 +3,7 @@
 
 Never writes CURRENT, HISTORY_FULL, Cloud Run, Scheduler, or production SQL.
 No new schedule. --selftest is offline; --dry-run inventories only.
-Commit is deliberately disabled until source and quota E2E gates are validated.
+Commit is fail-closed behind explicit live-source, budget and recovery checks.
 """
 import argparse
 import datetime as dt
@@ -13,6 +13,8 @@ import os
 import re
 import sys
 from pathlib import Path
+import tempfile
+import subprocess
 
 from cr_history_cas_append import (
     SEED, DRIVE_ROOT, CAS_ROOT, HISTORY_FULL, MANIFESTS, OBJECTS,
@@ -155,6 +157,7 @@ def main():
     g=ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--selftest",action="store_true")
     g.add_argument("--dry-run",action="store_true")
+    g.add_argument("--commit",action="store_true")
     ap.add_argument("--work-dir")
     ap.add_argument("--run-id")
     ap.add_argument("--max-new-bytes",type=int,default=536870912)
@@ -175,23 +178,105 @@ def main():
         if not args.run_id:
             raise ValueError("Run ID required when SQL dumps are provided")
         local=assemble_local_metadata(args.work_dir,args.run_id,len(rows))
+    if args.commit and (not local or not args.run_id or
+                        args.run_id[:8] != today.strftime("%Y%m%d")):
+        raise ValueError("Commit requires a complete same-day SQL snapshot")
     source,entries,missing,summary=estimate(rows,seed,existing,local)
     projected=summary["projected_new_unique_bytes"]
     if (projected>args.max_new_bytes or
         summary["source_files"] < 4531 or
         args.max_new_bytes <= 0):
         raise ValueError("Hard quota or source-coverage guard blocked")
-    # Quota read without writes. Include conservative manifest metadata estimate.
-    manifest_allowance=max(2 << 20,len(entries)*280)
+    # Exact immutable manifest, compatible with existing CR-CAS-1 archive validator.
+    manifest={"format":"CR-CAS-1", "run_id":args.run_id,
+              "source_project":PROJECT, "immutable_seed_id":"20261011-060021",
+              "entry_count":len(entries),
+              "cas_entry_count":sum(e["store"]=="cas" for e in entries),
+              "entries":entries} if local else None
+    payload=(json.dumps(manifest,sort_keys=True,separators=(",",":"),
+                        ensure_ascii=False)+"\n").encode("utf-8") if local else b""
+    manifest_allowance=len(payload) if manifest else max(2 << 20,len(entries)*280)
     total_added=projected+manifest_allowance
     quota_guard(total_added,remote_bytes(CAS_ROOT) if existing else 0,
                 remote_bytes(HISTORY_FULL))
-    print(json.dumps({**summary,"decision":"DRY_RUN_ONLY",
-                      "database_snapshot_created":bool(local),
-                      "target":"EXISTING_CAS_ONLY",
-                      "source_current_unchanged":True},
-                     sort_keys=True))
-    # No --commit yet. Do not activate without real E2E and cost verification.
+    if not args.commit:
+        print(json.dumps({**summary,"decision":"DRY_RUN_ONLY",
+                          "database_snapshot_created":bool(local),
+                          "target":"EXISTING_CAS_ONLY",
+                          "source_current_unchanged":True},
+                         sort_keys=True))
+        return
+    # Do not overwrite CURRENT or change scheduled cloud backup; CAS is additive.
+    # Recheck primary and source before every external write.
+    if status_is_fresh(command("rclone","cat",
+            DRIVE_ROOT+"/CURRENT/BACKUP_STATUS.txt"),today):
+        raise ValueError("Primary recovered while preparing fallback")
+    check_rows=lsjson(S3)
+    if inventory(check_rows)!=inventory(rows):
+        raise ValueError("Storage source changed during preflight")
+    present={p for p in command("rclone","lsf",MANIFESTS,"--files-only").splitlines()}
+    if args.run_id+".json" in present:
+        raise ValueError("Already archived RUN_ID; refuse overwrite")
+    from cr_history_cas_append import parse_cas_inventory, copyto
+    # CAS keys are content hashes; identical existing seed/CAS objects are reused.
+    for key,(src_path,size,md5) in sorted(missing.items()):
+        if src_path.startswith("06_STORAGE/"):
+            original=S3+src_path.removeprefix("06_STORAGE/")
+        else:
+            if src_path.startswith("03_DATABASE/"):
+                name=src_path.removeprefix("03_DATABASE/")
+            else:
+                name=src_path
+            if name not in local:
+                raise ValueError("Unexpected local source path")
+            original=local[name]
+        copyto(original,OBJECTS+"/"+key)
+    checked=parse_cas_inventory(lsjson(OBJECTS))
+    for e in entries:
+        if e["store"]=="cas" and checked.get(e["key"])!=(e["bytes"],e["md5"]):
+            raise ValueError("CAS object absent or corrupt after upload")
+    if inventory(lsjson(S3))!=inventory(rows):
+        raise ValueError("Storage changed before immutable manifest commit")
+    if status_is_fresh(command("rclone","cat",
+            DRIVE_ROOT+"/CURRENT/BACKUP_STATUS.txt"),today):
+        raise ValueError("Primary recovered before manifest")
+    with tempfile.TemporaryDirectory() as tmp:
+        saved=Path(tmp)/"manifest.json"
+        saved.write_bytes(payload)
+        copyto(str(saved),MANIFESTS+"/"+args.run_id+".json")
+        remote=command("rclone","cat",MANIFESTS+"/"+args.run_id+".json")
+        if remote.encode("utf-8")!=payload:
+            raise ValueError("Immutable manifest failed readback")
+        proof=validate_saved_manifest(manifest,seed,checked)
+        if proof["verified_entries"]!=len(entries):
+            raise ValueError("Some backup references do not resolve")
+        by_name={x["path"]:x for x in entries}
+        for name in SQL_FILES:
+            item=by_name["03_DATABASE/"+name]
+            base=(SEED if item["store"]=="seed" else OBJECTS)
+            saved_sql=Path(tmp)/name
+            command("rclone","copyto",base+"/"+item["key"],str(saved_sql))
+            if hashlib.sha256(saved_sql.read_bytes()).digest()!=hashlib.sha256(
+                    Path(local[name]).read_bytes()).digest():
+                raise ValueError("SQL readback differs")
+        sample=sorted((e for e in entries if e["path"].startswith("06_STORAGE/")),
+                      key=lambda e:e["bytes"])[:3]
+        if len(sample)!=3:
+            raise ValueError("Insufficient Storage recovery sample")
+        for ix,item in enumerate(sample):
+            base=SEED if item["store"]=="seed" else OBJECTS
+            sample_file=Path(tmp)/("sample-"+str(ix))
+            command("rclone","copyto",base+"/"+item["key"],str(sample_file))
+            h=hashlib.md5(sample_file.read_bytes()).hexdigest()
+            if h!=item["md5"]:
+                raise ValueError("Storage recovery sample differs")
+    print(json.dumps({"decision":"IMMUTABLE_CAS_FALLBACK_COMMITTED",
+                      "run_id":args.run_id,"restored_sql_samples":3,
+                      "restored_storage_samples":3,
+                      "source_files":len(entries),"new_objects":len(missing),
+                      "new_unique_bytes":projected,
+                      "current_untouched":True,"full_copy_created":False,
+                      "database_replay_proven":False},sort_keys=True))
 
 if __name__=="__main__":
     try:main()
