@@ -2,13 +2,18 @@ name: Cofre Zero | Immutable daily full archive
 on:
   workflow_dispatch:
   schedule:
-    - cron: '47 6 * * *'
+    - cron: '47 8 * * *'
   push:
     branches:
       - checkpoint/cofre-zero-archive-full-20261011
       - main
     paths:
       - .github/workflows/cofre-zero-history-full.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/cofre-zero-history-full.yml
+      - .github/scripts/cr_cofre_direct_cas_fallback.py
 
 permissions:
   contents: read
@@ -18,7 +23,58 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  contract:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Offline CAS tests without data or secrets
+        run: |
+          python3 -m py_compile .github/scripts/cr_cofre_direct_cas_fallback.py
+          python3 .github/scripts/cr_cofre_direct_cas_fallback.py --selftest
+
+  detect:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      primary: \${{ steps.marker.outputs.primary }}
+    env:
+      RCLONE_CONFIG_B64: \${{ secrets.RCLONE_CONFIG_B64 }}
+    steps:
+      - name: Determine if original 06:00 UTC backup is fresh
+        id: marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64" || exit 2
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+          mkdir -p "$HOME/.config/rclone"
+          trap 'rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone cat "construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT/BACKUP_STATUS.txt" > "$RUNNER_TEMP/origin.txt" 2>/dev/null
+          python3 - <<'PY'
+          import datetime,os,re
+          txt=open(os.environ["RUNNER_TEMP"]+"/origin.txt",encoding="utf-8").read()
+          assert txt.startswith("CONSTRU-REI CLOUD BACKUP\n")
+          assert "SOURCE_PROJECT: yspuaamokjbrosytqjpg\n" in txt
+          assert "DATABASE_FILES: 3\n" in txt
+          ident=re.search(r"^RUN_ID: (\d{8}-\d{6})$",txt,re.M)
+          assert ident,"Untrusted CURRENT"
+          day=datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+          fresh=ident.group(1).startswith(day)
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              out.write("primary="+("true" if fresh else "false")+"\n")
+          print("PRIMARY_STATUS="+("FRESH" if fresh else "STALE"))
+          PY
+
   archive:
+    needs: detect
+    if: needs.detect.outputs.primary == 'true'
     runs-on: ubuntu-22.04
     timeout-minutes: 90
     env:
