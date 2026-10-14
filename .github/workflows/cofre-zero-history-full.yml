@@ -56,7 +56,13 @@ jobs:
           trap 'rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
           printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
           chmod 600 "$HOME/.config/rclone/rclone.conf"
-          rclone cat "construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT/BACKUP_STATUS.txt" > "$RUNNER_TEMP/origin.txt" 2>/dev/null
+          # Missing CURRENT is not a reason to suppress the independent CAS fallback.
+          # Keep credentials/config failures fail-closed; the fallback still checks its remotes.
+          if ! rclone cat "construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT/BACKUP_STATUS.txt" > "$RUNNER_TEMP/origin.txt" 2>/dev/null; then
+            echo "PRIMARY_STATUS=UNAVAILABLE; attempting existing bounded CAS fallback"
+            printf "primary=false\n" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           python3 - <<'PY'
           import datetime,os,re
           txt=open(os.environ["RUNNER_TEMP"]+"/origin.txt",encoding="utf-8").read()
