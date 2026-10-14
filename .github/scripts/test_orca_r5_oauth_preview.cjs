@@ -109,6 +109,8 @@ assert.strictEqual(sdkScripts,0,"No auth SDK should load on init");
 const gateway=fs.readFileSync("security/contracts/orca-rei-r5-no-login-gateway-20261014/index.ts","utf8");
 const quota=fs.readFileSync("security/contracts/orca-rei-r5-no-login-gateway-20261014/budget.sql","utf8");
 assert(gateway.includes('env("ORCA_REI_FREE_TIER_CONFIRMED")==="true"'),"Free Tier fail-closed flag missing");
+assert(gateway.includes('const KEY=env("ORCA_REI_FREE_API_KEY")'),"Dedicated free-only credential missing");
+assert(!gateway.includes('env("GEMINI_API_KEY")')&&!gateway.includes('env("GOOGLE_AI_API_KEY")'),"Legacy/billable key fallback not allowed");
 assert(gateway.includes('env("ORCA_REI_ENABLE_PUBLIC_DEV_AI")==="true"'),"Model-enabled fail-closed flag missing");
 assert(gateway.includes("if(!FREE_VERIFIED)return send(")&&gateway.includes("if(!ENABLED)return send("),"Early cost protections missing");
 assert(gateway.includes('const MODEL="gemini-2.5-flash-lite"'),"Unapproved model change");
