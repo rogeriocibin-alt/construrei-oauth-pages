@@ -2,121 +2,16 @@ name: CONSTRU-REI Cloud Backup
 
 on:
   workflow_dispatch:
-    inputs:
-      mode:
-        description: "Read-only inspection of delta/capacity; never performs a backup"
-        required: true
-        type: choice
-        options:
-          - inspect
-        default: inspect
-  pull_request:
-    paths:
-      - .github/scripts/cr_cofre_failover_guard.py
-      - .github/scripts/cr_cofre_direct_cas_fallback.py
-      - .github/workflows/construrei-cloud-backup.yml
 
 permissions:
   contents: read
 
 concurrency:
-  # PR inspection never blocks a manually requested backup or another ref.
-  group: construrei-cloud-backup-${{ github.event_name }}-${{ github.ref }}
+  group: construrei-cloud-backup
   cancel-in-progress: false
 
 jobs:
-  failover-policy-selftest:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 3
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - name: Confirm fail-closed policy with synthetic data only
-        run: |
-          python3 -m py_compile .github/scripts/cr_cofre_failover_guard.py
-          python3 .github/scripts/cr_cofre_failover_guard.py --selftest
-          python3 -m py_compile .github/scripts/cr_cofre_direct_cas_fallback.py
-          python3 .github/scripts/cr_cofre_direct_cas_fallback.py --selftest
-
-  inspect-remote-delta:
-    # Inspect during same-repository PR review; never expose secrets to fork PRs.
-    # This is metadata-only and cannot write backup files.
-    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.mode == 'inspect') || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    permissions:
-      contents: read
-    env:
-      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - name: Prepare metadata-only inventory tools
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -n "$RCLONE_CONFIG_B64" || { echo "::error::Existing remote config unavailable"; exit 2; }
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq rclone >/dev/null
-          mkdir -p "$HOME/.config/rclone"
-          chmod 700 "$HOME/.config/rclone"
-          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
-          chmod 600 "$HOME/.config/rclone/rclone.conf"
-          rclone listremotes | grep -qx 'construrei-drive:'
-          rclone listremotes | grep -qx 'construrei-s3:'
-      - name: Compare metadata only; never download objects or alter Drive
-        shell: bash
-        run: |
-          set -euo pipefail
-          trap 'rm -rf "$RUNNER_TEMP/cofre-metadata"; rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
-          mkdir -m 700 "$RUNNER_TEMP/cofre-metadata"
-          WORK="$RUNNER_TEMP/cofre-metadata"
-          SRC="construrei-s3:"
-          DST="construrei-drive:CONSTRUREI-BACKUP-AUTO/CURRENT"
-          # Keep names, object paths, and hashes inside runner memory/files, NEVER logs/artifacts.
-          rclone lsjson "$SRC" --recursive --files-only --hash > "$WORK/source.json" 2>"$WORK/source.err" || { echo "::error::Supabase S3 metadata unavailable"; exit 2; }
-          rclone lsjson "$DST/06_STORAGE" --recursive --files-only --hash > "$WORK/destination.json" 2>"$WORK/destination.err" || { echo "::error::Drive metadata unavailable"; exit 2; }
-          rclone lsjson "$DST/03_DATABASE" --files-only > "$WORK/database.json" 2>"$WORK/database.err" || { echo "::error::Historical SQL metadata unavailable"; exit 2; }
-          rclone about construrei-drive: --json > "$WORK/quota.json" 2>"$WORK/quota.err" || { echo "::error::Drive quota unavailable"; exit 2; }
-          rclone cat "$DST/BACKUP_STATUS.txt" > "$WORK/status.txt" 2>"$WORK/status.err" || { echo "::error::No trusted CURRENT marker"; exit 2; }
-          python3 - "$WORK" <<'PY'
-          import json, pathlib, sys
-          work=pathlib.Path(sys.argv[1])
-          quota=json.loads((work/'quota.json').read_text())
-          free=quota.get('free')
-          sql=json.loads((work/'database.json').read_text())
-          files={p.get('Path'):p.get('Size') for p in sql}
-          if type(free) is not int or free < 0:
-              raise SystemExit("BLOCK: unknown Drive free quota")
-          if set(files) != {'roles.sql','schema.sql','data.sql'} or any(type(v) is not int or v<=0 for v in files.values()):
-              raise SystemExit("BLOCK: incomplete historical SQL")
-          # Prior SQL bytes + 100% growth margin; only a planning bound, not actual egress.
-          estimated=sum(files.values())*2
-          (work/'free.txt').write_text(str(free))
-          (work/'sql-estimate.txt').write_text(str(estimated))
-          print('Historical SQL metadata: 3/3; estimate includes 100% safety margin')
-          PY
-          python3 .github/scripts/cr_cofre_failover_guard.py \
-            --estimate-only \
-            --status-file "$WORK/status.txt" \
-            --source-inventory-json "$WORK/source.json" \
-            --destination-inventory-json "$WORK/destination.json" \
-            --database-export-estimate-bytes "$(cat "$WORK/sql-estimate.txt")" \
-            --max-egress-bytes 536870912 \
-            --drive-free-bytes "$(cat "$WORK/free.txt")"
-          echo "No backup executed. Cloud Run source status still must be verified separately."
-      - name: Confirm no real backup job runs from this inspection
-        run: echo "INSPECT_ONLY; no new schedule, Cloud, full copy, or archive"
-
   backup:
-    # Disabled until the existing Cloud Run producer is proven quiescent and the
-    # legacy full-copy steps below are replaced with verified incremental runtime.
-    if: ${{ false && github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
