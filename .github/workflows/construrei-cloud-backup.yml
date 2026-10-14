@@ -104,6 +104,7 @@ jobs:
           PY
           python3 .github/scripts/cr_cofre_failover_guard.py \
             --estimate-only \
+            --status-file "$WORK/status.txt" \
             --source-inventory-json "$WORK/source.json" \
             --destination-inventory-json "$WORK/destination.json" \
             --database-export-estimate-bytes "$(cat "$WORK/sql-estimate.txt")" \
