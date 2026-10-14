@@ -23,7 +23,8 @@ const secretKeys=(()=>{try{return JSON.parse(env("SUPABASE_SECRET_KEYS"))}catch{
 const SERVICE_KEY=secretKeys?.default||env("SUPABASE_SERVICE_ROLE_KEY");
 // Explicit independent verification is required; secret presence alone never authorizes spending.
 const FREE_VERIFIED=env("ORCA_REI_FREE_TIER_CONFIRMED")==="true";
-const ENABLED=env("ORCA_REI_ENABLE_PUBLIC_DEV_AI")==="true";
+// Apenas a confirmação explícita Free Tier autoriza uso. Nenhum toggle financeiro adicional.
+const ENABLED=FREE_VERIFIED;
 const LIMIT=2200;
 const finance=/(?:R\s*\$|US\s*\$|€|£|\b(?:BRL|USD)\b|\d[\d.,]*\s*%|\d[\d.,]*\s*(?:reais|real|centavos)\b|(?:pre[çc]o|valor|custo|total|desconto|margem|lucro|comiss[aã]o|tributo|encargo)\s*[:=-]?\s*(?:R\s*\$)?\s*\d)/i;
 const instruction=String.raw`Você é o ORÇA-REI, especialista em orçamento técnico CONSTRU-REI. Melhore de modo real e útil a redação técnica, evitando repetições, diagnósticos inventados, quantidades estimadas sem base e citações fictícias. Retorne JSON com services, materials, notes, report, warnings (lista) e research_status. Preserve integralmente os preços/quantidades fornecidos no orçamento, não crie novos valores. Em 'report', não inclua nenhum preço, custo, margem, comissão, valor financeiro, desconto ou percentual; diferencie constatações de hipóteses, indique vistorias necessárias. Não afirme pesquisa externa. Não processe nomes ou dados pessoais desnecessários. Português brasileiro profissional.`;
@@ -69,8 +70,8 @@ Deno.serve(async(req:Request)=>{
  // o teto GLOBAL atômico impede explosão de uso mesmo em caso de spoofing.
  const forwarded=(req.headers.get("x-forwarded-for")||"").split(",")[0].trim();
  const ip=req.headers.get("x-real-ip")||forwarded||"unknown";
- const fingerprint=await sha(env("ORCA_REI_RATE_SALT")+"|"+ip);
- if(!env("ORCA_REI_RATE_SALT"))return send({error:"rate_limit_salt_missing",provider_called:false},503);
+ // Hash com segredo privado já existente; evita outra credencial/configuração manual.
+ const fingerprint=await sha(SERVICE_KEY+"|orca-rei-private-quota-v1|"+ip);
  // RPC deve ter EXECUTE exclusivamente para service_role, com trava transacional.
  const db=createClient(SUPA_URL,SERVICE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
  const {data:claim,error:claimError}=await db.rpc("cr_orca_public_claim_v1",{p_fingerprint:fingerprint});
