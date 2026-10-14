@@ -8,6 +8,7 @@ Commit is fail-closed behind explicit live-source, budget and recovery checks.
 import argparse
 import datetime as dt
 import hashlib
+import gzip
 import json
 import os
 import re
@@ -60,8 +61,8 @@ def inventory(storage_rows, local_files=None):
         raise ValueError("No Storage objects; refuse incomplete backup")
     if local_files is not None:
         for name, path in local_files.items():
-            key = ("03_DATABASE/" + name) if name in SQL_FILES else name
-            if key in found or name not in (*SQL_FILES,"BACKUP_STATUS.txt","SHA256SUMS.txt"):
+            key = ("03_DATABASE/" + name) if name in (*SQL_FILES,"data.sql.gz") else name
+            if key in found or name not in (*SQL_FILES,"data.sql.gz","BACKUP_STATUS.txt","SHA256SUMS.txt"):
                 raise ValueError("Unexpected local manifest file")
             p = Path(path)
             size = p.stat().st_size
@@ -73,7 +74,7 @@ def inventory(storage_rows, local_files=None):
                     h.update(block)
             found[key] = (size,h.hexdigest())
         if {k for k in found if not k.startswith("06_STORAGE/")} != {
-            "03_DATABASE/roles.sql","03_DATABASE/schema.sql","03_DATABASE/data.sql",
+            "03_DATABASE/roles.sql","03_DATABASE/schema.sql","03_DATABASE/data.sql.gz",
             "BACKUP_STATUS.txt","SHA256SUMS.txt"
         }:
             raise ValueError("Local recovery inventory not complete")
@@ -91,14 +92,23 @@ def assemble_local_metadata(work, run_id, storage_count):
     for f in sorted(SQL_FILES):
         digest.append(hashlib.sha256((db/f).read_bytes()).hexdigest()+"  03_DATABASE/"+f)
     (root/"SHA256SUMS.txt").write_text("\n".join(digest)+"\n",encoding="utf-8")
+    # Immutable deterministic gzip drastically reduces recurring SQL delta bytes.
+    packed=db/"data.sql.gz"
+    with (db/"data.sql").open("rb") as src, packed.open("wb") as dest:
+        with gzip.GzipFile(fileobj=dest,mode="wb",filename="",mtime=0,compresslevel=6) as z:
+            for chunk in iter(lambda:src.read(1 << 20),b""):
+                z.write(chunk)
+    if not packed.is_file() or packed.stat().st_size==0:
+        raise ValueError("SQL compression failed")
     iso=dt.datetime.strptime(run_id,"%Y%m%d-%H%M%S").replace(
         tzinfo=dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     (root/"BACKUP_STATUS.txt").write_text(
         "CONSTRU-REI CLOUD BACKUP\nUTC: "+iso+"\nRUN_ID: "+run_id+
         "\nDATABASE_FILES: 3\nSTORAGE_FILES: "+str(storage_count)+
-        "\nSOURCE_PROJECT: "+PROJECT+"\nRECOVERY_METHOD: GITHUB_CAS_DELTA\n",encoding="utf-8")
-    return {name:str((db/name if name in SQL_FILES else root/name))
-            for name in (*SQL_FILES,"BACKUP_STATUS.txt","SHA256SUMS.txt")}
+        "\nSOURCE_PROJECT: "+PROJECT+"\nRECOVERY_METHOD: GITHUB_CAS_DELTA\nSQL_DATA_ENCODING: GZIP\n",encoding="utf-8")
+    packed_files=("roles.sql","schema.sql","data.sql.gz","BACKUP_STATUS.txt","SHA256SUMS.txt")
+    return {name:str((db/name if name in (*SQL_FILES,"data.sql.gz") else root/name))
+            for name in packed_files}
 
 def estimate(storage, seed, existing, local_files=None):
     source=inventory(storage,local_files)
@@ -200,7 +210,7 @@ def main():
     # Exact immutable manifest, compatible with existing CR-CAS-1 archive validator.
     manifest={"format":"CR-CAS-1", "run_id":args.run_id,
               "source_project":PROJECT, "immutable_seed_id":"20261011-060021",
-              "entry_count":len(entries),
+              "entry_count":len(entries), "sql_data_encoding":"gzip",
               "cas_entry_count":sum(e["store"]=="cas" for e in entries),
               "entries":entries} if local else None
     payload=(json.dumps(manifest,sort_keys=True,separators=(",",":"),
@@ -253,12 +263,21 @@ def main():
     with tempfile.TemporaryDirectory() as tmp:
         by_name={x["path"]:x for x in entries}
         for name in SQL_FILES:
-            item=by_name["03_DATABASE/"+name]
+            stored_name="data.sql.gz" if name=="data.sql" else name
+            item=by_name["03_DATABASE/"+stored_name]
             base=(SEED if item["store"]=="seed" else OBJECTS)
-            saved_sql=Path(tmp)/name
+            saved_sql=Path(tmp)/stored_name
             command("rclone","copyto",base+"/"+item["key"],str(saved_sql))
-            if hashlib.sha256(saved_sql.read_bytes()).digest()!=hashlib.sha256(
-                    Path(local[name]).read_bytes()).digest():
+            if name=="data.sql":
+                with gzip.open(saved_sql,"rb") as encoded:
+                    restore_hash=hashlib.sha256()
+                    for block in iter(lambda:encoded.read(1 << 20),b""):
+                        restore_hash.update(block)
+                reference=hashlib.sha256(Path(args.work_dir,"03_DATABASE","data.sql").read_bytes()).digest()
+            else:
+                restore_hash=hashlib.sha256(saved_sql.read_bytes())
+                reference=hashlib.sha256(Path(local[name]).read_bytes()).digest()
+            if restore_hash.digest()!=reference:
                 raise ValueError("SQL readback differs")
         sample=sorted((e for e in entries if e["path"].startswith("06_STORAGE/")),
                       key=lambda e:e["bytes"])[:3]
