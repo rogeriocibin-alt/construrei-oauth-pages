@@ -19,7 +19,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: construrei-cloud-backup
+  # PR inspection never blocks a manually requested backup or another ref.
+  group: construrei-cloud-backup-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
