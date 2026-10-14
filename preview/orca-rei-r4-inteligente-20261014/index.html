@@ -1,0 +1,168 @@
+<!doctype html><html lang="pt-BR"><meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8"><title>ORÇA-REI — Teste</title><style>body{font:16px system-ui;background:#edf2fa;color:#123;max-width:800px;margin:auto;padding:20px}header{background:#07185d;color:white;padding:20px;border-radius:14px}textarea,select{box-sizing:border-box;width:100%;padding:12px;font:inherit;border-radius:9px;margin:8px 0;border:1px solid #aaa}textarea{min-height:210px}button{background:#1754b4;color:white;padding:13px 16px;border:0;border-radius:10px;cursor:pointer;margin:7px 5px 7px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:white;padding:15px;border-radius:12px}.alert{background:#fffae8;padding:12px;border-radius:9px} #pdfmeta input{box-sizing:border-box;width:100%;padding:8px;border:1px solid #aebdcc;border-radius:7px;display:block;margin:5px 0 10px}#pdfmeta label{font-size:12px;font-weight:600}@media(max-width:550px){#pdfmeta{grid-template-columns:1fr!important}}</style><header><h1>ORÇA-REI | Teste F02</h1>CONSTRU-REI • candidata isolada • sem login</header><p class="alert" id="status">Verificando IA...</p><label>Documento<select id="mode"><option value="budget">Orçamento</option><option value="report">Parecer técnico sem valores</option></select></label><label>Agente para testar<select id="provider"><option value="auto">Automático (Groq → Gemini)</option><option value="gemini">Somente Gemini</option><option value="groq">Somente Groq 120B</option></select></label><label>Texto de teste<textarea id="src">SERVIÇOS:\nVedação de janela (Selar juntas e pontos de infiltração)\nLimpeza de calha (Retirar resíduos e desobstruir descidas)\nMATERIAIS:\nSelante flexível\nOBSERVAÇÕES:\nConfirmar medidas no local.</textarea></label><button onclick="send('format')">Testar formatação</button><button id="ai" onclick="send('ai')">Gerar com IA real</button><label style="display:block;margin:8px 0">Logomarca oficial do PDF<input id="pdflogo" type="file" accept="image/png,image/jpeg,image/webp" onchange="savePdfLogo(this)"></label><div id="pdfmeta" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><label>Nº documento<input id="pdfnumber" placeholder="Ex.: 710-26"></label><label>Cliente<input id="pdfclient" placeholder="Cliente / origem"></label><label>Endereço<input id="pdfaddress" placeholder="Endereço da obra"></label><label>Responsável<input id="pdfperson" value="CONSTRU-REI"></label><label>Assunto<input id="pdftitle" placeholder="Vistoria / serviço"></label><label>Fotos<input id="pdffiles" type="file" accept="image/*" multiple></label></div><div id="pricesPanel" style="background:#fff;border:1px solid #bfd1de;border-radius:10px;padding:12px;margin:10px 0"><b>Motor comercial — orçamento</b><p style="font-size:12px">Ao gerar, o sistema identifica itens e valores que constem na entrada. Você só precisa revisar lacunas; totais são recalculados sem IA.</p><button onclick="loadPriceItems()" type="button">Atualizar composição</button><div id="priceRows"></div><button onclick="applyPriceItems()" type="button">Calcular e aplicar valores</button><p id="priceStatus"></p></div><h3>Resultado</h3><b id="label"></b><pre id="out"></pre><button onclick="navigator.clipboard.writeText(document.getElementById('out').textContent)">Copiar</button><button onclick="exportPdf()" style="background:#d4a51c;color:#092b47;font-weight:bold">Gerar PDF institucional</button><small>Revise o texto; no diálogo selecione Salvar como PDF e ative gráficos de fundo.</small><script>const endpoint='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-test-bench-20261014';async function send(action){document.getElementById('label').textContent='Processando...';try{let r=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action,source:document.getElementById('src').value,mode:document.getElementById('mode').value,provider:document.getElementById('provider').value})});let d=await r.json();document.getElementById('label').textContent=d.ok?'Resposta real: '+d.provider:d.error?'Requisição bloqueada antes da IA':'Formatação local (sem IA)';document.getElementById('out').textContent=d.output||(d.error==='cooldown'||d.error==='Limite de consumo: cooldown'?'Aguarde 60 segundos desde a última tentativa e clique novamente em Gerar com IA real. Nenhuma geração foi concluída nesta tentativa.':d.error)||'Sem resultado';if(d.ok&&document.getElementById('mode').value==='budget'){loadPriceItems();applyPriceItems()} }catch(e){document.getElementById('out').textContent=String(e)}}fetch(endpoint+'?status=1').then(r=>r.json()).then(x=>{document.getElementById('ai').disabled=!x.model_available;document.getElementById('status').textContent=x.model_available?'Groq 120B • Gemini '+(x.gemini_configured?'com chave detectada':'sem chave detectada')+' • Teto interno 1000/dia (cotas reais dependem dos provedores)':'A formatação pode ser testada; IA real exige chave Groq no backend.'})
+function pdfEsc(x){return String(x||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function pdfVal(id){return(document.getElementById(id).value||'').trim()}
+function savePdfLogo(el){var f=el.files&&el.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{localStorage.setItem("cr_pdf_logo_710",String(rd.result));alert("Logomarca salva neste navegador.")}catch(e){alert("Imagem grande demais; reduza o arquivo.")}};rd.readAsDataURL(f)}
+async function exportPdf(){
+var txt=document.getElementById('out').textContent||'';
+if(txt.length<30||txt.indexOf('Provedores indisponíveis')===0){alert('Gere primeiro um orçamento ou parecer válido.');return}
+var isReport=document.getElementById('mode').value==='report';var logo='';try{logo=localStorage.getItem('cr_pdf_logo_710')||''}catch(e){};
+var title=isReport?'PARECER TÉCNICO':'ORÇAMENTO';
+var num=pdfVal('pdfnumber')||'A DEFINIR';
+var fields=[['CLIENTE / ORIGEM',pdfVal('pdfclient')||'Não informado'],['ENDEREÇO',pdfVal('pdfaddress')||'Não informado'],['DATA',new Date().toLocaleDateString('pt-BR')],['RESPONSÁVEL',pdfVal('pdfperson')||'CONSTRU-REI']];
+var raw=txt.replace(/\r/g,'').split('\n').map(function(x){return x.trim()}).filter(Boolean);
+var sections=[],cur=null;
+var headings=/^(SITUAÇÃO RELATADA|OBJETIVO E ESCOPO.*|VERIFICAÇÕES REALIZADAS|ANÁLISE TÉCNICA.*|HIPÓTESE TÉCNICA|RECOMENDAÇÕES.*|INFORMAÇÕES A CONFIRMAR|CONSIDERAÇÕES DE SEGURANÇA|CONCLUSÃO|SERVIÇOS.*|MATERIAIS|RESUMO|OBSERVAÇÕES TÉCNICAS|OBSERVAÇÕES)\s*:?\s*$/i;
+raw.forEach(function(line){if(headings.test(line)){cur={heading:line,text:[]};sections.push(cur)}else{if(!cur){cur={heading:isReport?'OBJETIVO E ESCOPO':'DESCRIÇÃO',text:[]};sections.push(cur)}cur.text.push(line)}});
+var body=sections.map(function(s,i){return '<section><h2>'+(i+1)+'. '+pdfEsc(s.heading)+'</h2>'+s.text.map(function(t){var cls=/^TOTAL|^QTD\./.test(t)?'money':/^\d+\.\s+[A-ZÁ-Ú]/.test(t)?'service':'';return '<p class="'+cls+'">'+pdfEsc(t)+'</p>'}).join('')+'</section>'}).join('');
+var files=Array.from(document.getElementById('pdffiles').files||[]).slice(0,12);
+var images=await Promise.all(files.map(function(f){return new Promise(function(resolve){var rd=new FileReader();rd.onload=function(){resolve({src:rd.result,name:f.name})};rd.onerror=function(){resolve(null)};rd.readAsDataURL(f)})}));
+images=images.filter(Boolean);
+if(images.length){body+='<section><h2>'+(sections.length+1)+'. REGISTROS FOTOGRÁFICOS</h2><div class="photos">'+images.map(function(p,i){return '<figure><img src="'+p.src+'"><figcaption>'+(i+1)+'. '+pdfEsc((window.crPhotoCaptions||{})[p.name]||p.name)+'</figcaption></figure>'}).join('')+'</div><p class="note">Fotografias anexadas para conferência. Confirmar legendas e correspondência com a vistoria.</p></section>'}
+var cs='@page{size:A4;margin:14mm 13mm 22mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#17344b;margin:0}header{position:relative;margin:0 0 10mm;display:flex;border-top:4px solid #ddb327;height:28mm;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}header .logo{width:30%;display:flex;justify-content:center;align-items:center;font-size:20px;color:#073b64;font-weight:bold}header .blue{width:70%;background:#07385f;color:white;padding:10px 16px}header h1{font-size:19px;margin:0}header b{color:#d5ae27;font-size:15px}header small{display:block;margin-top:5px}.info{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:15px}.info div{background:#eff6fa;border:1px solid #cedde7;border-radius:4px;padding:8px;overflow-wrap:anywhere}.info strong{color:#08527a;display:block;font-size:8px;margin-bottom:5px}h2{break-after:avoid;color:white;background:#073d68;padding:6px 10px;font-size:11px;border-radius:3px;margin:16px 0 8px}p{font-size:10.5px;line-height:1.45;margin:5px 8px;white-space:pre-wrap;overflow-wrap:anywhere}p.service{font-weight:bold;color:#0a3b64}p.money{background:#f0f6fa;padding:6px;font-weight:700}.photos{page-break-inside:avoid;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.photos figure{border:1px solid #d0dfe9;background:#f3f8fb;padding:5px;margin:0;break-inside:avoid}.photos img{width:100%;height:95px;object-fit:cover}.photos figcaption{font-size:9px;margin-top:4px}.note{font-size:9px;color:#567}.footer{position:fixed;bottom:-19mm;left:-13mm;right:-13mm;background:linear-gradient(to right,#07385f 78%,#d8ab1a 78%);height:14mm;display:flex;align-items:center;justify-content:space-around;color:white;font-size:8px}.footer strong{color:#07385f}header .blue,.footer,h2,.info div,p.money{print-color-adjust:exact;-webkit-print-color-adjust:exact}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.noprint{display:none}}';
+var meta='<div class="info">'+fields.map(function(p){return '<div><strong>'+pdfEsc(p[0])+'</strong>'+pdfEsc(p[1])+'</div>'}).join('')+'</div>';
+var html='<html lang="pt-BR"><head><meta charset="utf-8"><title>'+pdfEsc(title+' '+num)+'</title><style>'+cs+'</style></head><body><div class="noprint">Clique em Imprimir PDF e escolha Salvar como PDF. No navegador desative Cabeçalhos e rodapés e ative Gráficos de fundo. <button onclick="window.print()">Imprimir PDF</button></div><header><div class="logo">'+(logo?'<img alt="CONSTRU-REI" src="'+logo+'" style="max-width:92%;max-height:22mm;object-fit:contain">':'CONSTRU-REI')+'</div><div class="blue"><h1>'+title+'</h1><b>Nº '+pdfEsc(num)+'</b><small>'+pdfEsc(pdfVal('pdftitle')||'MANUTENÇÃO • REFORMAS • DIAGNÓSTICO')+'</small></div></header>'+meta+body+'<div class="footer"><span>(41) 98778-6277</span><span>construrei@construrei.com.br</span><span>Curitiba/PR • Região Metropolitana</span><strong>CONSTRU-REI</strong></div></body>
+<script>
+/* R4: extends the preserved R3 candidate; historical references are suggested, never silently approved. */
+(function(){
+ const logoURL="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/construrei-logo?asset=corporate";
+ const ref="Gestão Click, orçamento 590-26, 12/08/2026";
+ const samples=[
+ ["SERVIÇOS",["VEDA","PORTA"],275,"serviço para 1 porta, até 10 m de juntas"],
+ ["SERVIÇOS",["ADEQUA","CALHA"],418,"adequação até 3 m de calha"],
+ ["SERVIÇOS",["TESTE","CONFER"],82.5,"teste após cura"],
+ ["MATERIAIS",["PU40"],126,"lote com 3 unidades"],
+ ["MATERIAIS",["CORD","POLIETIL"],55,"lote"],
+ ["MATERIAIS",["ARGAMASSA","REPAR"],120,"lote"],
+ ["MATERIAIS",["CALHA","METAL"],165,"até 3 m"],
+ ["MATERIAIS",["BOCAL","SUPORT"],160,"lote de acessórios"],
+ ["MATERIAIS",["CONDUTOR","PLUVIAL"],110,"até 3 m"],
+ ["MATERIAIS",["CONEX","ABRACA"],110,"lote"],
+ ["MATERIAIS",["LIMPEZA","PREPAR"],80,"lote"],
+ ["MATERIAIS",["PARAFUS","FIXAD"],65,"lote"],
+ ["MATERIAIS",["CONSUMIV"],79,"lote"]
+ ];
+ const normal=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+ let logoOK=false;
+ let loading=null;
+ async function ensureLogo(){
+  if(logoOK)return true;
+  if(loading)return loading;
+  loading=(async()=>{
+   let r=await fetch(logoURL,{cache:"no-store"});
+   if(!r.ok)throw Error("Logo: HTTP "+r.status);
+   let blob=await r.blob();
+   if(!blob.type.startsWith("image/")||blob.size>2500000)throw Error("Arquivo de logo inválido");
+   let data=await new Promise((resolve,reject)=>{let x=new FileReader();x.onload=()=>resolve(x.result);x.onerror=reject;x.readAsDataURL(blob)});
+   localStorage.setItem("cr_pdf_logo_710",data);logoOK=true;
+   document.getElementById("crLogoStatus").textContent="Logo institucional carregada automaticamente para orçamento e parecer.";
+   return true;
+  })();
+  try{return await loading}catch(e){loading=null;document.getElementById("crLogoStatus").textContent="Erro de logomarca: "+e.message;return false}
+ }
+ const upload=document.getElementById("pdflogo");
+ upload.closest("label").style.display="none";
+ const badge=document.createElement("p");badge.id="crLogoStatus";badge.style.cssText="padding:10px;background:#e9f3f8;border-left:4px solid #b99a3a;border-radius:7px;font-size:13px";badge.textContent="Carregando logomarca institucional...";
+ document.getElementById("pdfmeta").before(badge);ensureLogo();
+ const panel=document.getElementById("pricesPanel");
+ const info=document.createElement("div");info.style.cssText="background:#f3f8ff;padding:10px;border-radius:8px;font-size:12px;line-height:1.5";
+ info.innerHTML="<b>Sugestões com origem — motor R4</b><div>Ao gerar orçamento, os itens equivalentes recebem automaticamente valores unitários históricos. Referência: "+ref+". Valores ainda não representam cotações atuais nem preços aprovados. Verifique escopo, margem e condições de acesso.</div>";
+ panel.prepend(info);
+ let prov=document.createElement("p");prov.id="crPriceSources";prov.style.cssText="font-size:12px;white-space:pre-wrap";panel.append(prov);
+ let previousLoad=window.loadPriceItems;
+ window.loadPriceItems=function(){
+  previousLoad();
+  let found=0,missing=[];
+  crPriceItems.forEach((it,i)=>{
+   const n=normal(it.name),s=samples.find(s=>s[0]===it.section&&s[1].every(t=>n.includes(t)));
+   let input=document.getElementById("crv"+i),qty=document.getElementById("crq"+i);
+   if(!input)return;
+   if(!s){missing.push(it.name);return}
+   if(!input.value.trim()){input.value=String(s[2]).replace(".",",");found++}
+   if(qty&&!qty.value.trim()){qty.value="1";qty.title="1 lote sugerido — confirmar quantitativo"}
+   let note=document.createElement("small");note.style.cssText="grid-column:1 / -1;color:#52697a";
+   note.textContent="Fonte: "+ref+" | "+s[3]+" | preço sugerido, a validar";
+   input.parentElement.append(note);
+  });
+  prov.textContent=found+" preços sugeridos automaticamente; "+missing.length+" sem referência unitária confiável."+ (missing.length?"\nSem referência: "+missing.join("; "):"");
+ };
+ let originalApply=window.applyPriceItems;
+ window.applyPriceItems=function(){
+  let out=document.getElementById("out");
+  let lines=out.textContent.split(/\r?\n/);
+  let units=crPriceItems.map(it=>(lines[it.line]||"").match(/\bUN\.\s*:\s*([^|]+)/i)?.[1]?.trim()||"UN");
+  originalApply();
+  lines=out.textContent.split(/\r?\n/);
+  crPriceItems.forEach((it,i)=>{if(lines[it.line]&&units[i]!=="UN")lines[it.line]=lines[it.line].replace(/\bUN\.\s*:\s*UN\b/i,"UN.: "+units[i]);});
+  out.textContent=lines.join("\n");
+ };
+ window.crPhotoCaptions={};
+ const photos=document.createElement("div");photos.style.cssText="background:#f0f5fb;padding:12px;border-radius:8px;margin:10px 0;font-size:13px";
+ photos.innerHTML='<label><input id="crCaptionEnable" type="checkbox" checked> Gerar legendas técnicas automáticas com Gemini no parecer</label><div id="crCaptionStatus" style="font-size:12px">Até 6 fotos por documento; imagens reduzidas e enviadas para análise quando gerar o PDF.</div>';
+ document.getElementById("pdfmeta").after(photos);
+ async function captionImages(){
+  const all=Array.from(document.getElementById("pdffiles").files||[]);
+  if(!all.length||document.getElementById("mode").value!=="report"||!document.getElementById("crCaptionEnable").checked)return true;
+  const files=all.slice(0,6);let status=document.getElementById("crCaptionStatus");
+  status.textContent="Analisando imagens pelo Gemini...";
+  try{
+   const images=[];
+   for(const f of files){
+    const bmp=await createImageBitmap(f);const ratio=Math.min(1,768/Math.max(bmp.width,bmp.height));
+    const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(bmp.width*ratio));canvas.height=Math.max(1,Math.round(bmp.height*ratio));
+    canvas.getContext("2d").drawImage(bmp,0,0,canvas.width,canvas.height);bmp.close();
+    images.push({name:f.name,mime_type:"image/jpeg",data:canvas.toDataURL("image/jpeg",.7).split(",")[1]});
+   }
+   let resp=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:"photo_caption",images,source:document.getElementById("src").value.slice(0,1000)})});
+   let d=await resp.json();
+   if(!resp.ok||!d.ok||!Array.isArray(d.captions)||d.captions.length!==files.length)throw Error(d.error||"Resposta inválida");
+   files.forEach((f,i)=>window.crPhotoCaptions[f.name]=String(d.captions[i]).slice(0,220));
+   status.textContent=files.length+" legendas geradas. Revise sua precisão antes de entregar o documento.";
+   return true;
+  }catch(e){status.textContent="Falha ao gerar legendas: "+e.message;alert(status.textContent);return false;}
+ }
+ const originalExport=window.exportPdf;
+ window.exportPdf=async function(){if(!await ensureLogo()){alert("Logo institucional indisponível. PDF não gerado.");return;}if(!await captionImages())return;return originalExport();};
+})();
+</script></html>';
+if(!logo){alert('Escolha a logomarca oficial antes de gerar o PDF. Ela fica salva para os próximos documentos.');return}var win=window.open('','_blank');if(!win){alert('Permita pop-ups para abrir o PDF.');return}win.document.open();win.document.write(html);win.document.close();win.focus();
+}
+
+var crPriceItems=[];
+function crNumber(v){var s=String(v||'').trim().replace(/R\$/g,'').replace(/\s/g,'');if(!s)return NaN;if(s.indexOf(',')>=0)s=s.replace(/\./g,'').replace(',','.');var n=Number(s);return Number.isFinite(n)&&n>=0?n:NaN}
+function crMoney(n){return 'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function crExtractSourcePrices(){
+var src=document.getElementById('src').value.replace(/\\n/g,'\n'),chunks=src.split(/\r?\n|;/),items=[];
+chunks.forEach(function(x){var m=x.match(/(?:^|\s)(?:QTD\.?\s*[:=]?\s*)?(\d+(?:[,.]\d+)?)\s*(UN|UND|M2|M²|M|KG|L|CX|PC|PEÇA|PEÇAS|UNIDADES?)?\s*(?:X|×|A|@|VR\.?\s*UNIT\.?\s*[:=]?)\s*R\$\s*([\d.,]+)/i);if(m)items.push({q:m[1],v:m[3],text:x.toLowerCase()})});
+return items;
+}
+function loadPriceItems(){
+ if(document.getElementById('mode').value!=='budget'){alert('O motor de precificação é exclusivo do orçamento.');return}
+ var lines=(document.getElementById('out').textContent||'').split(/\r?\n/),section='',items=[];
+ for(var i=0;i<lines.length;i++){var t=lines[i].trim();
+ if(/^SERVIÇOS\s*(\(|$)/i.test(t)){section='SERVIÇOS';continue}
+ if(/^MATERIAIS\s*$/i.test(t)){section='MATERIAIS';continue}
+ if(/^(RESUMO|OBSERVAÇÕES)/i.test(t)){section='';continue}
+ if(section&&/^\d+\.\s+\S/.test(t)){
+ var qidx=-1;for(var j=i+1;j<Math.min(i+5,lines.length);j++){if(/^QTD\.\s*:/i.test(lines[j].trim())){qidx=j;break}if(/^\d+\.\s+/.test(lines[j].trim()))break}
+ if(qidx>=0){var prev=lines[qidx]||'',qty=prev.match(/QTD\.\s*:\s*(\d+(?:[,\.]\d+)?)/i),unit=prev.match(/VR\.\s*UNIT\.\s*:\s*R\$\s*([\d.,]+)/i);
+ items.push({name:t,section:section,line:qidx,qty:qty?qty[1]:'',unit:unit?unit[1]:''})}
+ }}
+ var sourcePrices=crExtractSourcePrices();items.forEach(function(it,i){if(it.qty&&it.unit)return;var matching=sourcePrices.find(function(p){var words=it.name.toLowerCase().replace(/^\d+\.\s*/, '').split(/\s+/).filter(function(w){return w.length>=5});return words.some(function(w){return p.text.indexOf(w)>=0})});if(!matching&&sourcePrices.length===items.length)matching=sourcePrices[i];if(matching){if(!it.qty)it.qty=matching.q;if(!it.unit)it.unit=matching.v}});
+ crPriceItems=items;
+ var box=document.getElementById('priceRows');box.replaceChildren();
+ items.forEach(function(item,i){var row=document.createElement('div');row.style.cssText='display:grid;grid-template-columns:1fr 75px 100px;gap:6px;padding:7px 0;border-bottom:1px solid #dae4ed;align-items:center';
+ var name=document.createElement('span');name.textContent=item.section+' • '+item.name;name.style.fontSize='12px';row.appendChild(name);
+ var qty=document.createElement('input');qty.placeholder='Qtd.';qty.value=item.qty;qty.setAttribute('aria-label','Quantidade '+item.name);qty.id='crq'+i;row.appendChild(qty);
+ var unit=document.createElement('input');unit.placeholder='R$ unit.';unit.value=item.unit;unit.setAttribute('aria-label','Preço unitário '+item.name);unit.id='crv'+i;row.appendChild(unit);box.appendChild(row)});
+ document.getElementById('priceStatus').textContent=items.length+' itens identificados. Valores explícitos no relato são recuperados quando identificáveis; ausências permanecem A DEFINIR.';
+}
+function applyPriceItems(){
+ if(!crPriceItems.length){loadPriceItems();if(!crPriceItems.length)return}
+ var out=document.getElementById('out'),lines=out.textContent.split(/\r?\n/),sums={'SERVIÇOS':0,'MATERIAIS':0},valid={'SERVIÇOS':true,'MATERIAIS':true};
+ crPriceItems.forEach(function(item,i){var q=crNumber(document.getElementById('crq'+i).value),v=crNumber(document.getElementById('crv'+i).value),ok=Number.isFinite(q)&&Number.isFinite(v);
+ if(!ok)valid[item.section]=false;else sums[item.section]+=Math.round(q*v*100)/100;
+ lines[item.line]='QTD.: '+(Number.isFinite(q)?String(q).replace('.',','):'A DEFINIR')+' | UN.: UN | VR. UNIT.: '+(Number.isFinite(v)?crMoney(v):'A DEFINIR')+' | VR. TOTAL: '+(ok?crMoney(Math.round(q*v*100)/100):'A DEFINIR')});
+ lines=lines.map(function(line){if(/^TOTAL SERVIÇOS:/i.test(line))return 'TOTAL SERVIÇOS: '+(valid['SERVIÇOS']?crMoney(sums['SERVIÇOS']):'A DEFINIR');if(/^TOTAL MATERIAIS:/i.test(line))return 'TOTAL MATERIAIS: '+(valid['MATERIAIS']?crMoney(sums['MATERIAIS']):'A DEFINIR');if(/^TOTAL GERAL:/i.test(line))return 'TOTAL GERAL: '+(valid['SERVIÇOS']&&valid['MATERIAIS']?crMoney(sums['SERVIÇOS']+sums['MATERIAIS']):'A DEFINIR');return line});
+ out.textContent=lines.join('\n');document.getElementById('priceStatus').textContent='Composição recalculada a partir de dados informados, nunca preços inventados. Confira antes de emitir.';
+}
+</script></html>
