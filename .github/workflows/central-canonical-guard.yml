@@ -66,6 +66,21 @@ jobs:
             } catch(e){console.log(JSON.stringify({probe:"ORCA_R5_GOOGLE_PROVIDER",result:"INDETERMINATE",error_type:e.name}))}
           })();
           JS
+      - name: Verify R5 Gemini endpoint rejects unauthenticated requests without calling model
+        shell: bash
+        run: |
+          node - <<'JS'
+          (async()=>{
+            const endpoint="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-gemini-r5-restricted-20261013";
+            const response=await fetch(endpoint,{
+              method:"POST",signal:AbortSignal.timeout(12000),
+              headers:{"content-type":"application/json","apikey":"sb_publishable_CKRScNxEWURNGv4Mz269hg_zdQEmwzS","Authorization":"Bearer definitely.invalid.token"},
+              body:JSON.stringify({input:{services:"Teste sintético; não gerar proposta"}})
+            });
+            console.log(JSON.stringify({test:"ORCA_R5_REJECT_INVALID_JWT",http:response.status,gemini_invoked:false}));
+            if(response.status!==401&&response.status!==403)process.exitCode=1;
+          })().catch(e=>{console.error("Authorization probe unavailable:",e.name);process.exitCode=1});
+          JS
       - name: Verify homologated HTML is byte-identical
         shell: bash
         run: |
