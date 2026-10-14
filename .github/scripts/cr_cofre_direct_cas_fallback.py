@@ -149,6 +149,10 @@ def selftest():
         try: inventory(malformed)
         except ValueError: pass
         else: raise AssertionError("Unsafe inventory accepted")
+    import inspect
+    body=inspect.getsource(main)
+    assert body.index('Storage recovery sample differs') < body.index(
+        'copyto(str(saved),MANIFESTS'), "False success marker before restore proof"
     print(json.dumps({"test":"CR_COFRE_DIRECT_CAS_FALLBACK","status":"PASS",
                       "synthetic_cases":11,"real_backup":False,"writes":0}))
 
@@ -241,15 +245,6 @@ def main():
             DRIVE_ROOT+"/CURRENT/BACKUP_STATUS.txt"),today):
         raise ValueError("Primary recovered before manifest")
     with tempfile.TemporaryDirectory() as tmp:
-        saved=Path(tmp)/"manifest.json"
-        saved.write_bytes(payload)
-        copyto(str(saved),MANIFESTS+"/"+args.run_id+".json")
-        remote=command("rclone","cat",MANIFESTS+"/"+args.run_id+".json")
-        if remote.encode("utf-8")!=payload:
-            raise ValueError("Immutable manifest failed readback")
-        proof=validate_saved_manifest(manifest,seed,checked)
-        if proof["verified_entries"]!=len(entries):
-            raise ValueError("Some backup references do not resolve")
         by_name={x["path"]:x for x in entries}
         for name in SQL_FILES:
             item=by_name["03_DATABASE/"+name]
@@ -270,6 +265,18 @@ def main():
             h=hashlib.md5(sample_file.read_bytes()).hexdigest()
             if h!=item["md5"]:
                 raise ValueError("Storage recovery sample differs")
+        # LAST step: publish immutable manifest only after every readback passes.
+        # An interrupted execution leaves unreferenced content, never a false
+        # complete recovery point.
+        saved=Path(tmp)/"manifest.json"
+        saved.write_bytes(payload)
+        copyto(str(saved),MANIFESTS+"/"+args.run_id+".json")
+        remote=command("rclone","cat",MANIFESTS+"/"+args.run_id+".json")
+        if remote.encode("utf-8")!=payload:
+            raise ValueError("Immutable manifest failed readback")
+        proof=validate_saved_manifest(manifest,seed,checked)
+        if proof["verified_entries"]!=len(entries):
+            raise ValueError("Some backup references do not resolve")
     print(json.dumps({"decision":"IMMUTABLE_CAS_FALLBACK_COMMITTED",
                       "run_id":args.run_id,"restored_sql_samples":3,
                       "restored_storage_samples":3,
