@@ -38,4 +38,13 @@ for(const safe of [
  "Substituir 2 conexões quando tecnicamente necessário."
 ])assert(!regex.test(safe),"Overblocking technical description: "+safe);
 assert(!/(?:service_role|supabase_secret_key|GEMINI_API_KEY)\s*=\s*["']/.test(match[1]));
-console.log(JSON.stringify({suite:"ORCA_REI_R5_OAUTH_AND_PDF_GUARDS",ok:true,tests:27,original_pdf_identity:"byte_identical",gemini_real_call:false}));
+const server=fs.readFileSync("security/contracts/orca-rei-r5-gemini-hardened-20261013/index.ts","utf8");
+assert(server.includes('reportHasFinancialAmounts(String(out.report))'),"Missing server-side reject");
+assert(server.includes('Deno.env.get("ORCA_REI_ENABLE_MODEL_CALLS")!=="true"'),"Missing cost gate");
+assert(server.includes("auth.getUser(token)")&&server.includes("ORCA_REI_ALLOWED_EMAILS"));
+const serverPattern=server.match(/const reportHasFinancialAmounts=\(value:string\)=>(\/.*\/i)\.test\(value\);/);
+assert(serverPattern,"Server regex unavailable");
+const serverFinance=vm.runInNewContext("("+serverPattern[1]+")");
+for(const unsafe of ["R$ 750,00","35%","250 reais","custo: 500","US$ 44"])assert(serverFinance.test(unsafe),"Server would leak: "+unsafe);
+assert(match[1].includes("googleProviderEnabled")&&match[1].includes("settings?.external?.google===true"));
+console.log(JSON.stringify({suite:"ORCA_REI_R5_OAUTH_AND_PDF_GUARDS",ok:true,tests:36,original_pdf_identity:"byte_identical",gemini_real_call:false}));
