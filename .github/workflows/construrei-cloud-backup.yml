@@ -2,6 +2,10 @@ name: CONSTRU-REI Cloud Backup
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/scripts/cr_cofre_failover_guard.py
+      - .github/workflows/construrei-cloud-backup.yml
 
 permissions:
   contents: read
@@ -11,7 +15,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  failover-policy-selftest:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Confirm fail-closed policy with synthetic data only
+        run: |
+          python3 -m py_compile .github/scripts/cr_cofre_failover_guard.py
+          python3 .github/scripts/cr_cofre_failover_guard.py --selftest
+
   backup:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
