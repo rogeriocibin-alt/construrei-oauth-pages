@@ -16,10 +16,12 @@ const HEADERS={
 const send=(data:unknown,status=200)=>new Response(JSON.stringify(data),{status,headers:HEADERS});
 const env=(key:string)=>Deno.env.get(key)||"";
 const MODEL="gemini-2.5-flash-lite"; // versão com modalidade Free; NUNCA trocar silenciosamente
-const KEY=env("GEMINI_API_KEY")||env("GOOGLE_AI_API_KEY");
+// Dedicated key from a separate no-billing Free Tier project; NEVER fall back to existing billed app-construrei credentials.
+const KEY=env("ORCA_REI_FREE_API_KEY");
 const SUPA_URL=env("SUPABASE_URL");
 const secretKeys=(()=>{try{return JSON.parse(env("SUPABASE_SECRET_KEYS"))}catch{return {}}})();
 const SERVICE_KEY=secretKeys?.default||env("SUPABASE_SERVICE_ROLE_KEY");
+// Explicit independent verification is required; secret presence alone never authorizes spending.
 const FREE_VERIFIED=env("ORCA_REI_FREE_TIER_CONFIRMED")==="true";
 const ENABLED=env("ORCA_REI_ENABLE_PUBLIC_DEV_AI")==="true";
 const LIMIT=2200;
