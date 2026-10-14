@@ -1542,6 +1542,8 @@ const ANON="sb_publishable_CKRScNxEWURNGv4Mz269hg_zdQEmwzS";
 const FN=SUPA+"/functions/v1/cr-orca-rei-gemini-r5-restricted-20261013";
 const sdkUrl="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4";
 const keys=["services","materials","notes","report"];
+// Candidata: autenticação preservada como base, mas não oferecida durante o desenvolvimento.
+const DEV_MODE_NO_LOGIN=true;
 const finance=/(?:R\s*\$|US\s*\$|€|£|\b(?:BRL|USD)\b|\d[\d.,]*\s*%|\d[\d.,]*\s*(?:reais|real|centavos)\b|(?:pre[çc]o|valor|custo|total|desconto|margem|lucro|comiss[aã]o|tributo|encargo)\s*[:=-]?\s*(?:R\s*\$)?\s*\d)/i;
 let client=null,sdkPending=null,generated=null,busy=false;
 function make(host,tag,text){
@@ -1609,26 +1611,29 @@ function init(){
  const host=$("v20Docs");
  if(!host || $("orcaReiAdjust"))return;
  const css=document.createElement("style");
- css.textContent="#orcaPanelR9{margin:12px 0;padding:14px;background:#f7fbff;color:#0b2c4d;border:1px solid #8dbde9;border-radius:12px}#orcaPanelR9[hidden],#orcaAuthR9[hidden]{display:none!important}#orcaPanelR9 label{display:block;font-weight:750;margin:10px 0 3px}#orcaPanelR9 textarea{width:100%;background:#fff!important;color:#132d4c!important;border:1px solid #8eb5d7;border-radius:9px;padding:9px;font:14px/1.45 inherit;min-height:95px;box-sizing:border-box}#orcaAuthR9{padding:13px;margin:10px 0;border:1px solid #8dbde9;border-radius:10px;background:#f7fbff;color:#132d4c}#orcaR9Status{font-size:13px;color:#164b7b;margin:6px 0;white-space:pre-wrap}#orcaPanelR9 .btn,#orcaAuthR9 .btn{margin:6px 8px 0 0}";
+ css.textContent="#orcaPanelR9{margin:12px 0;padding:14px;background:#f7fbff;color:#0b2c4d;border:1px solid #8dbde9;border-radius:12px}#orcaPanelR9[hidden],#orcaAuthR9[hidden],#orcaReiGeminiRestricted[hidden]{display:none!important}#orcaPanelR9 label{display:block;font-weight:750;margin:10px 0 3px}#orcaPanelR9 textarea{width:100%;background:#fff!important;color:#132d4c!important;border:1px solid #8eb5d7;border-radius:9px;padding:9px;font:14px/1.45 inherit;min-height:95px;box-sizing:border-box}#orcaAuthR9{padding:13px;margin:10px 0;border:1px solid #8dbde9;border-radius:10px;background:#f7fbff;color:#132d4c}#orcaR9Status{font-size:13px;color:#164b7b;margin:6px 0;white-space:pre-wrap}#orcaPanelR9 .btn,#orcaAuthR9 .btn{margin:6px 8px 0 0}";
  document.head.appendChild(css);
- const b=make(host,"button","Preparar revisão local • sem login");
+ const b=make(host,"button","Revisar orçamento e parecer • acesso direto");
  b.id="orcaReiAdjust";b.type="button";b.className="btn gold";
  const budget=$("v20Budget");if(budget)host.insertBefore(b,budget);
  const modelBtn=make(host,"button","Usar Gemini • acesso protegido");
  modelBtn.id="orcaReiGeminiRestricted";modelBtn.type="button";modelBtn.className="btn ghost";
+ modelBtn.hidden=DEV_MODE_NO_LOGIN;modelBtn.disabled=DEV_MODE_NO_LOGIN;
+ modelBtn.setAttribute("aria-hidden",String(DEV_MODE_NO_LOGIN));modelBtn.tabIndex=DEV_MODE_NO_LOGIN?-1:0;
  if(budget)host.insertBefore(modelBtn,budget);
  document.title="CONSTRU-REI • ORÇA-REI R5 • desenvolvimento sem login";
- const status=make(host,"p","DESENVOLVIMENTO: acesso direto sem login. Revisão local e PDFs disponíveis; Gemini permanece protegido.");
+ const status=make(host,"p","Modo de desenvolvimento: revisão disponível sem login. A integração de IA permanece reservada e protegida.");
  status.id="orcaR9Status";status.setAttribute("role","status");
  const auth=make(host,"section");auth.id="orcaAuthR9";auth.hidden=true;
+ auth.setAttribute("aria-hidden",String(DEV_MODE_NO_LOGIN));
  make(auth,"strong","Acesso Google do ORÇA-REI");
  make(auth,"p","A conta precisa estar autorizada. Não informe senhas nem chaves neste aplicativo.");
  const signIn=make(auth,"button","Entrar com Google");signIn.type="button";signIn.className="btn gold";
  const signOut=make(auth,"button","Sair desta conta");signOut.type="button";signOut.className="btn";
  const hideAuth=make(auth,"button","Fechar");hideAuth.type="button";hideAuth.className="btn";hideAuth.onclick=()=>auth.hidden=true;
  const panel=make(host,"section");panel.id="orcaPanelR9";panel.hidden=true;
- const previewTitle=make(panel,"h3","Prévia local para revisão — sem IA");
- make(panel,"p","Revise antes de aplicar. Modo local sem chamadas externas ao Gemini; PDFs e preços confirmados preservados.");
+ const previewTitle=make(panel,"h3","Revisão de orçamento e parecer");
+ make(panel,"p","Confira e ajuste o texto antes de aplicar. A revisão é local, sem IA. Os PDFs e os valores do orçamento permanecem sob seu controle.");
  const out={};
  for(const [key,label] of [["services","Serviços e mão de obra"],["materials","Materiais"],["notes","Observações"],["report","Parecer técnico sem valores financeiros"]]){
   const l=make(panel,"label",label);const area=make(panel,"textarea");
@@ -1678,13 +1683,14 @@ async function startOAuth(){
   for(const key of ["services","materials","notes"])out[key].value=input[key];
   out.report.value=report;
   generated={snapshot:input,model:"revisao-local-sem-ia",at:Date.now(),source:"local"};
-  previewTitle.textContent="Prévia local para revisão — sem IA";
-  alert.textContent="Sem autenticação. Sem chamadas ao Gemini. Conteúdo editável antes de aplicar.";
+  previewTitle.textContent="Revisão de orçamento e parecer";
+  alert.textContent="Edição local, sem login nem geração por IA. Confira os dados antes de salvar.";
   panel.hidden=false;
-  status.textContent="Prévia local preparada no navegador. Revise o parecer e os textos; nada foi enviado ao Gemini.";
+  status.textContent="Revisão local pronta. Você pode editar o parecer e aplicar os textos ao rascunho.";
   panel.scrollIntoView({block:"nearest",behavior:"smooth"});
  }
  async function generate(){
+  if(DEV_MODE_NO_LOGIN)return; // IA não pode ser acionada nem por evento de UI durante esta fase.
   if(busy)return;
   const input={services:field("qaF02Services"),materials:field("qaF02Materials"),notes:field("qaF02Notes"),case_number:$("qaF02Case")?.textContent||""};
   if(!(input.services||input.materials||input.notes)){status.textContent="Preencha o pré-orçamento antes de ajustar.";return}
@@ -1714,7 +1720,7 @@ async function startOAuth(){
   finally{busy=false;b.disabled=false}
  }
  b.onclick=()=>{try{localPreview()}catch(e){status.textContent="Falha na prévia local: "+e.message}};
- modelBtn.onclick=async()=>{try{await generate()}catch(e){status.textContent="Falha na autenticação do Gemini: "+e.message;auth.hidden=false}};
+ modelBtn.onclick=async()=>{if(DEV_MODE_NO_LOGIN)return;try{await generate()}catch(e){status.textContent="Falha na autenticação do Gemini: "+e.message;auth.hidden=false}};
  apply.onclick=()=>{
   if(!generated){status.textContent="Não existe prévia para aplicar.";return}
   for(const [key,id] of [["services","qaF02Services"],["materials","qaF02Materials"],["notes","qaF02Notes"]]){
@@ -1728,8 +1734,8 @@ async function startOAuth(){
  // Desenvolvimento não depende do Google. O SDK é carregado apenas no uso explícito do Gemini
  // ou no retorno autorizado de uma sessão Google via PKCE.
  const params=new URLSearchParams(location.search);
- if(params.has("error_description"))status.textContent="Google recusou o retorno; a revisão local continua disponível sem login.";
- if(params.has("code"))sdk().then(async c=>{
+ if(!DEV_MODE_NO_LOGIN && params.has("error_description"))status.textContent="Google recusou o retorno; a revisão local continua disponível sem login.";
+ if(!DEV_MODE_NO_LOGIN && params.has("code"))sdk().then(async c=>{
   c.auth.onAuthStateChange((event,session)=>{
    if(event==="SIGNED_IN"&&session?.user?.email)status.textContent="Conta Google conectada: "+session.user.email+". Revisão local continua liberada.";
   });
