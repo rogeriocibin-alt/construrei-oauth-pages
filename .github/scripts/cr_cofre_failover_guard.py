@@ -218,18 +218,28 @@ def main():
         selftest()
         return
     if a.estimate_only:
-        if not a.source_inventory_json or not a.destination_inventory_json or a.drive_free_bytes is None:
-            p.error("Inventories and Drive free bytes required for read-only estimate")
+        if not a.source_inventory_json or not a.destination_inventory_json or not a.status_file or a.drive_free_bytes is None:
+            p.error("Inventories, trusted CURRENT status, and Drive free bytes required for read-only estimate")
         try:
+            with open(a.status_file, encoding="utf-8") as marker:
+                source_status=marker.read()
+            freshness, _reason = assess(source_status, dt.datetime.now(dt.timezone.utc),
+                                        "unknown", a.drive_free_bytes, 0, a.max_egress_bytes)
+            if freshness == "BLOCK_UNKNOWN_CURRENT":
+                print(json.dumps({"status":"BLOCK_UNKNOWN_CURRENT","backup_performed":False}))
+                raise SystemExit(2)
             plan = estimate_from_files(a.source_inventory_json, a.destination_inventory_json)
             result = strict_transfer_budget(
                 plan, database_export_estimate_bytes=a.database_export_estimate_bytes,
                 max_egress_bytes=a.max_egress_bytes, drive_free_bytes=a.drive_free_bytes)
             safe = {k: v for k, v in plan.items() if k not in ("remote_data_downloaded",)}
+            if freshness == "SKIP_FRESH_SOURCE":
+                result = "SKIP_FRESH_SOURCE"
             print(json.dumps({"status": result, "summary": safe,
                 "backup_performed": False, "secret_values_exposed": False,
+                "source_marker_status": freshness,
                 "origin_quiescence_proven": False}, sort_keys=True))
-            if result != "READY_FOR_INDEPENDENT_ORIGIN_CHECK":
+            if result not in ("READY_FOR_INDEPENDENT_ORIGIN_CHECK", "SKIP_FRESH_SOURCE"):
                 raise SystemExit(2)
         except (OSError, ValueError, json.JSONDecodeError) as error:
             print(json.dumps({"status":"BLOCK_BAD_INVENTORY","error_type":type(error).__name__}))
