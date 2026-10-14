@@ -27,6 +27,11 @@ if(!logo){alert('Escolha a logomarca oficial antes de gerar o PDF. Ela fica salv
 var crPriceItems=[];
 function crNumber(v){var s=String(v||'').trim().replace(/R\$/g,'').replace(/\s/g,'');if(!s)return NaN;if(s.indexOf(',')>=0)s=s.replace(/\./g,'').replace(',','.');var n=Number(s);return Number.isFinite(n)&&n>=0?n:NaN}
 function crMoney(n){return 'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function crExtractSourcePrices(){
+var src=document.getElementById('src').value.replace(/\\n/g,'\n'),chunks=src.split(/\r?\n|;/),items=[];
+chunks.forEach(function(x){var m=x.match(/(?:^|\s)(?:QTD\.?\s*[:=]?\s*)?(\d+(?:[,.]\d+)?)\s*(UN|UND|M2|M²|M|KG|L|CX|PC|PEÇA|PEÇAS|UNIDADES?)?\s*(?:X|×|A|@|VR\.?\s*UNIT\.?\s*[:=]?)\s*R\$\s*([\d.,]+)/i);if(m)items.push({q:m[1],v:m[3],text:x.toLowerCase()})});
+return items;
+}
 function loadPriceItems(){
  if(document.getElementById('mode').value!=='budget'){alert('O motor de precificação é exclusivo do orçamento.');return}
  var lines=(document.getElementById('out').textContent||'').split(/\r?\n/),section='',items=[];
@@ -39,13 +44,14 @@ function loadPriceItems(){
  if(qidx>=0){var prev=lines[qidx]||'',qty=prev.match(/QTD\.\s*:\s*(\d+(?:[,\.]\d+)?)/i),unit=prev.match(/VR\.\s*UNIT\.\s*:\s*R\$\s*([\d.,]+)/i);
  items.push({name:t,section:section,line:qidx,qty:qty?qty[1]:'',unit:unit?unit[1]:''})}
  }}
+ var sourcePrices=crExtractSourcePrices();items.forEach(function(it,i){if(it.qty&&it.unit)return;var matching=sourcePrices.find(function(p){var words=it.name.toLowerCase().replace(/^\d+\.\s*/, '').split(/\s+/).filter(function(w){return w.length>=5});return words.some(function(w){return p.text.indexOf(w)>=0})});if(!matching&&sourcePrices.length===items.length)matching=sourcePrices[i];if(matching){if(!it.qty)it.qty=matching.q;if(!it.unit)it.unit=matching.v}});
  crPriceItems=items;
  var box=document.getElementById('priceRows');box.replaceChildren();
  items.forEach(function(item,i){var row=document.createElement('div');row.style.cssText='display:grid;grid-template-columns:1fr 75px 100px;gap:6px;padding:7px 0;border-bottom:1px solid #dae4ed;align-items:center';
  var name=document.createElement('span');name.textContent=item.section+' • '+item.name;name.style.fontSize='12px';row.appendChild(name);
  var qty=document.createElement('input');qty.placeholder='Qtd.';qty.value=item.qty;qty.setAttribute('aria-label','Quantidade '+item.name);qty.id='crq'+i;row.appendChild(qty);
  var unit=document.createElement('input');unit.placeholder='R$ unit.';unit.value=item.unit;unit.setAttribute('aria-label','Preço unitário '+item.name);unit.id='crv'+i;row.appendChild(unit);box.appendChild(row)});
- document.getElementById('priceStatus').textContent=items.length+' itens identificados; valores não informados continuam A DEFINIR.';
+ document.getElementById('priceStatus').textContent=items.length+' itens identificados. Valores explícitos no relato são recuperados quando identificáveis; ausências permanecem A DEFINIR.';
 }
 function applyPriceItems(){
  if(!crPriceItems.length){loadPriceItems();if(!crPriceItems.length)return}
@@ -54,6 +60,6 @@ function applyPriceItems(){
  if(!ok)valid[item.section]=false;else sums[item.section]+=Math.round(q*v*100)/100;
  lines[item.line]='QTD.: '+(Number.isFinite(q)?String(q).replace('.',','):'A DEFINIR')+' | UN.: UN | VR. UNIT.: '+(Number.isFinite(v)?crMoney(v):'A DEFINIR')+' | VR. TOTAL: '+(ok?crMoney(Math.round(q*v*100)/100):'A DEFINIR')});
  lines=lines.map(function(line){if(/^TOTAL SERVIÇOS:/i.test(line))return 'TOTAL SERVIÇOS: '+(valid['SERVIÇOS']?crMoney(sums['SERVIÇOS']):'A DEFINIR');if(/^TOTAL MATERIAIS:/i.test(line))return 'TOTAL MATERIAIS: '+(valid['MATERIAIS']?crMoney(sums['MATERIAIS']):'A DEFINIR');if(/^TOTAL GERAL:/i.test(line))return 'TOTAL GERAL: '+(valid['SERVIÇOS']&&valid['MATERIAIS']?crMoney(sums['SERVIÇOS']+sums['MATERIAIS']):'A DEFINIR');return line});
- out.textContent=lines.join('\n');document.getElementById('priceStatus').textContent='Composição calculada automaticamente com os valores disponíveis. Onde faltar dado, fica A DEFINIR; revise antes de emitir.';
+ out.textContent=lines.join('\n');document.getElementById('priceStatus').textContent='Composição recalculada a partir de dados informados, nunca preços inventados. Confira antes de emitir.';
 }
 </script></html>
