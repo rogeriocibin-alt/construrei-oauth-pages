@@ -59,7 +59,6 @@ jobs:
           sudo apt-get install -y -qq rclone >/dev/null
           mkdir -p "$HOME/.config/rclone"
           chmod 700 "$HOME/.config/rclone"
-          trap 'rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
           printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
           chmod 600 "$HOME/.config/rclone/rclone.conf"
           rclone listremotes | grep -qx 'construrei-drive:'
@@ -68,7 +67,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          trap 'rm -rf "$RUNNER_TEMP/cofre-metadata"' EXIT
+          trap 'rm -rf "$RUNNER_TEMP/cofre-metadata"; rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
           mkdir -m 700 "$RUNNER_TEMP/cofre-metadata"
           WORK="$RUNNER_TEMP/cofre-metadata"
           SRC="construrei-s3:"
