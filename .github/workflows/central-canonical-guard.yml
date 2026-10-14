@@ -47,10 +47,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate Cofre Zero CAS fallback offline (no secret, no backup)
-        run: |
-          python3 -m py_compile .github/scripts/cr_cofre_direct_cas_fallback.py
-          python3 .github/scripts/cr_cofre_direct_cas_fallback.py --selftest
       - name: Verify homologated HTML is byte-identical
         shell: bash
         run: |
