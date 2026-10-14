@@ -40,9 +40,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
-      primary: \${{ steps.marker.outputs.primary }}
+      primary: ${{ steps.marker.outputs.primary }}
     env:
-      RCLONE_CONFIG_B64: \${{ secrets.RCLONE_CONFIG_B64 }}
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
     steps:
       - name: Determine if original 06:00 UTC backup is fresh
         id: marker
@@ -224,3 +224,82 @@ jobs:
             echo "- This is CAS/file-level recovery, not SQL database replay; FULL seed retained."
             echo "- No modification of CURRENT or production services."
           } >> "$GITHUB_STEP_SUMMARY"
+
+  fallback:
+    name: Append only deltas to existing CAS if primary missing
+    needs: detect
+    if: needs.detect.outputs.primary == 'false' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Prepare existing remotes and PG17 (no new infrastructure)
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64" && test -n "$SUPABASE_DB_URL" || exit 2
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone curl gnupg ca-certificates >/dev/null
+          sudo install -d -m 0755 /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc |
+            gpg --dearmor | sudo tee /usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg >/dev/null
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] https://apt.postgresql.org/pub/repos/apt noble-pgdg main" |
+            sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17 >/dev/null
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone lsd construrei-drive: >/dev/null
+          rclone lsd construrei-s3: >/dev/null
+      - name: Bounded same-day CAS delta, never touch CURRENT
+        id: incremental
+        shell: bash
+        run: |
+          set -euo pipefail
+          WORK="$RUNNER_TEMP/cofre-cas-only"
+          RUN_ID="$(date -u +%Y%m%d-%H%M%S)"
+          trap 'rm -rf "$WORK"; rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
+          bash .github/scripts/cr_cofre_fallback_dump.sh "$WORK"
+          python3 .github/scripts/cr_cofre_direct_cas_fallback.py --dry-run \
+            --work-dir "$WORK" --run-id "$RUN_ID" --max-new-bytes 268435456 > "$WORK/preview.json"
+          python3 .github/scripts/cr_cofre_direct_cas_fallback.py --commit \
+            --work-dir "$WORK" --run-id "$RUN_ID" --max-new-bytes 268435456 > "$WORK/result.json"
+          python3 .github/scripts/cr_sql_restore_preflight.py --root "$WORK" > "$WORK/sql-proof.json"
+          python3 - "$WORK" <<'PY'
+          import json,os,sys,pathlib
+          root=pathlib.Path(sys.argv[1])
+          result=json.loads((root/"result.json").read_text())
+          sql=json.loads((root/"sql-proof.json").read_text())
+          assert result["decision"]=="IMMUTABLE_CAS_FALLBACK_COMMITTED"
+          assert result["restored_sql_samples"]==3
+          assert result["restored_storage_samples"]==3
+          assert result["new_unique_bytes"]<=268435456
+          assert result["current_untouched"] is True
+          assert sql["hashes_verified"]==3
+          with open(os.environ["GITHUB_OUTPUT"],"a") as o:
+              o.write("run_id="+result["run_id"]+"\n")
+          print("CAS_DELTA=PASS; FULL_COPY=NO; SQL_REPLAY=NOT_TESTED")
+          print("New immutable content bytes:",result["new_unique_bytes"])
+          PY
+      - name: Independently prove all manifest references without CURRENT
+        env:
+          VERIFIED_RUN: ${{ steps.incremental.outputs.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/cr_history_cas_append.py --verify-manifest "$VERIFIED_RUN" |
+            python3 -c 'import json,sys;r=json.load(sys.stdin);assert r["verified_entries"]>=4531 and r["independent_of_current"];print("CAS_REFERENCE_PROOF=PASS")'
+      - name: Summarize unique-content backup
+        if: always()
+        shell: bash
+        run: |
+          echo "## Cofre Zero — CAS delta fallback" >> "$GITHUB_STEP_SUMMARY"
+          echo "Status: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "No new cron/Cloud service/full Storage copy; no CURRENT write" >> "$GITHUB_STEP_SUMMARY"
+
