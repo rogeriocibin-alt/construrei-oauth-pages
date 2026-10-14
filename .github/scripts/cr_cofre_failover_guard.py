@@ -76,19 +76,61 @@ def estimate_storage_egress(source_rows, dest_rows):
     dest = compact_inventory(dest_rows)
     changed = []
     indeterminate = 0
+    same = 0
+    replaced_bytes = 0
     for path, (size, md5) in src.items():
         old = dest.get(path)
-        # Without a comparable content digest, conservatively assume transfer.
+        # A missing MD5 MUST BLOCK execution: rclone --checksum may fall back
+        # to size-only comparison and silently skip equal-size changes.
         if old and old == (size, md5) and md5 is not None:
+            same += 1
             continue
         if not md5 or (old and not old[1]):
             indeterminate += 1
         changed.append(size)
+        if old:
+            replaced_bytes += old[0]
+    removed = [item[0] for path, item in dest.items() if path not in src]
     return {"source_files": len(src), "destination_files": len(dest),
-            "changed_or_unverified_files": len(changed),
+            "unchanged_files": same, "changed_or_unverified_files": len(changed),
+            "missing_on_source_files": len(removed),
             "indeterminate_hash_files": indeterminate,
             "projected_storage_egress_bytes": sum(changed),
+            "old_drive_bytes_requiring_historical_protection": replaced_bytes + sum(removed),
             "remote_data_downloaded": False, "backup_performed": False}
+
+def strict_transfer_budget(plan, *, database_export_estimate_bytes,
+                           max_egress_bytes, drive_free_bytes):
+    """Fail closed before writing: include SQL export and Drive safety reserve."""
+    if (not isinstance(plan, dict) or
+        any(type(v) is not int or v < 0 for v in
+            (database_export_estimate_bytes, max_egress_bytes, drive_free_bytes))):
+        return "BLOCK_INVALID_BUDGET"
+    if not plan.get("source_files") or not plan.get("destination_files"):
+        return "BLOCK_INCOMPLETE_INVENTORY"
+    if plan["indeterminate_hash_files"]:
+        return "BLOCK_HASH_UNKNOWN"
+    transfer = plan["projected_storage_egress_bytes"] + database_export_estimate_bytes
+    if transfer > max_egress_bytes:
+        return "BLOCK_EGRESS_CAP"
+    needed = (plan["projected_storage_egress_bytes"]
+              + database_export_estimate_bytes
+              + plan["old_drive_bytes_requiring_historical_protection"]
+              + RESERVE_BYTES)
+    if needed > drive_free_bytes:
+        return "BLOCK_DRIVE_CAP"
+    return "READY_FOR_INDEPENDENT_ORIGIN_CHECK"
+
+def estimate_from_files(src_path, dst_path):
+    from pathlib import Path
+    for path in (src_path, dst_path):
+        if Path(path).stat().st_size > 30 * 1024 * 1024:
+            raise ValueError("Inventory file exceeds safe size bound")
+    with open(src_path, encoding="utf-8") as r:
+        source = json.load(r)
+    with open(dst_path, encoding="utf-8") as r:
+        dest = json.load(r)
+    return estimate_storage_egress(source, dest)
 
 def estimate_selftest():
     a = "a" * 32
@@ -108,7 +150,22 @@ def estimate_selftest():
     assert p["projected_storage_egress_bytes"] == 90, p
     assert p["changed_or_unverified_files"] == 3
     assert p["indeterminate_hash_files"] == 1
+    assert p["unchanged_files"] == 1
+    assert p["missing_on_source_files"] == 0
+    assert strict_transfer_budget(p, database_export_estimate_bytes=5,
+                                 max_egress_bytes=1000, drive_free_bytes=2*RESERVE_BYTES) == "BLOCK_HASH_UNKNOWN"
     assert estimate_storage_egress(src[:1], dst[:1])["projected_storage_egress_bytes"] == 0
+    clean = estimate_storage_egress(src[:3], dst[:2])
+    assert clean["projected_storage_egress_bytes"] == 50
+    assert clean["old_drive_bytes_requiring_historical_protection"] == 20
+    assert strict_transfer_budget(clean, database_export_estimate_bytes=100,
+                                 max_egress_bytes=140, drive_free_bytes=2*RESERVE_BYTES) == "BLOCK_EGRESS_CAP"
+    assert strict_transfer_budget(clean, database_export_estimate_bytes=100,
+                                 max_egress_bytes=150, drive_free_bytes=RESERVE_BYTES) == "BLOCK_DRIVE_CAP"
+    assert strict_transfer_budget(clean, database_export_estimate_bytes=100,
+                                 max_egress_bytes=150, drive_free_bytes=2*RESERVE_BYTES) == "READY_FOR_INDEPENDENT_ORIGIN_CHECK"
+    deleted = estimate_storage_egress(src[:1], dst[:2])
+    assert deleted["missing_on_source_files"] == 1 and deleted["old_drive_bytes_requiring_historical_protection"] == 20
     try:
         estimate_storage_egress(src+[src[0]], dst)
         raise AssertionError("Duplicate path accepted")
@@ -120,7 +177,7 @@ def estimate_selftest():
     except ValueError:
         pass
     print(json.dumps({"test":"CR_COFRE_DELTA_ESTIMATOR","status":"PASS",
-                      "cases":5, "external_writes":0}))
+                      "cases":11, "external_writes":0}))
 
 def selftest():
     s = "CONSTRU-REI CLOUD BACKUP\nUTC: 2026-10-12T06:00:38Z\nRUN_ID: 20261012-060012\nDATABASE_FILES: 3\nSTORAGE_FILES: 4531\nSOURCE_PROJECT: " + PROJECT + "\n"
@@ -146,6 +203,11 @@ def selftest():
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--selftest", action="store_true")
+    p.add_argument("--estimate-only", action="store_true")
+    p.add_argument("--source-inventory-json")
+    p.add_argument("--destination-inventory-json")
+    p.add_argument("--database-export-estimate-bytes", type=int, default=0)
+    p.add_argument("--max-egress-bytes", type=int, default=0)
     p.add_argument("--status-file")
     p.add_argument("--cloud-state", choices=["unknown", "running", "disabled_verified"], default="unknown")
     p.add_argument("--drive-free-bytes", type=int)
@@ -154,6 +216,24 @@ def main():
     a = p.parse_args()
     if a.selftest:
         selftest()
+        return
+    if a.estimate_only:
+        if not a.source_inventory_json or not a.destination_inventory_json or a.drive_free_bytes is None:
+            p.error("Inventories and Drive free bytes required for read-only estimate")
+        try:
+            plan = estimate_from_files(a.source_inventory_json, a.destination_inventory_json)
+            result = strict_transfer_budget(
+                plan, database_export_estimate_bytes=a.database_export_estimate_bytes,
+                max_egress_bytes=a.max_egress_bytes, drive_free_bytes=a.drive_free_bytes)
+            safe = {k: v for k, v in plan.items() if k not in ("remote_data_downloaded",)}
+            print(json.dumps({"status": result, "summary": safe,
+                "backup_performed": False, "secret_values_exposed": False,
+                "origin_quiescence_proven": False}, sort_keys=True))
+            if result != "READY_FOR_INDEPENDENT_ORIGIN_CHECK":
+                raise SystemExit(2)
+        except (OSError, ValueError, json.JSONDecodeError) as error:
+            print(json.dumps({"status":"BLOCK_BAD_INVENTORY","error_type":type(error).__name__}))
+            raise SystemExit(2)
         return
     if not a.status_file or any(v is None for v in (a.drive_free_bytes, a.projected_new_bytes, a.max_new_bytes)):
         p.error("Status file and all three capacity numbers are required")
