@@ -159,6 +159,23 @@ def selftest():
         try: inventory(malformed)
         except ValueError: pass
         else: raise AssertionError("Unsafe inventory accepted")
+    # Deterministic compressed data.sql is recoverable without a raw duplicate in CAS.
+    with tempfile.TemporaryDirectory() as directory:
+        db=Path(directory)/"03_DATABASE"
+        db.mkdir()
+        for name,payload in (("roles.sql",b"ROLE TEST;\n"),
+                             ("schema.sql",b"CREATE TABLE t(id int);\n"),
+                             ("data.sql",b"INSERT INTO t VALUES (1);\n"*100)):
+            (db/name).write_bytes(payload)
+        local=assemble_local_metadata(directory,"20261013-090001",3)
+        assert "data.sql.gz" in local and "data.sql" not in local
+        with gzip.open(local["data.sql.gz"],"rb") as packed:
+            assert packed.read()==(db/"data.sql").read_bytes()
+        first=hashlib.md5(Path(local["data.sql.gz"]).read_bytes()).digest()
+        again=assemble_local_metadata(directory,"20261013-090001",3)
+        second=hashlib.md5(Path(again["data.sql.gz"]).read_bytes()).digest()
+        assert first==second,"Unstable gzip bytes would produce duplicate blobs"
+        assert len(inventory(storage,local))==8
     import inspect
     body=inspect.getsource(main)
     assert body.index('Cloud origin grace period') < body.index(
