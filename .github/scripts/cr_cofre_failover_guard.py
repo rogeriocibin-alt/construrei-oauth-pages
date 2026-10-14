@@ -48,6 +48,80 @@ def assess(status: str, now: dt.datetime, cloud_state: str,
         return "BLOCK_CAPACITY", "Drive cannot preserve required free reserve"
     return "READY_FOR_EXISTING_RUNNER", "Preflight passed; actual backup and restore unproven"
 
+
+# Metadata-only inventory comparison; never reads the bytes of user files.
+# Input comes from rclone lsjson --recursive --files-only --hash for each remote.
+def compact_inventory(rows):
+    if not isinstance(rows, list):
+        raise ValueError("Expected JSON inventory list")
+    seen = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("Malformed inventory row")
+        path, size = row.get("Path"), row.get("Size")
+        if (not isinstance(path, str) or not path or path.startswith("/")
+                or "/../" in "/" + path + "/" or "\\" in path
+                or type(size) is not int or size < 0 or path in seen):
+            raise ValueError("Unsafe or duplicate inventory item")
+        hashes = row.get("Hashes") or {}
+        md5 = next((str(v).lower() for k,v in hashes.items()
+                    if k.lower() == "md5" and v), None)
+        if md5 is not None and not re.fullmatch(r"[0-9a-f]{32}", md5):
+            raise ValueError("Malformed MD5 metadata")
+        seen[path] = (size, md5)
+    return seen
+
+def estimate_storage_egress(source_rows, dest_rows):
+    src = compact_inventory(source_rows)
+    dest = compact_inventory(dest_rows)
+    changed = []
+    indeterminate = 0
+    for path, (size, md5) in src.items():
+        old = dest.get(path)
+        # Without a comparable content digest, conservatively assume transfer.
+        if old and old == (size, md5) and md5 is not None:
+            continue
+        if not md5 or (old and not old[1]):
+            indeterminate += 1
+        changed.append(size)
+    return {"source_files": len(src), "destination_files": len(dest),
+            "changed_or_unverified_files": len(changed),
+            "indeterminate_hash_files": indeterminate,
+            "projected_storage_egress_bytes": sum(changed),
+            "remote_data_downloaded": False, "backup_performed": False}
+
+def estimate_selftest():
+    a = "a" * 32
+    b = "b" * 32
+    src = [
+        {"Path":"same","Size":10,"Hashes":{"MD5":a}},
+        {"Path":"changed","Size":20,"Hashes":{"MD5":b}},
+        {"Path":"new","Size":30,"Hashes":{"MD5":b}},
+        {"Path":"unknown","Size":40,"Hashes":{}},
+    ]
+    dst = [
+        {"Path":"same","Size":10,"Hashes":{"MD5":a}},
+        {"Path":"changed","Size":20,"Hashes":{"MD5":a}},
+        {"Path":"unknown","Size":40,"Hashes":{}},
+    ]
+    p = estimate_storage_egress(src, dst)
+    assert p["projected_storage_egress_bytes"] == 90, p
+    assert p["changed_or_unverified_files"] == 3
+    assert p["indeterminate_hash_files"] == 1
+    assert estimate_storage_egress(src[:1], dst[:1])["projected_storage_egress_bytes"] == 0
+    try:
+        estimate_storage_egress(src+[src[0]], dst)
+        raise AssertionError("Duplicate path accepted")
+    except ValueError:
+        pass
+    try:
+        estimate_storage_egress([{"Path":"../escape","Size":1}], [])
+        raise AssertionError("Traversal accepted")
+    except ValueError:
+        pass
+    print(json.dumps({"test":"CR_COFRE_DELTA_ESTIMATOR","status":"PASS",
+                      "cases":5, "external_writes":0}))
+
 def selftest():
     s = "CONSTRU-REI CLOUD BACKUP\nUTC: 2026-10-12T06:00:38Z\nRUN_ID: 20261012-060012\nDATABASE_FILES: 3\nSTORAGE_FILES: 4531\nSOURCE_PROJECT: " + PROJECT + "\n"
     now = dt.datetime(2026, 10, 13, 9, tzinfo=dt.timezone.utc)
@@ -67,6 +141,7 @@ def selftest():
         assert got == expected, (ix, got, expected)
     print(json.dumps({"test": "CR_COFRE_FAILOVER_PREFLIGHT", "status": "PASS",
                       "cases": len(cases), "external_writes": 0}))
+    estimate_selftest()
 
 def main():
     p = argparse.ArgumentParser()
