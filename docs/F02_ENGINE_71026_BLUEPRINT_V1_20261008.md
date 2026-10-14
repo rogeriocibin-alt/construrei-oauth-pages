@@ -1,5 +1,5 @@
 # CONSTRU-REI · F02 MOTOR DE PARECER 710-26 · BLUEPRINT V1
-Data: 08/10/2026 | Estado: especificação implementável; IA multimodal não conectada; sem homologação funcional.
+Data: 14/10/2026 | Estado: PADRÃO VISUAL 710-26 HOMOLOGADO POR ROGÉRIO; motor IA continua sujeito a validação funcional.
 
 ## Fonte canônica estudada
 PDF original DOC-20260918-WA0084(1).pdf, Parecer Técnico 710-26, 2 páginas. Caso: vistoria hidráulica, interrupção intermitente de abastecimento. Página 1: cabeçalho, metadados, objetivo/escopo, verificações e 6 registros fotográficos legendados em grade 3×2. Página 2: análise técnica, elementos compatíveis, recomendações, critério para confirmação da origem e conclusão. **Não copiar o diagnóstico da Sanepar para novos casos.**
@@ -45,3 +45,14 @@ Fase C: conectar provedor multimodal + pesquisa, fontes e trilha de auditoria.
 Fase D: F03, validação humana, QA integral e congelamento F00–F02.
 
 **Estado real:** este documento especifica o motor e a ordem de implantação. Não comprova integração IA, busca web em produção ou emissão automática fiel já operantes.
+
+
+## Homologação visual reforçada — 14/10/2026
+- **O Parecer Técnico 710-26 é o modelo visual canônico e obrigatório para novos pareceres CONSTRU-REI.**
+- Usar sempre a **logo real CONSTRU-REI**; é proibido substituir a marca por wordmark/texto improvisado.
+- Preservar o DNA visual homologado: azul-marinho + dourado, cabeçalho institucional, cartões de identificação, barras/seções, registros fotográficos com legendas, rodapé institucional e paginação.
+- Parecer técnico **não contém valores financeiros**.
+- Fotos devem ser proporcionais, sem deformação, selecionadas por evidência e legendadas tecnicamente.
+- Conteúdo técnico deve distinguir constatação visual, hipótese/compatibilidade e confirmação por teste; não transformar hipótese em causa comprovada.
+- Antes de entregar PDF: renderizar preview e verificar logo, cores, legibilidade, fotos, legendas, paginação e ausência de preços.
+- Esta regra é canônica para o ORÇA-REI/F02 e prevalece sobre templates genéricos anteriores.
