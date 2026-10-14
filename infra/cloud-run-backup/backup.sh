@@ -50,6 +50,13 @@ STORAGE_FILES: $STORAGE_COUNT
 SOURCE_PROJECT: yspuaamokjbrosytqjpg
 EOF
 
+# Fail closed before mutating CURRENT: remove the old success marker from
+# the active snapshot and preserve it in immutable per-run history.
+# A failed or interrupted sync must never appear to be a completed recovery point.
+if rclone lsf "$REMOTE" --files-only | grep -Fxq 'BACKUP_STATUS.txt'; then
+  rclone moveto "$REMOTE/BACKUP_STATUS.txt" "$HISTORY/BACKUP_STATUS.txt" --immutable
+fi
+
 rclone sync "$WORK" "$REMOTE" \
   --exclude "/06_STORAGE/**" \
   --exclude "/BACKUP_STATUS.txt" \
@@ -83,11 +90,7 @@ for rel in "${SAMPLES[@]}"; do
   test "$(sha256sum "$src" | awk '{print $1}')" = "$(sha256sum "$dst" | awk '{print $1}')"
 done
 
-# A status file is a completion marker, not a progress marker.
-# Keep CURRENT's previous marker unchanged until all SQL and Storage readbacks pass.
-if rclone lsf "$REMOTE" --files-only | grep -Fxq 'BACKUP_STATUS.txt'; then
-  rclone copyto "$REMOTE/BACKUP_STATUS.txt" "$HISTORY/BACKUP_STATUS.txt" --immutable
-fi
+# Publish the completion marker only after SQL and Storage integrity checks.
 rclone copyto "$WORK/BACKUP_STATUS.txt" "$REMOTE/BACKUP_STATUS.txt"
 rclone copyto "$REMOTE/BACKUP_STATUS.txt" "$RESTORE/BACKUP_STATUS-READBACK.txt"
 cmp "$WORK/BACKUP_STATUS.txt" "$RESTORE/BACKUP_STATUS-READBACK.txt"
