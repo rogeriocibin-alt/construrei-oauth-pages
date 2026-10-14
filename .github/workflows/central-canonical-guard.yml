@@ -47,6 +47,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: ORÇA-REI R5 auth, model and PDF preservation (offline)
+        shell: bash
+        run: |
+          node --version
+          node .github/scripts/test_orca_r5_oauth_preview.cjs
       - name: Verify homologated HTML is byte-identical
         shell: bash
         run: |
