@@ -151,6 +151,8 @@ def selftest():
         else: raise AssertionError("Unsafe inventory accepted")
     import inspect
     body=inspect.getsource(main)
+    assert body.index('Cloud origin grace period') < body.index(
+        'copyto(original,OBJECTS'), "No Cloud grace gate before CAS writes"
     assert body.index('Storage recovery sample differs') < body.index(
         'copyto(str(saved),MANIFESTS'), "False success marker before restore proof"
     print(json.dumps({"test":"CR_COFRE_DIRECT_CAS_FALLBACK","status":"PASS",
@@ -185,6 +187,10 @@ def main():
     if args.commit and (not local or not args.run_id or
                         args.run_id[:8] != today.strftime("%Y%m%d")):
         raise ValueError("Commit requires a complete same-day SQL snapshot")
+    # GCP's original 06:00 UTC producer has two hours to finish.
+    # A read-only test may run earlier; a real fallback may not.
+    if args.commit and dt.datetime.now(dt.timezone.utc).hour < 8:
+        raise ValueError("Cloud origin grace period: no writes before 08:00 UTC")
     source,entries,missing,summary=estimate(rows,seed,existing,local)
     projected=summary["projected_new_unique_bytes"]
     if (projected>args.max_new_bytes or
