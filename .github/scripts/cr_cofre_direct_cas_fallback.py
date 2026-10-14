@@ -96,7 +96,7 @@ def assemble_local_metadata(work, run_id, storage_count):
     (root/"BACKUP_STATUS.txt").write_text(
         "CONSTRU-REI CLOUD BACKUP\nUTC: "+iso+"\nRUN_ID: "+run_id+
         "\nDATABASE_FILES: 3\nSTORAGE_FILES: "+str(storage_count)+
-        "\nSOURCE_PROJECT: "+PROJECT+"\n",encoding="utf-8")
+        "\nSOURCE_PROJECT: "+PROJECT+"\nRECOVERY_METHOD: GITHUB_CAS_DELTA\n",encoding="utf-8")
     return {name:str((db/name if name in SQL_FILES else root/name))
             for name in (*SQL_FILES,"BACKUP_STATUS.txt","SHA256SUMS.txt")}
 
