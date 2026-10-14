@@ -133,7 +133,7 @@ def main():
     keep = {x["path"].strip("/").split("/")[1] for x in inventory["folders"]
             if x["status"] in PROTECTED_PREVIEW_STATES}
     assert len(slugs) == len(registry["links"]) == 39
-    assert len(inventory["folders"]) == inventory["folder_count"] == 121
+    assert len(inventory["folders"]) == inventory["folder_count"] == 123
     assert len(keep) == 12
     assert REQUIRED_TRANSITIVE_PREVIEW <= {x["path"].strip("/").split("/")[1] for x in inventory["folders"]}
     assert REQUIRED_TRANSITIVE_PREVIEW.isdisjoint(keep)

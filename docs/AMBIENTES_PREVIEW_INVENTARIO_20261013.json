@@ -1,0 +1,1044 @@
+{
+  "schema_version": 1,
+  "source_commit": "4023a924a15a7c93c8540eb4b8156b8e0182bb24",
+  "generated_date": "2026-10-13",
+  "scope": "git main preview/ only",
+  "total_files": 357,
+  "total_logical_bytes": 22920888,
+  "folder_count": 123,
+  "unknown_dependency_warning": "Static and SHA references are not an exhaustive runtime dependency graph. Newly added F02 candidates are UNCLASSIFIED_REVIEW_ONLY; no path is authorized for deletion, movement, or publication cutover.",
+  "production_contracts": [
+    {
+      "id": "f00_f09_checklist_script",
+      "category": "runtime_script",
+      "source": "preview/_shared/cr-checklist-native-20261004.js",
+      "paths": [
+        "central-runtime/f00/index.html",
+        "central-runtime/f01-canonical-20261001/index.html",
+        "central-runtime/f02/index.html",
+        "central-runtime/f03/index.html",
+        "central-runtime/f04/index.html",
+        "central-runtime/f05/index.html",
+        "central-runtime/f06/index.html",
+        "central-runtime/f07/index.html",
+        "central-runtime/f08/index.html",
+        "central-runtime/f09/index.html"
+      ],
+      "expected_count": 10,
+      "change_control": "copy to canonical assets and validate before changing any URL"
+    },
+    {
+      "id": "central_official_app_gabi",
+      "category": "live_link",
+      "source": "preview/app-gabi-v21-parecer-logo-20261008/",
+      "paths": [
+        "production/central-operacional-v2-ux-r1-2-homologada-20261005/index.html"
+      ],
+      "change_control": "replace only after approved candidate and mobile/notebook end-to-end test"
+    },
+    {
+      "id": "pinned_raw_image",
+      "category": "pinned_historical_asset",
+      "source": "preview/central-incorporacao-3-12-candidate-20261003/assets/",
+      "paths": [
+        "production/central-operacional-v2-ux-r1-2-homologada-20261005/clean-native.css"
+      ],
+      "change_control": "verify pinned old commit source retains access through public git"
+    },
+    {
+      "id": "gestor_history",
+      "category": "historical_reference",
+      "source": "preview/central-executive-",
+      "paths": [
+        "gestor-projeto/project-data.json"
+      ],
+      "change_control": "retain link-index lineage, rewrite only after archiving mapping"
+    }
+  ],
+  "folders": [
+    {
+      "path": "preview/_shared/",
+      "files": 4,
+      "logical_bytes": 48663,
+      "status": "ACTIVE_SHARED_SCRIPT_10_F00_F09",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/agent-hub-v1-candidate-20261005/",
+      "files": 4,
+      "logical_bytes": 23410,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-atendimento-f02-orca-rei-ajustar-candidate-20261013/",
+      "files": 1,
+      "logical_bytes": 132103,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-atendimento-f02-orca-rei-r2-20261013/",
+      "files": 1,
+      "logical_bytes": 132103,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-audited-central-alignment-20260930/",
+      "files": 1,
+      "logical_bytes": 64314,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-checklist-native-candidate-20261004/",
+      "files": 14,
+      "logical_bytes": 148120,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-atendimento-relacionamento-v12-candidate-20261007/",
+      "files": 1,
+      "logical_bytes": 88756,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-v13-teste-seguro-20261007/",
+      "files": 1,
+      "logical_bytes": 92879,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-v14-qa-funcional-20261007/",
+      "files": 1,
+      "logical_bytes": 96582,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-v15-qa-navegacao-20261007/",
+      "files": 1,
+      "logical_bytes": 99045,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-v16-fluxo-compacto-20261007/",
+      "files": 1,
+      "logical_bytes": 101566,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-v17-coleta-manual-20261007/",
+      "files": 1,
+      "logical_bytes": 105095,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-v18-f02-rascunho-20261007/",
+      "files": 1,
+      "logical_bytes": 109930,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-v19-inteligencia-f02-20261008/",
+      "files": 1,
+      "logical_bytes": 118158,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-v20-documentos-f02-20261008/",
+      "files": 1,
+      "logical_bytes": 129148,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-gabi-v21-parecer-logo-20261008/",
+      "files": 1,
+      "logical_bytes": 5216,
+      "status": "ACTIVE_OFFICIAL_CENTRAL_LINK",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-historical-audited-runtime-20260930/",
+      "files": 1,
+      "logical_bytes": 37576,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-historical-blue-canonical-20260930/",
+      "files": 1,
+      "logical_bytes": 188276,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-identity-20260930/",
+      "files": 1,
+      "logical_bytes": 211085,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-official-candidate-20261002/",
+      "files": 1,
+      "logical_bytes": 84977,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/app-v766-canonical-20260930/",
+      "files": 1,
+      "logical_bytes": 184654,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/buttons-canonical-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 254317,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-approved-router-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 241354,
+      "status": "GESTOR_HISTORICAL_LINK",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-canonical-evolution-candidate-20261003/",
+      "files": 2,
+      "logical_bytes": 251632,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-canonical-links-functional-reconciliation-candidate-20261003/",
+      "files": 4,
+      "logical_bytes": 213158,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-canonical-links-only-20261001/",
+      "files": 1,
+      "logical_bytes": 170483,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-clean-reconstruction-candidate-20261003/",
+      "files": 5,
+      "logical_bytes": 220914,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-consolidated-candidate-20261003/",
+      "files": 4,
+      "logical_bytes": 208861,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-consolidated-functional-recovery-candidate-20261003/",
+      "files": 4,
+      "logical_bytes": 211645,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-exec-r9-mobilefix-20261004/",
+      "files": 24,
+      "logical_bytes": 600192,
+      "status": "PRODUCTION_PROVENANCE_REFERENCE",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-cover-validation-20261003/",
+      "files": 1,
+      "logical_bytes": 427707,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v10-density-candidate-20261002/",
+      "files": 3,
+      "logical_bytes": 36334,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v10-menu-fixed-candidate-20261002/",
+      "files": 3,
+      "logical_bytes": 39498,
+      "status": "GESTOR_HISTORICAL_LINK",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v10-model-candidate-20261002/",
+      "files": 3,
+      "logical_bytes": 39485,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v10-navfix-candidate-20261002/",
+      "files": 3,
+      "logical_bytes": 39488,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v11-premium-detail-candidate-20261003/",
+      "files": 3,
+      "logical_bytes": 16689,
+      "status": "GESTOR_HISTORICAL_LINK",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v12-1-refinement-candidate-20261003/",
+      "files": 4,
+      "logical_bytes": 12186,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v12-consolidation-candidate-20261003/",
+      "files": 4,
+      "logical_bytes": 14590,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v5-static-candidate-20261002/",
+      "files": 1,
+      "logical_bytes": 297957,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v6-package-candidate-20261002/",
+      "files": 4,
+      "logical_bytes": 23004,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v7-agenda-bridge-candidate-20261002/",
+      "files": 2,
+      "logical_bytes": 6199,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v8-live-agenda-candidate-20261002/",
+      "files": 2,
+      "logical_bytes": 7422,
+      "status": "GESTOR_HISTORICAL_LINK",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-executive-v9-google-agenda-candidate-20261002/",
+      "files": 3,
+      "logical_bytes": 13817,
+      "status": "GESTOR_HISTORICAL_LINK",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-f00-integration-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 241918,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-global-link-audit-20261001/",
+      "files": 1,
+      "logical_bytes": 182399,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-incorporacao-3-12-candidate-20261003/",
+      "files": 8,
+      "logical_bytes": 325307,
+      "status": "PINNED_RAW_GITHUB_ASSET_IN_PRODUCTION",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-maturity-cockpit-candidate-20261003/",
+      "files": 1,
+      "logical_bytes": 277751,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-maturity-live-from-homologated-20261003/",
+      "files": 1,
+      "logical_bytes": 283888,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-menu-canonical-recovery-candidate-20261003/",
+      "files": 4,
+      "logical_bytes": 213337,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-native-clean-candidate-20261004/",
+      "files": 15,
+      "logical_bytes": 454252,
+      "status": "PRODUCTION_PROVENANCE_REFERENCE",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-notebook-mobile-buttons-final-20261001/",
+      "files": 1,
+      "logical_bytes": 200520,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-operation-only-candidate-20261005/",
+      "files": 2,
+      "logical_bytes": 4774,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-operation-only-v2-direct-candidate-20261005/",
+      "files": 2,
+      "logical_bytes": 270553,
+      "status": "PRODUCTION_PROVENANCE_REFERENCE",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-operational-refinement-candidate-20261004/",
+      "files": 24,
+      "logical_bytes": 600111,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-p0-pos-video-navigation-identity-performance-20261003/",
+      "files": 4,
+      "logical_bytes": 220014,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-pendencias-vivas-candidate-20261002/",
+      "files": 1,
+      "logical_bytes": 257725,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-pendencias-vivas-v3-agent-access-candidate-20261002/",
+      "files": 1,
+      "logical_bytes": 257795,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-recebidos-v10-20261009-candidate/",
+      "files": 2,
+      "logical_bytes": 323251,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-refinamento-navegacao-identidade-candidate-20261003/",
+      "files": 4,
+      "logical_bytes": 214690,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-responsive-final-20261001/",
+      "files": 1,
+      "logical_bytes": 184909,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-responsive-final-v2-20261001/",
+      "files": 1,
+      "logical_bytes": 191488,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-sidebar-fill-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 241121,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-sidebar-fit-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 241443,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-sidebar-refinement-20261002/",
+      "files": 1,
+      "logical_bytes": 283687,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-status-deeplink-20261009-candidate/",
+      "files": 2,
+      "logical_bytes": 318216,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-status-deeplink-v4-20261009-candidate/",
+      "files": 2,
+      "logical_bytes": 318630,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-status-deeplink-v5-20261009-candidate/",
+      "files": 2,
+      "logical_bytes": 318984,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-status-deeplink-v6-20261009-candidate/",
+      "files": 2,
+      "logical_bytes": 319341,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-status-deeplink-v7-20261009-candidate/",
+      "files": 2,
+      "logical_bytes": 319691,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-status-deeplink-v8-20261009-candidate/",
+      "files": 2,
+      "logical_bytes": 320042,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-status-deeplink-v9-20261009-candidate/",
+      "files": 2,
+      "logical_bytes": 320391,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-status-drilldown-20261009-candidate/",
+      "files": 2,
+      "logical_bytes": 317443,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-status-gestao-20261009-candidate/",
+      "files": 1,
+      "logical_bytes": 281769,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-team-identity-v1-candidate-20261005/",
+      "files": 26,
+      "logical_bytes": 605955,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/central-ux-navigation-r1-candidate-20261005/",
+      "files": 3,
+      "logical_bytes": 281265,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/checkpoints/",
+      "files": 5,
+      "logical_bytes": 1170767,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/dashboard-executivo-kpi5-candidate-20261001/",
+      "files": 3,
+      "logical_bytes": 240952,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/dashboard-financeiro-v11-capital-comprovantes-candidate-20261009/",
+      "files": 1,
+      "logical_bytes": 133026,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/dashboard-gerencial-v4-manual-cora-candidate-20261007/",
+      "files": 1,
+      "logical_bytes": 114844,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/docs-status-visual-canonical-20261001/",
+      "files": 1,
+      "logical_bytes": 276238,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f00-canonical-ui-20261001/",
+      "files": 2,
+      "logical_bytes": 56678,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f00-central-integration-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 28701,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f00-logic-recovery-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 28257,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f00-slot-canonical-fix-20261001/",
+      "files": 3,
+      "logical_bytes": 72654,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f01-canonical-evolution-20261001/",
+      "files": 1,
+      "logical_bytes": 23950,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f01-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 8840,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f02-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 9292,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f02-orca-rei-v1-candidate-20261005/",
+      "files": 1,
+      "logical_bytes": 32878,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f02-orca-rei-v1-r2-20261005/",
+      "files": 1,
+      "logical_bytes": 32873,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f02-orca-rei-v1-r3-intake-20261005/",
+      "files": 2,
+      "logical_bytes": 66275,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f02-orca-rei-v1-r5-autolearning-20261005/",
+      "files": 1,
+      "logical_bytes": 52751,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f02-orca-rei-v1-r6-autolearning-20261005/",
+      "files": 1,
+      "logical_bytes": 52763,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f03-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 8102,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f04-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 9754,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f05-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 9840,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f06-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 9869,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f07-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 9935,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f08-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 9798,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/f09-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 9893,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/gestao-financeira-v5-cost-center-candidate-20261006/",
+      "files": 1,
+      "logical_bytes": 175685,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/gestor-agent-hub-v1-candidate-20261005/",
+      "files": 16,
+      "logical_bytes": 554791,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/gestor-projeto-h5-ux-navigation-candidate-20261005/",
+      "files": 13,
+      "logical_bytes": 530387,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/gestor-team-identity-v1-candidate-20261005/",
+      "files": 18,
+      "logical_bytes": 561252,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/global-access-ui-canonical-20261001/",
+      "files": 1,
+      "logical_bytes": 276372,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/home-definitive-uiux-20261001/",
+      "files": 1,
+      "logical_bytes": 245961,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/home-final-readability-zero-cuts-20261001/",
+      "files": 1,
+      "logical_bytes": 236429,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/home-hoje-operacao-candidate-20261002/",
+      "files": 1,
+      "logical_bytes": 241446,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/home-operational-region-refinement-20261001/",
+      "files": 1,
+      "logical_bytes": 223386,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/home-reference-20260930/",
+      "files": 1,
+      "logical_bytes": 166329,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/homologacao-color-match-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 275770,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/homologacao-links-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 267935,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/homologacao-ui-candidate-20261001/",
+      "files": 1,
+      "logical_bytes": 250501,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/notebook-buttons-sidebar-finetune-20261001/",
+      "files": 1,
+      "logical_bytes": 209187,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/notebook-density-usability-final-20261001/",
+      "files": 1,
+      "logical_bytes": 214246,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/notebook-microtypography-final-20261001/",
+      "files": 1,
+      "logical_bytes": 218287,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/notebook-sidebar-mobile-buttons-final-20261001/",
+      "files": 1,
+      "logical_bytes": 207118,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/presentation-canonical-ui-20261001/",
+      "files": 1,
+      "logical_bytes": 72401,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/presentation-executive-v2-20261002/",
+      "files": 1,
+      "logical_bytes": 47805,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/presentation-executive-viva-20261002/",
+      "files": 1,
+      "logical_bytes": 43210,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/presentation-executive-viva-homologada-20261002/",
+      "files": 1,
+      "logical_bytes": 49128,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/presentation-executive-viva-macro-20261002/",
+      "files": 1,
+      "logical_bytes": 49128,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/project-manager-v1-candidate-20261003/",
+      "files": 11,
+      "logical_bytes": 357764,
+      "status": "UNCLASSIFIED_REVIEW_ONLY",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    },
+    {
+      "path": "preview/visual-hierarchy-target-refinement-20261001/",
+      "files": 1,
+      "logical_bytes": 236192,
+      "status": "PRODUCTION_STYLESHEET_REFERENCE",
+      "authorized_to_move": false,
+      "authorized_to_delete": false
+    }
+  ]
+}

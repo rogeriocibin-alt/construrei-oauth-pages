@@ -23,7 +23,7 @@ from urllib.parse import urlsplit, unquote
 ROOT = Path(__file__).resolve().parents[2]
 BASE = "https://rogeriocibin-alt.github.io/construrei-oauth-pages/"
 REGISTRY = ROOT / "docs/official-links-registry.json"
-PREVIEW = ROOT / "docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
+PREVIEW = ROOT / "docs/AMBIENTES_PREVIEW_INVENTARIO_20261013.json"
 
 # Conservative roots used in official pages; more dependencies may be found.
 # The test NEVER authorizes a cut-over based on directory names alone.
@@ -59,7 +59,7 @@ def main():
     official = registry["links"]
     slugs = {x["slug"] for x in official}
     assert len(official) == len(slugs) == 39, "Official link registry drift; abort stage."
-    assert len(preview["folders"]) == preview["folder_count"] == 121
+    assert len(preview["folders"]) == preview["folder_count"] == 123
     preview_keep = {p["path"].rstrip("/").split("/")[1] for p in preview["folders"]
                     if p["status"] in PROTECTED_PREVIEW_STATES}
     assert len(preview_keep) == 12, "Review protected preview inventory drift before staging."
