@@ -52,6 +52,20 @@ jobs:
         run: |
           node --version
           node .github/scripts/test_orca_r5_oauth_preview.cjs
+      - name: Probe public Supabase Auth settings without credentials or changes
+        shell: bash
+        run: |
+          node - <<'JS'
+          (async()=>{
+            const url="https://yspuaamokjbrosytqjpg.supabase.co/auth/v1/settings";
+            try {
+              const r=await fetch(url,{signal:AbortSignal.timeout(10000)});
+              const x=await r.json();
+              const provider=x.external?.google??x.external?.google_enabled??x.providers?.google??null;
+              console.log(JSON.stringify({probe:"ORCA_R5_GOOGLE_PROVIDER",http:r.status,google_enabled:provider,read_only:true,credentials_disclosed:false}));
+            } catch(e){console.log(JSON.stringify({probe:"ORCA_R5_GOOGLE_PROVIDER",result:"INDETERMINATE",error_type:e.name}))}
+          })();
+          JS
       - name: Verify homologated HTML is byte-identical
         shell: bash
         run: |
