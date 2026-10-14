@@ -47,4 +47,15 @@ assert(serverPattern,"Server regex unavailable");
 const serverFinance=vm.runInNewContext("("+serverPattern[1]+")");
 for(const unsafe of ["R$ 750,00","35%","250 reais","custo: 500","US$ 44"])assert(serverFinance.test(unsafe),"Server would leak: "+unsafe);
 assert(match[1].includes("googleProviderEnabled")&&match[1].includes("settings?.external?.google===true"));
+// Development preview: local draft can be prepared without OAuth or any Gemini call.
+const localStart=match[1].indexOf("function localPreview(){");
+const modelStart=match[1].indexOf("async function generate(){");
+assert(localStart>0&&modelStart>localStart,"No-login candidate and protected Gemini paths must be distinct");
+const localPath=match[1].slice(localStart,modelStart);
+assert(!/(?:\binvoke\s*\(|\bauthed\s*\(|\bsdk\s*\(|\bfetch\s*\(|\bsignInWithOAuth\s*\()/.test(localPath),"Local preview must not contact Supabase or Gemini");
+assert(localPath.includes('source:"local"')&&localPath.includes("reportSafe(report)"),"Local output must be labeled and financial safety checked");
+assert(match[1].includes('modelBtn.onclick=async()=>')&&match[1].includes('b.onclick=()=>'),"Authenticated model must be optional, not default");
+assert(match[1].includes('const params=new URLSearchParams(location.search);'),"PKCE callback must remain recoverable on demand");
+assert(!match[1].includes('googleProviderEnabled().then('),"Google provider must not be queried on page load");
+assert(now.includes('id="v20Budget"')&&now.includes('id="v20Report"'),"Original PDFs must stay available");
 console.log(JSON.stringify({suite:"ORCA_REI_R5_OAUTH_AND_PDF_GUARDS",ok:true,tests:36,original_pdf_identity:"byte_identical",gemini_real_call:false}));
