@@ -14,6 +14,12 @@ on:
     paths:
       - .github/scripts/cr_cofre_failover_guard.py
       - .github/workflows/construrei-cloud-backup.yml
+  push:
+    # Single bounded read-only diagnostic run on this internal candidate ONLY.
+    branches:
+      - candidate/cofre-github-failover-zero-new-cost-20261013
+    paths:
+      - .github/workflows/construrei-cloud-backup.yml
 
 permissions:
   contents: read
@@ -39,7 +45,8 @@ jobs:
           python3 .github/scripts/cr_cofre_failover_guard.py --selftest
 
   inspect-remote-delta:
-    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'inspect'
+    # Trusted owner-controlled branch push; fork PRs never obtain this secret.
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.mode == 'inspect') || (github.event_name == 'push' && github.ref_name == 'candidate/cofre-github-failover-zero-new-cost-20261013') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
