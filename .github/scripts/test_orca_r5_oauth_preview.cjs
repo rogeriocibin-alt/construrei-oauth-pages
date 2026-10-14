@@ -111,8 +111,9 @@ const quota=fs.readFileSync("security/contracts/orca-rei-r5-no-login-gateway-202
 assert(gateway.includes('env("ORCA_REI_FREE_TIER_CONFIRMED")==="true"'),"Free Tier fail-closed flag missing");
 assert(gateway.includes('const KEY=env("ORCA_REI_FREE_API_KEY")'),"Dedicated free-only credential missing");
 assert(!gateway.includes('env("GEMINI_API_KEY")')&&!gateway.includes('env("GOOGLE_AI_API_KEY")'),"Legacy/billable key fallback not allowed");
-assert(gateway.includes('env("ORCA_REI_ENABLE_PUBLIC_DEV_AI")==="true"'),"Model-enabled fail-closed flag missing");
+assert(gateway.includes('const ENABLED=FREE_VERIFIED;'),"Public call must remain disabled until explicit Free Tier confirmation");
 assert(gateway.includes("if(!FREE_VERIFIED)return send(")&&gateway.includes("if(!ENABLED)return send("),"Early cost protections missing");
+assert(gateway.includes('sha(SERVICE_KEY+"|orca-rei-private-quota-v1|"+ip)'),"Private rate fingerprint must avoid requiring new secret");
 assert(gateway.includes('const MODEL="gemini-2.5-flash-lite"'),"Unapproved model change");
 assert(gateway.includes('await db.rpc("cr_orca_public_claim_v1"'),"Atomic quota claim missing");
 assert(gateway.indexOf('db.rpc("cr_orca_public_claim_v1"')<gateway.indexOf('generativelanguage.googleapis.com'),"Model can run before quota reservation");
