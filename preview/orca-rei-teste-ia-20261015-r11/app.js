@@ -2,6 +2,7 @@ function orcaSetMode(){const report=document.getElementById('mode').value==='rep
 document.addEventListener('DOMContentLoaded',orcaSetMode);
 const endpoint='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-test-bench-20261014';async function send(action){
  const label=document.getElementById('label'),out=document.getElementById('out');
+ if(orcaMarketBusy){label.textContent='Precificação em andamento. Confira os resultados antes de gerar outra vez.';return;}
  const mode=document.getElementById('mode').value,provider=document.getElementById('provider').value;
  const raw=document.getElementById('src').value.trim();
  if(!raw){label.textContent='Escreva os serviços e as informações da obra antes de gerar.';return}
@@ -137,7 +138,7 @@ function loadPriceItems(){
 function applyPriceItems(showStatus=true){
  if(!crPriceItems.length){loadPriceItems();if(!crPriceItems.length)return}
  var out=document.getElementById('out'),lines=out.textContent.split(/\r?\n/),sums={'SERVIÇOS':0,'MATERIAIS':0},valid={'SERVIÇOS':true,'MATERIAIS':true};
- crPriceItems.forEach(function(item,i){var q=crNumber(document.getElementById('crq'+i).value),v=crNumber(document.getElementById('crv'+i).value),ok=Number.isFinite(q)&&Number.isFinite(v);
+ crPriceItems.forEach(function(item,i){var q=crNumber(document.getElementById('crq'+i).value),v=crNumber(document.getElementById('crv'+i).value),ok=Number.isFinite(q)&&q>0&&Number.isFinite(v)&&v>=0;
  if(!ok)valid[item.section]=false;else sums[item.section]+=Math.round(q*v*100)/100;
  lines[item.line]='QTD.: '+(Number.isFinite(q)?String(q).replace('.',','):'A DEFINIR')+' | UN.: '+(item.measure||'UN')+' | VR. UNIT.: '+(Number.isFinite(v)?crMoney(v):'A DEFINIR')+' | VR. TOTAL: '+(ok?crMoney(Math.round(q*v*100)/100):'A DEFINIR')});
  lines=lines.map(function(line){if(/^TOTAL SERVIÇOS:/i.test(line))return 'TOTAL SERVIÇOS: '+(valid['SERVIÇOS']?crMoney(sums['SERVIÇOS']):'A DEFINIR');if(/^TOTAL MATERIAIS:/i.test(line))return 'TOTAL MATERIAIS: '+(valid['MATERIAIS']?crMoney(sums['MATERIAIS']):'A DEFINIR');if(/^TOTAL GERAL:/i.test(line))return 'TOTAL GERAL: '+(valid['SERVIÇOS']&&valid['MATERIAIS']?crMoney(sums['SERVIÇOS']+sums['MATERIAIS']):'A DEFINIR');return line});
@@ -227,7 +228,7 @@ async function orcaMarketPrices(){
    try{
     const res=await fetch('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-context-prices-r11-20261015',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({items:batch,context:sourceAtStart.slice(0,2300),photo_captions:(orcaPhotoCaptions||[]).map(x=>String(x).slice(0,180))})});
     const data=await res.json().catch(()=>({error:'Resposta inválida do servidor'}));
-    if(sourceAtStart!==document.getElementById('src').value||document.getElementById('mode').value!=='budget'){errors.push('Conteúdo mudou durante a consulta; resultados antigos descartados.');break}
+    if(sourceAtStart!==document.getElementById('src').value||document.getElementById('mode').value!=='budget'){stats.failed+=total-offset;errors.push('Conteúdo mudou durante a consulta; resultados antigos descartados.');break}
     if(!res.ok||!data.ok)throw Error((data.error||'Falha de servidor')+(Array.isArray(data.invalid_indices)?' • índices '+data.invalid_indices.map(i=>offset+i+1).join(','):'')+' • HTTP '+res.status);
     if(!Array.isArray(data.items)||data.items.length!==batch.length)throw Error('Retorno incompleto do servidor.');
     if(data.ai_called)stats.aiCalls++;
