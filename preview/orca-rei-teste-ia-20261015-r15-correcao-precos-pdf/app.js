@@ -53,7 +53,7 @@ if(document.getElementById('mode').value==='budget'){
  if(orcaMarketProposals>0&&!window.confirm('Há estimativas automáticas preliminares. Confirma que revisou preços, materiais, escopo e acesso antes de imprimir?'))return;
 }
 var isReport=document.getElementById('mode').value==='report';var logo=CR_LOGO_DATA;
-var isPreliminary=!isReport&&(crPriceItems.some(i=>i.assumedQty||i.priceReference)||orcaMarketProposals>0||/A DEFINIR/i.test(txt));
+var isPreliminary=!isReport&&(crPriceItems.some(i=>i.assumedQty||i.priceReference||i.siteReviewRequired)||orcaMarketProposals>0||/A DEFINIR/i.test(txt));
 var title=isReport?'PARECER TÉCNICO':(isPreliminary?'ORÇAMENTO PRELIMINAR':'ORÇAMENTO');if(!isReport&&document.getElementById('orcaAllowDraft').checked&&/A DEFINIR/i.test(txt))title='RASCUNHO NÃO PRECIFICADO';
 var subject=pdfVal('pdftitle');if(!subject||/^(servi[çc]o|vistoria\s*\/\s*servi[çc]o)$/i.test(subject))subject=orcaInferSubject(document.getElementById('src').value);
 var num=pdfVal('pdfnumber')||'A DEFINIR';
