@@ -120,7 +120,13 @@ async function refreshEligibleCases(){
    seen.add(key);
    select.add(new Option(c.case_number+" • "+String(c.client||"Cliente"),c.case_number));
   }
-  notice(cases.length?"Fila F02 sincronizada: "+cases.length+" chamado(s) elegível(is). Selecione para carregar sem digitar número.":"Nenhum chamado chegou à fase F02. Conclua a passagem pelo F00 e F01 sem ignorar pendências.");
+  notice(cases.length?"Fila F02 sincronizada: "+cases.length+" chamado(s) elegível(is).":"Nenhum chamado chegou à fase F02. Conclua a passagem pelo F00 e F01 sem ignorar pendências.");
+  // Autoload only when exactly one distinct valid handoff is present and no
+  // other case or draft is open; never pick an arbitrary case from a busy queue.
+  if(cases.length===1&&!runtime.case&&runtime.loaded&&!$("caseNumber").value.trim()){
+    $("caseNumber").value=cases[0].case_number;
+    await loadCase();
+  }
  }catch(e){select.replaceChildren(new Option("Fila indisponível; tente novamente",""));notice("Falha ao consultar fila F02: "+String(e.message||e),true)}
 }
 async function loadCase(){
