@@ -202,7 +202,7 @@ function addressComplements(raw:string){
   const src=addressContext(raw),out:string[]=[];
   // Require a real unit identifier and a word boundary after the type.
   // Prevent "apresentada"/"aplicável" from becoming phantom apartments.
-  const re=/\b(apto?\.?|apartamento|bloco|torre|sobrado|casa|fundos|unidade|sala|loja|conjunto)\b\s*(?:n[ºo.]?\s*)?([A-Za-z0-9À-ÿ-]{1,24})\b/gi;
+  const re=/\b(ap(?:to)?\.?|apartamento|bloco|torre|sobrado|casa|fundos|unidade|sala|loja|conjunto)\b\s*(?:n[ºo.]?\s*)?([A-Za-z0-9À-ÿ-]{1,24})\b/gi;
   let m;while((m=re.exec(src))){
     const kind=clean(m[1],30),val=clean(m[2],30);
     const phrase=(kind+" "+val).replace(/\s+/g," ").trim();
