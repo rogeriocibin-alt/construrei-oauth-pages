@@ -57,7 +57,7 @@ assert.equal(Number(p.material_items[0].value),61.54);
 assert.equal(Number(p.material_items[1].value),0);
 assert.match(p.copy_ready_text,/REJUNTE PARA BASE/);
 assert.match(p.copy_ready_text,/REFIXAÇÃO DE VASO/);
-assert.match(p.copy_ready_text,/R\$ 661,54/);
+assert.match(p.copy_ready_text,/R\$\s*661,54/);
 assert.match(p.copy_ready_text,/RASCUNHO COMERCIAL NÃO APROVADO/);
 assert.throws(()=>B.budgetItems({...child,crPriceItems:[{...child.crPriceItems[0],assumedQty:true},child.crPriceItems[1]]}),/provisória/);
 inputs.crv0.value="";
