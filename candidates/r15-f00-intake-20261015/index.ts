@@ -202,12 +202,12 @@ function addressComplements(raw:string){
   const src=addressContext(raw),out:string[]=[];
   // Require a real unit identifier and a word boundary after the type.
   // Prevent "apresentada"/"aplicável" from becoming phantom apartments.
-  const re=/\b(ap(?:to)?\.?|apartamento|bloco|torre|sobrado|casa|fundos|unidade|sala|loja|conjunto)\b\s*(?:n[ºo.]?\s*)?([A-Za-z0-9À-ÿ-]{1,24})\b/gi;
+  const re=/\b(ap(?:to)?\.?|apartamento|bloco|bl\.?|torre|sobrado|casa|fundos|unidade|sala|loja|conjunto)\b\s*(?:n[ºo.]?\s*)?([A-Za-z0-9À-ÿ-]{1,24})\b/gi;
   let m;while((m=re.exec(src))){
     const kind=clean(m[1],30),val=clean(m[2],30);
     // Reject ordinary prose such as "casa de", "unidade superior" or "sala de".
     // A unit identifier is short and contains a digit, except a single-letter tower/block.
-    if(!/\\d/.test(val)&&!(/^(?:bloco|torre)$/i.test(kind)&&/^[a-z]$/i.test(val)))continue;
+    if(!/\d/.test(val)&&!(/^(?:bloco|bl\.?|torre)$/i.test(kind)&&/^[a-z]$/i.test(val)))continue;
     const phrase=(kind+" "+val).replace(/\s+/g," ").trim();
     if(phrase&&!out.some(x=>fold(x)===fold(phrase)))out.push(phrase);
   }
