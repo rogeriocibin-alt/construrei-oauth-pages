@@ -67,7 +67,7 @@ function importSource(h){
  "RETORNO TÉCNICO: "+String(state.technical_return?.text||""),
  "REGRA: levantar apenas materiais, quantidades e serviços do escopo. Distinguir fato observado, relato e hipótese. Não inventar medidas, preços publicados ou condições de acesso."
  ];
- return segments.filter(x=>x.trim().length>9).join("\n").slice(0,3500);
+ const full=segments.filter(x=>x.trim().length>9).join("\n");if(full.length>3300)throw Error("O contexto ultrapassa o limite de entrada da R15. Resuma o relato técnico conscientemente antes de importar: transferência automática parcial foi bloqueada.");return full;
 }
 async function loadCase(){
  if(runtime.saving){notice("Aguarde o salvamento terminar.",true);return}
