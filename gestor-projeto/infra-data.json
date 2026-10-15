@@ -420,7 +420,7 @@
         {
           "severity": "attention",
           "title": "CAS e restauração integral a comprovar",
-          "message": "Manifests CAS até 12/10, run 13/10 falhou; 15/10 HIST_FULL em publicação no último check. PG17 replay ainda sem prova."
+          "message": "FULL redundante por push corrigido PR #133; ainda CAS scheduled sem prova recente, CURRENT run #38816987001 e replay PG17 pendentes."
         }
       ]
     }
@@ -456,7 +456,7 @@
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Validar conclusão do run #38816987001; comprovar cron do CAS às 05:47 BRT com manifesto imutável real; mitigar cópia FULL em push main por candidata e testar replay SQL PG17 em laboratório isolado sem alterar produção."
+      "action": "PR #133 MERGED 9245be84 corrige FULL redundante por push e mantém FULL apenas manual; CAS diário separado preservado. Confirmar run #38816987001 e CURRENT/restore drill; provar próximo CAS event=schedule e replay SQL PG17 em laboratório isolado."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
@@ -590,16 +590,22 @@
       "action": "Manter executores automáticos e verificar testes pendentes sem declarar 100%."
     },
     {
-      "severity": "attention",
-      "title": "Cofre Zero — redundância FULL por push e CAS sem schedule comprovado",
-      "detail": "Workflow change-driven em main gera cópia FULL por novo RUN_ID em push, ainda que o nome mencione meaningful change; CAS diário event=schedule não comprovado em 14/15, falha real 13/10.",
-      "action": "Preparar proteção em candidata; não disparar novos FULL nem excluir backups; manter rotina CAS existente e validar agendamento antes de corte."
+      "severity": "resolved",
+      "title": "Cofre Zero — duplicação FULL por push corrigida",
+      "detail": "PR #133 MERGED main commit 9245be84; workflow FULL passou a workflow_dispatch manual-only, sem push. Auditor regressivo atualizado, PR CI 38822615841 PASS e main CI 38822682363 PASS. Routine CAS schedule separada preservada; ainda sem prova de execução recente.",
+      "action": "Acompanhar ocorrência real CAS event=schedule, CURRENT e restauração; não disparar FULL extra nem apagar backups."
     },
     {
       "severity": "attention",
       "title": "Restauração SQL PG17 atual não homologada",
       "detail": "Drill no workflow verifica 3 SQL e 3 amostras Storage com hashes, mas não executa replay PostgreSQL17 em ambiente isolado, nem prova Auth/Storage e E2E.",
       "action": "Realizar ensaio SQL real descartável, manter backup_restore_ok=false até comprovado."
+    },
+    {
+      "severity": "attention",
+      "title": "Cofre Zero — CAS agendado sem execução recente comprovada",
+      "detail": "Agendamento '47 8 * * *' preservado no .github/workflows/cofre-zero-history-full.yml; última falha schedule 13/10 por CURRENT stale; não há prova atual de manifestos CAS 14/15.",
+      "action": "Esperar execução automática e conferir sucesso real/manifesto novo em HISTORY_CAS; investigar ausência de scheduler sem criar backup FULL/infra extra."
     }
   ],
   "next_actions": [
