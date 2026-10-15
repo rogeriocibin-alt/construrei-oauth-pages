@@ -13,12 +13,12 @@ var raw=txt.replace(/\r/g,'').split('\n').map(function(x){return x.trim()}).filt
 var sections=[],cur=null;
 var headings=/^(SITUAÇÃO RELATADA|OBJETIVO E ESCOPO.*|VERIFICAÇÕES REALIZADAS|ANÁLISE TÉCNICA.*|HIPÓTESE TÉCNICA|RECOMENDAÇÕES.*|INFORMAÇÕES A CONFIRMAR|CONSIDERAÇÕES DE SEGURANÇA|CONCLUSÃO|SERVIÇOS.*|MATERIAIS|RESUMO|OBSERVAÇÕES TÉCNICAS|OBSERVAÇÕES)\s*:?\s*$/i;
 raw.forEach(function(line){if(headings.test(line)){cur={heading:line,text:[]};sections.push(cur)}else{if(!cur){cur={heading:isReport?'OBJETIVO E ESCOPO':'DESCRIÇÃO',text:[]};sections.push(cur)}cur.text.push(line)}});
-var body=sections.map(function(s,i){return '<section><h2>'+(i+1)+'. '+pdfEsc(s.heading)+'</h2>'+s.text.map(function(t){var cls=/^TOTAL|^QTD\./.test(t)?'money':/^\d+\.\s+[A-ZÁ-Ú]/.test(t)?'service':'';return '<p class="'+cls+'">'+pdfEsc(t)+'</p>'}).join('')+'</section>'}).join('');
+var body=sections.map(function(s,i){return '<section><h2>'+(/^\d+\./.test(s.heading)?'':(i+1)+'. ')+pdfEsc(s.heading)+'</h2>'+s.text.map(function(t){var cls=/^TOTAL|^QTD\./.test(t)?'money':/^\d+\.\s+[A-ZÁ-Ú]/.test(t)?'service':'';return '<p class="'+cls+'">'+pdfEsc(t)+'</p>'}).join('')+'</section>'}).join('');
 var files=Array.from(document.getElementById('pdffiles').files||[]).slice(0,12);
 var images=await Promise.all(files.map(function(f){return new Promise(function(resolve){var rd=new FileReader();rd.onload=function(){resolve({src:rd.result,name:f.name})};rd.onerror=function(){resolve(null)};rd.readAsDataURL(f)})}));
 images=images.filter(Boolean);
-if(images.length){body+='<section><h2>'+(sections.length+1)+'. REGISTROS FOTOGRÁFICOS</h2><div class="photos">'+images.map(function(p,i){return '<figure><img src="'+p.src+'"><figcaption>'+(i+1)+'. '+pdfEsc((window.crPhotoCaptions||{})[p.name]||p.name)+'</figcaption></figure>'}).join('')+'</div><p class="note">Fotografias anexadas para conferência. Confirmar legendas e correspondência com a vistoria.</p></section>'}
-var cs='@page{size:A4;margin:14mm 13mm 22mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#17344b;margin:0}header{position:relative;margin:0 0 10mm;display:flex;border-top:4px solid #ddb327;height:28mm;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}header .logo{width:30%;display:flex;justify-content:center;align-items:center;font-size:20px;color:#073b64;font-weight:bold}header .blue{width:70%;background:#07385f;color:white;padding:10px 16px}header h1{font-size:19px;margin:0}header b{color:#d5ae27;font-size:15px}header small{display:block;margin-top:5px}.info{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:15px}.info div{background:#eff6fa;border:1px solid #cedde7;border-radius:4px;padding:8px;overflow-wrap:anywhere}.info strong{color:#08527a;display:block;font-size:8px;margin-bottom:5px}h2{break-after:avoid;color:white;background:#073d68;padding:6px 10px;font-size:11px;border-radius:3px;margin:16px 0 8px}p{font-size:10.5px;line-height:1.45;margin:5px 8px;white-space:pre-wrap;overflow-wrap:anywhere}p.service{font-weight:bold;color:#0a3b64}p.money{background:#f0f6fa;padding:6px;font-weight:700}.photos{page-break-inside:avoid;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.photos figure{border:1px solid #d0dfe9;background:#f3f8fb;padding:5px;margin:0;break-inside:avoid}.photos img{width:100%;height:95px;object-fit:cover}.photos figcaption{font-size:9px;margin-top:4px}.note{font-size:9px;color:#567}.footer{position:fixed;bottom:-19mm;left:-13mm;right:-13mm;background:linear-gradient(to right,#07385f 78%,#d8ab1a 78%);height:14mm;display:flex;align-items:center;justify-content:space-around;color:white;font-size:8px}.footer strong{color:#07385f}header .blue,.footer,h2,.info div,p.money{print-color-adjust:exact;-webkit-print-color-adjust:exact}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.noprint{display:none}}';
+if(images.length){body+='<section><h2>'+(sections.length+1)+'. REGISTROS FOTOGRÁFICOS</h2><div class="photos">'+images.map(function(p,i){return '<figure><img src="'+p.src+'"><figcaption>'+(i+1)+'. '+pdfEsc((window.crPhotoCaptionsByIndex||[])[i]||p.name)+'</figcaption></figure>'}).join('')+'</div><p class="note">Fotografias anexadas para conferência. Confirmar legendas e correspondência com a vistoria.</p></section>'}
+var cs='@page{size:A4;margin:14mm 13mm 22mm}header .blue:after{content:"MANUTENÇÃO\A REFORMAS\A DIAGNÓSTICO";white-space:pre;position:absolute;right:6mm;top:6mm;border-left:1px solid #7791a7;padding-left:5mm;font-size:8px;line-height:1.9;color:#e3bc47}header .blue{padding-right:37mm}header .blue h1{font-size:17px}.photos{break-inside:auto}.photos figure{break-inside:avoid}.photos figcaption{min-height:28px;line-height:1.25}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#17344b;margin:0}header{position:relative;margin:0 0 10mm;display:flex;border-top:4px solid #ddb327;height:28mm;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}header .logo{width:30%;display:flex;justify-content:center;align-items:center;font-size:20px;color:#073b64;font-weight:bold}header .blue{width:70%;background:#07385f;color:white;padding:10px 16px}header h1{font-size:19px;margin:0}header b{color:#d5ae27;font-size:15px}header small{display:block;margin-top:5px}.info{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:15px}.info div{background:#eff6fa;border:1px solid #cedde7;border-radius:4px;padding:8px;overflow-wrap:anywhere}.info strong{color:#08527a;display:block;font-size:8px;margin-bottom:5px}h2{break-after:avoid;color:white;background:#073d68;padding:6px 10px;font-size:11px;border-radius:3px;margin:16px 0 8px}p{font-size:10.5px;line-height:1.45;margin:5px 8px;white-space:pre-wrap;overflow-wrap:anywhere}p.service{font-weight:bold;color:#0a3b64}p.money{background:#f0f6fa;padding:6px;font-weight:700}.photos{page-break-inside:avoid;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.photos figure{border:1px solid #d0dfe9;background:#f3f8fb;padding:5px;margin:0;break-inside:avoid}.photos img{width:100%;height:95px;object-fit:cover}.photos figcaption{font-size:9px;margin-top:4px}.note{font-size:9px;color:#567}.footer{position:fixed;bottom:-19mm;left:-13mm;right:-13mm;background:linear-gradient(to right,#07385f 78%,#d8ab1a 78%);height:14mm;display:flex;align-items:center;justify-content:space-around;color:white;font-size:8px}.footer strong{color:#07385f}header .blue,.footer,h2,.info div,p.money{print-color-adjust:exact;-webkit-print-color-adjust:exact}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.noprint{display:none}}';
 var meta='<div class="info">'+fields.map(function(p){return '<div><strong>'+pdfEsc(p[0])+'</strong>'+pdfEsc(p[1])+'</div>'}).join('')+'</div>';
 var html='<html lang="pt-BR"><head><meta charset="utf-8"><title>'+pdfEsc(title+' '+num)+'</title><style>'+cs+'</style></head><body><div class="noprint">Clique em Imprimir PDF e escolha Salvar como PDF. No navegador desative Cabeçalhos e rodapés e ative Gráficos de fundo. <button onclick="window.print()">Imprimir PDF</button></div><header><div class="logo">'+(logo?'<img alt="CONSTRU-REI" src="'+logo+'" style="max-width:92%;max-height:22mm;object-fit:contain">':'CONSTRU-REI')+'</div><div class="blue"><h1>'+title+'</h1><b>Nº '+pdfEsc(num)+'</b><small>'+pdfEsc(pdfVal('pdftitle')||'MANUTENÇÃO • REFORMAS • DIAGNÓSTICO')+'</small></div></header>'+meta+body+'<div class="footer"><span>(41) 98778-6277</span><span>construrei@construrei.com.br</span><span>Curitiba/PR • Região Metropolitana</span><strong>CONSTRU-REI</strong></div></body>
 <script>
@@ -30,6 +30,8 @@ var html='<html lang="pt-BR"><head><meta charset="utf-8"><title>'+pdfEsc(title+'
  ["SERVIÇOS",["VEDA","PORTA"],275,"serviço para 1 porta, até 10 m de juntas"],
  ["SERVIÇOS",["ADEQUA","CALHA"],418,"adequação até 3 m de calha"],
  ["SERVIÇOS",["TESTE","CONFER"],82.5,"teste após cura"],
+ ["SERVIÇOS",["LIMPEZA","CALHA"],260,"limpeza simples por visita; confirmar metragem/acesso","Trello, obra 40-24 (2024)"],
+ ["SERVIÇOS",["VEDAC","CUBA"],220,"serviço simples; confirmar escopo","Trello, obra 691-26 (2026)"],
  ["MATERIAIS",["PU40"],126,"lote com 3 unidades"],
  ["MATERIAIS",["CORD","POLIETIL"],55,"lote"],
  ["MATERIAIS",["ARGAMASSA","REPAR"],120,"lote"],
@@ -65,7 +67,7 @@ var html='<html lang="pt-BR"><head><meta charset="utf-8"><title>'+pdfEsc(title+'
  document.getElementById("pdfmeta").before(badge);ensureLogo();
  const panel=document.getElementById("pricesPanel");
  const info=document.createElement("div");info.style.cssText="background:#f3f8ff;padding:10px;border-radius:8px;font-size:12px;line-height:1.5";
- info.innerHTML="<b>Sugestões com origem — motor R4</b><div>Ao gerar orçamento, os itens equivalentes recebem automaticamente valores unitários históricos. Referência: "+ref+". Valores ainda não representam cotações atuais nem preços aprovados. Verifique escopo, margem e condições de acesso.</div>";
+ info.innerHTML="<b>Sugestões com origem — motor R4</b><div>Ao gerar orçamento, os itens equivalentes recebem automaticamente valores unitários históricos. Referências: orçamento 590-26 e obras Trello 40-24/691-26. Valores ainda não representam cotações atuais nem preços aprovados. Verifique escopo, margem e condições de acesso.</div>";
  panel.prepend(info);
  let prov=document.createElement("p");prov.id="crPriceSources";prov.style.cssText="font-size:12px;white-space:pre-wrap";panel.append(prov);
  let previousLoad=window.loadPriceItems;
@@ -80,7 +82,7 @@ var html='<html lang="pt-BR"><head><meta charset="utf-8"><title>'+pdfEsc(title+'
    if(!input.value.trim()){input.value=String(s[2]).replace(".",",");found++}
    if(qty&&!qty.value.trim()){qty.value="1";qty.title="1 lote sugerido — confirmar quantitativo"}
    let note=document.createElement("small");note.style.cssText="grid-column:1 / -1;color:#52697a";
-   note.textContent="Fonte: "+ref+" | "+s[3]+" | preço sugerido, a validar";
+   note.textContent="Fonte: "+(s[4]||ref)+" | "+s[3]+" | preço sugerido, a validar";
    input.parentElement.append(note);
   });
   prov.textContent=found+" preços sugeridos automaticamente; "+missing.length+" sem referência unitária confiável."+ (missing.length?"\nSem referência: "+missing.join("; "):"");
@@ -95,7 +97,7 @@ var html='<html lang="pt-BR"><head><meta charset="utf-8"><title>'+pdfEsc(title+'
   crPriceItems.forEach((it,i)=>{if(lines[it.line]&&units[i]!=="UN")lines[it.line]=lines[it.line].replace(/\bUN\.\s*:\s*UN\b/i,"UN.: "+units[i]);});
   out.textContent=lines.join("\n");
  };
- window.crPhotoCaptions={};
+ window.crPhotoCaptionsByIndex=[];
  const photos=document.createElement("div");photos.style.cssText="background:#f0f5fb;padding:12px;border-radius:8px;margin:10px 0;font-size:13px";
  photos.innerHTML='<label><input id="crCaptionEnable" type="checkbox" checked> Gerar legendas técnicas automáticas com Gemini no parecer</label><div id="crCaptionStatus" style="font-size:12px">Até 6 fotos por documento; imagens reduzidas e enviadas para análise quando gerar o PDF.</div>';
  document.getElementById("pdfmeta").after(photos);
@@ -115,7 +117,7 @@ var html='<html lang="pt-BR"><head><meta charset="utf-8"><title>'+pdfEsc(title+'
    let resp=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({action:"photo_caption",images,source:document.getElementById("src").value.slice(0,1000)})});
    let d=await resp.json();
    if(!resp.ok||!d.ok||!Array.isArray(d.captions)||d.captions.length!==files.length)throw Error(d.error||"Resposta inválida");
-   files.forEach((f,i)=>window.crPhotoCaptions[f.name]=String(d.captions[i]).slice(0,220));
+   window.crPhotoCaptionsByIndex=files.map((f,i)=>String(d.captions[i]).slice(0,220));
    status.textContent=files.length+" legendas geradas. Revise sua precisão antes de entregar o documento.";
    return true;
   }catch(e){status.textContent="Falha ao gerar legendas: "+e.message;alert(status.textContent);return false;}
