@@ -76,8 +76,8 @@
       "platform": "Google Cloud Run + Cloud Scheduler + Google Drive",
       "asset": "construrei-backup / construrei-backup-diario",
       "role": "Backup recorrente oficial independente do notebook",
-      "status": "live",
-      "freshness": "drive_current_2026-10-15_06utc_history_full_2026-10-15_22utc_pending_verify"
+      "status": "attention",
+      "freshness": "actions_38816987001_success_cas_schedule_unproven"
     },
     {
       "layer": "Storage operacional",
@@ -100,8 +100,8 @@
       "platform": "Desktop Commander",
       "asset": "Rogerio-2022",
       "role": "Auditoria e manutenção local autorizada",
-      "status": "live",
-      "freshness": "connector_live"
+      "status": "offline",
+      "freshness": "connector_devices_20261015_offline"
     }
   ],
   "providers": [
@@ -351,11 +351,11 @@
       "account": "Notebook autorizado",
       "plan": "Dispositivo próprio",
       "plan_status": "n/a",
-      "health": "healthy",
+      "health": "offline",
       "usage": [
         {
           "label": "Desktop Commander",
-          "value": "Online • app 0.2.52"
+          "value": "Offline • consulta 15/10/2026"
         },
         {
           "label": "Remote MCP calls restantes",
@@ -381,7 +381,7 @@
         }
       ],
       "admin_url": "https://mcp.desktopcommander.app/",
-      "source": "Inventário do dispositivo histórico • rotina oficial é cloud (comprovada 10/10)",
+      "source": "Desktop Commander list_devices • 15/10/2026; dispositivo offline",
       "alerts": []
     },
     {
@@ -403,7 +403,7 @@
         },
         {
           "label": "Última conclusão diária",
-          "value": "CURRENT Cloud 15/10 03h BRT • 3 SQL / 4535 objetos (não é restore SQL integral)"
+          "value": "Backup pontual GitHub #38816987001 SUCCESS; rotina diária e CAS exigem prova separada."
         }
       ],
       "assets": [
@@ -415,12 +415,12 @@
         }
       ],
       "admin_url": "https://drive.google.com/",
-      "source": "Drive BACKUP_STATUS.txt e HISTORY_FULL (15/10/2026), GitHub Actions #38816987001; conclusão final pendente",
+      "source": "Evidência anterior Drive + API GitHub Jobs #38816987001 revalidada; sem nova leitura Drive nesta retomada",
       "alerts": [
         {
           "severity": "attention",
           "title": "CAS e restauração integral a comprovar",
-          "message": "FULL redundante por push corrigido PR #133; ainda CAS scheduled sem prova recente, CURRENT run #38816987001 e replay PG17 pendentes."
+          "message": "Backup principal completed/success incluindo CURRENT e readback amostral. CAS schedule recente e replay integral permanecem sem prova; FULL automático removido."
         }
       ]
     }
@@ -446,17 +446,17 @@
       "installed_at": "2026-10-05 • migração cloud oficial",
       "state": "attention",
       "last_attempt": "2026-10-15: CURRENT Cloud 06:00 UTC; GitHub run 38816987001 às 22:25 UTC iniciou recuperação histórica",
-      "last_result": "Drive CURRENT confirmado 15/10 06:00 UTC com 3 SQL + 4535 objetos. GitHub HISTORY_FULL/20261015-222541 contém 3 SQL + 4539 objetos; job ainda em publicação na última consulta. Não equivale a conclusão/CURRENT atualizado.",
+      "last_result": "GitHub Actions #38816987001 completed/success: 3 SQL, Storage, manifesto, HISTORY_FULL, atualização CURRENT e restore drill amostral concluídos segundo API jobs revalidada em 15/10. Não comprova replay SQL integral.",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
-      "verification": "GitHub Copiar Storage e manifesto PASS; HISTORY_FULL readback final, CURRENT update e restore drill pendentes. CAS manifests existentes até 12/10; execução scheduled CAS de 13/10 falhou por stale CURRENT. Replay SQL PostgreSQL17 completo não realizado.",
+      "verification": "Todos os passos do job backup #116704035889 PASS. Drill compara SHA256 de 3 SQL e 3 amostras Storage. CAS schedule mais recente encontrado: #38414883600 de 13/10, falha CURRENT stale; sem schedule 14–15/10 encontrado. Sem nova leitura direta do Drive nesta retomada.",
       "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
         "Google Drive CURRENT/HISTORY",
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "PR #133 MERGED 9245be84 corrige FULL redundante por push e mantém FULL apenas manual; CAS diário separado preservado. Confirmar run #38816987001 e CURRENT/restore drill; provar próximo CAS event=schedule e replay SQL PG17 em laboratório isolado."
+      "action": "FULL manual-only confirmado no YAML main. Comprovar próximo CAS schedule e manifesto; leitura Cloud bloqueada pelo conector. Replay integral ADIADO_MONITORADO conforme contrato de 12/10; manter sem homologação integral."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
@@ -599,7 +599,7 @@
       "severity": "attention",
       "title": "Restauração SQL PG17 atual não homologada",
       "detail": "Drill no workflow verifica 3 SQL e 3 amostras Storage com hashes, mas não executa replay PostgreSQL17 em ambiente isolado, nem prova Auth/Storage e E2E.",
-      "action": "Realizar ensaio SQL real descartável, manter backup_restore_ok=false até comprovado."
+      "action": "Ensaio integral ADIADO_MONITORADO pelo contrato 12/10; manter backup_restore_ok=false até prova e isolamento disponíveis."
     },
     {
       "severity": "attention",
