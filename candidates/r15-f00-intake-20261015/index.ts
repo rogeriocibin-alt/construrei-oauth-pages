@@ -237,16 +237,13 @@ function fullAddress(raw:string,base:string){
   return b;
 }
 function addressComplementMissing(raw:string,address:string){
-  // A confirmed service address with an explicit unit must not be blocked
-  // by mentions of other houses/units elsewhere in the technical narrative.
-  const confirmed=addressComplements(address);
-  if(confirmed.length)return false;
-  // Without a confirmed unit, only evaluate complement information on an
-  // explicitly identified primary address line; other properties are context.
   const primary=String(raw||"").split(/\r?\n/).find(x=>/ENDERE[CÇ]O\s*:/i.test(x))||"";
+  // Only the address explicitly marked as the service destination can be
+  // compared: other apartments/houses in the complaint are technical context.
   if(!primary)return false;
-  const comps=addressComplements(primary),a=fold(address);
-  return comps.some(cp=>!a.includes(fold(cp)));
+  const expected=addressComplements(primary),actual=addressComplements(address);
+  const normalize=(v:string)=>fold(v).replace(/\bapartamento\b|\bapto?\.?\b/g,"ap").replace(/\bbloco\b|\bbl\.?\b/g,"bloco").replace(/\s+/g," ").trim();
+  return expected.some(cp=>!actual.some(ac=>normalize(ac)===normalize(cp)));
 }
 function clientFromHistory(raw:string){
   for(const line of statements(raw)){
