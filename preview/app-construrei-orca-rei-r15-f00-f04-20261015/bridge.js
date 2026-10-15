@@ -5,7 +5,7 @@ const BASE="https://rogeriocibin-alt.github.io/construrei-oauth-pages/";
 const FLOW="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-flow-runtime-v2";
 const ROUTES=Object.freeze({app:"app-construrei/",f00:"production/flow-canonical-20261001/f00/",f01:"production/flow-canonical-20261001/f01/",f02:"production/flow-canonical-20261001/f02/",f03:"production/flow-canonical-20261001/f03/",f04:"production/flow-canonical-20261001/f04/"});
 const $=id=>document.getElementById(id);
-const runtime={case:null,budgetRevision:null,lastTab:"orca",history:[],loaded:false,saving:false};
+const runtime={case:null,budgetRevision:null,lastTab:"orca",history:[],loaded:false,saving:false,f02Dirty:false};
 const fmt=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 function money(v){
  let t=String(v??"").replace(/R\$/gi,"").replace(/\s/g,"");
@@ -30,7 +30,7 @@ function setTab(tab,store=true){
  $("flowPanel").hidden=tab==="orca";
  if(tab!=="orca"){
   const frame=$("flowFrame"),url=BASE+ROUTES[tab];
-  if(frame.dataset.current!==url){frame.src=url;frame.dataset.current=url;}
+  if(frame.dataset.current!==url||(tab==="f02"&&runtime.f02Dirty)){frame.src=url;frame.dataset.current=url;runtime.f02Dirty=false;}
   const titles={app:"APP oficial",f00:"F00 • Captura",f01:"F01 • Qualificação",f02:"F02 • Orçamento oficial",f03:"F03 • Proposta e decisão",f04:"F04 • Agenda e mobilização"};
   $("pageDesc").textContent=titles[tab]+" • módulo canônico embutido sem alterações.";
  }
@@ -139,7 +139,7 @@ async function saveDraft(){
   const saved=await api("budget-save",payload);
   if(!saved.handoff||saved.budget?.budget_ready||saved.handoff.to_flow!=="F02")throw Error("Resposta de salvamento não comprovou permanência no F02. Verifique o caso oficial.");
   if(Math.abs(Number(saved.budget.total_labor)-result.labor)>0.01||Math.abs(Number(saved.budget.total_material)-result.materials)>0.01)throw Error("Divergência dos totais retornados pelo servidor. Conferir no F02.");
-  runtime.case=saved.handoff;runtime.budgetRevision=saved.handoff.revision??null;
+  runtime.case=saved.handoff;runtime.budgetRevision=saved.handoff.revision??null;runtime.f02Dirty=true;
   notice("RASCUNHO SALVO NO F02: "+saved.handoff.case_number+" • mão de obra "+fmt(result.labor)+" • materiais "+fmt(result.materials)+" • total "+fmt(round(result.labor+result.materials))+". Itens e descrição completa preservados em TEXTO PRONTO. F03/F04 não foram acionados.");
  }catch(e){notice("Rascunho NÃO confirmado: "+String(e.message||e),true)}
  finally{runtime.saving=false;btn.disabled=false}
