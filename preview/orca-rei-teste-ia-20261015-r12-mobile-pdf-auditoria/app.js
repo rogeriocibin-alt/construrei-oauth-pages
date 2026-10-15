@@ -15,12 +15,15 @@ const endpoint='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-re
     if(files.some((_,i)=>!String(orcaPhotoCaptions[i]||'').trim())){label.textContent='Análise visual pendente. Revise ou preencha as legendas e gere novamente.';return}
   }
   // Imagens não comprovam causalidade nem autorizam itens de serviço.
-  let source=raw.slice(0,3400);
+  let source=raw.slice(0,3300);
   if(mode==='report'&&files.length){
     source+='\n\nOBSERVAÇÕES VISUAIS INFORMADAS EM FOTOS (NÃO SIGNIFICAM SERVIÇOS AUTORIZADOS, REPAROS EXECUTADOS OU CAUSAS COMPROVADAS):\n';
     source+=orcaPhotoCaptions.map((v,i)=>'Foto '+(i+1)+': '+String(v||'').slice(0,190)).join('\n');
     source+='\nDistinguir relato da vistoria, registro visual e hipótese. Pintura visível não integra automaticamente o escopo contratado.';
   }
+  source += mode==='report'
+    ? '\n\nCONTROLE TÉCNICO: Parecer SEM QUALQUER VALOR FINANCEIRO. Diferencie fatos observados, relato do solicitante, hipóteses e recomendações. Fotos não comprovam instabilidade oculta, gases, causas ou vedação interna. Testes visuais de descarga são verificações funcionais, não ensaios conclusivos de estanqueidade gasosa. Evite afirmar como constatado o que depende de vistoria presencial.'
+    : '\n\nCONTROLE COMERCIAL: Separe SERVIÇOS (mão de obra), MATERIAIS e OBSERVAÇÕES TÉCNICAS. Descrições de cada item devem ser curtas, nomes em caixa alta, quantidade e unidade coerentes. Não invente medidas, condições estruturais ou valores de produtos. Destaque informações e adaptações a confirmar antes da proposta final.';
   label.textContent='Gerando com '+(provider==='auto'?'IA disponível':provider)+'...';
   let response=await fetch(endpoint,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action,source:source.slice(0,4950),mode,provider})});
   const data=await response.json();
@@ -227,7 +230,7 @@ async function orcaMarketPrices(){
   for(let offset=0;offset<total;offset+=12){
    const subset=crPriceItems.slice(offset,offset+12);
    const batch=subset.map((it,i)=>({id:'item-'+i,name:it.name.replace(/^\d+[.)]\s*/,''),section:it.section,unit:orcaCanonicalUnit(it.measure||'UN'),qty:crNumber(document.getElementById('crq'+(offset+i))?.value)||1}));
-   if(subset.every((it,i)=>it.originalProvided&&Number.isFinite(crNumber(document.getElementById('crv'+(offset+i))?.value)))){stats.preserved+=subset.length;continue}
+   if(subset.every((it,i)=>it.originalProvided&&crNumber(document.getElementById('crv'+(offset+i))?.value)>0)){stats.preserved+=subset.length;continue}
    status.textContent='Consultando IA/referências: itens '+(offset+1)+' a '+(offset+subset.length)+' de '+total;
    try{
     const res=await fetch('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-context-prices-r11-20261015',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({items:batch,context:sourceAtStart.slice(0,2300),photo_captions:(orcaPhotoCaptions||[]).map(x=>String(x).slice(0,180))})});
@@ -246,16 +249,18 @@ async function orcaMarketPrices(){
      row?.querySelector('.crprice-proof')?.remove();
      item.siteReviewRequired=!!ref.site_review_required;
      const price=typeof ref.price==='number'?ref.price:NaN;
-     const valid=Number.isFinite(price)&&price>0&&['preco_publicado','estimativa_revisar'].includes(ref.status);
-     const supplied=item.originalProvided&&Number.isFinite(crNumber(field.value));
+     const unitMatches=!ref.unit||orcaCanonicalUnit(ref.unit)===batch[i].unit;
+     const valid=Number.isFinite(price)&&price>0&&unitMatches&&['preco_publicado','estimativa_revisar'].includes(ref.status);
+     const documented=ref.status==='preco_publicado'&&!!(ref.source_url||ref.source_kind==='historico_interno');
+     const supplied=item.originalProvided&&crNumber(field.value)>0;
      if(supplied)stats.preserved++;
      else if(valid){
       field.value=String(price).replace('.',',');item.unit=field.value;
       item.priceReference={document:ref.source_title||'IA preliminar',date:ref.source_date||'',source_url:ref.source_url||'',kind:ref.source_kind||''};
-      if(ref.status==='preco_publicado')stats.published++;else stats.estimated++;
+      if(documented)stats.published++;else stats.estimated++;
      }else stats.missing++;
      const n=document.createElement('div');n.className='crprice-proof';n.style.cssText='grid-column:1/-1;background:#f3f7fb;border-left:3px solid #d0a329;padding:8px;margin:3px 0;border-radius:5px;font-size:12px';
-     const title=document.createElement('strong');title.textContent=valid?(ref.status==='preco_publicado'?'REFERÊNCIA DOCUMENTADA: ':'ESTIMATIVA A REVISAR: ')+crMoney(price)+' / '+(ref.unit||batch[i].unit):'SEM REFERÊNCIA: '+(ref.note||'Valor não estimável sem confirmação');n.appendChild(title);
+     const title=document.createElement('strong');title.textContent=valid?(documented?'REFERÊNCIA DOCUMENTADA: ':'ESTIMATIVA A REVISAR: ')+crMoney(price)+' / '+(ref.unit||batch[i].unit):(!unitMatches?'UNIDADE INCOMPATÍVEL: conferir '+String(ref.unit)+' x '+batch[i].unit:'SEM REFERÊNCIA: '+(ref.note||'Valor não estimável sem confirmação'));n.appendChild(title);
      if(ref.source_title){const o=document.createElement('div');o.textContent='Origem: '+ref.source_title;n.appendChild(o)}
      if(ref.note){const o=document.createElement('div');o.textContent=ref.note;n.appendChild(o)}
      if(ref.site_review_required){const o=document.createElement('div');o.textContent='PENDENTE: conferência de acesso, segurança ou unidade';n.appendChild(o)}
