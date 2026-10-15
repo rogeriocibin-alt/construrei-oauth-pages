@@ -35,6 +35,20 @@ function setTab(tab,store=true){
   $("pageDesc").textContent=titles[tab]+" • módulo canônico embutido sem alterações.";
  }
 }
+async function loadLinkedF04(){
+ if(runtime.lastTab!=="f04"||!runtime.case)return;
+ try{
+  const current=(await api("get",{token:runtime.case.token})).handoff;
+  if(!current||current.token!==runtime.case.token||String(current.to_flow).toUpperCase()!=="F04"){
+   $("pageDesc").textContent="F04 • módulo oficial. O chamado vinculado ainda não foi aprovado e transferido para F04; a tela está em modo isolado.";
+   return;
+  }
+  const url=BASE+ROUTES.f04+"?handoff="+encodeURIComponent(current.token);
+  const frame=$("flowFrame");
+  if(frame.dataset.current!==url){frame.src=url;frame.dataset.current=url;}
+  $("pageDesc").textContent="F04 • chamado "+current.case_number+" autorizado pelo fluxo canônico. Agenda e mobilização disponíveis no próprio APP.";
+ }catch(e){$("pageDesc").textContent="F04 • não foi possível confirmar a fase: "+String(e.message||e)+". Nenhuma transição executada.";}
+}
 function normalizeCase(x){return String(x||"").trim().toUpperCase().replace(/\s+/g,"");}
 function budgetItems(win){
  if(!win||!win.document||!Array.isArray(win.crPriceItems))throw Error("O motor R15 ainda não está pronto. Aguarde o carregamento ou gere o orçamento.");
@@ -149,7 +163,7 @@ function reset(){
  $("confirmReview").checked=false;$("confirmReplace").checked=false;
  notice("Vínculo local desligado. Nenhuma ação foi aplicada ao banco.");
 }
-$("navigation").addEventListener("click",e=>{const tab=e.target.closest("[data-tab]")?.dataset.tab;if(tab)setTab(tab)});
+$("navigation").addEventListener("click",e=>{const tab=e.target.closest("[data-tab]")?.dataset.tab;if(tab){setTab(tab);if(tab==="f04")loadLinkedF04();}});
 $("goBack").addEventListener("click",()=>setTab(runtime.history.pop()||"app",false));
 $("loadCase").addEventListener("click",loadCase);
 $("resetCase").addEventListener("click",reset);
