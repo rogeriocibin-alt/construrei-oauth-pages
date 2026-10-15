@@ -15,6 +15,7 @@ assert.match(code,/position:static!important;bottom:auto!important/);
 assert.doesNotMatch(code,/position:fixed!important;bottom:-20mm!important/);
 assert.match(code,/unit:packaged\?'UN':commercialUnit/);
 assert.match(code,/item\.siteReviewRequired=!!ref\.site_review_required\|\|!!batch\[i\]\.packaged/);
+assert.match(code,/i\.assumedQty\|\|i\.priceReference\|\|i\.siteReviewRequired/);
 function el(){
  const n={value:'',textContent:'',checked:false,disabled:false,hidden:true,style:{},children:[],classList:{add(){},remove(){}},appendChild(c){c._parent=this;this.children.push(c);return c;},replaceChildren(){this.children=[];},closest(){return this._parent||null;},querySelector(){return null;},scrollIntoView(){},focus(){},setAttribute(){},addEventListener(){},remove(){}};
  return n;
@@ -66,6 +67,10 @@ async function simulate(response){
  assert.doesNotMatch(html,/position:fixed!important;bottom:-20mm!important/);
  assert.match(html,/TOTAL PRELIMINAR — CONFERIR/);
  assert.match(html,/conferir acesso, segurança, unidade e embalagem/);
+ vm.runInContext('orcaMarketProposals=0;crPriceItems[0].priceReference=null;',ok.ctx);
+ ok.get('crv0').value='25';
+ await vm.runInContext('exportPdf()',ok.ctx);
+ assert.match(ok.get('orcaPdfFrame').srcdoc,/ORÇAMENTO PRELIMINAR/,'manual package value must stay preliminary');
  ok=await simulate({unit:'PCT',price:25,note:'Preço estimado por unidade, confirmar especificação da embalagem.'});
  assert.equal(ok.get('crv0').value,'25','reverse UN/PCT AI label can be repaired conservatively');
  ok=await simulate({unit:'PCT',price:25,note:'Preço do pacote com 4 unidades; embalagem múltipla.'});
