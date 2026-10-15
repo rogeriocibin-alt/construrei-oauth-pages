@@ -1495,9 +1495,9 @@
       "state": "in_progress",
       "owner": "Bio + CR Assertivo",
       "last_movement": "2026-10-15",
-      "next_action": "PR #133 integrada à main (9245be84): FULL agora somente manual, gatilho automático removido, auditor CI PASS. Próximo: confirmar run 38816987001 até CURRENT/restore drill, primeiro CAS event=schedule real e replay PostgreSQL17 isolado/Storage/Auth.",
-      "dependency": "Sem bloqueio de escrita workflow (resolvido 15/10). Ainda falta prova de schedule CAS 14–15/10, término do backup run 38816987001 e replay SQL PG17.",
-      "source": "Projeção (não mestre): public.cc_items/EXEC-COFRE-COVERAGE-20261010 • PR #133 MERGED 9245be84 • issue #53 • Actions #38822682363 CI PASS",
+      "next_action": "Backup principal #38816987001 completed/success, incluindo HISTORY_FULL, CURRENT e readback amostral. FULL somente manual confirmado no YAML main. Comprovar CAS por evento schedule e manifestos; consultar logs Cloud com acesso de leitura disponível; replay integral permanece ADIADO_MONITORADO conforme contrato, sem homologação.",
+      "dependency": "CAS schedule mais recente encontrado: 13/10, failure por CURRENT stale; nenhum schedule 14–15/10 na consulta. Console GCP bloqueado pelo conector; notebook remoto offline. Replay integral não comprovado.",
+      "source": "Projeção (não mestre): public.cc_items/EXEC-COFRE-COVERAGE-20261010 • PR #133 MERGED 9245be84 • issue #53 • Actions #38822682363 CI PASS • issue #53 comentário 6204474606 • jobs API #38816987001 revalidada",
       "close_when": "CAS recorrente comprovado, backup principal finalizado e validado, custo/duplicação sob controle, recuperação isolada reproduzível, rollback testado.",
       "human_action": false,
       "provenance": "master_readonly_projection"
