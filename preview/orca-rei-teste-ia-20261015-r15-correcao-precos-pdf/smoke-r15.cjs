@@ -1,0 +1,75 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const assert=require('node:assert/strict');
+const root=__dirname;
+const code=fs.readFileSync(path.join(root,'app.js'),'utf8');
+const brand=fs.readFileSync(path.join(root,'brand.js'),'utf8');
+const page=fs.readFileSync(path.join(root,'index.html'),'utf8');
+new vm.Script(code,{filename:'app.js'});
+new vm.Script(brand,{filename:'brand.js'});
+assert.match(page,/Candidata R15/);
+assert.match(page,/r15-pack-pdf-20261015-v1/);
+assert.match(code,/position:static!important;bottom:auto!important/);
+assert.doesNotMatch(code,/position:fixed!important;bottom:-20mm!important/);
+assert.match(code,/unit:packaged\?'UN':commercialUnit/);
+assert.match(code,/item\.siteReviewRequired=!!ref\.site_review_required\|\|!!batch\[i\]\.packaged/);
+function el(){
+ const n={value:'',textContent:'',checked:false,disabled:false,hidden:true,style:{},children:[],classList:{add(){},remove(){}},appendChild(c){c._parent=this;this.children.push(c);return c;},replaceChildren(){this.children=[];},closest(){return this._parent||null;},querySelector(){return null;},scrollIntoView(){},focus(){},setAttribute(){},addEventListener(){},remove(){}};
+ return n;
+}
+async function simulate(response){
+ const nodes={};
+ const get=id=>(nodes[id]??=(el()));
+ get('mode').value='budget';
+ get('src').value='Aplicar 2 pacotes de rejunte impermeável para acabamento sanitário. Embalagem a confirmar.';
+ get('out').textContent='MATERIAIS\n1. REJUNTE IMPERMEÁVEL\nQTD.: 2 | UN.: PCT | VR. UNIT.: A DEFINIR | VR. TOTAL: A DEFINIR\nTOTAL MATERIAIS: A DEFINIR\nTOTAL GERAL: A DEFINIR';
+ get('pdfnumber').value='520-26';
+ get('pdfclient').value='JBA';
+ get('pdfaddress').value='Rua Yoshiaki Nagano, 500';
+ get('pdftitle').value='MANUTENÇÃO HIDROSSANITÁRIA';
+ get('pdfperson').value='CONSTRU-REI';
+ get('pdffiles').files=[];
+ let received;
+ const ctx={console,window:{confirm:()=>true,alert(){}},alert(){},document:{getElementById:get,addEventListener(){},createElement:el,body:{classList:{add(){},remove(){}}}},navigator:{},FileReader:function(){},setTimeout,clearTimeout,
+ fetch:async(url,opts)=>{
+ if(url.includes('?status=1'))return {ok:true,json:async()=>({model_available:true,gemini_configured:false})};
+ received=JSON.parse(opts.body);
+ const requested=received.items[0];
+ return {ok:true,status:200,json:async()=>({ok:true,items:[{id:'item-0',name:requested.name,unit:response.unit,price:response.price,status:response.status||'estimativa_revisar',source_kind:'estimativa_ia_sem_cotacao',source_title:'Estimativa contextual',note:response.note||'Estimativa por unidade comercial; confirmar conteúdo da embalagem.',scope:'Uma embalagem comercial provisória'}],ai_called:true,provider:'mock: IA local (não rede)'})};
+ }};
+ vm.createContext(ctx);
+ vm.runInContext(brand,ctx);
+ vm.runInContext(code,ctx);
+ vm.runInContext('loadPriceItems()',ctx);
+ assert.equal(ctx.crPriceItems.length,1);
+ assert.equal(ctx.crPriceItems[0].measure,'PCT');
+ assert.equal(ctx.crPriceItems[0].packagingReviewRequired,true);
+ await vm.runInContext('orcaMarketPrices()',ctx);
+ assert.equal(received.items[0].unit,'UN','PCT must be normalized only for the backend transport');
+ assert.equal(received.items[0].packaged,true);
+ assert.equal(ctx.crPriceItems[0].measure,'PCT','printed commercial measure stays PCT');
+ assert.equal(ctx.crPriceItems[0].siteReviewRequired,true);
+ return {ctx,get,received};
+}
+(async()=>{
+ let ok=await simulate({unit:'UN',price:25});
+ assert.equal(ok.get('crv0').value,'25');
+ assert.match(ok.get('out').textContent,/UN\.: PCT \| VR\. UNIT\.: R\$ 25,00 \| VR\. TOTAL: R\$ 50,00/);
+ await vm.runInContext('exportPdf()',ok.ctx);
+ const html=ok.get('orcaPdfFrame').srcdoc;
+ assert.match(html,/ORÇAMENTO PRELIMINAR/);
+ assert.match(html,/R\$ 50,00/);
+ assert.match(html,/PCT/);
+ assert.match(html,/position:static!important;bottom:auto!important/);
+ assert.doesNotMatch(html,/position:fixed!important;bottom:-20mm!important/);
+ assert.match(html,/TOTAL PRELIMINAR — CONFERIR/);
+ assert.match(html,/conferir acesso, segurança, unidade e embalagem/);
+ ok=await simulate({unit:'PCT',price:25,note:'Preço estimado por unidade, confirmar especificação da embalagem.'});
+ assert.equal(ok.get('crv0').value,'25','reverse UN/PCT AI label can be repaired conservatively');
+ ok=await simulate({unit:'PCT',price:25,note:'Preço do pacote com 4 unidades; embalagem múltipla.'});
+ assert.equal(ok.get('crv0').value,'','explicit multi-unit package price must NOT be invented or converted');
+ assert.match(ok.get('priceStatus').textContent,/PRECIFICAÇÃO PARCIAL/);
+ console.log('PASS: R15 JS syntax, no-overlay print CSS, PCT=>UN transport, preliminary totals, safe price fallback, reverse-unit audit and packaging guards.');
+})().catch(e=>{console.error(e);process.exitCode=1});
