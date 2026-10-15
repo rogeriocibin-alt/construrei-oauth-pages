@@ -50,8 +50,16 @@ STORAGE_FILES: $STORAGE_COUNT
 SOURCE_PROJECT: yspuaamokjbrosytqjpg
 EOF
 
+# Fail closed before mutating CURRENT: remove the old success marker from
+# the active snapshot and preserve it in immutable per-run history.
+# A failed or interrupted sync must never appear to be a completed recovery point.
+if rclone lsf "$REMOTE" --files-only | grep -Fxq 'BACKUP_STATUS.txt'; then
+  rclone moveto "$REMOTE/BACKUP_STATUS.txt" "$HISTORY/BACKUP_STATUS.txt" --immutable
+fi
+
 rclone sync "$WORK" "$REMOTE" \
   --exclude "/06_STORAGE/**" \
+  --exclude "/BACKUP_STATUS.txt" \
   --backup-dir "$HISTORY" \
   --create-empty-src-dirs
 
@@ -59,7 +67,7 @@ rclone sync construrei-s3: "$REMOTE/06_STORAGE" \
   --backup-dir "$HISTORY/06_STORAGE" \
   --create-empty-src-dirs
 
-rclone check "$WORK" "$REMOTE" --exclude "/06_STORAGE/**"
+rclone check "$WORK" "$REMOTE" --exclude "/06_STORAGE/**" --exclude "/BACKUP_STATUS.txt"
 rclone check construrei-s3: "$REMOTE/06_STORAGE"
 
 RESTORE="$ROOT/RESTORE-DRILL-$RUN_ID"
@@ -81,6 +89,11 @@ for rel in "${SAMPLES[@]}"; do
   rclone copyto "$REMOTE/06_STORAGE/$rel" "$dst"
   test "$(sha256sum "$src" | awk '{print $1}')" = "$(sha256sum "$dst" | awk '{print $1}')"
 done
+
+# Publish the completion marker only after SQL and Storage integrity checks.
+rclone copyto "$WORK/BACKUP_STATUS.txt" "$REMOTE/BACKUP_STATUS.txt"
+rclone copyto "$REMOTE/BACKUP_STATUS.txt" "$RESTORE/BACKUP_STATUS-READBACK.txt"
+cmp "$WORK/BACKUP_STATUS.txt" "$RESTORE/BACKUP_STATUS-READBACK.txt"
 
 echo "RESTORE_DRILL=PASS"
 echo "RUN_ID=$RUN_ID"
