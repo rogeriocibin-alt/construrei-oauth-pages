@@ -206,41 +206,68 @@ function orcaCanonicalUnit(v){const u=String(v||'UN').normalize('NFD').replace(/
 let orcaMarketProposals=0;
 let orcaMarketBusy=false;
 async function orcaMarketPrices(){
- const status=document.getElementById('priceStatus'),button=document.getElementById('marketRun'),proof=document.getElementById('marketProof');
- if(orcaMarketBusy)return;
- if(document.getElementById('mode').value!=='budget'){status.textContent='Preços apenas para orçamento.';return}
- if(!crPriceItems.length){loadPriceItems();if(!crPriceItems.length){status.textContent='Gere o orçamento para identificar itens.';return}}
- const batch=crPriceItems.slice(0,12).map((it,i)=>({id:'item-'+i,name:it.name.replace(/^\d+\.\s*/,''),section:it.section,unit:orcaCanonicalUnit(it.measure||'UN'),qty:crNumber(document.getElementById('crq'+i)?.value)||1}));
- if(batch.every((_,i)=>crPriceItems[i].originalProvided&&Number.isFinite(crNumber(document.getElementById('crv'+i)?.value)))){applyPriceItems();status.textContent='Preços informados preservados e totais calculados.';return}
- orcaMarketBusy=true;button.disabled=true;orcaMarketProposals=0;status.textContent='Consultando preços de mercado, histórico e estimativas...';proof.replaceChildren();
+ const status=document.getElementById('priceStatus');
+ const proof=document.getElementById('marketProof');
+ const button=document.getElementById('marketRun');
+ if(orcaMarketBusy){status.textContent='Consulta já em andamento.';return}
+ if(document.getElementById('mode').value!=='budget'){status.textContent='Preços exclusivos do orçamento.';return}
+ if(!crPriceItems.length)loadPriceItems();
+ if(!crPriceItems.length){status.textContent='Nenhum item estruturado encontrado. Gere o orçamento com IA.';return}
+ const sourceAtStart=document.getElementById('src').value;
+ const total=crPriceItems.length;
+ const stats={published:0,estimated:0,preserved:0,missing:0,failed:0,aiCalls:0};
+ const errors=[],providers=new Set();
+ orcaMarketBusy=true;button.disabled=true;proof.replaceChildren();
  try{
-  const res=await fetch('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-context-prices-r11-20261015',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({items:batch,context:document.getElementById('src').value.slice(0,2300),photo_captions:(orcaPhotoCaptions||[]).map(v=>String(v).slice(0,180))})});
-  const data=await res.json().catch(()=>({error:'Resposta inválida'}));if(!res.ok||!data.ok)throw Error((data.error||'Backend não disponível')+(Array.isArray(data.invalid_indices)?' Itens: '+data.invalid_indices.map(i=>i+1).join(', '):'')+' [HTTP '+res.status+']');if(!Array.isArray(data.items)||data.items.length!==batch.length)throw Error('O motor retornou itens incompletos. Nenhum preço faltante será tratado como aprovado.');
-  let published=0,estimated=0,preserved=0,missing=0;
-  (data.items||[]).forEach((ref,i)=>{
-   if(i>=batch.length||ref.id!=='item-'+i){missing++;return;}
-   const item=crPriceItems[i],field=document.getElementById('crv'+i);if(!field||!item)return;item.siteReviewRequired=!!ref.site_review_required;
-   const row=field.closest('.crprice-row')||field.parentElement,old=row?.querySelector('.crprice-proof');if(old)old.remove();
-   const value=Number(ref.price),valid=Number.isFinite(value)&&value>0;
-   if(valid&&['preco_publicado','estimativa_revisar'].includes(ref.status)){
-    if(!item.originalProvided){
-     field.value=String(value).replace('.',',');item.unit=field.value;item.priceReference={document:ref.source_title||'Estimativa',date:ref.source_date||'',source_url:ref.source_url||'',kind:ref.source_kind||'',site_review_required:!!ref.site_review_required};
-     if(ref.status==='preco_publicado')published++;else estimated++;
-    }else preserved++;
-   }else missing++;
-   const wrap=document.createElement('div');wrap.className='crprice-proof';wrap.style.cssText='grid-column:1/-1;background:#f3f7fb;border-left:3px solid #cc9c27;padding:9px;margin:4px 0;border-radius:5px;font-size:12px;line-height:1.45;color:#25465a';
-   const head=document.createElement('strong');head.textContent=valid?(ref.status==='preco_publicado'?'PREÇO PUBLICADO: ':'ESTIMATIVA PRELIMINAR: ')+crMoney(value)+' / '+ref.unit:'Sem preço confiável para este item.';wrap.appendChild(head);
-   if(ref.source_title){const src=document.createElement('div');src.textContent='Referência: '+ref.source_title+(ref.source_date?' • '+ref.source_date:'');wrap.appendChild(src)}
-   if(ref.note){const note=document.createElement('div');note.textContent=ref.note;wrap.appendChild(note)}if(ref.site_review_required){const caution=document.createElement('strong');caution.style.cssText='display:block;color:#8a4c10;margin-top:4px';caution.textContent='ATENÇÃO: ACESSO / TRABALHO EM ALTURA A CONFIRMAR — sugestão não inclui necessariamente os custos de segurança e mobilização.';wrap.appendChild(caution)}
-   if(ref.source_url){const link=document.createElement('a');link.href=ref.source_url;link.textContent='Abrir referência';link.target='_blank';link.rel='noopener noreferrer';wrap.appendChild(link)}
-   row?.appendChild(wrap);
-  });
-  orcaMarketProposals=published+estimated;applyPriceItems();
-  const totals=document.createElement('strong');totals.textContent=published+' preços públicos; '+estimated+' estimativas; '+preserved+' valores do usuário preservados; '+missing+' sem preço.';proof.appendChild(totals);
-  const meta=document.createElement('p');meta.textContent='Origem: '+(data.provider||'referências locais')+'. '+(data.ai_called?'IA adicional consultada.':'Sem nova chamada de IA.')+(data.quota_reason?' Limite gratuito de IA atingido: '+data.quota_reason+'.':'')+(data.ai_errors?.length?' Detalhes técnicos: '+data.ai_errors.join('; ')+'.':'');proof.appendChild(meta);
-  status.textContent=missing>0?'Precificação parcial: '+missing+' item(ns) ainda sem preço confiável. Consulte as justificativas abaixo; orçamento comercial incompleto permanece bloqueado.':'Preços e estimativas aplicados automaticamente. Revise os valores antes da impressão.';
- }catch(err){applyPriceItems(false);status.textContent='Falha real da precificação: '+String(err.message||err)+'. Valores confirmados preservados; revise os detalhes e tente novamente.';proof.textContent='O orçamento não foi precificado integralmente. Nenhum valor foi aprovado automaticamente.'}
- finally{orcaMarketBusy=false;button.disabled=false}
+  for(let offset=0;offset<total;offset+=12){
+   const subset=crPriceItems.slice(offset,offset+12);
+   const batch=subset.map((it,i)=>({id:'item-'+i,name:it.name.replace(/^\d+[.)]\s*/,''),section:it.section,unit:orcaCanonicalUnit(it.measure||'UN'),qty:crNumber(document.getElementById('crq'+(offset+i))?.value)||1}));
+   if(subset.every((it,i)=>it.originalProvided&&Number.isFinite(crNumber(document.getElementById('crv'+(offset+i))?.value)))){stats.preserved+=subset.length;continue}
+   status.textContent='Consultando IA/referências: itens '+(offset+1)+' a '+(offset+subset.length)+' de '+total;
+   try{
+    const res=await fetch('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-context-prices-r11-20261015',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({items:batch,context:sourceAtStart.slice(0,2300),photo_captions:(orcaPhotoCaptions||[]).map(x=>String(x).slice(0,180))})});
+    const data=await res.json().catch(()=>({error:'Resposta inválida do servidor'}));
+    if(sourceAtStart!==document.getElementById('src').value||document.getElementById('mode').value!=='budget'){errors.push('Conteúdo mudou durante a consulta; resultados antigos descartados.');break}
+    if(!res.ok||!data.ok)throw Error((data.error||'Falha de servidor')+(Array.isArray(data.invalid_indices)?' • índices '+data.invalid_indices.map(i=>offset+i+1).join(','):'')+' • HTTP '+res.status);
+    if(!Array.isArray(data.items)||data.items.length!==batch.length)throw Error('Retorno incompleto do servidor.');
+    if(data.ai_called)stats.aiCalls++;
+    if(data.provider)providers.add(data.provider);
+    if(data.quota_reason)errors.push('Limite gratuito IA: '+data.quota_reason);
+    if(data.ai_errors?.length)errors.push('Provedores: '+data.ai_errors.join(', '));
+    data.items.forEach((ref,i)=>{
+     const pos=offset+i, item=crPriceItems[pos], field=document.getElementById('crv'+pos);
+     if(ref.id!=='item-'+i||!field||!item){stats.missing++;return}
+     const row=field.closest('.crprice-row')||field.parentElement;
+     row?.querySelector('.crprice-proof')?.remove();
+     item.siteReviewRequired=!!ref.site_review_required;
+     const price=typeof ref.price==='number'?ref.price:NaN;
+     const valid=Number.isFinite(price)&&price>0&&['preco_publicado','estimativa_revisar'].includes(ref.status);
+     const supplied=item.originalProvided&&Number.isFinite(crNumber(field.value));
+     if(supplied)stats.preserved++;
+     else if(valid){
+      field.value=String(price).replace('.',',');item.unit=field.value;
+      item.priceReference={document:ref.source_title||'IA preliminar',date:ref.source_date||'',source_url:ref.source_url||'',kind:ref.source_kind||''};
+      if(ref.status==='preco_publicado')stats.published++;else stats.estimated++;
+     }else stats.missing++;
+     const n=document.createElement('div');n.className='crprice-proof';n.style.cssText='grid-column:1/-1;background:#f3f7fb;border-left:3px solid #d0a329;padding:8px;margin:3px 0;border-radius:5px;font-size:12px';
+     const title=document.createElement('strong');title.textContent=valid?(ref.status==='preco_publicado'?'REFERÊNCIA DOCUMENTADA: ':'ESTIMATIVA A REVISAR: ')+crMoney(price)+' / '+(ref.unit||batch[i].unit):'SEM REFERÊNCIA: '+(ref.note||'Valor não estimável sem confirmação');n.appendChild(title);
+     if(ref.source_title){const o=document.createElement('div');o.textContent='Origem: '+ref.source_title;n.appendChild(o)}
+     if(ref.note){const o=document.createElement('div');o.textContent=ref.note;n.appendChild(o)}
+     if(ref.site_review_required){const o=document.createElement('div');o.textContent='PENDENTE: conferência de acesso, segurança ou unidade';n.appendChild(o)}
+     if(ref.source_url){const link=document.createElement('a');link.textContent='Ver referência';link.href=ref.source_url;link.rel='noopener noreferrer';link.target='_blank';n.appendChild(link)}
+     row?.appendChild(n);
+    });
+    applyPriceItems(false);
+   }catch(e){stats.failed+=subset.length;errors.push('Itens '+(offset+1)+'–'+(offset+subset.length)+': '+String(e.message||e))}
+  }
+  applyPriceItems(false);
+  orcaMarketProposals=stats.published+stats.estimated;
+  const info=document.createElement('strong');info.textContent=stats.published+' preços documentados; '+stats.estimated+' estimativas; '+stats.preserved+' informados; '+stats.missing+' sem valor; '+stats.failed+' não processados.';proof.appendChild(info);
+  const note=document.createElement('p');note.textContent='Fontes: '+Array.from(providers).join(' / ')+'. Novas chamadas à IA: '+stats.aiCalls+'. Valores automáticos sempre exigem aprovação.';proof.appendChild(note);
+  if(errors.length){const detail=document.createElement('p');detail.style.color='#9b3819';detail.textContent='ERROS E LIMITES: '+errors.join(' | ');proof.appendChild(detail)}
+  const pending=stats.missing+stats.failed;
+  status.textContent=pending?'PRECIFICAÇÃO PARCIAL: '+pending+' item(ns) pendentes de '+total+'; veja o diagnóstico.':'PRECIFICAÇÃO CALCULADA: '+total+' itens com valores. Confira todos antes de aprovar.';
+ }finally{orcaMarketBusy=false;button.disabled=false}
 }
 
 function orcaInferSubject(src){
