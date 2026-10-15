@@ -224,7 +224,7 @@ $("resetCase").addEventListener("click",reset);
 $("saveDraft").addEventListener("click",saveDraft);
 $("openOfficialF02").addEventListener("click",()=>setTab("f02"));
 $("caseNumber").addEventListener("keydown",e=>{if(e.key==="Enter")loadCase()});
-$("orcaFrame").addEventListener("load",()=>{runtime.loaded=true;notice("Motor R15 homologado carregado. Informe um número de chamado F02 para conectar.")});
+$("orcaFrame").addEventListener("load",()=>{runtime.loaded=true;notice("Motor R15 carregado. Consultando a fila F02.");refreshEligibleCases();});
 setTab("orca",false);
 refreshEligibleCases();
 window.CRBridgeV1={money,round,makePayload,importSource,showReviewWarnings,budgetItems}; // Testes puros, sem token/cache.
