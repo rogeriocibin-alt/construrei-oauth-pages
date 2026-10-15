@@ -242,8 +242,12 @@ def main():
             errors.append("Canonical Cofre Zero lost dispatch or concurrency lock")
         if "HISTORY_FULL" not in text or "SHA256SUMS.txt" not in text or "rclone check" not in text:
             errors.append("Canonical Cofre Zero lost archive/manifest/integrity gates")
-        if "on:" not in text or "paths:" not in text:
-            errors.append("Canonical change-driven triggers missing")
+        # FULL snapshots are manual-only; source push/schedule belongs to the separate daily CAS.
+        # Fail if an accidental automatic trigger would reintroduce full Storage copies.
+        if not re.search(r"(?m)^on:\\s*$", text):
+            errors.append("Canonical FULL workflow lost its event block")
+        if re.search(r"(?m)^  (?:push|schedule|pull_request|pull_request_target):\\s*$", text):
+            errors.append("Canonical FULL must remain manual-only (no automatic trigger)")
     history = WORKFLOWS / "cofre-zero-history-full.yml"
     if history.is_file():
         text = history.read_text(encoding="utf-8")
