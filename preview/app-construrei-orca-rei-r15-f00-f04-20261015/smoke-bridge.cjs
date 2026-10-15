@@ -18,6 +18,8 @@ assert.match(html,/f03/);
 assert.match(html,/f04/);
 assert.match(html,/RASCUNHO/ig);
 assert.match(bridge,/budget-save/);
+assert.match(bridge,/String\(current\.to_flow\)\.toUpperCase\(\)!=="F04"/,"F04 requires approved handoff");
+assert.match(bridge,/ROUTES\.f04\+"\?handoff="/,"F04 can receive canonical handoff");
 assert.doesNotMatch(bridge,/api\(["']budget-release["']/,"no automatic F02 -> F03");
 assert.doesNotMatch(bridge,/api\(["']proposal-save["']/,"no automatic F03 approval");
 assert.doesNotMatch(bridge,/localStorage|sessionStorage/,"no locally stored sensitive tokens");
