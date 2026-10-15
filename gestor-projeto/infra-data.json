@@ -420,7 +420,7 @@
         {
           "severity": "attention",
           "title": "CAS e restauração integral a comprovar",
-          "message": "Backup principal completed/success incluindo CURRENT e readback amostral. CAS schedule recente e replay integral permanecem sem prova; FULL automático removido."
+          "message": "CAS manual e FULL pontual SUCCESS. Recorrência CAS aguarda evento schedule após 16/10 05:47 BRT; replay integral e logs Cloud ainda sem prova."
         }
       ]
     }
@@ -446,17 +446,17 @@
       "installed_at": "2026-10-05 • migração cloud oficial",
       "state": "attention",
       "last_attempt": "2026-10-15: CURRENT Cloud 06:00 UTC; GitHub run 38816987001 às 22:25 UTC iniciou recuperação histórica",
-      "last_result": "GitHub Actions #38816987001 completed/success: 3 SQL, Storage, manifesto, HISTORY_FULL, atualização CURRENT e restore drill amostral concluídos segundo API jobs revalidada em 15/10. Não comprova replay SQL integral.",
+      "last_result": "FULL pontual #38816987001 SUCCESS; CAS manual #38825322289 SUCCESS em 15/10: 9 objetos novos, 240232762 bytes; 4544 referências seed+CAS verificadas; ledger privado arquivado e relido.",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
-      "verification": "Todos os passos do job backup #116704035889 PASS. Drill compara SHA256 de 3 SQL e 3 amostras Storage. CAS schedule mais recente encontrado: #38414883600 de 13/10, falha CURRENT stale; sem schedule 14–15/10 encontrado. Sem nova leitura direta do Drive nesta retomada.",
+      "verification": "CAS manifesto SHA256 f763c74da70e716308696376cad4b08afb6176197affd816a256375406c3e09e; 3 SQL hash PASS, 3 amostras Storage PASS, todas 4544 referências PASS. SQL COPY 231 blocos; replay NÃO executado.",
       "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
         "Google Drive CURRENT/HISTORY",
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "FULL manual-only confirmado no YAML main. Comprovar próximo CAS schedule e manifesto; leitura Cloud bloqueada pelo conector. Replay integral ADIADO_MONITORADO conforme contrato de 12/10; manter sem homologação integral."
+      "action": "Provar event=schedule após restauração do cron em 15/10 18:58 BRT (PR #124 havia removido em 14/10); próxima janela 16/10 05:47 BRT. Cloud logs bloqueados; recuperação integral ainda não homologada."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
@@ -604,8 +604,8 @@
     {
       "severity": "attention",
       "title": "Cofre Zero — CAS agendado sem execução recente comprovada",
-      "detail": "Agendamento '47 8 * * *' preservado no .github/workflows/cofre-zero-history-full.yml; última falha schedule 13/10 por CURRENT stale; não há prova atual de manifestos CAS 14/15.",
-      "action": "Esperar execução automática e conferir sucesso real/manifesto novo em HISTORY_CAS; investigar ausência de scheduler sem criar backup FULL/infra extra."
+      "detail": "Causa comprovada: PR #124 removeu workflow em 14/10; ba4d8e2 restaurou em 15/10 18:58 BRT. CAS manual #38825322289 SUCCESS; próximo schedule previsto 16/10 05:47 BRT.",
+      "action": "Conferir primeiro evento schedule real e manifesto; não repetir validação manual ou iniciar FULL."
     }
   ],
   "next_actions": [
