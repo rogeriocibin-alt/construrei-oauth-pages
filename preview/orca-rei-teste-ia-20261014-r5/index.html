@@ -5,6 +5,7 @@ function savePdfLogo(el){var f=el.files&&el.files[0];if(!f)return;var rd=new Fil
 async function exportPdf(){
 var txt=document.getElementById('out').textContent||'';
 if(txt.length<30||txt.indexOf('Provedores indisponíveis')===0){alert('Gere primeiro um orçamento ou parecer válido.');return}
+if(document.getElementById('mode').value==='budget'){if(/A DEFINIR/.test(txt)&&!window.confirm('Há campos A DEFINIR. Este orçamento será PRELIMINAR. Continuar a emissão?'))return;if(orcaMarketProposals>0&&!window.confirm('Alguns preços foram sugeridos automaticamente pelo mercado/IA e exigem sua conferência. Você validou os valores e o escopo antes de emitir?'))return;}
 var isReport=document.getElementById('mode').value==='report';var logo=CR_LOGO_DATA;
 var title=isReport?'PARECER TÉCNICO':'ORÇAMENTO';
 var num=pdfVal('pdfnumber')||'A DEFINIR';
@@ -116,6 +117,7 @@ async function orcaGenerateCaptions(){
  }catch(e){el.textContent='Falha: '+String(e.message||e)}
 }
 
+let orcaMarketProposals=0;
 let orcaMarketBusy=false;
 async function orcaMarketPrices(){
  const status=document.getElementById('priceStatus'),button=document.getElementById('marketRun'),proof=document.getElementById('marketProof');
@@ -155,6 +157,7 @@ async function orcaMarketPrices(){
    fieldContainer.appendChild(wrap);
   });
   applyPriceItems();
+  orcaMarketProposals=matched+estimated;
   const info=document.createElement('div');info.textContent='Pesquisa '+(data.cached?'reaproveitada do cache':'concluída')+': '+matched+' preços publicados aplicados, '+estimated+' estimativas IA sujeitas a revisão, '+onlyCost+' somente custo de referência. '+Math.max(0,crPriceItems.length-batch.length)+' item(ns) além do limite de 8. Todas as cifras requerem aprovação antes do envio.';
   proof.appendChild(info);
   let sourceLinks=(data.grounded_sources||[]).filter(x=>x.url).slice(0,6);if(sourceLinks.length){const title=document.createElement('div');title.textContent='Fontes consultadas pela pesquisa Google:';proof.appendChild(title);sourceLinks.forEach(x=>{const a=document.createElement('a');a.href=x.url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=(x.title||x.url).slice(0,85);a.style.cssText='display:block;padding:3px 0';proof.appendChild(a)})}
