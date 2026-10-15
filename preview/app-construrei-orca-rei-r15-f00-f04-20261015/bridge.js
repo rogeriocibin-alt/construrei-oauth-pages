@@ -95,7 +95,11 @@ async function refreshEligibleCases(){
   const seen=new Set();
   for(const c of cases){
    const key=normalizeCase(c.case_number);
-   if(seen.has(key))continue;
+   if(seen.has(key)){
+    // Duplicate case numbers must remain blocked, never silently select one.
+    for(const opt of select.options){if(normalizeCase(opt.value)===key)opt.disabled=true;}
+    continue;
+   }
    seen.add(key);
    select.add(new Option(c.case_number+" • "+String(c.client||"Cliente"),c.case_number));
   }
