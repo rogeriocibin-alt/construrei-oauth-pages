@@ -1,0 +1,31 @@
+name: ORÇA-REI R11 — proteção anti-regressão
+on:
+  push:
+    paths:
+      - 'preview/orca-rei-teste-ia-20261015-r11/**'
+      - 'preview/orca-rei-teste-ia-20261015-r11-refino-pdf1/**'
+      - 'scripts/orca-rei-r11-regression.cjs'
+      - 'docs/orca-rei/CONTRATO-R11-20261015.md'
+      - '.github/workflows/orca-rei-r11-regression.yml'
+  pull_request:
+    paths:
+      - 'preview/orca-rei-teste-ia-20261015-r11/**'
+      - 'preview/orca-rei-teste-ia-20261015-r11-refino-pdf1/**'
+      - 'scripts/orca-rei-r11-regression.cjs'
+      - '.github/workflows/orca-rei-r11-regression.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  r11-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Recuperar código
+        uses: actions/checkout@v4
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar congelamento, composição e PDFs
+        run: node scripts/orca-rei-r11-regression.cjs
