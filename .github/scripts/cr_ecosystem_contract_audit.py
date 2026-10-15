@@ -247,7 +247,7 @@ def main():
     history = WORKFLOWS / "cofre-zero-history-full.yml"
     if history.is_file():
         text = history.read_text(encoding="utf-8")
-        scheduled = re.findall(r'^\\s*-\\s*cron:\\s*[\\x22\\x27]?([^\\x22\\x27\\n#]+)', text, re.MULTILINE)
+        scheduled = re.findall(r'^\s*-\s*cron:\s*["\x27]?([^"\x27\n#]+)', text, re.MULTILINE)
         if ARCHIVE_UTC_CRON not in [x.strip() for x in scheduled]:
             errors.append("Cofre Zero history schedule changed: expected 05:47 America/Sao_Paulo")
         if "cofre-zero-history-full" not in text or "cancel-in-progress: false" not in text:
