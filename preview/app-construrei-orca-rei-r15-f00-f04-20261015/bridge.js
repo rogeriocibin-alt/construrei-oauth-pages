@@ -70,6 +70,23 @@ function budgetItems(win){
  if(!rows.length)throw Error("Nenhum serviço ou material estruturado disponível.");
  return {rows,text,labor:round(rows.filter(x=>x.section==="SERVIÇOS").reduce((s,x)=>s+x.total,0)),materials:round(rows.filter(x=>x.section==="MATERIAIS").reduce((s,x)=>s+x.total,0))};
 }
+function showCaseEvidence(h){
+ const box=$("caseEvidence");if(!box)return;
+ const state=h.state||{}, sources=[state.evidence,state.f00?.files,state.f00Files,state.integration?.f00Files,state.f00?.evidence];
+ const files=sources.find(x=>Array.isArray(x))||[];
+ const safe=files.filter(x=>x&&typeof x==="object");
+ box.replaceChildren();
+ const title=document.createElement("strong");title.textContent="Evidências vinculadas: "+safe.length;box.append(title);
+ if(!safe.length){box.append(document.createTextNode(" • Sem metadados de anexos nesta transferência. Conferir F00/F01."));return;}
+ const list=document.createElement("ul");
+ for(const f of safe.slice(0,30)){
+  const li=document.createElement("li");
+  li.textContent=String(f.filename||f.name||"Arquivo").slice(0,110)+" • "+String(f.content_type||f.mime_type||"tipo não informado").slice(0,70);
+  list.append(li);
+ }
+ box.append(list);
+ box.append(document.createTextNode("Arquivos associados ao chamado; visualização e inclusão no PDF ainda exigem transferência autorizada. Nenhum arquivo foi copiado."));
+}
 function importSource(h){
  const state=h.state||{},items=Array.isArray(state.items)?state.items:Array.isArray(state.services)?state.services:[];
  const segments=[
@@ -143,6 +160,7 @@ async function loadCase(){
   win.document.getElementById("priceStatus").textContent="Contexto carregado. Gere com IA e precifique antes de salvar.";
   $("confirmReview").checked=false;$("confirmReplace").checked=false;
   runtime.case=h;runtime.budgetRevision=h.revision??null;
+  showCaseEvidence(h);
   $("selectedCase").textContent="F02 conectado • "+h.case_number+" • "+String(h.state?.client||"Cliente");
   notice("Contexto F00/F01/F02 carregado na R15. Agora gere com IA e revise quantidades, preços, escopo, fotos e PDFs. Nenhum rascunho foi gravado.");
  }catch(e){notice("Não foi possível carregar: "+String(e.message||e),true)}
@@ -187,6 +205,7 @@ async function saveDraft(){
 }
 function reset(){
  runtime.case=null;runtime.budgetRevision=null;$("selectedCase").textContent="Nenhum caso vinculado";
+ $("caseEvidence").textContent="Anexos: aguardando chamado qualificado.";
  $("confirmReview").checked=false;$("confirmReplace").checked=false;
  notice("Vínculo local desligado. Nenhuma ação foi aplicada ao banco.");
 }
