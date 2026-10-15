@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - 'preview/orca-rei-teste-ia-20261015-r15-correcao-precos-pdf/**'
+      - 'preview/app-construrei-orca-rei-r15-f00-f04-20261015/**'
+      - 'docs/orca-rei/HOMOLOGACAO_R15_20261015.md'
       - '.github/workflows/orca-rei-r15-regression.yml'
   workflow_dispatch:
 permissions:
@@ -19,3 +21,6 @@ jobs:
           node-version: '22'
       - name: Testar JS, precificação PCT/UN e HTML de impressão
         run: node preview/orca-rei-teste-ia-20261015-r15-correcao-precos-pdf/smoke-r15.cjs
+
+      - name: Testar encaixe APP F00-F04, retenção do R15 e rascunho F02
+        run: node preview/app-construrei-orca-rei-r15-f00-f04-20261015/smoke-bridge.cjs
