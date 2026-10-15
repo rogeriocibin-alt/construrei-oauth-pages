@@ -25,7 +25,7 @@ const endpoint='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-re
   const data=await response.json();
   label.textContent=data.ok?'Resposta real: '+data.provider:data.error?'Falha na geração':'Formatação local (sem IA)';
   out.textContent=data.output||(data.error==='cooldown'||data.error==='Limite de consumo: cooldown'?'Aguarde um minuto para tentar novamente.':data.error)||'Sem resultado';
-  if(data.ok&&mode==='budget'){loadPriceItems();applyPriceItems();await orcaMarketPrices()}
+  if(data.ok&&mode==='budget'){crPriceItems=[];loadPriceItems();applyPriceItems();await orcaMarketPrices()}
  }catch(e){label.textContent='Falha de geração';out.textContent=String(e.message||e)}
 }
 fetch(endpoint+'?status=1').then(r=>r.json()).then(x=>{document.getElementById('ai').disabled=!x.model_available;document.getElementById('status').textContent=x.model_available?'Groq 120B • Gemini '+(x.gemini_configured?'com chave detectada':'sem chave detectada')+' • Teto interno 1000/dia (cotas reais dependem dos provedores)':'A formatação pode ser testada; IA real exige chave Groq no backend.'})
@@ -192,7 +192,7 @@ async function orcaMarketPrices(){
  orcaMarketBusy=true;button.disabled=true;orcaMarketProposals=0;status.textContent='Consultando preços de mercado, histórico e estimativas...';proof.replaceChildren();
  try{
   const res=await fetch('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-context-prices-r11-20261015',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({items:batch,context:document.getElementById('src').value.slice(0,2300),photo_captions:(orcaPhotoCaptions||[]).map(v=>String(v).slice(0,180))})});
-  const data=await res.json().catch(()=>({error:'Resposta inválida'}));if(!res.ok||!data.ok)throw Error((data.error||'Backend não disponível')+(Array.isArray(data.invalid_indices)?' Itens: '+data.invalid_indices.map(i=>i+1).join(', '):'')+' [HTTP '+res.status+']');
+  const data=await res.json().catch(()=>({error:'Resposta inválida'}));if(!res.ok||!data.ok)throw Error((data.error||'Backend não disponível')+(Array.isArray(data.invalid_indices)?' Itens: '+data.invalid_indices.map(i=>i+1).join(', '):'')+' [HTTP '+res.status+']');if(!Array.isArray(data.items)||data.items.length!==batch.length)throw Error('O motor retornou itens incompletos. Nenhum preço faltante será tratado como aprovado.');
   let published=0,estimated=0,preserved=0,missing=0;
   (data.items||[]).forEach((ref,i)=>{
    if(i>=batch.length||ref.id!=='item-'+i)return;
