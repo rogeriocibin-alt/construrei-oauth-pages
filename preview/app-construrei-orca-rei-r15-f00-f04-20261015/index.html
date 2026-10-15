@@ -35,27 +35,27 @@ footer{padding:10px 15px;font-size:11px;color:var(--soft);text-align:center;bord
 <button type="button" data-tab="app">Início APP</button>
 <button type="button" data-tab="f00">F00 • Captura</button>
 <button type="button" data-tab="f01">F01 • Triagem</button>
-<button type="button" data-tab="orca" aria-current="page">F02 • ORÇA-REI</button>
-<button type="button" data-tab="f02">F02 • Oficial</button>
+<button type="button" data-tab="orca" aria-current="page">F02 • Orçamento inteligente</button>
+
 <button type="button" data-tab="f03">F03 • Propostas</button>
 <button type="button" data-tab="f04">F04 • Agenda</button>
 <button type="button" id="goBack">Voltar</button>
 </nav>
 <main>
-<div class="notice">O ORÇA-REI R15 foi aprovado como versão funcional. Nesta candidata, F00/F01 continuam capturando e qualificando, F02 prepara o orçamento com IA e salva somente após conferência humana, F03 registra a aprovação e F04 mobiliza a equipe. Nenhum botão deste encaixe aprova, emite OS ou transfere fases automaticamente.</div>
+<div class="notice">Candidata de integração em teste: a R15 prepara e gera documentos; o botão Salvar envia apenas rascunho e totais ao F02 oficial. Fotografias, PDFs e itens estruturados individuais ainda não são transferidos integralmente. Nenhum botão aprova proposta, emite OS ou avança fases automaticamente.</div>
 <section id="flowPanel" class="panel" hidden>
 <p id="pageDesc">Fluxo oficial embutido sem alterar suas rotas.</p><iframe id="flowFrame" title="Etapa do aplicativo CONSTRU-REI" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </section>
 <section id="orcaPanel" class="panel">
 <div class="f02-layout"><aside class="sidebar" aria-label="Conexão do ORÇA-REI com o F02">
-<h2>F02 • Encaixe operacional</h2><p>Digite o número do chamado que já chegou ao F02. A conexão recupera apenas o contexto necessário e preenche o ORÇA-REI aprovado, sem duplicar banco ou inteligência.</p>
+<h2>F02 • Preparar orçamento</h2><p>Digite o número do chamado que já chegou ao F02. A conexão recupera apenas o contexto necessário e preenche o ORÇA-REI aprovado, sem duplicar banco ou inteligência.</p>
 <label><span>Nº do chamado no F02</span><input type="text" id="caseNumber" placeholder="Ex.: 520-26" maxlength="45" autocomplete="off"></label>
 <div class="actions"><button type="button" id="loadCase" class="gold">Carregar do F02</button><button type="button" id="resetCase">Desvincular</button></div>
 <div id="selectedCase" role="status">Nenhum caso vinculado</div>
-<p>Na área à direita, use a IA, ajuste preços, fotos e gere os PDFs exatamente como na R15. Os dados ficam na tela até você optar por salvar.</p>
+<p>Prepare o orçamento na R15, confira os itens, os preços e os documentos. O botão Salvar registra apenas o rascunho textual e seus totais no F02; PDFs e fotografias ainda não são anexados ao histórico oficial.</p>
 <label><input type="checkbox" id="confirmReview"> Conferi quantidades, unidades, preços, margem, descrição técnica e documentos; autorizo salvar somente o rascunho no F02.</label>
 <label><input type="checkbox" id="confirmReplace"> Autorizo substituir um rascunho anterior deste mesmo chamado, se houver.</label>
-<div class="actions"><button type="button" id="saveDraft" class="gold">Salvar rascunho no F02</button><button type="button" id="openOfficialF02">Revisar no F02 oficial</button></div>
+<div class="actions"><button type="button" id="saveDraft" class="gold">Salvar rascunho (sem PDFs/anexos)</button><button type="button" id="openOfficialF02">Abrir registro oficial F02</button></div>
 <div id="bridgeStatus" aria-live="polite">Aguardando caso autorizado. Nenhum dado foi enviado ou salvo.</div>
 <p>F03/F04 permanecem sujeitos à aprovação, número da OS e passagem pelo fluxo canônico. Não há gravação automática nem replicação de dados em armazenamento do navegador.</p>
 <a class="btn" href="../orca-rei-teste-ia-20261015-r15-correcao-precos-pdf/" target="_blank" rel="noopener noreferrer">Abrir R15 isolada (impressão alternativa)</a>
