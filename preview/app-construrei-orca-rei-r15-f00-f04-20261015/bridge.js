@@ -108,6 +108,10 @@ async function loadCase(){
   win.document.getElementById("pdftitle").value="";
   win.document.getElementById("mode").value="budget";
   if(typeof win.orcaSetMode==="function")win.orcaSetMode();
+  const photoInput=win.document.getElementById("pdffiles");if(photoInput)photoInput.value="";
+  if(typeof win.orcaPhotoReset==="function")win.orcaPhotoReset();
+  if(typeof win.orcaClosePdfPreview==="function")win.orcaClosePdfPreview();
+  win.orcaR12Html="";
   // A new case must not inherit the previous generated prices or PDFs.
   win.document.getElementById("out").textContent="";
   if(Array.isArray(win.crPriceItems))win.crPriceItems.length=0;
