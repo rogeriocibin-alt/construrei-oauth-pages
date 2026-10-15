@@ -21,12 +21,13 @@ var sections=[],cur=null;
 var headings=/^(SITUAÇÃO RELATADA|OBJETIVO E ESCOPO.*|VERIFICAÇÕES REALIZADAS|ANÁLISE TÉCNICA.*|HIPÓTESE TÉCNICA|RECOMENDAÇÕES.*|INFORMAÇÕES A CONFIRMAR|CONSIDERAÇÕES DE SEGURANÇA|CONCLUSÃO|SERVIÇOS.*|MATERIAIS|RESUMO|OBSERVAÇÕES TÉCNICAS|OBSERVAÇÕES)\s*:?\s*$/i;
 raw.forEach(function(line){if(headings.test(line)){cur={heading:line,text:[]};sections.push(cur)}else{if(!cur){cur={heading:isReport?'OBJETIVO E ESCOPO':'DESCRIÇÃO',text:[]};sections.push(cur)}cur.text.push(line)}});
 var body=sections.map(function(s,i){return '<section><h2>'+(i+1)+'. '+pdfEsc(s.heading)+'</h2>'+s.text.map(function(t){var cls=/^TOTAL|^QTD\./.test(t)?'money':/^\d+\.\s+[A-ZÁ-Ú]/.test(t)?'service':'';return '<p class="'+cls+'">'+pdfEsc(t)+'</p>'}).join('')+'</section>'}).join('');
+if(!isReport)body=orcaBudgetPdfBody(txt);
 var files=Array.from(document.getElementById('pdffiles').files||[]).slice(0,6);
 if(files.length&&files.some(function(_,i){return !String(orcaPhotoCaptions[i]||'').trim()})){alert('Fotos sem legenda. Gere as legendas pela IA ou escreva uma legenda antes de imprimir.');return}
 var images=await Promise.all(files.map(function(f){return new Promise(function(resolve){var rd=new FileReader();rd.onload=function(){resolve({src:rd.result,name:f.name})};rd.onerror=function(){resolve(null)};rd.readAsDataURL(f)})}));
 images=images.filter(Boolean);
 if(images.length){body+='<section><h2>'+(sections.length+1)+'. REGISTROS FOTOGRÁFICOS</h2><div class="photos">'+images.map(function(p,i){return '<figure><img src="'+p.src+'"><figcaption>'+(i+1)+'. '+pdfEsc((orcaPhotoCaptions[i]||'Legenda pendente de revisão'))+'</figcaption></figure>'}).join('')+'</div><p class="note">Fotografias anexadas para conferência. Confirmar legendas e correspondência com a vistoria.</p></section>'}
-var cs='@page{size:A4;margin:14mm 13mm 22mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#17344b;margin:0}header{position:relative;margin:0 0 10mm;display:flex;border-top:4px solid #ddb327;height:28mm;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}header .logo{width:30%;display:flex;justify-content:center;align-items:center;font-size:20px;color:#073b64;font-weight:bold}header .blue{width:70%;background:#07385f;color:white;padding:10px 16px}header h1{font-size:19px;margin:0}header b{color:#d5ae27;font-size:15px}header small{display:block;margin-top:5px}.info{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:15px}.info div{background:#eff6fa;border:1px solid #cedde7;border-radius:4px;padding:8px;overflow-wrap:anywhere}.info strong{color:#08527a;display:block;font-size:8px;margin-bottom:5px}h2{break-after:avoid;color:white;background:#073d68;padding:6px 10px;font-size:11px;border-radius:3px;margin:16px 0 8px}p{font-size:10.5px;line-height:1.45;margin:5px 8px;white-space:pre-wrap;overflow-wrap:anywhere}p.service{font-weight:bold;color:#0a3b64}p.money{background:#f0f6fa;padding:6px;font-weight:700}.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.photos figure{border:1px solid #d0dfe9;background:#f3f8fb;padding:5px;margin:0;break-inside:avoid}.photos img{width:100%;height:95px;object-fit:cover}.photos figcaption{font-size:9px;margin-top:4px}.note{font-size:9px;color:#567}.footer{position:fixed;bottom:-19mm;left:-13mm;right:-13mm;background:linear-gradient(to right,#07385f 78%,#d8ab1a 78%);height:14mm;display:flex;align-items:center;justify-content:space-around;color:white;font-size:8px}.footer strong{color:#07385f}header .blue,.footer,h2,.info div,p.money{print-color-adjust:exact;-webkit-print-color-adjust:exact}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.noprint{display:none}}';
+var cs='@page{size:A4;margin:14mm 13mm 22mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;font-size:10px;color:#17344b;margin:0}header{position:relative;margin:0 0 10mm;display:flex;border-top:4px solid #ddb327;height:28mm;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}header .logo{width:30%;display:flex;justify-content:center;align-items:center;font-size:20px;color:#073b64;font-weight:bold}header .blue{width:70%;background:#07385f;color:white;padding:10px 16px}header h1{font-size:19px;margin:0}header b{color:#d5ae27;font-size:15px}header small{display:block;margin-top:5px}.info{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:15px}.info div{background:#eff6fa;border:1px solid #cedde7;border-radius:4px;padding:8px;overflow-wrap:anywhere}.info strong{color:#08527a;display:block;font-size:8px;margin-bottom:5px}h2{break-after:avoid;color:white;background:#073d68;padding:6px 10px;font-size:11px;border-radius:3px;margin:16px 0 8px}p{font-size:10.5px;line-height:1.45;margin:5px 8px;white-space:pre-wrap;overflow-wrap:anywhere}p.service{font-weight:bold;color:#0a3b64}p.money{background:#f0f6fa;padding:6px;font-weight:700}.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.photos figure{border:1px solid #d0dfe9;background:#f3f8fb;padding:5px;margin:0;break-inside:avoid}.photos img{width:100%;height:95px;object-fit:cover}.photos figcaption{font-size:9px;margin-top:4px}.note{font-size:9px;color:#567}.footer{position:fixed;bottom:-19mm;left:-13mm;right:-13mm;background:linear-gradient(to right,#07385f 78%,#d8ab1a 78%);height:14mm;display:flex;align-items:center;justify-content:space-around;color:white;font-size:8px}.footer strong{color:#07385f}header .blue,.footer,h2,.info div,p.money{print-color-adjust:exact;-webkit-print-color-adjust:exact}.quote-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9px;margin:8px 0 13px}.quote-table th{padding:7px 3px;background:#073d68;color:white;text-align:left}.quote-table td{padding:7px 3px;border-bottom:1px solid #d6e3ed;vertical-align:top;overflow-wrap:anywhere}.quote-table th:nth-child(1){width:45%}.quote-table th:nth-child(2){width:11%}.quote-table th:nth-child(3){width:9%}.quote-table th:nth-child(4){width:17%}.quote-table th:nth-child(5){width:18%}.quote-table td:not(:first-child){text-align:right}.quote-table strong{font-size:9px;color:#07385f}.quote-table small{display:block;font-size:8px;color:#506478;line-height:1.3;margin-top:4px}.total-table{border-collapse:collapse;width:65%;margin:6px 0 6px auto;font-size:11px}.total-table td{padding:6px;border-bottom:1px solid #d1e0e8}.total-table td:last-child{text-align:right;font-weight:bold}.total-emphasis{background:#eaf1f6;color:#07385f}.proposal-notes{background:#fff8e8;padding:9px;margin:12px 0;font-size:9px;color:#78501a}@media screen and (max-width:640px){body{width:100%;overflow-wrap:anywhere}.info{grid-template-columns:repeat(2,minmax(0,1fr))}.photos{grid-template-columns:repeat(2,1fr)}.quote-table{font-size:8px}.quote-table td,.quote-table th{padding:5px 2px}}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.noprint{display:none}}';
 var meta='<div class="info">'+fields.map(function(p){return '<div><strong>'+pdfEsc(p[0])+'</strong>'+pdfEsc(p[1])+'</div>'}).join('')+'</div>';
 var html='<html lang="pt-BR"><head><meta charset="utf-8"><title>'+pdfEsc(title+' '+num)+'</title><style>'+cs+'</style></head><body><div class="noprint">Clique em Imprimir PDF e escolha Salvar como PDF. No navegador desative Cabeçalhos e rodapés e ative Gráficos de fundo. <button onclick="window.print()">Imprimir PDF</button></div><header><div class="logo">'+(logo?'<img alt="CONSTRU-REI" src="'+logo+'" style="max-width:92%;max-height:22mm;object-fit:contain">':'CONSTRU-REI')+'</div><div class="blue"><h1>'+title+'</h1><b>Nº '+pdfEsc(num)+'</b><small>'+pdfEsc(pdfVal('pdftitle')||'MANUTENÇÃO • REFORMAS • DIAGNÓSTICO')+'</small></div></header>'+meta+body+'<div class="footer"><span>(41) 98778-6277</span><span>construrei@construrei.com.br</span><span>Curitiba/PR • Região Metropolitana</span><strong>CONSTRU-REI</strong></div></body></html>';
 var win=window.open('','_blank');if(!win){alert('Permita pop-ups para abrir o PDF.');return}win.document.open();win.document.write(html);win.document.close();win.focus();
@@ -172,5 +173,42 @@ async function orcaMarketPrices(){
   status.textContent=matched+' preços publicados aplicados e '+estimated+' estimativas preliminares propostas. Revise a composição antes de enviar.';
  }catch(e){status.textContent='Pesquisa externa não concluída: '+String(e.message||e)+'. Valores do histórico preservados quando disponíveis.'}
  finally{orcaMarketBusy=false;button.disabled=false;}
+}
+
+function orcaBudgetPdfBody(fullText){
+ if(!crPriceItems.length)loadPriceItems();
+ const lines=String(fullText).replace(/\r/g,'').split('\n');
+ let totals={SERVIÇOS:0,MATERIAIS:0},complete={SERVIÇOS:true,MATERIAIS:true},parts=[];
+ for(const section of ['SERVIÇOS','MATERIAIS']){
+  const list=crPriceItems.map((it,i)=>({it,i})).filter(({it})=>it.section===section);
+  if(!list.length)continue;
+  const tableRows=list.map(({it,i})=>{
+   const rawQty=document.getElementById('crq'+i)?.value||'',rawVal=document.getElementById('crv'+i)?.value||'';
+   const qty=crNumber(rawQty),unit=crNumber(rawVal),valid=Number.isFinite(qty)&&qty>0&&Number.isFinite(unit)&&unit>=0;
+   const sub=valid?Math.round(qty*unit*100)/100:NaN;
+   if(valid)totals[section]+=sub;else complete[section]=false;
+   const name=it.name.replace(/^\d+\.\s*/,'').trim();
+   const idx=lines.findIndex(t=>t.trim()===it.name.trim());
+   const notes=[];
+   if(idx>=0){for(let j=idx+1;j<Math.min(idx+8,lines.length);j++){
+    const t=lines[j].trim();
+    if(/^QTD\./i.test(t)||/^\d+\.\s+[A-ZÀ-Ü]/.test(t)||/^(SERVIÇOS|MATERIAIS|RESUMO|OBSERVAÇÕES)/i.test(t))break;
+    if(t)notes.push(t);
+   }}
+   return '<tr><td><strong>'+pdfEsc(name)+'</strong>'+(notes.length?'<small>'+pdfEsc(notes.join(' '))+'</small>':'')+'</td><td>'+
+      pdfEsc(Number.isFinite(qty)&&qty>0?String(qty).replace('.',','):'A DEFINIR')+(it.assumedQty?'*':'')+
+      '</td><td>'+pdfEsc(it.measure||'UN')+'</td><td>'+pdfEsc(Number.isFinite(unit)?crMoney(unit):'A DEFINIR')+
+      '</td><td>'+pdfEsc(valid?crMoney(sub):'A DEFINIR')+'</td></tr>';
+  }).join('');
+  parts.push('<section><h2>'+(section==='SERVIÇOS'?'SERVIÇOS (MÃO DE OBRA)':'PRODUTOS E MATERIAIS')+'</h2><table class="quote-table"><thead><tr><th>DESCRIÇÃO</th><th>QTD.</th><th>UN.</th><th>VR. UNIT.</th><th>SUBTOTAL</th></tr></thead><tbody>'+tableRows+'</tbody></table></section>');
+ }
+ const ok=complete.SERVIÇOS&&complete.MATERIAIS;
+ parts.push('<section><h2>RESUMO DO ORÇAMENTO</h2><table class="total-table"><tr><td>SERVIÇOS</td><td>'+(complete.SERVIÇOS?crMoney(totals.SERVIÇOS):'A DEFINIR')+
+ '</td></tr><tr><td>MATERIAIS</td><td>'+(complete.MATERIAIS?crMoney(totals.MATERIAIS):'A DEFINIR')+
+ '</td></tr><tr class="total-emphasis"><td>TOTAL GERAL</td><td>'+(ok?crMoney(totals.SERVIÇOS+totals.MATERIAIS):'A DEFINIR')+'</td></tr></table></section>');
+ if(crPriceItems.some(x=>x.assumedQty)||orcaMarketProposals||!ok)parts.push('<div class="proposal-notes">* Quantidades de 1 UN/CJ foram sugeridas provisoriamente. Orçamento preliminar: conferir quantidades, preços de materiais, execução, acesso e custos indiretos antes da aprovação final.</div>');
+ const obs=lines.findIndex(t=>/^OBSERVAÇÕES TÉCNICAS\s*:?\s*$/i.test(t.trim()));
+ if(obs>=0){const notes=lines.slice(obs+1).filter(x=>x.trim()).slice(0,18);if(notes.length)parts.push('<section><h2>OBSERVAÇÕES TÉCNICAS</h2>'+notes.map(t=>'<p>'+pdfEsc(t)+'</p>').join('')+'</section>')}
+ return parts.join('');
 }
 </script></html>
