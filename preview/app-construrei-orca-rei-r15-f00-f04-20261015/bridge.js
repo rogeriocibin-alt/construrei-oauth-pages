@@ -39,7 +39,7 @@ function normalizeCase(x){return String(x||"").trim().toUpperCase().replace(/\s+
 function budgetItems(win){
  if(!win||!win.document||!Array.isArray(win.crPriceItems))throw Error("O motor R15 ainda não está pronto. Aguarde o carregamento ou gere o orçamento.");
  if(win.document.getElementById("mode")?.value!=="budget")throw Error("Alterne a R15 para Orçamento antes de salvar no F02.");
- if(win.orcaMarketBusy)throw Error("A precificação ainda está em andamento.");
+ if(win.document.getElementById('marketRun')?.disabled)throw Error("A precificação ainda está em andamento.");
  const text=String(win.document.getElementById("out")?.textContent||"").trim();
  if(text.length<45||/Provedores indisponíveis/i.test(text))throw Error("Gere primeiro um orçamento real no ORÇA-REI R15.");
  const rows=win.crPriceItems.map((it,i)=>{
@@ -127,12 +127,12 @@ async function saveDraft(){
  if(!$("confirmReview").checked){notice("Confirme a revisão humana antes de salvar. Não há aprovação automática.",true);return}
  const btn=$("saveDraft");btn.disabled=true;runtime.saving=true;
  try{
-  const result=budgetItems($("orcaFrame").contentWindow);
+  const w=$("orcaFrame").contentWindow;if(w&&typeof w.applyPriceItems==='function')w.applyPriceItems(false);const result=budgetItems(w);
   const warnings=showReviewWarnings(result.rows);
   if(warnings.length&&!window.confirm("Itens ainda sujeitos a conferência: "+warnings.join("; ")+". Salvar SOMENTE rascunho não aprovado?"))return;
   const latest=(await api("get",{token:runtime.case.token})).handoff;
   if(!latest||String(latest.to_flow).toUpperCase()!=="F02")throw Error("Chamado mudou de fase; nada foi gravado.");
-  if(latest.revision!==runtime.budgetRevision)throw Error("O chamado foi atualizado em outra tela. Recarregue-o antes de gravar, para não sobrescrever dados.");
+  if((latest.revision??null)!==runtime.budgetRevision)throw Error("O chamado foi atualizado em outra tela. Recarregue-o antes de gravar, para não sobrescrever dados.");
   if((latest.state?.budget?.copy_ready_text||latest.state?.budget?.labor_items?.length||latest.state?.budget?.material_items?.length)&&!$("confirmReplace").checked)throw Error("Já existe orçamento no F02. Marque a confirmação de substituição após conferir o histórico.");
   const payload=makePayload(latest,result);
   notice("Salvando SOMENTE rascunho no F02 oficial. Não é aprovação nem transferência de fase.");
