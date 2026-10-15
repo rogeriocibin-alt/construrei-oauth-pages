@@ -150,6 +150,8 @@ jobs:
         run: python3 .github/scripts/cr_central_full_scope_audit.py
       - name: Audit Gestor, official rules, preview dependencies and backup workflow catalogue
         run: python3 .github/scripts/cr_ecosystem_contract_audit.py
+      - name: Prove Cofre Zero mutable Storage copy retry is fail-closed (offline)
+        run: bash .github/scripts/test_cr_cofre_copy_storage_verified.sh
       - name: Enforce F00-F09 official client Edge route contract (offline)
         run: python3 .github/scripts/cr_flow_public_client_perimeter_guard.py
       - name: Exercise isolated WZ-01 authorization deny-by-default contract (synthetic)

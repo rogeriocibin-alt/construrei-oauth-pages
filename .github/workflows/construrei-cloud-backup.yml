@@ -153,8 +153,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rclone copy construrei-s3: "${{ steps.prep.outputs.work }}/06_STORAGE" --create-empty-src-dirs
-          rclone check construrei-s3: "${{ steps.prep.outputs.work }}/06_STORAGE"
+          # Capture uploads that appear while the initial copy runs.
+          # No HISTORY or CURRENT publication unless a full source check succeeds.
+          bash .github/scripts/cr_cofre_copy_storage_verified.sh \
+            "construrei-s3:" "${{ steps.prep.outputs.work }}/06_STORAGE"
 
       - name: Create integrity manifest
         shell: bash
