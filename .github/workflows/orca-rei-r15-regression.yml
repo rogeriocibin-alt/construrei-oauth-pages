@@ -1,0 +1,21 @@
+name: ORÇA-REI R15 — precificação e PDF sem regressão
+on:
+  push:
+    paths:
+      - 'preview/orca-rei-teste-ia-20261015-r15-correcao-precos-pdf/**'
+      - '.github/workflows/orca-rei-r15-regression.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  r15-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Testar JS, precificação PCT/UN e HTML de impressão
+        run: node preview/orca-rei-teste-ia-20261015-r15-correcao-precos-pdf/smoke-r15.cjs
