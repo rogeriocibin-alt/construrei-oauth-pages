@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11",
+  "generated_at": "2026-10-15",
   "title": "Infraestrutura do Projeto CONSTRU-REI",
   "policy": {
     "owner_view": "Gestor do Projeto",
@@ -13,14 +13,14 @@
     "providers_total": 10,
     "providers_live_verified": 6,
     "critical_alerts": 0,
-    "attention_alerts": 4,
+    "attention_alerts": 6,
     "netlify_sites": 7,
     "vercel_projects": 0,
     "github_repositories": 2,
     "supabase_projects": 2,
     "supabase_edge_functions": 370,
     "supabase_public_tables": 157,
-    "updated_at": "2026-10-11"
+    "updated_at": "2026-10-15"
   },
   "topology": [
     {
@@ -77,7 +77,7 @@
       "asset": "construrei-backup / construrei-backup-diario",
       "role": "Backup recorrente oficial independente do notebook",
       "status": "live",
-      "freshness": "google_drive_2026-10-10_03h"
+      "freshness": "drive_current_2026-10-15_06utc_history_full_2026-10-15_22utc_pending_verify"
     },
     {
       "layer": "Storage operacional",
@@ -395,15 +395,15 @@
       "usage": [
         {
           "label": "Conectividade",
-          "value": "Drive acessível; pacote diário de 10/10 presente"
+          "value": "Drive acessível; CURRENT 15/10 06h UTC e HISTORY_FULL 15/10 22h UTC visíveis"
         },
         {
           "label": "Destino",
-          "value": "CONSTRUREI-BACKUP-AUTO/CURRENT + HISTORY"
+          "value": "CURRENT, HISTORY_FULL, HISTORY_DELTAS, HISTORY_CAS (CAS com manifestos até 12/10)"
         },
         {
           "label": "Última conclusão diária",
-          "value": "10/10 03:00 • 3 SQL e 4.526 objetos"
+          "value": "CURRENT Cloud 15/10 03h BRT • 3 SQL / 4535 objetos (não é restore SQL integral)"
         }
       ],
       "assets": [
@@ -415,8 +415,14 @@
         }
       ],
       "admin_url": "https://drive.google.com/",
-      "source": "BACKUP_STATUS.txt Google Drive • 10/10/2026 03h BRT",
-      "alerts": []
+      "source": "Drive BACKUP_STATUS.txt e HISTORY_FULL (15/10/2026), GitHub Actions #38816987001; conclusão final pendente",
+      "alerts": [
+        {
+          "severity": "attention",
+          "title": "CAS e restauração integral a comprovar",
+          "message": "Manifests CAS até 12/10, run 13/10 falhou; 15/10 HIST_FULL em publicação no último check. PG17 replay ainda sem prova."
+        }
+      ]
     }
   ],
   "backups": {
@@ -438,19 +444,19 @@
     "daily": {
       "schedule": "03:00 diariamente • America/Sao_Paulo",
       "installed_at": "2026-10-05 • migração cloud oficial",
-      "state": "healthy",
-      "last_attempt": "2026-10-11 03:00 -03:00 (Drive: RUN_ID 20261011-060021)",
-      "last_result": "BACKUP_STATUS PRESENTE — 3 SQL + 4.526 objetos; histórico diário integral independente no GitHub PR #48",
+      "state": "attention",
+      "last_attempt": "2026-10-15: CURRENT Cloud 06:00 UTC; GitHub run 38816987001 às 22:25 UTC iniciou recuperação histórica",
+      "last_result": "Drive CURRENT confirmado 15/10 06:00 UTC com 3 SQL + 4535 objetos. GitHub HISTORY_FULL/20261015-222541 contém 3 SQL + 4539 objetos; job ainda em publicação na última consulta. Não equivale a conclusão/CURRENT atualizado.",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
-      "verification": "Backup CURRENT e HISTORY_FULL em Drive em 11/10: 3 SQL + 4.526 objetos, checksums e leitura de volta. Teste de importação SQL integral nesta data não comprovado.",
+      "verification": "GitHub Copiar Storage e manifesto PASS; HISTORY_FULL readback final, CURRENT update e restore drill pendentes. CAS manifests existentes até 12/10; execução scheduled CAS de 13/10 falhou por stale CURRENT. Replay SQL PostgreSQL17 completo não realizado.",
       "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
         "Google Drive CURRENT/HISTORY",
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Monitorar somente falha confirmada. Novo restore periódico exclusivamente em ambiente isolado."
+      "action": "Validar conclusão do run #38816987001; comprovar cron do CAS às 05:47 BRT com manifesto imutável real; mitigar cópia FULL em push main por candidata e testar replay SQL PG17 em laboratório isolado sem alterar produção."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
@@ -474,9 +480,10 @@
         "restore": "git bundle, SHA256 readback, clone mirror e fsck PASS"
       },
       "trello_binary": {
-        "status": "in_progress",
-        "run": 38180968850,
-        "scope": "backup integral dos anexos e teste offsite ainda não homologados"
+        "status": "offline_restore_verified_schedule_unproven",
+        "run": 38246754723,
+        "scope": "13 quadros, 1721 cartões, 4055 anexos, 9873 arquivos em ZIP/SQLite com readback offline; prova manual main em 12/10, primeiro schedule domingo 18/10 pendente",
+        "restore": "GitHub Actions #38246754723 SUCCESS + Drive RESTORE_REPORT.json PASS_OFFLINE_RECOVERY, sem restaurar a conta Trello real"
       }
     }
   },
@@ -581,6 +588,18 @@
       "title": "Cobertura externa de código e hospedagem parcial",
       "detail": "Git privado, Netlify publicado e histórico diário foram copiados e recuperados em teste isolado em 11/10; 370 Edge referenciadas na baseline + delta. Trello binário/restore completo e funções/segredos de sites sem deploy seguem sem prova de cobertura total.",
       "action": "Manter executores automáticos e verificar testes pendentes sem declarar 100%."
+    },
+    {
+      "severity": "attention",
+      "title": "Cofre Zero — redundância FULL por push e CAS sem schedule comprovado",
+      "detail": "Workflow change-driven em main gera cópia FULL por novo RUN_ID em push, ainda que o nome mencione meaningful change; CAS diário event=schedule não comprovado em 14/15, falha real 13/10.",
+      "action": "Preparar proteção em candidata; não disparar novos FULL nem excluir backups; manter rotina CAS existente e validar agendamento antes de corte."
+    },
+    {
+      "severity": "attention",
+      "title": "Restauração SQL PG17 atual não homologada",
+      "detail": "Drill no workflow verifica 3 SQL e 3 amostras Storage com hashes, mas não executa replay PostgreSQL17 em ambiente isolado, nem prova Auth/Storage e E2E.",
+      "action": "Realizar ensaio SQL real descartável, manter backup_restore_ok=false até comprovado."
     }
   ],
   "next_actions": [
@@ -611,6 +630,18 @@
     {
       "priority": "P1",
       "title": "Migrar documentação de desenvolvimento da Central para o Gestor por candidata segura",
+      "owner": "CR Assertivo",
+      "status": "open"
+    },
+    {
+      "priority": "P0",
+      "title": "Comprovar CAS e cópia FULL econômica sem concorrência",
+      "owner": "BIO + CR Assertivo",
+      "status": "open"
+    },
+    {
+      "priority": "P0",
+      "title": "Replay PostgreSQL17 isolado e recuperação Auth/Storage",
       "owner": "CR Assertivo",
       "status": "open"
     }
