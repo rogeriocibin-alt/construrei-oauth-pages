@@ -1,16 +1,9 @@
 name: Cofre Zero | Canonical change-driven backup
 
+# Full recovery snapshots must be manually requested; daily CAS handles the scheduled incremental archive.
+# Avoid automatic full copies from code pushes, preserving CURRENT and all existing HISTORY_FULL.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'supabase/**'
-      - 'production/**'
-      - 'central-runtime/**'
-      - 'gestor-projeto/**'
-      - '.github/scripts/**'
-      - '!**/*.md'
 
 permissions:
   contents: read
