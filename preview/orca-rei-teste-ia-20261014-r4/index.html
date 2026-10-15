@@ -50,7 +50,7 @@ function loadPriceItems(){
  items.forEach(function(item,i){var row=document.createElement('div');row.style.cssText='display:grid;grid-template-columns:1fr 75px 100px;gap:6px;padding:7px 0;border-bottom:1px solid #dae4ed;align-items:center';
  var name=document.createElement('span');name.textContent=item.section+' • '+item.name;name.style.fontSize='12px';row.appendChild(name);
  var qty=document.createElement('input');qty.placeholder='Qtd.';qty.value=item.qty;qty.setAttribute('aria-label','Quantidade '+item.name);qty.id='crq'+i;row.appendChild(qty);
- var unit=document.createElement('input');unit.placeholder='R$ unit.';unit.value=item.unit;unit.setAttribute('aria-label','Preço unitário '+item.name);unit.id='crv'+i;row.appendChild(unit);if(item.priceReference){var origin=document.createElement('small');origin.textContent='Sugestão: orçamento '+item.priceReference.document+' (12/08/2026). Preço histórico, não SINAPI vigente. Revisar escopo.';origin.style.gridColumn='1/-1';origin.style.color='#64748b';row.appendChild(origin)}box.appendChild(row)});
+ var unit=document.createElement('input');unit.placeholder='R$ unit.';unit.value=item.unit;unit.setAttribute('aria-label','Preço unitário '+item.name);unit.id='crv'+i;row.appendChild(unit);if(item.priceReference){var origin=document.createElement('small');origin.textContent='Sugestão: orçamento '+item.priceReference.document+' ('+(item.priceReference.date||'12/08/2026')+'). Referência documental; confirmar escopo e preço final. Não é SINAPI vigente.';origin.style.gridColumn='1/-1';origin.style.color='#64748b';row.appendChild(origin)}box.appendChild(row)});
  document.getElementById('priceStatus').textContent=items.length+' itens identificados. Valores explícitos no relato são recuperados quando identificáveis; ausências permanecem A DEFINIR.';
 }
 function applyPriceItems(){
@@ -78,6 +78,17 @@ const CR_PRICE_HISTORY=[
  {section:"MATERIAIS",keys:["materiais para limpeza","materiais para preparação"],value:80,measure:"UN",document:"590-26"},
  {section:"MATERIAIS",keys:["parafusos, buchas e fixadores"],value:65,measure:"UN",document:"590-26"},
  {section:"MATERIAIS",keys:["materiais auxiliares e consumiveis","materiais auxiliares e consumíveis"],value:79,measure:"UN",document:"590-26"}
+
+ {section:"SERVIÇOS",keys:["ajuste e regulagem de 04 portas","ajuste e regulagem de portas"],value:195,measure:"UN",document:"766-26",date:"05/10/2026"},
+ {section:"SERVIÇOS",keys:["substituicao da porta de correr","substituição da porta de correr"],value:680,measure:"UN",document:"766-26",date:"05/10/2026"},
+ {section:"MATERIAIS",keys:["porta de correr branca completa","porta de correr completa"],value:680,measure:"UN",document:"766-26",date:"05/10/2026"},
+ {section:"MATERIAIS",keys:["massa para madeira"],value:32,measure:"UN",document:"766-26",date:"05/10/2026"},
+ {section:"MATERIAIS",keys:["lixa para madeira"],value:36,measure:"UN",document:"766-26",date:"05/10/2026"},
+ {section:"MATERIAIS",keys:["tinta para madeira"],value:115,measure:"UN",document:"766-26",date:"05/10/2026"},
+ {section:"SERVIÇOS",keys:["revisao conjunto sanitario suite 01","revisão conjunto sanitário suíte 01","manutencao da caixa acoplada e escoamento lento"],value:390,measure:"UN",document:"627-26",date:"Proposta preliminar"},
+ {section:"SERVIÇOS",keys:["regulagem mecanismo caixa acoplada","regulagem do kit da caixa acoplada"],value:180,measure:"UN",document:"627-26",date:"Proposta preliminar"},
+ {section:"SERVIÇOS",keys:["refazer vedacao do box","refazer vedação do box","vedacao de box","vedação de box"],value:280,measure:"UN",document:"627-26",date:"Proposta preliminar"},
+ {section:"SERVIÇOS",keys:["infraestrutura e passagem de cabos","passagem de cabos de internet"],value:350,measure:"UN",document:"627-26",date:"Proposta preliminar"},
 ];
 function orcaNormalize(t){return String(t).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/^\d+\.\s*/,'').replace(/\s+/g,' ').trim()}
 function orcaMatchHistorical(name,section){
