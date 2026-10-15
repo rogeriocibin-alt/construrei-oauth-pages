@@ -44,4 +44,15 @@ run_case() {
 run_case 0 pass 1
 run_case 1 pass 2
 run_case 3 fail 3
+# Prevent a future CI-success / production-failure regression when script is not checked out.
+python3 - <<'PY'
+from pathlib import Path
+workflow = Path(".github/workflows/construrei-cloud-backup.yml").read_text(encoding="utf-8")
+checkout = workflow.find("uses: actions/checkout@v4")
+storage = workflow.find("- name: Copy Supabase Storage")
+assert checkout >= 0 and storage > checkout, "Repository must be checked out before Storage copy script"
+assert "persist-credentials: false" in workflow[checkout:storage], "Checkout must not persist credentials"
+assert "bash .github/scripts/cr_cofre_copy_storage_verified.sh" in workflow[checkout:storage+650], "Verified Storage script invocation missing"
+print("COFRE_STORAGE_CHECKOUT_CONTRACT=PASS")
+PY
 echo "COFRE_STORAGE_OFFLINE_CONTRACT=PASS (immediate, eventual, fail-closed)"
