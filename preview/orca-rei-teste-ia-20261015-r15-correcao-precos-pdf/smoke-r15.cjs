@@ -32,7 +32,7 @@ async function simulate(response){
  get('pdfperson').value='CONSTRU-REI';
  get('pdffiles').files=[];
  let received;
- const ctx={console,window:{confirm:()=>true,alert(){}},alert(){},document:{getElementById:get,addEventListener(){},createElement:el,body:{classList:{add(){},remove(){}}}},navigator:{},FileReader:function(){},setTimeout,clearTimeout,
+ const ctx={console,window:{confirm:()=>true,alert(){}},alert(){},document:{getElementById:get,addEventListener(){},createElement(){const n=el();let id='';Object.defineProperty(n,'id',{get(){return id;},set(x){id=x;nodes[id]=n;}});return n;},body:{classList:{add(){},remove(){}}}},navigator:{},FileReader:function(){},setTimeout,clearTimeout,
  fetch:async(url,opts)=>{
  if(url.includes('?status=1'))return {ok:true,json:async()=>({model_available:true,gemini_configured:false})};
  received=JSON.parse(opts.body);
