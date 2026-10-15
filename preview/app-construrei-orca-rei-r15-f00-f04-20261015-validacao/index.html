@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="cr-integration" content="R15_APPROVED_F00_F04_ISOLATED_CANDIDATE">
+<title>APP CONSTRU-REI • Encaixe ORÇA-REI R15 (F00–F04)</title>
+<style>
+:root{color-scheme:dark;--bg:#061827;--pane:#0b2d46;--card:#0d344f;--gold:#d7b02d;--line:#325975;--ink:#edf5fc;--soft:#bcd4e7;--ok:#82d3b0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,"Segoe UI",sans-serif}
+header{border-top:4px solid var(--gold);background:#07324f;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:19px;margin:0}.ey{color:var(--gold);font-size:11px;letter-spacing:.1em;font-weight:700}
+header p{font-size:12px;color:var(--soft);margin:4px 0 0}.status{color:#e7d08a;font-size:12px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:9px;background:#09253a;position:sticky;top:0;z-index:9;border-bottom:1px solid var(--line)}
+button,a.btn{border:1px solid var(--line);background:#124467;color:white;padding:10px 13px;border-radius:9px;text-decoration:none;font:inherit;font-weight:650;cursor:pointer;white-space:nowrap}
+button[aria-current="page"]{background:var(--gold);color:#092538;border-color:var(--gold)}
+button:disabled{opacity:.5;cursor:not-allowed}.gold{background:var(--gold)!important;color:#112d3f!important}.muted{color:var(--soft)}
+main{padding:12px;max-width:1600px;margin:auto}.notice{border-left:4px solid var(--gold);background:#103449;padding:11px;border-radius:7px;font-size:13px;line-height:1.5;margin-bottom:11px}
+.panel[hidden],#flowFrame[hidden],#orcaPanel[hidden]{display:none!important}
+#flowFrame{width:100%;height:calc(100vh - 188px);min-height:700px;border:1px solid var(--line);border-radius:11px;background:#fff}
+.f02-layout{display:grid;grid-template-columns:minmax(270px,320px) minmax(0,1fr);gap:10px;align-items:start}
+.sidebar{border:1px solid var(--line);background:var(--pane);padding:13px;border-radius:10px;display:flex;flex-direction:column;gap:10px}
+.sidebar h2{font-size:16px;margin:0}.sidebar p{margin:0;font-size:12px;color:var(--soft);line-height:1.5}
+input,textarea,select{border:1px solid #60809a;background:#061f34;color:white;font:inherit;padding:10px;border-radius:7px;width:100%;min-width:0}input[type=checkbox]{width:auto;accent-color:#cfa524}
+label{font-size:13px;display:block}label span{display:block;margin-bottom:4px}.actions{display:flex;flex-wrap:wrap;gap:8px}.actions button{white-space:normal;text-align:left;flex:1}
+#bridgeStatus{white-space:pre-wrap;border-radius:8px;background:#071e30;padding:10px;font-size:12px;line-height:1.55;min-height:54px;color:var(--soft)}
+#selectedCase{font-size:13px;font-weight:700;color:var(--ok)}
+#orcaFrame{width:100%;height:1300px;min-height:75vh;border:1px solid var(--line);border-radius:10px;background:#edf2fa}
+#pageDesc{font-size:13px;color:var(--soft);margin:0 0 8px}
+footer{padding:10px 15px;font-size:11px;color:var(--soft);text-align:center;border-top:1px solid var(--line)}
+@media(max-width:820px){header h1{font-size:17px}main{padding:9px}.f02-layout{grid-template-columns:1fr}#orcaFrame{height:1260px;min-height:85vh}.sidebar{position:static}#flowFrame{min-height:720px;height:calc(100vh - 155px)}}
+</style></head><body>
+<header>
+<div><div class="ey">CONSTRU-REI • APP • CANDIDATA DE ENCAIXE</div><h1>ORÇA-REI R15 no fluxo F00 → F04</h1><p>Motor R15 homologado preservado • fluxo canônico e dados oficiais mantidos</p></div>
+<div class="status" id="topStatus">Candidata isolada • sem promoção à produção</div>
+</header>
+<nav id="navigation" aria-label="Etapas do APP">
+<button type="button" data-tab="app">Início APP</button>
+<button type="button" data-tab="f00">F00 • Captura</button>
+<button type="button" data-tab="f01">F01 • Triagem</button>
+<button type="button" data-tab="orca" aria-current="page">F02 • ORÇA-REI</button>
+<button type="button" data-tab="f02">F02 • Oficial</button>
+<button type="button" data-tab="f03">F03 • Propostas</button>
+<button type="button" data-tab="f04">F04 • Agenda</button>
+<button type="button" id="goBack">Voltar</button>
+</nav>
+<main>
+<div class="notice">O ORÇA-REI R15 foi aprovado como versão funcional. Nesta candidata, F00/F01 continuam capturando e qualificando, F02 prepara o orçamento com IA e salva somente após conferência humana, F03 registra a aprovação e F04 mobiliza a equipe. Nenhum botão deste encaixe aprova, emite OS ou transfere fases automaticamente.</div>
+<section id="flowPanel" class="panel" hidden>
+<p id="pageDesc">Fluxo oficial embutido sem alterar suas rotas.</p><iframe id="flowFrame" title="Etapa do aplicativo CONSTRU-REI" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</section>
+<section id="orcaPanel" class="panel">
+<div class="f02-layout"><aside class="sidebar" aria-label="Conexão do ORÇA-REI com o F02">
+<h2>F02 • Encaixe operacional</h2><p>Digite o número do chamado que já chegou ao F02. A conexão recupera apenas o contexto necessário e preenche o ORÇA-REI aprovado, sem duplicar banco ou inteligência.</p>
+<label><span>Chamados disponíveis no F02</span><select id="eligibleCases" aria-label="Fila de chamados qualificados"><option value="">Consultando fila...</option></select></label>
+<div class="actions"><button type="button" id="refreshCases">Atualizar fila F02</button></div>
+<label><span>Busca opcional por número</span><input type="text" id="caseNumber" placeholder="Ex.: 520-26" maxlength="45" autocomplete="off"></label>
+<div class="actions"><button type="button" id="loadCase" class="gold">Carregar do F02</button><button type="button" id="resetCase">Desvincular</button></div>
+<div id="selectedCase" role="status">Nenhum caso vinculado</div>
+<div id="caseEvidence" role="status" aria-live="polite">Anexos: aguardando chamado qualificado.</div>
+<p>Na área à direita, use a IA, ajuste preços, fotos e gere os PDFs exatamente como na R15. Os dados ficam na tela até você optar por salvar.</p>
+<label><input type="checkbox" id="confirmReview"> Conferi quantidades, unidades, preços, margem, descrição técnica e documentos; autorizo salvar somente o rascunho no F02.</label>
+<label><input type="checkbox" id="confirmReplace"> Autorizo substituir um rascunho anterior deste mesmo chamado, se houver.</label>
+<div class="actions"><button type="button" id="saveDraft" class="gold">Salvar rascunho no F02</button><button type="button" id="openOfficialF02">Revisar no F02 oficial</button></div>
+<div id="bridgeStatus" aria-live="polite">Aguardando caso autorizado. Nenhum dado foi enviado ou salvo.</div>
+<p>F03/F04 permanecem sujeitos à aprovação, número da OS e passagem pelo fluxo canônico. Não há gravação automática nem replicação de dados em armazenamento do navegador.</p>
+<a class="btn" href="../orca-rei-teste-ia-20261015-r15-correcao-precos-pdf/" target="_blank" rel="noopener noreferrer">Abrir R15 isolada (impressão alternativa)</a>
+</aside><div><iframe id="orcaFrame" title="ORÇA-REI R15 homologado incorporado ao F02" src="../orca-rei-teste-ia-20261015-r15-correcao-precos-pdf/" referrerpolicy="strict-origin-when-cross-origin"></iframe></div></div>
+</section>
+</main><footer>CONSTRU-REI • R15 congelada por SHA • candidatura de encaixe sem alteração do APP oficial, F00–F04, dados ou Edge Functions</footer>
+<script src="./bridge.js?v=validacao-20261015-r2"></script>
+</body></html>
