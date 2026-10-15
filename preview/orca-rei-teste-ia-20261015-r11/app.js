@@ -88,19 +88,21 @@ chunks.forEach(function(x){var m=x.match(/(?:^|\s)(?:QTD\.?\s*[:=]?\s*)?(\d+(?:[
 return items;
 }
 function loadPriceItems(){
+ const previous=new Map((crPriceItems||[]).map((it,i)=>[it.section+'|'+it.name,{qty:document.getElementById('crq'+i)?.value,price:document.getElementById('crv'+i)?.value,originalProvided:it.originalProvided}]));
  if(document.getElementById('mode').value!=='budget'){alert('O motor de precificação é exclusivo do orçamento.');return}
  var lines=(document.getElementById('out').textContent||'').split(/\r?\n/),section='',items=[];
  for(var i=0;i<lines.length;i++){var t=lines[i].trim();
- if(/^SERVIÇOS\s*(\(|$)/i.test(t)){section='SERVIÇOS';continue}
- if(/^MATERIAIS\s*$/i.test(t)){section='MATERIAIS';continue}
+ if(/^SERVI[ÇC]OS(?:\s*\(|\s*:|\s*$)/i.test(t)){section='SERVIÇOS';continue}
+ if(/^(?:PRODUTOS\s+E\s+)?MATERIAIS\s*:?\s*$/i.test(t)){section='MATERIAIS';continue}
  if(/^(RESUMO|OBSERVAÇÕES)/i.test(t)){section='';continue}
  if(section&&/^\d+\.\s+\S/.test(t)){
- var qidx=-1;for(var j=i+1;j<Math.min(i+5,lines.length);j++){if(/^QTD\.\s*:/i.test(lines[j].trim())){qidx=j;break}if(/^\d+\.\s+/.test(lines[j].trim()))break}
- if(qidx>=0){var prev=lines[qidx]||'',qty=prev.match(/QTD\.\s*:\s*(\d+(?:[,\.]\d+)?)/i),unit=prev.match(/VR\.\s*UNIT\.\s*:\s*R\$\s*([\d.,]+)/i);
- items.push({name:t,section:section,line:qidx,qty:qty?qty[1]:'',unit:unit?unit[1]:'',originalProvided:!!unit,measure:(prev.match(/UN\.:\s*([^|\s]+)/i)||[])[1]||'UN'})}
+ var qidx=-1;for(var j=i+1;j<Math.min(i+5,lines.length);j++){if(/^(?:QTD\.?|QUANTIDADE)\s*[:=./-]/i.test(lines[j].trim())){qidx=j;break}if(/^\d+\.\s+/.test(lines[j].trim()))break}
+ if(qidx>=0){var prev=lines[qidx]||'',qty=prev.match(/(?:QTD\.?|QUANTIDADE)\s*[:=./-]\s*(\d+(?:[,\.]\d+)?)/i),unit=prev.match(/VR\.?\s*UNIT\.?\s*[:=]\s*(?:R\$\s*)?([\d.,]+)/i);
+ items.push({name:t,section:section,line:qidx,qty:qty?qty[1]:'',unit:unit?unit[1]:'',originalProvided:!!unit,measure:(prev.match(/(?:UN\.?|UNIDADE)\s*[:=./-]\s*([^|\s]+)/i)||[])[1]||'UN'})}
  }}
  var sourcePrices=crExtractSourcePrices();items.forEach(function(it,i){if(it.qty&&it.unit)return;var matching=sourcePrices.find(function(p){var words=it.name.toLowerCase().replace(/^\d+\.\s*/, '').split(/\s+/).filter(function(w){return w.length>=5});return words.some(function(w){return p.text.indexOf(w)>=0})});if(!matching&&sourcePrices.length===items.length)matching=sourcePrices[i];if(matching){if(!it.qty)it.qty=matching.q;if(!it.unit){it.unit=matching.v;it.originalProvided=true}}});
  items.forEach(function(it){if(!it.unit){var ref=orcaMatchHistorical(it.name,it.section);if(ref){it.unit=String(ref.value).replace('.',',');it.priceReference=ref}}});
+ items.forEach(function(it){const prior=previous.get(it.section+'|'+it.name);if(prior){if(prior.qty!==undefined)it.qty=prior.qty;if(prior.price!==undefined)it.unit=prior.price;if(prior.originalProvided)it.originalProvided=true;}});
  items.forEach(function(it){if(!it.qty&&['UN','UND','CJ','PC','PEÇA'].includes(String(it.measure||'').toUpperCase())){it.qty='1';it.assumedQty=true}});crPriceItems=items;
  var box=document.getElementById('priceRows');box.replaceChildren();
  items.forEach(function(item,i){var row=document.createElement('div');row.className='crprice-row';row.style.cssText='display:grid;grid-template-columns:minmax(0,1fr) 75px 106px;gap:6px;padding:7px 0;border-bottom:1px solid #dae4ed;align-items:center';
@@ -177,6 +179,7 @@ async function orcaGenerateCaptions(){
  }catch(err){if(batch!==orcaPhotoBatch)return;orcaPhotoEditors([]);el.textContent='IA visual indisponível: '+String(err.message||err)+'. Você pode preencher as legendas manualmente ou tentar novamente.'}
 }
 
+function orcaCanonicalUnit(v){const u=String(v||'UN').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[.:]$/g,'').trim().replace(/\s+/g,' ');const aliases={'UND':'UN','UNID':'UN','UNIDADE':'UN','UNIDADES':'UN','PECA':'PC','PECAS':'PC','PCA':'PC','CONJ':'CJ','CONJUNTO':'CJ','KIT':'CJ','PAR':'CJ','MT':'M','METRO':'M','METROS':'M','METRO LINEAR':'M','METROS LINEARES':'M','M2':'M²','M3':'M³','LITRO':'L','LITROS':'L','HORA':'H','HORAS':'H','HR':'H','DIARIA':'DIA','DIARIAS':'DIA'};return aliases[u]||u}
 let orcaMarketProposals=0;
 let orcaMarketBusy=false;
 async function orcaMarketPrices(){
@@ -184,12 +187,12 @@ async function orcaMarketPrices(){
  if(orcaMarketBusy)return;
  if(document.getElementById('mode').value!=='budget'){status.textContent='Preços apenas para orçamento.';return}
  if(!crPriceItems.length){loadPriceItems();if(!crPriceItems.length){status.textContent='Gere o orçamento para identificar itens.';return}}
- const batch=crPriceItems.slice(0,12).map((it,i)=>({id:'item-'+i,name:it.name.replace(/^\d+\.\s*/,''),section:it.section,unit:it.measure||'UN',qty:crNumber(document.getElementById('crq'+i)?.value)||1}));
+ const batch=crPriceItems.slice(0,12).map((it,i)=>({id:'item-'+i,name:it.name.replace(/^\d+\.\s*/,''),section:it.section,unit:orcaCanonicalUnit(it.measure||'UN'),qty:crNumber(document.getElementById('crq'+i)?.value)||1}));
  if(batch.every((_,i)=>crPriceItems[i].originalProvided&&Number.isFinite(crNumber(document.getElementById('crv'+i)?.value)))){applyPriceItems();status.textContent='Preços informados preservados e totais calculados.';return}
  orcaMarketBusy=true;button.disabled=true;orcaMarketProposals=0;status.textContent='Consultando preços de mercado, histórico e estimativas...';proof.replaceChildren();
  try{
   const res=await fetch('https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-orca-rei-context-prices-r11-20261015',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({items:batch,context:document.getElementById('src').value.slice(0,2300),photo_captions:(orcaPhotoCaptions||[]).map(v=>String(v).slice(0,180))})});
-  const data=await res.json().catch(()=>({error:'Resposta inválida'}));if(!res.ok||!data.ok)throw Error(data.error||'Backend não disponível');
+  const data=await res.json().catch(()=>({error:'Resposta inválida'}));if(!res.ok||!data.ok)throw Error((data.error||'Backend não disponível')+(Array.isArray(data.invalid_indices)?' Itens: '+data.invalid_indices.map(i=>i+1).join(', '):'')+' [HTTP '+res.status+']');
   let published=0,estimated=0,preserved=0,missing=0;
   (data.items||[]).forEach((ref,i)=>{
    if(i>=batch.length||ref.id!=='item-'+i)return;
@@ -211,8 +214,8 @@ async function orcaMarketPrices(){
   });
   orcaMarketProposals=published+estimated;applyPriceItems();
   const totals=document.createElement('strong');totals.textContent=published+' preços públicos; '+estimated+' estimativas; '+preserved+' valores do usuário preservados; '+missing+' sem preço.';proof.appendChild(totals);
-  const meta=document.createElement('p');meta.textContent='Origem: '+(data.provider||'referências locais')+'. '+(data.ai_called?'IA adicional consultada.':'Sem nova chamada de IA.')+(data.quota_reason?' IA no limite, referências locais continuam ativas.':'');proof.appendChild(meta);
-  status.textContent=missing>0?'Precificação parcial: '+missing+' item(ns) ainda sem preço confiável. Não será emitido orçamento comercial incompleto.':'Preços e estimativas aplicados automaticamente. Revise os valores antes da impressão.';
+  const meta=document.createElement('p');meta.textContent='Origem: '+(data.provider||'referências locais')+'. '+(data.ai_called?'IA adicional consultada.':'Sem nova chamada de IA.')+(data.quota_reason?' Limite gratuito de IA atingido: '+data.quota_reason+'.':'')+(data.ai_errors?.length?' Detalhes técnicos: '+data.ai_errors.join('; ')+'.':'');proof.appendChild(meta);
+  status.textContent=missing>0?'Precificação parcial: '+missing+' item(ns) ainda sem preço confiável. Consulte as justificativas abaixo; orçamento comercial incompleto permanece bloqueado.':'Preços e estimativas aplicados automaticamente. Revise os valores antes da impressão.';
  }catch(err){status.textContent='Erro ao consultar sugestões: '+String(err.message||err)+'. Os preços informados foram preservados.';applyPriceItems()}
  finally{orcaMarketBusy=false;button.disabled=false}
 }
