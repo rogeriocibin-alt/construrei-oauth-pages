@@ -28,7 +28,13 @@ WORKFLOWS = ROOT / ".github/workflows"
 KNOWN_DOC_ONLY = set()
 KNOWN_GESTOR_ONLY = set()
 MIN_ALIASES = 39
-MIN_WORKFLOWS = 11
+# Identity/function contracts replace the obsolete pre-V2 total workflow count.
+CRITICAL_BACKUP_WORKFLOWS = {
+    "construrei-cloud-backup.yml": "canonical",
+    "cofre-zero-history-full.yml": "daily_archive",
+}
+ARCHIVE_UTC_CRON = "47 8 * * *"
+
 
 def load(path):
     return json.loads(path.read_text(encoding="utf-8"))
@@ -225,8 +231,31 @@ def main():
     warnings.append("preview/ inventory is a dated Git snapshot, not a proven runtime dependency graph")
 
     workflow_files = sorted([*WORKFLOWS.glob("*.yml"), *WORKFLOWS.glob("*.yaml")])
-    if len(workflow_files) < MIN_WORKFLOWS:
-        errors.append("Previously-known GitHub workflow set unexpectedly shrank")
+    workflow_names = {f.name for f in workflow_files}
+    for essential, role in CRITICAL_BACKUP_WORKFLOWS.items():
+        if essential not in workflow_names:
+            errors.append("Missing critical Cofre Zero workflow: " + essential + " (role=" + role + ")")
+    canonical = WORKFLOWS / "construrei-cloud-backup.yml"
+    if canonical.is_file():
+        text = canonical.read_text(encoding="utf-8")
+        if "workflow_dispatch:" not in text or "group: construrei-cloud-backup" not in text:
+            errors.append("Canonical Cofre Zero lost dispatch or concurrency lock")
+        if "HISTORY_FULL" not in text or "SHA256SUMS.txt" not in text or "rclone check" not in text:
+            errors.append("Canonical Cofre Zero lost archive/manifest/integrity gates")
+        if "on:" not in text or "paths:" not in text:
+            errors.append("Canonical change-driven triggers missing")
+    history = WORKFLOWS / "cofre-zero-history-full.yml"
+    if history.is_file():
+        text = history.read_text(encoding="utf-8")
+        scheduled = re.findall(r'^\s*-\s*cron:\s*["\x27]?([^"\x27\n#]+)', text, re.MULTILINE)
+        if ARCHIVE_UTC_CRON not in [x.strip() for x in scheduled]:
+            errors.append("Cofre Zero history schedule changed: expected 05:47 America/Sao_Paulo")
+        if "cofre-zero-history-full" not in text or "cancel-in-progress: false" not in text:
+            errors.append("Cofre Zero history concurrency contract changed")
+        if "cr_history_cas_append.py" not in text or "cr_sql_restore_preflight.py" not in text:
+            errors.append("Cofre Zero history lost CAS or SQL restore preflight")
+        if "exit 21" not in text:
+            errors.append("Cofre Zero history lost fail-closed Drive marker access check")
     workflows = []
     crons = collections.defaultdict(list)
     for file in workflow_files:
