@@ -26,7 +26,7 @@ assert.doesNotMatch(bridge,/localStorage|sessionStorage/,"no locally stored sens
 const ids=new Map();
 function node(id){if(!ids.has(id))ids.set(id,{id,value:"",textContent:"",dataset:{},checked:false,disabled:false,hidden:false,style:{},addEventListener(){},setAttribute(){},removeAttribute(){},replaceChildren(){},classList:{add(){},remove(){}},contentWindow:null});return ids.get(id)}
 const win={confirm:()=>true};
-const ctx={window:win,document:{getElementById:node,querySelectorAll:()=>[]},console,URL,fetch:async()=>{throw Error("No live backend calls allowed in smoke tests")}};
+const ctx={window:win,document:{getElementById:node,querySelectorAll:()=>[]},console,URL,Option:function Option(label,value){this.text=label;this.value=value;this.disabled=false},fetch:async()=>{throw Error("No live backend calls allowed in smoke tests")}};
 vm.runInNewContext(bridge,ctx);
 const B=win.CRBridgeV1;
 assert.ok(B);
