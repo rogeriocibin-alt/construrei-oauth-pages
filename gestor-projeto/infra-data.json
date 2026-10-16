@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-11",
+  "generated_at": "2026-10-15",
   "title": "Infraestrutura do Projeto CONSTRU-REI",
   "policy": {
     "owner_view": "Gestor do Projeto",
@@ -13,14 +13,14 @@
     "providers_total": 10,
     "providers_live_verified": 6,
     "critical_alerts": 0,
-    "attention_alerts": 4,
+    "attention_alerts": 6,
     "netlify_sites": 7,
     "vercel_projects": 0,
     "github_repositories": 2,
     "supabase_projects": 2,
     "supabase_edge_functions": 370,
     "supabase_public_tables": 157,
-    "updated_at": "2026-10-11"
+    "updated_at": "2026-10-15"
   },
   "topology": [
     {
@@ -76,8 +76,8 @@
       "platform": "Google Cloud Run + Cloud Scheduler + Google Drive",
       "asset": "construrei-backup / construrei-backup-diario",
       "role": "Backup recorrente oficial independente do notebook",
-      "status": "live",
-      "freshness": "google_drive_2026-10-10_03h"
+      "status": "attention",
+      "freshness": "cloud_q2tjm_20261015_success_owner_verified_cas_manual_success"
     },
     {
       "layer": "Storage operacional",
@@ -100,8 +100,8 @@
       "platform": "Desktop Commander",
       "asset": "Rogerio-2022",
       "role": "Auditoria e manutenção local autorizada",
-      "status": "live",
-      "freshness": "connector_live"
+      "status": "offline",
+      "freshness": "connector_devices_20261015_offline"
     }
   ],
   "providers": [
@@ -351,11 +351,11 @@
       "account": "Notebook autorizado",
       "plan": "Dispositivo próprio",
       "plan_status": "n/a",
-      "health": "healthy",
+      "health": "offline",
       "usage": [
         {
           "label": "Desktop Commander",
-          "value": "Online • app 0.2.52"
+          "value": "Offline • consulta 15/10/2026"
         },
         {
           "label": "Remote MCP calls restantes",
@@ -381,7 +381,7 @@
         }
       ],
       "admin_url": "https://mcp.desktopcommander.app/",
-      "source": "Inventário do dispositivo histórico • rotina oficial é cloud (comprovada 10/10)",
+      "source": "Desktop Commander list_devices • 15/10/2026; dispositivo offline",
       "alerts": []
     },
     {
@@ -395,15 +395,15 @@
       "usage": [
         {
           "label": "Conectividade",
-          "value": "Drive acessível; pacote diário de 10/10 presente"
+          "value": "Drive acessível; CURRENT 15/10 06h UTC e HISTORY_FULL 15/10 22h UTC visíveis"
         },
         {
           "label": "Destino",
-          "value": "CONSTRUREI-BACKUP-AUTO/CURRENT + HISTORY"
+          "value": "CURRENT, HISTORY_FULL, HISTORY_DELTAS, HISTORY_CAS (manifesto 20261015-222541 verificado via Actions)"
         },
         {
           "label": "Última conclusão diária",
-          "value": "10/10 03:00 • 3 SQL e 4.526 objetos"
+          "value": "Cloud q2tjm 15/10 03h SUCCESS; CAS manual 15/10 SUCCESS; recorrência CAS monitorada."
         }
       ],
       "assets": [
@@ -415,8 +415,14 @@
         }
       ],
       "admin_url": "https://drive.google.com/",
-      "source": "BACKUP_STATUS.txt Google Drive • 10/10/2026 03h BRT",
-      "alerts": []
+      "source": "Evidência anterior Drive + API GitHub Jobs #38816987001 revalidada; sem nova leitura Drive nesta retomada",
+      "alerts": [
+        {
+          "severity": "attention",
+          "title": "CAS e restauração integral a comprovar",
+          "message": "Operação homologada por Rogério. Falhas Cloud 13–14 históricas; ciclo 15/10 SUCCESS. Próximo CAS schedule e recuperação integral permanecem monitorados."
+        }
+      ]
     }
   ],
   "backups": {
@@ -438,19 +444,19 @@
     "daily": {
       "schedule": "03:00 diariamente • America/Sao_Paulo",
       "installed_at": "2026-10-05 • migração cloud oficial",
-      "state": "healthy",
-      "last_attempt": "2026-10-11 03:00 -03:00 (Drive: RUN_ID 20261011-060021)",
-      "last_result": "BACKUP_STATUS PRESENTE — 3 SQL + 4.526 objetos; histórico diário integral independente no GitHub PR #48",
+      "state": "attention",
+      "last_attempt": "2026-10-15 03:00:01 BRT • Cloud Run construrei-backup-q2tjm",
+      "last_result": "Cloud original 15/10 q2tjm SUCCESS, 1/1 tarefa, exit0, retries0, evidência visual do titular. FULL GitHub #38816987001 e CAS manual #38825322289 SUCCESS.",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
-      "verification": "Backup CURRENT e HISTORY_FULL em Drive em 11/10: 3 SQL + 4.526 objetos, checksums e leitura de volta. Teste de importação SQL integral nesta data não comprovado.",
+      "verification": "CAS manifesto SHA256 f763c74da70e716308696376cad4b08afb6176197affd816a256375406c3e09e; 3 SQL hash PASS, 3 amostras Storage PASS, todas 4544 referências PASS. SQL COPY 231 blocos; replay NÃO executado. Cloud original q2tjm confirmado por captura do titular, issue53 #6205333436.",
       "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
         "Google Drive CURRENT/HISTORY",
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Monitorar somente falha confirmada. Novo restore periódico exclusivamente em ambiente isolado."
+      "action": "Operação homologada e incidente encerrado por Rogério 15/10. Sem ajuste IAM, novo FULL ou intervenção humana. Monitorar primeiro CAS schedule 16/10 05:47 BRT; recuperação integral adiada, não homologada."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
@@ -474,9 +480,10 @@
         "restore": "git bundle, SHA256 readback, clone mirror e fsck PASS"
       },
       "trello_binary": {
-        "status": "in_progress",
-        "run": 38180968850,
-        "scope": "backup integral dos anexos e teste offsite ainda não homologados"
+        "status": "offline_restore_verified_schedule_removed",
+        "run": 38246754723,
+        "scope": "13 quadros/1721 cartões/4055 anexos recuperados offline. PR124 removeu workflows em 14/10; não presumir recorrência de 18/10.",
+        "restore": "GitHub Actions #38246754723 SUCCESS + Drive RESTORE_REPORT.json PASS_OFFLINE_RECOVERY, sem restaurar a conta Trello real"
       }
     }
   },
@@ -581,6 +588,24 @@
       "title": "Cobertura externa de código e hospedagem parcial",
       "detail": "Git privado, Netlify publicado e histórico diário foram copiados e recuperados em teste isolado em 11/10; 370 Edge referenciadas na baseline + delta. Trello binário/restore completo e funções/segredos de sites sem deploy seguem sem prova de cobertura total.",
       "action": "Manter executores automáticos e verificar testes pendentes sem declarar 100%."
+    },
+    {
+      "severity": "resolved",
+      "title": "Cofre Zero — duplicação FULL por push corrigida",
+      "detail": "PR #133 MERGED main commit 9245be84; workflow FULL passou a workflow_dispatch manual-only, sem push. Auditor regressivo atualizado, PR CI 38822615841 PASS e main CI 38822682363 PASS. Routine CAS schedule separada preservada; ainda sem prova de execução recente.",
+      "action": "Acompanhar ocorrência real CAS event=schedule, CURRENT e restauração; não disparar FULL extra nem apagar backups."
+    },
+    {
+      "severity": "attention",
+      "title": "Restauração SQL PG17 atual não homologada",
+      "detail": "Drill no workflow verifica 3 SQL e 3 amostras Storage com hashes, mas não executa replay PostgreSQL17 em ambiente isolado, nem prova Auth/Storage e E2E.",
+      "action": "Ensaio integral ADIADO_MONITORADO pelo contrato 12/10; manter backup_restore_ok=false até prova e isolamento disponíveis."
+    },
+    {
+      "severity": "attention",
+      "title": "Cofre Zero — CAS agendado sem execução recente comprovada",
+      "detail": "Causa comprovada: PR #124 removeu workflow em 14/10; ba4d8e2 restaurou em 15/10 18:58 BRT. CAS manual #38825322289 SUCCESS; próximo schedule previsto 16/10 05:47 BRT.",
+      "action": "Conferir primeiro evento schedule real e manifesto; não repetir validação manual ou iniciar FULL."
     }
   ],
   "next_actions": [
@@ -613,6 +638,18 @@
       "title": "Migrar documentação de desenvolvimento da Central para o Gestor por candidata segura",
       "owner": "CR Assertivo",
       "status": "open"
+    },
+    {
+      "priority": "P0",
+      "title": "Comprovar CAS e cópia FULL econômica sem concorrência",
+      "owner": "BIO + CR Assertivo",
+      "status": "monitoring"
+    },
+    {
+      "priority": "P0",
+      "title": "Replay PostgreSQL17 isolado e recuperação Auth/Storage",
+      "owner": "CR Assertivo",
+      "status": "deferred"
     }
   ]
 }

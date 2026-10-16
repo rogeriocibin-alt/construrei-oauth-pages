@@ -27,7 +27,9 @@
     "baseline_freeze_branch": "checkpoint/current-official-logos-recovered-20261006",
     "updated_at": "2026-10-07T17:55:00-03:00",
     "canonical_governance_index": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
-    "previous_official_build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006"
+    "previous_official_build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006",
+    "reconciliation_candidate_at": "2026-10-15",
+    "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP."
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -1368,10 +1370,10 @@
       "priority": "P0",
       "state": "awaiting_owner_validation",
       "owner": "Bio + CR Assertivo + Rogério",
-      "last_movement": "2026-10-06",
-      "next_action": "Fechar complementos F02, rodar um caso E2E F00→F09 em celular e notebook e congelar pacote final.",
-      "dependency": "Validação humana E2E",
-      "source": "Issue #24 + baseline APP/F00→F09",
+      "last_movement": "2026-10-15",
+      "next_action": "ORÇA-REI R15 validada isoladamente (15/10); integrar motor ao F02 com dados estruturados F00/F01 e gerar orçamento/parecer; executar E2E F00→F09 em candidato seguro, validar celular+notebook, rollback e só então homologar a integração.",
+      "dependency": "E2E de integração e aceite humano; R15 individual já validada",
+      "source": "Banco Mestre EXEC-APP-E2E-20261006 • ORÇA-REI R15 aprovada isoladamente em 15/10/2026",
       "close_when": "Fluxo E2E aprovado e pacote final homologado sem regressão.",
       "human_action": true,
       "provenance": "current_explicit"
@@ -1398,10 +1400,10 @@
       "priority": "P1",
       "state": "completed",
       "owner": "Bio + CR Assertivo",
-      "last_movement": "2026-10-07",
-      "next_action": "Monitorar apenas falhas reais; manter restore drill periódico.",
+      "last_movement": "2026-10-15",
+      "next_action": "Backup Cloud original q2tjm de 15/10 03h concluído 1/1 exit0, homologação operacional Rogério; monitorar falhas novas. Cobertura integral/CAS recorrente separada no registro existente.",
       "dependency": "Nenhuma dependência operacional do notebook",
-      "source": "Cloud Run construrei-backup + Scheduler construrei-backup-diario + restore drill 05/10",
+      "source": "Cloud Run/Scheduler histórico + Banco Mestre EXEC-BACKUP-AUTO-20261006; incidente separado EXEC-COFRE-COVERAGE-20261010",
       "close_when": "Concluído: execução automática independente do notebook e restore verificável.",
       "human_action": false,
       "provenance": "current_explicit"
@@ -1484,6 +1486,36 @@
         "GESTOR_PROJETO"
       ],
       "app_projection": false
+    },
+    {
+      "id": "EXEC-COFRE-COVERAGE-20261010",
+      "title": "Cofre Zero — operação homologada; recorrência CAS e recuperação integral monitoradas",
+      "domain": "Infraestrutura / Recuperação",
+      "priority": "P1",
+      "state": "in_progress",
+      "owner": "Bio + CR Assertivo",
+      "last_movement": "2026-10-15",
+      "next_action": "Incidente operacional encerrado por Rogério: Cloud q2tjm 15/10 03h SUCCESS, FULL pontual e CAS manual SUCCESS. Monitorar primeiro CAS schedule 16/10 05:47 BRT; recuperação integral ADIADA_MONITORADA, sem nova intervenção humana atual.",
+      "dependency": "Sem bloqueio humano atual. Execução CAS agendada futura e ensaio integral não comprovados. Cobertura Trello/Netlify após remoção PR124 deve ser reconciliada sem criar novas rotinas.",
+      "source": "Projeção (não mestre): public.cc_items/EXEC-COFRE-COVERAGE-20261010 • PR #133 MERGED 9245be84 • issue #53 • Actions #38822682363 CI PASS • issue #53 comentário 6204474606 • jobs API #38816987001 revalidada • CAS #38825322289 SUCCESS; manifesto SHA256 f763c74da70e716308696376cad4b08afb6176197affd816a256375406c3e09e • Cloud q2tjm confirmado pelo titular • homologação expressa 15/10 • cc_items atualizado",
+      "close_when": "CAS recorrente comprovado, backup principal finalizado e validado, custo/duplicação sob controle, recuperação isolada reproduzível, rollback testado.",
+      "human_action": false,
+      "provenance": "master_readonly_projection"
+    },
+    {
+      "id": "ARCH-TRUTH-20261012",
+      "title": "Gestor — conciliação de pendências, fontes e versão real",
+      "domain": "Governança / Gestor do Projeto",
+      "priority": "P1",
+      "state": "in_progress",
+      "owner": "BIO Gestor + CR Assertivo",
+      "last_movement": "2026-10-15",
+      "next_action": "Reconciliar JSON exibido com cc_items; diferenciar app.js 1.2.4, version.json 1.2.5.2, snapshot V1.2.7; validar candidata no PWA celular/notebook antes de atualizar release e produção.",
+      "dependency": "PWA renderiza project_pending do JSON estático; mudanças Banco Mestre não migram automaticamente; precisa homologação de release/caching",
+      "source": "Projeção (não mestre): public.cc_items/ARCH-TRUTH-20261012 • GitHub issue #53",
+      "close_when": "Fonte única para pendências, status e lançamento do Gestor comprovados sem divergência, regressão ou segundo escritor.",
+      "human_action": false,
+      "provenance": "master_readonly_projection"
     }
   ],
   "history_catalog": {
