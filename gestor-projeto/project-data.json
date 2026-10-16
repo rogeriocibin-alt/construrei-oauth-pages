@@ -29,7 +29,7 @@
     "canonical_governance_index": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
     "previous_official_build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006",
     "reconciliation_candidate_at": "2026-10-15",
-    "reconciliation_scope": "Candidata isolada: radar do Gestor sincronizado manualmente com pendências já existentes no Banco Mestre; sem troca de release, homologação, dados operacionais ou produção."
+    "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP."
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -1401,7 +1401,7 @@
       "state": "completed",
       "owner": "Bio + CR Assertivo",
       "last_movement": "2026-10-15",
-      "next_action": "Marco histórico concluído quanto ao agendamento principal independente do notebook; incidente novo em EXEC-COFRE-COVERAGE-20261010: comprovar CAS schedule, CURRENT, risco de FULL automático e replay PG17 real. Não tomar restore amostral como E2E.",
+      "next_action": "Backup Cloud original q2tjm de 15/10 03h concluído 1/1 exit0, homologação operacional Rogério; monitorar falhas novas. Cobertura integral/CAS recorrente separada no registro existente.",
       "dependency": "Nenhuma dependência operacional do notebook",
       "source": "Cloud Run/Scheduler histórico + Banco Mestre EXEC-BACKUP-AUTO-20261006; incidente separado EXEC-COFRE-COVERAGE-20261010",
       "close_when": "Concluído: execução automática independente do notebook e restore verificável.",
@@ -1489,15 +1489,15 @@
     },
     {
       "id": "EXEC-COFRE-COVERAGE-20261010",
-      "title": "Cofre Zero — automação FULL corrigida; CAS e restauração pendentes",
+      "title": "Cofre Zero — operação homologada; recorrência CAS e recuperação integral monitoradas",
       "domain": "Infraestrutura / Recuperação",
       "priority": "P1",
       "state": "in_progress",
       "owner": "Bio + CR Assertivo",
       "last_movement": "2026-10-15",
-      "next_action": "CAS manual #38825322289 SUCCESS: 9 objetos novos / 240232762 bytes, 4544 referências verificadas, SQL 3/3 hashes e ledger readback PASS. Próximo: comprovar event=schedule 16/10 05:47 BRT; logs Cloud indisponíveis; replay integral permanece sem homologação.",
-      "dependency": "Causa schedule: PR #124 removeu workflow 14/10; restaurado ba4d8e2 em 15/10 18:58 BRT. Próxima janela 16/10 05:47 BRT. GCP bloqueado pelos navegadores; replay integral sem prova.",
-      "source": "Projeção (não mestre): public.cc_items/EXEC-COFRE-COVERAGE-20261010 • PR #133 MERGED 9245be84 • issue #53 • Actions #38822682363 CI PASS • issue #53 comentário 6204474606 • jobs API #38816987001 revalidada • CAS #38825322289 SUCCESS; manifesto SHA256 f763c74da70e716308696376cad4b08afb6176197affd816a256375406c3e09e",
+      "next_action": "Incidente operacional encerrado por Rogério: Cloud q2tjm 15/10 03h SUCCESS, FULL pontual e CAS manual SUCCESS. Monitorar primeiro CAS schedule 16/10 05:47 BRT; recuperação integral ADIADA_MONITORADA, sem nova intervenção humana atual.",
+      "dependency": "Sem bloqueio humano atual. Execução CAS agendada futura e ensaio integral não comprovados. Cobertura Trello/Netlify após remoção PR124 deve ser reconciliada sem criar novas rotinas.",
+      "source": "Projeção (não mestre): public.cc_items/EXEC-COFRE-COVERAGE-20261010 • PR #133 MERGED 9245be84 • issue #53 • Actions #38822682363 CI PASS • issue #53 comentário 6204474606 • jobs API #38816987001 revalidada • CAS #38825322289 SUCCESS; manifesto SHA256 f763c74da70e716308696376cad4b08afb6176197affd816a256375406c3e09e • Cloud q2tjm confirmado pelo titular • homologação expressa 15/10 • cc_items atualizado",
       "close_when": "CAS recorrente comprovado, backup principal finalizado e validado, custo/duplicação sob controle, recuperação isolada reproduzível, rollback testado.",
       "human_action": false,
       "provenance": "master_readonly_projection"
