@@ -77,7 +77,7 @@
       "asset": "construrei-backup / construrei-backup-diario",
       "role": "Backup recorrente oficial independente do notebook",
       "status": "attention",
-      "freshness": "actions_38816987001_success_cas_schedule_unproven"
+      "freshness": "cloud_q2tjm_20261015_success_owner_verified_cas_manual_success"
     },
     {
       "layer": "Storage operacional",
@@ -399,11 +399,11 @@
         },
         {
           "label": "Destino",
-          "value": "CURRENT, HISTORY_FULL, HISTORY_DELTAS, HISTORY_CAS (CAS com manifestos até 12/10)"
+          "value": "CURRENT, HISTORY_FULL, HISTORY_DELTAS, HISTORY_CAS (manifesto 20261015-222541 verificado via Actions)"
         },
         {
           "label": "Última conclusão diária",
-          "value": "Backup pontual GitHub #38816987001 SUCCESS; rotina diária e CAS exigem prova separada."
+          "value": "Cloud q2tjm 15/10 03h SUCCESS; CAS manual 15/10 SUCCESS; recorrência CAS monitorada."
         }
       ],
       "assets": [
@@ -420,7 +420,7 @@
         {
           "severity": "attention",
           "title": "CAS e restauração integral a comprovar",
-          "message": "CAS manual e FULL pontual SUCCESS. Recorrência CAS aguarda evento schedule após 16/10 05:47 BRT; replay integral e logs Cloud ainda sem prova."
+          "message": "Operação homologada por Rogério. Falhas Cloud 13–14 históricas; ciclo 15/10 SUCCESS. Próximo CAS schedule e recuperação integral permanecem monitorados."
         }
       ]
     }
@@ -445,18 +445,18 @@
       "schedule": "03:00 diariamente • America/Sao_Paulo",
       "installed_at": "2026-10-05 • migração cloud oficial",
       "state": "attention",
-      "last_attempt": "2026-10-15: CURRENT Cloud 06:00 UTC; GitHub run 38816987001 às 22:25 UTC iniciou recuperação histórica",
-      "last_result": "FULL pontual #38816987001 SUCCESS; CAS manual #38825322289 SUCCESS em 15/10: 9 objetos novos, 240232762 bytes; 4544 referências seed+CAS verificadas; ledger privado arquivado e relido.",
+      "last_attempt": "2026-10-15 03:00:01 BRT • Cloud Run construrei-backup-q2tjm",
+      "last_result": "Cloud original 15/10 q2tjm SUCCESS, 1/1 tarefa, exit0, retries0, evidência visual do titular. FULL GitHub #38816987001 e CAS manual #38825322289 SUCCESS.",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
-      "verification": "CAS manifesto SHA256 f763c74da70e716308696376cad4b08afb6176197affd816a256375406c3e09e; 3 SQL hash PASS, 3 amostras Storage PASS, todas 4544 referências PASS. SQL COPY 231 blocos; replay NÃO executado.",
+      "verification": "CAS manifesto SHA256 f763c74da70e716308696376cad4b08afb6176197affd816a256375406c3e09e; 3 SQL hash PASS, 3 amostras Storage PASS, todas 4544 referências PASS. SQL COPY 231 blocos; replay NÃO executado. Cloud original q2tjm confirmado por captura do titular, issue53 #6205333436.",
       "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
         "Google Drive CURRENT/HISTORY",
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Provar event=schedule após restauração do cron em 15/10 18:58 BRT (PR #124 havia removido em 14/10); próxima janela 16/10 05:47 BRT. Cloud logs bloqueados; recuperação integral ainda não homologada."
+      "action": "Operação homologada e incidente encerrado por Rogério 15/10. Sem ajuste IAM, novo FULL ou intervenção humana. Monitorar primeiro CAS schedule 16/10 05:47 BRT; recuperação integral adiada, não homologada."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
@@ -480,9 +480,9 @@
         "restore": "git bundle, SHA256 readback, clone mirror e fsck PASS"
       },
       "trello_binary": {
-        "status": "offline_restore_verified_schedule_unproven",
+        "status": "offline_restore_verified_schedule_removed",
         "run": 38246754723,
-        "scope": "13 quadros, 1721 cartões, 4055 anexos, 9873 arquivos em ZIP/SQLite com readback offline; prova manual main em 12/10, primeiro schedule domingo 18/10 pendente",
+        "scope": "13 quadros/1721 cartões/4055 anexos recuperados offline. PR124 removeu workflows em 14/10; não presumir recorrência de 18/10.",
         "restore": "GitHub Actions #38246754723 SUCCESS + Drive RESTORE_REPORT.json PASS_OFFLINE_RECOVERY, sem restaurar a conta Trello real"
       }
     }
@@ -643,13 +643,13 @@
       "priority": "P0",
       "title": "Comprovar CAS e cópia FULL econômica sem concorrência",
       "owner": "BIO + CR Assertivo",
-      "status": "open"
+      "status": "monitoring"
     },
     {
       "priority": "P0",
       "title": "Replay PostgreSQL17 isolado e recuperação Auth/Storage",
       "owner": "CR Assertivo",
-      "status": "open"
+      "status": "deferred"
     }
   ]
 }
