@@ -90,8 +90,11 @@ def previous_objects():
     try:
         values=json.loads(run("rclone","lsjson",OBJECTS,"--recursive","--files-only"))
     except subprocess.CalledProcessError:
-        # A raiz precisa estar autenticada. Uma falha geral de Drive impede o backup.
-        run("rclone","lsd","construrei-drive:")
+        # Bootstrap somente quando a pasta nunca existiu. Erros de permissão,
+        # conexão ou inventário na pasta existente DEVEM bloquear a execução.
+        parent=run("rclone","lsf","construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_CAS","--dirs-only")
+        if "TRELLO_TEXT/" in parent.splitlines():
+            raise RuntimeError("CAS Trello existente mas inacessível; execução bloqueada")
         return {}
     output={}
     for obj in values:
