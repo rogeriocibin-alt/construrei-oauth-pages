@@ -3,12 +3,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '47 8 * * *'
-  push:
-    branches:
-      - checkpoint/cofre-zero-archive-full-20261011
-      - main
-    paths:
-      - .github/workflows/cofre-zero-history-full.yml
   pull_request:
     branches: [main]
     paths:
