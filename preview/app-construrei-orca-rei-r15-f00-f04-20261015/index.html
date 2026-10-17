@@ -18,7 +18,7 @@ main{padding:12px;max-width:1600px;margin:auto}.notice{border-left:4px solid var
 .f02-layout{display:grid;grid-template-columns:minmax(270px,320px) minmax(0,1fr);gap:10px;align-items:start}
 .sidebar{border:1px solid var(--line);background:var(--pane);padding:13px;border-radius:10px;display:flex;flex-direction:column;gap:10px}
 .sidebar h2{font-size:16px;margin:0}.sidebar p{margin:0;font-size:12px;color:var(--soft);line-height:1.5}
-input,textarea{border:1px solid #60809a;background:#061f34;color:white;font:inherit;padding:10px;border-radius:7px;width:100%;min-width:0}input[type=checkbox]{width:auto;accent-color:#cfa524}
+input,textarea,select{border:1px solid #60809a;background:#061f34;color:white;font:inherit;padding:10px;border-radius:7px;width:100%;min-width:0}input[type=checkbox]{width:auto;accent-color:#cfa524}
 label{font-size:13px;display:block}label span{display:block;margin-bottom:4px}.actions{display:flex;flex-wrap:wrap;gap:8px}.actions button{white-space:normal;text-align:left;flex:1}
 #bridgeStatus{white-space:pre-wrap;border-radius:8px;background:#071e30;padding:10px;font-size:12px;line-height:1.55;min-height:54px;color:var(--soft)}
 #selectedCase{font-size:13px;font-weight:700;color:var(--ok)}
@@ -49,9 +49,12 @@ footer{padding:10px 15px;font-size:11px;color:var(--soft);text-align:center;bord
 <section id="orcaPanel" class="panel">
 <div class="f02-layout"><aside class="sidebar" aria-label="Conexão do ORÇA-REI com o F02">
 <h2>F02 • Encaixe operacional</h2><p>Digite o número do chamado que já chegou ao F02. A conexão recupera apenas o contexto necessário e preenche o ORÇA-REI aprovado, sem duplicar banco ou inteligência.</p>
-<label><span>Nº do chamado no F02</span><input type="text" id="caseNumber" placeholder="Ex.: 520-26" maxlength="45" autocomplete="off"></label>
+<label><span>Chamados disponíveis no F02</span><select id="eligibleCases" aria-label="Fila de chamados qualificados"><option value="">Consultando fila...</option></select></label>
+<div class="actions"><button type="button" id="refreshCases">Atualizar fila F02</button></div>
+<label><span>Busca opcional por número</span><input type="text" id="caseNumber" placeholder="Ex.: 520-26" maxlength="45" autocomplete="off"></label>
 <div class="actions"><button type="button" id="loadCase" class="gold">Carregar do F02</button><button type="button" id="resetCase">Desvincular</button></div>
 <div id="selectedCase" role="status">Nenhum caso vinculado</div>
+<div id="caseEvidence" role="status" aria-live="polite">Anexos: aguardando chamado qualificado.</div>
 <p>Na área à direita, use a IA, ajuste preços, fotos e gere os PDFs exatamente como na R15. Os dados ficam na tela até você optar por salvar.</p>
 <label><input type="checkbox" id="confirmReview"> Conferi quantidades, unidades, preços, margem, descrição técnica e documentos; autorizo salvar somente o rascunho no F02.</label>
 <label><input type="checkbox" id="confirmReplace"> Autorizo substituir um rascunho anterior deste mesmo chamado, se houver.</label>
