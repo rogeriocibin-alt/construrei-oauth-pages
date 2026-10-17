@@ -1,0 +1,77 @@
+name: Cofre Zero | Ciclo semanal unico (candidata)
+# RESTAURADO no caminho OIDC Trello original; jamais criar bridge, segredo ou credencial.
+# AINDA NAO ATIVAR EM MAIN ate o Cloud Scheduler produtor estar comprovadamente semanal.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '47 8 * * 0' # Domingo 05:47 BRT, sujeito a atraso do GitHub
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/cofre-zero-trello-offsite.yml
+      - .github/workflows/cofre-zero-history-full.yml
+      - .github/scripts/cr_trello_incremental.py
+      - .github/scripts/cr_ecosystem_contract_audit.py
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: cofre-zero-trello-offsite
+  cancel-in-progress: false
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Teste offline de unicidade e incremento, sem clientes
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/cr_trello_incremental.py .github/scripts/cofre_trello_readonly.py .github/scripts/cofre_trello_bootstrap.py
+          python3 .github/scripts/cr_trello_incremental.py --selftest
+
+  trello_text:
+    name: Trello financeiro/obras, conteudo incremental (sem anexos binarios)
+    needs: contract
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Reutilizar a configuracao existente do Cofre Zero
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64" || { echo "::error::Drive nao autorizado"; exit 2; }
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone lsd construrei-drive: >/dev/null
+      - name: Copiar so blocos novos/alterados e confirmar integridade no mesmo arquivo CAS
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/cr_trello_incremental.py
+      - name: Relatorio sem dados financeiros ou credenciais
+        if: always()
+        run: |
+          echo "## Cofre Zero semanal | Trello incremental" >> "$GITHUB_STEP_SUMMARY"
+          echo "Resultado: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Origem: Trello read-only via OIDC existente; sem anexos binarios." >> "$GITHUB_STEP_SUMMARY"
+          echo "Destino: CONSTRUREI-BACKUP-AUTO/HISTORY_CAS/TRELLO_TEXT." >> "$GITHUB_STEP_SUMMARY"
+          echo "Nenhuma escrita na producao e nenhuma exclusao dos FULL anteriores." >> "$GITHUB_STEP_SUMMARY"
+
+  supabase_cas:
+    name: Supabase e Storage no MESMO ciclo semanal
+    needs: contract
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/cofre-zero-history-full.yml
+    secrets: inherit
