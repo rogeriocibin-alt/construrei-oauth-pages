@@ -31,9 +31,10 @@ MIN_ALIASES = 39
 # Identity/function contracts replace the obsolete pre-V2 total workflow count.
 CRITICAL_BACKUP_WORKFLOWS = {
     "construrei-cloud-backup.yml": "canonical",
-    "cofre-zero-history-full.yml": "daily_archive",
+    "cofre-zero-history-full.yml": "weekly_cas_reusable",
+    "cofre-zero-trello-offsite.yml": "one_weekly_orchestrator",
 }
-ARCHIVE_UTC_CRON = "47 8 * * *"
+ARCHIVE_UTC_CRON = "47 8 * * 0"
 
 
 def load(path):
@@ -252,14 +253,25 @@ def main():
     if history.is_file():
         text = history.read_text(encoding="utf-8")
         scheduled = re.findall(r'^\s*-\s*cron:\s*["\x27]?([^"\x27\n#]+)', text, re.MULTILINE)
-        if ARCHIVE_UTC_CRON not in [x.strip() for x in scheduled]:
-            errors.append("Cofre Zero history schedule changed: expected 05:47 America/Sao_Paulo")
+        if scheduled or "  workflow_call:" not in text:
+            errors.append("Cofre CAS must be reusable only: no second scheduled backup")
         if "cofre-zero-history-full" not in text or "cancel-in-progress: false" not in text:
             errors.append("Cofre Zero history concurrency contract changed")
         if "cr_history_cas_append.py" not in text or "cr_sql_restore_preflight.py" not in text:
             errors.append("Cofre Zero history lost CAS or SQL restore preflight")
         if "exit 21" not in text:
             errors.append("Cofre Zero history lost fail-closed Drive marker access check")
+    # Exactly one configured Sunday event, on original authorized Trello OIDC path.
+    unified = WORKFLOWS / "cofre-zero-trello-offsite.yml"
+    if unified.is_file():
+        candidate = unified.read_text(encoding="utf-8")
+        configured = re.findall(r'^\s*-\s*cron:\s*["\x27]?([^"\x27\n#]+)', candidate, re.MULTILINE)
+        if [x.strip() for x in configured] != [ARCHIVE_UTC_CRON]:
+            errors.append("Unified Cofre Zero must have exactly one weekly Sunday cron")
+        if "cofre-zero-trello-offsite" not in candidate or "cr_trello_incremental.py" not in candidate:
+            errors.append("Previously authorized Trello OIDC path / incremental coverage lost")
+        if "uses: ./.github/workflows/cofre-zero-history-full.yml" not in candidate:
+            errors.append("Unified weekly Cofre Zero no longer invokes canonical Supabase CAS")
     workflows = []
     crons = collections.defaultdict(list)
     for file in workflow_files:

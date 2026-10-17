@@ -1,14 +1,7 @@
-name: Cofre Zero | Immutable daily full archive
+name: Cofre Zero | Reusable immutable CAS archive
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '47 8 * * *'
-  push:
-    branches:
-      - checkpoint/cofre-zero-archive-full-20261011
-      - main
-    paths:
-      - .github/workflows/cofre-zero-history-full.yml
+  workflow_call:
   pull_request:
     branches: [main]
     paths:
@@ -198,7 +191,7 @@ jobs:
           print("PASS: all historical references independently restored by seed+CAS")
           print("Verified references:",m["verified_entries"])
           PY
-      - name: Archive migration ledger in the existing daily cycle (private deduplicated CAS)
+      - name: Archive migration ledger in the existing unified weekly cycle (private deduplicated CAS)
         if: github.ref == 'refs/heads/main'
         shell: bash
         env:
@@ -219,7 +212,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Cofre Zero - immutable CAS daily archive"
+            echo "## Cofre Zero - immutable CAS reusable CAS archive"
             echo "- Result: ${{ job.status }}"
             echo "- Run ID: ${{ steps.snapshot.outputs.run_id }}"
             echo "- Database SQL: ${{ steps.snapshot.outputs.database }} / 3"
@@ -262,7 +255,7 @@ jobs:
           chmod 600 "$HOME/.config/rclone/rclone.conf"
           rclone lsd construrei-drive: >/dev/null
           rclone lsd construrei-s3: >/dev/null
-      - name: Bounded same-day CAS delta, never touch CURRENT
+      - name: Bounded recovery-point CAS delta, never touch CURRENT
         id: incremental
         shell: bash
         run: |
