@@ -96,7 +96,7 @@ def previous_objects():
     output={}
     for obj in values:
         name=obj.get("Path","")
-        if not re.fullmatch("[a-f0-9]{64}.json.gz",name):
+        if not re.fullmatch(r"[a-f0-9]{64}\.json\.gz",name):
             raise RuntimeError("Objeto estranho no histórico imutável Trello")
         output[name]=obj["Size"]
     return output
@@ -146,11 +146,11 @@ def write_delta(parts,board_count,counts,dry_run):
 
 def selftest():
     def entity(i,**fields):return {"id":f"{i:024x}",**fields}
-    data=[{"board":entity(j+1),"cards":[entity(j+100,desc="custo 100")],
+    data=[{"board":entity(j+1),"cards":[entity(j*2000+100+k,desc="custo 100") for k in range(116)],
            "lists":[entity(j+300)],"labels":[],"custom_fields":[],
            "actions":[entity(j+500,date="2026-10-17T10:00:00Z")]} for j in range(13)]
     p,n,c=materialize(data)
-    assert n==13 and c["card"]==13
+    assert n==13 and c["card"]==1508
     assert p==materialize(data)[0]
     data[0]["cards"][0]["desc"]="custo 200"
     q=materialize(data)[0]
