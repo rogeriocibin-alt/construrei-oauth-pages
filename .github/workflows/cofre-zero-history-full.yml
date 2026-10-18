@@ -1,8 +1,15 @@
-name: Cofre Zero | Immutable daily full archive
+name: Cofre Zero | Smart immutable CAS archive
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '47 8 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/**'
+      - 'production/**'
+      - 'central-runtime/**'
+      - 'gestor-projeto/**'
+      - '.github/scripts/**'
+      - '!**/*.md'
   pull_request:
     branches: [main]
     paths:
@@ -30,7 +37,7 @@ jobs:
           python3 .github/scripts/cr_cofre_direct_cas_fallback.py --selftest
 
   detect:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
@@ -38,7 +45,7 @@ jobs:
     env:
       RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
     steps:
-      - name: Determine if original 06:00 UTC backup is fresh
+      - name: Determine if existing primary snapshot can be archived
         id: marker
         shell: bash
         run: |
@@ -64,11 +71,12 @@ jobs:
           assert "DATABASE_FILES: 3\n" in txt
           ident=re.search(r"^RUN_ID: (\d{8}-\d{6})$",txt,re.M)
           assert ident,"Untrusted CURRENT"
-          day=datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
-          fresh=ident.group(1).startswith(day)
+          # Change-driven policy: a trusted primary snapshot is enough. Do not
+          # require a new snapshot merely because the calendar day changed.
+          trusted=bool(ident)
           with open(os.environ["GITHUB_OUTPUT"],"a") as out:
-              out.write("primary="+("true" if fresh else "false")+"\n")
-          print("PRIMARY_STATUS="+("FRESH" if fresh else "STALE"))
+              out.write("primary="+("true" if trusted else "false")+"\n")
+          print("PRIMARY_STATUS="+("TRUSTED" if trusted else "UNTRUSTED"))
           PY
 
   archive:
@@ -117,7 +125,7 @@ jobs:
           assert r["source_files"]>=4531 and r["drive_free_bytes"]>1073741824
           print("PASS: today's Cloud Run backup and bounded immutable CAS preflight")
           PY
-      - name: Commit immutable daily CAS delta and verify recovery samples
+      - name: Commit immutable change-driven CAS delta and verify recovery samples
         id: snapshot
         shell: bash
         run: |
@@ -192,7 +200,7 @@ jobs:
           print("PASS: all historical references independently restored by seed+CAS")
           print("Verified references:",m["verified_entries"])
           PY
-      - name: Archive migration ledger in the existing daily cycle (private deduplicated CAS)
+      - name: Archive migration ledger in the existing change-driven cycle (private deduplicated CAS)
         if: github.ref == 'refs/heads/main'
         shell: bash
         env:
@@ -207,13 +215,13 @@ jobs:
           echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] https://apt.postgresql.org/pub/repos/apt jammy-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
           sudo apt-get update -qq
           sudo apt-get install -y -qq postgresql-client-17 >/dev/null
-          python3 .github/scripts/cr_migration_ledger_daily.py --run-id "${{ steps.snapshot.outputs.run_id }}"
+          python3 .github/scripts/cr_migration_ledger_change-driven.py --run-id "${{ steps.snapshot.outputs.run_id }}"
       - name: Publish audit result
         if: always()
         shell: bash
         run: |
           {
-            echo "## Cofre Zero - immutable CAS daily archive"
+            echo "## Cofre Zero - immutable CAS change-driven archive"
             echo "- Result: ${{ job.status }}"
             echo "- Run ID: ${{ steps.snapshot.outputs.run_id }}"
             echo "- Database SQL: ${{ steps.snapshot.outputs.database }} / 3"
