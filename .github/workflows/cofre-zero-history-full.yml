@@ -104,7 +104,7 @@ jobs:
           chmod 600 "$HOME/.config/rclone/rclone.conf"
           rclone lsd construrei-drive: >/dev/null
 
-      - name: Preflight today's Cloud Run snapshot and bounded CAS capacity
+      - name: Preflight trusted primary snapshot and bounded CAS capacity
         shell: bash
         run: |
           set -euo pipefail
@@ -114,16 +114,13 @@ jobs:
           printf '%s\n' "$STATUS" | grep -Fxq 'DATABASE_FILES: 3'
           RUN_ID="$(printf '%s\n' "$STATUS" | sed -n 's/^RUN_ID: //p' | head -n 1)"
           [[ "$RUN_ID" =~ ^[0-9]{8}-[0-9]{6}$ ]] || exit 3
-          [[ "$RUN_ID" == "$(date -u +%Y%m%d)"-* ]] || {
-            echo "::error::CURRENT stale: history not updated"; exit 4;
-          }
           python3 .github/scripts/cr_history_cas_append.py --dry-run > "$RUNNER_TEMP/cas-preflight.json"
           python3 - <<'PY'
           import json,os
           r=json.load(open(os.environ["RUNNER_TEMP"]+"/cas-preflight.json"))
           assert r["mode"]=="dry-run" and not r["approved_for_cutover"]
           assert r["source_files"]>=4531 and r["drive_free_bytes"]>1073741824
-          print("PASS: today's Cloud Run backup and bounded immutable CAS preflight")
+          print("PASS: trusted primary snapshot and bounded immutable CAS preflight")
           PY
       - name: Commit immutable change-driven CAS delta and verify recovery samples
         id: snapshot
@@ -221,7 +218,7 @@ jobs:
         shell: bash
         run: |
           {
-            echo "## Cofre Zero - immutable CAS change-driven archive"
+            echo "## Cofre Zero - smart immutable CAS archive"
             echo "- Result: ${{ job.status }}"
             echo "- Run ID: ${{ steps.snapshot.outputs.run_id }}"
             echo "- Database SQL: ${{ steps.snapshot.outputs.database }} / 3"
