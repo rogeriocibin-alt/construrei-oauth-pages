@@ -197,7 +197,7 @@ jobs:
           print("PASS: all historical references independently restored by seed+CAS")
           print("Verified references:",m["verified_entries"])
           PY
-      - name: Archive migration ledger in the existing change-driven cycle (private deduplicated CAS)
+      - name: Archive migration ledger using the existing validated ledger script (private deduplicated CAS)
         if: github.ref == 'refs/heads/main'
         shell: bash
         env:
@@ -212,7 +212,7 @@ jobs:
           echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.gpg] https://apt.postgresql.org/pub/repos/apt jammy-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list >/dev/null
           sudo apt-get update -qq
           sudo apt-get install -y -qq postgresql-client-17 >/dev/null
-          python3 .github/scripts/cr_migration_ledger_change-driven.py --run-id "${{ steps.snapshot.outputs.run_id }}"
+          python3 .github/scripts/cr_migration_ledger_daily.py --run-id "${{ steps.snapshot.outputs.run_id }}"
       - name: Publish audit result
         if: always()
         shell: bash
