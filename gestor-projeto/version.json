@@ -1,11 +1,11 @@
 {
   "app": "Gestor do Projeto CONSTRU-REI",
-  "version": "1.2.5.2",
-  "build": "CR-PM-V1.2.5.2-COFRE-AUDIT-20261010",
-  "environment": "canonical",
-  "release_status": "official_homologated",
-  "base_official": "CR-PM-V1.2.4-CANONICAL-GOVERNANCE-20261007",
-  "checkpoint_before": "CHECKPOINT_PROJECT_FRONTS_PRIORITY_20261006",
+  "version": "1.2.5.3",
+  "build": "CR-PM-V1.2.5.3-RELEASE-IDENTITY-20261012",
+  "environment": "homologation",
+  "release_status": "candidate_pending_owner_homologation",
+  "base_official": "CR-PM-V1.2.5.2-COFRE-AUDIT-20261010",
+  "checkpoint_before": "CHECKPOINT_GESTOR_RELEASE_BUILD_20261012",
   "changes": [
     "Backup / Cofre Zero adicionado à faixa principal de ações do Cockpit, no padrão visual existente.",
     "Status do acesso deriva da fonte de continuidade do próprio Gestor.",
@@ -14,30 +14,38 @@
     "Backup automático diário às 03:00 permanece inalterado.",
     "Correção somente dos indicadores da Infraestrutura / Cofre Zero com prova Drive 10/10, sem alteração do executor Cloud Run, Cloud Scheduler, lógica financeira ou APP.",
     "Alertas legados de Docker retirados; cobertura externa GitHub/Netlify/Edge permanece parcial, documentada no Gestor.",
-    "Revisão final dos riscos e contadores estáticos; avisos históricos de segurança permanecem auditáveis, sem serem apresentados como métricas atuais."
+    "Revisão final dos riscos e contadores estáticos; avisos históricos de segurança permanecem auditáveis, sem serem apresentados como métricas atuais.",
+    "CANDIDATA: versão única no HTML, app.js, SW e manifesto; remove chip legado V1.2.4; nenhum fluxo financeiro/operacional alterado."
   ],
   "gate": {
     "security": "PASS_NO_PUBLIC_WRITE",
     "cloud_backup_evidence": "DRIVE_PACKAGE_PRESENT_20261010",
     "restore_drill": "PASS_20261005",
-    "owner_publication_authorization": "APPROVED_20261007",
-    "source_coverage": "PARTIAL_GITHUB_NETLIFY_EDGE"
+    "owner_publication_authorization": "PENDING_V1_2_5_3",
+    "source_coverage": "PARTIAL_GITHUB_NETLIFY_EDGE",
+    "release_identity_static": "CI_PENDING"
   },
-  "released_at": "2026-10-07",
-  "branch": "main",
-  "canonical_changed": true,
-  "update_policy": "same_url_governance_only",
-  "rollback": "checkpoint/gestor-v1-2-4-canonical-governance-official-20261007",
+  "branch": "candidate/gestor-release-identity-v1-2-5-3-20261012",
+  "canonical_changed": false,
+  "update_policy": "candidate_only_no_production_promotion",
+  "rollback": "main@96ad3a41d44906c78612b29e5d15b020c01e19ff",
   "canonical_checkpoint": "CHECKPOINT_GESTOR_V1_2_5_COFRE_ZERO_SAFE_20261007",
   "owner_homologation": {
-    "status": "OWNER_APPROVED_FOR_PUBLICATION",
-    "source": "explicit_owner_instruction_in_voice_chat",
-    "note": "Rogério autorizou publicação direta em 07/10/2026 após validação de segurança."
+    "status": "PENDING_MOBILE_NOTEBOOK",
+    "source": "not_yet_tested",
+    "note": "Nao homologado. Exige verificação visual e de cache PWA no celular e notebook, CI e rollback antes do merge."
   },
   "promotion": {
+    "state": "NOT_PROMOTED",
+    "pr": null,
+    "merge_sha": null
+  },
+  "patch_note": "CANDIDATA ISOLADA: bug de aviso/versao do Gestor. Backup/financeiro/UI homologado permanece na main; sem publico novo.",
+  "last_official_released_at": "2026-10-07",
+  "previous_official_promotion": {
     "pr": 42,
     "merge_sha": "e44d82810cd56d03247df9e7e1008ae3d61ce0c2",
     "state": "MERGED_TO_MAIN"
   },
-  "patch_note": "Atualização documental/indicadores; rollback checkpoint/cofre-zero-pre-infra-refresh-20261010; exigir checagem visual pós-publicação."
+  "candidate_at": "2026-10-12"
 }
