@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Immutable, deduplicated migration ledger in the EXISTING daily Cofre cycle.
+"""Immutable, deduplicated migration ledger in the EXISTING change-driven Cofre cycle.
 
 Read-only PostgreSQL 17 export. Private Drive CAS objects and run manifests,
 no new workflow/cron, no migrations applied, no deletes and no PII in logs.
