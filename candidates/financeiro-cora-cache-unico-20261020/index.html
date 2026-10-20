@@ -57,13 +57,13 @@ th{font-size:11px;color:var(--muted);background:white;position:sticky;top:0}td{f
   <div><small>VARIAÇÃO LÍQUIDA</small><div class="todayValue" id="dailyNet">—</div></div>
  </div><p class="muted"><small id="dailyStatus">Base armazenada da Cora; movimentações em atualização. Não corresponde a lucro.</small></p>
  </section>
+ <section id="cora-pro-module" class="panel"><h2>Minhas Finanças Cora Pro</h2><p>Carregando módulos financeiros...</p></section>
  <div class="panel"><h2>Comparativo financeiro · 2023 a 2026</h2><div class="barLegend"><span><span class="dot in"></span>Entradas bancárias</span><span><span class="dot out"></span>Saídas bancárias</span></div><div class="chart-years" id="yearsChart"></div><p class="muted"><small>Os gráficos distinguem dados completos de períodos parciais. A base da Cora Pro não fornece aqui uma classificação garantida de faturamento por competência.</small></p></div>
  <div class="toolbar"><label>Ano <select id="year"><option>2026</option><option>2025</option><option>2024</option><option>2023</option></select></label><label>Mês <select id="month"></select></label><button id="showmonth" type="button">Abrir extrato do mês</button><span class="pill" id="monthstatus">—</span></div>
  <div class="two">
   <section class="panel"><h2>Entradas e saídas por mês</h2><div class="barLegend"><span><span class="dot in"></span>Entradas</span><span><span class="dot out"></span>Saídas</span></div><div id="monthChart"></div></section>
   <section class="panel"><h2>Cobertura histórica e importação</h2><div id="yearStatus"></div><p class="muted"><small>O histórico de 2023 a 2026 é importado em lotes e armazenado. O navegador apenas consulta o banco. Os períodos não concluídos ficam claramente identificados.</small></p><h3>Conferência bancária</h3><div id="audit"></div></section>
  </div>
- <section id="cora-pro-module" class="panel"><h2>Minhas Finanças Cora Pro</h2><p>Carregando módulos financeiros...</p></section>
  <section class="panel"><h2>Extrato real armazenado</h2><div class="toolbar"><input id="search" placeholder="Localizar descrição" aria-label="Localizar lançamento"><select id="type"><option value="all">Todos</option><option value="credit">Entradas</option><option value="debit">Saídas</option></select><span class="muted" id="statementInfo">Escolha um mês</span></div><div class="table-scroll"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead><tbody id="rows"></tbody></table></div></section>
  
 </div><div id="feedback" role="status" aria-live="polite">Aguardando autenticação.</div></main>
