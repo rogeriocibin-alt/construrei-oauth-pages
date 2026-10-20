@@ -21,10 +21,11 @@ root.innerHTML='<div class="crv2-heading"><h2>Gestão Cora Pro V2 · Central Ana
 '<div id="crv2-pie"><div id="crv2-pie-inner"><strong id="crv2-pieTotal">—</strong><small>no período</small></div></div><div id="crv2-cats"></div></div></div>'+
 '<div class="crv2-actions"><button type="button" id="crv2-export">Exportar resumo CSV</button><button type="button" id="crv2-rerun">Atualizar consulta</button></div>'+
 '<div class="crv2-status" id="crv2-status" role="status" aria-live="polite">Aguardando acesso à Diretoria.</div>'+
+'<div class="crv2-actions"><button type="button" id="crv2-connectors">Consultar Trello e Gestão Click (ao vivo)</button></div>'+ 
 '<h3 style="margin:12px 0 7px">Conciliação de fontes · sem duplicações</h3><div class="crv2-sources">'+
 '<div class="crv2-source"><strong>Cora · fonte bancária</strong><small id="crv2-coraSource">Aguardando confirmação de cobertura e divergências.</small></div>'+
-'<div class="crv2-source"><strong>Trello · gestão das obras</strong><small>Obras, custos, repasses e recebimentos por card. É uma fonte operacional, não deve ser somada ao extrato como novo dinheiro.</small></div>'+
-'<div class="crv2-source"><strong>Gestão Click · comercial</strong><small>Orçamentos, propostas e cobranças. Não representa automaticamente receita recebida nem substitui a conciliação bancária.</small></div></div>'+
+'<div class="crv2-source"><strong>Trello · gestão das obras</strong><small id="crv2-trelloSource">Obras, custos, repasses e recebimentos por card. É uma fonte operacional, não deve ser somada ao extrato como novo dinheiro.</small></div>'+
+'<div class="crv2-source"><strong>Gestão Click · comercial</strong><small id="crv2-clickSource">Orçamentos, propostas e cobranças. Não representa automaticamente receita recebida nem substitui a conciliação bancária.</small></div></div>'+
 '<p class="crv2-alert">Integração de fontes: a leitura bancária da Cora está ativa. A conciliação automática linha a linha entre Cora, Trello e Gestão Click requer chaves comuns (obra, comprovante, valor/data), validação de vinculações e conectores ativos. Os dados não são artificialmente fundidos.</p>';
 original.parentNode.insertBefore(root,original);
 const $=id=>document.getElementById(id),money=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((Number(n)||0)/100);
@@ -98,6 +99,35 @@ $("crv2-status").textContent="Extrato Cora · "+v.a+" até "+v.b+" · "+grain+" 
 if($("crv2-class").value==="estimated")loadEstimated();
 }catch(err){$("crv2-status").textContent="Consulta não concluída: "+err.message}
 finally{button.disabled=false}}
+
+$("crv2-connectors").addEventListener("click",async()=>{
+ if(!active){$("crv2-status").textContent="Entre na sessão protegida antes de consultar as fontes.";return}
+ const btn=$("crv2-connectors");btn.disabled=true;
+ $("crv2-trelloSource").textContent="Consultando as três bases de obras...";
+ $("crv2-clickSource").textContent="Consultando orçamentos no Gestão Click...";
+ try{
+  const d=await query("sources","",55000),years=d.trello?.years||{};
+  const all=Object.values(years),cases=all.reduce((s,v)=>s+(Number(v.operational_cases)||0),0),
+  dup=all.reduce((s,v)=>s+(Number(v.duplicate_case_numbers)||0),0);
+  $("crv2-trelloSource").textContent="Leitura direta: "+Object.keys(years).join(", ")+
+    " · "+cases+" registros operacionais distintos por número de obra · "+
+    dup+" casos de numeração duplicada identificados. Consulta: "+(d.trello?.read_at?new Date(d.trello.read_at).toLocaleString("pt-BR"):"agora")+
+    ". Sem movimentação bancária duplicada.";
+  const gc=d.gestaoclick||{};
+  $("crv2-clickSource").textContent=gc.ok?
+    "Conexão de consulta operacional ativa. "+(gc.quotes_sampled??"Quantidade não informada")+
+    " orçamentos analisados na amostra. Última leitura: "+(gc.read_at?new Date(gc.read_at).toLocaleString("pt-BR"):"agora")+
+    ". Não são recebimentos bancários.":
+    "Sem leitura confirmada do Gestão Click. Código HTTP: "+(gc.http_status||"não informado")+
+    ". Não considerar esta fonte sincronizada.";
+  $("crv2-status").textContent="Situação operacional consultada. Vinculação individual de lançamentos Cora ↔ obra Trello ↔ orçamento Click continua exigindo referência verificável, não cruzamento por valor isoladamente.";
+ }catch(err){
+   $("crv2-trelloSource").textContent="Consulta externa não confirmada: "+err.message;
+   $("crv2-clickSource").textContent="Sem sincronização confirmada nesta tentativa.";
+   $("crv2-status").textContent="Fontes complementares temporariamente indisponíveis. Gráficos bancários preservados.";
+ }finally{btn.disabled=false}
+});
+
 $("crv2-export").addEventListener("click",()=>{if(!current)return;
 const rows=[["Periodo","Entradas_R$","Saidas_R$","Variacao_R$","Qtd"]];
 for(const r of current.timeline||[]){const c=Number(r.credits)||0,d=Number(r.debits)||0;rows.push([r.label,(c/100).toFixed(2),(d/100).toFixed(2),((c-d)/100).toFixed(2),Number(r.count)||0])}
