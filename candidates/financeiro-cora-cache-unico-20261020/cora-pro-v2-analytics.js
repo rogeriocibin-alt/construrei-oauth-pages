@@ -178,4 +178,14 @@ function gate(){if(auth()&&!active){active=true;run()}else if(!auth())active=fal
 new MutationObserver(gate).observe(app,{attributes:true,attributeFilter:["hidden"]});
 $("refresh")?.addEventListener("click",()=>{if(active)run()});
 gate();
+setInterval(()=>{
+ if(!active||document.hidden)return;
+ const period=$("crv2-preset").value;
+ const currentNow=today(),from=$("crv2-from").value,to=$("crv2-to").value;
+ if(to!==currentNow && period!=="all" && period!=="year"+currentNow.slice(0,4))return;
+ run();
+},120000);
+document.addEventListener("visibilitychange",()=>{
+ if(!document.hidden&&active)run();
+});
 })();
