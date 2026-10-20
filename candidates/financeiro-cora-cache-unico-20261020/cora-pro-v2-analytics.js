@@ -27,6 +27,7 @@ root.innerHTML='<div class="crv2-heading"><h2>Gestão Cora Pro V2 · Central Ana
 '<div class="crv2-source"><strong>Trello · gestão das obras</strong><small id="crv2-trelloSource">Obras, custos, repasses e recebimentos por card. É uma fonte operacional, não deve ser somada ao extrato como novo dinheiro.</small></div>'+
 '<div class="crv2-source"><strong>Gestão Click · comercial</strong><small id="crv2-clickSource">Orçamentos, propostas e cobranças. Não representa automaticamente receita recebida nem substitui a conciliação bancária.</small></div></div>'+
 '<div class="crv2-actions" style="margin-top:16px"><label>Conferir obra específica <input id="crv2-case" placeholder="Ex.: 645-26" maxlength="8" pattern="[0-9]{1,5}-(24|25|26)"></label><button type="button" id="crv2-case-search">Cruzar Cora × Trello × Click</button></div><div class="crv2-status" id="crv2-case-result">Informe o número da obra para identificar movimentos bancários que mencionam explicitamente essa obra. Nenhuma baixa será automática.</div>'+
+'<div id="crv2-op-years" class="crv2-status">Indicadores de obras e propostas aparecem após consulta às fontes complementares.</div>'+ 
 '<p class="crv2-alert">Integração de fontes: a leitura bancária da Cora está ativa. A conciliação automática linha a linha entre Cora, Trello e Gestão Click requer chaves comuns (obra, comprovante, valor/data), validação de vinculações e conectores ativos. Os dados não são artificialmente fundidos.</p>';
 original.parentNode.insertBefore(root,original);
 const $=id=>document.getElementById(id),money=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((Number(n)||0)/100);
@@ -133,6 +134,24 @@ $("crv2-connectors").addEventListener("click",async()=>{
     " · "+cases+" registros operacionais distintos por número de obra · "+
     dup+" casos de numeração duplicada identificados. Consulta: "+(d.trello?.read_at?new Date(d.trello.read_at).toLocaleString("pt-BR"):"agora")+
     ". Sem movimentação bancária duplicada.";
+
+  const operational=$("crv2-op-years");
+  operational.replaceChildren();
+  const heading=document.createElement("h3");heading.textContent="Trello · resultado gerencial anual (separado do banco)";operational.append(heading);
+  const table=document.createElement("table");table.style.minWidth="580px";
+  const head=document.createElement("tr");
+  for(const label of ["Ano","Obras","Fechado","Custos","Lucro","Margem"]){const th=document.createElement("th");th.textContent=label;head.append(th)}
+  table.append(head);
+  for(const year of ["2024","2025","2026"]){const x=years[year],m=x?.metrics||{};
+   const tr=document.createElement("tr");const cols=[year,m.cases_total??x?.operational_cases??"—",
+    m.gross_cents==null?"—":money(m.gross_cents),m.cost_cents==null?"—":money(m.cost_cents),
+    m.profit_cents==null?"—":money(m.profit_cents),
+    m.margin_pct==null?"—":Number(m.margin_pct).toFixed(2)+"%"];
+   for(const val of cols){const td=document.createElement("td");td.textContent=String(val);tr.append(td)}
+   table.append(tr);
+  }
+  const wrap=document.createElement("div");wrap.style.overflowX="auto";wrap.append(table);operational.append(wrap);
+  const warning=document.createElement("p");warning.textContent="Fonte: Trello, totalização conforme cards e sumários canônicos; receitas por competência/obra não são entradas financeiras adicionais à Cora.";operational.append(warning);
   const gc=d.gestaoclick||{};
   $("crv2-clickSource").textContent=gc.ok?
     "Conexão de consulta operacional ativa. "+(gc.quotes_sampled??"Quantidade não informada")+
