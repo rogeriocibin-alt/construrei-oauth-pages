@@ -67,16 +67,21 @@ function create(tag,cls,text){const el=document.createElement(tag);if(cls)el.cla
 function dates(y,m){const start=new Date(Date.UTC(y,m-1,1)),end=new Date(Math.min(Date.UTC(y,m,0),Date.now()));return [start.toISOString().slice(0,10),end.toISOString().slice(0,10)]}
 async function get(api){const r=await fetch(ROOT+"cr-cora-cache-gateway-20261020"+api,{headers:{"x-cr-session":sessionStorage.getItem(AUTH)||""},cache:"no-store",signal:AbortSignal.timeout(22000)});const d=await r.json();if(r.status===401){sessionStorage.removeItem(AUTH);E("app").hidden=true;E("login").hidden=false}if(!r.ok||!d.ok)throw Error(d.error||"HTTP "+r.status);return d}
 function value(m,k){const raw=Number(m[k]);return m[k]===null||m[k]===undefined||!Number.isFinite(raw)?null:raw}
-function assessment(m){if(!m)return {ready:false,inc:0,out:0,reconciled:false};const inc=value(m,"observed_credit_centavos")||0,out=value(m,"observed_debit_centavos")||0;
- const officialIn=value(m,"credit_centavos"),officialOut=value(m,"debit_centavos");const official=officialIn!==null&&officialOut!==null;
- const reconciled=!official||(inc===officialIn&&out===officialOut);
- return {ready:m.status==="complete"&&reconciled,inc:official&&reconciled?officialIn:inc,out:official&&reconciled?officialOut:out,reconciled,official}}
+function assessment(m){if(!m)return {ready:false,inc:0,out:0,reconciled:false};
+ const observedIn=value(m,"observed_credit_centavos")||0,observedOut=value(m,"observed_debit_centavos")||0;
+ const officialIn=value(m,"credit_centavos"),officialOut=value(m,"debit_centavos");
+ const official=m.source==="CORA_VALIDATED_AGGREGATIONS"&&officialIn!==null&&officialOut!==null;
+ const otherSummary=officialIn!==null&&officialOut!==null&&!official;
+ const reconciled=!official||m.status!=="complete"||(observedIn===officialIn&&observedOut===officialOut);
+ const ready=(official&&reconciled)||(m.status==="complete"&&!otherSummary);
+ return {ready,inc:official&&reconciled?officialIn:observedIn,out:official&&reconciled?officialOut:observedOut,reconciled,official};
+}
 function render(){const y=Number(E("year").value);const months=data.filter(m=>m.period_start?.startsWith(String(y)));const expected=y===new Date().getUTCFullYear()?new Date().getUTCMonth()+1:12;
 const complete=months.filter(m=>assessment(m).ready).length;const sumIn=months.reduce((a,m)=>a+assessment(m).inc,0),sumOut=months.reduce((a,m)=>a+assessment(m).out,0),valid=complete===expected;
 E("credit").textContent=valid?BRL(sumIn):"—";E("debit").textContent=valid?BRL(sumOut):"—";E("net").textContent=valid?BRL(sumIn-sumOut):"—";
-E("creditNote").textContent=E("debitNote").textContent=valid?"Ano completo / verificado":complete+"/"+expected+" meses completos · valores parciais bloqueados";
+E("creditNote").textContent=E("debitNote").textContent=valid?"Totais de créditos e débitos confirmados (não faturamento fiscal)":complete+"/"+expected+" meses completos · valores parciais bloqueados";
 E("netNote").textContent=valid?"Entradas menos saídas · não é lucro":"Aguardando histórico completo";
-E("yearStatus").textContent="Ano "+y+": "+complete+" de "+expected+" meses conferidos";
+E("yearStatus").textContent="Ano "+y+": "+complete+" de "+expected+" meses com totais confirmados";
 const max=Math.max(1,...[2023,2024,2025,2026].flatMap(yr=>{const mm=data.filter(m=>m.period_start.startsWith(String(yr)));return[mm.reduce((a,m)=>a+assessment(m).inc,0),mm.reduce((a,m)=>a+assessment(m).out,0)]}));
 E("yearsChart").replaceChildren();for(const yr of [2023,2024,2025,2026]){const mm=data.filter(m=>m.period_start.startsWith(String(yr))),needed=yr===2026?10:12;const ok=mm.filter(m=>assessment(m).ready).length;const incoming=mm.reduce((a,m)=>a+assessment(m).inc,0),outgoing=mm.reduce((a,m)=>a+assessment(m).out,0),full=ok===needed;
 const cell=create("div","ycell"),pair=create("div","ypair");for(const [v,cls] of [[incoming,"in"],[outgoing,"out"]]){const bar=create("div","ybar "+cls);bar.style.height=pct(v,max)+"%";bar.style.opacity=full?"1":".42";bar.title=BRL(v)+(full?" · conferido":" · parcial");pair.append(bar)}
