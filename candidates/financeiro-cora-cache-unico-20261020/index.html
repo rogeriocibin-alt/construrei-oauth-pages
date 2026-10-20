@@ -128,4 +128,4 @@ E("login").onsubmit=async ev=>{ev.preventDefault();const p=E("pass").value;E("pa
 E("refresh").onclick=async()=>{await reload();await loadDetail()};E("logout").onclick=()=>{sessionStorage.removeItem(AUTH);E("app").hidden=true;E("login").hidden=false;msg("Sessão encerrada.")};E("year").onchange=async()=>{render();await loadDetail()};E("month").onchange=async()=>{render();await loadDetail()};E("showmonth").onclick=loadDetail;E("search").oninput=displayRows;E("type").onchange=displayRows;
 if(sessionStorage.getItem(AUTH)){E("login").hidden=true;E("app").hidden=false;reload().then(loadDetail)}
 setInterval(()=>{if(sessionStorage.getItem(AUTH)&&!document.hidden)reload()},180000);
-</script><script src="./cora-pro.js?v=20261020-3" defer></script><script src="./cora-pro-v2-analytics.js?v=20261020-1" defer></script></body></html>
+</script><script src="./cora-pro.js?v=20261020-3" defer></script><script src="./cora-pro-v2-analytics.js?v=20261020-2" defer></script></body></html>
