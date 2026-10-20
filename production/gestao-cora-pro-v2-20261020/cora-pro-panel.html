@@ -1,0 +1,35 @@
+<div class="cpro-top"><div><span class="cpro-tag">PAINEL FINANCEIRO · CORA PRO</span><h2 style="margin:6px 0">Minhas Finanças</h2><div class="cpro-subtitle">Dados históricos no Supabase · Fonte Cora</div></div><a href="https://app.cora.com.br/" target="_blank" rel="noopener noreferrer">Abrir Cora oficial ↗</a></div>
+<div class="cpro-nav" role="tablist">
+<button type="button" data-cpro-tab="finance" aria-selected="true">Minhas Finanças</button>
+<button type="button" data-cpro-tab="categories" aria-selected="false">Categorias</button>
+<button type="button" data-cpro-tab="invoices" aria-selected="false">Cobranças</button>
+<button type="button" data-cpro-tab="services" aria-selected="false">Serviços bancários</button></div>
+<section class="cpro-screen" data-cpro-screen="finance">
+<div class="cpro-actions"><div class="cpro-segments">
+<button type="button" data-cpro-time="past" aria-pressed="true">Passado</button>
+<button type="button" data-cpro-time="future" aria-pressed="false">Futuro</button></div>
+<div class="cpro-segments"><button type="button" data-cpro-grain="day" aria-pressed="false">Dia</button>
+<button type="button" data-cpro-grain="week" aria-pressed="false">Semana</button>
+<button type="button" data-cpro-grain="month" aria-pressed="true">Mês</button>
+<button type="button" data-cpro-grain="year" aria-pressed="false">Ano</button></div></div>
+<div id="cpro-past">
+<div class="cpro-kpis">
+<div class="cpro-kpi"><span>ENTRADAS NO PERÍODO</span><strong id="cpro-in">—</strong><small id="cpro-in-note">—</small></div>
+<div class="cpro-kpi"><span>SAÍDAS NO PERÍODO</span><strong id="cpro-out">—</strong><small id="cpro-out-note">—</small></div>
+<div class="cpro-kpi"><span>VARIAÇÃO NO PERÍODO</span><strong id="cpro-net">—</strong><small>Não corresponde ao lucro</small></div>
+<div class="cpro-kpi"><span>SALDO ATUAL DA CORA</span><strong id="cpro-balance">—</strong><small id="cpro-balance-note">Última leitura</small></div></div>
+<div class="cpro-chart-leg"><span><i class="cpro-legend-dot" style="background:#288fd0"></i>Entradas</span><span><i class="cpro-legend-dot" style="background:#e85d71"></i>Saídas</span><span><i class="cpro-legend-dot" style="background:#3f536b"></i>Variação acumulada</span></div>
+<div id="cpro-graph" class="cpro-chart"><div class="cpro-empty">Carregando evolução...</div></div><div id="cpro-status" class="cpro-status" aria-live="polite"></div></div>
+<div id="cpro-future" hidden><div class="cpro-note">O extrato registra movimentações compensadas, não agendamentos futuros. Para projetar o futuro precisamos de cobranças e contas agendadas via APIs específicas; não vamos inventar valores.</div><p><button type="button" id="cpro-open-invoices">Consultar cobranças abertas</button> <a href="https://app.cora.com.br/" target="_blank" rel="noopener noreferrer">Ver futuros no aplicativo Cora ↗</a></p></div></section>
+<section class="cpro-screen" data-cpro-screen="categories" hidden>
+<h3>Entradas e saídas por categoria</h3><p class="cpro-subtitle">Escolha modalidades oficiais da API ou categorias gerenciais sugeridas por regras da CONSTRU-REI. As sugestões não reproduzem a classificação personalizada do Cora Pro.</p><div class="cpro-actions"><div class="cpro-segments"><button type="button" data-cpro-class="bank" aria-pressed="true">Modalidade da API</button><button type="button" data-cpro-class="suggested" aria-pressed="false">Categorias gerenciais estimadas</button></div></div>
+<div class="cpro-actions"><div class="cpro-segments"><button type="button" data-cpro-cat="credit" aria-pressed="true">Entradas</button><button type="button" data-cpro-cat="debit" aria-pressed="false">Saídas</button></div><label>Ano <select id="cpro-cat-year"><option>2026</option><option>2025</option><option>2024</option><option>2023</option></select></label><div class="cpro-segments" id="cpro-cat-months" aria-label="Selecionar mês"></div></div>
+<div class="cpro-categories"><div class="cpro-donut" id="cpro-donut"><div class="cpro-donut-label"><strong id="cpro-donut-total">—</strong><span id="cpro-donut-period">—</span></div></div><div id="cpro-cat-list"><div class="cpro-empty">Aguardando categoria...</div></div></div>
+<div class="cpro-note" id="cpro-legacy" hidden></div><div class="cpro-status" id="cpro-cat-status"></div><button type="button" id="cpro-see-bank">Conferir lançamentos</button></section>
+<section class="cpro-screen" data-cpro-screen="invoices" hidden>
+<h3>Boletos e cobranças oficiais</h3><p class="cpro-subtitle">Consulta diretamente na API de cobrança da Cora, sob demanda e somente leitura. Cobranças emitidas fora dessa API podem não aparecer.</p>
+<div class="cpro-actions"><label>Status <select id="cpro-invoice-state"><option value="OPEN">Em aberto</option><option value="LATE">Atrasadas</option><option value="PAID">Recebidas</option><option value="CANCELLED">Canceladas</option></select></label><label>Início <input type="date" id="cpro-invoice-start"></label><label>Fim <input type="date" id="cpro-invoice-end"></label><button type="button" id="cpro-load-invoices">Consultar cobranças</button></div>
+<div class="cpro-status" id="cpro-invoice-status">Pronto para consulta. Nenhuma cobrança será alterada.</div>
+<div class="cpro-invoices"><table><thead><tr><th>Identificador</th><th>Vencimento</th><th>Estado</th><th>Valor</th></tr></thead><tbody id="cpro-invoice-rows"></tbody></table></div>
+<p><a href="https://app.cora.com.br/" target="_blank" rel="noopener noreferrer">Abrir Cora oficial ↗</a></p></section>
+<section class="cpro-screen" data-cpro-screen="services" hidden><h3>Serviços e operações Cora</h3><p class="cpro-subtitle">Atalhos que abrem o aplicativo oficial. Nenhuma transferência, Pix, pagamento ou cobrança é iniciada por este painel.</p><div class="cpro-services" id="cpro-service-list"></div><p class="cpro-note">Cartões, Tap to Pay, DDA e funções bancárias de escrita exigem integração e aprovação próprias. Não há simulação de transação neste Dashboard.</p></section>
