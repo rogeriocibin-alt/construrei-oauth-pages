@@ -78,10 +78,11 @@ function assessment(m){if(!m)return {ready:false,inc:0,out:0,reconciled:false};
  return {ready,inc:official?officialIn:observedIn,out:official?officialOut:observedOut,reconciled,official};
 }
 function render(){const y=Number(E("year").value);const months=data.filter(m=>m.period_start?.startsWith(String(y)));const expected=y===new Date().getUTCFullYear()?new Date().getUTCMonth()+1:12;
-const complete=months.filter(m=>assessment(m).ready).length;const sumIn=months.reduce((a,m)=>a+assessment(m).inc,0),sumOut=months.reduce((a,m)=>a+assessment(m).out,0),valid=complete===expected;
-E("credit").textContent=valid?BRL(sumIn):"—";E("debit").textContent=valid?BRL(sumOut):"—";E("net").textContent=valid?BRL(sumIn-sumOut):"—";
-E("creditNote").textContent=E("debitNote").textContent=valid?"Totais de créditos e débitos confirmados (não faturamento fiscal)":complete+"/"+expected+" meses completos · valores parciais bloqueados";
-E("netNote").textContent=valid?"Entradas menos saídas · não é lucro":"Aguardando histórico completo";
+const verified=months.filter(m=>assessment(m).ready),complete=verified.length;const sumIn=verified.reduce((a,m)=>a+assessment(m).inc,0),sumOut=verified.reduce((a,m)=>a+assessment(m).out,0),valid=complete===expected;
+E("credit").textContent=complete?BRL(sumIn):"—";E("debit").textContent=complete?BRL(sumOut):"—";E("net").textContent=complete?BRL(sumIn-sumOut):"—";
+const coverage=valid?"Período completo e conciliado":complete?("PARCIAL — "+complete+"/"+expected+" meses concluídos; faltam "+(expected-complete)):"Aguardando meses conciliados";
+E("creditNote").textContent=E("debitNote").textContent=coverage+" · Movimentação bancária, não faturamento fiscal";
+E("netNote").textContent=coverage+" · Entradas menos saídas, não lucro";
 E("yearStatus").textContent="Ano "+y+": "+complete+" de "+expected+" meses com totais confirmados";
 const max=Math.max(1,...[2023,2024,2025,2026].flatMap(yr=>{const mm=data.filter(m=>m.period_start.startsWith(String(yr))&&assessment(m).ready);return[mm.reduce((a,m)=>a+assessment(m).inc,0),mm.reduce((a,m)=>a+assessment(m).out,0)]}));
 E("yearsChart").replaceChildren();for(const yr of [2023,2024,2025,2026]){const mm=data.filter(m=>m.period_start.startsWith(String(yr))),needed=yr===2026?10:12;const ok=mm.filter(m=>assessment(m).ready).length;const verified=mm.filter(m=>assessment(m).ready),incoming=verified.reduce((a,m)=>a+assessment(m).inc,0),outgoing=verified.reduce((a,m)=>a+assessment(m).out,0),full=ok===needed;
