@@ -26,6 +26,7 @@ root.innerHTML='<div class="crv2-heading"><h2>Gestão Cora Pro V2 · Central Ana
 '<div class="crv2-source"><strong>Cora · fonte bancária</strong><small id="crv2-coraSource">Aguardando confirmação de cobertura e divergências.</small></div>'+
 '<div class="crv2-source"><strong>Trello · gestão das obras</strong><small id="crv2-trelloSource">Obras, custos, repasses e recebimentos por card. É uma fonte operacional, não deve ser somada ao extrato como novo dinheiro.</small></div>'+
 '<div class="crv2-source"><strong>Gestão Click · comercial</strong><small id="crv2-clickSource">Orçamentos, propostas e cobranças. Não representa automaticamente receita recebida nem substitui a conciliação bancária.</small></div></div>'+
+'<div class="crv2-actions" style="margin-top:16px"><label>Conferir obra específica <input id="crv2-case" placeholder="Ex.: 645-26" maxlength="8" pattern="[0-9]{1,5}-(24|25|26)"></label><button type="button" id="crv2-case-search">Cruzar Cora × Trello × Click</button></div><div class="crv2-status" id="crv2-case-result">Informe o número da obra para identificar movimentos bancários que mencionam explicitamente essa obra. Nenhuma baixa será automática.</div>'+
 '<p class="crv2-alert">Integração de fontes: a leitura bancária da Cora está ativa. A conciliação automática linha a linha entre Cora, Trello e Gestão Click requer chaves comuns (obra, comprovante, valor/data), validação de vinculações e conectores ativos. Os dados não são artificialmente fundidos.</p>';
 original.parentNode.insertBefore(root,original);
 const $=id=>document.getElementById(id),money=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((Number(n)||0)/100);
@@ -99,6 +100,25 @@ $("crv2-status").textContent="Extrato Cora · "+v.a+" até "+v.b+" · "+grain+" 
 if($("crv2-class").value==="estimated")loadEstimated();
 }catch(err){$("crv2-status").textContent="Consulta não concluída: "+err.message}
 finally{button.disabled=false}}
+
+
+$("crv2-case-search").addEventListener("click",async()=>{
+ const num=$("crv2-case").value.trim(),dest=$("crv2-case-result");
+ if(!/^[0-9]{1,5}-(24|25|26)$/.test(num)){dest.textContent="Informe o número NNN-24, NNN-25 ou NNN-26.";return}
+ if(!active){dest.textContent="Faça login para consultar as fontes.";return}
+ const b=$("crv2-case-search");b.disabled=true;dest.textContent="Buscando referências documentadas nas três fontes...";
+ try{const d=await query("case-match","&case="+encodeURIComponent(num),55000),bank=d.bank||{};
+  dest.replaceChildren();
+  const p1=document.createElement("p");p1.textContent="Cora · "+(bank.count||0)+" transações com referência textual à obra "+num+
+   " · entradas "+money(bank.credits)+" · saídas "+money(bank.debits)+
+   ". Essas transações ainda não foram confirmadas como liquidação de parcelas.";dest.append(p1);
+  const p2=document.createElement("p"),t=d.trello;
+  p2.textContent="Trello · "+(t?"card encontrado"+(t.status?" · "+t.status:"")+(t.gross_cents!==null&&t.gross_cents!==undefined?" · valor registrado "+money(t.gross_cents):""):"sem card confirmado nesta consulta")+
+    " | Gestão Click · "+(d.gestaoclick||[]).length+" orçamento(s) localizado(s).";dest.append(p2);
+  const p3=document.createElement("p");p3.textContent="Resultado: indícios por número da obra, somente consulta. Conferir comprovante, cliente, data, parcelas e descontos antes de conciliar.";dest.append(p3);
+ }catch(e){dest.textContent="Não foi possível concluir a conferência: "+e.message}
+ finally{b.disabled=false}
+});
 
 $("crv2-connectors").addEventListener("click",async()=>{
  if(!active){$("crv2-status").textContent="Entre na sessão protegida antes de consultar as fontes.";return}
