@@ -38,7 +38,7 @@ th{font-size:11px;color:var(--muted);background:white;position:sticky;top:0}td{f
 #feedback{padding:8px 2px;margin:12px 0;color:var(--muted);font-size:12px}
 @media(max-width:940px){.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}}
 @media(max-width:530px){header h1{font-size:23px}.grid{grid-template-columns:1fr}.mrow{grid-template-columns:36px 1fr 85px}.ybar{width:30%}.panel{padding:13px}}
-</style></head><body>
+</style><link rel="stylesheet" href="./cora-pro.css?v=20261020-1"></head><body>
 <header><div class="eyebrow">CONSTRU-REI · FINANCEIRO REI · DIRETORIA</div><h1>Gestão Financeira Cora Pro</h1><p>Extrato oficial armazenado no Supabase · Gráficos sem consulta bancária repetida</p></header>
 <main><div class="notice"><strong>Somente consulta.</strong> A Cora é a fonte bancária oficial; o Trello é a referência das obras. Créditos recebidos não significam automaticamente faturamento por competência. Dados históricos em importação não são totais finais.</div>
 <form id="login" class="panel"><h2>Acesso protegido da Diretoria</h2><p class="muted">Entre com a chave administrativa da Central CONSTRU-REI. Não informe senha bancária.</p><input id="pass" type="password" autocomplete="current-password" required><button type="submit">Entrar no Financeiro</button></form>
@@ -63,8 +63,9 @@ th{font-size:11px;color:var(--muted);background:white;position:sticky;top:0}td{f
   <section class="panel"><h2>Entradas e saídas por mês</h2><div class="barLegend"><span><span class="dot in"></span>Entradas</span><span><span class="dot out"></span>Saídas</span></div><div id="monthChart"></div></section>
   <section class="panel"><h2>Cobertura histórica e importação</h2><div id="yearStatus"></div><p class="muted"><small>O histórico de 2023 a 2026 é importado em lotes e armazenado. O navegador apenas consulta o banco. Os períodos não concluídos ficam claramente identificados.</small></p><h3>Conferência bancária</h3><div id="audit"></div></section>
  </div>
+ <section id="cora-pro-module" class="panel"><h2>Minhas Finanças Cora Pro</h2><p>Carregando módulos financeiros...</p></section>
  <section class="panel"><h2>Extrato real armazenado</h2><div class="toolbar"><input id="search" placeholder="Localizar descrição" aria-label="Localizar lançamento"><select id="type"><option value="all">Todos</option><option value="credit">Entradas</option><option value="debit">Saídas</option></select><span class="muted" id="statementInfo">Escolha um mês</span></div><div class="table-scroll"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead><tbody id="rows"></tbody></table></div></section>
- <section class="panel"><h2>Categorias Cora Pro, cobranças e conciliação</h2><p class="muted">Os agrupamentos oficiais de categorias do Cora Pro, cobranças a receber e conciliação por obra com o Trello ainda precisam de fonte/API e validação próprias. Nenhum valor é classificado automaticamente como faturamento ou lucro sem evidência.</p></section>
+ 
 </div><div id="feedback" role="status" aria-live="polite">Aguardando autenticação.</div></main>
 <script>
 const E=id=>document.getElementById(id),ROOT="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/",AUTH="crGestaoSession";
@@ -127,4 +128,4 @@ E("login").onsubmit=async ev=>{ev.preventDefault();const p=E("pass").value;E("pa
 E("refresh").onclick=async()=>{await reload();await loadDetail()};E("logout").onclick=()=>{sessionStorage.removeItem(AUTH);E("app").hidden=true;E("login").hidden=false;msg("Sessão encerrada.")};E("year").onchange=async()=>{render();await loadDetail()};E("month").onchange=async()=>{render();await loadDetail()};E("showmonth").onclick=loadDetail;E("search").oninput=displayRows;E("type").onchange=displayRows;
 if(sessionStorage.getItem(AUTH)){E("login").hidden=true;E("app").hidden=false;reload().then(loadDetail)}
 setInterval(()=>{if(sessionStorage.getItem(AUTH)&&!document.hidden)reload()},180000);
-</script></body></html>
+</script><script src="./cora-pro.js?v=20261020-1" defer></script></body></html>
