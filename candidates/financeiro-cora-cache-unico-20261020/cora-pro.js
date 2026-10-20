@@ -40,7 +40,16 @@ root.querySelectorAll("[data-cpro-grain]").forEach(x=>x.addEventListener("click"
 root.querySelectorAll("[data-cpro-cat]").forEach(x=>x.addEventListener("click",()=>{
  catType=x.dataset.cproCat;root.querySelectorAll("[data-cpro-cat]").forEach(b=>b.setAttribute("aria-pressed",String(b===x)));paintCategories();
 }));
-e("cpro-update-cat").onclick=loadCategories;
+let catMonth=now.getUTCMonth()+1;
+const catMonths=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+function drawCategoryMonthButtons(){const zone=e("cpro-cat-months");zone.replaceChildren();const y=Number(e("cpro-cat-year").value);
+ for(let m=1;m<=(y===now.getUTCFullYear()?now.getUTCMonth()+1:12);m++){
+  const b=document.createElement("button");b.type="button";b.textContent=catMonths[m-1];b.setAttribute("aria-pressed",String(catMonth===m));
+  b.addEventListener("click",()=>{catMonth=m;drawCategoryMonthButtons();loadCategories()});zone.append(b);
+ }
+}
+e("cpro-cat-year").onchange=()=>{if(Number(e("cpro-cat-year").value)===now.getUTCFullYear()&&catMonth>now.getUTCMonth()+1)catMonth=now.getUTCMonth()+1;drawCategoryMonthButtons();loadCategories()};
+drawCategoryMonthButtons();
 e("cpro-open-invoices").onclick=()=>view("invoices");
 e("cpro-see-bank").onclick=()=>e("rows")?.closest(".panel")?.scrollIntoView({behavior:"smooth",block:"start"});
 e("cpro-invoice-start").value=iso(new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),1)));
@@ -83,7 +92,7 @@ async function loadFinance(){
  }catch(err){if(ticket===seq)e("cpro-status").textContent="Consulta indisponível: "+err.message}
 }
 function categoryPeriod(){
- const year=Number(e("year")?.value)||now.getUTCFullYear(),month=Number(e("month")?.value)||(now.getUTCMonth()+1);
+ const year=Number(e("cpro-cat-year").value)||now.getUTCFullYear(),month=catMonth;
  const start=iso(new Date(Date.UTC(year,month-1,1))),end=iso(new Date(Math.min(Date.UTC(year,month,0),Date.now())));return {start,end};
 }
 async function loadCategories(){
