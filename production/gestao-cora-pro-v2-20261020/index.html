@@ -1,0 +1,145 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CONSTRU-REI | Gestão Financeira Cora</title>
+<style>
+:root{--navy:#092346;--blue:#167ac3;--gold:#d8ac45;--ink:#193b5d;--muted:#687f95;--line:#d7e3ef;--bg:#f0f5f9;--white:white}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px "Segoe UI",Arial,sans-serif}
+header{background:linear-gradient(110deg,#081e3d,#124a79);border-bottom:4px solid var(--gold);padding:24px max(4vw,15px);color:white}
+header .eyebrow{color:#f1c869;font-size:11px;letter-spacing:1.6px;font-weight:bold}
+header h1{margin:8px 0;font-size:27px}header p{margin:0;color:#d0e0f1}
+main{max-width:1480px;margin:0 auto;padding:20px 3vw 60px}
+.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 3px 14px #0b2c4d09}
+h2{margin:0 0 13px;font-size:19px}h3{margin:0 0 10px;font-size:15px}p{line-height:1.5}
+.notice{background:#fff6df;border:1px solid #efdda9;border-radius:10px;padding:12px 15px;margin-bottom:16px;color:#745417}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}
+button,input,select{padding:10px;border-radius:8px;border:1px solid #afc6db;font:inherit}button{background:var(--blue);color:white;cursor:pointer;font-weight:600}button:disabled{opacity:.55}
+button.ghost{background:white;color:var(--ink)}button.chosen{background:var(--navy);color:white}
+.muted{color:var(--muted)}small{font-size:11px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+.kpi{min-height:125px}.kpi small{display:block;color:var(--muted);font-weight:700;letter-spacing:.4px}.kpi strong{font-size:25px;display:block;margin:13px 0 6px;overflow-wrap:anywhere}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.barLegend{display:flex;gap:18px;margin:8px 0 15px;color:var(--muted);font-size:12px}
+.dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:5px}.dot.in{background:var(--blue)}.dot.out{background:var(--gold)}
+.chart-years{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-items:end;min-height:245px}
+.ycell{text-align:center;display:flex;flex-direction:column;gap:5px}.ypair{height:160px;display:flex;align-items:flex-end;justify-content:center;gap:6px;border-bottom:1px solid var(--line)}
+.ybar{width:24%;border-radius:5px 5px 0 0;min-height:3px}.ybar.in{background:var(--blue)}.ybar.out{background:var(--gold)}
+.ycell b{font-size:14px}.ycell small{font-size:11px}
+.mrow{display:grid;grid-template-columns:44px 1fr 110px;gap:12px;align-items:center;margin:9px 0}
+.mtracks{display:grid;gap:4px}.track{height:9px;border-radius:7px;background:#e8eff5;overflow:hidden}.fill{height:100%;border-radius:7px}.fill.in{background:var(--blue)}.fill.out{background:var(--gold)}
+.mrow small{text-align:right;font-size:11px}
+.table-scroll{overflow:auto;max-height:470px}table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{text-align:left;border-bottom:1px solid #e7eef5;padding:10px 9px}
+th{font-size:11px;color:var(--muted);background:white;position:sticky;top:0}td{font-size:12px}
+.statusline{display:flex;gap:11px;align-items:center;flex-wrap:wrap;padding:10px 0;font-size:12px}
+.pill{border:1px solid var(--line);border-radius:20px;padding:5px 9px;background:#f6f9fc;color:var(--muted)}
+.pill.good{background:#e9f6ee;color:#207249}.pill.warn{background:#fff3d6;color:#94651a}
+.todayGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.todayValue{font-size:23px;font-weight:750;margin:6px 0}.todayGrid small{color:var(--muted)}
+@media(max-width:650px){.todayGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.todayGrid>div:last-child{grid-column:1/-1}}
+#login{max-width:450px;margin:28px auto}#login input{width:100%;margin:12px 0}
+#app[hidden],#login[hidden]{display:none!important}.right{margin-left:auto}
+#feedback{padding:8px 2px;margin:12px 0;color:var(--muted);font-size:12px}
+@media(max-width:940px){.grid{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}}
+@media(max-width:530px){header h1{font-size:23px}.grid{grid-template-columns:1fr}.mrow{grid-template-columns:36px 1fr 85px}.ybar{width:30%}.panel{padding:13px}}
+</style><link rel="stylesheet" href="./cora-pro.css?v=20261020-3"><link rel="stylesheet" href="./cora-pro-v2-analytics.css?v=20261020-1"></head><body>
+<header><div class="eyebrow">CONSTRU-REI · FINANCEIRO REI · DIRETORIA</div><h1>Gestão Financeira Cora Pro</h1><p>Extrato oficial armazenado no Supabase · Gráficos sem consulta bancária repetida</p></header>
+<main><div class="notice"><strong>Somente consulta.</strong> A Cora é a fonte bancária oficial; o Trello é a referência das obras. Créditos recebidos não significam automaticamente faturamento por competência. A cobertura histórica e eventuais períodos parciais são identificados nos painéis.</div>
+<form id="login" class="panel"><h2>Acesso protegido da Diretoria</h2><p class="muted">Entre com a chave administrativa da Central CONSTRU-REI. Não informe senha bancária.</p><input id="pass" type="password" autocomplete="current-password" required><button type="submit">Entrar no Financeiro</button></form>
+<div id="app" hidden>
+ <div class="panel toolbar"><span class="pill" id="syncstate">Carregando...</span><span class="muted" id="freshness">—</span><span class="right"></span><button type="button" id="refresh">Atualizar painel</button><button type="button" class="ghost" id="logout">Sair</button></div>
+ <div class="grid">
+  <div class="panel kpi"><small>SALDO Cora · ÚLTIMA CONSULTA</small><strong id="balance">—</strong><small id="balanceAge">Aguardando saldo</small></div>
+  <div class="panel kpi"><small>ENTRADAS BANCÁRIAS · ANO</small><strong id="credit">—</strong><small id="creditNote">—</small></div>
+  <div class="panel kpi"><small>SAÍDAS BANCÁRIAS · ANO</small><strong id="debit">—</strong><small id="debitNote">—</small></div>
+  <div class="panel kpi"><small>VARIAÇÃO BANCÁRIA · ANO</small><strong id="net">—</strong><small id="netNote">Não equivale a lucro contábil</small></div>
+ </div>
+ <section class="panel"><h2>Fluxo de caixa · Hoje <small id="dayStamp" class="muted"></small></h2>
+ <div class="todayGrid">
+  <div><small>ENTRADAS DO DIA</small><div class="todayValue" id="dailyCredit">—</div></div>
+  <div><small>SAÍDAS DO DIA</small><div class="todayValue" id="dailyDebit">—</div></div>
+  <div><small>VARIAÇÃO LÍQUIDA</small><div class="todayValue" id="dailyNet">—</div></div>
+ </div><p class="muted"><small id="dailyStatus">Base armazenada da Cora; movimentações em atualização. Não corresponde a lucro.</small></p>
+ </section>
+ <section id="cora-pro-module" class="panel"><h2>Minhas Finanças Cora Pro</h2><p>Carregando módulos financeiros...</p></section>
+ <div class="panel"><h2>Comparativo financeiro · 2023 a 2026</h2><div class="barLegend"><span><span class="dot in"></span>Entradas bancárias</span><span><span class="dot out"></span>Saídas bancárias</span></div><div class="chart-years" id="yearsChart"></div><p class="muted"><small>Os gráficos distinguem dados completos de períodos parciais. A base da Cora Pro não fornece aqui uma classificação garantida de faturamento por competência.</small></p></div>
+ <div class="toolbar"><label>Ano <select id="year"><option>2026</option><option>2025</option><option>2024</option><option>2023</option></select></label><label>Mês <select id="month"></select></label><button id="showmonth" type="button">Abrir extrato do mês</button><span class="pill" id="monthstatus">—</span></div>
+ <div class="two">
+  <section class="panel"><h2>Entradas e saídas por mês</h2><div class="barLegend"><span><span class="dot in"></span>Entradas</span><span><span class="dot out"></span>Saídas</span></div><div id="monthChart"></div></section>
+  <section class="panel"><h2>Cobertura histórica e importação</h2><div id="yearStatus"></div><p class="muted"><small>O histórico de 2023 a 2026 é importado em lotes e armazenado. O navegador apenas consulta o banco. Os períodos não concluídos ficam claramente identificados.</small></p><h3>Conferência bancária</h3><div id="audit"></div></section>
+ </div>
+ <section class="panel"><h2>Extrato real armazenado</h2><div class="toolbar"><input id="search" placeholder="Localizar descrição" aria-label="Localizar lançamento"><select id="type"><option value="all">Todos</option><option value="credit">Entradas</option><option value="debit">Saídas</option></select><span class="muted" id="statementInfo">Escolha um mês</span></div><div class="table-scroll"><table><thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+ 
+</div><div id="feedback" role="status" aria-live="polite">Aguardando autenticação.</div></main>
+<script>
+const E=id=>document.getElementById(id),ROOT="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/",AUTH="crGestaoSession";
+const BRL=n=>Number.isFinite(Number(n))?new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(n)/100):"—";
+const M=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+let data=[],detail=[],busy=false,lastYears=null;
+E("month").innerHTML=M.map((m,i)=>'<option value="'+(i+1)+'">'+m+'</option>').join("");E("month").value="10";
+function msg(s){E("feedback").textContent=s}function pct(x,m){return Math.max(2,Math.round(x/Math.max(1,m)*100))}
+function create(tag,cls,text){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=String(text);return el}
+function dates(y,m){const start=new Date(Date.UTC(y,m-1,1)),end=new Date(Math.min(Date.UTC(y,m,0),Date.now()));return [start.toISOString().slice(0,10),end.toISOString().slice(0,10)]}
+async function get(api){const r=await fetch(ROOT+"cr-cora-cache-gateway-20261020"+api,{headers:{"x-cr-session":sessionStorage.getItem(AUTH)||""},cache:"no-store",signal:AbortSignal.timeout(22000)});const d=await r.json();if(r.status===401){sessionStorage.removeItem(AUTH);E("app").hidden=true;E("login").hidden=false}if(!r.ok||!d.ok)throw Error(d.error||"HTTP "+r.status);return d}
+function value(m,k){const raw=Number(m[k]);return m[k]===null||m[k]===undefined||!Number.isFinite(raw)?null:raw}
+function assessment(m){if(!m)return {ready:false,inc:0,out:0,reconciled:false};
+ const observedIn=value(m,"observed_credit_centavos")||0,observedOut=value(m,"observed_debit_centavos")||0;
+ const officialIn=value(m,"credit_centavos"),officialOut=value(m,"debit_centavos");
+ const hasTotals=officialIn!==null&&officialOut!==null;
+ const recognized=hasTotals&&["CORA_VALIDATED_AGGREGATIONS","CORA_OFFICIAL_AGGREGATIONS","CORA_STATEMENT_SUM_RECONCILED"].includes(m.source);
+ const reconciled=!recognized||m.status!=="complete"||(observedIn===officialIn&&observedOut===officialOut);
+ const official=recognized&&(["CORA_VALIDATED_AGGREGATIONS","CORA_STATEMENT_SUM_RECONCILED"].includes(m.source)||(m.status==="complete"&&reconciled));
+ const ready=reconciled&&((m.status==="complete")||official);
+ return {ready,inc:official?officialIn:observedIn,out:official?officialOut:observedOut,reconciled,official};
+}
+function render(){const y=Number(E("year").value);const months=data.filter(m=>m.period_start?.startsWith(String(y)));const expected=y===new Date().getUTCFullYear()?new Date().getUTCMonth()+1:12;
+const verified=months.filter(m=>assessment(m).ready),complete=verified.length;const sumIn=verified.reduce((a,m)=>a+assessment(m).inc,0),sumOut=verified.reduce((a,m)=>a+assessment(m).out,0),valid=complete===expected;
+E("credit").textContent=complete?BRL(sumIn):"—";E("debit").textContent=complete?BRL(sumOut):"—";E("net").textContent=complete?BRL(sumIn-sumOut):"—";
+const coverage=valid?"Período completo e conciliado":complete?("PARCIAL — "+complete+"/"+expected+" meses concluídos; faltam "+(expected-complete)):"Aguardando meses conciliados";
+E("creditNote").textContent=E("debitNote").textContent=coverage+" · Movimentação bancária, não faturamento fiscal";
+E("netNote").textContent=coverage+" · Entradas menos saídas, não lucro";
+E("yearStatus").textContent="Ano "+y+": "+complete+" de "+expected+" meses com totais confirmados";
+const max=Math.max(1,...[2023,2024,2025,2026].flatMap(yr=>{const mm=data.filter(m=>m.period_start.startsWith(String(yr))&&assessment(m).ready);return[mm.reduce((a,m)=>a+assessment(m).inc,0),mm.reduce((a,m)=>a+assessment(m).out,0)]}));
+E("yearsChart").replaceChildren();for(const yr of [2023,2024,2025,2026]){const mm=data.filter(m=>m.period_start.startsWith(String(yr))),needed=yr===2026?10:12;const ok=mm.filter(m=>assessment(m).ready).length;const verified=mm.filter(m=>assessment(m).ready),incoming=verified.reduce((a,m)=>a+assessment(m).inc,0),outgoing=verified.reduce((a,m)=>a+assessment(m).out,0),full=ok===needed;
+const cell=create("div","ycell"),pair=create("div","ypair");for(const [v,cls] of [[incoming,"in"],[outgoing,"out"]]){const bar=create("div","ybar "+cls);bar.style.height=pct(v,max)+"%";bar.style.opacity=full?"1":".42";bar.title=BRL(v)+(full?" · ano completo":" · apenas meses conferidos (parcial)");pair.append(bar)}
+cell.append(pair,create("b",null,String(yr)),create("small","muted",full?"Completo":ok+"/"+needed+" meses"));E("yearsChart").append(cell)}
+const rows=E("monthChart");rows.replaceChildren();const maxMonth=Math.max(1,...months.flatMap(m=>[assessment(m).inc,assessment(m).out]));
+for(let i=1;i<=12;i++){if(y===2026&&i>10)continue;const m=months.find(x=>Number(x.period_start?.slice(5,7))===i);const s=assessment(m);
+const row=create("div","mrow"),tracks=create("div","mtracks"),lab=create("strong",null,M[i-1]),val=create("small","muted",m&&!s.reconciled?"Divergência":m&&s.ready?BRL(s.inc-s.out):"Pendente");
+for(const [n,cls] of [[s.ready?s.inc:0,"in"],[s.ready?s.out:0,"out"]]){const track=create("div","track"),fill=create("div","fill "+cls);fill.style.width=pct(n,maxMonth)+"%";fill.style.opacity=s.ready?"1":".35";track.append(fill);tracks.append(track)}row.append(lab,tracks,val);rows.append(row)}
+const active=months.find(x=>Number(x.period_start?.slice(5,7))===Number(E("month").value));const state=assessment(active);E("monthstatus").textContent=state.ready?"Período completo":active?.status==="error"?"Erro de importação":active?.status==="running"?"Importando":"Histórico parcial";E("monthstatus").className="pill "+(state.ready?"good":"warn");
+const discrepancies=months.filter(m=>m.status==="complete"&&!assessment(m).reconciled);
+E("audit").textContent=discrepancies.length?discrepancies.length+" mês(es) com diferença entre totais oficiais e lançamentos; valores bloqueados.":"Diferenças encontradas em meses completos: nenhuma até o momento.";
+}
+function displayRows(){const q=E("search").value.toLowerCase(),type=E("type").value;
+const found=detail.filter(m=>(type==="all"||m.direction===type)&&String(m.description||"").toLowerCase().includes(q));
+E("statementInfo").textContent=found.length+" lançamentos exibidos";const tbody=E("rows");tbody.replaceChildren();for(const m of found.slice(0,1500)){const tr=create("tr");for(const text of [String(m.occurred_at||"").slice(0,10),m.direction||"—",m.description||"—",BRL(m.amount_centavos)])tr.append(create("td",null,text));tbody.append(tr)}}
+async function loadDetail(){const y=Number(E("year").value),m=Number(E("month").value),[start,end]=dates(y,m);if(new Date(start)>new Date()){detail=[];displayRows();return}try{msg("Carregando extrato armazenado de "+M[m-1]+"/"+y+"...");const d=await get("?api=dashboard&start="+start+"&end="+end);detail=d.movements||[];displayRows();msg("Extrato consultado no Supabase: sem nova leitura bancária.")}catch(e){msg("Falha no extrato: "+e.message)}}
+async function reload(){if(busy)return;busy=true;E("refresh").disabled=true;try{msg("Lendo indicadores do Supabase...");const d=await get("?api=years");lastYears=d;data=d.months||[];const s=d.stats||{};E("syncstate").textContent=(s.imported_months||0)+"/"+(s.total_months||46)+" meses concluídos · "+(d.record_count||0)+" movimentações";
+E("syncstate").className="pill "+(s.imported_months===s.total_months?"good":"warn");
+const daily=d.today||null;
+E("dailyCredit").textContent=daily?BRL(daily.credit_centavos):"—";
+E("dailyDebit").textContent=daily?BRL(daily.debit_centavos):"—";
+E("dailyNet").textContent=daily?BRL(Number(daily.credit_centavos||0)-Number(daily.debit_centavos||0)):"—";
+E("dayStamp").textContent=daily?.date?daily.date.split("-").reverse().join("/"):"";
+E("dailyStatus").textContent=daily?(daily.transactions+" lançamentos no dia · dados bancários armazenados no Supabase · atualização incremental"):"Aguardando importação do dia";
+E("balance").textContent=d.balance?BRL(d.balance.amount_centavos):"—";
+E("balanceAge").textContent=d.balance?.updated_at?"Atualizado: "+new Date(d.balance.updated_at).toLocaleString("pt-BR"):"Primeiro saldo ainda não sincronizado";
+const live=d.live_status||null;
+const stamp=live?.last_success_at?new Date(live.last_success_at).toLocaleString("pt-BR"):"aguardando primeira atualização";
+E("freshness").textContent="Sincronização Cora (48h): "+stamp+(live?.healthy?" · automática OK":" · atrasada / aguardando");
+E("freshness").style.color=live?.healthy?"#26744a":"#ad6a19";
+E("syncstate").textContent+=" · "+(live?.healthy?"Cora atualizada":"Cora em conferência");
+E("balanceAge").textContent=d.balance?.updated_at?"Saldo oficial consultado: "+new Date(d.balance.updated_at).toLocaleString("pt-BR")+(live&&!live.balance_healthy?" · consulta de saldo atrasada":""):"Saldo Cora aguardando consulta oficial";
+
+render();msg("Painel carregado do banco. Histórico importado automaticamente no servidor.")}catch(e){msg("Falha: "+e.message)}finally{busy=false;E("refresh").disabled=false}}
+async function enter(password){const r=await fetch(ROOT+"central-gestao-api?api=login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:password})});const d=await r.json();if(!r.ok||!d.ok||d.role!=="ADMIN_MASTER_ROGERIO"||!d.session)throw Error("Chave da Diretoria não autorizada");sessionStorage.setItem(AUTH,d.session)}
+E("login").onsubmit=async ev=>{ev.preventDefault();const p=E("pass").value;E("pass").value="";try{await enter(p);E("login").hidden=true;E("app").hidden=false;await reload();await loadDetail()}catch(e){msg(e.message)}};
+E("refresh").onclick=async()=>{await reload();await loadDetail()};E("logout").onclick=()=>{sessionStorage.removeItem(AUTH);E("app").hidden=true;E("login").hidden=false;msg("Sessão encerrada.")};E("year").onchange=async()=>{render();await loadDetail()};E("month").onchange=async()=>{render();await loadDetail()};E("showmonth").onclick=loadDetail;E("search").oninput=displayRows;E("type").onchange=displayRows;
+if(sessionStorage.getItem(AUTH)){E("login").hidden=true;E("app").hidden=false;reload().then(loadDetail)}
+async function autoRefreshBankCache(){
+ if(!sessionStorage.getItem(AUTH)||document.hidden||E("app").hidden||busy)return;
+ await reload();
+ const now=new Date();
+ const currentYear=now.getUTCFullYear(),currentMonth=now.getUTCMonth()+1;
+ if(Number(E("year").value)===currentYear&&Number(E("month").value)===currentMonth)await loadDetail();
+}
+setInterval(autoRefreshBankCache,60000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)autoRefreshBankCache()});
+</script><script src="./cora-pro.js?v=20261020-4" defer></script><script src="./cora-pro-v2-analytics.js?v=20261020-5" defer></script></body></html>
