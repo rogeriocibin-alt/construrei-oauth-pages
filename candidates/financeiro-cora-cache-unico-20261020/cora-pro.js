@@ -4,7 +4,7 @@ try{const r=await fetch("./cora-pro-panel.html",{cache:"no-store"});if(!r.ok)thr
 const e=id=>document.getElementById(id),brl=c=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format((Number(c)||0)/100),iso=d=>d.toISOString().slice(0,10),now=new Date();
 const colors=["#e4ab31","#dc4380","#2aabdf","#3272a3","#4cbe99","#807bd5","#8c98a4","#52677d"];
 const labels={PIX:"Pix",TRANSFER:"Transferência / TED",PAYMENT:"Pagamento",FEE:"Tarifa",BANK_DOMICILE:"Recebíveis de cartão",CARD:"Cartão",JUD_BLOCKER:"Bloqueio judicial",LIMIT_RESERVATION:"Reserva de limite",NOT_CLASSIFIED:"Ainda sem identificação"};
-let active="finance",grain="month",mode="past",catType="credit",categoryData=null,seq=0,logged=false;
+let active="finance",grain="month",mode="past",catType="credit",catClass="bank",categoryData=null,suggestedData=null,seq=0,logged=false;
 const services=[["Pix","Transferências instantâneas"],["Cobrar","Boletos e cobranças"],["Pagar","Contas e pagamentos"],["Transferir","TED e transferências"],["Depositar","Créditos na conta"],["Cartão","Faturas e limites"],["Tap to Pay","Pagamento no celular"],["Link de pagamento","Cobrança por link"],["Boletos DDA","Gestão de boletos"],["Minhas Finanças","Categoria e projeção"],["API e integrações","Conexões autorizadas"]];
 for(const [name,desc] of services){const a=document.createElement("a");a.href="https://app.cora.com.br/";a.target="_blank";a.rel="noopener noreferrer";a.className="cpro-service";const title=document.createElement("strong"),sub=document.createElement("small");title.textContent=name+" ↗";sub.textContent=desc+" · abrir Cora";a.append(title,sub);e("cpro-service-list").append(a)}
 const signed=()=>!!sessionStorage.getItem("crGestaoSession")&&!e("app").hidden;
@@ -39,6 +39,10 @@ root.querySelectorAll("[data-cpro-grain]").forEach(x=>x.addEventListener("click"
 }));
 root.querySelectorAll("[data-cpro-cat]").forEach(x=>x.addEventListener("click",()=>{
  catType=x.dataset.cproCat;root.querySelectorAll("[data-cpro-cat]").forEach(b=>b.setAttribute("aria-pressed",String(b===x)));paintCategories();
+}));
+root.querySelectorAll("[data-cpro-class]").forEach(x=>x.addEventListener("click",()=>{
+ catClass=x.dataset.cproClass;root.querySelectorAll("[data-cpro-class]").forEach(b=>b.setAttribute("aria-pressed",String(b===x)));
+ paintCategories();
 }));
 let catMonth=now.getUTCMonth()+1;
 const catMonths=["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
@@ -97,14 +101,14 @@ function categoryPeriod(){
 }
 async function loadCategories(){
  if(!signed())return;const q=categoryPeriod();e("cpro-cat-status").textContent="Lendo modalidades...";
- try{categoryData=await request("?api=insights&start="+q.start+"&end="+q.end+"&grain=month");paintCategories();
+ try{const both=await Promise.all([request("?api=insights&start="+q.start+"&end="+q.end+"&grain=month"),request("?api=categories&start="+q.start+"&end="+q.end)]);categoryData=both[0];suggestedData=both[1];paintCategories();
  const complete=(categoryData.coverage||[]).every(v=>v.status==="complete");
- e("cpro-cat-status").textContent=(complete?"Extrato concluído. ":"Mês em importação. ")+"As modalidades exibidas dependem do tipo informado no extrato.";
+ e("cpro-cat-status").textContent=(complete?"Extrato concluído. ":"Mês em importação. ")+(catClass==="suggested"?"Categorias gerenciais estimadas por descrição; sujeitas a revisão.":"Modalidades identificadas pelo tipo da transação na API Cora.");
  }catch(err){e("cpro-cat-status").textContent="Não foi possível consultar as modalidades: "+err.message}
 }
 function paintCategories(){
  if(!categoryData)return;
- const c=(categoryData.categories||[]).filter(x=>x.direction===catType).sort((a,b)=>Number(b.cents)-Number(a.cents)),
+ const chosen=catClass==="suggested"?suggestedData:categoryData;if(!chosen)return;const c=(chosen.categories||[]).filter(x=>x.direction===catType).sort((a,b)=>Number(b.cents)-Number(a.cents)),
  total=c.reduce((s,x)=>s+Number(x.cents||0),0),period=categoryPeriod(),list=e("cpro-cat-list");list.replaceChildren();
  let pct=0;const stops=c.map((v,i)=>{const vpc=total?Number(v.cents)/total*100:0,start=pct;pct+=vpc;return colors[i%colors.length]+" "+start.toFixed(2)+"% "+pct.toFixed(2)+"%"});
  e("cpro-donut").style.background=stops.length?"conic-gradient("+stops.join(",")+")":"#e1e7ec";
@@ -113,7 +117,7 @@ function paintCategories(){
  for(const [i,v] of c.entries()){
   const r=document.createElement("div");r.className="cpro-category-row";
   const dot=document.createElement("span");dot.className="cpro-legend-dot";dot.style.background=colors[i%colors.length];
-  const name=document.createElement("span");name.textContent=(labels[v.category]||"Outro: "+v.category)+" · "+(total?(Number(v.cents)/total*100).toFixed(1):"0")+"%";
+  const name=document.createElement("span");name.textContent=(catClass==="suggested"?v.category:(labels[v.category]||"Outro: "+v.category))+" · "+(total?(Number(v.cents)/total*100).toFixed(1):"0")+"%";
   const value=document.createElement("span");value.textContent=brl(v.cents);r.append(dot,name,value);list.append(r);
  }
  const ref=e("cpro-legacy");ref.hidden=period.start!=="2026-10-01";if(!ref.hidden)ref.textContent="Referência do vídeo de 20/10/2026: Cora Pro mostra Pix/TED R$ 38.417,32 e Outros R$ 0,06, somando R$ 38.417,38. O extrato bancário importado não contém a rubrica de seis centavos; ela não foi adicionada artificialmente.";
