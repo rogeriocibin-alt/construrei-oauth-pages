@@ -139,4 +139,15 @@ observer.observe(app,{attributes:true,attributeFilter:["hidden"]});
 if(signed()){hasLoaded=true;loadFinance()}
 e("refresh")?.addEventListener("click",()=>{setTimeout(()=>{if(active==="finance")loadFinance();if(active==="categories")loadCategories()},750)});
 for(const id of ["year","month"])e(id)?.addEventListener("change",()=>{if(active==="categories")loadCategories()});
+setInterval(()=>{
+ if(!signed()||document.hidden)return;
+ if(active==="finance"&&mode==="past")loadFinance();
+ else if(active==="categories"&&categoryPeriod().end===new Date().toISOString().slice(0,10))loadCategories();
+},120000);
+document.addEventListener("visibilitychange",()=>{
+ if(!document.hidden&&signed()){
+   if(active==="finance"&&mode==="past")loadFinance();
+   else if(active==="categories")loadCategories();
+ }
+});
 })();
