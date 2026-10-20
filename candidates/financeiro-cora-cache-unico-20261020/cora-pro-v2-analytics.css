@@ -1,0 +1,39 @@
+
+/* Gestao Cora Pro V2 — complemento isolado, sem alterar Dashboard V11 */
+#crv2{margin:14px 0 20px;border:1px solid #d7e3ef;border-radius:14px;padding:17px;background:white;box-shadow:0 3px 14px #0b2c4d09}
+#crv2 *{box-sizing:border-box}
+#crv2 .crv2-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+#crv2 h2{margin:0;color:#193b5d;font-size:20px}
+#crv2 .crv2-sub{font-size:12px;color:#687f95;margin:6px 0 13px}
+#crv2 .crv2-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin:12px 0}
+#crv2 label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700;color:#193b5d}
+#crv2 button,#crv2 select,#crv2 input{padding:9px 10px;border-radius:9px;border:1px solid #b6cde2;font:inherit;max-width:100%}
+#crv2 button{background:#176ea9;color:#fff;font-size:12px;cursor:pointer}
+#crv2 button[aria-pressed=true]{background:#092346;outline:2px solid #d8ac45}
+#crv2 button:disabled{opacity:.55;cursor:not-allowed}
+#crv2 .crv2-pills{display:flex;flex-wrap:wrap;gap:6px}
+#crv2 .crv2-boxes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:13px 0}
+#crv2 .crv2-box{border:1px solid #dce7f0;border-radius:12px;background:#f8fafc;padding:12px;min-width:0}
+#crv2 .crv2-box small{display:block;color:#687f95;font-size:11px;font-weight:700}
+#crv2 .crv2-box strong{display:block;overflow-wrap:anywhere;font-size:20px;color:#092346;margin:10px 0 3px}
+#crv2 .crv2-chartgrid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:13px}
+#crv2 .crv2-chpanel{border:1px solid #e1eaf2;border-radius:12px;padding:12px;min-width:0}
+#crv2 .crv2-chpanel h3{margin:0 0 9px;font-size:15px}
+#crv2 #crv2-timeline{width:100%;min-height:220px;display:block}
+#crv2 .crv2-legend{display:flex;flex-wrap:wrap;gap:13px;font-size:11px;color:#60768d;margin:4px 0 8px}
+#crv2 .crv2-dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+#crv2 #crv2-pie{width:178px;height:178px;border-radius:50%;margin:8px auto;display:grid;place-items:center;background:#dce6ee}
+#crv2 #crv2-pie-inner{width:112px;height:112px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;background:white;text-align:center;padding:8px}
+#crv2 #crv2-pie-inner strong{font-size:13px;overflow-wrap:anywhere}
+#crv2 #crv2-cats{max-height:210px;overflow:auto}
+#crv2 .crv2-cat{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #e9eff5;padding:7px 0;font-size:12px}
+#crv2 .crv2-cat span:first-child{flex:1;min-width:0;overflow-wrap:anywhere}
+#crv2 .crv2-status{font-size:12px;padding:10px 0;color:#526d85;white-space:normal;line-height:1.5}
+#crv2 .crv2-sources{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
+#crv2 .crv2-source{border:1px solid #d7e3ef;border-radius:11px;padding:12px}
+#crv2 .crv2-source strong{display:block;margin-bottom:5px}
+#crv2 .crv2-source small{color:#526d85;line-height:1.5}
+#crv2 .crv2-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+#crv2 .crv2-alert{border-left:3px solid #d8ac45;padding:8px 11px;background:#fffaf0;font-size:12px;line-height:1.6;color:#715a2b}
+@media(max-width:850px){#crv2 .crv2-boxes{grid-template-columns:repeat(2,minmax(0,1fr))}#crv2 .crv2-chartgrid{grid-template-columns:1fr}#crv2 .crv2-sources{grid-template-columns:1fr}}
+@media(max-width:470px){#crv2 .crv2-boxes{grid-template-columns:1fr 1fr}#crv2 .crv2-box strong{font-size:16px}#crv2 .crv2-controls label{flex:1 1 115px}}
