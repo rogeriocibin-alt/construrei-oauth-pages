@@ -71,9 +71,9 @@ function assessment(m){if(!m)return {ready:false,inc:0,out:0,reconciled:false};
  const observedIn=value(m,"observed_credit_centavos")||0,observedOut=value(m,"observed_debit_centavos")||0;
  const officialIn=value(m,"credit_centavos"),officialOut=value(m,"debit_centavos");
  const hasTotals=officialIn!==null&&officialOut!==null;
- const recognized=hasTotals&&["CORA_VALIDATED_AGGREGATIONS","CORA_OFFICIAL_AGGREGATIONS"].includes(m.source);
+ const recognized=hasTotals&&["CORA_VALIDATED_AGGREGATIONS","CORA_OFFICIAL_AGGREGATIONS","CORA_STATEMENT_SUM_RECONCILED"].includes(m.source);
  const reconciled=!recognized||m.status!=="complete"||(observedIn===officialIn&&observedOut===officialOut);
- const official=recognized&&(m.source==="CORA_VALIDATED_AGGREGATIONS"||(m.status==="complete"&&reconciled));
+ const official=recognized&&(["CORA_VALIDATED_AGGREGATIONS","CORA_STATEMENT_SUM_RECONCILED"].includes(m.source)||(m.status==="complete"&&reconciled));
  const ready=reconciled&&((m.status==="complete")||official);
  return {ready,inc:official?officialIn:observedIn,out:official?officialOut:observedOut,reconciled,official};
 }
