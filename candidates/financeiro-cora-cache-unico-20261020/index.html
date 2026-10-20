@@ -121,11 +121,25 @@ E("dayStamp").textContent=daily?.date?daily.date.split("-").reverse().join("/"):
 E("dailyStatus").textContent=daily?(daily.transactions+" lançamentos no dia · dados bancários armazenados no Supabase · atualização incremental"):"Aguardando importação do dia";
 E("balance").textContent=d.balance?BRL(d.balance.amount_centavos):"—";
 E("balanceAge").textContent=d.balance?.updated_at?"Atualizado: "+new Date(d.balance.updated_at).toLocaleString("pt-BR"):"Primeiro saldo ainda não sincronizado";
-E("freshness").textContent=d.last_import?"Última importação: "+new Date(d.last_import).toLocaleString("pt-BR"):"Aguardando carga histórica";
+const live=d.live_status||null;
+const stamp=live?.last_success_at?new Date(live.last_success_at).toLocaleString("pt-BR"):"aguardando primeira atualização";
+E("freshness").textContent="Sincronização Cora (48h): "+stamp+(live?.healthy?" · automática OK":" · atrasada / aguardando");
+E("freshness").style.color=live?.healthy?"#26744a":"#ad6a19";
+E("syncstate").textContent+=" · "+(live?.healthy?"Cora atualizada":"Cora em conferência");
+E("balanceAge").textContent=d.balance?.updated_at?"Saldo oficial consultado: "+new Date(d.balance.updated_at).toLocaleString("pt-BR")+(live&&!live.balance_healthy?" · consulta de saldo atrasada":""):"Saldo Cora aguardando consulta oficial";
+
 render();msg("Painel carregado do banco. Histórico importado automaticamente no servidor.")}catch(e){msg("Falha: "+e.message)}finally{busy=false;E("refresh").disabled=false}}
 async function enter(password){const r=await fetch(ROOT+"central-gestao-api?api=login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:password})});const d=await r.json();if(!r.ok||!d.ok||d.role!=="ADMIN_MASTER_ROGERIO"||!d.session)throw Error("Chave da Diretoria não autorizada");sessionStorage.setItem(AUTH,d.session)}
 E("login").onsubmit=async ev=>{ev.preventDefault();const p=E("pass").value;E("pass").value="";try{await enter(p);E("login").hidden=true;E("app").hidden=false;await reload();await loadDetail()}catch(e){msg(e.message)}};
 E("refresh").onclick=async()=>{await reload();await loadDetail()};E("logout").onclick=()=>{sessionStorage.removeItem(AUTH);E("app").hidden=true;E("login").hidden=false;msg("Sessão encerrada.")};E("year").onchange=async()=>{render();await loadDetail()};E("month").onchange=async()=>{render();await loadDetail()};E("showmonth").onclick=loadDetail;E("search").oninput=displayRows;E("type").onchange=displayRows;
 if(sessionStorage.getItem(AUTH)){E("login").hidden=true;E("app").hidden=false;reload().then(loadDetail)}
-setInterval(()=>{if(sessionStorage.getItem(AUTH)&&!document.hidden)reload()},180000);
+async function autoRefreshBankCache(){
+ if(!sessionStorage.getItem(AUTH)||document.hidden||E("app").hidden||busy)return;
+ await reload();
+ const now=new Date();
+ const currentYear=now.getUTCFullYear(),currentMonth=now.getUTCMonth()+1;
+ if(Number(E("year").value)===currentYear&&Number(E("month").value)===currentMonth)await loadDetail();
+}
+setInterval(autoRefreshBankCache,60000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)autoRefreshBankCache()});
 </script><script src="./cora-pro.js?v=20261020-3" defer></script><script src="./cora-pro-v2-analytics.js?v=20261020-4" defer></script></body></html>
