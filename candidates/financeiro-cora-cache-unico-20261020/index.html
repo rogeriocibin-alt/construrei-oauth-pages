@@ -30,6 +30,9 @@ th{font-size:11px;color:var(--muted);background:white;position:sticky;top:0}td{f
 .statusline{display:flex;gap:11px;align-items:center;flex-wrap:wrap;padding:10px 0;font-size:12px}
 .pill{border:1px solid var(--line);border-radius:20px;padding:5px 9px;background:#f6f9fc;color:var(--muted)}
 .pill.good{background:#e9f6ee;color:#207249}.pill.warn{background:#fff3d6;color:#94651a}
+.todayGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.todayValue{font-size:23px;font-weight:750;margin:6px 0}.todayGrid small{color:var(--muted)}
+@media(max-width:650px){.todayGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.todayGrid>div:last-child{grid-column:1/-1}}
 #login{max-width:450px;margin:28px auto}#login input{width:100%;margin:12px 0}
 #app[hidden],#login[hidden]{display:none!important}.right{margin-left:auto}
 #feedback{padding:8px 2px;margin:12px 0;color:var(--muted);font-size:12px}
@@ -47,6 +50,13 @@ th{font-size:11px;color:var(--muted);background:white;position:sticky;top:0}td{f
   <div class="panel kpi"><small>SAÍDAS BANCÁRIAS · ANO</small><strong id="debit">—</strong><small id="debitNote">—</small></div>
   <div class="panel kpi"><small>VARIAÇÃO BANCÁRIA · ANO</small><strong id="net">—</strong><small id="netNote">Não equivale a lucro contábil</small></div>
  </div>
+ <section class="panel"><h2>Fluxo de caixa · Hoje <small id="dayStamp" class="muted"></small></h2>
+ <div class="todayGrid">
+  <div><small>ENTRADAS DO DIA</small><div class="todayValue" id="dailyCredit">—</div></div>
+  <div><small>SAÍDAS DO DIA</small><div class="todayValue" id="dailyDebit">—</div></div>
+  <div><small>VARIAÇÃO LÍQUIDA</small><div class="todayValue" id="dailyNet">—</div></div>
+ </div><p class="muted"><small id="dailyStatus">Base armazenada da Cora; movimentações em atualização. Não corresponde a lucro.</small></p>
+ </section>
  <div class="panel"><h2>Comparativo financeiro · 2023 a 2026</h2><div class="barLegend"><span><span class="dot in"></span>Entradas bancárias</span><span><span class="dot out"></span>Saídas bancárias</span></div><div class="chart-years" id="yearsChart"></div><p class="muted"><small>Os gráficos distinguem dados completos de períodos parciais. A base da Cora Pro não fornece aqui uma classificação garantida de faturamento por competência.</small></p></div>
  <div class="toolbar"><label>Ano <select id="year"><option>2026</option><option>2025</option><option>2024</option><option>2023</option></select></label><label>Mês <select id="month"></select></label><button id="showmonth" type="button">Abrir extrato do mês</button><span class="pill" id="monthstatus">—</span></div>
  <div class="two">
@@ -102,6 +112,12 @@ E("statementInfo").textContent=found.length+" lançamentos exibidos";const tbody
 async function loadDetail(){const y=Number(E("year").value),m=Number(E("month").value),[start,end]=dates(y,m);if(new Date(start)>new Date()){detail=[];displayRows();return}try{msg("Carregando extrato armazenado de "+M[m-1]+"/"+y+"...");const d=await get("?api=dashboard&start="+start+"&end="+end);detail=d.movements||[];displayRows();msg("Extrato consultado no Supabase: sem nova leitura bancária.")}catch(e){msg("Falha no extrato: "+e.message)}}
 async function reload(){if(busy)return;busy=true;E("refresh").disabled=true;try{msg("Lendo indicadores do Supabase...");const d=await get("?api=years");lastYears=d;data=d.months||[];const s=d.stats||{};E("syncstate").textContent=(s.imported_months||0)+"/"+(s.total_months||46)+" meses concluídos · "+(d.record_count||0)+" movimentações";
 E("syncstate").className="pill "+(s.imported_months===s.total_months?"good":"warn");
+const daily=d.today||null;
+E("dailyCredit").textContent=daily?BRL(daily.credit_centavos):"—";
+E("dailyDebit").textContent=daily?BRL(daily.debit_centavos):"—";
+E("dailyNet").textContent=daily?BRL(Number(daily.credit_centavos||0)-Number(daily.debit_centavos||0)):"—";
+E("dayStamp").textContent=daily?.date?daily.date.split("-").reverse().join("/"):"";
+E("dailyStatus").textContent=daily?(daily.transactions+" lançamentos no dia · dados bancários armazenados no Supabase · atualização incremental"):"Aguardando importação do dia";
 E("balance").textContent=d.balance?BRL(d.balance.amount_centavos):"—";
 E("balanceAge").textContent=d.balance?.updated_at?"Atualizado: "+new Date(d.balance.updated_at).toLocaleString("pt-BR"):"Primeiro saldo ainda não sincronizado";
 E("freshness").textContent=d.last_import?"Última importação: "+new Date(d.last_import).toLocaleString("pt-BR"):"Aguardando carga histórica";
