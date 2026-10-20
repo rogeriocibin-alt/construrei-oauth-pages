@@ -70,11 +70,12 @@ function value(m,k){const raw=Number(m[k]);return m[k]===null||m[k]===undefined|
 function assessment(m){if(!m)return {ready:false,inc:0,out:0,reconciled:false};
  const observedIn=value(m,"observed_credit_centavos")||0,observedOut=value(m,"observed_debit_centavos")||0;
  const officialIn=value(m,"credit_centavos"),officialOut=value(m,"debit_centavos");
- const official=m.source==="CORA_VALIDATED_AGGREGATIONS"&&officialIn!==null&&officialOut!==null;
- const otherSummary=officialIn!==null&&officialOut!==null&&!official;
- const reconciled=!official||m.status!=="complete"||(observedIn===officialIn&&observedOut===officialOut);
- const ready=(official&&reconciled)||(m.status==="complete"&&!otherSummary);
- return {ready,inc:official&&reconciled?officialIn:observedIn,out:official&&reconciled?officialOut:observedOut,reconciled,official};
+ const hasTotals=officialIn!==null&&officialOut!==null;
+ const recognized=hasTotals&&["CORA_VALIDATED_AGGREGATIONS","CORA_OFFICIAL_AGGREGATIONS"].includes(m.source);
+ const reconciled=!recognized||m.status!=="complete"||(observedIn===officialIn&&observedOut===officialOut);
+ const official=recognized&&(m.source==="CORA_VALIDATED_AGGREGATIONS"||(m.status==="complete"&&reconciled));
+ const ready=reconciled&&((m.status==="complete")||official);
+ return {ready,inc:official?officialIn:observedIn,out:official?officialOut:observedOut,reconciled,official};
 }
 function render(){const y=Number(E("year").value);const months=data.filter(m=>m.period_start?.startsWith(String(y)));const expected=y===new Date().getUTCFullYear()?new Date().getUTCMonth()+1:12;
 const complete=months.filter(m=>assessment(m).ready).length;const sumIn=months.reduce((a,m)=>a+assessment(m).inc,0),sumOut=months.reduce((a,m)=>a+assessment(m).out,0),valid=complete===expected;
@@ -88,7 +89,7 @@ const cell=create("div","ycell"),pair=create("div","ypair");for(const [v,cls] of
 cell.append(pair,create("b",null,String(yr)),create("small","muted",full?"Completo":ok+"/"+needed+" meses"));E("yearsChart").append(cell)}
 const rows=E("monthChart");rows.replaceChildren();const maxMonth=Math.max(1,...months.flatMap(m=>[assessment(m).inc,assessment(m).out]));
 for(let i=1;i<=12;i++){if(y===2026&&i>10)continue;const m=months.find(x=>Number(x.period_start?.slice(5,7))===i);const s=assessment(m);
-const row=create("div","mrow"),tracks=create("div","mtracks"),lab=create("strong",null,M[i-1]),val=create("small","muted",m&&s.ready?BRL(s.inc-s.out):"Pendente");
+const row=create("div","mrow"),tracks=create("div","mtracks"),lab=create("strong",null,M[i-1]),val=create("small","muted",m&&!s.reconciled?"Divergência":m&&s.ready?BRL(s.inc-s.out):"Pendente");
 for(const [n,cls] of [[s.inc,"in"],[s.out,"out"]]){const track=create("div","track"),fill=create("div","fill "+cls);fill.style.width=pct(n,maxMonth)+"%";fill.style.opacity=s.ready?"1":".35";track.append(fill);tracks.append(track)}row.append(lab,tracks,val);rows.append(row)}
 const active=months.find(x=>Number(x.period_start?.slice(5,7))===Number(E("month").value));const state=assessment(active);E("monthstatus").textContent=state.ready?"Período completo":active?.status==="error"?"Erro de importação":active?.status==="running"?"Importando":"Histórico parcial";E("monthstatus").className="pill "+(state.ready?"good":"warn");
 const discrepancies=months.filter(m=>m.status==="complete"&&!assessment(m).reconciled);
