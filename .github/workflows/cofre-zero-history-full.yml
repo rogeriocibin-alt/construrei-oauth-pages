@@ -1,5 +1,7 @@
 name: Cofre Zero | Smart immutable CAS archive
 on:
+  schedule:
+    - cron: '47 8 * * *'
   workflow_dispatch:
   push:
     branches: [main]
@@ -37,7 +39,7 @@ jobs:
           python3 .github/scripts/cr_cofre_direct_cas_fallback.py --selftest
 
   detect:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:

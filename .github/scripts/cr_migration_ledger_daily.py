@@ -94,6 +94,8 @@ def selftest():
             raise AssertionError("Accepted unclosed COPY")
         except ValueError:
             pass
+    assert hashlib.sha256(b'a').hexdigest() != hashlib.sha256(b'b').hexdigest()
+    assert (('20261020-060011-' + hashlib.sha256(b'b').hexdigest() + '.json') != '20261020-060011.json')
     capacity(2000000, 1000000, 2 * FREE_RESERVE_BYTES)
     for values in ((500, MAX_LEDGER_BYTES, 2 * FREE_RESERVE_BYTES),
                    (500, 0, 40), (500, 0, None)):
@@ -157,6 +159,14 @@ def archive(run_id):
         quota = json.loads(execute(["rclone", "about", "construrei-drive:", "--json"]))
         if type(quota) is not dict:
             raise ValueError("Private Drive quota unavailable")
+        # Resolve immutable destination before quota accounting and writes.
+        # A repeated source run can have a different read-only export.
+        if manifest_name in manifests:
+            execute(["rclone", "copyto", ROOT + "/MANIFESTS/" + manifest_name,
+                     str(work / "existing-manifest.json")])
+            if (work / "existing-manifest.json").read_bytes() != payload:
+                manifest_name = run_id + "-" + hashlib.sha256(payload).hexdigest() + ".json"
+        target = ROOT + "/MANIFESTS/" + manifest_name
         capacity((0 if obj_name in objects else size)
                  + (0 if manifest_name in manifests else len(payload)),
                  existing, quota.get("free"))
@@ -167,13 +177,9 @@ def archive(run_id):
             copy_immutable(dump, ROOT + "/OBJECTS/" + obj_name)
             copy_readback(ROOT + "/OBJECTS/" + obj_name, work / "verified.sql",
                           dump.read_bytes())
-        if manifest_name in manifests:
-            copy_readback(ROOT + "/MANIFESTS/" + manifest_name,
-                          work / "verified.json", payload)
-        else:
-            copy_immutable(manifest_local, ROOT + "/MANIFESTS/" + manifest_name)
-            copy_readback(ROOT + "/MANIFESTS/" + manifest_name,
-                          work / "verified.json", payload)
+        if manifest_name not in manifests:
+            copy_immutable(manifest_local, target)
+        copy_readback(target, work / "verified.json", payload)
         print("PASS: daily migration ledger archived privately and read back")
         print("Source migration rows:", rows)
         print("Immutable object:", "reused" if obj_name in objects else "new")
