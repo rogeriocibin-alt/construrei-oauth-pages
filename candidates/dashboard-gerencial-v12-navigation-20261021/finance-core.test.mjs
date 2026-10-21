@@ -1,0 +1,17 @@
+import assert from "node:assert/strict";
+import {rateioCanonico,conciliarValores,deduplicarMovimentos,rotuloAcerto,centavos} from "./finance-core.mjs";
+const r=rateioCanonico(49800);
+assert.deepEqual(r,{fabricio:9960,eder:13944,rogerio:13944,gabrielly:6972,capitalGiro:4980});
+assert.equal(Object.values(rateioCanonico(1)).reduce((a,b)=>a+b,0),1);
+assert.equal(Object.values(rateioCanonico(184419)).reduce((a,b)=>a+b,0),184419);
+assert.equal(conciliarValores({receitaCentavos:120000,custoCentavos:70200}).lucroCentavos,49800);
+assert.equal(conciliarValores({receitaCentavos:0,custoCentavos:0}).margemPercentual,null);
+assert.equal(centavos(1.23),123);
+assert.throws(()=>rateioCanonico(100,{historico:true}));
+assert.throws(()=>rateioCanonico(-1));
+const d=deduplicarMovimentos([{origem:"CORA",sourceId:"abc"},{origem:"CORA",sourceId:"abc"},{origem:"TRELLO",sourceId:"abc"},{sourceId:""}]);
+assert.equal(d.unicos.length,2);assert.equal(d.rejeitados.length,1);assert.equal(d.semId.length,1);
+assert.equal(rotuloAcerto({calculado:true}),"CALCULADO_NAO_PAGO");
+assert.equal(rotuloAcerto({registrado:true,pago:true}),"PAGO_REGISTRADO");
+assert.equal(rotuloAcerto({pago:true}),"DIVERGENTE");
+console.log("V12 — 12 verificações financeiras básicas aprovadas (fixtures, não conciliação real).");
