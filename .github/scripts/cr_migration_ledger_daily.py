@@ -157,6 +157,14 @@ def archive(run_id):
         quota = json.loads(execute(["rclone", "about", "construrei-drive:", "--json"]))
         if type(quota) is not dict:
             raise ValueError("Private Drive quota unavailable")
+        # Resolve immutable destination before quota accounting and writes.
+        # A repeated source run can have a different read-only export.
+        if manifest_name in manifests:
+            execute(["rclone", "copyto", ROOT + "/MANIFESTS/" + manifest_name,
+                     str(work / "existing-manifest.json")])
+            if (work / "existing-manifest.json").read_bytes() != payload:
+                manifest_name = run_id + "-" + hashlib.sha256(payload).hexdigest() + ".json"
+        target = ROOT + "/MANIFESTS/" + manifest_name
         capacity((0 if obj_name in objects else size)
                  + (0 if manifest_name in manifests else len(payload)),
                  existing, quota.get("free"))
@@ -167,13 +175,6 @@ def archive(run_id):
             copy_immutable(dump, ROOT + "/OBJECTS/" + obj_name)
             copy_readback(ROOT + "/OBJECTS/" + obj_name, work / "verified.sql",
                           dump.read_bytes())
-        if manifest_name in manifests:
-            # Preserve earlier immutable exports when a retry yields a new snapshot.
-            execute(["rclone", "copyto", ROOT + "/MANIFESTS/" + manifest_name,
-                     str(work / "existing-manifest.json")])
-            if (work / "existing-manifest.json").read_bytes() != payload:
-                manifest_name = run_id + "-" + hashlib.sha256(payload).hexdigest() + ".json"
-        target = ROOT + "/MANIFESTS/" + manifest_name
         if manifest_name not in manifests:
             copy_immutable(manifest_local, target)
         copy_readback(target, work / "verified.json", payload)
