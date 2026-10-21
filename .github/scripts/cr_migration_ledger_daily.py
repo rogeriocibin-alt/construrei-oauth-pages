@@ -168,12 +168,15 @@ def archive(run_id):
             copy_readback(ROOT + "/OBJECTS/" + obj_name, work / "verified.sql",
                           dump.read_bytes())
         if manifest_name in manifests:
-            copy_readback(ROOT + "/MANIFESTS/" + manifest_name,
-                          work / "verified.json", payload)
-        else:
-            copy_immutable(manifest_local, ROOT + "/MANIFESTS/" + manifest_name)
-            copy_readback(ROOT + "/MANIFESTS/" + manifest_name,
-                          work / "verified.json", payload)
+            # Preserve earlier immutable exports when a retry yields a new snapshot.
+            execute(["rclone", "copyto", ROOT + "/MANIFESTS/" + manifest_name,
+                     str(work / "existing-manifest.json")])
+            if (work / "existing-manifest.json").read_bytes() != payload:
+                manifest_name = run_id + "-" + hashlib.sha256(payload).hexdigest() + ".json"
+        target = ROOT + "/MANIFESTS/" + manifest_name
+        if manifest_name not in manifests:
+            copy_immutable(manifest_local, target)
+        copy_readback(target, work / "verified.json", payload)
         print("PASS: daily migration ledger archived privately and read back")
         print("Source migration rows:", rows)
         print("Immutable object:", "reused" if obj_name in objects else "new")
