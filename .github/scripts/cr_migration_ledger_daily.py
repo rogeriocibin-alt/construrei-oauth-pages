@@ -94,6 +94,8 @@ def selftest():
             raise AssertionError("Accepted unclosed COPY")
         except ValueError:
             pass
+    assert hashlib.sha256(b'a').hexdigest() != hashlib.sha256(b'b').hexdigest()
+    assert (('20261020-060011-' + hashlib.sha256(b'b').hexdigest() + '.json') != '20261020-060011.json')
     capacity(2000000, 1000000, 2 * FREE_RESERVE_BYTES)
     for values in ((500, MAX_LEDGER_BYTES, 2 * FREE_RESERVE_BYTES),
                    (500, 0, 40), (500, 0, None)):
