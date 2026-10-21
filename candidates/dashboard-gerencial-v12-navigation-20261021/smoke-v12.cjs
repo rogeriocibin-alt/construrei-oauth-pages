@@ -7,7 +7,7 @@ const p=path.join(__dirname,'index.html');
 const s=readFileSync(p,'utf8');
 let checks=0;
 function check(condition,description){assert.ok(condition,description);checks++;}
-const sections=[...s.matchAll(/<section id="([^"]+)" class="section"/g)].map(x=>x[1]);
+const sections=[...s.matchAll(/<section id="([^"]+)" class="section(?: on)?"/g)].map(x=>x[1]);
 check(sections.length===8,'Oito seções operacionais da V11 preservadas');
 check(new Set(sections).size===8,'Sem seções repetidas');
 for(const id of ['agora','corapro','cora','fin','hist','conc','cost','qual'])check(sections.includes(id),'Seção '+id+' preservada');
