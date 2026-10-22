@@ -1,6 +1,11 @@
 "use strict";
 /* Auditoria Cora x Trello estritamente SOMENTE LEITURA, sem escrita contábil. */
-const LINE=/^\s*(?:[•*+-]\s*)?(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\s*[-–—]\s*(?:R\$\s*)?([\d.]+,\d{2})(?=\s|$)/i;
+const LINE=/^\s*(?:[•*+-]\s*)?(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\s*[-–—]\s*(?:R\$\s*){0,2}([\d.]+,\d{2})(?=\s|$)/i;
+// Separar somente lançamentos datados colados a "Ref. PIX", preservando o texto original na origem.
+const GLUED_PIX=/(PIX)(?=\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\s*[-–—]\s*(?:R\$\s*){0,2}[\d.]+,\d{2})/gi;
+function splitFinancialLines(text){
+ return String(text||"").replace(GLUED_PIX,"$1\n").split(/\r?\n/);
+}
 const CASE=/(?<!\d)(\d{2,5}-(?:24|25|26))(?!\d)/;
 function parseLine(line,defaultYear){
  const m=String(line||"").match(LINE);if(!m)return null;
@@ -28,7 +33,7 @@ function reconcile(bank,cards,year){
   cardIds.add(c.id);
   const no=String(c.name||"").match(CASE)?.[1];
   if(!no)continue;
-  for(const [i,line] of String(c.desc||"").split(/\r?\n/).entries()){
+  for(const [i,line] of splitFinancialLines(c.desc).entries()){
    const p=parseLine(line,year);if(!p)continue;
    const options=byKey.get(key(no,p.day,p.cents,"debit"))||[];
    const entry={cardId:c.id,caseNo:no,line:i,bankId:null,status:"SEM_VINCULO"};
@@ -50,4 +55,4 @@ function reconcile(bank,cards,year){
  return {rows,counts,bankIds:ids.size,cardIds:cardIds.size,
   uniqueMatchedBank:uses.size,reusedBank:[...uses.values()].filter(a=>a.length>1).length};
 }
-module.exports={parseLine,reconcile};
+module.exports={parseLine,splitFinancialLines,reconcile};
