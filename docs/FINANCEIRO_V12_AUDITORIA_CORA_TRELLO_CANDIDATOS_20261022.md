@@ -14,15 +14,16 @@ Consulta reproduzível: `audits/financeiro-v12-cora-trello-candidatos-20261022.s
 
 | Categoria excluente | Movimentos | O que realmente significa |
 |---|---:|---|
-| Identificador explícito de obra `123-26` ou semelhante | **1.160** | Candidato para pesquisar card; NÃO confirma que registro equivalente exista nem que valor ou origem coincidam |
-| Menciona "obra", sem identificador de orçamento | **563** | Exige pesquisa contextual com confirmação humana; não vincular automaticamente |
-| Descrição vazia | **3.681** | Não há texto suficiente para estabelecer obra; não inventar associação |
-| Outros, sem indicador suficiente | **2.272** | Pode ser gasto bancário, administrativo ou pessoal/empresa; não impor categoria |
+| Um único número de obra `123-26` | **1.115** | Um único **candidato** de obra no texto; requer vinculação bilateral no Trello |
+| Dois ou mais números de obra | **45** | **Bloqueado para atribuição integral**; exige rateio documentado |
+| Menciona "obra", sem número de orçamento | **563** | Exige pesquisa contextual com confirmação humana |
+| Descrição vazia | **3.681** | Não há texto suficiente para estabelecer obra |
+| Outros, sem indicador suficiente | **2.272** | Pode ser gasto bancário, administrativo ou não relacionado a obra; não impor categoria |
 | **Total de movimentos classificados** | **7.676** | **100% da base classificada**, NÃO 100% conciliada com cartões |
 
-Os 1.160 candidatos mencionam **562 números distintos de obra** no conjunto. Os valores foram apurados em 22/10/2026; dados vivos mudam após novas movimentações.
+Os **1.160 movimentos** com algum número identificável foram segregados em **1.115 de obra única** e **45 multiobra**, usando expressão regular com limites não consumidores. O agrupamento inicial com regex consumidora omitia códigos adicionais em duas transações multiobra. A classificação nova foi conferida sobre os mesmos 7.676 IDs únicos. Os valores foram apurados em 22/10/2026; dados vivos mudam após novas movimentações.
 
-**Por ano:** 2023: 1 candidato / 1.150 movimentos; 2024: 198 / 2.180; 2025: 466 / 2.564; 2026 até o snapshot: 495 / 1.782. Os demais grupos ficam separados conforme a consulta.
+**Por ano (obra única / multiobra):** 2023 1 / 0 (1.150 movimentos); 2024 188 / 10 (2.180); 2025 458 / 8 (2.564); 2026 468 / 27 (1.782). Total por ano confere com todos os movimentos; sem dupla contagem.
 
 ## Trilha Trello das três despesas previamente documentadas
 O card oficial de Capital de Giro traz comentário de auditoria de 16/10 com vínculos e marcadores históricos:
@@ -50,3 +51,14 @@ O card oficial de Capital de Giro traz comentário de auditoria de 16/10 com ví
 - Não foram criados novos serviços ou alterados saldos, chaves, movimentações, obras, faturas, Trello ou funções Supabase.
 
 **Conclusão:** a sincronização do Capital de Giro alcançou o Trello automaticamente, o congelamento foi reforçado e todos os movimentos bancários receberam uma classificação reproduzível. A correspondência por transação e por obra continua sob verificação; não homologar como contábil integral sem evidência bilateral.
+
+## Segundo checkpoint — evidência bilateral de obra 775-26
+- Card Trello localizado por busca autenticada: `https://trello.com/c/dYuHiLPe`, lista EM ANDAMENTO (Gestão de Obras 2026).
+- Trello informa `07/10 R$ 1.785,22 Material Piso` e `08/10 R$ 105,00 Almoço Éder, João e Fabrício — Ref. PIX`.
+- Cora encontrou em 07/10 o débito PIX R$ 1.785,22, descrição `Materiais Obra 775-26`, `source_id=ent_H7JkjhdfSNGrcqTjiLvuRg`; e em 08/10 o PIX R$ 105,00, descrição `775-26 Almoço todos`, `source_id=ent_IbX0FLcqTF6CCA3c4A3CpQ`.
+- Ambos os pares são únicos na base bancária para mesma data civil Brasília, direção e centavos. **Classificação: EVIDÊNCIA BILATERAL COMPATÍVEL / AGUARDANDO ID DA OPERAÇÃO NO TRELLO**. Não afirmar que o ID Cora foi efetivamente gravado nos dois lançamentos do card.
+- O mesmo extrato possui mais três transações que citam 775-26 e **também outras obras** (R$ 300,00 em 09/10, R$ 450,00 em 14/10 e R$ 450,00 em 22/10). Esses totais não podem ser debitados integralmente na obra 775-26. O cartão de 20/10 tem um apoio de R$ 150,00 que pode corresponder a parte do último PIX, mas vinculação integral e rateio entre os outros dois trabalhos **não foram comprovados**.
+- Uma busca por valor/data não autoriza escrita nem modificação de despesa antiga.
+
+## Limite objetivo apurado
+Foram classificados todos os 7.676 movimentos em cinco conjuntos excludentes; **nenhuma movimentação foi transferida, corrigida ou inserida nos cartões Trello**. A trilha exemplar de 775-26 foi confrontada bilateralmente por valor/data/obra; os 1.115 candidatos restantes exigem varredura do conteúdo dos respectivos cartões, seus comprovantes e seus IDs. O conector não forneceu exportação transacional completa de todos os cartões e suas referências para comparação em massa nesta execução. Não é possível atestar 100% de conciliação por obra com apenas o extrato.
