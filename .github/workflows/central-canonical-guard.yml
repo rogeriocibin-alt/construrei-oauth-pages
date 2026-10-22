@@ -97,7 +97,9 @@ jobs:
           grep -Fq 'V12 · HOMOLOGADA (OPERAÇÃO)' "$frozen"
           grep -Fq 'window.CR_V12_CORA_AUDIT=calculate' "$frozen"
           echo 'Financeiro V12 frozen HTML checked; no financial writes or new services.'
-      - name: Prove Financeiro V12 protected close-work, without writes\n        run: node --test audits/finance-v12-close-work-restore.test.cjs\n      - name: Verify homologated HTML is byte-identical
+      - name: Prove Financeiro V12 protected close-work, without writes
+        run: node --test audits/finance-v12-close-work-restore.test.cjs
+      - name: Verify homologated HTML is byte-identical
         shell: bash
         run: |
           actual="$(git hash-object production/central-homologada-20261001/index.html)"
