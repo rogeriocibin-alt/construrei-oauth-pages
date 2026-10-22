@@ -621,8 +621,8 @@ async function manualCheckStatus(){
 async function manualCloseWork(){
  const b=document.getElementById("mc_close");
  if(b.disabled||S.manualCloseInFlight)return;
- const caseNo=String(document.getElementById("mc_case")?.value||"").trim().replace(/\\s+/g,"");
- if(!/^\\d{1,5}-?2[456]$/.test(caseNo)){manualMsg("Informe uma obra válida de 2024, 2025 ou 2026.","err");return}
+ const caseNo=String(document.getElementById("mc_case")?.value||"").trim().replace(/\s+/g,"");
+ if(!/^\d{1,5}-?2[456]$/.test(caseNo)){manualMsg("Informe uma obra válida de 2024, 2025 ou 2026.","err");return}
  S.manualCloseInFlight=true;b.disabled=true;
  const closurePost=payload=>api("api=manual-close-work",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)});
  try{
@@ -631,11 +631,11 @@ async function manualCloseWork(){
   const x=pre.close||{},rr=x.rateio||{},t=pre.target||{};
   if(!pre.preview||!pre.fingerprint||!t.card_id)throw Error("PRÉVIA INCOMPLETA: nenhuma gravação autorizada.");
   const labels=[["Base de acerto",x.base_cents],["Custos",x.cost_cents],["Lucro líquido",x.profit_cents],["Margem",pct(x.margin_pct)],["Fabrício (20%)",rr.fabricio_cents],["Éder (28%)",rr.eder_cents],["Rogério (28%)",rr.rogerio_cents],["Gabrielly (14%)",rr.gabi_cents],["Capital de Giro (10%)",rr.capital_giro_cents]];
-  const summary=labels.map(([label,v])=>label+": "+(typeof v==="number"?brl(v):v)).join("\\n");
-  const previewText="Obra "+pre.case+" • "+t.card_name+" • "+t.list+"\\n"+summary;
+  const summary=labels.map(([label,v])=>label+": "+(typeof v==="number"?brl(v):v)).join("\n");
+  const previewText="Obra "+pre.case+" • "+t.card_name+" • "+t.list+"\n"+summary;
   manualMsg('<b>PRÉVIA DO FECHAMENTO · NADA GRAVADO</b><br>Obra '+esc(pre.case)+' · Card: '+esc(t.card_name)+'<br>'+labels.map(([n,v])=>esc(n)+": <b>"+esc(typeof v==="number"?brl(v):v)+"</b>").join("<br>")+(pre.duplicate?"<br><b>Fechamento idêntico já registrado, não repetir.</b>":""),"ok");
   if(pre.duplicate){b.disabled=true;return}
-  if(!confirm(previewText+"\\n\\nCONFIRMAR GRAVAÇÃO DO FECHAMENTO NO TRELLO?\\nNão movimenta o saldo Cora nem faz pagamento.")){b.disabled=false;return}
+  if(!confirm(previewText+"\n\nCONFIRMAR GRAVAÇÃO DO FECHAMENTO NO TRELLO?\nNão movimenta o saldo Cora nem faz pagamento.")){b.disabled=false;return}
   manualMsg("Confirmado. Verificando se o card mudou e registrando no Trello...");
   const result=await closurePost({case:caseNo,require_preview:true,expected_card_id:t.card_id,expected_fingerprint:pre.fingerprint,preview_at:pre.preview_at});
   if(!result?.ok||!(result.committed||result.duplicate))throw Error("O servidor não comprovou o fechamento. Confira o Trello antes de repetir.");
