@@ -49,6 +49,10 @@ check(s.includes('cr-finance-v12-safe-trello-candidate-20261021'),'Canal de escr
 check(s.includes('const capitalV11=method===\"POST\"')&&s.includes('url.searchParams.get(\"action\")===\"debit\"'),'Capital libera somente ação de débito legado autenticado');
 check(s.includes('id=\"v12ex-capital-shortcut\"')&&s.includes('#fin #v11cap{display:block!important;'),'Capital de Giro V11 navegável e visível');
 check(s.includes('window.v12CapitalGo'),'Atalho executivo ao capital de giro');
+check(s.includes('if(key==="capital"&&typeof window.v12CapitalGo')&&s.includes('window.v12CapitalGo()'),'Card executivo de Capital de Giro navega à central, não duplica resumo');
+check(s.includes('Margem ponderada comparável')&&s.includes('comparableMargin=v12ComparableRows(S.oy,S.opm)'),'Indicador de margem ponderada usa obras com mesma base');
+check(s.includes('LUCRO INFORMADO')&&s.includes('MARGEM APURÁVEL'),'Painel executivo distingue lucro informado de margem comparável');
+
 check((s.match(/id="v12-capital-workspace"/g)||[]).length===1,'Um só espaço operacional Capital de Giro');
 check(s.indexOf('id="v12-capital-workspace"')<s.indexOf('id="v12-live-acertos"')&&s.indexOf('id="v12-live-acertos"')<s.indexOf('id="finperiod"'),'Capital de Giro vem primeiro, antes de acertos vivos e rateios históricos');
 for(const anchor of ['#v12-capital-workspace','#v12-live-acertos','#finperiod'])check(s.includes('href="'+anchor+'"'),'Navegação por âncora '+anchor);
