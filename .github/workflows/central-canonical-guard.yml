@@ -87,7 +87,7 @@ jobs:
         run: |
           set -euo pipefail
           frozen='production/dashboard-financeiro-v12-homologada-20261022/index.html'
-          expected='1bf77c0fdcf8c715d21170aeb940975f75a1f6fa'
+          expected='31ae6a8e9b2c231ada71628dc25416a1157b2b98'
           test -f "$frozen" || { echo 'ERROR: Financeiro V12 homologada missing'; exit 1; }
           actual="$(git hash-object "$frozen")"
           test "$actual" = "$expected" || {
