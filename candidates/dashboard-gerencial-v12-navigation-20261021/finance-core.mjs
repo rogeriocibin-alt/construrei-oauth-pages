@@ -87,3 +87,34 @@ export function verificarMargemConsolidada({receitaCentavos,custoCentavos,lucroC
   }
   return {status:"ARITMETICA_CONSISTENTE_NAO_HOMOLOGADA",margemPercentual:Math.round(lucroCentavos/receitaCentavos*10000)/100,diferencaCentavos:diferenca};
 }
+
+
+/**
+ * Apura apenas obras com trio receita/custo/lucro aritmeticamente verificável,
+ * mantendo fora do subtotal entradas incompletas e casos duplicados.
+ * Não é comprovante de recebimento/pagamento Cora.
+ */
+export function apurarObrasComparaveis(rows=[]){
+ if(!Array.isArray(rows))throw Error("Linhas inválidas");
+ const groups=new Map(),excluidas=[];
+ for(const r of rows){
+  const key=String(r?.case??r?.case_no??"").trim();
+  if(!key){excluidas.push({case:null,motivo:"SEM_IDENTIFICADOR"});continue}
+  if(!groups.has(key))groups.set(key,[]);
+  groups.get(key).push(r);
+ }
+ let receitaCentavos=0,custoCentavos=0,lucroCentavos=0,elegiveis=0;
+ for(const [key,g] of groups){
+  if(g.length!==1){excluidas.push({case:key,motivo:"CASO_REPETIDO"});continue}
+  const r=g[0],a=[r?.gross_cents,r?.cost_cents,r?.profit_cents];
+  const v=a.map(x=>typeof x==="number"&&Number.isSafeInteger(x)?x:null);
+  if(v.some(x=>x===null)||v[0]<=0||v[1]<0||Math.abs(v[0]-v[1]-v[2])>1){
+   excluidas.push({case:key,motivo:"BASE_INCOMPLETA_OU_DIVERGENTE"});continue
+  }
+  elegiveis++;receitaCentavos+=v[0];custoCentavos+=v[1];lucroCentavos+=v[2];
+ }
+ const total=groups.size+excluidas.filter(x=>x.motivo==="SEM_IDENTIFICADOR").length;
+ return {total,elegiveis,excluidas,receitaCentavos,custoCentavos,lucroCentavos,
+  margemPercentual:receitaCentavos>0?Math.round(lucroCentavos/receitaCentavos*10000)/100:null,
+  status:elegiveis===0?"SEM_BASE_COMPARAVEL":excluidas.length>0?"SUBCONJUNTO_PARCIAL":"SUBCONJUNTO_CONSISTENTE"};
+}
