@@ -39,3 +39,25 @@ assert.equal(verificarMargemConsolidada({receitaCentavos:10000,custoCentavos:100
 const ponderada=verificarMargemConsolidada({receitaCentavos:110000,custoCentavos:90000,lucroCentavos:20000,coberturaPercentual:100});
 assert.equal(ponderada.margemPercentual,18.18); // não média simples de 50% e 16,67%
 console.log("V12 — 8 cenários adicionais de conciliação de margem aprovados (fixtures).");
+
+
+import {apurarObrasComparaveis} from "./finance-core.mjs";
+const comps=apurarObrasComparaveis([
+ {case:"1-26",gross_cents:120000,cost_cents:80000,profit_cents:40000},
+ {case:"2-26",gross_cents:20000,cost_cents:25000,profit_cents:-5000},
+ {case:"3-26",gross_cents:10000,cost_cents:null,profit_cents:3000},
+ {case:"4-26",gross_cents:5000,cost_cents:1000,profit_cents:4000},
+ {case:"4-26",gross_cents:5000,cost_cents:1000,profit_cents:4000},
+ {case:"5-26",gross_cents:10000,cost_cents:2000,profit_cents:7000}
+]);
+assert.equal(comps.total,5);
+assert.equal(comps.elegiveis,2);
+assert.equal(comps.receitaCentavos,140000);
+assert.equal(comps.custoCentavos,105000);
+assert.equal(comps.lucroCentavos,35000);
+assert.equal(comps.margemPercentual,25);
+assert.equal(comps.status,"SUBCONJUNTO_PARCIAL");
+assert.equal(apurarObrasComparaveis([]).status,"SEM_BASE_COMPARAVEL");
+assert.equal(apurarObrasComparaveis([{case:"a",gross_cents:100,cost_cents:40,profit_cents:60}]).status,"SUBCONJUNTO_CONSISTENTE");
+assert.throws(()=>apurarObrasComparaveis({}));
+console.log("V12 — subtotal válido calculado em cenários parciais sem inventar resultado total.");
