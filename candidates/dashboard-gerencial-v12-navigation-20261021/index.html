@@ -417,6 +417,21 @@ body{background:var(--v12-bg)}
 @media(max-width:1000px){.v12ex-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.v12ex-grids{grid-template-columns:1fr 1fr}}
 @media(max-width:680px){.v12ex-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.v12ex-grids{grid-template-columns:1fr}.v12ex-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.v12ex-head{align-items:flex-start;flex-direction:column}.v12ex-chart{gap:3px}.v12ex-chartbox{padding:12px}.v12ex-kpi{padding:12px}}
 @media(prefers-reduced-motion:reduce){.v12ex-kpi{transition:none}}
+</style><style id="v12ex-semantic-palette-20261021">
+:root{--v12-navy:#07182b;--v12-blue:#216ab5;--v12-green:#198065;--v12-red:#c74653;--v12-amber:#b27e20;--v12-gold:#c9a14a}
+#v12-exec-cockpit .v12ex-chartbox{background:#fff;border:1px solid #e0e8f0;box-shadow:0 4px 17px #07182b0c}
+#v12-exec-cockpit .v12ex-kpi:focus-visible,#v12-exec-cockpit button:focus-visible{outline:3px solid #216ab5;outline-offset:3px}
+#v12-exec-cockpit .v12ex-bar{background:#216ab5}
+#v12-exec-cockpit .v12ex-bar.cost{background:#c74653}
+#v12-exec-cockpit .v12ex-bar.profit,#v12-exec-cockpit .v12ex-bar.positive{background:#198065}
+#v12-exec-cockpit .v12ex-bar.loss,#v12-exec-cockpit .v12ex-bar.negative{background:#c74653}
+#hist .bc:nth-child(n) .bar{background:#216ab5;border-color:#216ab5}
+#hist:has(#met option[value="cost_cents"]:checked) .bc:nth-child(n) .bar{background:#c74653;border-color:#c74653}
+#hist:has(#met option[value="profit_cents"]:checked) .bc:nth-child(n) .bar{background:#198065;border-color:#198065}
+#v12-cora-live .v12-smart{background:#102e4b}
+#v12ex-advanced>summary{border-radius:9px;transition:background .2s}
+#v12ex-advanced>summary:hover{background:#eef4fa}
+@media(max-width:640px){#v12-exec-cockpit .v12ex-filters{gap:8px}#v12-exec-cockpit .v12ex-kpi{padding:12px}}
 </style></head><body><div id="login" class="login"><div class="box"><div style="display:flex;gap:10px;align-items:center"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><b>CONSTRU-REI · DASHBOARD V4</b></div><p class="muted small">Módulo oficial da Central CONSTRU-REI. Mesma chave da Central.</p><input id="key" type="password" placeholder="Chave de acesso"><button onclick="login()">Entrar</button><div id="err"></div></div></div>
 <header class="top"><div class="topin"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><div><b>CONSTRU-REI</b><div class="small" style="color:#f3e7c6">DASHBOARD GERENCIAL</div><div class="small">GESTÃO • OPERAÇÃO • FINANCEIRO • INTELIGÊNCIA</div></div><div class="grow"></div><b>V12 · VALIDAÇÃO</b><span id="live">online</span></div></header><main class="main"><div class="r6hero"><div class="r6eyebrow">CENTRO DE COMANDO DA DIRETORIA</div><div class="r6title">CONSTRU-REI · Diretoria Agora</div><div class="r6sub">VISÃO EXECUTIVA • OPERAÇÃO • RESULTADO • CUSTOS • RISCOS</div></div><div class="v12-line"><b>V12 · PRÉVIA PUBLICADA · SOMENTE LEITURA</b><span>Dados vivos protegidos por autenticação. Acertos em auditoria; lançamentos e fechamentos bloqueados.</span></div><div class="tabs v12tabs">
 <button class="tab on" data-t="agora">VISÃO EXECUTIVA</button>
@@ -922,7 +937,7 @@ setInterval(tick,10000);
 })();
 </script><script id="v12ex-runtime">(function(){
 "use strict";
-const get=id=>document.getElementById(id),money=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(n/100),nint=n=>n!==null&&n!==undefined&&Number.isSafeInteger(Number(n))?Number(n):null,months=["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
+const get=id=>document.getElementById(id),money=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(n/100),nint=n=>n!==null&&n!==undefined&&n!==""&&typeof n!=="boolean"&&Number.isSafeInteger(Number(n))?Number(n):null,months=["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
 let bankStamp=0,bankAmount=null;
 function put(id,val){const e=get(id);if(e)e.textContent=String(val)}
 function strict(m,year,month){const gross=nint(m?.gross_cents),cost=nint(m?.cost_cents),profit=nint(m?.profit_cents);
@@ -968,7 +983,7 @@ function render(){
  const q=strict(base,year,month);
  put("v12ex-gross",q.gross==null?"N/D":money(q.gross));put("v12ex-cost",q.cost==null?"N/D":money(q.cost));
  put("v12ex-profit",q.valid?money(q.profit):"N/D · revisão");put("v12ex-margin",q.valid?(q.profit/q.gross*100).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%":"N/D · revisão");
- put("v12ex-gross-note",filtered?"Recorte de "+limited.rows+" obras · Trello":"Receita identificada · não equivale a recebimento");
+ put("v12ex-gross-note",filtered?"Recorte de "+limited.rows+" obras · Trello"+(q.valid?"":" · parcial"):"Receita identificada · não equivale a recebimento");
  put("v12ex-cost-note",filtered?"Custos do mesmo recorte":"Custos documentados na fonte");
  put("v12ex-profit-note",q.valid?"Bruto menos custo no mesmo recorte":"Aguardando base completa e equivalente");
  put("v12ex-margin-note",q.valid?"Lucro ÷ receita do mesmo conjunto":"Não calculada por média de percentuais");
@@ -980,7 +995,7 @@ function render(){
   const inPeriod=!month||i===month;
   const scoped=filtered&&inPeriod?rowFiltered(year,i,status,term):null;
   const t=inPeriod?strict(scoped?.metrics||m,year,i):null;
-  ops.push({points:t&&t.gross!==null&&t.cost!==null&&t.profit!==null&&Math.abs(t.diff)<=1?[t.gross,t.cost,t.profit]:null});
+  ops.push({points:t?.valid?[t.gross,t.cost,t.profit]:null});
   margin.push({points:t?.valid?[t.profit/t.gross*100]:null});
  }
  drawBars("v12ex-ops-chart",ops,"ops");drawBars("v12ex-margin-chart",margin,"margin");
