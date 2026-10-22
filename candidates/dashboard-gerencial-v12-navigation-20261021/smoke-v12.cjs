@@ -20,8 +20,8 @@ check(s.includes('allowedLogin')||s.includes('const login=method==="POST"'),'Log
 check(s.includes('cr-cora-pro-v2-frame'),'Cora Pro V2 integrado');
 check(s.includes('gestao-cora-pro-v2-20261020'),'Mesmo Cora Pro V2 homologado');
 check(s.includes('v12-bank-audit'),'Quadros de auditoria bancária');
-check(s.includes('37 com zeros substitutos'),'Saldo ausente não confundido com zero');
-check(s.includes('Agosto/2023: R$ 300,00'),'Divergência histórica sinalizada');
+check(s.includes('Saldos reconstruídos')&&s.includes('não são saldos oficiais individuais'),'Saldo derivado não é tratado como saldo oficial mensal');
+check(s.includes('Campos legados inconsistentes')&&s.includes('v12-legacy-row'),'Divergências legadas auditáveis por mês, sem alterar a origem');
 check(s.includes('Dezembro/2023: R$ 200,00'),'Segunda divergência histórica sinalizada');
 check(s.includes('04/06–12/06')&&s.includes('Conferência operacional por período'),'Auditoria histórica do capital preservada sem duplicar montantes');
 check(s.includes('N/D · bases distintas'),'Margem de bases divergentes não é apresentada');
