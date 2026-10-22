@@ -199,7 +199,7 @@ jobs:
           print("PASS: all historical references independently restored by seed+CAS")
           print("Verified references:",m["verified_entries"])
           PY
-      - name: Archive migration ledger in the existing change-driven cycle (private deduplicated CAS)
+      - name: Archive migration ledger using the existing validated ledger script (private deduplicated CAS)
         if: github.ref == 'refs/heads/main'
         shell: bash
         env:
