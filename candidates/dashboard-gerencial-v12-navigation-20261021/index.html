@@ -589,7 +589,8 @@ function v12Margin(m,{year=S.oy,month=S.opm}={}){
  if(String(year)==="2025"&&!Number(month))return "N/D · parcial";
  if(String(year)==="2024"&&!Number(month))return "N/D · histórico";
  const b=v12Bases(m),coverage=m?.coverage_pct,issues=r7IssueInfo(m);
- if(!b||b.gross<=0||b.unequal||coverage==null||Number(coverage)<99.999||(issues.known&&issues.count>0))return "N/D · conciliação";
+ if(b?.unequal)return "N/D · bases distintas";
+ if(!b||b.gross<=0||coverage==null||Number(coverage)<99.999||(issues.known&&issues.count>0))return "N/D · conciliação";
  return pct(b.profit/b.gross*100);
 }
 function v12Coverage(m,issues,{year=S.oy,month=S.opm}={}){
