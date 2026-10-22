@@ -57,3 +57,11 @@ test("Não truncar silenciosamente quantias mal formatadas de três casas decima
  assert.equal(parseCostLine("12/05 - R$100,000 Combustível",2026).kind,"AMBIGUOUS_AMOUNT");
  assert.equal(analyzeCard({name:"Obra 307-26",desc:"Custos:\n12/05 - R$100,000 Combustível\nTotal Custos: R$100,00"}).status,"SEM_LINHAS_VALIDAS");
 });
+
+test("Identificar capital de giro histórico separado sem alterar total de custos",()=>{
+ const r=analyzeCard({name:"Obra 433-26",desc:"Custos:\n17/07 - R$100,00 Materiais\nTotal de Custos: R$ 168,26\nCAPITAL DE GIRO\nCapital de Giro 10% = R$68,26"},2026);
+ assert.equal(r.status,"REGRA_HISTORICA_CAPITAL_GIRO_A_VERIFICAR");
+ assert.equal(r.capitalLabelCents,6826);
+ assert.equal(r.difference,-6826);
+ assert.equal("confirmed" in r,false);
+});
