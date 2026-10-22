@@ -62,3 +62,24 @@ O card oficial de Capital de Giro traz comentário de auditoria de 16/10 com ví
 
 ## Limite objetivo apurado
 Foram classificados todos os 7.676 movimentos em cinco conjuntos excludentes; **nenhuma movimentação foi transferida, corrigida ou inserida nos cartões Trello**. A trilha exemplar de 775-26 foi confrontada bilateralmente por valor/data/obra; os 1.115 candidatos restantes exigem varredura do conteúdo dos respectivos cartões, seus comprovantes e seus IDs. O conector não forneceu exportação transacional completa de todos os cartões e suas referências para comparação em massa nesta execução. Não é possível atestar 100% de conciliação por obra com apenas o extrato.
+
+## Terceiro checkpoint — operação V12 escrita e riscos de vinculação (22/10)
+**Escopo:** checagens autenticadas somente de leitura no Supabase e Trello. Nenhuma transação, cartão, saldo ou operação alterados.
+
+### Prova de escrita pelo canal V12 (não equivale a conciliação Cora)
+- Ao contrário do instantâneo anterior de zero linhas, `public.cr_finance_v12_operations` passou a ter **1 linha**, operação `4ff20bfa-88b3-4ae4-848e-49146111b2c0`, status `COMMITTED`, registrada em **2026-10-22 17:21:22 UTC**.
+- Obra `799-26`, cartão Trello [CJ27HA7S](https://trello.com/c/CJ27HA7S), R$ 100,70, saída, Alimentação, data 22/10, referência PIX. Descrição autenticada do cartão contém o marcador exato `CRV12OP_4ff20bfa-88b3-4ae4-848e-49146111b2c0` **uma vez**.
+- Extrato Cora contém débito PIX **R$ 100,70 em 22/10 13:43 BRT**, `source_id=ent_uhS0im23Qb90nTnz6pUzXwg`, **sem descrição**; há outra transação de **R$ 100,70 em 20/10 13:23 BRT**, `source_id=ent_KjJj1G4tR0OA99qasTtjHfg`, também sem descrição. Mesmo valor não comprova identidade: o `source_id` Cora **não está no lançamento Trello**; portanto o par 22/10 é `CANDIDATO_NAO_VERIFICADO`, **não** `CONFIRMADO_COM_EVIDENCIA`.
+- Estado auditado demonstra persistência bilateral **Supabase↔Trello da operação V12**; **não** demonstra repetição idempotente sob falha/reenvio (essa prova exige teste específico seguro). Não repetir a operação real para testar.
+
+### Revisão transversal de obras e rateio
+- Cartão da obra [768-26](https://trello.com/c/eqRchlZA) contém duas despesas de apoio de **15/10 R$ 150,00 cada** cujo próprio texto diz **REF OBRA 748-26**. Como o cartão 768-26 possui fechamento e margem já registrados, **não reclassificar nem recalcular** até checar a origem e a regra de custos posteriores; sinalizar `REFERENCIA_CRUZADA_A_VERIFICAR`.
+- PIX bancário de **17/10 R$ 300,00**, `source_id=ent_yOzL5TAXTv2ScOKQBU4190Q`, menciona obras **748-26 e 694-26**. Não debitar R$ 300,00 integral em nenhuma delas sem rateio e comprovação.
+- PIX de **22/10 R$ 450,00**, `source_id=ent_60opXwvgTIOoflRI0hsOQg`, menciona 768-26, 775-26 e 755-26. A descrição sugere diárias individuais de Éder; o rateio por data/obra necessita confirmação documental. Não duplicar a saída em três cartões.
+- A obra [775-26](https://trello.com/c/dYuHiLPe) mantém as duas evidências compatíveis de 07/10 R$ 1.785,22 e 08/10 R$ 105,00 já descritas, mas permanece sem IDs bancários incorporados no cartão. Não marcar como integralmente conciliada.
+
+### Checagem de atualização da base
+- Consulta na execução: `cora_cache.movements` contém **7.676 movimentos e 7.676 IDs únicos**; o mais recente ocorreu em **2026-10-22 16:43:15 UTC** (13:43 BRT). A coluna `imported_at` atingiu **18:15:14 UTC** (15:15 BRT); há **23 movimentos com data de ocorrência nas últimas 48 horas**.
+- Isso confirma **ingestão recente do cache**, não prova que todos os eventos disponíveis na API bancária tenham sido importados, nem que o saldo oficial esteja concilado transação a transação.
+
+**Gate mantido:** PR #143 deve permanecer DRAFT, com leitura isolada. Publicação V12 congelada e PR #142 não devem ser modificadas. Não converter comparação de valor/data em gravação automática em cartões; exigir fonte bancária e trilha de identidade antes de alterar indicador de margem.
