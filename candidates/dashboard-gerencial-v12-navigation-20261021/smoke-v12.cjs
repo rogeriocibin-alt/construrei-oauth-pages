@@ -38,6 +38,10 @@ check(s.includes('v12ex-semantic-palette-20261021'),'Paleta semântica CONSTRU-R
 check(s.includes('cr-finance-v12-safe-trello-candidate-20261021'),'Apenas endpoint candidato de escrita autorizado');
 check(s.includes('await v12ProtectedWrite("preview",p)'),'Preview utiliza o canal idempotente');
 check(s.includes('await v12ProtectedWrite("commit",p)'),'Commit utiliza o canal idempotente');
+const commitHandler=s.slice(s.indexOf('async function manualCommit(){'),s.indexOf('async function manualCheckStatus(){'));
+check(commitHandler.includes('S.manualLastPayload=p'),'Operação é mantida para consulta após falhas ambíguas');
+check(commitHandler.includes('b.disabled=true}}')&&!commitHandler.includes('b.disabled=false'),'Não permite reenvio imediato após falha');
+check(s.includes('Não foi possível comprovar se houve gravação. Confira o Trello antes de qualquer repetição.'),'Consulta inconclusiva não afirma falsamente que nada foi lançado');
 check(s.includes('V12_SOMENTE_LEITURA'),'Canal legado e fechamento permanecem bloqueados');
 check(s.includes('#cora .manualactions #mc_close{display:none!important}'),'Fechamento de obras não liberado sem homologação');
 check(!s.includes('registro gravado e saldo projetado atualizado.'),'Escrita no Trello não afirma alterar saldo Cora');
