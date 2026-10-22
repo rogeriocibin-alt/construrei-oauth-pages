@@ -14,7 +14,7 @@ for(const id of ['agora','corapro','cora','fin','hist','conc','cost','qual'])che
 const nav=[...s.matchAll(/class="tab(?: on)?" data-t="([^"]+)"/g)].map(x=>x[1]);
 check(nav.join('|')==='agora|corapro|cora|fin|hist|conc','Seis ambientes primários na ordem aprovada');
 check(s.includes('const parent=id==="cost"?"fin":id==="qual"?"conc":id'),'Subabas associadas ao ambiente pai');
-check(s.includes('V12_SOMENTE_LEITURA'),'Gravações bloqueadas na candidata');
+check(s.includes('V12_SOMENTE_LEITURA'),'Escritas fora dos canais restritos bloqueadas');
 check(s.indexOf('id="v12-netguard"')<s.indexOf('async function api('),'Bloqueio presente antes do runtime de API');
 check(s.includes('allowedLogin')||s.includes('const login=method==="POST"'),'Login autorizado sem liberar lançamentos');
 check(s.includes('cr-cora-pro-v2-frame'),'Cora Pro V2 integrado');
@@ -32,17 +32,22 @@ check(s.includes('max-width:550px'),'Regras responsivas móveis');
 for(const id of ['v12-exec-cockpit','v12ex-gross','v12ex-cost','v12ex-profit','v12ex-margin','v12ex-bank-balance','v12ex-receive','v12ex-ops-chart','v12ex-margin-chart'])check(s.includes('id="'+id+'"'),'Painel executivo preserva '+id);
 for(const id of ['v12ex-year','v12ex-month','v12ex-status','v12ex-find','v12ex-reset'])check(s.includes('id="'+id+'"'),'Filtro executivo '+id);
 check(s.includes('window.v12ExecRender()'),'KPIs executivos atualizados após leitura Trello');
-check(s.includes('t?.valid?[t.gross,t.cost,t.profit]:null'),'Gráficos não apresentam dados não conciliados');
+check(s.includes('candidate?.valid?[candidate.gross,candidate.cost,candidate.profit]:null'),'Gráficos apresentam somente agregados consistentes ou subconjuntos rastreáveis');
+check(s.includes('limited.eligible>0')&&s.includes('Receita do subconjunto comparável'),'Cálculo parcial somente de obras com bases comparáveis');
+check(s.includes('v12ComparableRows(year,month)'),'Regra de subtotais nos acertos');
 check(s.includes('typeof n!=="boolean"'),'Números ausentes ou inválidos não são convertidos em zero');
 check(s.includes('v12ex-semantic-palette-20261021'),'Paleta semântica CONSTRU-REI');
-check(s.includes('cr-finance-v12-safe-trello-candidate-20261021'),'Apenas endpoint candidato de escrita autorizado');
+check(s.includes('cr-finance-v12-safe-trello-candidate-20261021'),'Canal de escrita em obra com idempotência preservado');
+check(s.includes('const capitalV11=method===\"POST\"')&&s.includes('url.searchParams.get(\"action\")===\"debit\"'),'Capital libera somente ação de débito legado autenticado');
+check(s.includes('id=\"v12ex-capital-shortcut\"')&&s.includes('#fin #v11cap{display:block!important}'),'Capital de Giro V11 navegável e visível');
+check(s.includes('window.v12CapitalGo'),'Atalho executivo ao capital de giro');
 check(s.includes('await v12ProtectedWrite("preview",p)'),'Preview utiliza o canal idempotente');
 check(s.includes('await v12ProtectedWrite("commit",p)'),'Commit utiliza o canal idempotente');
 const commitHandler=s.slice(s.indexOf('async function manualCommit(){'),s.indexOf('async function manualCheckStatus(){'));
 check(commitHandler.includes('S.manualLastPayload=p'),'Operação é mantida para consulta após falhas ambíguas');
 check(commitHandler.includes('b.disabled=true}}')&&!commitHandler.includes('b.disabled=false'),'Não permite reenvio imediato após falha');
 check(s.includes('Não foi possível comprovar se houve gravação. Confira o Trello antes de qualquer repetição.'),'Consulta inconclusiva não afirma falsamente que nada foi lançado');
-check(s.includes('V12_SOMENTE_LEITURA'),'Canal legado e fechamento permanecem bloqueados');
+check(s.includes('V12_SOMENTE_LEITURA'),'Canal legado geral e fechamento permanecem bloqueados; exceção restrita ao capital V11');
 check(s.includes('#cora .manualactions #mc_close{display:none!important}'),'Fechamento de obras não liberado sem homologação');
 check(!s.includes('registro gravado e saldo projetado atualizado.'),'Escrita no Trello não afirma alterar saldo Cora');
 const fs=require('node:fs');
@@ -50,7 +55,7 @@ const edge=fs.readFileSync(path.join(__dirname,'finance-v12-safe-trello-edge.ts'
 for(const x of ['ADMIN_MASTER_ROGERIO','cr_finance_v12_claim','cr_finance_v12_finish','REVIEW_REQUIRED','TRELLO_MARKER_NOT_CONFIRMED','CRV12OP_','OPERATION_NOT_RETRYABLE'])
  check(edge.includes(x),'Endpoint seguro inclui '+x);
 
-check(s.includes('V12_SOMENTE_LEITURA'),'Escrita Trello permanece fechada sem idempotência homologada');
+check(s.includes('q(\'v11commit\').disabled=true}finally{pending=false}'),'Falha ambígua no capital bloqueia repetição imediata');
 
 check(!/BEGIN (RSA )?PRIVATE KEY|client_secret\s*[:=]/i.test(s),'Sem segredo bancário embutido');
 const scripts=[...s.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
