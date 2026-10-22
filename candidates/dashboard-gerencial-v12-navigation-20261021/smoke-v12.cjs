@@ -42,8 +42,14 @@ check(s.includes('v===null||v===undefined||v===""||typeof v==="boolean"?null'),'
 check(s.includes('Sem dados para esta competência')&&s.includes('Lucro/margem não conciliados nesta competência'),'Histórico distingue ausência, lucro parcial e competência comparável');
 check(!s.includes('const raw=Number(x[k]||0)'),'Gráficos históricos não convertem nulo em zero');
 check(s.includes('id="v12-cora-audit-status"')&&s.includes('window.addEventListener("cr:v12:cora"'),'Indicador de sincronização Cora baseado em evento autenticado');
+check(s.includes('id="v12rec-rows"')&&s.includes('window.CR_V12_CORA_AUDIT=calculate'),'Auditoria mensal da Cora acessível, com cálculo reproduzível');
+check(s.includes('PERIODO_INVALIDO')||s.includes('Lacuna: '),'Sequência UTC exige competências contíguas');
+check(s.includes('balance_healthy===true&&running===bank'),'Banco oficial comparado ao fechamento calculado');
+check(s.includes('OFICIAL CORA')&&s.includes('DERIVADO · extrato'),'Saldos reconstruídos jamais apresentados como oficiais individuais');
+check(s.includes('oldStart!==0||oldEnd!==0'),'Campos históricos legados inconsistentes continuam rastreáveis');
+
 check((s.match(/id="v12-cora-audit-status"/g)||[]).length===1,'Apenas um estado de sincronização Cora na auditoria');
-check(s.includes('46 competências')&&s.includes('6 competências')&&s.includes('38 competências'),'Saldos históricos oficiais e não comprovados continuam distintos');
+check(s.includes('id="v12rec-flow"')&&s.includes('id="v12rec-anchors"')&&s.includes('id="v12rec-derived"')&&s.includes('id="v12rec-legacy"'),'Indicadores de conciliação com dados vivos e origens distintas');
 
 check(s.includes('cr-finance-v12-safe-trello-candidate-20261021'),'Canal de escrita em obra com idempotência preservado');
 check(s.includes('const capitalV11=method===\"POST\"')&&s.includes('url.searchParams.get(\"action\")===\"debit\"'),'Capital libera somente ação de débito legado autenticado');
