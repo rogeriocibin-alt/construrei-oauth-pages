@@ -52,3 +52,8 @@ test("Fases fora da seção Custos ainda impedem comparação cega",()=>{
  const d="Custos:\n16/10 - R$150,00\nTotal Custos: R$100,00\nPRIMEIRA PARTE EXECUTADA E ACERTADA";
  assert.equal(analyzeCard({name:"Obra 694-26",desc:d}).status,"MULTIPLAS_ETAPAS_A_VERIFICAR");
 });
+
+test("Não truncar silenciosamente quantias mal formatadas de três casas decimais",()=>{
+ assert.equal(parseCostLine("12/05 - R$100,000 Combustível",2026).kind,"AMBIGUOUS_AMOUNT");
+ assert.equal(analyzeCard({name:"Obra 307-26",desc:"Custos:\n12/05 - R$100,000 Combustível\nTotal Custos: R$100,00"}).status,"SEM_LINHAS_VALIDAS");
+});
