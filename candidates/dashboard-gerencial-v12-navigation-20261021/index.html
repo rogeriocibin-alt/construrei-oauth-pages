@@ -772,7 +772,61 @@ function fy(y){S.fy=y;S.fm=0;S.monthlyAudit=null;fin()}async function fm(m){S.fm
   '<div class="v12cap-stat v12cap-pending"><span>Acerto pendente</span><strong>'+fmt(pending)+'</strong><small>Fora do saldo disponível</small></div>'+
   '<div class="v12cap-meta"><span>Fonte: Trello · '+esc(c.periods??"—")+' períodos</span><span class="'+(equals?"v12cap-ok":"v12cap-attention")+'">'+(equals?"Gerado − consumido = disponível":"Conferência matemática pendente")+'</span></div>';
  })();const tl=S.years[S.fy]?.rateio_timeline||[];document.getElementById("tl").innerHTML=tl.filter(x=>!S.fm||x.month===S.fm).map(x=>'<div class="r"><span>'+String(x.month).padStart(2,"0")+'/'+S.fy+' · '+x.confidence+'</span><b>'+x.legacy_equal_share_cards+' legado · '+Object.keys(x.models||{}).length+' modelo(s)</b></div>').join("")}
-function hist(){const historicalNote=document.getElementById("v12-historical-note");if(historicalNote)historicalNote.hidden=false;const y=document.getElementById("hy")?.value||"2026",met=document.getElementById("met"),k=met?.value||"gross_cents",ml=met?.selectedOptions?.[0]?.textContent||k,mo=S.years[y]?.metrics?.months||[],vals=mo.map(x=>Math.abs(Number(x[k]||0))),max=Math.max(...vals,1),mn=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],ms=["J","F","M","A","M","J","J","A","S","O","N","D"],compact=(raw)=>{const v=Number(raw||0),a=Math.abs(v),sg=v<0?"−":"";if(k.includes("cents")){const r=a/100,n=r>=1e6?(r/1e6).toLocaleString("pt-BR",{maximumFractionDigits:1})+"mi":r>=1e3?(r/1e3).toLocaleString("pt-BR",{maximumFractionDigits:1})+"k":Math.round(r).toLocaleString("pt-BR");return sg+'<span class="cur">R$</span>'+n}if(k==="margin_pct")return sg+a.toLocaleString("pt-BR",{maximumFractionDigits:1})+"%";return sg+a.toLocaleString("pt-BR",{maximumFractionDigits:0})},full=(raw)=>k.includes("cents")?brl(raw):k==="margin_pct"?pct(raw):Number(raw||0).toLocaleString("pt-BR");document.getElementById("bars").innerHTML=mo.map((x,i)=>{const raw=Number(x[k]||0),h=Math.max(2,Math.abs(raw)/max*100),fv=full(raw);return '<div class="bc" tabindex="0" style="--h:'+h+'%" title="'+mn[i]+' · '+fv+' · '+ml+'"><div class="bar"></div><div class="bv">'+compact(raw)+'</div><div class="btip"><b>'+mn[i]+'</b><span>'+fv+'</span><small>'+ml+'</small></div><div class="bl">'+ms[i]+'</div></div>'}).join("");const a=S.years[y]?.metrics||{},p=S.years[String(Number(y)-1)]?.metrics,g=k=>p&&p[k]?((a[k]-p[k])/p[k]*100):null;document.getElementById("read").innerHTML=[["Faturamento",brl(a.gross_cents)],["Lucro",brl(a.profit_cents)],["Margem",v12Margin(a,{year:y,month:0})],["Ticket médio",brl(a.ticket_cents)],["Faturamento vs ano anterior",pct(g("gross_cents"))],["Lucro vs ano anterior",y==="2025"?"N/D · parcial":pct(g("profit_cents"))]].map(x=>'<div class="r"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("");document.getElementById("annual").innerHTML=["2024","2025","2026"].map(z=>{const m=S.years[z]?.metrics||{};return '<div class="kpi"><div class="lab">'+z+'</div><div class="v">'+brl(m.gross_cents)+'</div><div class="small muted">Lucro '+brl(m.profit_cents)+' · '+v12Margin(m,{year:z,month:0})+'</div></div>'}).join("")}
+function hist(){
+ const note=document.getElementById("v12-historical-note");if(note)note.hidden=false;
+ const year=document.getElementById("hy")?.value||"2026",select=document.getElementById("met");
+ const key=select?.value||"gross_cents",label=select?.selectedOptions?.[0]?.textContent||key;
+ const yearly=S.years[year]?.metrics||{},months=Array.isArray(yearly.months)?yearly.months:[];
+ const names=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],abbr=["J","F","M","A","M","J","J","A","S","O","N","D"];
+ const numeric=value=>value===null||value===undefined||value===""||typeof value==="boolean"||!Number.isFinite(Number(value))?null:Number(value);
+ function metric(monthNumber){
+  const m=months.find(x=>Number(x.month)===monthNumber);
+  if(!m)return {value:null,reason:"Sem dados para esta competência"};
+  const raw=numeric(m[key]);
+  if(!["profit_cents","margin_pct"].includes(key))return {value:raw,reason:raw===null?"Dado ausente":"Fonte histórica registrada; sujeito à classificação"};
+  const b=v12Bases(m),issue=r7IssueInfo(m),full=b&&b.gross>0&&!b.unequal&&m.coverage_pct!=null&&Number(m.coverage_pct)>=99.999&&(!issue.known||issue.count===0);
+  if(full)return {value:key==="margin_pct"?b.profit/b.gross*100:b.profit,reason:"Receita, custo e lucro equivalentes nesta competência"};
+  const subset=v12ComparableRows(year,monthNumber);
+  if(subset.eligible>0)return {value:key==="margin_pct"?subset.margin:subset.profit,reason:"PARCIAL: "+subset.eligible+" de "+subset.total+" obras com valores comparáveis"};
+  return {value:null,reason:"Lucro/margem não conciliados nesta competência"};
+ }
+ const series=Array.from({length:12},(_,i)=>metric(i+1));
+ const max=Math.max(1,...series.map(x=>Math.abs(x.value??0)));
+ const full=x=>x===null?"N/D":key.includes("cents")?brl(x):key==="margin_pct"?pct(x):x.toLocaleString("pt-BR");
+ const compact=x=>{
+  if(x===null)return "N/D";
+  const a=Math.abs(x),sign=x<0?"−":"";
+  if(key.includes("cents")){const real=a/100;return sign+"R$ "+(real>=1e6?(real/1e6).toLocaleString("pt-BR",{maximumFractionDigits:1})+"mi":real>=1e3?(real/1e3).toLocaleString("pt-BR",{maximumFractionDigits:1})+"mil":real.toLocaleString("pt-BR",{maximumFractionDigits:0}))}
+  return sign+a.toLocaleString("pt-BR",{maximumFractionDigits:1})+(key==="margin_pct"?"%":"");
+ };
+ document.getElementById("bars").innerHTML=series.map((item,i)=>{
+  const empty=item.value===null,height=empty?0:Math.max(2,Math.abs(item.value)/max*100);
+  const title=esc(names[i]+" · "+full(item.value)+" · "+label+" · "+item.reason);
+  return '<div class="bc'+(empty?' v12-missing':'')+'" tabindex="0" style="--h:'+height+'%" title="'+title+'">'+
+   '<div class="bar"'+(empty?' style="visibility:hidden"':'')+'></div><div class="bv">'+compact(item.value)+'</div>'+
+   '<div class="btip"><b>'+names[i]+'</b><span>'+full(item.value)+'</span><small>'+esc(item.reason)+'</small></div>'+
+   '<div class="bl">'+abbr[i]+'</div></div>';
+ }).join("");
+ const old=S.years[String(Number(year)-1)]?.metrics||null;
+ const pctChange=(current,previous)=>{const a=numeric(current),b=numeric(previous);return a!==null&&b!==null&&b!==0?pct((a-b)/Math.abs(b)*100):"N/D"};
+ const annualSafe=metricName=>{const value=numeric(yearly[metricName]);return value===null?"N/D":brl(value)};
+ const rawProfit=annualSafe("profit_cents");
+ const annualMargin=v12Margin(yearly,{year,month:0});
+ const comparisonProfits=year!=="2025"&&year!=="2024"&&old&&v12Bases(yearly)&&!v12Bases(yearly).unequal&&v12Bases(old)&&!v12Bases(old).unequal;
+ const values=[
+  ["Receita registrada",annualSafe("gross_cents")],
+  ["Lucro informado (base histórica)",rawProfit],
+  ["Margem verificável",annualMargin],
+  ["Ticket médio registrado",annualSafe("ticket_cents")],
+  ["Receita vs ano anterior",pctChange(yearly.gross_cents,old?.gross_cents)],
+  ["Lucro vs ano anterior",comparisonProfits?pctChange(yearly.profit_cents,old.profit_cents):"N/D · bases distintas"]
+ ];
+ document.getElementById("read").innerHTML=values.map(x=>'<div class="r"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("");
+ document.getElementById("annual").innerHTML=["2024","2025","2026"].map(y=>{
+  const m=S.years[y]?.metrics||{};
+  return '<div class="kpi"><div class="lab">'+y+' · receita registrada</div><div class="v">'+brl(m.gross_cents)+'</div><div class="small muted">Lucro informado '+brl(m.profit_cents)+' · '+v12Margin(m,{year:y,month:0})+'</div></div>';
+ }).join("");
+}
 function v12CapitalAudit(){
  const el=document.getElementById("v12capitalaudit");if(!el)return;
  const c=S.capital;
