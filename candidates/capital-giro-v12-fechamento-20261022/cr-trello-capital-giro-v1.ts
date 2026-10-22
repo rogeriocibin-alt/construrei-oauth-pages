@@ -420,9 +420,10 @@ async function closeCapital(req:Request,action:string){
  for(const card of all){
   if(String(card.desc||"").includes(SUMMARY_MARK))continue;
   const key=keyFromMarker(card.desc),p=periodMatch(card.name);
-  const match=key||p&&periodKey(p,2026)||"";
+  const yr=p&&p.em>Number(currentBR.slice(5,7))?Number(currentBR.slice(0,4))-1:Number(currentBR.slice(0,4));
+  const match=key||(p?periodKey(p,yr):"");
   if(match===periodKeyValue)duplicate=true;
-  const closing=key?keyDates(key).end:p?periodKey(p,2026).split("_")[1]:"";
+  const closing=key?keyDates(key).end:p?periodKey(p,yr).split("_")[1]:"";
   if(closing>last)last=closing;
  }
  if(duplicate)return json({ok:false,error:"PERIOD_ALREADY_REGISTERED"},409);
