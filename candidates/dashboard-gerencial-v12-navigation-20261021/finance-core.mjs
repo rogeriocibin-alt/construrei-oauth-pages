@@ -118,3 +118,54 @@ export function apurarObrasComparaveis(rows=[]){
   margemPercentual:receitaCentavos>0?Math.round(lucroCentavos/receitaCentavos*10000)/100:null,
   status:elegiveis===0?"SEM_BASE_COMPARAVEL":excluidas.length>0?"SUBCONJUNTO_PARCIAL":"SUBCONJUNTO_CONSISTENTE"};
 }
+
+
+/**
+ * Cora 2023→hoje: reconciliação aritmética dos movimentos por COMPETÊNCIA UTC,
+ * baseada em extratos integralmente paginados e âncoras oficiais do banco.
+ * NÃO converte saldos derivados em saldos oficiais de cada mês.
+ * Não escreve nem altera dados bancários, Trello ou obras.
+ */
+export function conciliarSerieCora(months,bankSnapshot=null){
+ if(!Array.isArray(months)||!months.length)return {status:"SEM_DADOS",periodos:0,rows:[]};
+ const rows=[...months].sort((a,b)=>String(a.period_start).localeCompare(String(b.period_start)));
+ const safe=n=>n!==null&&n!==undefined&&n!==""&&typeof n!=="boolean"&&Number.isSafeInteger(Number(n))?Number(n):null;
+ const earliest=rows[0],open=safe(earliest.start_balance_centavos);
+ const anchored=earliest.source==="CORA_OFFICIAL_AGGREGATIONS"&&open!==null;
+ if(!anchored)return {status:"SEM_ANCORA_INICIAL",periodos:rows.length,rows:[]};
+ let running=open,previous=null,flowIssues=0,checkIssues=0,legacyIssues=0,verified=0,derived=0,notVerified=0;
+ const output=[];
+ for(const m of rows){
+  const date=String(m.period_start||"");
+  if(!/^20\d{2}-\d{2}-01$/.test(date))return {status:"PERIODO_INVALIDO",periodos:rows.length,rows:output};
+  if(previous){
+   const next=new Date(previous+"T00:00:00.000Z");next.setUTCMonth(next.getUTCMonth()+1);
+   if(next.toISOString().slice(0,10)!==date)return {status:"LACUNA_MENSAL",periodos:rows.length,rows:output};
+  }
+  const c=safe(m.credit_centavos),d=safe(m.debit_centavos),oc=safe(m.observed_credit_centavos),od=safe(m.observed_debit_centavos);
+  if(c===null||d===null||oc===null||od===null||c<0||d<0||m.status!=="complete"||m.last_error!=null)
+   return {status:"IMPORTACAO_INCOMPLETA",periodos:rows.length,rows:output};
+  const matching=c===oc&&d===od;if(!matching)flowIssues++;
+  const begin=running;running+=c-d;
+  if(!Number.isSafeInteger(running))return {status:"VALOR_INSEGURO",periodos:rows.length,rows:output};
+  const official=m.source==="CORA_OFFICIAL_AGGREGATIONS";
+  const officialMatch=official&&safe(m.start_balance_centavos)===begin&&safe(m.end_balance_centavos)===running;
+  if(official){verified++;if(!officialMatch)checkIssues++}
+  else{derived++;const bs=safe(m.start_balance_centavos),es=safe(m.end_balance_centavos);
+   if(bs!==null&&es!==null&&(bs!==0||es!==0)&&(bs!==begin||es!==running))legacyIssues++;
+  }
+  output.push({periodo:date,aberturaCentavos:begin,creditoCentavos:c,debitoCentavos:d,fechamentoCentavos:running,
+   origemSaldo:official?"OFICIAL_CORA":"DERIVADO_POR_EXTRATO",fluxoConfere:matching,ancoraOficialConfere:official?officialMatch:null,
+   legadoComDiferenca:!official&&(safe(m.start_balance_centavos)!==null||safe(m.end_balance_centavos)!==null)&&
+     !(safe(m.start_balance_centavos)===0&&safe(m.end_balance_centavos)===0)&&
+     (safe(m.start_balance_centavos)!==begin||safe(m.end_balance_centavos)!==running)});
+  previous=date;
+ }
+ const bank=safe(bankSnapshot?.amount_centavos??bankSnapshot?.balance_centavos);
+ const officialSource=bankSnapshot?.source==null||bankSnapshot.source==="CORA_OFFICIAL_API";
+ const finalMatch=bank!==null&&officialSource&&bank===running;
+ const status=flowIssues||checkIssues||!finalMatch?"DIVERGENCIA_PENDENTE":"CONCILIACAO_ARITMETICA_CONFIRMADA";
+ return {status,periodos:rows.length,fluxosConferidos:rows.length-flowIssues,saldosOficiaisConferidos:verified-checkIssues,
+ saldosDerivados:derived,legadosDivergentes:legacyIssues,aberturaCentavos:open,fechamentoCentavos:running,
+ saldoBancarioCentavos:bank,diferencaFinalCentavos:bank===null?null:running-bank,rows:output};
+}
