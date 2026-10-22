@@ -45,9 +45,13 @@ function reconcile(bank,cards,year){
   for(const [i,line] of splitFinancialLines(c.desc).entries()){
    const p=parseLine(line,year);if(!p)continue;
    const foreign=referencesOtherWork(line,no);
-   const options=foreign?[]:(byKey.get(key(no,p.day,p.cents,"debit"))||[]);
+   const implicitYear= !/^\s*(?:[•*+-]\s*)?\d{1,2}\/\d{1,2}\/\d{2,4}\s*[-–—]/.test(line);
+   // Obra de um ano movida para board de outro ano exige data explícita.
+   const yearMismatch=implicitYear&&Number("20"+no.slice(-2))!==Number(year);
+   const options=(foreign||yearMismatch)?[]:(byKey.get(key(no,p.day,p.cents,"debit"))||[]);
    const entry={cardId:c.id,caseNo:no,line:i,bankId:null,status:"SEM_VINCULO"};
-   if(foreign)entry.status="REFERENCIA_CRUZADA_A_VERIFICAR";
+   if(yearMismatch)entry.status="ANO_REFERENCIA_AMBIGUO";
+   else if(foreign)entry.status="REFERENCIA_CRUZADA_A_VERIFICAR";
    else if(options.length>1)entry.status="BANCO_AMBIGUO";
    if(options.length===1){
     entry.bankId=options[0].sourceId;
