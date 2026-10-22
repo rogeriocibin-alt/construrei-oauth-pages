@@ -73,3 +73,13 @@ test("Referência bancária deve ser token exato: prefixo não é prova",()=>{
  assert.equal(r.counts.CONFIRMADO_COM_EVIDENCIA,undefined);
  assert.equal(r.counts.EVIDENCIA_BILATERAL_COMPATIVEL,1);
 });
+
+test("Ano da obra não pode ser inferido do quadro diferente sem data explícita",()=>{
+ const bank=[{sourceId:"bank-2026",caseCodes:["1006-25"],day:"2026-10-17",cents:10000,direction:"debit"}];
+ const amb=reconcile(bank,[{id:"migrated",name:"Obra 1006-25",desc:"17/10 - R$100,00 Materiais"}],2026);
+ assert.equal(amb.counts.ANO_REFERENCIA_AMBIGUO,1);
+ assert.equal(amb.uniqueMatchedBank,0);
+ const explicit=reconcile(bank,[{id:"dated",name:"Obra 1006-25",desc:"17/10/2026 - R$100,00 Materiais"}],2026);
+ assert.equal(explicit.counts.EVIDENCIA_BILATERAL_COMPATIVEL,1);
+ assert.equal(explicit.counts.CONFIRMADO_COM_EVIDENCIA,undefined);
+});
