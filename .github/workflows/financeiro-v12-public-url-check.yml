@@ -1,0 +1,31 @@
+name: Financeiro V12 | Verificar candidata publicada
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'production/dashboard-financeiro-v12-validacao-20261021/**'
+      - '.github/workflows/financeiro-v12-public-url-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verificar-url:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: HTTP 200 e marcador da V12 com consulta Cora
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v12-validacao-20261021/?v=20261021'
+          for attempt in $(seq 1 20); do
+            if curl -fLsS --connect-timeout 8 --max-time 20 -H 'Cache-Control: no-cache' "$url&attempt=$attempt" -o /tmp/v12-public.html && grep -Fq 'id="v12-cora-live"' /tmp/v12-public.html && grep -Fq 'id="v12-official-cora-live"' /tmp/v12-public.html && grep -Fq 'V12_SOMENTE_LEITURA' /tmp/v12-public.html; then
+              echo "PASS: candidata HTTP 200, saldo Cora autenticado e bloqueio de escrita no HTML publicado"
+              echo "$url"
+              exit 0
+            fi
+            echo "Publicacao ainda propagando: tentativa $attempt"
+            sleep 9
+          done
+          echo "FAIL: URL publica nao confirmou os marcadores da V12"
+          exit 1
