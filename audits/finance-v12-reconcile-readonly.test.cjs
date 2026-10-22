@@ -1,6 +1,6 @@
 "use strict";
 const {test}=require("node:test"),assert=require("node:assert/strict");
-const {parseLine,splitFinancialLines,reconcile}=require("./finance-v12-reconcile-readonly.cjs");
+const {parseLine,splitFinancialLines,referencesOtherWork,hasExactBankId,reconcile}=require("./finance-v12-reconcile-readonly.cjs");
 const b=[{sourceId:"bank-a",caseCodes:["775-26"],day:"2026-10-07",cents:178522,direction:"debit"},
  {sourceId:"bank-b",caseCodes:["775-26"],day:"2026-10-08",cents:10500,direction:"debit"}];
 const c={id:"card-775",name:"Orçamento 775-26",desc:"07/10 - R$1.785,22 Material Piso\n08/10 - 105,00 Almoço"};
@@ -55,4 +55,21 @@ test("Reconciliador mantém bloqueio de confirmação com PIX colado sem comprov
  const r=reconcile(match,cards,2026);
  assert.equal(r.counts.EVIDENCIA_BILATERAL_COMPATIVEL,1);
  assert.equal(r.counts.CONFIRMADO_COM_EVIDENCIA,undefined);
+});
+
+test("Não conciliar despesa referenciada a outra obra, mesmo coincidindo data e centavos",()=>{
+ const candidate=[{sourceId:"ent_768",caseCodes:["768-26"],day:"2026-10-15",cents:15000,direction:"debit"}];
+ const cards=[{id:"card-768",name:"768-26",desc:"15/10 - R$150,00 Apoio - REF OBRA 748-26"}];
+ const r=reconcile(candidate,cards,2026);
+ assert.equal(r.counts.REFERENCIA_CRUZADA_A_VERIFICAR,1);
+ assert.equal(r.uniqueMatchedBank,0);
+ assert.equal(referencesOtherWork("15/10 - R$150,00 REF OBRA 768-26","768-26"),false);
+});
+test("Referência bancária deve ser token exato: prefixo não é prova",()=>{
+ assert.equal(hasExactBankId("07/10 - 100,00 Ref ent_123Z","ent_123"),false);
+ assert.equal(hasExactBankId("07/10 - 100,00 Ref ent_123","ent_123"),true);
+ const r=reconcile([{sourceId:"ent_123",caseCodes:["775-26"],day:"2026-10-07",cents:10000,direction:"debit",receiptVerified:true}],
+ [{id:"card",name:"Obra 775-26",desc:"07/10 - R$100,00 Ref ent_123Z"}],2026);
+ assert.equal(r.counts.CONFIRMADO_COM_EVIDENCIA,undefined);
+ assert.equal(r.counts.EVIDENCIA_BILATERAL_COMPATIVEL,1);
 });
