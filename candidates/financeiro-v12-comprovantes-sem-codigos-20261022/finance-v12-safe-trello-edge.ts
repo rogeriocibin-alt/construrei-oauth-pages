@@ -71,14 +71,14 @@ function withMarker(p:ReturnType<typeof clean>){
 async function tidyCommittedMarker(short:string,tag:string){
  const before=await card(short),desc=String(before.desc||"");
  if(!desc.includes(tag))return true;
- if(desc.split(tag).length!==2||!desc.includes(" "+tag))return false;
+ if(desc.split(tag).length!==2||!desc.includes(" "+tag)||(desc.match(/CRV12OP_[0-9a-f-]{36}/g)||[]).length!==1)return false;
  const cleaned=desc.replace(" "+tag,"");
  const ak=env("TRELLO_API_KEY"),tk=env("TRELLO_API_TOKEN");
  if(!ak||!tk)return false;
  // Only the Trello description is changed. No financial figures or card state.
- const url=new URL("https://api.trello.com/1/cards/"+encodeURIComponent(before.id)+"/desc");
+ const url=new URL("https://api.trello.com/1/cards/"+encodeURIComponent(before.id));
  url.searchParams.set("key",ak);url.searchParams.set("token",tk);
- const r=await fetch(url,{method:"PUT",headers:{"content-type":"application/x-www-form-urlencoded"},body:new URLSearchParams({value:cleaned}),signal:AbortSignal.timeout(12000)});
+ const r=await fetch(url,{method:"PUT",headers:{"content-type":"application/json"},body:JSON.stringify({desc:cleaned}),signal:AbortSignal.timeout(12000)});
  if(!r.ok)return false;
  const after=await card(short);
  return String(after.desc||"")===cleaned;
