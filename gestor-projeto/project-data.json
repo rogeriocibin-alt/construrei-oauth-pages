@@ -3,7 +3,7 @@
     "title": "Gestor do Projeto CONSTRU-REI",
     "version": "V1.2.7 • FINANCEIRO V4 OFICIAL • 07/10 ENCERRADO",
     "status": "OFICIAL / HOMOLOGADA • FINANCEIRO V4 CONGELADO • CENTRAL ATUALIZADA",
-    "generated_at": "2026-10-07",
+    "generated_at": "2026-10-22",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
@@ -28,8 +28,21 @@
     "updated_at": "2026-10-07T17:55:00-03:00",
     "canonical_governance_index": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
     "previous_official_build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006",
-    "reconciliation_candidate_at": "2026-10-15",
-    "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP."
+    "reconciliation_candidate_at": "2026-10-22",
+    "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP.",
+    "operational_snapshot_at": "2026-10-22",
+    "operational_audit_status": "EVIDÊNCIA VERIFICADA • GitHub/Trello/Supabase/Vercel; Google Cloud/Netlify E2E não confirmado nesta sessão",
+    "operational_checkpoint": "CHECKPOINT_GESTOR_REVISAO_GLOBAL_20261022",
+    "operational_rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
+    "operational_scope": "Atualização documental e de indicadores; NÃO altera release 1.2.x, código, rotas ou SW do PWA",
+    "operational_current_focus": "Financeiro V12 para teste em 23/10; APP/ORÇA-REI E2E; Cofre Zero recuperação como monitoramento",
+    "operational_total_cc_items": 263,
+    "operational_cc_items": {
+      "completed": 120,
+      "canceled": 39,
+      "open": 104,
+      "source": "Supabase public.cc_items consulta 22/10/2026"
+    }
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -349,7 +362,7 @@
       "layer": "Governança",
       "status": "canonical",
       "summary": "Cockpit superior do proprietário para governança, memória, versões, decisões e desenvolvimento do ecossistema APP CONSTRU-REI, com acesso ao diretório mestre de Links Oficiais.",
-      "current": "V1.2.5 • Cofre Zero no Cockpit • backup cloud automático 03:00"
+      "current": "PWA canônico 1.2.5.2 preservado • catálogo informativo auditado em 22/10; atualização visual em notebook/celular pendente."
     },
     {
       "id": "links_oficiais",
@@ -373,7 +386,7 @@
       "layer": "Produto gerenciado",
       "status": "candidate",
       "summary": "Cadeia experimental/aprovada V6→V11 sem promoção automática da Central oficial.",
-      "current": "V11 Premium candidata"
+      "current": "Financeiro V12 candidata (PRs #142/#143/#145/#147) • testes E2E e conciliação pendentes; V11 fallback preservada."
     },
     {
       "id": "app",
@@ -413,7 +426,7 @@
       "layer": "Produto gerenciado",
       "status": "canonical",
       "summary": "Dashboard Financeiro V4 oficial: lançamentos manuais, pré-visualização, escrita no Trello, Acerto Vivo e fechamento financeiro automático no card.",
-      "current": "HOMOLOGADO / OFICIAL / CONGELADO • Cora Manual → Trello • Fechar obra homologado • saldo base R$ 30.272,41"
+      "current": "Financeiro V12 candidata para teste em 23/10 • V12 congelada preservada; Dashboard V4 histórico homologado."
     },
     {
       "id": "academy",
@@ -461,7 +474,7 @@
       "layer": "Produto gerenciado",
       "status": "candidate",
       "summary": "Centro operacional-financeiro por obra com ponte histórica, Cora e aprovisionamento controlado.",
-      "current": "R18 CORA POLICIAL • candidata • escrita Trello bloqueada até validação"
+      "current": "V5 legado consolidado na V12/Cora; manter como histórico, não frente ativa."
     }
   ],
   "versions": [
@@ -844,6 +857,13 @@
       "date": "2026-10-03",
       "commit": "ae2e8e9e17f4a1b2d63af4a845c1749f3800c51f",
       "role": "APP V11 atendimento/F01"
+    },
+    {
+      "name": "CHECKPOINT_GESTOR_REVISAO_GLOBAL_20261022",
+      "date": "2026-10-22",
+      "commit": "ebd9cfafdbca07e0ddd4f0d2cf5c7d1700270c57",
+      "role": "Rollback pré-atualização informativa de Governança/Infra; pendências originais preservadas",
+      "branch": "checkpoint/gestor-auditoria-global-preupdate-20261022"
     }
   ],
   "fronts": [
@@ -863,15 +883,15 @@
     },
     {
       "id": "front-app-final",
-      "name": "APP F00→F09 + ORÇA-REI — fechamento operacional",
+      "name": "APP F00→F09 + ORÇA-REI — integração única",
       "status": "homologation",
       "priority": "P0",
       "objective": "Concluir a esteira operacional como produto único e remover o último bloco de validação humana antes do fechamento.",
       "progress": 82,
       "owner": "Bio + CR Assertivo + Rogério",
-      "last_advance": "ORÇA-REI R10 validado; F00→F09 disponíveis; F01/F02/F04 possuem candidatas e evidências técnicas. Falta gate E2E consolidado e fechamento dos complementos acordados do F02.",
-      "next_action": "Fechar anexos/modelo de vistoria do ORÇA-REI; executar um caso E2E F00→F09; validar celular + notebook; congelar e promover o pacote final.",
-      "dependency": "Gate humano E2E e validação dos complementos F02",
+      "last_advance": "22/10: R15 validada isoladamente; orçamento de vistoria 822-26 e 823-26 entregues em texto; handoff F00/F01→F02 e anexos ainda sem E2E.",
+      "next_action": "Provar F00→F01→F02→F03/F04 com dados, fotos, PDF e preços; testar notebook+celular; manter PRs #131/#127 isoladas.",
+      "dependency": "Anexos e gate humano E2E; sem nova versão promovida.",
       "blocked": false,
       "age_days": 0
     },
@@ -891,15 +911,15 @@
     },
     {
       "id": "front-backup-auto",
-      "name": "Cofre Zero / backup automático",
+      "name": "Cofre Zero — rotina Cloud de execução automática (escopo histórico)",
       "status": "completed",
       "priority": "P1",
-      "objective": "Garantir continuidade sem dependência do notebook, com cópia automatizada e recuperação comprovada.",
+      "objective": "Preservar rotina Cloud independente do notebook e checkpoints já aprovados, monitorando execução corrente. Recuperação integral e CAS permanecem no controle de cobertura separado.",
       "progress": 100,
       "owner": "Bio + CR Assertivo",
-      "last_advance": "Cloud Run oficial e Scheduler diário às 03:00 validados; execuções automáticas de 06/10 e 07/10 concluídas com sucesso; restore drill integral PASS.",
-      "next_action": "Operação automática; reabrir somente em falha real ou no restore drill periódico.",
-      "dependency": "Nenhuma dependência do notebook",
+      "last_advance": "22/10: runs GitHub CAS 39869814025 e 39865384972 SUCCESS. Não são prova de restauração integral do Cloud Run/Scheduler/Storage.",
+      "next_action": "Manter execução homologada; problemas de CAS/restore registrados separadamente em EXEC-COFRE-COVERAGE-20261010.",
+      "dependency": "Nenhuma para baseline; restauração integral pendente no item de cobertura.",
       "blocked": false,
       "age_days": 0
     },
@@ -920,13 +940,13 @@
     {
       "id": "front-meet-addon",
       "name": "Google Meet Add-ons",
-      "status": "queue",
+      "status": "archived",
       "priority": "P2",
       "objective": "Evoluir de acesso oficial externo para integração nativa quando trouxer ganho real.",
-      "progress": 15,
+      "progress": 0,
       "owner": "CR Assertivo",
-      "last_advance": "Sala atual está funcional; Add-on oficial foi separado como evolução futura.",
-      "next_action": "Só abrir após APP/Financeiro; candidata isolada e teste celular/notebook.",
+      "last_advance": "22/10: retirado do radar de execução sem descartar o registro histórico.",
+      "next_action": "Fora do plano ativo de outubro; somente reabrir por demanda expressa e viabilidade comprovada.",
       "dependency": "Fila",
       "blocked": false,
       "age_days": 1
@@ -934,13 +954,13 @@
     {
       "id": "front-brand-future",
       "name": "Nova identidade visual — kit correto",
-      "status": "queue",
+      "status": "archived",
       "priority": "P2",
       "objective": "Reimplementar identidade somente quando houver kit visual correto e validado, sem tocar a base recuperada.",
       "progress": 0,
       "owner": "Rogério + CR Assertivo",
-      "last_advance": "Brand V1/V2 incorreta removida; logos históricas recuperadas; checkpoint oficial congelado.",
-      "next_action": "Não executar agora. Aguardar kit correto; criar candidata visual isolada; validar ativo por ativo antes de promoção.",
+      "last_advance": "22/10: retirado do radar de execução sem descartar o registro histórico.",
+      "next_action": "Fora do plano ativo de outubro; somente reabrir por demanda expressa e viabilidade comprovada.",
       "dependency": "Novo kit visual correto + validação do proprietário",
       "blocked": false,
       "age_days": 0
@@ -958,6 +978,36 @@
       "dependency": "Fila",
       "blocked": false,
       "age_days": 2
+    },
+    {
+      "id": "front-finance-v12",
+      "name": "Financeiro V12 — Capital de Giro, Cora, Trello e conciliação",
+      "status": "executing",
+      "priority": "P0",
+      "objective": "Operar Dashboard V12 candidato com fechamento de períodos, leitura Cora verificada, indicadores e conciliação idempotente, sem afetar V11 ou release congelada.",
+      "progress": 75,
+      "progress_basis": "estimativa de avanço técnico, NÃO homologação E2E",
+      "owner": "Financeiro REI + CR Assertivo + Rogério",
+      "last_advance": "22/10: Capital de Giro v34 ACTIVE e PR #147 homologada tecnicamente para teste de 23/10. Comprovantes UI restaurados, PRs #142/#143/#145 isoladas. Auditoria Cora × Trello com exceções não sanadas.",
+      "next_action": "23/10 após término das obras: prévia e confirmação única do Capital de Giro; validar card, ledger e saldos notebook+celular. Depois avançar conciliação da PR #143 e prova saldo Cora.",
+      "dependency": "E2E autenticado com obras reais, evidência Cora, revisão de auditoria e gate humano",
+      "blocked": false,
+      "age_days": 0
+    },
+    {
+      "id": "front-cofre-coverage",
+      "name": "Cofre Zero — cobertura incremental e restauração integral",
+      "status": "queue",
+      "priority": "P1",
+      "objective": "Validar CAS incremental sem novos serviços e recuperação isolada de PostgreSQL 17, dados financeiros e Trello textual.",
+      "progress": 60,
+      "progress_basis": "estimativa operacional, restore ainda não comprovado",
+      "owner": "CR Assertivo",
+      "last_advance": "22/10: GitHub Actions CAS e Guard SUCCESS; PR #146 DRAFT corrige rejeição de CURRENT. Execução Cloud/restore integral não foram comprovados nesta leitura.",
+      "next_action": "Acompanhar PR #146 e validar readback/restore integral isolado antes de declarar 100%; sem FULL repetido.",
+      "dependency": "Provas de restauração e histórico completo",
+      "blocked": false,
+      "age_days": 0
     }
   ],
   "decisions": [
@@ -1234,6 +1284,13 @@
       "title": "Financeiro V4 completo homologado com Fechar obra",
       "detail": "Fluxo Cora Manual → Trello homologado; botão Fechar obra reutiliza cálculo canônico do Acerto Vivo e grava fechamento financeiro no card. Teste real 775-26 aprovado pelo proprietário.",
       "confidence": "owner_homologated"
+    },
+    {
+      "date": "2026-10-22",
+      "type": "governance_audit",
+      "title": "Revisão geral de provedores e operações",
+      "detail": "GitHub CI verde recente; financeiro V12 candidata; Banco Mestre 263 registros após reconciliação; Vercel 54 / Supabase Edge 385; pendências falsas retiradas do radar sem perder história.",
+      "confidence": "verified_connectors_and_database"
     }
   ],
   "recoverables": [
@@ -1350,18 +1407,18 @@
   "project_pending": [
     {
       "id": "PM-18",
-      "title": "Financeiro V5 R18 — validar e fechar escrita controlada Trello",
+      "title": "Financeiro V5 R18 — acompanhamento legado consolidado nas frentes Cora/V12",
       "domain": "Financeiro",
       "priority": "P0",
-      "state": "in_progress",
+      "state": "completed",
       "owner": "Financeiro REI + CR Assertivo",
-      "last_movement": "2026-10-06",
-      "next_action": "Validar R18, homologar contrato de escrita, liberar envio ao Trello com deduplicação/auditoria e executar teste real.",
+      "last_movement": "2026-10-22",
+      "next_action": "Registro de acompanhamento encerrado por consolidação. Integração real Cora STAGE/PROD e conciliação permanecem abertas sob FIN-CORA-API-20261007 e FIN-V12-CORA-TRELLO-AUDITORIA-20261022.",
       "dependency": "Gate humano + escrita controlada",
-      "source": "Issue #34 • R18 CORA POLICIAL",
-      "close_when": "Movimento Cora real aprovisionado uma única vez, vinculado à obra correta, refletido no fluxo financeiro e auditável.",
-      "human_action": true,
-      "provenance": "current_explicit"
+      "source": "Revisão BIO 22/10 • status cc_items EXEC-FIN-V5-20261006 Cancelado por substituição",
+      "close_when": "Consolidação administrativa sem perda de dependências nas frentes sucessoras.",
+      "human_action": false,
+      "provenance": "administratively_superseded"
     },
     {
       "id": "PM-19",
@@ -1370,8 +1427,8 @@
       "priority": "P0",
       "state": "awaiting_owner_validation",
       "owner": "Bio + CR Assertivo + Rogério",
-      "last_movement": "2026-10-15",
-      "next_action": "ORÇA-REI R15 validada isoladamente (15/10); integrar motor ao F02 com dados estruturados F00/F01 e gerar orçamento/parecer; executar E2E F00→F09 em candidato seguro, validar celular+notebook, rollback e só então homologar a integração.",
+      "last_movement": "2026-10-22",
+      "next_action": "Completar integração F00→F01→F02 com fotos e anexos e ensaio E2E real; precificação documental 822/823 entregue não substitui homologação de APP.",
       "dependency": "E2E de integração e aceite humano; R15 individual já validada",
       "source": "Banco Mestre EXEC-APP-E2E-20261006 • ORÇA-REI R15 aprovada isoladamente em 15/10/2026",
       "close_when": "Fluxo E2E aprovado e pacote final homologado sem regressão.",
@@ -1424,36 +1481,6 @@
       "provenance": "current_explicit"
     },
     {
-      "id": "PM-23",
-      "title": "Google Meet Add-ons",
-      "domain": "Meeting",
-      "priority": "P2",
-      "state": "queue",
-      "owner": "CR Assertivo",
-      "last_movement": "2026-10-05",
-      "next_action": "Manter Sala atual; desenvolver Add-on apenas quando abrir vaga.",
-      "dependency": "Fila",
-      "source": "Backlog canônico CR-MEET-P1-ADDON-20261005",
-      "close_when": "Integração nativa homologada sem regressão.",
-      "human_action": false,
-      "provenance": "current_explicit"
-    },
-    {
-      "id": "PM-24",
-      "title": "Nova identidade visual — somente com kit correto",
-      "domain": "Visual",
-      "priority": "P2",
-      "state": "queue",
-      "owner": "Rogério + CR Assertivo",
-      "last_movement": "2026-10-06",
-      "next_action": "Aguardar novo kit correto. V1/V2 erradas permanecem em quarentena.",
-      "dependency": "Kit visual correto",
-      "source": "Recovery PR #37 + checkpoint atual",
-      "close_when": "Novo kit validado em candidata isolada no celular e notebook.",
-      "human_action": true,
-      "provenance": "current_explicit"
-    },
-    {
       "id": "PM-25",
       "title": "Academy + refinamentos documentais",
       "domain": "Conhecimento",
@@ -1494,10 +1521,10 @@
       "priority": "P1",
       "state": "in_progress",
       "owner": "Bio + CR Assertivo",
-      "last_movement": "2026-10-15",
-      "next_action": "Incidente operacional encerrado por Rogério: Cloud q2tjm 15/10 03h SUCCESS, FULL pontual e CAS manual SUCCESS. Monitorar primeiro CAS schedule 16/10 05:47 BRT; recuperação integral ADIADA_MONITORADA, sem nova intervenção humana atual.",
+      "last_movement": "2026-10-22",
+      "next_action": "PR #146 DRAFT CAS idempotente; conferir recorrência Cloud e restore PostgreSQL17/Storage/Auth; conservar baseline FULL/CAS anterior sem agenda paralela.",
       "dependency": "Sem bloqueio humano atual. Execução CAS agendada futura e ensaio integral não comprovados. Cobertura Trello/Netlify após remoção PR124 deve ser reconciliada sem criar novas rotinas.",
-      "source": "Projeção (não mestre): public.cc_items/EXEC-COFRE-COVERAGE-20261010 • PR #133 MERGED 9245be84 • issue #53 • Actions #38822682363 CI PASS • issue #53 comentário 6204474606 • jobs API #38816987001 revalidada • CAS #38825322289 SUCCESS; manifesto SHA256 f763c74da70e716308696376cad4b08afb6176197affd816a256375406c3e09e • Cloud q2tjm confirmado pelo titular • homologação expressa 15/10 • cc_items atualizado",
+      "source": "Supabase public.cc_items + GitHub runs #39869814025/#39865384972 (sucesso do workflow, não recuperação integral)",
       "close_when": "CAS recorrente comprovado, backup principal finalizado e validado, custo/duplicação sob controle, recuperação isolada reproduzível, rollback testado.",
       "human_action": false,
       "provenance": "master_readonly_projection"
@@ -1509,13 +1536,88 @@
       "priority": "P1",
       "state": "in_progress",
       "owner": "BIO Gestor + CR Assertivo",
-      "last_movement": "2026-10-15",
-      "next_action": "Reconciliar JSON exibido com cc_items; diferenciar app.js 1.2.4, version.json 1.2.5.2, snapshot V1.2.7; validar candidata no PWA celular/notebook antes de atualizar release e produção.",
+      "last_movement": "2026-10-22",
+      "next_action": "Conferir contador banco mestre 263 (120 concluídos / 39 cancelados / 104 abertos) vs UI estática. Conteúdo de governança sincronizado, release do app 1.2.4 / SW 1.2.5.2 / catálogo V1.2.7 não alterados sem gate E2E PWA.",
       "dependency": "PWA renderiza project_pending do JSON estático; mudanças Banco Mestre não migram automaticamente; precisa homologação de release/caching",
       "source": "Projeção (não mestre): public.cc_items/ARCH-TRUTH-20261012 • GitHub issue #53",
       "close_when": "Fonte única para pendências, status e lançamento do Gestor comprovados sem divergência, regressão ou segundo escritor.",
       "human_action": false,
       "provenance": "master_readonly_projection"
+    },
+    {
+      "id": "FIN-CAPITAL-V12-FECHAMENTO-20261022",
+      "title": "Capital de Giro V12 — testar encerramento por período",
+      "domain": "Financeiro",
+      "priority": "P0",
+      "state": "awaiting_owner_validation",
+      "owner": "Financeiro REI + CR Assertivo + Rogério",
+      "last_movement": "2026-10-22",
+      "next_action": "Testar em 23/10 após obras concluídas; conferir rateio 10%, período único, card, saldo e ledger. Não enviar antes da aprovação.",
+      "dependency": "Teste real 23/10 com Diretor e dois dispositivos",
+      "source": "PR #147 • checkpoint/capital-giro-v12-homologacao-tecnica-20261022",
+      "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
+      "human_action": true,
+      "provenance": "public.cc_items_operational_audit_20261022"
+    },
+    {
+      "id": "FIN-V12-GLOBAL-20261022",
+      "title": "Financeiro V12 — integração e saldo oficial ainda em prova",
+      "domain": "Financeiro",
+      "priority": "P0",
+      "state": "in_progress",
+      "owner": "Financeiro REI + CR Assertivo",
+      "last_movement": "2026-10-22",
+      "next_action": "Reconciliar Cora × Trello por obra, comprovar saldo real e KPIs, fechamento e demais escritas sem regressão.",
+      "dependency": "Gate específico descrito no registro mestre",
+      "source": "PR #142, #143 e #145; Supabase V12",
+      "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
+      "human_action": false,
+      "provenance": "public.cc_items_operational_audit_20261022"
+    },
+    {
+      "id": "GOV-REVIEW-GERAL-20261022",
+      "title": "Revisão de provedores e indicadores do Gestor",
+      "domain": "Governança",
+      "priority": "P1",
+      "state": "in_progress",
+      "owner": "BIO Gestor + CR Assertivo",
+      "last_movement": "2026-10-22",
+      "next_action": "Validar página e indicadores no notebook+celular e rechecagem dos provedores sem conector direto (Cloud/Netlify).",
+      "dependency": "Gate específico descrito no registro mestre",
+      "source": "GitHub checkpoint/gestor-auditoria-global-preupdate-20261022",
+      "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
+      "human_action": false,
+      "provenance": "public.cc_items_operational_audit_20261022"
+    },
+    {
+      "id": "FIN-V12-COMPROVANTES-UI-20261022",
+      "title": "Importação visual de comprovantes V12 restaurada",
+      "domain": "Financeiro",
+      "priority": "P1",
+      "state": "completed",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-22",
+      "next_action": "Concluído apenas o campo de importação. Anexo físico ao Trello permanece na tarefa FIN-V12-CORA-ATTACH-20261009.",
+      "dependency": "Gate específico descrito no registro mestre",
+      "source": "PR #145; Pages 39869813490",
+      "close_when": "Entrega documental/visual concluída, não operação cliente",
+      "human_action": false,
+      "provenance": "public.cc_items_operational_audit_20261022"
+    },
+    {
+      "id": "ORCA-VISTORIAS-822-823-20261022",
+      "title": "Orça-Rei — orçamento 822/823 texto precificado entregue",
+      "domain": "Orça-Rei",
+      "priority": "P2",
+      "state": "completed",
+      "owner": "ORÇA-REI + Gabrielly",
+      "last_movement": "2026-10-22",
+      "next_action": "Formatos textuais entregues; preço estimado demanda aceite comercial do orçamento e não corresponde à execução.",
+      "dependency": "Gate específico descrito no registro mestre",
+      "source": "Conversação 22/10/2026",
+      "close_when": "Entrega documental/visual concluída, não operação cliente",
+      "human_action": false,
+      "provenance": "public.cc_items_operational_audit_20261022"
     }
   ],
   "history_catalog": {
@@ -3033,6 +3135,18 @@
       },
       "findings_total": 25,
       "storage": "Supabase cr_internal.pm_audits_v1 / pm_audit_findings_v1"
+    },
+    {
+      "id": "AUD-GERAL-20261022",
+      "number": 2,
+      "title": "Auditoria operacional geral — BIO Gestor",
+      "date": "2026-10-22",
+      "type": "source_reconciliation",
+      "product": "gestor",
+      "status": "evidence_reconciled_pending_pwa_validation",
+      "scope": "GitHub/Trello/Supabase/Vercel/Drive metadados, Dashboard V12, ORÇA-REI, APP, Cofre Zero",
+      "summary": "Indicadores e status reconciliados; testes E2E Cloud/Netlify/PWA declarados pendentes. Rollback protegido.",
+      "source": "CHECKPOINT_GESTOR_REVISAO_GLOBAL_20261022"
     }
   ],
   "audit_findings": [
@@ -3268,16 +3382,16 @@
       "name": "GitHub",
       "status": "healthy",
       "confidence": "high",
-      "last_read": "05/10 18:55",
-      "note": "Repositório e checkpoints reconciliados na baseline final aprovada."
+      "last_read": "2026-10-22",
+      "note": "Conector GitHub conferido: 22 PRs abertas; Pages 39869813490, Guard 39871026550 e CAS 39869814025 SUCCESS. PRs DRAFT não equivalem a merges."
     },
     {
       "id": "SRC-SUPABASE",
       "name": "Supabase",
       "status": "healthy",
       "confidence": "high",
-      "last_read": "05/10 18:55",
-      "note": "Central v286 e Sala v6 ativas; entrega HTML corrigida."
+      "last_read": "2026-10-22",
+      "note": "Projeto yspuaamokjbrosytqjpg ACTIVE; 385 funções Edge ACTIVE, Capital Giro v34 ACTIVE, PM API v25. 276 funções verify_jwt=false requerem auditoria por função, não significam falha automaticamente."
     },
     {
       "id": "SRC-CENTRAL",
@@ -3298,74 +3412,74 @@
     {
       "id": "SRC-TRELLO",
       "name": "Trello",
-      "status": "stale",
-      "confidence": "medium",
-      "last_read": "27/09",
-      "note": "Cofre Zero anterior; exige leitura atual para decisões."
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "2026-10-22",
+      "note": "Trello consultado: Capital Giro gerado R$20.648,65, saldo líquido R$2.479,69; 26 períodos; acerto atual varia online. Leituras de cartões comprovadas."
     },
     {
       "id": "SRC-GESTAOCLICK",
       "name": "GestãoClick",
       "status": "stale",
       "confidence": "medium",
-      "last_read": "28/09",
-      "note": "Cofre Zero anterior; exige leitura atual para decisões."
+      "last_read": "2026-10-07",
+      "note": "Histórico operacional conhecido. Sem consulta autenticada à conta hoje; saneamento Click é pendência P1, Trello é fonte operacional."
     },
     {
       "id": "SRC-GCAL",
       "name": "Google Calendar",
-      "status": "healthy",
-      "confidence": "high",
-      "last_read": "05/10",
-      "note": "Agenda v5 permanece oficial/homologada; esta reconciliação usa evidência de homologação, não uma nova leitura independente do calendário."
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "2026-10-07",
+      "note": "A agenda foi homologada historicamente, mas não houve auditoria operacional ao vivo hoje."
     },
     {
       "id": "SRC-NETLIFY",
       "name": "Netlify",
       "status": "not_confirmed",
-      "confidence": "medium",
-      "last_read": "03/10 snapshot",
-      "note": "Inventário anterior conhecido; revalidação pendente."
+      "confidence": "low",
+      "last_read": "2026-10-22",
+      "note": "Sem conector direto de Netlify disponível nesta sessão; números históricos não foram confirmados hoje; não alterar nem remover sites."
     },
     {
       "id": "SRC-VERCEL",
       "name": "Vercel",
-      "status": "not_confirmed",
-      "confidence": "medium",
-      "last_read": "03/10 snapshot",
-      "note": "0 projetos no último inventário."
+      "status": "healthy",
+      "confidence": "high",
+      "last_read": "2026-10-22",
+      "note": "Conector Vercel listou 54 projetos na conta, dos quais 26 com nomenclatura CONSTRU-REI/CR/Central e 28 outros; isso não confirma que estejam em produção ou ativos."
     },
     {
       "id": "SRC-PWA",
       "name": "PWA Gestor",
-      "status": "healthy",
-      "confidence": "high",
-      "last_read": "05/10",
-      "note": "Gestor H5 oficial e aprovado; PWA preservado no mesmo link."
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "2026-10-22",
+      "note": "Código PWA localizado; conteúdo de dados atualizado. Teste visual notebook+celular não executado; não alterar versão JS/SW antes do gate."
     },
     {
       "id": "SRC-BANCO-MESTRE",
       "name": "Banco Mestre",
       "status": "healthy",
       "confidence": "high",
-      "last_read": "05/10 18:55",
-      "note": "Pendências reconciliadas com a baseline aprovada; única validação do proprietário em aberto: F00→F09."
+      "last_read": "2026-10-22",
+      "note": "Banco público cc_items consultado e reconciliado: 263 registros, 120 concluídos, 39 cancelados e 104 não concluídos após atualização de tarefas."
     },
     {
       "id": "SRC-BACKUP",
       "name": "Backups automáticos",
-      "status": "healthy",
-      "confidence": "high",
-      "last_read": "2026-10-07T06:05:10Z",
-      "note": "Cloud Run construrei-backup + Scheduler construrei-backup-diario ENABLED; execução 07/10 concluída com sucesso; restore drill integral PASS em 05/10."
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "2026-10-22",
+      "note": "GitHub Actions CAS SUCCESS em 22/10; Cloud Run/Scheduler e restauração integral não foram consultados diretamente. PR #146 DRAFT; cobertura e recovery ainda pendentes."
     },
     {
       "id": "SRC-COFRE-ZERO",
       "name": "Cofre Zero",
-      "status": "healthy",
-      "confidence": "high",
-      "last_read": "2026-10-07T06:05:10Z",
-      "note": "Cofre Zero preservado em nuvem; restore físico de 4526 arquivos e banco validado; rotina oficial independente do notebook."
+      "status": "not_confirmed",
+      "confidence": "medium",
+      "last_read": "2026-10-22",
+      "note": "Rotina Cloud anterior preservada; execução GitHub CAS/Guard recente confirmada, mas restore PostgreSQL17/Storage/Auth integral não provado nesta rodada."
     }
   ],
   "reconciliations": [
@@ -3718,6 +3832,42 @@
       ],
       "resolution": "Gestor é fonte mestre; APP/WIZY/Éder são projeções do escopo APP. WIZY/Éder não fecham automaticamente.",
       "rule": "PEND-001"
+    }
+  ],
+  "archived_operational_items": [
+    {
+      "id": "PM-23",
+      "title": "Google Meet Add-ons",
+      "domain": "Meeting",
+      "priority": "P2",
+      "state": "queue",
+      "owner": "CR Assertivo",
+      "last_movement": "2026-10-05",
+      "next_action": "Manter Sala atual; desenvolver Add-on apenas quando abrir vaga.",
+      "dependency": "Fila",
+      "source": "Backlog canônico CR-MEET-P1-ADDON-20261005",
+      "close_when": "Integração nativa homologada sem regressão.",
+      "human_action": false,
+      "provenance": "current_explicit",
+      "archive_reason": "Não entra no plano operacional imediato outubro/2026; não afirmar execução concluída.",
+      "archived_at": "2026-10-22"
+    },
+    {
+      "id": "PM-24",
+      "title": "Nova identidade visual — somente com kit correto",
+      "domain": "Visual",
+      "priority": "P2",
+      "state": "queue",
+      "owner": "Rogério + CR Assertivo",
+      "last_movement": "2026-10-06",
+      "next_action": "Aguardar novo kit correto. V1/V2 erradas permanecem em quarentena.",
+      "dependency": "Kit visual correto",
+      "source": "Recovery PR #37 + checkpoint atual",
+      "close_when": "Novo kit validado em candidata isolada no celular e notebook.",
+      "human_action": true,
+      "provenance": "current_explicit",
+      "archive_reason": "Não entra no plano operacional imediato outubro/2026; não afirmar execução concluída.",
+      "archived_at": "2026-10-22"
     }
   ]
 }
