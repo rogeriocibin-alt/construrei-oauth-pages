@@ -988,7 +988,7 @@
       "progress": 75,
       "progress_basis": "estimativa de avanço técnico, NÃO homologação E2E",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
-      "last_advance": "22/10: Capital de Giro v34 ACTIVE e PR #147 homologada tecnicamente para teste de 23/10. Comprovantes UI restaurados, PRs #142/#143/#145 isoladas. Auditoria Cora × Trello com exceções não sanadas.",
+      "last_advance": "22/10: Capital de Giro v34 ACTIVE e PR #147 homologada tecnicamente para teste de 23/10. Comprovantes UI restaurados, PRs #142/#143/#145 isoladas. Auditoria Cora × Trello com exceções não sanadas. | Indicadores Trello: 13 EM ANDAMENTO, 9 AG. PAGAMENTO, 10 AG. ACERTO, 3 RETORNOS; Acerto Vivo 8 obras, lucro R$ 8.796,87, CG R$ 879,67 (dados que variam).",
       "next_action": "23/10 após término das obras: prévia e confirmação única do Capital de Giro; validar card, ledger e saldos notebook+celular. Depois avançar conciliação da PR #143 e prova saldo Cora.",
       "dependency": "E2E autenticado com obras reais, evidência Cora, revisão de auditoria e gate humano",
       "blocked": false,
@@ -1291,6 +1291,13 @@
       "title": "Revisão geral de provedores e operações",
       "detail": "GitHub CI verde recente; financeiro V12 candidata; Banco Mestre 263 registros após reconciliação; Vercel 54 / Supabase Edge 385; pendências falsas retiradas do radar sem perder história.",
       "confidence": "verified_connectors_and_database"
+    },
+    {
+      "date": "2026-10-22",
+      "type": "operational_snapshot",
+      "title": "Indicadores vivos das obras 2026 e financeiro",
+      "detail": "Quadro: 306 cartões, 13 em andamento/9 pagamento/10 acerto/3 retornos. Acerto Vivo 8 obras, margem 33,87%; Capital Giro líquido R$ 2.479,69. Valores vinculados à hora da leitura.",
+      "confidence": "live_connector_read"
     }
   ],
   "recoverables": [
@@ -3869,5 +3876,50 @@
       "archive_reason": "Não entra no plano operacional imediato outubro/2026; não afirmar execução concluída.",
       "archived_at": "2026-10-22"
     }
-  ]
+  ],
+  "operational_indicators": {
+    "as_of": "2026-10-22T23:35:04Z",
+    "source": "Trello board GESTÃO DE OBRAS 2026 + Supabase read-only snapshot",
+    "trello_cards_open_board": 306,
+    "caveat": "306 são cartões abertos no quadro inteiro, incluindo resumos mensais/anuais e históricos — não são 306 obras simultaneamente em andamento.",
+    "trello_lists": {
+      "em_andamento": 13,
+      "aguardando_pagamento": 9,
+      "aguardando_acerto": 10,
+      "retornos": 3
+    },
+    "acerto_vivo": {
+      "works": 8,
+      "checked": 8,
+      "pending": 0,
+      "base_brl": 25970,
+      "cost_brl": 17173.13,
+      "profit_brl": 8796.87,
+      "margin_percent": 33.87,
+      "capital_giro_brl": 879.67,
+      "ratios_balance_brl": 0,
+      "source": "Trello Acerto Vivo cartão 6ab6f27658e42565c7413b7b (última leitura 22/10 22:33:42 UTC)"
+    },
+    "capital_giro": {
+      "generated_brl": 20648.65,
+      "positive_available_brl": 2595.75,
+      "negative_historical_brl": -116.06,
+      "net_available_brl": 2479.69,
+      "period_cards": 26,
+      "source": "Trello Gestão Financeira, 22/10",
+      "no_new_period_created": true
+    },
+    "financeiro_v12_operations": {
+      "committed": 5,
+      "source": "Supabase cr_finance_v12_operations consulta 22/10",
+      "not_bank_reconciliation": true
+    },
+    "source_counts": {
+      "healthy": 5,
+      "stale": 3,
+      "not_confirmed": 5,
+      "source": "cr_project_manager_snapshot_v1()"
+    },
+    "warning": "O campo pending_current_acerto de cr_working_capital_state_v1 ainda guardava valor diferente do Acerto Vivo; o fechamento deve reler o cartão e verificar o rateio na hora."
+  }
 }
