@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-15",
+  "generated_at": "2026-10-22",
   "title": "Infraestrutura do Projeto CONSTRU-REI",
   "policy": {
     "owner_view": "Gestor do Projeto",
@@ -10,17 +10,27 @@
     "anti_stale": "Mudança de provedor, hospedagem, plano, limite, versão ou backup precisa atualizar esta camada antes de a entrega ser considerada concluída."
   },
   "summary": {
-    "providers_total": 10,
-    "providers_live_verified": 6,
-    "critical_alerts": 0,
-    "attention_alerts": 6,
+    "providers_total": 6,
+    "providers_live_verified": 3,
+    "critical_alerts": 1,
+    "attention_alerts": 5,
     "netlify_sites": 7,
-    "vercel_projects": 0,
+    "vercel_projects": 54,
     "github_repositories": 2,
     "supabase_projects": 2,
-    "supabase_edge_functions": 370,
+    "supabase_edge_functions": 385,
     "supabase_public_tables": 157,
-    "updated_at": "2026-10-15"
+    "updated_at": "2026-10-22",
+    "vercel_construrei_named_projects": 26,
+    "vercel_other_projects": 28,
+    "supabase_edge_active": 385,
+    "supabase_edge_without_jwt": 276,
+    "github_open_pull_requests": 22,
+    "github_latest_guard": "39871026550 SUCCESS",
+    "github_latest_pages": "39869813490 SUCCESS",
+    "github_latest_cas": "39869814025 SUCCESS",
+    "netlify_sites_last_verified": "2026-10-03 • histórico, não revalidado",
+    "source_caveat": "Números Vercel/Supabase/GitHub são leituras ao vivo de 22/10; Netlify e Google Cloud carecem de conector de runtime nesta sessão."
   },
   "topology": [
     {
@@ -113,35 +123,31 @@
       "plan": "Não confirmado pelo conector",
       "plan_status": "unknown",
       "health": "healthy",
-      "health_label": "ACTIVE_HEALTHY",
+      "health_label": "ATIVO • AUDITORIA DE ACESSO PENDENTE",
       "usage": [
         {
-          "label": "Projetos na organização",
-          "value": "2"
-        },
-        {
-          "label": "Projeto CONSTRU-REI",
-          "value": "ACTIVE_HEALTHY"
-        },
-        {
-          "label": "Região",
-          "value": "sa-east-1"
-        },
-        {
-          "label": "PostgreSQL",
-          "value": "17.6.1.166"
-        },
-        {
-          "label": "Tabelas public",
-          "value": "157"
+          "label": "Projeto financeiro",
+          "value": "yspuaamokjbrosytqjpg ACTIVE"
         },
         {
           "label": "Edge Functions",
-          "value": "330 ativas"
+          "value": "385 ACTIVE (22/10)"
         },
         {
           "label": "verify_jwt=false",
-          "value": "226 (exige revisão por função; não implica falha por si só)"
+          "value": "276; revisar autorização por rota, não presumir vulnerabilidade"
+        },
+        {
+          "label": "Capital de Giro",
+          "value": "cr-trello-capital-giro-v1 v34 ACTIVE"
+        },
+        {
+          "label": "PM API",
+          "value": "cr-project-manager-v1-api-candidate-20261003 v25 ACTIVE"
+        },
+        {
+          "label": "Cora STAGE",
+          "value": "cr-cora-channel-v2-candidate-20261007 v26 • sucesso mTLS não confirmado"
         }
       ],
       "assets": [
@@ -159,10 +165,10 @@
         }
       ],
       "admin_url": "https://supabase.com/dashboard/project/yspuaamokjbrosytqjpg",
-      "source": "Conector Supabase • 03/10/2026",
+      "source": "Conector Supabase 22/10/2026",
       "alerts": [
-        "Advisor de segurança: INFO — RLS habilitado sem policy em 159 achados; revisar intenção de acesso.",
-        "Advisor de performance: 4 FKs sem índice, 126 índices sem uso e Auth DB connections em valor absoluto."
+        "Acesso das Edge Functions verify_jwt=false depende dos controles internos de autorização, revisão por endpoint. Não divulgar credenciais.",
+        "Conciliação Cora × Trello V12 permanece em auditoria PR #143."
       ]
     },
     {
@@ -175,28 +181,20 @@
       "health": "healthy",
       "usage": [
         {
-          "label": "Repositórios visíveis",
-          "value": "2"
+          "label": "PRs abertas",
+          "value": "22 (candidatas e históricos; não promover automaticamente)"
         },
         {
-          "label": "Principal",
-          "value": "construrei-oauth-pages • público"
+          "label": "Pages",
+          "value": "run 39869813490 SUCCESS"
         },
         {
-          "label": "Dashboard",
-          "value": "construrei-dashboard-v4-candidate • privado"
+          "label": "Canonical Guard",
+          "value": "run 39871026550 SUCCESS"
         },
         {
-          "label": "Gestor PWA",
-          "value": "GitHub Pages no repositório principal"
-        },
-        {
-          "label": "Git privado offsite",
-          "value": "Git bundle + SHA + clone/fscK PASS 11/10"
-        },
-        {
-          "label": "Agendamento",
-          "value": "02:15 diariamente, sem notebook"
+          "label": "Cofre CAS Action",
+          "value": "run 39869814025 SUCCESS"
         }
       ],
       "assets": [
@@ -214,10 +212,12 @@
         }
       ],
       "admin_url": "https://github.com/rogeriocibin-alt",
-      "source": "Conector GitHub • 03/10/2026",
+      "source": "Conector GitHub 22/10/2026",
       "alerts": [
-        "O repositório do Gestor é público: nunca publicar credenciais, tokens ou senhas no HTML/JSON do PWA."
-      ]
+        "PRs #142, #143, #145, #146, #147 DRAFT. Merge sujeito a gate.",
+        "Workflows de backup PASS não equivalem a restauração integral Cloud/DB comprovada."
+      ],
+      "health_label": "CI E PAGES OK • CANDIDATAS ISOLADAS"
     },
     {
       "id": "netlify",
@@ -226,7 +226,7 @@
       "account": "rogeriocibin’s team",
       "plan": "Free",
       "plan_status": "confirmed",
-      "health": "attention",
+      "health": "not_confirmed",
       "usage": [
         {
           "label": "Plano",
@@ -309,11 +309,11 @@
         }
       ],
       "admin_url": "https://app.netlify.com/teams/rogeriocibin",
-      "source": "Conector Netlify • 03/10/2026",
+      "source": "Inventário histórico 03/10; sem conector Netlify nesta sessão de 22/10",
       "alerts": [
-        "Mapear quais sites ainda são necessários e quais podem ser congelados/arquivados.",
-        "MFA não está exigido no time; avaliar endurecimento de acesso."
-      ]
+        "Sete sites no inventário anterior, sem verificação atual de saúde/deploy. Evitar concluir ou desativar sem auditoria independente."
+      ],
+      "health_label": "NÃO REVALIDADO"
     },
     {
       "id": "vercel",
@@ -322,27 +322,29 @@
       "account": "contatoconstrurei-3042's projects",
       "plan": "Não confirmado pelo conector",
       "plan_status": "unknown",
-      "health": "idle",
+      "health": "healthy",
       "usage": [
         {
-          "label": "Times conectados",
-          "value": "1"
+          "label": "Projetos totais da conta",
+          "value": "54"
         },
         {
-          "label": "Projetos",
-          "value": "0"
+          "label": "Identificados CONSTRU-REI/CR/Central pelo nome",
+          "value": "26"
         },
         {
-          "label": "Uso atual do CONSTRU-REI",
-          "value": "Nenhum workload identificado"
+          "label": "Outros projetos na conta",
+          "value": "28 (fora do escopo atual sem auditoria de uso)"
         }
       ],
       "assets": [],
       "admin_url": "https://vercel.com/dashboard",
-      "source": "Conector Vercel • 03/10/2026",
+      "source": "Conector Vercel 22/10/2026",
       "alerts": [
-        "Conta conectada, porém sem projetos; manter visível para evitar a falsa impressão de que algo atual está hospedado aqui."
-      ]
+        "O total anterior de 0 projetos era obsoleto; projetos registrados não são prova de serviços ativos em produção.",
+        "Não excluir projetos, domínios ou alterar cobrança sem mapeamento de tráfego e dependências."
+      ],
+      "health_label": "INVENTÁRIO CONFIRMADO • USO NÃO CLASSIFICADO"
     },
     {
       "id": "notebook",
@@ -381,8 +383,11 @@
         }
       ],
       "admin_url": "https://mcp.desktopcommander.app/",
-      "source": "Desktop Commander list_devices • 15/10/2026; dispositivo offline",
-      "alerts": []
+      "source": "Desktop Commander 22/10/2026: Rogerio-2022 Offline (última observação há 357 horas)",
+      "alerts": [
+        "A indisponibilidade do notebook não deve bloquear rotinas cloud; validação visual notebook+celular segue pendente."
+      ],
+      "health_label": "OFFLINE / DESKTOP COMMANDER"
     },
     {
       "id": "google-drive",
@@ -391,7 +396,7 @@
       "account": "Remote construrei-drive",
       "plan": "Não confirmado",
       "plan_status": "unknown",
-      "health": "healthy",
+      "health": "not_confirmed",
       "usage": [
         {
           "label": "Conectividade",
@@ -415,14 +420,12 @@
         }
       ],
       "admin_url": "https://drive.google.com/",
-      "source": "Evidência anterior Drive + API GitHub Jobs #38816987001 revalidada; sem nova leitura Drive nesta retomada",
+      "source": "Conector Drive 22/10: busca de metadados; GitHub backup Actions 22/10",
       "alerts": [
-        {
-          "severity": "attention",
-          "title": "CAS e restauração integral a comprovar",
-          "message": "Operação homologada por Rogério. Falhas Cloud 13–14 históricas; ciclo 15/10 SUCCESS. Próximo CAS schedule e recuperação integral permanecem monitorados."
-        }
-      ]
+        "Documentos Drive aparecem na pesquisa, mas nenhum restore PostgreSQL17/Storage/Auth foi executado na auditoria.",
+        "Google Cloud Run/Scheduler e logs de execução não acessados diretamente nesta sessão."
+      ],
+      "health_label": "DRIVE METADADOS ACESSÍVEIS • RESTORE NÃO ATESTADO"
     }
   ],
   "backups": {
@@ -437,7 +440,7 @@
         "restore runbook",
         "checksums"
       ],
-      "note": "Cofre Zero permanece como baseline de recuperação comprovada. O backup recorrente oficial roda em Google Cloud Run + Cloud Scheduler e não depende do notebook.",
+      "note": "Baseline histórica de recuperação preservada; STATUS ATUAL não deve exibir restore integral como comprovado sem teste recente. CAS GitHub SUCCESS != restauração completa.",
       "edge_function_snapshot_count": 254,
       "current_live_edge_functions": 370
     },
@@ -446,23 +449,23 @@
       "installed_at": "2026-10-05 • migração cloud oficial",
       "state": "attention",
       "last_attempt": "2026-10-15 03:00:01 BRT • Cloud Run construrei-backup-q2tjm",
-      "last_result": "Cloud original 15/10 q2tjm SUCCESS, 1/1 tarefa, exit0, retries0, evidência visual do titular. FULL GitHub #38816987001 e CAS manual #38825322289 SUCCESS.",
+      "last_result": "GitHub Cofre Zero CAS Action runs 39869814025 e 39865384972 SUCCESS em 22/10; prova do job Cloud Run/Scheduler às 03h e restauração integral neste dia INDISPONÍVEL.",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
-      "verification": "CAS manifesto SHA256 f763c74da70e716308696376cad4b08afb6176197affd816a256375406c3e09e; 3 SQL hash PASS, 3 amostras Storage PASS, todas 4544 referências PASS. SQL COPY 231 blocos; replay NÃO executado. Cloud original q2tjm confirmado por captura do titular, issue53 #6205333436.",
+      "verification": "CI CAS SUCCESS; não assumir que checksum readback/restore PostgreSQL17/Storage/Auth foram executados. Caso no Gestor: EXEC-COFRE-COVERAGE-20261010.",
       "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
         "Google Drive CURRENT/HISTORY",
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Operação homologada e incidente encerrado por Rogério 15/10. Sem ajuste IAM, novo FULL ou intervenção humana. Monitorar primeiro CAS schedule 16/10 05:47 BRT; recuperação integral adiada, não homologada."
+      "action": "Preservar Scheduler/Run histórico; revisão da PR #146 antes de merge; obter prova job Cloud recente e restore isolado sem FULL repetido."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
       "state": "partial",
-      "evidence": "370 funções ativas em 11/10. Manifesto Drive de 10/10 referencia 366; quatro funções novas exportadas com código integral para cofre privado Git e readback verificado, posteriormente espelhado no Supabase Storage.",
-      "action": "Reconciliar total de Edge e provar artefatos versionados; sem incidente do backup diário."
+      "evidence": "22/10 Supabase: 385 Edge Functions ACTIVE; último snapshot semanal 370 documentado, diferença de cobertura ainda não verificada.",
+      "action": "Comprovar exportação versionada/readback de Edge novas sem gerar rotina paralela, monitorar orçamento/cotas."
     },
     "external": {
       "netlify": {
@@ -480,7 +483,7 @@
         "restore": "git bundle, SHA256 readback, clone mirror e fsck PASS"
       },
       "trello_binary": {
-        "status": "offline_restore_verified_schedule_removed",
+        "status": "RESTORE HISTÓRICO PASS; RECORRÊNCIA NÃO CONFIRMADA",
         "run": 38246754723,
         "scope": "13 quadros/1721 cartões/4055 anexos recuperados offline. PR124 removeu workflows em 14/10; não presumir recorrência de 18/10.",
         "restore": "GitHub Actions #38246754723 SUCCESS + Drive RESTORE_REPORT.json PASS_OFFLINE_RECOVERY, sem restaurar a conta Trello real"
@@ -491,20 +494,20 @@
     {
       "name": "Trello",
       "role": "Fonte operacional de cards e histórico",
-      "status": "registered",
-      "plan": "Não auditado nesta rodada"
+      "status": "live_read_verified",
+      "plan": "Conector Trello 22/10: cartões Capital Giro e Acerto Vivo lidos; gravação encerramento amanhã ainda sem prova E2E."
     },
     {
       "name": "GestãoClick",
       "role": "Orçamentos, OS e conciliações",
-      "status": "registered",
-      "plan": "Não auditado nesta rodada"
+      "status": "not_revalidated",
+      "plan": "Fila de saneamento existente; sem consulta autenticada ao GestãoClick em 22/10."
     },
     {
       "name": "Google Calendar",
       "role": "Agenda executiva/operacional",
-      "status": "registered",
-      "plan": "Não auditado nesta rodada"
+      "status": "not_revalidated",
+      "plan": "Homologação histórica da Agenda preservada; sem teste atual de criação."
     },
     {
       "name": "Pagey",
@@ -606,6 +609,18 @@
       "title": "Cofre Zero — CAS agendado sem execução recente comprovada",
       "detail": "Causa comprovada: PR #124 removeu workflow em 14/10; ba4d8e2 restaurou em 15/10 18:58 BRT. CAS manual #38825322289 SUCCESS; próximo schedule previsto 16/10 05:47 BRT.",
       "action": "Conferir primeiro evento schedule real e manifesto; não repetir validação manual ou iniciar FULL."
+    },
+    {
+      "severity": "attention",
+      "title": "Visão infra obsoleta corrigida com fontes parciais",
+      "detail": "Antes 0 Vercel; agora 54 projetos na conta, 26 nomeados CONSTRU-REI. Netlify Cloud Run e restore ainda não consultados diretamente.",
+      "action": "Reconciliar provedores sem criar segundo serviço, custo ou exclusões precipitadas."
+    },
+    {
+      "severity": "high",
+      "title": "Cofre Zero — restauração integral ainda sem comprovação atual",
+      "detail": "GitHub CAS Actions SUCCESS não atestam restauração isolada do PostgreSQL 17/Storage/Auth nem Cloud Run/Scheduler do dia.",
+      "action": "Validar somente após prova controlada, preservando backup atual e rollback."
     }
   ],
   "next_actions": [
@@ -617,9 +632,9 @@
     },
     {
       "priority": "P0",
-      "title": "Provar execução do backup semanal de Edge Functions",
+      "title": "Comprovar cobertura semanal atual das 385 Edge Functions",
       "owner": "CR Assertivo",
-      "status": "completed"
+      "status": "monitoring"
     },
     {
       "priority": "P1",
@@ -629,9 +644,9 @@
     },
     {
       "priority": "P1",
-      "title": "Classificar Netlify/Vercel por uso real e encerrar resíduos",
+      "title": "Classificar 26 projetos Vercel nomeados CONSTRU-REI e 7 sites Netlify históricos sem excluir nada",
       "owner": "CR Assertivo",
-      "status": "open"
+      "status": "in_progress"
     },
     {
       "priority": "P1",
@@ -650,6 +665,35 @@
       "title": "Replay PostgreSQL17 isolado e recuperação Auth/Storage",
       "owner": "CR Assertivo",
       "status": "deferred"
+    },
+    {
+      "priority": "P0",
+      "title": "Teste de encerramento Capital de Giro V12 — 23/10",
+      "owner": "Financeiro REI + CR Assertivo",
+      "status": "awaiting_owner_validation",
+      "evidence": "PR #147 / função v34; novo card ainda não criado",
+      "action": "Conferir 10% e obras reais, preview sem escrita, commit único, verificar card/Trello/Supabase/notebook+celular."
+    },
+    {
+      "priority": "P0",
+      "title": "Conciliar Cora × Trello por obra V12",
+      "owner": "Financeiro REI + CR Assertivo",
+      "status": "in_progress",
+      "evidence": "PR #143 DRAFT / divergências sem comprovantes; manter read-only",
+      "action": "Sanear exceções apenas com evidência independente, sem retificar fechamento por suposição."
     }
-  ]
+  ],
+  "audit_20261022": {
+    "scope": "read_only_provider_review_plus_metadata_update",
+    "evidence": "GitHub Actions, Supabase list_edge_functions, public.cc_items, Trello, Vercel list_projects, Drive metadata e Desktop Commander",
+    "rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
+    "nonverified": [
+      "Netlify real-time",
+      "Google Cloud Run/Scheduler logs",
+      "Restore PostgreSQL 17/Storage/Auth",
+      "Uso efetivo de todos 54 projetos Vercel",
+      "E2E notebook/celular"
+    ],
+    "never_claim": "TODO_SERVICE_HEALTHY"
+  }
 }
