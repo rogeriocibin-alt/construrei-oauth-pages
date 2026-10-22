@@ -7,6 +7,15 @@ function splitFinancialLines(text){
  return String(text||"").replace(GLUED_PIX,"$1\n").split(/\r?\n/);
 }
 const CASE=/(?<!\d)(\d{2,5}-(?:24|25|26))(?!\d)/;
+const CASE_GLOBAL=/(?<!\d)(\d{2,5}-(?:24|25|26))(?!\d)/g;
+function referencesOtherWork(line,current){
+ return [...String(line||"").matchAll(CASE_GLOBAL)].some(m=>m[1]!==current);
+}
+function hasExactBankId(line,id){
+ if(typeof id!=="string"||!id)return false;
+ // Não aceitar prefixo parcial (ex: ent_123 dentro de ent_123XYZ).
+ return String(line||"").split(/[^A-Za-z0-9_-]+/).includes(id);
+}
 function parseLine(line,defaultYear){
  const m=String(line||"").match(LINE);if(!m)return null;
  let y=m[3]?Number(m[3]):Number(defaultYear);if(y<100)y+=2000;
@@ -35,12 +44,14 @@ function reconcile(bank,cards,year){
   if(!no)continue;
   for(const [i,line] of splitFinancialLines(c.desc).entries()){
    const p=parseLine(line,year);if(!p)continue;
-   const options=byKey.get(key(no,p.day,p.cents,"debit"))||[];
+   const foreign=referencesOtherWork(line,no);
+   const options=foreign?[]:(byKey.get(key(no,p.day,p.cents,"debit"))||[]);
    const entry={cardId:c.id,caseNo:no,line:i,bankId:null,status:"SEM_VINCULO"};
-   if(options.length>1)entry.status="BANCO_AMBIGUO";
+   if(foreign)entry.status="REFERENCIA_CRUZADA_A_VERIFICAR";
+   else if(options.length>1)entry.status="BANCO_AMBIGUO";
    if(options.length===1){
     entry.bankId=options[0].sourceId;
-    entry.verified=options[0].receiptVerified===true&&line.includes(entry.bankId);
+    entry.verified=options[0].receiptVerified===true&&hasExactBankId(line,entry.bankId);
     entry.status="EVIDENCIA_BILATERAL_COMPATIVEL";
     uses.set(entry.bankId,[...(uses.get(entry.bankId)||[]),c.id+":"+i]);
    }
@@ -55,4 +66,4 @@ function reconcile(bank,cards,year){
  return {rows,counts,bankIds:ids.size,cardIds:cardIds.size,
   uniqueMatchedBank:uses.size,reusedBank:[...uses.values()].filter(a=>a.length>1).length};
 }
-module.exports={parseLine,splitFinancialLines,reconcile};
+module.exports={parseLine,splitFinancialLines,referencesOtherWork,hasExactBankId,reconcile};
