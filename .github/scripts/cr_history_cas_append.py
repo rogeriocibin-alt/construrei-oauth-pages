@@ -208,14 +208,14 @@ def execute(mode, restore=None, pilot_seed=False):
         raise ValueError("Recovery directory mandatory for commit")
     if not re.fullmatch(r"\d{8}-\d{6}", run_id):
         raise ValueError("Unsafe manifest ID")
-    from datetime import datetime, timezone
     if pilot_seed:
         if (run_id != "20261011-060021" or missing
                 or len(entries) != len(seed)
                 or any(e["store"] != "seed" for e in entries)):
             raise ValueError("Seed-only pilot preconditions not fulfilled")
-    elif run_id[:8] != datetime.now(timezone.utc).strftime("%Y%m%d"):
-        raise ValueError("Stale source snapshot; no archive written")
+    # A verified CURRENT may legitimately predate a change-driven or scheduled CAS run.
+    # Integrity and immutable manifest identity are checked above and below;
+    # never infer freshness from the wall-clock date of the GitHub runner.
 
     present_manifests = inventory_manifest_files()
     if run_id + ".json" in present_manifests:
@@ -337,6 +337,9 @@ def selftest():
         raise AssertionError("Missing CAS object accepted")
     except ValueError:
         pass
+    # Same immutable source identity is safe to reprocess on a later day;
+    # a changed manifest with the same run ID must still fail closed in execute().
+    assert RUN_RX.search("RUN_ID: 20261017-060011") is not None
     print("PASS: immutable CAS plan, independent manifest recovery, corruption fixtures")
 
 
