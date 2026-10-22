@@ -27,6 +27,7 @@ on:
       - 'docs/official-links-registry.json'
       - 'production/central-operacional-v2-ux-r1-2-homologada-20261005/**'
       - 'production/dashboard-financeiro-v4/**'
+      - 'production/dashboard-financeiro-v12-homologada-20261022/**'
       - 'gestor-projeto/index.html'
       - 'preview/app-gabi-v21-parecer-logo-20261008/**'
       - 'checklist-operacional/**'
@@ -81,6 +82,21 @@ jobs:
             if(response.status!==401&&response.status!==403)process.exitCode=1;
           })().catch(e=>{console.error("Authorization probe unavailable:",e.name);process.exitCode=1});
           JS
+      - name: Protect frozen Financeiro V12 release (code only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          frozen='production/dashboard-financeiro-v12-homologada-20261022/index.html'
+          expected='68960c5a8abf3dd53be5c2d1d2f0e7a00b8b308c'
+          test -f "$frozen" || { echo 'ERROR: Financeiro V12 homologada missing'; exit 1; }
+          actual="$(git hash-object "$frozen")"
+          test "$actual" = "$expected" || {
+            echo "ERROR: Financeiro V12 frozen blob changed: expected $expected, actual $actual"
+            exit 1
+          }
+          grep -Fq 'V12 · HOMOLOGADA (OPERAÇÃO)' "$frozen"
+          grep -Fq 'window.CR_V12_CORA_AUDIT=calculate' "$frozen"
+          echo 'Financeiro V12 frozen HTML checked; no financial writes or new services.'
       - name: Verify homologated HTML is byte-identical
         shell: bash
         run: |
