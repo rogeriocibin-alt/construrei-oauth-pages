@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {rateioCanonico,conciliarValores,deduplicarMovimentos,rotuloAcerto,centavos,classificarSaldoCora,classificarCompetenciaCora} from "./finance-core.mjs";
+import {rateioCanonico,conciliarValores,deduplicarMovimentos,rotuloAcerto,centavos,classificarSaldoCora,classificarCompetenciaCora,verificarMargemConsolidada} from "./finance-core.mjs";
 const r=rateioCanonico(49800);
 assert.deepEqual(r,{fabricio:9960,eder:13944,rogerio:13944,gabrielly:6972,capitalGiro:4980});
 assert.equal(Object.values(rateioCanonico(1)).reduce((a,b)=>a+b,0),1);
@@ -27,3 +27,15 @@ assert.equal(classificarCompetenciaCora({statusImportacao:"complete",origem:"COR
 assert.equal(classificarCompetenciaCora({statusImportacao:"complete",origem:"CORA_OFFICIAL_AGGREGATIONS",saldoInicial:100,saldoFinal:200}),"CONCILIADA");
 assert.equal(classificarCompetenciaCora({statusImportacao:"complete",origem:"CORA_OFFICIAL_AGGREGATIONS",saldoInicial:100,saldoFinal:200,divergenciaCentavos:1}),"DIVERGENTE");
 console.log("V12 — testes adicionais de proveniência Cora (fixtures, não saldo real).");
+
+const consistente=verificarMargemConsolidada({receitaCentavos:100000,custoCentavos:70000,lucroCentavos:30000,coberturaPercentual:100,pendencias:0});
+assert.equal(consistente.status,"ARITMETICA_CONSISTENTE_NAO_HOMOLOGADA");
+assert.equal(consistente.margemPercentual,30);
+assert.equal(verificarMargemConsolidada({receitaCentavos:null,custoCentavos:0,lucroCentavos:0,coberturaPercentual:100}).status,"BASE_INCOMPLETA");
+assert.equal(verificarMargemConsolidada({receitaCentavos:10000,custoCentavos:1000,lucroCentavos:8000,coberturaPercentual:100}).status,"BASES_DIVERGENTES");
+assert.equal(verificarMargemConsolidada({receitaCentavos:10000,custoCentavos:1000,lucroCentavos:9000,coberturaPercentual:82}).status,"CONCILIACAO_PENDENTE");
+assert.equal(verificarMargemConsolidada({receitaCentavos:10000,custoCentavos:1000,lucroCentavos:9000,coberturaPercentual:100,pendencias:1}).margemPercentual,null);
+assert.equal(verificarMargemConsolidada({receitaCentavos:10000,custoCentavos:1000,lucroCentavos:9000,coberturaPercentual:100,historicoNaoConciliado:true}).margemPercentual,null);
+const ponderada=verificarMargemConsolidada({receitaCentavos:110000,custoCentavos:90000,lucroCentavos:20000,coberturaPercentual:100});
+assert.equal(ponderada.margemPercentual,18.18); // não média simples de 50% e 16,67%
+console.log("V12 — 8 cenários adicionais de conciliação de margem aprovados (fixtures).");
