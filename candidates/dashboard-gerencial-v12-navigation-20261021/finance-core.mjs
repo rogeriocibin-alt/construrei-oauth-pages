@@ -66,3 +66,24 @@ export function classificarCompetenciaCora({statusImportacao,origem,saldoInicial
   if(origem!=="CORA_OFFICIAL_AGGREGATIONS")return "SEM_COMPROVACAO";
   return "CONCILIADA";
 }
+
+/**
+ * Verifica qualidade contábil da margem consolidada (soma de receitas e custos,
+ * NUNCA a média simples das margens das obras).
+ * A aprovação matemática NÃO comprova pagamentos, impostos ou recebimentos:
+ * por isso o estado resultante jamais é denominado "LUCRO_REAL_HOMOLOGADO".
+ */
+export function verificarMargemConsolidada({receitaCentavos,custoCentavos,lucroCentavos,coberturaPercentual,pendencias=0,historicoNaoConciliado=false}={}){
+  const integers=[receitaCentavos,custoCentavos,lucroCentavos];
+  if(integers.some(v=>!Number.isSafeInteger(v))||receitaCentavos<=0||custoCentavos<0){
+    return {status:"BASE_INCOMPLETA",margemPercentual:null,diferencaCentavos:null};
+  }
+  const diferenca=receitaCentavos-custoCentavos-lucroCentavos;
+  if(Math.abs(diferenca)>1){
+    return {status:"BASES_DIVERGENTES",margemPercentual:null,diferencaCentavos:diferenca};
+  }
+  if(historicoNaoConciliado||!Number.isFinite(coberturaPercentual)||coberturaPercentual<99.999||!Number.isSafeInteger(pendencias)||pendencias>0){
+    return {status:"CONCILIACAO_PENDENTE",margemPercentual:null,diferencaCentavos:diferenca};
+  }
+  return {status:"ARITMETICA_CONSISTENTE_NAO_HOMOLOGADA",margemPercentual:Math.round(lucroCentavos/receitaCentavos*10000)/100,diferencaCentavos:diferenca};
+}
