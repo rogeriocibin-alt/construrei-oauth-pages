@@ -42,7 +42,9 @@
       "canceled": 39,
       "open": 104,
       "source": "Supabase public.cc_items consulta 22/10/2026"
-    }
+    },
+    "operational_audit_file": "docs/GESTOR_REVIEW_OPERACIONAL_20261022.md",
+    "operational_audit_url": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/GESTOR_REVIEW_OPERACIONAL_20261022.md"
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -863,7 +865,9 @@
       "date": "2026-10-22",
       "commit": "ebd9cfafdbca07e0ddd4f0d2cf5c7d1700270c57",
       "role": "Rollback pré-atualização informativa de Governança/Infra; pendências originais preservadas",
-      "branch": "checkpoint/gestor-auditoria-global-preupdate-20261022"
+      "branch": "checkpoint/gestor-auditoria-global-preupdate-20261022",
+      "url": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/GESTOR_REVIEW_OPERACIONAL_20261022.md",
+      "evidence": "GitHub Pages datafiles updated; live Supabase PM sources reconciled; report archived."
     }
   ],
   "fronts": [
@@ -3153,7 +3157,9 @@
       "status": "evidence_reconciled_pending_pwa_validation",
       "scope": "GitHub/Trello/Supabase/Vercel/Drive metadados, Dashboard V12, ORÇA-REI, APP, Cofre Zero",
       "summary": "Indicadores e status reconciliados; testes E2E Cloud/Netlify/PWA declarados pendentes. Rollback protegido.",
-      "source": "CHECKPOINT_GESTOR_REVISAO_GLOBAL_20261022"
+      "source": "CHECKPOINT_GESTOR_REVISAO_GLOBAL_20261022",
+      "report": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/GESTOR_REVIEW_OPERACIONAL_20261022.md",
+      "report_path": "docs/GESTOR_REVIEW_OPERACIONAL_20261022.md"
     }
   ],
   "audit_findings": [
@@ -3920,6 +3926,7 @@
       "not_confirmed": 5,
       "source": "cr_project_manager_snapshot_v1()"
     },
-    "warning": "O campo pending_current_acerto de cr_working_capital_state_v1 ainda guardava valor diferente do Acerto Vivo; o fechamento deve reler o cartão e verificar o rateio na hora."
+    "warning": "O campo pending_current_acerto de cr_working_capital_state_v1 ainda guardava valor diferente do Acerto Vivo; o fechamento deve reler o cartão e verificar o rateio na hora.",
+    "report": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/GESTOR_REVIEW_OPERACIONAL_20261022.md"
   }
 }
