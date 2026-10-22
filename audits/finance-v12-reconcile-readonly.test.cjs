@@ -1,6 +1,6 @@
 "use strict";
 const {test}=require("node:test"),assert=require("node:assert/strict");
-const {parseLine,reconcile}=require("./finance-v12-reconcile-readonly.cjs");
+const {parseLine,splitFinancialLines,reconcile}=require("./finance-v12-reconcile-readonly.cjs");
 const b=[{sourceId:"bank-a",caseCodes:["775-26"],day:"2026-10-07",cents:178522,direction:"debit"},
  {sourceId:"bank-b",caseCodes:["775-26"],day:"2026-10-08",cents:10500,direction:"debit"}];
 const c={id:"card-775",name:"Orçamento 775-26",desc:"07/10 - R$1.785,22 Material Piso\n08/10 - 105,00 Almoço"};
@@ -37,4 +37,22 @@ test("Confirmação requer ID bancário na linha e comprovante verificado",()=>{
 test("Outra obra com mesmo valor continua sem vínculo",()=>{
  const r=reconcile(b,[{id:"not-a",name:"Obra 799-26",desc:"07/10 - 1785,22"}],2026);
  assert.equal(r.counts.SEM_VINCULO,1);
+});
+
+test("PIX colado a datas preserva três despesas distintas — obra 735-26",()=>{
+ const desc="17/10 - R$49,26 Combustível - Ref. PIX17/10 - R$87,20 Alimentação - Ref. PIX17/10 - R$55,64 Materiais - Ref. PIX";
+ const lines=splitFinancialLines(desc);
+ const values=lines.map(line=>parseLine(line,2026)).filter(Boolean).map(x=>x.cents);
+ assert.deepEqual(values,[4926,8720,5564]);
+ assert.equal(values.reduce((a,b)=>a+b,0),19210);
+});
+test("Despesa histórica com prefixo monetário duplicado não desaparece",()=>{
+ assert.deepEqual(parseLine("24/08 - R$R$850,00 OSIEL",2026),{day:"2026-08-24",cents:85000});
+});
+test("Reconciliador mantém bloqueio de confirmação com PIX colado sem comprovante",()=>{
+ const match=[{sourceId:"b-735",caseCodes:["735-26"],day:"2026-10-17",cents:8720,direction:"debit"}];
+ const cards=[{id:"c-735",name:"Obra 735-26",desc:"17/10 - R$49,26 - Ref. PIX17/10 - R$87,20 - Ref. PIX17/10 - R$55,64"}];
+ const r=reconcile(match,cards,2026);
+ assert.equal(r.counts.EVIDENCIA_BILATERAL_COMPATIVEL,1);
+ assert.equal(r.counts.CONFIRMADO_COM_EVIDENCIA,undefined);
 });
