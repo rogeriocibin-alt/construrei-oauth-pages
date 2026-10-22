@@ -402,9 +402,10 @@ async function sourceForClosing(){
  const declared=(summary.match(/Capital de Giro:\s*R\$\s*([0-9.,]+)/i)||[])[1];
  const capital=declared?money(declared):null;
  const works=Number((summary.match(/Obras:\s*(\d+)/i)||[])[1]||0);
+ const case_ids=[...item.matchAll(/\b(\d{1,5}-2[456])\s*\|/g)].map(m=>m[1]);
  const difference=(summary.match(/Diferen[cç]a:\s*R\$\s*(-?[0-9.,]+)/i)||[])[1];
- if(!capital||works<1||amounts.length!==works||Math.round(amounts.reduce((a,b)=>a+(b||0),0)*100)!==Math.round(capital*100)||money(difference)!==0||!/Pend[eê]ncias:\s*Nenhuma/i.test(summary))throw Error("ACERTO_INCONSISTENT_OR_PENDING");
- return {id:c.id,name:c.name,url:c.shortUrl||"",desc:d,works,capital};
+ if(!capital||works<1||case_ids.length!==works||new Set(case_ids).size!==works||amounts.length!==works||Math.round(amounts.reduce((a,b)=>a+(b||0),0)*100)!==Math.round(capital*100)||money(difference)!==0||!/Pend[eê]ncias:\s*Nenhuma/i.test(summary))throw Error("ACERTO_INCONSISTENT_OR_PENDING");
+ return {id:c.id,name:c.name,url:c.shortUrl||"",desc:d,works,capital,case_ids};
 }
 async function closeCapital(req:Request,action:string){
  if(req.method!=="POST")return json({ok:false,error:"POST_REQUIRED"},405);
@@ -431,10 +432,17 @@ async function closeCapital(req:Request,action:string){
  let source:any;try{source=await sourceForClosing()}catch(e){return json({ok:false,error:String(e?.message||e)},409)}
  const fpArr=new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode([periodKeyValue,source.desc,source.capital].join("|"))));
  const fingerprint=Array.from(fpArr,v=>v.toString(16).padStart(2,"0")).join("");
+ const snapArr=new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(source.desc)));
+ const snapshot_hash=Array.from(snapArr,v=>v.toString(16).padStart(2,"0")).join("");
+ const earlier=await db("cr_working_capital_periods_v1?select=period_key,metadata,status&source_card_id=eq."+encodeURIComponent(String(source.id)));
+ if(Array.isArray(earlier)&&earlier.some(p=>["ACTIVE","CREATING"].includes(String(p.status))&&
+   (String(p.metadata?.snapshot_hash||"")===snapshot_hash||
+    (Array.isArray(p.metadata?.case_ids)&&p.metadata.case_ids.some((x:string)=>source.case_ids.includes(x))))))
+  return json({ok:false,error:"ACERTO_JA_REGISTRADO_OU_OBRAS_REPETIDAS",review_required:true},409);
  const period=pad(+start.slice(8,10))+"/"+pad(+start.slice(5,7))+" a "+pad(+end.slice(8,10))+"/"+pad(+end.slice(5,7));
  if(action==="close-preview")return json({ok:true,preview:true,period,start,end,capital_cents:Math.round(source.capital*100),works:source.works,source_url:source.url,fingerprint,previous_end:last,no_write:true});
  if(input.fingerprint!==fingerprint)return json({ok:false,error:"STALE_PREVIEW"},409);
- const reservation=await db("cr_working_capital_periods_v1?on_conflict=period_key",{method:"POST",headers:{"prefer":"resolution=ignore-duplicates,return=representation"},body:JSON.stringify({period_key:periodKeyValue,period_start:start,period_end:end,period_label:period,source_card_id:source.id,source_card_name:source.name,capital_generated:source.capital,manual_credits:0,manual_debits:0,real_balance:source.capital,status:"CREATING",metadata:{source_url:source.url,source_fingerprint:fingerprint,source:"V12_CLOSE"}})});
+ const reservation=await db("cr_working_capital_periods_v1?on_conflict=period_key",{method:"POST",headers:{"prefer":"resolution=ignore-duplicates,return=representation"},body:JSON.stringify({period_key:periodKeyValue,period_start:start,period_end:end,period_label:period,source_card_id:source.id,source_card_name:source.name,capital_generated:source.capital,manual_credits:0,manual_debits:0,real_balance:source.capital,status:"CREATING",metadata:{source_url:source.url,source_fingerprint:fingerprint,snapshot_hash,case_ids:source.case_ids,source:"V12_CLOSE"}})});
  if(!Array.isArray(reservation)||reservation.length!==1)return json({ok:false,error:"PERIOD_RESERVED_REVIEW_REQUIRED"},409);
  let created:any=null;
  try{
