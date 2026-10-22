@@ -769,7 +769,7 @@ const fmt=cents=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}
 const freshMs=12*60*1000;
 let pending=false,lastToken="",lastRefresh=0;
 function set(id,s){const el=find(id);if(el)el.textContent=String(s)}
-function clear(){for(const id of ["v12-cora-balance","v12-cora-credit","v12-cora-debit"])set(id,"—");set("v12-cora-stamp","Aguardando acesso autorizado");const e=find("v12-cora-year-flow");if(e)e.replaceChildren()}
+function clear(){window.dispatchEvent(new Event("cr:v12:cora:error"));for(const id of ["v12-cora-balance","v12-cora-credit","v12-cora-debit"])set(id,"—");set("v12-cora-stamp","Aguardando acesso autorizado");const e=find("v12-cora-year-flow");if(e)e.replaceChildren()}
 function renderYears(months){
  const target=find("v12-cora-year-flow");if(!target)return;
  target.replaceChildren();
