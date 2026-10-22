@@ -93,6 +93,16 @@ Deno.serve(async(req:Request)=>{
  let p:ReturnType<typeof clean>;
  try{p=clean(raw)}catch(e){return reply({ok:false,error:String(e?.message||e)},400)}
  const fp=await fingerprint(p),tag="CRV12OP_"+p.operation_id;
+ if(action==="commit"){
+  const sr=await fetch(SB+"/rest/v1/cr_finance_v12_operations?operation_id=eq."+encodeURIComponent(p.operation_id)+"&select=operation_id,status,trello_url,fingerprint",{headers:headers(k),signal:AbortSignal.timeout(12000)});
+  if(!sr.ok)return reply({ok:false,error:"LEDGER_READ_UNAVAILABLE"},503);
+  const sj=await sr.json();const prior=Array.isArray(sj)?sj[0]:null;
+  if(prior){
+   if(prior.fingerprint!==fp)return reply({ok:false,error:"OPERATION_ID_CONFLICT"},409);
+   if(prior.status==="COMMITTED")return reply({ok:true,committed:true,duplicate:true,trello_url:prior.trello_url,status:"COMMITTED"});
+   return reply({ok:false,error:"OPERATION_NOT_RETRYABLE",status:prior.status},409);
+  }
+ }
  if(action==="status"){
   const r=await fetch(SB+"/rest/v1/cr_finance_v12_operations?operation_id=eq."+encodeURIComponent(p.operation_id)+"&select=operation_id,status,trello_url,error_code,fingerprint",{headers:headers(k),signal:AbortSignal.timeout(12000)});
   if(!r.ok)return reply({ok:false,error:"LEDGER_READ_"+r.status},502);
