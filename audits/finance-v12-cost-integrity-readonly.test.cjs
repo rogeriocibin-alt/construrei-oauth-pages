@@ -43,3 +43,12 @@ test("Nunca deduzir margem, confirmar Cora ou inserir lançamento",()=>{
  assert.equal("confirmed" in r,false);
  assert.equal("margin" in r,false);
 });
+
+test("Lançamentos com espaço invisível Unicode no início não são descartados",()=>{
+ assert.equal(parseCostLine("\u200C26/06 - R$500,00 Teto Gesso",2026).cents,50000);
+ assert.equal(parseCostLine("\uFEFF27/05 - R$500,00 Teto Gesso",2026).cents,50000);
+});
+test("Fases fora da seção Custos ainda impedem comparação cega",()=>{
+ const d="Custos:\n16/10 - R$150,00\nTotal Custos: R$100,00\nPRIMEIRA PARTE EXECUTADA E ACERTADA";
+ assert.equal(analyzeCard({name:"Obra 694-26",desc:d}).status,"MULTIPLAS_ETAPAS_A_VERIFICAR");
+});
