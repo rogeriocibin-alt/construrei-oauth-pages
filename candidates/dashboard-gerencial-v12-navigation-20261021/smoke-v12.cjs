@@ -39,7 +39,7 @@ check(s.includes('typeof n!=="boolean"'),'Números ausentes ou inválidos não s
 check(s.includes('v12ex-semantic-palette-20261021'),'Paleta semântica CONSTRU-REI');
 check(s.includes('cr-finance-v12-safe-trello-candidate-20261021'),'Canal de escrita em obra com idempotência preservado');
 check(s.includes('const capitalV11=method===\"POST\"')&&s.includes('url.searchParams.get(\"action\")===\"debit\"'),'Capital libera somente ação de débito legado autenticado');
-check(s.includes('id=\"v12ex-capital-shortcut\"')&&s.includes('#fin #v11cap{display:block!important}'),'Capital de Giro V11 navegável e visível');
+check(s.includes('id=\"v12ex-capital-shortcut\"')&&s.includes('#fin #v11cap{display:block!important;'),'Capital de Giro V11 navegável e visível');
 check(s.includes('window.v12CapitalGo'),'Atalho executivo ao capital de giro');
 check(s.includes('await v12ProtectedWrite("preview",p)'),'Preview utiliza o canal idempotente');
 check(s.includes('await v12ProtectedWrite("commit",p)'),'Commit utiliza o canal idempotente');
