@@ -3409,18 +3409,18 @@
     {
       "id": "SRC-CENTRAL",
       "name": "Central CONSTRU-REI",
-      "status": "healthy",
-      "confidence": "high",
-      "last_read": "05/10 18:55",
-      "note": "Alias e endpoint oficial validados em HTTP 200 com text/html; owner approved."
+      "status": "stale",
+      "confidence": "medium",
+      "last_read": "05/10/2026",
+      "note": "Central canônica historicamente homologada; operação e runtime não testados ao vivo nesta rodada."
     },
     {
       "id": "SRC-APP",
       "name": "APP CONSTRU-REI",
-      "status": "healthy",
-      "confidence": "high",
-      "last_read": "05/10 18:55",
-      "note": "Alias APP respondeu HTTP 200. Validação funcional da esteira F00→F09 permanece separada e pendente do proprietário."
+      "status": "stale",
+      "confidence": "medium",
+      "last_read": "05/10/2026",
+      "note": "Alias APP historicamente validado; F00–F09 + ORÇA-REI não testado E2E nesta rodada."
     },
     {
       "id": "SRC-TRELLO",
