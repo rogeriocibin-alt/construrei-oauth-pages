@@ -18,6 +18,8 @@ function parseCostLine(raw,defaultYear){
  const dd=Number(header[1]),mm=Number(header[2]),dt=new Date(Date.UTC(year,mm-1,dd));
  if(dt.getUTCFullYear()!==year||dt.getUTCMonth()+1!==mm||dt.getUTCDate()!==dd)return {kind:"INVALID_DATE"};
  const description=header[4];
+ // Falha fechada para quantia inválida com três ou mais dígitos após a vírgula.
+ if(/(?:R\$\s*){1,2}(?:NF\s*)?\d[\d.]*,\d{3,}/i.test(description))return {kind:"AMBIGUOUS_AMOUNT",values:[]};
  // Prefixos históricos: R$R$850,00 / R$NF131,57 / R$150 / R$65,64Taxa.
  const explicit=[...description.matchAll(/(?:R\$\s*){1,2}(?:NF\s*)?((?:\d{1,3}(?:\.\d{3})+|\d+)(?:,\d{2})?)/gi)].map(x=>x[1]);
  // Ex.: 15/08 - JR 450,00; sem prefixo monetário, exigir um único valor com vírgula.
