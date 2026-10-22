@@ -26,7 +26,7 @@ check(s.includes('wrongLegacy')&&s.includes('if(wrongLegacy)legacy++'),'Divergê
 check(s.includes('04/06–12/06')&&s.includes('Conferência operacional por período'),'Auditoria histórica do capital preservada sem duplicar montantes');
 check(s.includes('N/D · bases distintas'),'Margem de bases divergentes não é apresentada');
 check(s.includes('N/D · parcial'),'Histórico parcial explicitado');
-check(s.includes('V12 · VALIDAÇÃO'),'Candidata claramente identificada');
+check(s.includes('V12 · HOMOLOGADA (OPERAÇÃO)')&&s.includes('CONCILIAÇÃO DO EXTRATO'),'Homologação operacional identificada com escopo do extrato');
 check(s.includes('background:#f5f9fc')&&s.includes('#16975e')&&s.includes('#d64c59'),'Semântica cromática aplicada');
 check(s.includes('max-width:550px'),'Regras responsivas móveis');
 for(const id of ['v12-exec-cockpit','v12ex-gross','v12ex-cost','v12ex-profit','v12ex-margin','v12ex-bank-balance','v12ex-receive','v12ex-ops-chart','v12ex-margin-chart'])check(s.includes('id="'+id+'"'),'Painel executivo preserva '+id);
@@ -37,7 +37,7 @@ check(s.includes('limited.eligible>0')&&s.includes('Receita do subconjunto compa
 check(s.includes('v12ComparableRows(year,month)'),'Regra de subtotais nos acertos');
 check(s.includes('typeof n!=="boolean"'),'Números ausentes ou inválidos não são convertidos em zero');
 check(s.includes('v12ex-semantic-palette-20261021'),'Paleta semântica CONSTRU-REI');
-check(s.includes('bf.textContent="CONSTRU-REI · DASHBOARD FINANCEIRO V12')&&!s.includes('bf.textContent="CENTRO DE COMANDO DA DIRETORIA · DASHBOARD GERENCIAL V4'),'Rodapé atualizado não volta a exibir produção/V4 após refresh');
+check(s.includes('bf.textContent="CONSTRU-REI · FINANCEIRO V12')&&!s.includes('bf.textContent="CENTRO DE COMANDO DA DIRETORIA · DASHBOARD GERENCIAL V4'),'Rodapé atualizado não volta a exibir produção/V4 após refresh');
 check(s.includes('v===null||v===undefined||v===""||typeof v==="boolean"?null'),'Base financeira distingue campo ausente de zero');
 check(s.includes('Sem dados para esta competência')&&s.includes('Lucro/margem não conciliados nesta competência'),'Histórico distingue ausência, lucro parcial e competência comparável');
 check(!s.includes('const raw=Number(x[k]||0)'),'Gráficos históricos não convertem nulo em zero');
