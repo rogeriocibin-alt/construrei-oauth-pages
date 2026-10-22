@@ -157,8 +157,16 @@ async function saveDraft(){
   const saved=await api("budget-save",payload);
   if(!saved.handoff||saved.budget?.budget_ready||saved.handoff.to_flow!=="F02")throw Error("Resposta de salvamento não comprovou permanência no F02. Verifique o caso oficial.");
   if(Math.abs(Number(saved.budget.total_labor)-result.labor)>0.01||Math.abs(Number(saved.budget.total_material)-result.materials)>0.01)throw Error("Divergência dos totais retornados pelo servidor. Conferir no F02.");
-  runtime.case=saved.handoff;runtime.budgetRevision=saved.handoff.revision??null;runtime.f02Dirty=true;
-  notice("RASCUNHO SALVO NO F02: "+saved.handoff.case_number+" • mão de obra "+fmt(result.labor)+" • materiais "+fmt(result.materials)+" • total "+fmt(round(result.labor+result.materials))+". Itens e descrição completa preservados em TEXTO PRONTO. F03/F04 não foram acionados.");
+  // Read back from the canonical server: an ACK alone is not proof of persistence.
+  const readback=(await api("get",{token:latest.token})).handoff;
+  if(!readback||String(readback.to_flow).toUpperCase()!=="F02"||normalizeCase(readback.case_number)!==normalizeCase(latest.case_number))throw Error("Gravação não verificável: chamado ou etapa divergente na releitura.");
+  const persisted=readback.state?.budget||{};
+  if(!String(persisted.copy_ready_text||"").includes("DISCRIMINAÇÃO COMPLETA")||!String(persisted.copy_ready_text||"").includes(result.text))throw Error("Rascunho não comprovado: descrição detalhada ausente na releitura.");
+  const pLabor=Array.isArray(persisted.labor_items)?persisted.labor_items.reduce((a,x)=>a+money(x.value||0),0):NaN;
+  const pMaterial=Array.isArray(persisted.material_items)?persisted.material_items.reduce((a,x)=>a+money(x.value||0),0):NaN;
+  if(!Number.isFinite(pLabor)||!Number.isFinite(pMaterial)||Math.abs(round(pLabor)-result.labor)>0.01||Math.abs(round(pMaterial)-result.materials)>0.01)throw Error("Rascunho não comprovado: valores persistidos divergentes.");
+  runtime.case=readback;runtime.budgetRevision=readback.revision??null;runtime.f02Dirty=true;
+  notice("RASCUNHO SALVO NO F02: "+readback.case_number+" • mão de obra "+fmt(result.labor)+" • materiais "+fmt(result.materials)+" • total "+fmt(round(result.labor+result.materials))+". Itens e descrição completa preservados em TEXTO PRONTO. F03/F04 não foram acionados.");
  }catch(e){notice("Rascunho NÃO confirmado: "+String(e.message||e),true)}
  finally{runtime.saving=false;btn.disabled=false}
 }
