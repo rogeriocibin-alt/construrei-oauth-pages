@@ -42,6 +42,10 @@ check(s.includes('const capitalV11=method===\"POST\"')&&s.includes('url.searchPa
 check(s.includes('id=\"v12ex-capital-shortcut\"')&&s.includes('#fin #v11cap{display:block!important;'),'Capital de Giro V11 navegável e visível');
 check(s.includes('window.v12CapitalGo'),'Atalho executivo ao capital de giro');
 check((s.match(/id="v12-capital-workspace"/g)||[]).length===1,'Um só espaço operacional Capital de Giro');
+check(s.indexOf('id="v12-capital-workspace"')<s.indexOf('id="v12-live-acertos"')&&s.indexOf('id="v12-live-acertos"')<s.indexOf('id="finperiod"'),'Capital de Giro vem primeiro, antes de acertos vivos e rateios históricos');
+for(const anchor of ['#v12-capital-workspace','#v12-live-acertos','#finperiod'])check(s.includes('href="'+anchor+'"'),'Navegação por âncora '+anchor);
+check((s.match(/<nav class="v12fin-nav"/g)||[]).length===1,'Navegação financeira única');
+
 check((s.match(/id="cap"/g)||[]).length===1,'Resumo único do capital');
 check((s.match(/id="v11cap-slot"/g)||[]).length===1,'Único formulário V11 acoplado à central');
 check(s.includes("let cap=q('v11cap-slot')")&&s.includes("cap.insertAdjacentHTML('beforeend'"),'Rotina V11 renderizada dentro da central, não nos rateios');
