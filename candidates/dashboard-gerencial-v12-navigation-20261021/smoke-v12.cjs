@@ -23,7 +23,7 @@ check(s.includes('v12-bank-audit'),'Quadros de auditoria bancária');
 check(s.includes('37 com zeros substitutos'),'Saldo ausente não confundido com zero');
 check(s.includes('Agosto/2023: R$ 300,00'),'Divergência histórica sinalizada');
 check(s.includes('Dezembro/2023: R$ 200,00'),'Segunda divergência histórica sinalizada');
-check(s.includes('R$ 385,11'),'Reconciliação capital de giro registrada');
+check(s.includes('04/06–12/06')&&s.includes('Conferência operacional por período'),'Auditoria histórica do capital preservada sem duplicar montantes');
 check(s.includes('N/D · bases distintas'),'Margem de bases divergentes não é apresentada');
 check(s.includes('N/D · parcial'),'Histórico parcial explicitado');
 check(s.includes('V12 · VALIDAÇÃO'),'Candidata claramente identificada');
@@ -41,6 +41,17 @@ check(s.includes('cr-finance-v12-safe-trello-candidate-20261021'),'Canal de escr
 check(s.includes('const capitalV11=method===\"POST\"')&&s.includes('url.searchParams.get(\"action\")===\"debit\"'),'Capital libera somente ação de débito legado autenticado');
 check(s.includes('id=\"v12ex-capital-shortcut\"')&&s.includes('#fin #v11cap{display:block!important;'),'Capital de Giro V11 navegável e visível');
 check(s.includes('window.v12CapitalGo'),'Atalho executivo ao capital de giro');
+check((s.match(/id="v12-capital-workspace"/g)||[]).length===1,'Um só espaço operacional Capital de Giro');
+check((s.match(/id="cap"/g)||[]).length===1,'Resumo único do capital');
+check((s.match(/id="v11cap-slot"/g)||[]).length===1,'Único formulário V11 acoplado à central');
+check(s.includes("let cap=q('v11cap-slot')")&&s.includes("cap.insertAdjacentHTML('beforeend'"),'Rotina V11 renderizada dentro da central, não nos rateios');
+check(!s.includes('<h3>Capital de Giro / Auditoria</h3>'),'Sem segunda área de capital dentro dos rateios');
+check(s.includes('v12cap-hero')&&s.includes('v12cap-stat')&&s.includes('v12cap-pending'),'Saldo, gerado, consumido e pendência apresentados com hierarquia');
+check(s.includes('window.v12CapitalAuditGo')&&s.includes('window.v12CapitalGo'),'Navegação unificada, sem módulo operacional paralelo');
+const qual=s.slice(s.indexOf('<section id="qual"'),s.indexOf('<section id="corapro"'));
+check(!qual.includes('v12-bank-audit'),'Quadro Cora não duplicado na subaba de qualidade');
+check(s.includes('max-width:650px')&&s.includes('v12cap-workspace'),'Central do capital adaptada a celular');
+
 check(s.includes('await v12ProtectedWrite("preview",p)'),'Preview utiliza o canal idempotente');
 check(s.includes('await v12ProtectedWrite("commit",p)'),'Commit utiliza o canal idempotente');
 const commitHandler=s.slice(s.indexOf('async function manualCommit(){'),s.indexOf('async function manualCheckStatus(){'));
