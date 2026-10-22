@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {rateioCanonico,conciliarValores,deduplicarMovimentos,rotuloAcerto,centavos} from "./finance-core.mjs";
+import {rateioCanonico,conciliarValores,deduplicarMovimentos,rotuloAcerto,centavos,classificarSaldoCora,classificarCompetenciaCora} from "./finance-core.mjs";
 const r=rateioCanonico(49800);
 assert.deepEqual(r,{fabricio:9960,eder:13944,rogerio:13944,gabrielly:6972,capitalGiro:4980});
 assert.equal(Object.values(rateioCanonico(1)).reduce((a,b)=>a+b,0),1);
@@ -15,3 +15,15 @@ assert.equal(rotuloAcerto({calculado:true}),"CALCULADO_NAO_PAGO");
 assert.equal(rotuloAcerto({registrado:true,pago:true}),"PAGO_REGISTRADO");
 assert.equal(rotuloAcerto({pago:true}),"DIVERGENTE");
 console.log("V12 — 12 verificações financeiras básicas aprovadas (fixtures, não conciliação real).");
+
+const now=new Date("2026-10-22T00:30:00Z");
+const oficial={balance_centavos:3027241,updated_at:"2026-10-22T00:25:00Z",source:"CORA_OFFICIAL_API"};
+assert.equal(classificarSaldoCora({snapshot:oficial,agora:now}).status,"CONFIRMADO");
+assert.equal(classificarSaldoCora({snapshot:oficial,agora:now}).saldoCentavos,3027241);
+assert.equal(classificarSaldoCora({snapshot:{...oficial,updated_at:"2026-10-21T22:00:00Z"},agora:now}).status,"DESATUALIZADO");
+assert.equal(classificarSaldoCora({monthlySummary:{end_balance_centavos:0},agora:now}).saldoCentavos,null);
+assert.equal(classificarSaldoCora({snapshot:{...oficial,source:"MANUAL"},agora:now}).status,"NAO_COMPROVADO");
+assert.equal(classificarCompetenciaCora({statusImportacao:"complete",origem:"CORA_STATEMENT_SUM_RECONCILED",saldoInicial:0,saldoFinal:0}),"SEM_COMPROVACAO");
+assert.equal(classificarCompetenciaCora({statusImportacao:"complete",origem:"CORA_OFFICIAL_AGGREGATIONS",saldoInicial:100,saldoFinal:200}),"CONCILIADA");
+assert.equal(classificarCompetenciaCora({statusImportacao:"complete",origem:"CORA_OFFICIAL_AGGREGATIONS",saldoInicial:100,saldoFinal:200,divergenciaCentavos:1}),"DIVERGENTE");
+console.log("V12 — testes adicionais de proveniência Cora (fixtures, não saldo real).");
