@@ -1416,7 +1416,7 @@ async function periodic(){
  refreshing=true;
  try{
   const r=await fetch(URL+"?action=summary",{headers:{"x-cr-session":session()},cache:"no-store"});
-  const j=await r.json();if(r.ok&&j.ok&&typeof S!=="undefined"){S.capital=j;if(typeof fin==="function")fin()}
+  const j=await r.json();if(r.ok&&j.ok&&typeof S!=="undefined"){S.capital=j;if(typeof fin==="function")fin();const list=by("v11periods"),loadButton=by("v11load");if(loadButton&&list&&!list.querySelector("input:checked")&&by("v11commit")?.disabled===true)loadButton.click()}
  }catch{}finally{refreshing=false}
 }
 function init(){
