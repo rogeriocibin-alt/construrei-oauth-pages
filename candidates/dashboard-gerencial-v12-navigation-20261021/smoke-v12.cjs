@@ -37,6 +37,14 @@ check(s.includes('limited.eligible>0')&&s.includes('Receita do subconjunto compa
 check(s.includes('v12ComparableRows(year,month)'),'Regra de subtotais nos acertos');
 check(s.includes('typeof n!=="boolean"'),'Números ausentes ou inválidos não são convertidos em zero');
 check(s.includes('v12ex-semantic-palette-20261021'),'Paleta semântica CONSTRU-REI');
+check(s.includes('bf.textContent="CONSTRU-REI · DASHBOARD FINANCEIRO V12')&&!s.includes('bf.textContent="CENTRO DE COMANDO DA DIRETORIA · DASHBOARD GERENCIAL V4'),'Rodapé atualizado não volta a exibir produção/V4 após refresh');
+check(s.includes('v===null||v===undefined||v===""||typeof v==="boolean"?null'),'Base financeira distingue campo ausente de zero');
+check(s.includes('Sem dados para esta competência')&&s.includes('Lucro/margem não conciliados nesta competência'),'Histórico distingue ausência, lucro parcial e competência comparável');
+check(!s.includes('const raw=Number(x[k]||0)'),'Gráficos históricos não convertem nulo em zero');
+check(s.includes('id="v12-cora-audit-status"')&&s.includes('window.addEventListener("cr:v12:cora"'),'Indicador de sincronização Cora baseado em evento autenticado');
+check((s.match(/id="v12-cora-audit-status"/g)||[]).length===1,'Apenas um estado de sincronização Cora na auditoria');
+check(s.includes('46 competências')&&s.includes('6 competências')&&s.includes('38 competências'),'Saldos históricos oficiais e não comprovados continuam distintos');
+
 check(s.includes('cr-finance-v12-safe-trello-candidate-20261021'),'Canal de escrita em obra com idempotência preservado');
 check(s.includes('const capitalV11=method===\"POST\"')&&s.includes('url.searchParams.get(\"action\")===\"debit\"'),'Capital libera somente ação de débito legado autenticado');
 check(s.includes('id=\"v12ex-capital-shortcut\"')&&s.includes('#fin #v11cap{display:block!important;'),'Capital de Giro V11 navegável e visível');
