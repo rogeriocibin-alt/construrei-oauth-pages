@@ -29,6 +29,14 @@ check(s.includes('N/D · parcial'),'Histórico parcial explicitado');
 check(s.includes('V12 · VALIDAÇÃO'),'Candidata claramente identificada');
 check(s.includes('background:#f5f9fc')&&s.includes('#16975e')&&s.includes('#d64c59'),'Semântica cromática aplicada');
 check(s.includes('max-width:550px'),'Regras responsivas móveis');
+for(const id of ['v12-exec-cockpit','v12ex-gross','v12ex-cost','v12ex-profit','v12ex-margin','v12ex-bank-balance','v12ex-receive','v12ex-ops-chart','v12ex-margin-chart'])check(s.includes('id="'+id+'"'),'Painel executivo preserva '+id);
+for(const id of ['v12ex-year','v12ex-month','v12ex-status','v12ex-find','v12ex-reset'])check(s.includes('id="'+id+'"'),'Filtro executivo '+id);
+check(s.includes('window.v12ExecRender()'),'KPIs executivos atualizados após leitura Trello');
+check(s.includes('t?.valid?[t.gross,t.cost,t.profit]:null'),'Gráficos não apresentam dados não conciliados');
+check(s.includes('typeof n!=="boolean"'),'Números ausentes ou inválidos não são convertidos em zero');
+check(s.includes('v12ex-semantic-palette-20261021'),'Paleta semântica CONSTRU-REI');
+check(s.includes('V12_SOMENTE_LEITURA'),'Escrita Trello permanece fechada sem idempotência homologada');
+
 check(!/BEGIN (RSA )?PRIVATE KEY|client_secret\s*[:=]/i.test(s),'Sem segredo bancário embutido');
 const scripts=[...s.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
 check(scripts.length>=3,'Scripts inline presentes');
