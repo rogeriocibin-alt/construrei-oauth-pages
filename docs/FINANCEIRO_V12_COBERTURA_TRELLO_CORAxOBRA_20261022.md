@@ -1,6 +1,6 @@
 # CONSTRU-REI | Cobertura bilateral Trello × Cora | checkpoint 22/10/2026
 
-**Situação:** auditoria de leitura concluída para os boards localizados de 2024, 2025 e 2026. NÃO é homologação contábil integral, nem alteração da V12 publicada. Fonte de consulta: Trello Gestão de Obras (listas abertas e listas de arquivamento disponíveis), Cora cache de movimentações do Supabase e banco de dados Cora atualizado.
+**Situação:** auditoria de leitura e deduplicação GLOBAL entre os boards localizados de 2024, 2025 e 2026 concluídas, com 3 respostas completas de leitura Trello (sem páginas pendentes). NÃO é homologação contábil integral, nem alteração da V12 publicada. Fonte de consulta: Trello Gestão de Obras (listas abertas e listas de arquivamento disponíveis), Cora cache de movimentações do Supabase e banco de dados Cora atualizado.
 
 ## Protocolo de extração
 - Boards: Gestão de Obras 2024 e 2025 (12 listas mensais cada), Gestão de Obras 2026 (12 listas mensais + Em Andamento, Ag. Pagamento, Ag. Acerto, Retornos, Arquivados = 17 listas).
@@ -10,15 +10,22 @@
 - Correspondências candidatas só são contabilizadas quando Trello e Cora coincidem em **número da obra, data civil de Curitiba, valor exato em centavos e direção débito**. A transação Cora deve citar **uma única obra**. Caso contrário, bloqueio/revisão.
 - Para contabilidade `CONFIRMADO_COM_EVIDENCIA`, é necessário também o ID bancário no registro do card e comprovação independente; esses detalhes não foram fornecidos em todos os cards. Por isso, os números abaixo são **EVIDÊNCIAS COMPATÍVEIS**, não receitas/custos fechados.
 
-## Resultado com parser novo, por board
-| Board Trello | Listas | Cards vistos | Cards únicos no board* | Linhas com custo reconhecido | Linhas com correspondência candidata | IDs Cora distintos entre correspondências no board | IDs Cora em uma única linha no board | IDs reutilizados no board | Linhas com chave bancária ambígua |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Gestão de Obras 2024 | 12 | 346 | 330 | 1.881 | 102 | 101 | 100 | 1 | 0 |
-| Gestão de Obras 2025 | 12 | 399 | 372 | 2.604 | 258 | 241 | 227 | 14 | 16 |
-| Gestão de Obras 2026 | 17 | 297 | 277 | 1.927 | 261 | 245 | 231 | 14 | 21 |
-| **Soma de leituras por board** | **41** | **1.042** | **979*** | **6.412** | **621** | **587*** | **558*** | **29*** | **37** |
+## Resultado final (leitura integral por board e deduplicação global de IDs)
 
-**Nota essencial:** o asterisco indica **soma das contagens deduplicadas dentro de cada board**, NÃO uma deduplicação global entre 2024, 2025 e 2026. Cards e pagamentos podem estar repetidos entre boards de anos diferentes. A tentativa de conferência global em uma chamada atingiu o limite de consultas do conector, logo NÃO afirmar 979 cards ou 587 IDs como globalmente exclusivos; 558 é a soma de casos de ID utilizado em uma linha por board, não um total auditado de pares únicos interanuais.
+A leitura final usou `trelloReadCard(list_by_board)` para os três boards e devolveu **347, 410 e 306 cards** respectivamente, sem cursor pendente. Cada identificador de card foi contado uma vez em toda a extração. Os lançamentos foram comparados com os **1.115 movimentos Cora que citam exatamente uma obra**. Datas inválidas foram rejeitadas, e o dia bancário foi interpretado no fuso de Curitiba.
+
+| Board | Cards retornados | Cards com obra extraível | Custos com data e valor válidos | Linhas candidatas compatíveis | IDs Cora distintos vinculáveis por chave | Uso único no board | IDs reutilizados no board | Linhas bancárias ambíguas |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Gestão de Obras 2024 | 347 | 330 | 1.879 | 102 | 101 | 100 | 1 | 0 |
+| Gestão de Obras 2025 | 410 | 372 | 2.601 | 258 | 241 | 227 | 14 | 16 |
+| Gestão de Obras 2026 | 306 | 277 | 1.926 | 261 | 245 | 231 | 14 | 21 |
+| **Total confirmado globalmente** | **1.063** | **979** | **6.406** | **621** | **587** | **558** | **29** | **37** |
+
+**Importante:** a conferência global recalculou o uso de cada `source_id` bancário contra todos os cards de 2024, 2025 e 2026. **Não encontrou IDs Cora reutilizados entre boards de anos diferentes**; as 29 reutilizações aconteceram dentro do conjunto de um mesmo ano. Dessa forma, os **587 IDs distintos, 558 de uso único e 29 reutilizados** são totais globais confiáveis para esse recorte e essa regra de matching. As 621 linhas candidatas são ocorrências de correspondência; *não* são 621 pagamentos únicos. 
+
+Dos **1.115 movimentos bancários com uma única obra explícita**, **587** apresentaram ao menos uma correspondência por número da obra, dia, centavos e direção, e **528** não apresentaram correspondência inequívoca nessa chave, incluindo situações de formato não compatível ou colisão de valores bancários. **Não** atribuir esses 528 a uma obra errada nem declarar falta de pagamento.
+
+**Nenhuma dessas 587 correspondências é, apenas por essa chave, um lançamento plenamente conciliado**: a comprovação do identificador Cora no card e do comprovante de origem continua sendo o requisito de confirmação contábil. O relatório não promove os 558 pares exclusivos a `CONFIRMADO_COM_EVIDENCIA` sem o recibo necessário.
 
 ## Cobertura e classificação de extrato (todos os anos 2023–2026)
 - `cora_cache.movements`: 7.676 movimentos, 7.676 source_id distintos no checkpoint.
@@ -42,11 +49,11 @@
 - Release V12 homologada `production/dashboard-financeiro-v12-homologada-20261022/index.html` permanece intacta no blob `68960c5a8abf3dd53be5c2d1d2f0e7a00b8b308c`; guard da main já protege o hash.
 
 ## Pendências verificáveis, sem inventar conciliação
-1. Deduplicação global interboards de cards e IDs bancários. Não somar os subtotais por ano como exclusivos.
+1. Deduplicação interboards **concluída neste checkpoint**: 587 IDs Cora distintos e 29 reutilizações em linhas de custo. Os casos reutilizados continuam bloqueados para contabilização dupla e exigem verificação individual.
 2. Localização/recuperação do Trello de 2023 ou documentação equivalente; ausência de board impede auditoria bilateral total.
 3. Comprovantes de débito Cora e IDs bancários por item nas despesas históricas Trello; valores coincidentes sem recibo são *candidatos*.
 4. 45 movimentos multiobra precisam de rateio comprovado; 37 linhas são ambíguas por colisão de mesma chave; e há repetição de IDs em linhas de custo.
 5. Comparação de compra com cartão de crédito versus fatura e pagamento bancário, para impedir despesa duplicada.
 6. Não alterar obras fechadas, mesmo diante de discrepância; trilha de custo posterior deve registrar a origem preservada.
 
-**Status de encerramento da etapa:** varredura disponível encerrada e reproduzível por critérios; conciliação contábil individual integral NÃO comprovada, logo não ampliar a homologação operacional V12 para homologação contábil total.
+**Status de encerramento da etapa:** varredura global concluída em todos os boards 2024–2026 disponíveis, reconciliando candidatos sem sobreposição de IDs. O domínio de 2023 continua sem board Trello equivalente, e não existe comprovante bancário explicitamente embutido em cada uma das 587 correspondências. **Conciliação contábil individual integral NÃO comprovada**; não ampliar a homologação operacional V12 para homologação contábil total.
