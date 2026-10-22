@@ -103,3 +103,15 @@ Exemplos para revisão **sem qualquer atualização de cartão**:
 **Cobertura e limites:** 295 é quantidade de cartões abertos dessas 15 listas, não a quantidade de obras conciliadas. Os 29 são *linhas* e não 29 cartões distintos, divergências comprovadas ou transações bancárias. A heurística textual não detecta despesas sem o literal `obra` ou sem código de orçamento. Continuação da conciliação exigirá evidência por ID Cora `source_id`, cartão, lançamento individual e eventual comprovante, com rateio explícito em movimentos multiobra.
 
 **Governança:** não foram feitos novos lançamentos no Trello, nem ajustes nas obras fechadas, no saldo Cora ou no Capital de Giro, nem alterações na V12 congelada. PR #143 continua DRAFT.
+
+## Checkpoint de retomada — auditoria outubro 22/10/2026
+
+Checkpoint solicitado pelo gestor; documentação de leitura apenas, sem alterar produção ou contas.
+
+**Base:** Cora cache com 7.676 IDs únicos (2023–2026), Capital de Giro R$ 20.648,65 gerado, R$ 17.291,96 consumido, saldo R$ 3.356,69, 26 períodos; uma operação V12 COMMITTED, R$ 100,70, obra 799-26, identificador confirmado no Trello.
+
+**Triagem:** 295 cartões abertos do Trello em 15 listas; 29 linhas com referências a outras obras; 9 cartões sem total de custos preenchido. Outubro/2026: 150 movimentações Cora, 91 sem descrição e 34 com código de obra. Cruzamento dessas 34: 16 candidatos exatos por obra/data/valor; 4 em outros cartões; 4 com data divergente; 2 ambíguos; 5 multiobra; 3 sem linha equivalente. Nenhum candidato é conciliação definitiva sem source_id + registro individual no card.
+
+**Investigações:** obra 791-26, pagamentos de 20/10 referidos no card em 19/10; 740-26, débito de materiais R$ 1.239,80 em 17/10 ausente no card; 748-26, almoço R$ 91,00 ausente; 808-26, pagamento R$ 330,00 ausente; 735-26, 8 despesas visíveis somam preliminarmente R$ 857,25 versus Total Custos R$ 714,41 (diferença R$ 142,84). Esta última discrepância não foi validada contra estornos/regras de fechamento. Não corrigir valores automaticamente.
+
+**Retomada:** concluir varredura aritmética dos cartões com fechamento (consulta anterior foi interrompida sem resultado conclusivo), validar casos pendentes com prova bilateral Cora × Trello e não relançar custos. Não reabrir obras fechadas nem mudar V11, V12 congelada, saldo Cora ou Capital de Giro. PR #143 segue DRAFT.
