@@ -17,6 +17,7 @@ on:
     paths:
       - .github/workflows/cofre-zero-history-full.yml
       - .github/scripts/cr_cofre_direct_cas_fallback.py
+      - .github/scripts/cr_history_cas_append.py
 
 permissions:
   contents: read
@@ -37,6 +38,7 @@ jobs:
         run: |
           python3 -m py_compile .github/scripts/cr_cofre_direct_cas_fallback.py
           python3 .github/scripts/cr_cofre_direct_cas_fallback.py --selftest
+          python3 .github/scripts/cr_history_cas_append.py --selftest
 
   detect:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
