@@ -46,7 +46,7 @@ function analyzeCard(card,defaultYear=2026){
  const sum=ok.reduce((total,cost)=>total+cost.cents,0);
  if(!ok.length)return {caseNo:code,declared,status:"SEM_LINHAS_VALIDAS"};
  const phase=/PRIMEIRA PARTE|SEGUNDA PARTE|PRIMEIRA ETAPA|SEGUNDA ETAPA/i.test(desc);
- const cg=desc.match(/Capital de Giro\\s*10%(?:\\s*do Bruto|\\s*=)?\\s*(?:=)?\\s*R\\$\\s*((?:\\d{1,3}(?:\\.\\d{3})+|\\d+),\\d{2})/i);
+ const cg=desc.match(/Capital de Giro\s*10%(?:\s*do Bruto|\s*=)?\s*(?:=)?\s*R\\$\s*((?:\d{1,3}(?:\.\d{3})+|\d+),\d{2})/i);
  const cgCents=cg?centavos(cg[1]):null;
  const legacyCG=declared>sum&&cgCents===declared-sum;
  const result={caseNo:code,declared,sum,difference:sum-declared,parsedCostCount:ok.length,unreadableCount:unreadable.length,
