@@ -83,3 +83,23 @@ Foram classificados todos os 7.676 movimentos em cinco conjuntos excludentes; **
 - Isso confirma **ingestão recente do cache**, não prova que todos os eventos disponíveis na API bancária tenham sido importados, nem que o saldo oficial esteja concilado transação a transação.
 
 **Gate mantido:** PR #143 deve permanecer DRAFT, com leitura isolada. Publicação V12 congelada e PR #142 não devem ser modificadas. Não converter comparação de valor/data em gravação automática em cartões; exigir fonte bancária e trilha de identidade antes de alterar indicador de margem.
+
+## Quarto checkpoint — varredura textual de 295 cartões Trello 2026
+
+**Execução:** leitura autenticada das listas operacionais do board `GESTÃO DE OBRAS 2026`: EM ANDAMENTO, AG. PAGAMENTO, AG. ACERTO, RETORNOS, OUTUBRO, SETEMBRO, AGOSTO, JULHO, JUNHO, MAIO, ABRIL, MARÇO, FEVEREIRO, JANEIRO e ARQUIVADOS. **15 listas, 295 cartões abertos, sem paginação pendente**. Listas RESUMO ANUAL e meses futuros novembro/dezembro não foram incluídas, assim como cartões realmente arquivados/fechados fora das listas abertas.
+
+**Triagem determinística, NÃO auditoria contábil fechada:** linhas de descrição de cada card com preço `R$`, termo “obra” ou “ref obra” e identificador `NNN-26` diferente do identificador principal no título do card foram sinalizadas. A consulta encontrou **29 linhas com referências cruzadas**. Podem ser reembolsos/custos posteriores intencionalmente concentrados na obra atual, não necessariamente erros ou duplicatas. Regra canônica: **não reabrir obras fechadas; preservar origem de custos posteriores**.
+
+Exemplos para revisão **sem qualquer atualização de cartão**:
+- [500-26](https://trello.com/c/px8l6D3B), lista AGOSTO: 5 linhas com referência às obras **479-26** e **347-26**, incluindo apoio e taxa de link.
+- [451-26](https://trello.com/c/1sQFY6jA): material R$ 421,89 citando **125-26**; [480-26](https://trello.com/c/7B17EA9v): retorno R$ 500,00 citando **125-26**.
+- [791-26](https://trello.com/c/vQ91NeQg), EM ANDAMENTO: despesas R$ 30,00 e R$ 53,70 com referências a **798-26** e **499-26**.
+- [420-26](https://trello.com/c/yGn1Xf7Z), JUNHO: custos R$ 3,00 e R$ 100,00 com referência **401-26**.
+- [768-26](https://trello.com/c/eqRchlZA), AG. ACERTO: R$ 150,00 + R$ 150,00 com referência **748-26**, também documentados no checkpoint anterior.
+- [775-26](https://trello.com/c/dYuHiLPe), EM ANDAMENTO: diferencial de mão de obra R$ 20,00 citando **687-26**.
+
+**Campos a completar mediante evidência:** 9 cartões possuem o campo `Total Custos: R$` **sem valor imediatamente preenchido**, sendo 5 em ARQUIVADOS (lista, não estado de card), 2 em SETEMBRO, 1 em AG. PAGAMENTO e 1 em AGOSTO. Isso **não prova** lucro incorreto nem autoriza preenchimento automático; avaliar cada obra e seus lançamentos antes de computar KPIs de margem real. Não contar resumos como obras.
+
+**Cobertura e limites:** 295 é quantidade de cartões abertos dessas 15 listas, não a quantidade de obras conciliadas. Os 29 são *linhas* e não 29 cartões distintos, divergências comprovadas ou transações bancárias. A heurística textual não detecta despesas sem o literal `obra` ou sem código de orçamento. Continuação da conciliação exigirá evidência por ID Cora `source_id`, cartão, lançamento individual e eventual comprovante, com rateio explícito em movimentos multiobra.
+
+**Governança:** não foram feitos novos lançamentos no Trello, nem ajustes nas obras fechadas, no saldo Cora ou no Capital de Giro, nem alterações na V12 congelada. PR #143 continua DRAFT.
