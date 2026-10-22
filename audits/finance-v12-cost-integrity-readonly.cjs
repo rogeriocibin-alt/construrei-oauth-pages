@@ -10,7 +10,7 @@ function centavos(value){
  return Number.isSafeInteger(n)&&n>=0?n:null;
 }
 function parseCostLine(raw,defaultYear){
- const line=String(raw||"");
+ const line=String(raw||"").replace(/^[\u200B\u200C\u200D\uFEFF]+/g,"");
  const header=line.match(/^\s*(?:[•*+-]\s*)?(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\s*[-–—]\s*(.*)$/);
  if(!header)return {kind:"NOT_DATED"};
  let year=header[3]?Number(header[3]):Number(defaultYear);
@@ -43,7 +43,7 @@ function analyzeCard(card,defaultYear=2026){
  const ok=parsed.filter(x=>x.kind==="COST"),unreadable=parsed.filter(x=>x.kind==="AMBIGUOUS_AMOUNT"||x.kind==="INVALID_DATE");
  const sum=ok.reduce((total,cost)=>total+cost.cents,0);
  if(!ok.length)return {caseNo:code,declared,status:"SEM_LINHAS_VALIDAS"};
- const phase=/PRIMEIRA PARTE|SEGUNDA PARTE|PRIMEIRA ETAPA|SEGUNDA ETAPA/i.test(chunk);
+ const phase=/PRIMEIRA PARTE|SEGUNDA PARTE|PRIMEIRA ETAPA|SEGUNDA ETAPA/i.test(desc);
  const result={caseNo:code,declared,sum,difference:sum-declared,parsedCostCount:ok.length,unreadableCount:unreadable.length,
   status:unreadable.length?"LEITURA_INCOMPLETA":(sum===declared?"SOMA_TEXTUAL_COMPATIVEL":(phase?"MULTIPLAS_ETAPAS_A_VERIFICAR":"DIVERGENCIA_A_VERIFICAR"))};
  // Nunca corrigir fechamento automaticamente. Mesmo SOMA_TEXTUAL_COMPATIVEL não é conciliação Cora.
