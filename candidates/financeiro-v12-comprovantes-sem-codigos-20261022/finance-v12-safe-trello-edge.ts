@@ -68,8 +68,10 @@ function withMarker(p:ReturnType<typeof clean>){
 /* Visible operation markers are removed only AFTER the ledger is COMMITTED.
  * The operation ID and fingerprint remain in Supabase; failed/uncertain writes
  * preserve their marker to support safe forensic recovery. */
-async function tidyCommittedMarker(short:string,tag:string){
+async function tidyCommittedMarker(short:string,tag:string,expectedDesc:string){
  const before=await card(short),desc=String(before.desc||"");
+ // Skip if the card changed between confirmation and cleanup (concurrent operator).
+ if(desc!==expectedDesc)return false;
  if(!desc.includes(tag))return true;
  if(desc.split(tag).length!==2||!desc.includes(" "+tag)||(desc.match(/CRV12OP_[0-9a-f-]{36}/g)||[]).length!==1)return false;
  const cleaned=desc.replace(" "+tag,"");
@@ -150,7 +152,7 @@ Deno.serve(async(req:Request)=>{
    const done=await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,p_status:"COMMITTED",p_trello_url:confirmed.shortUrl||pre.target?.trello_url||null,p_error_code:null},k);
    if(done.ok!==true)throw Error("LEDGER_FINALIZE_UNCONFIRMED");
    let marker_hidden=false;
-   try{marker_hidden=await tidyCommittedMarker(short,tag)}catch{/* committed operation remains authoritative */}
+   try{marker_hidden=await tidyCommittedMarker(short,tag,String(confirmed.desc||""))}catch{/* committed operation remains authoritative */}
    return reply({ok:true,committed:true,duplicate:false,trello_url:confirmed.shortUrl||null,target:pre.target,status:"COMMITTED",marker_hidden});
   }catch(e){
    const error=String(e?.message||e).slice(0,100);
