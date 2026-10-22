@@ -587,8 +587,10 @@ function v12Bases(m){
 }
 function v12Margin(m,{year=S.oy,month=S.opm}={}){
  if(String(year)==="2025"&&!Number(month))return "N/D · parcial";
- const b=v12Bases(m);
- return b&&b.unequal?"N/D · bases distintas":pct(m?.margin_pct);
+ if(String(year)==="2024"&&!Number(month))return "N/D · histórico";
+ const b=v12Bases(m),coverage=m?.coverage_pct,issues=r7IssueInfo(m);
+ if(!b||b.gross<=0||b.unequal||coverage==null||Number(coverage)<99.999||(issues.known&&issues.count>0))return "N/D · conciliação";
+ return pct(b.profit/b.gross*100);
 }
 function v12Coverage(m,issues,{year=S.oy,month=S.opm}={}){
  const n=Number(issues?.count||0);
@@ -628,14 +630,15 @@ function ops(){
   const so=document.getElementById("sort")?.value||"recent",dt=r=>String(r.last_activity||r.date||r.updated_at||"");
   a.sort((x,y)=>so==="gross"?(Number(y.gross_cents||0)-Number(x.gross_cents||0)):so==="profit"?(Number(y.profit_cents||0)-Number(x.profit_cents||0)):so==="margin"?(Number(x.margin_pct??999)-Number(y.margin_pct??999)):so==="old"?dt(x).localeCompare(dt(y)):dt(y).localeCompare(dt(x)));
   const gross=sumKnown(a,"gross_cents"),cost=sumKnown(a,"cost_cents"),profit=sumKnown(a,"profit_cents");
-  const margin=gross.known&&profit.known&&gross.value!==0?profit.value/gross.value*100:null;
+  const consistent=gross.known===a.length&&cost.known===a.length&&profit.known===a.length&&gross.value>0&&Math.abs(gross.value-cost.value-profit.value)<=1;
+  const margin=consistent?profit.value/gross.value*100:null;
   const knownGross=gross.total?Math.round(gross.known/gross.total*100):100;
   const summary='<div class="opfilterstats">'+[
     ["Obras",String(a.length),"quantidade no filtro"],
     ["Faturamento",moneyKnown(gross),gross.known+" de "+gross.total+" com valor"],
     ["Custos",moneyKnown(cost),cost.known+" de "+cost.total+" com valor"],
     ["Lucro",moneyKnown(profit),profit.known+" de "+profit.total+" com valor"],
-    ["Margem",margin==null?"N/D":pct(margin),"sobre valores identificados"]
+    ["Margem",margin==null?"N/D · revisar":pct(margin),margin==null?"Base incompleta ou distinta":"sobre base equivalente do filtro"]
   ].map(x=>'<div class="opfilterstat"><span>'+x[0]+'</span><b>'+x[1]+'</b><small>'+x[2]+'</small></div>').join("")+'</div><div class="opfilterhint">Autosoma do recorte atual. Cobertura de faturamento: '+knownGross+'%. Valores ausentes na fonte permanecem como N/D; não são tratados como zero.</div>';
   const trello=r=>r.short_url?'<a class="trellobtn" href="'+esc(r.short_url)+'" target="_blank" rel="noopener noreferrer">Abrir no Trello ↗</a>':'<span class="small muted">Trello indisponível</span>';
   const tr=a.map(r=>'<tr><td><b>'+esc(r.case)+'</b><br><span class="muted">'+esc((r.title||"").slice(0,75))+'</span></td><td>'+esc(r.status||"Não informado")+'</td><td>'+brl(r.gross_cents)+'</td><td>'+brl(r.cost_cents)+'</td><td>'+brl(r.profit_cents)+'</td><td>'+pct(r.margin_pct)+'</td><td>'+trello(r)+'</td></tr>').join("");
@@ -929,7 +932,7 @@ function strict(m,year,month){const gross=nint(m?.gross_cents),cost=nint(m?.cost
  const history=String(year)==="2025"&&!Number(month)||String(year)==="2024"&&!Number(month);
  return {gross,cost,profit,coverage,count,diff:unequal,valid:complete&&!history,history};
 }
-function rowFiltered(year,month,status,term){const raw=window.S?.years?.[year]?.rows||[];const seen=new Set(),rows=[];let ignored=0;
+function rowFiltered(year,month,status,term){const raw=window.CR_V12_MODEL?.()?.years?.[year]?.rows||[];const seen=new Set(),rows=[];let ignored=0;
  for(const r of raw){if(month&&Number(r.month)!==month)continue;
  if(status&&String(r.status||"")!==status)continue;
  if(term&&!JSON.stringify([r.case,r.name,r.title,r.client,r.customer,r.address,r.description]).toLowerCase().includes(term))continue;
@@ -971,13 +974,16 @@ function render(){
  put("v12ex-source","Trello · "+year+(month?" / "+months[month-1]:" anual")+(filtered?" · filtro operacional":""));
  const msg=q.history?"Histórico com regra de fechamento pendente de conciliação.":q.diff!==null&&Math.abs(q.diff)>1?"Receita, custos e lucro provêm de bases diferentes (diferença: "+money(Math.abs(q.diff))+").":q.coverage===null||q.coverage<99.999?"Cobertura financeira incompleta; margens não podem ser confirmadas.":q.count>0?"Existem "+q.count+" pendências de classificação ou completude.":q.valid?"Margem aritmética consistente no período; pagamentos e impostos externos ainda dependem de evidência.":"Não há base suficiente para confirmar a margem.";
  const state=get("v12ex-integrity");state.textContent=msg+(filtered?" Filtro de obras baseado em registros classificados; registros ausentes não são zero.":"");state.classList.toggle("ok",q.valid);
- const mo=selected.months||[];const ops=[],margin=[];for(let i=1;i<=12;i++){const m=mo.find(x=>Number(x.month)===i),t=m?strict(m,year,i):null;
+ const mo=selected.months||[];const ops=[],margin=[];for(let i=1;i<=12;i++){
+  const m=mo.find(x=>Number(x.month)===i);
+  const inPeriod=!month||i===month;
+  const scoped=filtered&&inPeriod?rowFiltered(year,i,status,term):null;
+  const t=inPeriod?strict(scoped?.metrics||m,year,i):null;
   ops.push({points:t&&t.gross!==null&&t.cost!==null&&t.profit!==null&&Math.abs(t.diff)<=1?[t.gross,t.cost,t.profit]:null});
   margin.push({points:t?.valid?[t.profit/t.gross*100]:null});
  }
- // Graphs show the annual source series; applied work/client filters only affect KPI recorte, never pretend that whole-year graph is filtered.
  drawBars("v12ex-ops-chart",ops,"ops");drawBars("v12ex-margin-chart",margin,"margin");
- put("v12ex-foot",filtered?"Gráficos anuais de referência (não filtrados por obra/cliente); cartões mostram o recorte.":"Gráficos do ano selecionado. Cora é bancário; Trello é operacional.");
+ put("v12ex-foot","Cartões e gráficos seguem os mesmos filtros. Receita Trello não é saldo bancário Cora.");
 }
 window.CR_V12_MODEL=()=>typeof S!=="undefined"?S:null;window.v12ExecRender=render;
 for(const id of ["v12ex-year","v12ex-month","v12ex-status","v12ex-find"])get(id)?.addEventListener(id==="v12ex-find"?"input":"change",render);
