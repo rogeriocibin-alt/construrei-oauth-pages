@@ -356,6 +356,82 @@ body{background:linear-gradient(180deg,#eef8fd 0,#f7fbfe 220px,#eef6fb 100%)!imp
 .v12-chart-state{font-size:9px;line-height:1.2;color:#bad2e2;min-height:22px}
 .v12-smart-note{margin:10px 0 0!important;color:#c3d9e7!important;font-size:11px!important}
 @media(max-width:700px){.v12-smart{padding:12px}.v12-filtergrid{grid-template-columns:repeat(2,minmax(0,1fr))}.v12-bank-kpis{grid-template-columns:1fr}.v12-smart-chart{grid-template-columns:repeat(auto-fit,minmax(53px,1fr));gap:5px}.v12-chart-bars{padding:0 3px}}
+</style><style id="v12ex-design-system">
+/* Identidade corporativa consistente e foco nas duas áreas centrais */
+:root{--v12-navy:#07182b;--v12-blue:#216ab5;--v12-green:#198065;--v12-red:#c74653;--v12-amber:#b27e20;--v12-gold:#c9a14a;--v12-bg:#f4f6fa}
+body{background:var(--v12-bg)}
+.top{background:#07182b;border-bottom:2px solid #c9a14a}
+.v12-line{background:#eff4f9;border-color:#d7e2ee;color:#324d63}
+.v12-line b{color:#184a75}
+.v12tabs .tab.on{background:var(--v12-navy);border-color:#c9a14a;box-shadow:inset 0 -2px 0 #c9a14a}
+.v12tabs .tab{font-size:12px}
+.bc:nth-child(n) .bar{background:#216ab5;border-color:#216ab5}
+.v12exec{background:transparent;color:#15283d;padding:12px 0 18px}
+.v12ex-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:6px 0 15px}
+.v12ex-head h2{font-size:clamp(23px,2.8vw,33px);font-weight:800;margin:5px 0 4px;color:#102943;letter-spacing:-.025em}
+.v12ex-head p{margin:0;line-height:1.5;font-size:12px;color:#607184;max-width:640px}
+.v12ex-kicker{color:#376b9b;font-weight:800;font-size:10px;letter-spacing:.13em}
+#v12ex-source{border:1px solid #d1dee9;background:white;padding:8px 12px;color:#53687a;border-radius:100px;font-size:11px;font-weight:700;max-width:270px}
+.v12ex-filters{display:grid;grid-template-columns:0.75fr 1fr 1.15fr 1.35fr auto;gap:9px;align-items:end;background:#fff;border:1px solid #dfe7ef;border-radius:14px;padding:13px;box-shadow:0 4px 16px #07182b0a}
+.v12ex-filters label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:700;color:#547086}
+.v12ex-filters input,.v12ex-filters select,.v12ex-filters button{width:100%;min-height:39px;padding:8px;border:1px solid #d0deec;background:#f8fafc;color:#143553;border-radius:8px;font:inherit;font-size:12px}
+.v12ex-filters input:focus,.v12ex-filters select:focus{outline:2px solid #216ab5;outline-offset:1px}
+#v12ex-reset{background:#e9f0f8;color:#245277;font-weight:800;cursor:pointer}
+.v12ex-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:13px 0}
+.v12ex-kpi{border:1px solid #dfe7ef;border-left:3px solid #216ab5;box-shadow:0 4px 15px #0e325509;border-radius:12px;padding:14px;background:#fff;display:flex;flex-direction:column;gap:7px;align-items:flex-start;text-align:left;cursor:pointer;min-width:0;color:#17314c}
+.v12ex-kpi:hover{border-color:#93b1ce;box-shadow:0 7px 20px #11365716}
+.v12ex-kpi span{font-size:11px;color:#536d81;font-weight:760}
+.v12ex-kpi strong{font-size:clamp(18px,2.05vw,27px);letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15;overflow-wrap:anywhere}
+.v12ex-kpi small{font-size:10px;color:#778b9d;line-height:1.4}
+.v12ex-kpi:nth-child(2){border-left-color:#c74653}.v12ex-kpi:nth-child(3),.v12ex-kpi:nth-child(4){border-left-color:#198065}
+.v12ex-kpi:nth-child(4) strong{color:#198065}
+.v12ex-bank{border-left-color:#c9a14a;background:#fefdf9}
+.v12ex-note{font-size:12px;background:#fffbf3;color:#7d5620;border:1px solid #efdcae;border-radius:10px;padding:10px 12px;line-height:1.55;margin-bottom:13px}
+.v12ex-note.ok{background:#eef7f3;color:#1a674c;border-color:#b7dccc}
+.v12ex-grids{display:grid;grid-template-columns:1.25fr 1fr;gap:12px}
+.v12ex-chartbox{border:1px solid #dfe7ef;border-radius:14px;background:#fff;padding:15px 14px;min-width:0}
+.v12ex-chartbox>header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.v12ex-chartbox h3{font-size:14px;margin:0;color:#14304a}
+.v12ex-chartbox p{font-size:11px;color:#8795a5;margin:5px 0}
+.v12ex-mini{color:#7590aa;background:#f1f5f9;font-size:11px;padding:5px 8px;border-radius:6px}
+.v12ex-legend{display:flex;gap:12px;font-size:10px;color:#627789;margin:5px 0 12px}
+.v12ex-legend span{display:flex;align-items:center;gap:5px}
+.v12ex-legend i{display:inline-block;width:9px;height:9px;border-radius:3px}
+.v12ex-legend .g{background:#216ab5}.v12ex-legend .c{background:#c74653}.v12ex-legend .p{background:#198065}
+.v12ex-chart{height:170px;min-height:170px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;align-items:end;overflow:hidden}
+.v12ex-col{height:165px;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;align-items:center}
+.v12ex-bars{height:137px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;border-bottom:1px solid #e7edf3}
+.v12ex-bar{display:block;min-width:3px;max-width:15px;flex:1;border-radius:4px 4px 0 0;background:#216ab5}
+.v12ex-bar.cost{background:#c74653}.v12ex-bar.profit{background:#198065}.v12ex-bar.loss{background:#d48339}
+.v12ex-month-label{font-size:9px;color:#72899e;font-weight:800;text-align:center}
+.v12ex-chart.margin .v12ex-bars{justify-content:center}
+.v12ex-chart.margin .v12ex-bar{max-width:29px;flex:1}
+.v12ex-chart.margin .v12ex-bar.positive{background:#198065}
+.v12ex-chart.margin .v12ex-bar.negative{background:#c74653}
+.v12ex-empty{grid-column:1/-1;margin:auto;color:#8795a5;font-size:12px;max-width:330px;text-align:center}
+.v12ex-tools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:13px 0 4px;flex-wrap:wrap;color:#8091a2;font-size:11px}
+#v12ex-open-details{padding:8px 11px;border:1px solid #a4bdd1;background:#fff;color:#22547b;font-weight:800;border-radius:8px;cursor:pointer}
+#v12ex-advanced{border-top:1px solid #dfebf3;margin-top:8px;padding-top:8px}
+#v12ex-advanced>summary{font-size:12px;font-weight:750;color:#45647d;cursor:pointer;padding:12px 3px}
+#v12ex-advanced:not([open])>*:not(summary){display:none}
+@media(max-width:1000px){.v12ex-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.v12ex-grids{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.v12ex-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.v12ex-grids{grid-template-columns:1fr}.v12ex-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.v12ex-head{align-items:flex-start;flex-direction:column}.v12ex-chart{gap:3px}.v12ex-chartbox{padding:12px}.v12ex-kpi{padding:12px}}
+@media(prefers-reduced-motion:reduce){.v12ex-kpi{transition:none}}
+</style><style id="v12ex-semantic-palette-20261021">
+:root{--v12-navy:#07182b;--v12-blue:#216ab5;--v12-green:#198065;--v12-red:#c74653;--v12-amber:#b27e20;--v12-gold:#c9a14a}
+#v12-exec-cockpit .v12ex-chartbox{background:#fff;border:1px solid #e0e8f0;box-shadow:0 4px 17px #07182b0c}
+#v12-exec-cockpit .v12ex-kpi:focus-visible,#v12-exec-cockpit button:focus-visible{outline:3px solid #216ab5;outline-offset:3px}
+#v12-exec-cockpit .v12ex-bar{background:#216ab5}
+#v12-exec-cockpit .v12ex-bar.cost{background:#c74653}
+#v12-exec-cockpit .v12ex-bar.profit,#v12-exec-cockpit .v12ex-bar.positive{background:#198065}
+#v12-exec-cockpit .v12ex-bar.loss,#v12-exec-cockpit .v12ex-bar.negative{background:#c74653}
+#hist .bc:nth-child(n) .bar{background:#216ab5;border-color:#216ab5}
+#hist:has(#met option[value="cost_cents"]:checked) .bc:nth-child(n) .bar{background:#c74653;border-color:#c74653}
+#hist:has(#met option[value="profit_cents"]:checked) .bc:nth-child(n) .bar{background:#198065;border-color:#198065}
+#v12-cora-live .v12-smart{background:#102e4b}
+#v12ex-advanced>summary{border-radius:9px;transition:background .2s}
+#v12ex-advanced>summary:hover{background:#eef4fa}
+@media(max-width:640px){#v12-exec-cockpit .v12ex-filters{gap:8px}#v12-exec-cockpit .v12ex-kpi{padding:12px}}
 </style></head><body><div id="login" class="login"><div class="box"><div style="display:flex;gap:10px;align-items:center"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><b>CONSTRU-REI · DASHBOARD V4</b></div><p class="muted small">Módulo oficial da Central CONSTRU-REI. Mesma chave da Central.</p><input id="key" type="password" placeholder="Chave de acesso"><button onclick="login()">Entrar</button><div id="err"></div></div></div>
 <header class="top"><div class="topin"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><div><b>CONSTRU-REI</b><div class="small" style="color:#f3e7c6">DASHBOARD GERENCIAL</div><div class="small">GESTÃO • OPERAÇÃO • FINANCEIRO • INTELIGÊNCIA</div></div><div class="grow"></div><b>V12 · VALIDAÇÃO</b><span id="live">online</span></div></header><main class="main"><div class="r6hero"><div class="r6eyebrow">CENTRO DE COMANDO DA DIRETORIA</div><div class="r6title">CONSTRU-REI · Diretoria Agora</div><div class="r6sub">VISÃO EXECUTIVA • OPERAÇÃO • RESULTADO • CUSTOS • RISCOS</div></div><div class="v12-line"><b>V12 · PRÉVIA PUBLICADA · SOMENTE LEITURA</b><span>Dados vivos protegidos por autenticação. Acertos em auditoria; lançamentos e fechamentos bloqueados.</span></div><div class="tabs v12tabs">
 <button class="tab on" data-t="agora">VISÃO EXECUTIVA</button>
@@ -365,7 +441,33 @@ body{background:linear-gradient(180deg,#eef8fd 0,#f7fbfe 220px,#eef6fb 100%)!imp
 <button class="tab" data-t="hist">INTELIGÊNCIA HISTÓRICA</button>
 <button class="tab" data-t="conc">AUDITORIA E SAÚDE</button>
 </div><div class="v12sub"><button class="chip" data-v12detail="cost">CUSTOS / PRESTADORES</button><button class="chip" data-v12detail="qual">SAÚDE DOS DADOS</button></div>
-<section id="agora" class="section on"><div id="v12-cora-live" class="panel" style="border:1px solid #c99d325e;margin:12px 0 16px">
+<section id="agora" class="section on">
+<div id="v12-exec-cockpit" class="v12exec" aria-label="Visão executiva CONSTRU-REI">
+ <header class="v12ex-head"><div><div class="v12ex-kicker">CONSTRU-REI · INTELIGÊNCIA FINANCEIRA</div><h2>Visão executiva</h2><p>Resultados das obras no Trello e saldo bancário autenticado na Cora, apresentados separadamente.</p></div><span id="v12ex-source">Aguardando dados autenticados</span></header>
+ <div class="v12ex-filters" aria-label="Filtros inteligentes">
+  <label>Ano<select id="v12ex-year"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option></select></label>
+  <label>Período<select id="v12ex-month"><option value="0">Ano completo</option><option value="1">Janeiro</option><option value="2">Fevereiro</option><option value="3">Março</option><option value="4">Abril</option><option value="5">Maio</option><option value="6">Junho</option><option value="7">Julho</option><option value="8">Agosto</option><option value="9">Setembro</option><option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option></select></label>
+  <label>Situação<select id="v12ex-status"><option value="">Todas as situações</option><option value="EM ANDAMENTO">Em andamento</option><option value="RETORNO">Retorno</option><option value="AGUARDANDO PAGAMENTO">Aguardando pagamento</option><option value="PAGAMENTO ATRASADO">Pagamento atrasado</option><option value="AGUARDANDO ACERTO">Aguardando acerto</option></select></label>
+  <label>Obra / cliente<input id="v12ex-find" type="search" placeholder="Número ou cliente" autocomplete="off"></label>
+  <button id="v12ex-reset" type="button">Limpar filtros</button>
+ </div>
+ <div class="v12ex-kpis">
+  <button type="button" class="v12ex-kpi" data-go="gross"><span>Receita registrada</span><strong id="v12ex-gross">—</strong><small id="v12ex-gross-note">Trello · aguardando leitura</small></button>
+  <button type="button" class="v12ex-kpi" data-go="cost"><span>Custos identificados</span><strong id="v12ex-cost">—</strong><small id="v12ex-cost-note">Trello · aguardando leitura</small></button>
+  <button type="button" class="v12ex-kpi" data-go="profit"><span>Lucro apurado</span><strong id="v12ex-profit">—</strong><small id="v12ex-profit-note">Sujeito à conciliação</small></button>
+  <button type="button" class="v12ex-kpi" data-go="margin"><span>Margem apurável</span><strong id="v12ex-margin">—</strong><small id="v12ex-margin-note">Somente com base equivalente</small></button>
+  <button type="button" class="v12ex-kpi v12ex-bank" data-go="bank"><span>Saldo oficial Cora</span><strong id="v12ex-bank-balance">—</strong><small id="v12ex-bank-note">Requer login da Diretoria</small></button>
+  <button type="button" class="v12ex-kpi" data-go="receivable"><span>A receber confirmado</span><strong id="v12ex-receive">N/D</strong><small>Não estimado por status da obra</small></button>
+ </div>
+ <div class="v12ex-note" id="v12ex-integrity" role="status">Os valores financeiros serão exibidos após consulta autenticada. Sem estimativas ou substituição de dados ausentes por zero.</div>
+ <div class="v12ex-grids">
+  <section class="v12ex-chartbox"><header><div><h3>Receita, custo e resultado</h3><p>Comparação mensal · Trello</p></div><span class="v12ex-mini">R$</span></header><div class="v12ex-legend"><span><i class="g"></i> Receita</span><span><i class="c"></i> Custo</span><span><i class="p"></i> Lucro</span></div><div id="v12ex-ops-chart" class="v12ex-chart" role="img" aria-label="Receita, custos e lucros por mês"></div></section>
+  <section class="v12ex-chartbox"><header><div><h3>Margem de lucro</h3><p>Percentual mensal, somente quando a base fecha</p></div><span class="v12ex-mini">%</span></header><div id="v12ex-margin-chart" class="v12ex-chart margin" role="img" aria-label="Margem de lucro validável por mês"></div></section>
+ </div>
+ <div class="v12ex-tools"><span id="v12ex-foot">Nenhum lançamento bancário é tratado como faturamento automaticamente.</span><button type="button" id="v12ex-open-details">Explorar dados e operações <span aria-hidden="true">↓</span></button></div>
+</div>
+<details id="v12ex-advanced"><summary>Detalhamento operacional · Cora Pro, obras e auditoria</summary>
+<div id="v12-cora-live" class="panel" style="border:1px solid #c99d325e;margin:12px 0 16px">
   <div class="r6eyebrow">BANCO CORA · CONSULTA AUTENTICADA</div>
   <h3>Saldo oficial e fluxo bancário em tempo real</h3>
   <p id="v12-cora-message" class="small" role="status">Aguardando autenticação da Diretoria para consultar o Cora.</p>
@@ -389,7 +491,8 @@ body{background:linear-gradient(180deg,#eef8fd 0,#f7fbfe 220px,#eef6fb 100%)!imp
   <p id="v12-smart-note" class="v12-smart-note">Sem dados autenticados. Para consultar, faça login no Dashboard.</p>
 </div>
   <div class="small muted" style="margin-top:8px">Atualização automática a cada 5 minutos via Supabase autenticado. Nenhuma escrita no Cora, Trello ou Gestão Click.</div>
- </div><div class="r8commandbar"><div><div class="r8mode" id="r8mode">OPERAÇÃO VIVA</div><div id="r8context" class="r8context">2026 • ANO TODO</div></div><div class="r8quick"><button onclick="r8Go('agora')">OPERAÇÃO</button><button onclick="r8Go('fin')">FINANCEIRO</button><button onclick="r8Go('cost')">CUSTOS</button><button onclick="r8Go('cost');setTimeout(()=>document.getElementById('prov')?.scrollIntoView({behavior:'smooth'}),0)">PRESTADORES</button><button onclick="r8Go('hist')">HISTÓRICO</button><button onclick="r8Go('qual')">SAÚDE</button></div></div><div id="globalyears" class="yearnav"></div><div id="periodtitle" class="periodtitle"></div><div id="periodnote" class="periodnote"></div><div id="r8result"></div><div id="v12-scope-note" role="status" aria-live="polite"></div><div id="kpis" class="r7master"></div><div id="supportkpis" class="r7support"></div><div id="opkpis" class="opkpis"></div><div id="execalerts" class="r7alerts"></div><div id="r8costcontrol"></div><div class="r7execgrid"><div class="panel r7readpanel"><h3>Leitura da Diretoria</h3><div id="execread"></div></div><div class="panel r7readpanel"><h3>Indicadores do período</h3><div id="execsmart" class="r7smart"></div></div></div><div class="panel"><h3>Operação e obras</h3><div id="chips" class="chips"></div><div id="opmonths" class="chips"></div><div class="opfiltertitle">FILTRAR ORÇAMENTOS / OBRAS</div><div class="filters opfilters"><select id="opyear" onchange="oy(this.value)"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option></select><input id="q" placeholder="Buscar orçamento, cliente, endereço..." oninput="ops()"><select id="sort" onchange="ops()"><option value="recent">Mais recentes</option><option value="old">Mais antigos</option><option value="gross">Maior valor</option><option value="profit">Maior lucro</option><option value="margin">Menor margem</option></select></div><div id="op"></div></div></section>
+ </div><div class="r8commandbar"><div><div class="r8mode" id="r8mode">OPERAÇÃO VIVA</div><div id="r8context" class="r8context">2026 • ANO TODO</div></div><div class="r8quick"><button onclick="r8Go('agora')">OPERAÇÃO</button><button onclick="r8Go('fin')">FINANCEIRO</button><button onclick="r8Go('cost')">CUSTOS</button><button onclick="r8Go('cost');setTimeout(()=>document.getElementById('prov')?.scrollIntoView({behavior:'smooth'}),0)">PRESTADORES</button><button onclick="r8Go('hist')">HISTÓRICO</button><button onclick="r8Go('qual')">SAÚDE</button></div></div><div id="globalyears" class="yearnav"></div><div id="periodtitle" class="periodtitle"></div><div id="periodnote" class="periodnote"></div><div id="r8result"></div><div id="v12-scope-note" role="status" aria-live="polite"></div><div id="kpis" class="r7master"></div><div id="supportkpis" class="r7support"></div><div id="opkpis" class="opkpis"></div><div id="execalerts" class="r7alerts"></div><div id="r8costcontrol"></div><div class="r7execgrid"><div class="panel r7readpanel"><h3>Leitura da Diretoria</h3><div id="execread"></div></div><div class="panel r7readpanel"><h3>Indicadores do período</h3><div id="execsmart" class="r7smart"></div></div></div><div class="panel"><h3>Operação e obras</h3><div id="chips" class="chips"></div><div id="opmonths" class="chips"></div><div class="opfiltertitle">FILTRAR ORÇAMENTOS / OBRAS</div><div class="filters opfilters"><select id="opyear" onchange="oy(this.value)"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option></select><input id="q" placeholder="Buscar orçamento, cliente, endereço..." oninput="ops()"><select id="sort" onchange="ops()"><option value="recent">Mais recentes</option><option value="old">Mais antigos</option><option value="gross">Maior valor</option><option value="profit">Maior lucro</option><option value="margin">Menor margem</option></select></div><div id="op"></div></div></details>
+</section>
 <section id="fin" class="section">
 <div class="panel aclive">
   <div class="aclivehead">
@@ -438,7 +541,7 @@ const CG_API_BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-trel
 const S={session:sessionStorage.getItem("crv2")||"",years:{},current:null,capital:null,oy:"2026",fy:"2026",fm:0,status:"",opm:0,opYear:null,opAudit:null,monthlyAudit:null,cy:"2026",cm:0,costData:null,costCache:{},providerView:[],gcLast:null,gcLastAt:0,acertoHistory:[],acertoSelected:{},acertoHistoryLoaded:false};const brl=c=>c==null?"Não informado":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(c/100),pct=v=>v==null?"Não calculável":Number(v).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",esc=s=>String(s??"").replace(/[&<>]/g,"");
 async function api(q,opt={}){const r=await fetch(CR_API_BASE+"?"+q,{...opt,headers:{"x-cr-session":S.session,...(opt.headers||{})}}),j=await r.json().catch(()=>({}));if(r.status===401){logout();throw Error()}if(!r.ok)throw Error(j.error);return j}async function cgapi(){const r=await fetch(CG_API_BASE+"?action=summary",{headers:{"x-cr-session":S.session}}),j=await r.json().catch(()=>({}));if(!r.ok||!j.ok)throw Error(j.error||"CAPITAL_UNAVAILABLE");return j}async function login(){const r=await fetch(CR_API_BASE+"?api=login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:document.getElementById("key").value.trim()})}),j=await r.json();if(!r.ok||!j.ok){document.getElementById("err").textContent=j.error||"Acesso negado";return}S.session=j.session;sessionStorage.setItem("crv2",S.session);document.getElementById("login").classList.add("hide");refresh(true)}function logout(){sessionStorage.removeItem("crv2");location.reload()}
 async function refresh(gc){document.getElementById("live").textContent="atualizando";try{const nowTs=Date.now(),wantGc=!!gc||!S.gcLastAt||(nowTs-S.gcLastAt)>=300000;const [a,b,c,d,e]=await Promise.all([api("api=year&year=2024"),api("api=year&year=2025"),api("api=year&year=2026"),api("api=current&gc="+(wantGc?1:0)),cgapi().catch(()=>null)]);if(wantGc)S.gcLastAt=nowTs;if(d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick}else if(S.gcLast&&(d?.gestaoclick?.skipped||d?.gestaoclick?.ok===false)){d.gestaoclick={...S.gcLast,stale:d?.gestaoclick?.ok===false,last_error_status:d?.gestaoclick?.http_status??null}}S.years={2024:a,2025:b,2026:c};S.current=d;S.capital=e;const apiBuild=c?.build||d?.build||b?.build||a?.build||"não informado";const bf=document.getElementById("buildfoot");bf.textContent="CENTRO DE COMANDO DA DIRETORIA · DASHBOARD GERENCIAL V4 · UI "+UI_BUILD+" · API LIVE · READ ONLY · PRODUÇÃO";bf.title="API "+apiBuild;render();if(!S.acertoHistoryLoaded)loadAcertoHistory();document.getElementById("live").textContent="online"}catch(e){const live=document.getElementById("live");live.textContent="degradado";live.title="Falha ao atualizar dados. A interface preserva o último estado carregado."}}
-function render(){now();fin();hist();qual();recon();costs()}function manualLocalDate(){const d=new Date(),z=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
+function render(){now();fin();hist();qual();recon();costs();if(typeof window.v12ExecRender==="function")window.v12ExecRender()}function manualLocalDate(){const d=new Date(),z=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
 const CORA_BASE_BALANCE_CENTS=3256462,CORA_BASE_BALANCE_DATE="09/10/2026",CORA_PROJECTED_KEY="cr-cora-projected-balance-cents-preview-v12",CORA_VERIFIED_KEY="cr-cora-verified-balance-cents-preview-v12",CORA_VERIFIED_DATE_KEY="cr-cora-verified-balance-date-preview-v12";
 if(localStorage.getItem(CORA_PROJECTED_KEY)===null)localStorage.setItem(CORA_PROJECTED_KEY,String(CORA_BASE_BALANCE_CENTS));
 function manualAmountCents(v){const s=String(v??"").trim().replace(/\s/g,"").replace(/\./g,"").replace(",",".");const n=Number(s);return Number.isFinite(n)?Math.round(n*100):0}
@@ -499,8 +602,11 @@ function v12Bases(m){
 }
 function v12Margin(m,{year=S.oy,month=S.opm}={}){
  if(String(year)==="2025"&&!Number(month))return "N/D · parcial";
- const b=v12Bases(m);
- return b&&b.unequal?"N/D · bases distintas":pct(m?.margin_pct);
+ if(String(year)==="2024"&&!Number(month))return "N/D · histórico";
+ const b=v12Bases(m),coverage=m?.coverage_pct,issues=r7IssueInfo(m);
+ if(b?.unequal)return "N/D · bases distintas";
+ if(!b||b.gross<=0||coverage==null||Number(coverage)<99.999||(issues.known&&issues.count>0))return "N/D · conciliação";
+ return pct(b.profit/b.gross*100);
 }
 function v12Coverage(m,issues,{year=S.oy,month=S.opm}={}){
  const n=Number(issues?.count||0);
@@ -540,14 +646,15 @@ function ops(){
   const so=document.getElementById("sort")?.value||"recent",dt=r=>String(r.last_activity||r.date||r.updated_at||"");
   a.sort((x,y)=>so==="gross"?(Number(y.gross_cents||0)-Number(x.gross_cents||0)):so==="profit"?(Number(y.profit_cents||0)-Number(x.profit_cents||0)):so==="margin"?(Number(x.margin_pct??999)-Number(y.margin_pct??999)):so==="old"?dt(x).localeCompare(dt(y)):dt(y).localeCompare(dt(x)));
   const gross=sumKnown(a,"gross_cents"),cost=sumKnown(a,"cost_cents"),profit=sumKnown(a,"profit_cents");
-  const margin=gross.known&&profit.known&&gross.value!==0?profit.value/gross.value*100:null;
+  const consistent=gross.known===a.length&&cost.known===a.length&&profit.known===a.length&&gross.value>0&&Math.abs(gross.value-cost.value-profit.value)<=1;
+  const margin=consistent?profit.value/gross.value*100:null;
   const knownGross=gross.total?Math.round(gross.known/gross.total*100):100;
   const summary='<div class="opfilterstats">'+[
     ["Obras",String(a.length),"quantidade no filtro"],
     ["Faturamento",moneyKnown(gross),gross.known+" de "+gross.total+" com valor"],
     ["Custos",moneyKnown(cost),cost.known+" de "+cost.total+" com valor"],
     ["Lucro",moneyKnown(profit),profit.known+" de "+profit.total+" com valor"],
-    ["Margem",margin==null?"N/D":pct(margin),"sobre valores identificados"]
+    ["Margem",margin==null?"N/D · revisar":pct(margin),margin==null?"Base incompleta ou distinta":"sobre base equivalente do filtro"]
   ].map(x=>'<div class="opfilterstat"><span>'+x[0]+'</span><b>'+x[1]+'</b><small>'+x[2]+'</small></div>').join("")+'</div><div class="opfilterhint">Autosoma do recorte atual. Cobertura de faturamento: '+knownGross+'%. Valores ausentes na fonte permanecem como N/D; não são tratados como zero.</div>';
   const trello=r=>r.short_url?'<a class="trellobtn" href="'+esc(r.short_url)+'" target="_blank" rel="noopener noreferrer">Abrir no Trello ↗</a>':'<span class="small muted">Trello indisponível</span>';
   const tr=a.map(r=>'<tr><td><b>'+esc(r.case)+'</b><br><span class="muted">'+esc((r.title||"").slice(0,75))+'</span></td><td>'+esc(r.status||"Não informado")+'</td><td>'+brl(r.gross_cents)+'</td><td>'+brl(r.cost_cents)+'</td><td>'+brl(r.profit_cents)+'</td><td>'+pct(r.margin_pct)+'</td><td>'+trello(r)+'</td></tr>').join("");
@@ -828,4 +935,80 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)tick()});
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",tick,{once:true});else tick();
 setInterval(tick,10000);
 })();
-</script></body></html>
+</script><script id="v12ex-runtime">(function(){
+"use strict";
+const get=id=>document.getElementById(id),money=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(n/100),nint=n=>n!==null&&n!==undefined&&n!==""&&typeof n!=="boolean"&&Number.isSafeInteger(Number(n))?Number(n):null,months=["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
+let bankStamp=0,bankAmount=null;
+function put(id,val){const e=get(id);if(e)e.textContent=String(val)}
+function strict(m,year,month){const gross=nint(m?.gross_cents),cost=nint(m?.cost_cents),profit=nint(m?.profit_cents);
+ const coverage=m?.coverage_pct==null?null:Number(m.coverage_pct),issues=m?.issues||{};
+ const count=Object.entries(issues).filter(([k])=>/class|categor|missing|incomplet|nao|não/i.test(k)).reduce((sum,[,v])=>sum+(Number(v)||0),0);
+ const unequal=gross!==null&&cost!==null&&profit!==null?gross-cost-profit:null;
+ const complete=gross!==null&&cost!==null&&profit!==null&&gross>0&&Math.abs(unequal)<=1&&count===0&&coverage!==null&&coverage>=99.999;
+ const history=String(year)==="2025"&&!Number(month)||String(year)==="2024"&&!Number(month);
+ return {gross,cost,profit,coverage,count,diff:unequal,valid:complete&&!history,history};
+}
+function rowFiltered(year,month,status,term){const raw=window.CR_V12_MODEL?.()?.years?.[year]?.rows||[];const seen=new Set(),rows=[];let ignored=0;
+ for(const r of raw){if(month&&Number(r.month)!==month)continue;
+ if(status&&String(r.status||"")!==status)continue;
+ if(term&&!JSON.stringify([r.case,r.name,r.title,r.client,r.customer,r.address,r.description]).toLowerCase().includes(term))continue;
+ const key=String(r.case||r.case_no||r.id||r.short_url||"");
+ if(!key){ignored++;continue}
+ if(seen.has(key)){ignored++;continue}seen.add(key);rows.push(r)}
+ const metrics={gross_cents:0,cost_cents:0,profit_cents:0,coverage_pct:100,issues:{}};
+ let all=true;for(const r of rows){const v=[nint(r.gross_cents),nint(r.cost_cents),nint(r.profit_cents)];if(v.some(x=>x===null)||Math.abs(v[0]-v[1]-v[2])>1){all=false;continue}
+  metrics.gross_cents+=v[0];metrics.cost_cents+=v[1];metrics.profit_cents+=v[2]}
+ if(!all||ignored>0||!rows.length){metrics.coverage_pct=0;metrics.issues={incomplete:1}}
+ return {metrics,rows:rows.length,ignored,all}
+}
+function drawBars(chart,vals,kind){const root=get(chart);if(!root)return;root.replaceChildren();
+ const top=Math.max(1,...vals.flatMap(a=>a?.points||[]).filter(x=>x!=null).map(Math.abs));
+ let has=false;
+ for(let k=0;k<12;k++){const v=vals[k],col=document.createElement("div");col.className="v12ex-col";const bars=document.createElement("div");bars.className="v12ex-bars";
+ if(v?.points){has=true;for(let j=0;j<v.points.length;j++){const number=v.points[j];if(number===null)continue;
+  const bar=document.createElement("span");bar.className="v12ex-bar "+(kind==="margin"?(number<0?"negative":"positive"):["","cost",number<0?"loss":"profit"][j]);
+  bar.style.height=Math.max(3,Math.abs(number)/top*130)+"px";
+  bar.title=months[k]+" · "+(kind==="margin"?number.toLocaleString("pt-BR",{maximumFractionDigits:2})+"%":money(number));
+  bars.append(bar)}
+ }
+ const lab=document.createElement("span");lab.className="v12ex-month-label";lab.textContent=months[k];col.append(bars,lab);root.append(col)}
+ if(!has){root.replaceChildren();const el=document.createElement("div");el.className="v12ex-empty";el.textContent="Sem valores comparáveis com cobertura financeira suficiente.";root.append(el)}
+}
+function render(){
+ const S=window.CR_V12_MODEL?.()||null;
+ if(!S||!S.years||!Object.keys(S.years).length){put("v12ex-source","Aguardando Trello autenticado");return}
+ const year=get("v12ex-year").value,month=Number(get("v12ex-month").value),status=get("v12ex-status").value,term=get("v12ex-find").value.trim().toLowerCase();
+ const selected=(S.years[year]?.metrics)||{},raw=month?(selected.months||[]).find(x=>Number(x.month)===month):selected;
+ const filtered=!!status||!!term;const limited=filtered?rowFiltered(year,month,status,term):null,base=limited?.metrics||raw;
+ const q=strict(base,year,month);
+ put("v12ex-gross",q.gross==null?"N/D":money(q.gross));put("v12ex-cost",q.cost==null?"N/D":money(q.cost));
+ put("v12ex-profit",q.valid?money(q.profit):"N/D · revisão");put("v12ex-margin",q.valid?(q.profit/q.gross*100).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%":"N/D · revisão");
+ put("v12ex-gross-note",filtered?"Recorte de "+limited.rows+" obras · Trello"+(q.valid?"":" · parcial"):"Receita identificada · não equivale a recebimento");
+ put("v12ex-cost-note",filtered?"Custos do mesmo recorte":"Custos documentados na fonte");
+ put("v12ex-profit-note",q.valid?"Bruto menos custo no mesmo recorte":"Aguardando base completa e equivalente");
+ put("v12ex-margin-note",q.valid?"Lucro ÷ receita do mesmo conjunto":"Não calculada por média de percentuais");
+ put("v12ex-source","Trello · "+year+(month?" / "+months[month-1]:" anual")+(filtered?" · filtro operacional":""));
+ const msg=q.history?"Histórico com regra de fechamento pendente de conciliação.":q.diff!==null&&Math.abs(q.diff)>1?"Receita, custos e lucro provêm de bases diferentes (diferença: "+money(Math.abs(q.diff))+").":q.coverage===null||q.coverage<99.999?"Cobertura financeira incompleta; margens não podem ser confirmadas.":q.count>0?"Existem "+q.count+" pendências de classificação ou completude.":q.valid?"Margem aritmética consistente no período; pagamentos e impostos externos ainda dependem de evidência.":"Não há base suficiente para confirmar a margem.";
+ const state=get("v12ex-integrity");state.textContent=msg+(filtered?" Filtro de obras baseado em registros classificados; registros ausentes não são zero.":"");state.classList.toggle("ok",q.valid);
+ const mo=selected.months||[];const ops=[],margin=[];for(let i=1;i<=12;i++){
+  const m=mo.find(x=>Number(x.month)===i);
+  const inPeriod=!month||i===month;
+  const scoped=filtered&&inPeriod?rowFiltered(year,i,status,term):null;
+  const t=inPeriod?strict(scoped?.metrics||m,year,i):null;
+  ops.push({points:t?.valid?[t.gross,t.cost,t.profit]:null});
+  margin.push({points:t?.valid?[t.profit/t.gross*100]:null});
+ }
+ drawBars("v12ex-ops-chart",ops,"ops");drawBars("v12ex-margin-chart",margin,"margin");
+ put("v12ex-foot","Cartões e gráficos seguem os mesmos filtros. Receita Trello não é saldo bancário Cora.");
+}
+window.CR_V12_MODEL=()=>typeof S!=="undefined"?S:null;window.v12ExecRender=render;
+for(const id of ["v12ex-year","v12ex-month","v12ex-status","v12ex-find"])get(id)?.addEventListener(id==="v12ex-find"?"input":"change",render);
+get("v12ex-reset")?.addEventListener("click",()=>{get("v12ex-year").value="2026";get("v12ex-month").value="0";get("v12ex-status").value="";get("v12ex-find").value="";render()});
+get("v12ex-open-details")?.addEventListener("click",()=>{get("v12ex-advanced").open=true;get("v12ex-advanced").scrollIntoView({behavior:"smooth"})});
+document.querySelectorAll("#v12-exec-cockpit .v12ex-kpi").forEach(b=>b.addEventListener("click",()=>{get("v12ex-advanced").open=true;const key=b.dataset.go;if(key==="bank"){get("v12-cora-live")?.scrollIntoView({behavior:"smooth"});return}if(key==="receivable"){if(typeof r8Go==="function")r8Go("fin");return}if(typeof openR7Kpi==="function")openR7Kpi(key)}));
+window.addEventListener("cr:v12:cora",e=>{const v=e.detail||{},b=v.balance||{},n=nint(b.amount_centavos),stamp=Date.parse(b.updated_at||"");bankStamp=stamp;bankAmount=n;const live=Number.isFinite(stamp)&&Date.now()-stamp<=12*60*1000&&Date.now()>=stamp&&v.live_status?.balance_healthy===true;
+ put("v12ex-bank-balance",n!==null?money(n):"N/D");
+ put("v12ex-bank-note",n===null?"Saldo oficial indisponível":(live?"Cora oficial · sincronizado":"Cora oficial · leitura desatualizada")+" · "+(Number.isFinite(stamp)?new Date(stamp).toLocaleString("pt-BR"):"sem data"))});
+window.addEventListener("cr:v12:cora:error",()=>{bankAmount=null;bankStamp=0;put("v12ex-bank-balance","—");put("v12ex-bank-note","Sem sessão bancária válida")});
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render,{once:true});else render();
+})();</script></body></html>
