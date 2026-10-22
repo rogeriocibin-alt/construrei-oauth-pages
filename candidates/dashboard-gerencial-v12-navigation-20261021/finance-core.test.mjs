@@ -61,3 +61,27 @@ assert.equal(apurarObrasComparaveis([]).status,"SEM_BASE_COMPARAVEL");
 assert.equal(apurarObrasComparaveis([{case:"a",gross_cents:100,cost_cents:40,profit_cents:60}]).status,"SUBCONJUNTO_CONSISTENTE");
 assert.throws(()=>apurarObrasComparaveis({}));
 console.log("V12 — subtotal válido calculado em cenários parciais sem inventar resultado total.");
+
+
+import {conciliarSerieCora} from "./finance-core.mjs";
+const monthsCora=[
+ {period_start:"2023-01-01",source:"CORA_OFFICIAL_AGGREGATIONS",status:"complete",credit_centavos:200,debit_centavos:100,observed_credit_centavos:200,observed_debit_centavos:100,start_balance_centavos:1000,end_balance_centavos:1100,last_error:null},
+ {period_start:"2023-02-01",source:"CORA_STATEMENT_SUM_RECONCILED",status:"complete",credit_centavos:70,debit_centavos:20,observed_credit_centavos:70,observed_debit_centavos:20,start_balance_centavos:0,end_balance_centavos:0,last_error:null},
+ {period_start:"2023-03-01",source:"CORA_OFFICIAL_AGGREGATIONS",status:"complete",credit_centavos:30,debit_centavos:90,observed_credit_centavos:30,observed_debit_centavos:90,start_balance_centavos:1150,end_balance_centavos:1090,last_error:null}
+];
+const chain=conciliarSerieCora(monthsCora,{amount_centavos:1090,source:"CORA_OFFICIAL_API"});
+assert.equal(chain.status,"CONCILIACAO_ARITMETICA_CONFIRMADA");
+assert.equal(chain.periodos,3);assert.equal(chain.fluxosConferidos,3);
+assert.equal(chain.saldosOficiaisConferidos,2);assert.equal(chain.saldosDerivados,1);
+assert.equal(chain.diferencaFinalCentavos,0);assert.equal(chain.rows[1].origemSaldo,"DERIVADO_POR_EXTRATO");
+assert.equal(chain.rows[1].fechamentoCentavos,1150);
+assert.equal(conciliarSerieCora(monthsCora,{amount_centavos:1091,source:"CORA_OFFICIAL_API"}).status,"DIVERGENCIA_PENDENTE");
+assert.equal(conciliarSerieCora(monthsCora.map((m,i)=>i===1?{...m,observed_credit_centavos:71}:m),{amount_centavos:1090}).status,"DIVERGENCIA_PENDENTE");
+assert.equal(conciliarSerieCora(monthsCora.filter((m,i)=>i!==1),{amount_centavos:1090}).status,"LACUNA_MENSAL");
+assert.equal(conciliarSerieCora(monthsCora.map((m,i)=>i===2?{...m,end_balance_centavos:1091}:m),{amount_centavos:1090}).status,"DIVERGENCIA_PENDENTE");
+assert.equal(conciliarSerieCora(monthsCora.map((m,i)=>i===1?{...m,last_error:"timeout"}:m),{amount_centavos:1090}).status,"IMPORTACAO_INCOMPLETA");
+assert.equal(conciliarSerieCora(monthsCora,{amount_centavos:1090,source:"MANUAL"}).status,"DIVERGENCIA_PENDENTE");
+const legacy=conciliarSerieCora(monthsCora.map((m,i)=>i===1?{...m,start_balance_centavos:1100,end_balance_centavos:1170}:m),{amount_centavos:1090});
+assert.equal(legacy.status,"CONCILIACAO_ARITMETICA_CONFIRMADA");
+assert.equal(legacy.legadosDivergentes,1); // erro legado NÃO desclassifica soma bancária
+console.log("V12 — conciliação UTC com âncoras oficiais, saldos derivados e teste de divergências.");
