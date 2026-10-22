@@ -35,6 +35,17 @@ check(s.includes('window.v12ExecRender()'),'KPIs executivos atualizados após le
 check(s.includes('t?.valid?[t.gross,t.cost,t.profit]:null'),'Gráficos não apresentam dados não conciliados');
 check(s.includes('typeof n!=="boolean"'),'Números ausentes ou inválidos não são convertidos em zero');
 check(s.includes('v12ex-semantic-palette-20261021'),'Paleta semântica CONSTRU-REI');
+check(s.includes('cr-finance-v12-safe-trello-candidate-20261021'),'Apenas endpoint candidato de escrita autorizado');
+check(s.includes('await v12ProtectedWrite("preview",p)'),'Preview utiliza o canal idempotente');
+check(s.includes('await v12ProtectedWrite("commit",p)'),'Commit utiliza o canal idempotente');
+check(s.includes('V12_SOMENTE_LEITURA'),'Canal legado e fechamento permanecem bloqueados');
+check(s.includes('#cora .manualactions #mc_close{display:none!important}'),'Fechamento de obras não liberado sem homologação');
+check(!s.includes('registro gravado e saldo projetado atualizado.'),'Escrita no Trello não afirma alterar saldo Cora');
+const fs=require('node:fs');
+const edge=fs.readFileSync(path.join(__dirname,'finance-v12-safe-trello-edge.ts'),'utf8');
+for(const x of ['ADMIN_MASTER_ROGERIO','cr_finance_v12_claim','cr_finance_v12_finish','REVIEW_REQUIRED','TRELLO_MARKER_NOT_CONFIRMED','CRV12OP_','OPERATION_NOT_RETRYABLE'])
+ check(edge.includes(x),'Endpoint seguro inclui '+x);
+
 check(s.includes('V12_SOMENTE_LEITURA'),'Escrita Trello permanece fechada sem idempotência homologada');
 
 check(!/BEGIN (RSA )?PRIVATE KEY|client_secret\s*[:=]/i.test(s),'Sem segredo bancário embutido');
