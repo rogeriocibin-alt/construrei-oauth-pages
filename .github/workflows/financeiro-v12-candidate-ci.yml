@@ -1,0 +1,26 @@
+name: Financeiro V12 | Candidata sem regressao
+on:
+  push:
+    branches:
+      - 'candidate/financeiro-v12-auditoria-20261021'
+    paths:
+      - 'candidates/dashboard-gerencial-v12-navigation-20261021/**'
+      - '.github/workflows/financeiro-v12-candidate-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'candidates/dashboard-gerencial-v12-navigation-20261021/**'
+      - '.github/workflows/financeiro-v12-candidate-ci.yml'
+permissions:
+  contents: read
+jobs:
+  candidato-somente-leitura:
+    name: JS, dados, UX, cores e autenticacao da V12
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Testes financeiros isolados, sem rede
+        run: node --test candidates/dashboard-gerencial-v12-navigation-20261021/finance-core.test.mjs
+      - name: Validar scripts, navegação, cores e bloqueios
+        run: node candidates/dashboard-gerencial-v12-navigation-20261021/smoke-v12.cjs
