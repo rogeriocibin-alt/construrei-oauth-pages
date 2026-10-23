@@ -48,6 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Prove Financeiro V12 bank-to-Trello reconciliation fail-closed (synthetic, read-only)
+        run: node --test audits/finance-v12-reconcile-readonly.test.cjs
+      - name: Audit historic 2026 costs without editing financial records (synthetic, read-only)
+        run: node --test audits/finance-v12-cost-integrity-readonly.test.cjs
       - name: ORÇA-REI R5 auth, model and PDF preservation (offline)
         shell: bash
         run: |
