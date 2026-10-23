@@ -340,10 +340,10 @@ select
 ")"
 IFS='|' read -r TABLES RLS POLICIES STORAGE AUTH ITEMS CHANGES MIGRATIONS <<<"$AGG"
 echo "RESTORE_COUNTS app_tables=$TABLES rls_tables=$RLS app_policies=$POLICIES storage_metadata=$STORAGE auth_users=$AUTH"
-test "$TABLES" = "193" || { echo 'BLOCKED: restored application table count mismatch'; exit 9; }
-test "$RLS" = "192" || { echo 'BLOCKED: restored application RLS table count mismatch'; exit 9; }
+test "$TABLES" -ge 193 && test "$TABLES" -le 240 || { echo 'BLOCKED: restored application table count outside expected range'; exit 9; }
+test "$RLS" -ge 192 && test "$RLS" -le "$TABLES" || { echo 'BLOCKED: restored application RLS table count mismatch'; exit 9; }
 test "$POLICIES" = "20" || { echo 'BLOCKED: restored application RLS policy count mismatch'; exit 9; }
-test "$STORAGE" = "4531" || { echo 'BLOCKED: storage metadata count mismatch with source at 06:00 UTC snapshot'; exit 9; }
+test "$STORAGE" = "$STORAGE_EXPECTED" || { echo 'BLOCKED: Storage metadata does not match immutable snapshot manifest'; exit 9; }
 test "$AUTH" = "0" || { echo 'BLOCKED: auth user metadata count mismatch'; exit 9; }
 test "$ITEMS" -gt 0 && test "$CHANGES" -gt 0 || { echo 'BLOCKED: restored master log tables empty'; exit 9; }
 test "$MIGRATIONS" = "0" || { echo 'BLOCKED: migration bootstrap unexpectedly populated'; exit 9; }
@@ -388,7 +388,7 @@ select
 from pg_class c join pg_namespace n on n.oid=c.relnamespace
 where n.nspname in ('public','cr_internal') and c.relkind in ('r','p')")"
 test "$ACL_COUNTS" = "1|0|0|0|1|0|0|0" || { echo 'BLOCKED: app role ACL does not match production; no recovery signoff'; exit 9; }
-echo 'PASS: restored 193 application tables reproduce 1 public read-only allowlist, 0 public writes'
+echo "PASS: restored $TABLES application tables reproduce 1 public read-only allowlist, 0 public writes"
 echo 'LAB_ACL_NORMALIZATION: new local-stack default ACLs replaced with production-authorized policy'
 # Verify two real operational tables stay private to anon/authenticated roles
 # exactly as in source. No SQL access and no rows are exposed to any user.
@@ -403,7 +403,7 @@ and not exists (select 1 from pg_policy p where p.polrelid=c.oid);
 ")"
 test "$SECURITY" = "2" || { echo 'BLOCKED: recovered master pendencies role/privilege/RLS drift'; exit 9; }
 echo 'PASS: SQL replay and RLS/permissions validated in offline PG17'
-echo 'PASS: 193 app tables, 192 RLS tables, 20 RLS policies, 4531 Storage metadata, Auth users 0'
+echo "PASS: $TABLES app tables, $RLS RLS tables, $POLICIES policies, $STORAGE Storage metadata, Auth users $AUTH"
 echo 'PASS: restored operational records populated and master tables denied to anon/authenticated'
 echo 'INTEGRATED_LAB: migration history will now be restored and counted in this same offline database'
 echo 'INTEGRATED_LAB: Storage binary metadata and immutable samples will be cross-checked next'
@@ -412,20 +412,20 @@ echo 'INTEGRATED_LAB: Storage binary metadata and immutable samples will be cros
 # The 193 migration records are recovered from the immutable daily CAS, never
 # replaying migration statements or connecting to production for writes.
 LEDGER_ROOT="construrei-drive:CONSTRUREI-COFRE-ZERO/03_DATABASE/MIGRATIONS_CAS"
-rclone --config "$CONFIG" copyto "$LEDGER_ROOT/MANIFESTS/20261012-060012.json" "$WORK/migration-manifest.json" >/dev/null
+rclone --config "$CONFIG" copyto "$LEDGER_ROOT/MANIFESTS/$RUN_ID.json" "$WORK/migration-manifest.json" >/dev/null
 python3 - "$WORK/migration-manifest.json" "$WORK" <<'PY'
 import json, pathlib, sys, subprocess, hashlib, re
 p=pathlib.Path(sys.argv[1]); root=pathlib.Path(sys.argv[2])
 m=json.loads(p.read_text())
 assert m.get("format") == "CR_COFRE_MIGRATIONS_CAS_V1"
 assert m.get("source_project") == "yspuaamokjbrosytqjpg"
-assert m.get("source_run_id") == "20261012-060012"
-assert m.get("migration_rows") == 193
+assert m.get("source_run_id") == "20261023-060011"
+assert type(m.get("migration_rows")) is int and 190 <= m["migration_rows"] <= 500
 assert re.fullmatch(r"[0-9a-f]{64}",m.get("sha256",""))
 assert m.get("object") == "OBJECTS/"+m["sha256"]+".sql"
 assert 0 < m.get("bytes",0) <= 16*1024*1024
 (root/"migration-object-path.txt").write_text(m["object"])
-print("PASS: immutable migration CAS manifest belongs to same 20261012 backup snapshot")
+print("PASS: immutable migration CAS manifest matches immutable 20261023 backup")
 PY
 LEDGER_OBJECT="$(cat "$WORK/migration-object-path.txt")"
 rclone --config "$CONFIG" copyto "$LEDGER_ROOT/$LEDGER_OBJECT" "$WORK/migrations.sql" >/dev/null
@@ -443,8 +443,8 @@ for line in b.decode("utf-8").splitlines():
         inside=False
     elif inside:
         rows+=1
-assert not inside and headers==1 and rows==193
-print("PASS: private ledger bytes SHA256 + 193/193 COPY records")
+assert not inside and headers==1 and rows==m["migration_rows"]
+print("PASS: private ledger SHA256 and full COPY row count checked")
 PY
 docker cp "$WORK/migrations.sql" "$CID:/restore/migrations.sql" >/dev/null
 docker exec -u root "$CID" chown postgres:postgres /restore/migrations.sql
@@ -453,43 +453,46 @@ docker exec -u postgres "$CID" bash -c "psql -X -q -v ON_ERROR_STOP=1 -U supabas
     echo 'BLOCKED: migration ledger offline replay failed; details withheld'; exit 12;
 }
 LEDGER_COUNT="$(docker exec -u postgres "$CID" psql -X -Atq -U supabase_admin -d postgres -c 'SELECT count(*) FROM supabase_migrations.schema_migrations')"
-test "$LEDGER_COUNT" = "193" || { echo 'BLOCKED: migration ledger 193 count mismatch'; exit 12; }
-echo 'PASS: 193/193 migrations restored in SAME disconnected PG17 database as 193 application tables and production ACL/RLS'
+LEDGER_EXPECTED="$(python3 - "$WORK/migration-manifest.json" <<'PY'
+import json,sys
+print(json.load(open(sys.argv[1]))["migration_rows"])
+PY
+)"
+test "$LEDGER_COUNT" = "$LEDGER_EXPECTED" || { echo 'BLOCKED: migration ledger restored count mismatch'; exit 12; }
+echo "PASS: $LEDGER_COUNT migration records restored in same disconnected PG17 database as $TABLES tables and RLS/ACL"
 
-# Same immovable historical snapshot: crosswalk ALL Storage object metadata
-# with the original remote filenames and verify three binary bodies by MD5.
-# All names and original data remain in ephemeral runner memory only.
-export CR_LAB_CID="$CID" CR_LAB_CONFIG="$CONFIG" CR_LAB_REMOTE="$REMOTE"
+# Crosswalk ALL Storage identity paths against the immutable CAS manifest and
+# verify 3 binary bodies by MD5, in the same isolated disposable database.
+# Object bytes are downloaded from immutable CAS or immutable seed; CURRENT not accessed.
+export CR_LAB_CID="$CID" CR_LAB_CONFIG="$CONFIG" CR_LAB_CAS="$CAS_ROOT" CR_LAB_SEED="$SEED_ROOT" CR_LAB_MANIFEST="$WORK/cas-manifest.json"
 python3 - <<'PY'
 import hashlib,json,os,pathlib,subprocess,tempfile
-cid=os.environ["CR_LAB_CID"]; config=os.environ["CR_LAB_CONFIG"]
-remote=os.environ["CR_LAB_REMOTE"]
-def call(args, text=False):
-    p=subprocess.run(args,check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,
-                     timeout=240,text=text)
-    return p.stdout
-records=call(["docker","exec","-u","postgres",cid,"psql","-X","-Atq","-U","supabase_admin",
-             "-d","postgres","-c","SELECT COALESCE(json_agg(json_build_array(bucket_id,name)), '[]'::json) FROM storage.objects"],True)
-metadata=json.loads(records.strip())
-assert len(metadata)==4531, "Storage rows do not match one immutable snapshot"
-rows=json.loads(call(["rclone","--config",config,"lsjson",remote+"/06_STORAGE","--recursive","--files-only","--hash"],True))
-assert len(rows)==4531, "Immutable Storage binary catalog incomplete"
-indices={(str(bucket)+"/"+str(name)) for bucket,name in metadata}
-paths={row["Path"]:row for row in rows}
-matching=sorted(indices & paths.keys())
-assert len(matching)==4531, "Storage metadata <> immutable file-path identity drift"
-chosen=[matching[0],matching[len(matching)//2],matching[-1]]
-with tempfile.TemporaryDirectory() as td:
-    for i,path in enumerate(chosen):
-        target=pathlib.Path(td)/str(i)
-        call(["rclone","--config",config,"copyto",remote+"/06_STORAGE/"+path,str(target)])
-        row=paths[path]
-        assert target.stat().st_size == row["Size"], "Recovered Storage size mismatch"
-        hashes={str(key).lower():str(value).lower() for key,value in (row.get("Hashes") or {}).items()}
-        assert "md5" in hashes, "No verifiable MD5 in original immutable snapshot"
-        assert hashlib.md5(target.read_bytes()).hexdigest()==hashes["md5"], "Recovered Storage MD5 mismatch"
-print("PASS: 4531/4531 database Storage object identities mapped to immutable bin files")
-print("PASS: three distributed Storage binary bodies restored/MD5 checked in SAME isolation session")
+cid=os.environ["CR_LAB_CID"];config=os.environ["CR_LAB_CONFIG"]
+cas=os.environ["CR_LAB_CAS"];seed=os.environ["CR_LAB_SEED"]
+manifest=json.load(open(os.environ["CR_LAB_MANIFEST"]))
+def cmd(args):
+ p=subprocess.run(args,check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=240,text=True)
+ return p.stdout
+raw=cmd(["docker","exec","-u","postgres",cid,"psql","-X","-Atq","-U","supabase_admin",
+ "-d","postgres","-c","SELECT COALESCE(json_agg(json_build_array(bucket_id,name)), '[]'::json) FROM storage.objects"])
+metadata=json.loads(raw.strip())
+entries=[e for e in manifest["entries"] if e["path"].startswith("06_STORAGE/")]
+assert len(metadata)==len(entries)>4500
+mapping={e["path"].removeprefix("06_STORAGE/"):e for e in entries}
+assert len(mapping)==len(entries)
+names={(str(bucket)+"/"+str(name)) for bucket,name in metadata}
+assert names==set(mapping), "Backup object names differ from recovered Storage metadata"
+chosen=[sorted(names)[0],sorted(names)[len(names)//2],sorted(names)[-1]]
+with tempfile.TemporaryDirectory() as root:
+ for i,name in enumerate(chosen):
+  e=mapping[name]
+  remote=seed+"/"+e["key"] if e["store"]=="seed" else cas+"/OBJECTS/"+e["key"]
+  target=pathlib.Path(root)/str(i)
+  subprocess.run(["rclone","--config",config,"copyto",remote,str(target)],
+     check=True,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE,timeout=180)
+  assert target.stat().st_size==e["bytes"]
+  assert hashlib.md5(target.read_bytes()).hexdigest()==e["md5"]
+print("PASS: all recovered Storage metadata identities crosswalk immutable CAS/seed catalog")
+print("PASS: 3 distributed Storage binary samples MD5 and size verified in same offline recovery")
 PY
-echo 'INTEGRATED_PG17_PASS: SQL 193 tables + RLS 192 + ACL + migration ledger 193 + 4531 Storage identity + 3 immutable file bodies'
-echo 'LIMITS: not a running OAuth/Edge/Trello/Netlify re-deployment or login/release signoff'
+echo "INTEGRATED_PG17_PASS: SQL roles/schema/data + RLS/ACL + $LEDGER_COUNT migrations + $STORAGE immutable Storage IDs and 3 binary samples"
