@@ -1574,14 +1574,26 @@ const rows=movements.filter(m=>{
  const passesState=stateFilter.value==="all"||stateFilter.value==="confirmed"&&state==="TRELLO_CONFIRMED"||stateFilter.value==="review"&&state==="REVIEW_REQUIRED"||stateFilter.value==="pending"&&state==="PENDENTE";
  return passesState&&(filter==="all"||String(m.direction||"").toUpperCase().includes(filter)||filter==="DEBIT"&&/OUT|SAIDA|DÉBITO|DEBIT/i.test(m.direction)||filter==="CREDIT"&&/IN|ENTRADA|CRÉDITO|CREDIT/i.test(m.direction))&&(String(m.description||"")+" "+id).toLowerCase().includes(q);
 });
-if(!statusFailed)status.textContent=rows.length+" movimentos Cora · "+Math.min(shown,rows.length)+" exibidos · "+[...bankStatuses.values()].filter(x=>x.state==="TRELLO_CONFIRMED").length+" confirmados no ledger · "+(statusBusy?"consultando registro...":"somente registros confirmados ficam verdes.");more.hidden=rows.length<=shown;
+if(!statusFailed)status.textContent=rows.length+" movimentos Cora · "+Math.min(shown,rows.length)+" exibidos · "+[...bankStatuses.values()].filter(x=>x.state==="TRELLO_CONFIRMED").length+" Trello confirmado(s) · "+(statusBusy?"conferindo registros...":"histórico consultado no Supabase.");more.hidden=rows.length<=shown;
 for(const m of rows.slice(0,shown)){
-const row=document.createElement("div");row.style.cssText="border:1px solid #d1e0ea;background:white;padding:12px;border-radius:10px;margin:8px 0;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap";
+const row=document.createElement("div");row.style.cssText="border:1px solid #d1e0ea;background:white;padding:12px;border-radius:10px;margin:8px 0;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap";row.dataset.coraSourceId=String(m.source_id||"");
 const info=document.createElement("div");info.style.flex="1";const strong=document.createElement("strong");strong.textContent=(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100);const desc=document.createElement("div");desc.textContent=String(m.description||"Sem descrição");const source=document.createElement("small");const bid=String(m.source_id??m.id??m.transaction_id??m.external_id??"");const ledger=bankStatuses.get(bid),committed=ledger?.state==="TRELLO_CONFIRMED",review=ledger?.state==="REVIEW_REQUIRED";
- source.textContent=committed?"● TRELLO CONFIRMADO · "+(ledger.case||"obra")+" · ID "+bid:review?"⚠ REVISÃO OBRIGATÓRIA · ID "+bid:ledger?"○ PENDENTE · ID "+bid:"◌ AGUARDANDO CONSULTA DO REGISTRO · ID "+(bid||"INDISPONÍVEL");
- source.style.display="block";source.style.fontWeight="700";source.style.color=committed?"#087a50":review?"#b03839":"#85621c";info.append(strong,desc,source);
-const btn=document.createElement("button");btn.type="button";btn.className="manualbtn";btn.textContent=committed?"Confirmado no Trello":review?"Revisão necessária":!ledger?"Verificando registro...":"Aprovisionar →";
- btn.disabled=committed||review||!ledger||statusFailed;btn.addEventListener("click",()=>{selected=m;editor.hidden=false;caseField.value="";existing.value="";editorStatus.textContent="";selectedLabel.textContent=String(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100)+" · "+String(m.description||"");editor.scrollIntoView({behavior:"smooth",block:"start"});});row.append(info,btn);results.append(row)}
+ source.textContent=committed?"✓ TRELLO CONFIRMADO · Obra "+(ledger.case||"vinculada"):review?"⚠ REVISÃO OBRIGATÓRIA":ledger?"○ PENDENTE — não lançado":"◌ Consultando registro...";
+ source.title="Referência bancária: "+bid;
+ source.style.display="block";source.style.fontWeight="800";source.style.color=committed?"#087a50":review?"#b03839":"#85621c";info.append(strong,desc,source);
+ if(committed){
+  row.style.border="2px solid #168756";row.style.background="#effbf4";
+  const link=String(ledger?.trello_url||"");
+  try{
+   const u=new URL(link);
+   const okPath=u.pathname.split("/").filter(Boolean);
+   if(u.protocol==="https:"&&u.hostname==="trello.com"&&okPath[0]==="c"&&/^[A-Za-z0-9]{6,12}$/.test(okPath[1]||"")){
+    const a=document.createElement("a");a.href=link;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Abrir cartão Trello ↗";a.style.cssText="display:inline-block;color:#087a50;font-weight:800;margin-top:5px;text-decoration:underline";info.append(a);
+   }
+  }catch{}
+ }
+const btn=document.createElement("button");btn.type="button";btn.className="manualbtn";btn.textContent=committed?"✓ Trello confirmado":review?"Revisão necessária":!ledger?"Verificando registro...":"Aprovisionar →";
+ btn.disabled=committed||review||!ledger||statusFailed||statusBusy;btn.addEventListener("click",()=>{selected=m;editor.hidden=false;caseField.value="";existing.value="";editorStatus.textContent="";selectedLabel.textContent=String(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100)+" · "+String(m.description||"");editor.scrollIntoView({behavior:"smooth",block:"start"});});row.append(info,btn);results.append(row)}
 }
 document.getElementById("cr-ap-cancel").addEventListener("click",()=>{editor.hidden=true;selected=null});
 document.getElementById("cr-ap-prepare").addEventListener("click",async()=>{
