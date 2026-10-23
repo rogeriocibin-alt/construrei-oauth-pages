@@ -86,3 +86,51 @@ Promise.all([
   "Existing reconciliation must not write to Trello");
  console.log("Existing Trello reconciliation: date/amount, source reuse, and no-write tests passed");
 }).catch(e=>{console.error(e);process.exitCode=1});
+
+/* Unified Cora operations regression: 2026 open-card rules, exact cent
+ * allocation, receipt summary, bank-linked idempotency markers and manual UI. */
+const workListCode=backend.slice(backend.indexOf("function allowedList("),backend.indexOf("async function liveCases("))
+ .replace("direction:string,name:string","direction,name");
+const listAllowed=new Function(workListCode+";return allowedList")();
+assert.equal(listAllowed("IN","EM ANDAMENTO"),true);
+assert.equal(listAllowed("IN","AGUARDANDO PAGAMENTO"),true);
+assert.equal(listAllowed("IN","AG. ACERTO"),false);
+assert.equal(listAllowed("IN","FINALIZADO"),false);
+assert.equal(listAllowed("OUT","AG. ACERTO"),true);
+const splitCode=backend.slice(backend.indexOf("function splitValidate("),backend.indexOf("async function bankAlreadyUsed("))
+ .replace("raw:any,total:number","raw,total").replace("(r:any)","(r)");
+const validateSplit=new Function(splitCode+";return splitValidate")();
+const allocations=[{case:"799-26",cents:10000},{case:"800-26",cents:21025},{case:"801-26",cents:1775}];
+assert.equal(validateSplit({allocations},32800).reduce((v,a)=>v+a.cents,0),32800);
+assert.throws(()=>validateSplit({allocations},32801),/ALLOCATIONS_DO_NOT_SUM_TO_BANK_AMOUNT/);
+assert.throws(()=>validateSplit({allocations:[allocations[0],allocations[0]]},20000),/DUPLICATED_CASE_IN_SPLIT/);
+assert.throws(()=>validateSplit({allocations:[{case:"799-26",cents:32800}]},32800),/SPLIT_REQUIRES_2_TO_10_TARGETS/);
+const centsCode=ui.slice(ui.indexOf("function moneyCentavos(v){"),ui.indexOf("function selectedBankPayload(){"));
+const centsParser=new Function(centsCode+";return moneyCentavos")();
+for(const [a,b] of [["1.250,50",125050],["3.000",300000],["109,90",10990],["55.000,30",5500030],["1,234",null]])
+ assert.equal(centsParser(a),b,"Money parser failed "+a);
+assert.ok(ui.includes('<option>Recebimento</option>'),"Receipt select option not installed");
+assert.ok(ui.includes('id="cr-ap-kind"'),"Unified operations selector missing");
+assert.ok(ui.includes('id="cr-ap-preview-parts"'),"Server-verified split preview missing");
+const receiptCode=backend.slice(backend.indexOf("async function receiptPlan("),backend.indexOf("async function writeReceipt("))
+ .replace("p:ReturnType<typeof clean>","p");
+const testReceipt=new Function("liveCases","shortLink","card","amount",receiptCode+";return receiptPlan")(
+ async()=>[{case:"800-26",id:"0123456789abcdef01234567",url:"https://trello.com/c/ABCD1234",list:"EM ANDAMENTO",name:"800-26 TESTE"}],
+ ()=> "ABCD1234",
+ async()=>({id:"0123456789abcdef01234567",shortUrl:"https://trello.com/c/ABCD1234",
+  desc:"MOVIMENTAÇÕES FINANCEIRAS:\nValor Fechado: R$ 2.000,00\nValor Recebido: R$ 0,00\nCustos:\n23/10 - R$100,00 Materiais - Ref. PIX"}),
+ x=>{const cents=Math.round(Number(String(x).replace(/\./g,"").replace(",","."))*100);return cents>0?cents:null}
+);
+Promise.all([
+ testReceipt({case:"800-26",date:"2026-10-23",direction:"IN",amount_cents:75000,operation_id:"CORA_"+"a".repeat(64),counterparty:"IMOBILIARIA"}),
+ testReceipt({case:"800-26",date:"2026-10-23",direction:"IN",amount_cents:300000,operation_id:"CORA_"+"a".repeat(64)}).then(()=>null,e=>String(e.message))
+]).then(([valid,excess])=>{
+ assert.equal(valid.received_cents,75000);
+ assert.ok(valid.updated.includes("Valor Recebido: R$ 750,00"));
+ assert.ok(valid.updated.includes("23/10 - R$750,00 Recebido"));
+ assert.ok(valid.updated.includes("CRV12OP_CORA_"));
+ assert.equal(excess,"RECEIPT_EXCEEDS_CONTRACT_AMOUNT");
+ assert.ok(backend.includes('if(p.direction==="IN"&&(action==="preview"||action==="commit"))'));
+ assert.ok(backend.includes("CAPITAL_REVIEW_REQUIRED")&&backend.includes("PARTIAL_MULTI_REVIEW_REQUIRED"));
+ console.log("Unified operations: split, dates, receipt totals and revision gates passed");
+}).catch(e=>{console.error(e);process.exitCode=1});
