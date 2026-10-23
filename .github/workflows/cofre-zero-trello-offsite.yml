@@ -1,6 +1,6 @@
 name: Cofre Zero | Trello textos incrementais (OIDC protegido)
 # RESTAURADO no caminho OIDC Trello original; jamais criar bridge, segredo ou credencial.
-# AINDA NAO ATIVAR EM MAIN ate o Cloud Scheduler produtor estar comprovadamente semanal.
+# Ativo em main por workflow_dispatch acionado pelo cron CAS existente aos domingos. Nenhum segundo schedule.
 on:
   workflow_dispatch:
   pull_request:

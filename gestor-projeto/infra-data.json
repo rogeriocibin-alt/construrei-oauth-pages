@@ -309,11 +309,11 @@
         }
       ],
       "admin_url": "https://app.netlify.com/teams/rogeriocibin",
-      "source": "Conector Netlify direto 23/10: 7 projetos, 1 deploy pronto e 6 sem deploy atual; pacote restaurável do dashboard #38178583034.",
+      "source": "Netlify conector 23/10, deploy único ativo ID 6ab31f639b53ce0008e5fef7 recuperável em ZIP 14 arquivos, PR #46 encerrada como candidata histórica; não criar deploys artificiais.",
       "alerts": [
         "Sete sites no inventário anterior, sem verificação atual de saúde/deploy. Evitar concluir ou desativar sem auditoria independente."
       ],
-      "health_label": "1 DEPLOY ATIVO RECUPERÁVEL • 6 SITES HISTÓRICOS SEM DEPLOY"
+      "health_label": "1/1 DEPLOY PUBLICADO COM RESTORE ESTÁTICO • 6 LEGADOS SEM DEPLOY"
     },
     {
       "id": "vercel",
@@ -422,7 +422,7 @@
       "admin_url": "https://drive.google.com/",
       "source": "Drive privado Cofre Zero/24_EXTERNAL_SOURCES: fonte Edge 386/386 e 22 funções delta 23/10 com readback; PG17 23/10 e CAS automatizado confirmados.",
       "alerts": [
-        "OAuth/segredos e reativação funcional dos aplicativos externos permanecem fora do restore PG17; Trello OIDC primeira carga ainda sem manifesto validado.",
+        "Trello textual primeiro CAS #40039261383 segue em execução; restauração offline via cr_trello_restore_verify.py é exigida antes do encerramento. OAuth externo segue condicionado a autorização de provedores.",
         "Google Cloud Run/Scheduler e logs de execução não acessados diretamente nesta sessão."
       ],
       "health_label": "EDGE 386/386 + PG17 PASS • TRELLO OIDC EM TESTE"

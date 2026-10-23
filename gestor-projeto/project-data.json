@@ -20,7 +20,7 @@
     "canonical_checkpoint": "CHECKPOINT_CANONICAL_GOVERNANCE_INDEX_V1_20261007",
     "pwa_mobile_status": "PASS_OWNER_CONFIRMED",
     "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
-    "reconciled_at": "2026-10-23T23:20:12Z",
+    "reconciled_at": "2026-10-23T23:51:53Z",
     "owner_validation": "PASS_OWNER_PUBLICATION_AUTHORIZATION",
     "current_baseline": "CR-PM-V1.2.7-FINANCEIRO-V4-OFFICIAL-20261007",
     "baseline_freeze_checkpoint": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
@@ -1005,10 +1005,10 @@
       "priority": "P1",
       "objective": "Validar CAS incremental sem novos serviços e recuperação isolada de PostgreSQL 17, dados financeiros e Trello textual.",
       "progress": 60,
-      "progress_basis": "Edge source 386/386 PASS e PG17 PASS; Netlify 1 único deploy atual recuperável; OIDC Trello em 1ª execução; OAuth externo E2E permanece sem prova",
+      "progress_basis": "PG17, código Edge 386/386 e escopo Netlify ativo concluídos. Bloqueios remanescentes: 1ª carga/restauração Trello e OAuth E2E (externos).",
       "owner": "CR Assertivo",
-      "last_advance": "23/10: 22 fontes Edge novas/alteradas arquivadas em Drive privado e conferidas; inventário total 386. Netlify live 1/1 com pacote estático antigo validado; primeiro backup Trello textual #40039261383 iniciado por OIDC, aguardando resultado.",
-      "next_action": "Não repetir PG17 ou copiar funções Edge iguais. Concluir teste Trello #40039261383 e manter restauração de aplicações/OAuth externa em avaliação segura.",
+      "last_advance": "23/10: sites Netlify históricos encerrados como não ativos, PR #46 histórica fechada sem merge; prova de recuperação Trello independente adicionada ao mesmo workflow sem cron extra; GitHub CAS e Guard PASS.",
+      "next_action": "Não criar novas candidatas/cópias. Validar somente fim do Trello #40039261383, restauração pelo manifesto e OAuth E2E. Encerrar o restante mediante evidência.",
       "dependency": "Primeiro manifesto Trello e testes pós-desastre dos provedores OAuth não comprovados",
       "blocked": false,
       "age_days": 0
@@ -1533,9 +1533,9 @@
       "state": "in_progress",
       "owner": "Bio + CR Assertivo",
       "last_movement": "2026-10-23",
-      "next_action": "Edge 386/386 fontes recuperáveis no índice privado (22 delta 23/10); Netlify único deploy ativo com restore estático PASS, seis legados sem deploy; PG17 PASS. Pendente exclusivamente OAuth/reauthorização funcional e testes externos específicos; Trello acompanha outro item. Sem cron/serviços novos.",
-      "dependency": "Não há lacuna de código Edge no checkpoint. Aplicativos externos/OAuth/segredos e operações pós-desastre não homologados somente com código e metadados.",
-      "source": "Supabase Mestre cc_items EXEC-COFRE-COVERAGE-20261010; índice privado Cofre Drive Edge 386; Netlify API 23/10; Actions PG17 40034006428; checkpoint GitHub #53.",
+      "next_action": "PG17 PASS, Edge 386/386 fontespreservadas, Netlify único deploy publicado 1/1 estático recuperado: frentes encerradas. Os seis sites sem deploy são históricos, não reconstruir; PR #46 encerrada sem merge. Pendente somente prova funcional de OAuth/reauthorização dos provedores externos realmente usados.",
+      "dependency": "Restauração SQL/PG17, códigos Edge e deploy Netlify atual comprovada. Testes de reautorização e restabelecimento pós-desastre de OAuth/Cora/Google/Trello exigem credenciais vigentes/autorizações de provedores; não armazenar tokens.",
+      "source": "Supabase Mestre cc_items EXEC-COFRE-COVERAGE-20261010; PG17 40034006428 PASS; Edge private Drive archive 386; Netlify 1 deploy ativo; GitHub #53, PR Netlify #46 encerrada historicamente.",
       "close_when": "CAS recorrente comprovado, backup principal finalizado e validado, custo/duplicação sob controle, recuperação isolada reproduzível, rollback testado.",
       "human_action": false,
       "provenance": "master_readonly_projection"
@@ -1548,9 +1548,9 @@
       "state": "in_progress",
       "owner": "Bio + CR Assertivo",
       "last_movement": "2026-10-23",
-      "next_action": "Workflow OIDC original recomposto na main; CAS existente fez dispatch único com sucesso (GitHub CAS #40038761606). Acompanhar backup Trello textual real #40039261383 até PASS com SHA/readback; depois conferir primeira recorrência no domingo; não copiar anexos novamente nem adicionar cron.",
-      "dependency": "OIDC/schedule ativados sem credencial nova. O primeiro manifesto Trello textual ainda em execução, não confirmado como recuperável até conclusão e readback.",
-      "source": "Supabase cc_items EXEC-COFRE-TRELLO-20261011; GitHub Actions 40038761606 (dispatch SUCCESS) e 40039261383 (backup real em curso).",
+      "next_action": "Acompanhar o job real Trello #40039261383 já em execução, sem repetir/cancelar. Após manifesto readback, executar/verificar recuperação imutável via cr_trello_restore_verify.py; testar primeiro domingo agendado. Não abrir outro cron, repetir FULL ou duplicar cartão.",
+      "dependency": "Workflow OIDC e programação única já ativos. Manifesto da 1ª carga Trello ainda não concluído; teste offline obrigatório após CAS; homologar somente por evidência.",
+      "source": "Supabase Mestre EXEC-COFRE-TRELLO-20261011; GitHub Actions 40039261383 in progress, CAS dispatch 40038761606 PASS; verificador cr_trello_restore_verify.py publicado.",
       "close_when": "Primeira recorrência Trello e restauração incremental autenticadas, com integridade dos cards e custos, sem serviços ou duplicação de backups.",
       "human_action": false,
       "provenance": "master_readonly_projection"
@@ -3499,7 +3499,7 @@
       "status": "not_confirmed",
       "confidence": "medium",
       "last_read": "2026-10-23",
-      "note": "PG17 23/10 PASS #40034006428. Edge 386/386 fontes em Drive privado (22 delta atual com readback). Netlify só 1 deploy publicado recuperável. Trello OIDC real disparado #40038761606; backup #40039261383 ainda em curso. OAuth/E2E externo exige comprovação separada."
+      "note": "PG17 #40034006428 restaurado. Edge 386/386 preservada. Netlify único deploy ativo 1/1 pacote estático recuperado; seis históricos sem deploy excluídos de obrigação ativa. Trello CAS #40039261383 segue em execução, verificador E2E privado acrescentado. OAuth pós-desastre ainda sem prova."
     },
     {
       "id": "SRC-COFRE-ZERO",
@@ -3507,7 +3507,7 @@
       "status": "not_confirmed",
       "confidence": "medium",
       "last_read": "2026-10-23",
-      "note": "PG17 23/10 PASS #40034006428. Edge 386/386 fontes em Drive privado (22 delta atual com readback). Netlify só 1 deploy publicado recuperável. Trello OIDC real disparado #40038761606; backup #40039261383 ainda em curso. OAuth/E2E externo exige comprovação separada."
+      "note": "PG17 #40034006428 restaurado. Edge 386/386 preservada. Netlify único deploy ativo 1/1 pacote estático recuperado; seis históricos sem deploy excluídos de obrigação ativa. Trello CAS #40039261383 segue em execução, verificador E2E privado acrescentado. OAuth pós-desastre ainda sem prova."
     }
   ],
   "reconciliations": [

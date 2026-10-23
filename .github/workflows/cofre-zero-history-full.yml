@@ -331,7 +331,7 @@ jobs:
       contents: read
       actions: write
     steps:
-      - name: Dispatch original read-only Trello OIDC workflow on Sunday or one-time activation
+      - name: Dispatch read-only Trello OIDC workflow on Sunday via existing CAS only
         env:
           GH_TOKEN: ${{ github.token }}
           EVENT_TYPE: ${{ github.event_name }}
