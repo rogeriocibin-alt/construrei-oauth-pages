@@ -136,6 +136,95 @@ async function verifiedBankOrigin(p:ReturnType<typeof clean>,k:string){
  if(bankDirection!==p.direction)throw Error("BANK_DIRECTION_MISMATCH");
  if(String(bank.occurred_at||"").slice(0,10)!==p.date)throw Error("BANK_DATE_MISMATCH");
 }
+
+/* Associate an existing cost with the bank movement WITHOUT writing to Trello.
+ * Requires exact work, day and cents; operator chooses and confirms the exact
+ * line. Matching only an amount does not authorize a reconciliation. */
+async function sha256(s:string){
+ const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
+ return Array.from(new Uint8Array(bytes),v=>v.toString(16).padStart(2,"0")).join("");
+}
+async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string){
+ if(p.direction!=="OUT"||!p.operation_id.startsWith("CORA_"))throw Error("EXISTING_ONLY_BANK_DEBITS");
+ const pre=await legacy("manual-cora-preview",withMarker(p),k);
+ const short=shortLink(pre?.target?.trello_url);
+ if(!short)throw Error("TRELLO_TARGET_UNVERIFIED");
+ const target=await card(short);
+ const lines=String(target.desc||"").split(/\r?\n/);
+ const matches:{match_key:string;line:string}[]=[];
+ const mm=p.date.slice(5,7),dd=p.date.slice(8,10),yy=p.date.slice(2,4);
+ let inCosts=false;
+ for(const line of lines){
+  if(/^\s*Custos\s*:/i.test(line)){inCosts=true;continue}
+  if(!inCosts)continue;
+  if(/^\s*(?:Total\s+Custos|Lucro|Saldo|Recebimentos?|Entradas?|Observa[cç][oõ]es?|Rateio)\s*:/i.test(line))break;
+  const m=line.trim().match(/^(\d{2})\/(\d{2})(?:\/(\d{2}|\d{4}))?\s*[-–]\s*R\$\s*([\d.,]+)\b(.*)$/i);
+  if(!m||m[1]!==dd||m[2]!==mm)continue;
+  if(m[3]&&m[3]!==yy&&m[3]!==p.date.slice(0,4))continue;
+  if(amount(m[4])!==p.amount_cents)continue;
+  const normalized=line.trim();
+  // Two visually identical entries cannot be safely disambiguated.
+  if(lines.filter(x=>x.trim()===normalized).length!==1)continue;
+  matches.push({match_key:await sha256("CR-CORA-EXISTING-V1|"+target.id+"|"+normalized),line:normalized});
+ }
+ return {target,pre,matches:matches.slice(0,20)};
+}
+async function existingLinksForCard(cardId:string,k:string){
+ const endpoint=new URL(SB+"/rest/v1/cr_finance_v12_operations");
+ endpoint.searchParams.set("card_id","eq."+cardId);
+ endpoint.searchParams.set("select","operation_id,status,payload");
+ endpoint.searchParams.set("limit","1000");
+ const r=await fetch(endpoint,{headers:headers(k),signal:AbortSignal.timeout(12000)});
+ if(!r.ok)throw Error("RECONCILIATION_LEDGER_READ_"+r.status);
+ const rows=await r.json();
+ if(!Array.isArray(rows)||rows.length>=1000)throw Error("RECONCILIATION_LEDGER_INCOMPLETE");
+ return rows;
+}
+async function reconcileExisting(action:string,p:ReturnType<typeof clean>,raw:any,k:string,fp:string){
+ const already=await existingLinksForCardIdByOperation(p.operation_id,k);
+ if(already){
+  if(already.status==="COMMITTED")return reply({ok:true,already_committed:true,reconciliation_kind:already.payload?.reconciliation_kind||"DIRECT_TRELLO",trello_url:already.trello_url});
+  return reply({ok:false,error:"BANK_OPERATION_NEEDS_REVIEW",status:already.status},409);
+ }
+ const scan=await existingMatchCandidates(p,k);
+ const candidates=scan.matches;
+ const prev= {ok:true,source:"TRELLO_EXISTING_CARD_VERIFIED",case:p.case,amount_centavos:p.amount_cents,date:p.date,
+  trello_url:scan.target.shortUrl||scan.pre?.target?.trello_url,candidates};
+ if(action==="existing-preview")return reply(prev);
+ const matchKey=String(raw?.match_key||"");
+ const found=candidates.filter(x=>x.match_key===matchKey);
+ if(found.length!==1)return reply({ok:false,error:"EXISTING_LINE_NOT_VERIFIED",possible_trello_write:false},409);
+ const linked=await existingLinksForCard(scan.target.id,k);
+ if(linked.some(x=>x.status!=="FAILED"&&String(x.payload?.trello_match_key||"")===matchKey))
+  return reply({ok:false,error:"TRELLO_LINE_ALREADY_LINKED",possible_trello_write:false},409);
+ const payload={case:p.case,date:p.date,direction:p.direction,amount_cents:p.amount_cents,category:p.category,
+  reference:p.reference,reconciliation_kind:"EXISTING_TRELLO",trello_match_key:matchKey,trello_line_text:found[0].line};
+ const claim=await rpc("cr_finance_v12_claim",{p_operation_id:p.operation_id,p_fingerprint:fp,p_card_id:scan.target.id,p_payload:payload},k);
+ if(claim.ok===true&&claim.claimed===false&&claim.status==="COMMITTED")return reply({ok:true,already_committed:true,reconciliation_kind:"EXISTING_TRELLO",trello_url:claim.trello_url});
+ if(claim.ok!==true||claim.claimed!==true)return reply({ok:false,error:claim.error||"RECONCILIATION_ALREADY_CLAIMED",status:claim.status},409);
+ // No write to Trello happens here. The record is only a bank→existing-cost link.
+ try{
+  const secondScan=await card(shortLink(scan.target.shortUrl||scan.pre?.target?.trello_url)!);
+  if(!String(secondScan.desc||"").split(/\r?\n/).some(x=>x.trim()===found[0].line))throw Error("EXISTING_LINE_CHANGED");
+  const confirmed=await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,p_status:"COMMITTED",p_trello_url:scan.target.shortUrl||scan.pre?.target?.trello_url||null,p_error_code:null},k);
+  if(confirmed.ok!==true)throw Error("LEDGER_CONFIRMATION_MISSING");
+  return reply({ok:true,committed:true,reconciliation_kind:"EXISTING_TRELLO",trello_url:scan.target.shortUrl||null,
+   case:p.case,line:found[0].line,bank_source_id:p.reference});
+ }catch(e){
+  try{await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,p_status:"REVIEW_REQUIRED",
+   p_trello_url:scan.target.shortUrl||null,p_error_code:String((e as Error)?.message||e).slice(0,100)},k)}catch{}
+  return reply({ok:false,error:"REVIEW_REQUIRED",detail:String((e as Error)?.message||e).slice(0,90)},409);
+ }
+}
+async function existingLinksForCardIdByOperation(id:string,k:string){
+ const r=await fetch(SB+"/rest/v1/cr_finance_v12_operations?operation_id=eq."+encodeURIComponent(id)+
+  "&select=status,trello_url,payload",{headers:headers(k),signal:AbortSignal.timeout(12000)});
+ if(!r.ok)throw Error("LEDGER_READ_"+r.status);
+ const rows=await r.json();
+ if(!Array.isArray(rows))throw Error("LEDGER_INVALID");
+ return rows[0]||null;
+}
+
 async function batchBankStatus(raw:any,k:string){
  const given=raw?.ids;
  if(!Array.isArray(given)||given.length>120)return {ok:false,error:"INVALID_BANK_ID_LIST"};
@@ -157,7 +246,8 @@ async function batchBankStatus(raw:any,k:string){
    if(!id)continue;
    const verifiedReference=String(record.payload?.reference||"")===id;
    statuses[id]={
-    state:verifiedReference&&record.status==="COMMITTED"?"TRELLO_CONFIRMED": "REVIEW_REQUIRED",
+    state:verifiedReference&&record.status==="COMMITTED"?(record.payload?.reconciliation_kind==="EXISTING_TRELLO"?"TRELLO_EXISTING":"TRELLO_CONFIRMED"): "REVIEW_REQUIRED",
+    reconciliation_kind:record.payload?.reconciliation_kind||"DIRECT_TRELLO",
     ledger_status:String(record.status||"UNKNOWN"),
     verified_reference:verifiedReference,
     case:verifiedReference?String(record.payload?.case||""):null,
@@ -174,7 +264,7 @@ Deno.serve(async(req:Request)=>{
  if(req.headers.get("origin")&&req.headers.get("origin")!==ORIGIN)return reply({ok:false,error:"ORIGIN_DENIED"},403);
  const u=new URL(req.url),action=u.searchParams.get("action")||"health";
  if(action==="health"&&req.method==="GET")return reply({ok:true,candidate:true,build:NAME,trello_writes:"DIRECTOR_ONLY",bank_verification:"SERVER_SIDE_CACHE",status:"LEDGER_PERSISTENT"});
- if(req.method!=="POST"||!["preview","commit","status","bank-status"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
+ if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return reply({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const k=key();if(!k)return reply({ok:false,error:"SERVICE_AUTH_UNAVAILABLE"},503);
  let raw:any=null;
@@ -188,6 +278,10 @@ Deno.serve(async(req:Request)=>{
  try{await verifiedBankOrigin(p,k)}
  catch(e){return reply({ok:false,error:String((e as Error)?.message||e)},409)}
  const fp=await fingerprint(p),tag="CRV12OP_"+p.operation_id;
+ if(action==="existing-preview"||action==="existing-confirm"){
+  try{return await reconcileExisting(action,p,raw,k,fp)}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,110),possible_trello_write:false},409)}
+ }
  if(action==="commit"){
   const sr=await fetch(SB+"/rest/v1/cr_finance_v12_operations?operation_id=eq."+encodeURIComponent(p.operation_id)+"&select=operation_id,status,trello_url,fingerprint",{headers:headers(k),signal:AbortSignal.timeout(12000)});
   if(!sr.ok)return reply({ok:false,error:"LEDGER_READ_UNAVAILABLE"},503);
