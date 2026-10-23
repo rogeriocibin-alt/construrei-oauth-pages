@@ -17,3 +17,15 @@ Promise.all([operationId({source_id:"cora-real-123"}),operationId({source_id:"co
  assert.match(id,/^CORA_[0-9a-f]{64}$/);assert.equal(id,a);assert.notEqual(id,b);
  console.log("Aprovisionamento: verificações de ID bancário e idempotência passaram");
 }).catch(e=>{console.error(e);process.exitCode=1});
+
+// Regression from Android test 23/10/2026: valid 799-26 was rejected due to
+// mistakenly escaped \\d inside a JavaScript regex literal in the UI.
+const fs=require("node:fs");
+const path=require("node:path");
+const ui=fs.readFileSync(path.resolve(__dirname,"../../candidates/central-operacoes-unificada-v12-20261023/index.html"),"utf8");
+const match=ui.match(/const obra=caseField\.value\.trim\(\);if\(!(\S+)\.test\(obra\)\)/);
+assert.ok(match,"Aprovisionamento: case validation not found in candidate UI");
+const validCase=new Function("obra","return "+match[1]+".test(obra)");
+for(const work of ["799-26","818-26","1-26","12345-26"])assert.equal(validCase(work),true,"Valid case was rejected: "+work);
+for(const work of ["79926","799-2","ABC-26","799-260","799-26e"])assert.equal(validCase(work),false,"Invalid case was accepted: "+work);
+console.log("Aprovisionamento: validacao de obra no formulario passou");
