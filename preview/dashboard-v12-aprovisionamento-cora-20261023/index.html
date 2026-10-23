@@ -1517,7 +1517,7 @@ if(cl){const caseInput=document.getElementById("mc_case");if(caseInput)caseInput
 else {const close=document.getElementById("mc_close");if(close)close.style.outline="";}
 hint.textContent=bk?"Extrato Cora Pro V2 original (somente leitura). Para atribuir uma movimentação à obra, use o lançamento existente com referência bancária; conciliação automática de previsão ainda não está habilitada.":cg?"Capital de Giro V12 original: saldos, despesas, acertos e encerramento. Sem formulários ou motores paralelos.":cl?"Fechamento original V12: informe a obra, confira a prévia e confirme; nenhuma obra é fechada automaticamente.":"Lançamento manual original: antecipe custos mesmo antes do extrato Cora. Informe referência bancária apenas se já existir; confira o Trello antes de repetir.";
 }
-a.addEventListener("click",()=>select("manual"));b.addEventListener("click",()=>select("capital"));c.addEventListener("click",()=>select("bank"));d.addEventListener("click",()=>select("close"));
+a.addEventListener("click",()=>select("manual"));b.addEventListener("click",()=>select("capital"));c.addEventListener("click",()=>{select("bank");if(movements.length)refreshBankStatus();else load.click()});d.addEventListener("click",()=>select("close"));
 document.querySelectorAll('[data-t="fin"]').forEach(btn=>btn.addEventListener("click",()=>select("manual")));
 document.querySelectorAll('[data-t="corapro"]').forEach(btn=>btn.addEventListener("click",()=>select("manual")));
 
@@ -1538,13 +1538,32 @@ async function readLedger(ids){
   for(const id of list.slice(i,i+120))bankStatuses.set(id,data.records?.[id]||{state:"PENDENTE"});
  }
 }
+async function refreshBankStatus(){
+ if(statusBusy||!movements.length)return;
+ statusBusy=true;statusFailed=false;renderRows();
+ try{await readLedger(movements.map(m=>m.source_id));statusFailed=false}
+ catch(error){statusFailed=true;status.textContent="Registro do Trello indisponível: "+String(error?.message||error)+". Por segurança, aprovisionamento bloqueado."}
+ finally{statusBusy=false;renderRows()}
+}
 window.addEventListener("cr:ap:confirmed",async e=>{
  const id=String(e.detail?.source_id||"");
  if(!id)return;
- bankStatuses.delete(id);status.textContent="Gravação indicada pelo servidor. Conferindo novamente no registro persistente...";
- try{await readLedger([id]);statusFailed=false}
- catch{statusFailed=true;status.textContent="Gravação Trello informada, mas consulta do registro pendente. Use CONSULTAR REGISTRO antes de repetir."}
- renderRows();
+ bankStatuses.delete(id);statusBusy=true;
+ status.textContent="Consultando confirmação definitiva no Supabase...";
+ try{
+  await readLedger([id]);
+  if(bankStatuses.get(id)?.state!=="TRELLO_CONFIRMED")throw Error("Sem confirmação persistente");
+  statusFailed=false;selected=null;editor.hidden=true;
+  search.value="";type.value="all";stateFilter.value="all";
+  select("bank");
+  const index=movements.findIndex(m=>m.source_id===id);
+  if(index>=0)shown=Math.max(shown,Math.ceil((index+1)/12)*12);
+  renderRows();
+  [...results.children].find(row=>row.dataset.coraSourceId===id)?.scrollIntoView({behavior:"smooth",block:"center"});
+ }catch{
+  statusFailed=true;
+  status.textContent="Trello indicou sucesso, mas o registro persistente ainda não foi confirmado. Não repita o lançamento; confira o cartão.";
+ }finally{statusBusy=false;renderRows()}
 });const editor=document.getElementById("cr-ap-editor"),selectedLabel=document.getElementById("cr-ap-selected"),caseField=document.getElementById("cr-ap-case"),existing=document.getElementById("cr-ap-existing"),editorStatus=document.getElementById("cr-ap-editor-status");
 const more=document.getElementById("cr-ap-more");more.addEventListener("click",()=>{shown+=12;renderRows()});
 function renderRows(){
@@ -1555,14 +1574,26 @@ const rows=movements.filter(m=>{
  const passesState=stateFilter.value==="all"||stateFilter.value==="confirmed"&&state==="TRELLO_CONFIRMED"||stateFilter.value==="review"&&state==="REVIEW_REQUIRED"||stateFilter.value==="pending"&&state==="PENDENTE";
  return passesState&&(filter==="all"||String(m.direction||"").toUpperCase().includes(filter)||filter==="DEBIT"&&/OUT|SAIDA|DÉBITO|DEBIT/i.test(m.direction)||filter==="CREDIT"&&/IN|ENTRADA|CRÉDITO|CREDIT/i.test(m.direction))&&(String(m.description||"")+" "+id).toLowerCase().includes(q);
 });
-if(!statusFailed)status.textContent=rows.length+" movimentos Cora · "+Math.min(shown,rows.length)+" exibidos · "+[...bankStatuses.values()].filter(x=>x.state==="TRELLO_CONFIRMED").length+" confirmados no ledger · "+(statusBusy?"consultando registro...":"somente registros confirmados ficam verdes.");more.hidden=rows.length<=shown;
+if(!statusFailed)status.textContent=rows.length+" movimentos Cora · "+Math.min(shown,rows.length)+" exibidos · "+[...bankStatuses.values()].filter(x=>x.state==="TRELLO_CONFIRMED").length+" Trello confirmado(s) · "+(statusBusy?"conferindo registros...":"histórico consultado no Supabase.");more.hidden=rows.length<=shown;
 for(const m of rows.slice(0,shown)){
-const row=document.createElement("div");row.style.cssText="border:1px solid #d1e0ea;background:white;padding:12px;border-radius:10px;margin:8px 0;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap";
+const row=document.createElement("div");row.style.cssText="border:1px solid #d1e0ea;background:white;padding:12px;border-radius:10px;margin:8px 0;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap";row.dataset.coraSourceId=String(m.source_id||"");
 const info=document.createElement("div");info.style.flex="1";const strong=document.createElement("strong");strong.textContent=(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100);const desc=document.createElement("div");desc.textContent=String(m.description||"Sem descrição");const source=document.createElement("small");const bid=String(m.source_id??m.id??m.transaction_id??m.external_id??"");const ledger=bankStatuses.get(bid),committed=ledger?.state==="TRELLO_CONFIRMED",review=ledger?.state==="REVIEW_REQUIRED";
- source.textContent=committed?"● TRELLO CONFIRMADO · "+(ledger.case||"obra")+" · ID "+bid:review?"⚠ REVISÃO OBRIGATÓRIA · ID "+bid:ledger?"○ PENDENTE · ID "+bid:"◌ AGUARDANDO CONSULTA DO REGISTRO · ID "+(bid||"INDISPONÍVEL");
- source.style.display="block";source.style.fontWeight="700";source.style.color=committed?"#087a50":review?"#b03839":"#85621c";info.append(strong,desc,source);
-const btn=document.createElement("button");btn.type="button";btn.className="manualbtn";btn.textContent=committed?"Confirmado no Trello":review?"Revisão necessária":!ledger?"Verificando registro...":"Aprovisionar →";
- btn.disabled=committed||review||!ledger||statusFailed;btn.addEventListener("click",()=>{selected=m;editor.hidden=false;caseField.value="";existing.value="";editorStatus.textContent="";selectedLabel.textContent=String(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100)+" · "+String(m.description||"");editor.scrollIntoView({behavior:"smooth",block:"start"});});row.append(info,btn);results.append(row)}
+ source.textContent=committed?"✓ TRELLO CONFIRMADO · Obra "+(ledger.case||"vinculada"):review?"⚠ REVISÃO OBRIGATÓRIA":ledger?"○ PENDENTE — não lançado":"◌ Consultando registro...";
+ source.title="Referência bancária: "+bid;
+ source.style.display="block";source.style.fontWeight="800";source.style.color=committed?"#087a50":review?"#b03839":"#85621c";info.append(strong,desc,source);
+ if(committed){
+  row.style.border="2px solid #168756";row.style.background="#effbf4";
+  const link=String(ledger?.trello_url||"");
+  try{
+   const u=new URL(link);
+   const okPath=u.pathname.split("/").filter(Boolean);
+   if(u.protocol==="https:"&&u.hostname==="trello.com"&&okPath[0]==="c"&&/^[A-Za-z0-9]{6,12}$/.test(okPath[1]||"")){
+    const a=document.createElement("a");a.href=link;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Abrir cartão Trello ↗";a.style.cssText="display:inline-block;color:#087a50;font-weight:800;margin-top:5px;text-decoration:underline";info.append(a);
+   }
+  }catch{}
+ }
+const btn=document.createElement("button");btn.type="button";btn.className="manualbtn";btn.textContent=committed?"✓ Trello confirmado":review?"Revisão necessária":!ledger?"Verificando registro...":"Aprovisionar →";
+ btn.disabled=committed||review||!ledger||statusFailed||statusBusy;btn.addEventListener("click",()=>{selected=m;editor.hidden=false;caseField.value="";existing.value="";editorStatus.textContent="";selectedLabel.textContent=String(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100)+" · "+String(m.description||"");editor.scrollIntoView({behavior:"smooth",block:"start"});});row.append(info,btn);results.append(row)}
 }
 document.getElementById("cr-ap-cancel").addEventListener("click",()=>{editor.hidden=true;selected=null});
 document.getElementById("cr-ap-prepare").addEventListener("click",async()=>{
@@ -1574,7 +1605,7 @@ if(existing.value==="yes"){editorStatus.textContent="Custo já antecipado: novo 
 if(existing.value!=="no"){editorStatus.textContent="Confira se o custo já consta no Trello antes de lançar.";return}
 const m=selected,amount=Math.abs(Number(m.amount_centavos||0)),ref=String(m.source_id??m.id??m.transaction_id??m.external_id??"").trim();
 if(!Number.isSafeInteger(amount)||amount<=0||!ref){editorStatus.textContent="ID bancário ou valor inválido. Nenhuma gravação realizada.";return}
-const fields={mc_case:obra,mc_dir:/OUT|SAIDA|DÉBITO|DEBIT/i.test(m.direction)?"OUT":"IN",mc_date:String(m.occurred_at||"").slice(0,10),mc_amount:(amount/100).toFixed(2).replace(".",","),mc_party:String(m.description||"").slice(0,100),mc_desc:("ID bancário Cora: "+ref+" | "+String(m.description||"")).slice(0,180),mc_ref:ref};
+const fields={mc_case:obra,mc_dir:/OUT|SAIDA|DÉBITO|DEBIT/i.test(m.direction)?"OUT":"IN",mc_date:String(m.occurred_at||"").slice(0,10),mc_amount:(amount/100).toFixed(2).replace(".",","),mc_party:String(m.description||"").slice(0,100),mc_desc:String(m.description||"").slice(0,180),mc_ref:ref};
 if(!/^20\d{2}-\d{2}-\d{2}$/.test(fields.mc_date)){editorStatus.textContent="Data bancária inválida; não é possível aprovisionar.";return}
 try{const bytes=new TextEncoder().encode("CR-CORA-APROVISIONAMENTO-V1:"+ref);const hash=await crypto.subtle.digest("SHA-256",bytes);const opId="CORA_"+Array.from(new Uint8Array(hash),v=>v.toString(16).padStart(2,"0")).join("");S.manualOp=opId;S.manualBankMovement={id:ref,operationId:opId,amount,date:fields.mc_date,direction:fields.mc_dir}}catch(e){editorStatus.textContent="Não foi possível proteger o ID bancário. Nenhuma gravação realizada.";return}
 select("manual");
@@ -1593,11 +1624,11 @@ const response=await fetch(url,{headers:{"x-cr-session":token},cache:"no-store",
 if(!response.ok||!data.ok||data.source!=="CORA_CACHE")throw Error(data.error||"Fonte oficial não confirmada");
 if(!Array.isArray(data.movements))throw Error("Extrato oficial sem lista de movimentações; nunca usar dados simulados");
 movements=data.movements.filter(m=>m&&typeof m.source_id==="string"&&m.source_id.trim()&&Number.isSafeInteger(Number(m.amount_centavos))&&Number(m.amount_centavos)>0);
- bankStatuses.clear();statusFailed=false;shown=12;statusBusy=true;renderRows();
- try{await readLedger(movements.map(m=>m.source_id));statusBusy=false;renderRows()}
- catch(error){statusBusy=false;statusFailed=true;renderRows();status.textContent="Extrato real consultado, mas situação dos lançamentos não confirmada: "+String(error?.message||error)+". Aprovisionamento bloqueado para evitar duplicidade."}
+ bankStatuses.clear();statusFailed=false;shown=12;
+ await refreshBankStatus()
 }catch(e){status.textContent="Não foi possível consultar: "+e.message+". Nenhum lançamento realizado."}finally{load.disabled=false}});
 select("bank");
+if(sessionStorage.getItem("crv2"))load.click();
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();</script></body></html>
