@@ -455,11 +455,100 @@ async function closeCapital(req:Request,action:string){
  catch(e){return json({ok:true,created:true,period,card_url:created.shortUrl||null,summary_pending:true})}
 }
 
+
+/* V12 safe diagnostic: read-only live Trello + PostgREST checks. Does NOT create
+   cards, update the settlement, reserve periods, or modify bank balances.
+   Only the Director session can request its financial results. */
+async function capitalDryRun(req:Request){
+ if(req.method!=="POST")return json({ok:false,error:"POST_REQUIRED"},405);
+ if(!await closeAuthorized(req))return json({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},403);
+ const body=await req.json().catch(()=>null);
+ if(!body||JSON.stringify(body).length>1500)return json({ok:false,error:"INVALID_REQUEST"},400);
+ const start=isoDate(body.start),end=isoDate(body.end);
+ if(!start||!end||start>end)return json({ok:false,error:"INVALID_DATES"},400);
+ const today=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+ const checks:any[]=[];
+ let blocks=0,warns=0;
+ const add=(code:string,pass:boolean,detail:string,warning=false)=>{
+  const state=pass?"PASS":warning?"WARN":"BLOCK";
+  checks.push({code,state,detail});
+  if(!pass){if(warning)warns++;else blocks++}
+ };
+ const dayCount=(+new Date(end+"T12:00:00Z")-(+new Date(start+"T12:00:00Z")))/86400000;
+ add("PERIODO_VALIDADE",dayCount<=60,"Intervalo de "+dayCount+" dias; limite operacional 60 dias.");
+ add("DATA_FINAL",end<=today,end>today?"O período termina em data futura; o encerramento real ficará bloqueado até a data final.":"Data final permitida.",true);
+ let current:any=null,all:any[]=[],rows:any[]=[],state:any[]=[],sourceError="";
+ try{current=await sourceForClosing();add("ACERTO_VIVO",true,"Conferidas "+current.works+" obras; Capital de Giro apurado no Trello em centavos.");}
+ catch(e){sourceError=String((e as Error)?.message||e);add("ACERTO_VIVO",false,"Acerto Vivo indisponível ou pendente: "+sourceError);}
+ try{all=await cards(CAPITAL_LIST);add("TRELLO_LEITURA",true,"A lista financeira responde e contém "+all.length+" cartões abertos.");}
+ catch(e){add("TRELLO_LEITURA",false,"Não foi possível consultar a lista do Capital de Giro.");}
+ try{
+  rows=await db("cr_working_capital_periods_v1?select=period_key,status,metadata,source_card_id&limit=250");
+  if(!Array.isArray(rows))throw Error("INVALID_LEDGER_RESPONSE");
+  add("LEDGER_LEITURA",true,"Controle persistente acessível ("+rows.length+" períodos registrados).");
+ }catch(e){add("LEDGER_LEITURA",false,"Não foi possível consultar a proteção de períodos duplicados.");}
+ try{
+  state=await db("cr_working_capital_state_v1?select=capital_generated,real_balance,pending_current_acerto,historical_cards&state_key=eq.GLOBAL&limit=1");
+  if(!Array.isArray(state)||!state.length)throw Error("EMPTY_STATE");
+  add("SALDO_PERSISTIDO",true,"Estado do Capital de Giro acessível, sem alterar valores.");
+ }catch(e){add("SALDO_PERSISTIDO",false,"O estado de saldo do Capital de Giro não respondeu.");}
+ let last="",cardDuplicate=false,perCount=0,sumGenerated=0,sumBalance=0,negative=0;
+ for(const c of all){
+  if(String(c.desc||"").includes(SUMMARY_MARK)||String(c.name||"").startsWith("📊"))continue;
+  const p=periodMatch(c.name);
+  if(!p)continue;
+  perCount++;
+  const info=legacyInfo(c,[]);
+  sumGenerated+=Math.round(info.credit*100);
+  sumBalance+=Math.round(info.balance*100);
+  if(info.balance<0)negative+=Math.round(-info.balance*100);
+  const key=keyFromMarker(c.desc);
+  const inferredYear=p.em>Number(today.slice(5,7))?Number(today.slice(0,4))-1:Number(today.slice(0,4));
+  const candidate=key||(p?periodKey(p,inferredYear):"");
+  if(candidate===start+"_"+end)cardDuplicate=true;
+  const periodEnd=key?keyDates(key).end:candidate.split("_")[1];
+  if(periodEnd>last)last=periodEnd;
+ }
+ add("TRELLO_DUPLICIDADE",!cardDuplicate,cardDuplicate?"Já existe cartão Trello com o mesmo período.":"Nenhum cartão Trello com período idêntico.");
+ const already=rows.some(r=>String(r.period_key)===start+"_"+end&&["ACTIVE","CREATING"].includes(String(r.status)));
+ add("LEDGER_DUPLICIDADE",!already,already?"Período já reservado no controle persistente.":"Nenhuma reserva ativa para o mesmo período.");
+ const dt=new Date(last+"T12:00:00Z");
+ if(last&&!Number.isNaN(+dt))dt.setUTCDate(dt.getUTCDate()+1);
+ const next=last&&!Number.isNaN(+dt)?dt.toISOString().slice(0,10):null;
+ add("PERIODO_CONTIGUO",!next||start===next,next?"Início necessário: "+next+".":"Sem período anterior confirmado.");
+ const overlaps=current&&rows.some(r=>["ACTIVE","CREATING"].includes(String(r.status))&&
+   (Array.isArray(r.metadata?.case_ids)&&r.metadata.case_ids.some((x:string)=>current.case_ids.includes(x))));
+ add("OBRAS_NAO_DUPLICADAS",!overlaps,overlaps?"Uma obra do Acerto Vivo já está em período ativo.":"Nenhuma obra do Acerto Vivo aparece nas reservas anteriores.");
+ if(state.length&&all.length){
+  const dbGenerated=Math.round(Number(state[0].capital_generated)*100);
+  const dbBalance=Math.round(Number(state[0].real_balance)*100);
+  add("SALDO_CONCILIADO",sumGenerated===dbGenerated&&sumBalance===dbBalance,
+    sumGenerated===dbGenerated&&sumBalance===dbBalance?"Totais da lista Trello e do estado persistente são iguais.":"O resumo persistido diverge dos cartões; não fechar sem conciliação.");
+ }
+ if(state.length&&current){
+  const reported=Math.round(Number(state[0].pending_current_acerto)*100);
+  const expected=Math.round(current.capital*100);
+  add("PENDENCIA_ATUALIZADA",reported===expected,reported===expected?
+   "Valor pendente no estado agregado confere.":"Valor agregado de acerto anterior está desatualizado. O fechamento sempre deve reler o Acerto Vivo.",true);
+ }
+ return json({
+  ok:true,mode:"SIMULACAO_SEM_LANCAMENTOS",no_write:true,build:BUILD,
+  period:{start,end,last_registered:last||null,expected_next_start:next},
+  live_acerto:current?{works:current.works,capital_cents:Math.round(current.capital*100),source_url:current.url}:null,
+  capital:{historical_cards:perCount,generated_cents:sumGenerated,real_balance_cents:sumBalance,negative_periods_cents:negative},
+  checks,blocked:blocks>0,warnings:warns,passed:checks.filter((x:any)=>x.state==="PASS").length,
+  technical_ready:blocks===0,
+  ready_to_close:blocks===0&&warns===0,
+  note:"Esta simulação NÃO gera card, NÃO encerra o período e NÃO libera confirmação automática."
+ });
+}
+
 Deno.serve(async(req:Request)=>{
   if(req.method==="OPTIONS")return new Response(null,{status:204,headers:{"access-control-allow-origin":"*","access-control-allow-headers":"content-type,x-cr-session","access-control-allow-methods":"GET,POST,OPTIONS"}});
   const u=new URL(req.url),action=(u.searchParams.get("action")||"health").toLowerCase();
   if(req.method==="HEAD")return new Response(null,{status:200,headers:{"x-construrei-build":BUILD}});
   if(action==="health")return json({ok:true,build:BUILD,mode:"trello-ledger-reconcile",finance_board:FINANCE_BOARD,capital_list:CAPITAL_LIST,received_list:RECEIVED_2026_LIST});
+  if(action==="close-test")return capitalDryRun(req);
   if(action==="close-preview"||action==="close-commit")return closeCapital(req,action);
    if(action==="summary"){
     if(!(await authorized(req)))return json({ok:false,error:"UNAUTHORIZED"},401);
