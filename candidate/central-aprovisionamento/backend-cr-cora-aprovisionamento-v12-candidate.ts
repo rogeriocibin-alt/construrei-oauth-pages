@@ -73,7 +73,7 @@ async function tidyCommittedMarker(short:string,tag:string,expectedDesc:string){
  // Skip if the card changed between confirmation and cleanup (concurrent operator).
  if(desc!==expectedDesc)return false;
  if(!desc.includes(tag))return true;
- if(desc.split(tag).length!==2||!desc.includes(" "+tag)||(desc.match(/CRV12OP_[0-9a-f-]{36}/g)||[]).length!==1)return false;
+ if(desc.split(tag).length!==2||!desc.includes(" "+tag)||(desc.match(/CRV12OP_(?:[0-9a-f-]{36}|CORA_[0-9a-f]{64})/g)||[]).length!==1)return false;
  const cleaned=desc.replace(" "+tag,"");
  const ak=env("TRELLO_API_KEY"),tk=env("TRELLO_API_TOKEN");
  if(!ak||!tk)return false;
