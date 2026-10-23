@@ -477,6 +477,7 @@ Deno.serve(async(req:Request)=>{
  try{
   const tagged=withMarker(p);
   const pre=await legacy("manual-cora-preview",tagged,k);
+  if(p.direction==="IN"&&!allowedList("IN",String(pre?.target?.list||"")))throw Error("RECEIPT_TARGET_ALREADY_PAID_OR_INELIGIBLE");
   if(pre.duplicate)return reply({ok:false,error:"EXISTING_TRELLO_MARKER_REQUIRES_REVIEW"},409);
   const short=shortLink(pre?.target?.trello_url);
   if(!short)throw Error("TRELLO_LINK_UNTRUSTED");
