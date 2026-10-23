@@ -171,6 +171,10 @@ def main():
     arg=parser.parse_args()
     if arg.selftest:print(json.dumps(selftest()));return
     groups,boards,counts=materialize(get_source())
-    print(json.dumps(write_delta(groups,boards,counts,arg.dry_run)))
+    outcome=write_delta(groups,boards,counts,arg.dry_run)
+    if not arg.dry_run and os.getenv("GITHUB_OUTPUT"):
+        with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as out:
+            out.write("manifest="+outcome["manifest"]+"\n")
+    print(json.dumps(outcome))
 
 if __name__=="__main__":main()

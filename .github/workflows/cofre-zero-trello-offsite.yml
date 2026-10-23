@@ -29,8 +29,9 @@ jobs:
       - name: Teste offline de unicidade e incremento, sem clientes
         run: |
           set -euo pipefail
-          python3 -m py_compile .github/scripts/cr_trello_incremental.py .github/scripts/cofre_trello_readonly.py .github/scripts/cofre_trello_bootstrap.py
+          python3 -m py_compile .github/scripts/cr_trello_incremental.py .github/scripts/cofre_trello_readonly.py .github/scripts/cofre_trello_bootstrap.py .github/scripts/cr_trello_restore_verify.py
           python3 .github/scripts/cr_trello_incremental.py --selftest
+          python3 .github/scripts/cr_trello_restore_verify.py --selftest
 
   trello_text:
     name: Trello financeiro/obras, conteudo incremental (sem anexos binarios)
@@ -55,9 +56,17 @@ jobs:
           chmod 600 "$HOME/.config/rclone/rclone.conf"
           rclone lsd construrei-drive: >/dev/null
       - name: Copiar so blocos novos/alterados e confirmar integridade no mesmo arquivo CAS
+        id: cas_upload
         run: |
           set -euo pipefail
           python3 .github/scripts/cr_trello_incremental.py
+      - name: Recuperar integralmente do manifesto sem usar Trello nem banco de producao
+        env:
+          MANIFEST: ${{ steps.cas_upload.outputs.manifest }}
+        run: |
+          set -euo pipefail
+          test -n "$MANIFEST"
+          python3 .github/scripts/cr_trello_restore_verify.py --manifest "$MANIFEST"
       - name: Relatorio sem dados financeiros ou credenciais
         if: always()
         run: |
