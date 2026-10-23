@@ -65,3 +65,19 @@ Vídeo `1000967196.mp4` (32,7 s): função de consulta autenticada e botões ind
 - Teste de regressão ancorado na expressão real da UI acrescentado em `candidate/central-aprovisionamento/aprovisionamento-core.test.js`, commit `b5803db6460cbdf5a30ef88276d2b47236e38db0`.
 - **Link para o teste:** https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-v12-aprovisionamento-cora-20261023/?v=44a0f3bb
 - Não houve gravação financeira ou Trello na correção, nem alterações ao `production/`, às obras fechadas ou ao saldo Cora. **Ainda falta validar o próximo passo no Android e executar preview/commit real controlado**; PR #148 deve continuar DRAFT.
+
+## Primeiro E2E bancário real confirmado — vídeo Android 1000967216 (23/10/2026)
+
+**Registro de aceitação com prova cruzada (sem nova escrita executada pelo agente):**
+
+- Vídeo Android de 52,6 segundos, sessão do usuário por volta de **13h04 BRT**, mostra prévia `PRÉ-VISUALIZAÇÃO OK`, ação `LANÇAR NO TRELLO`, confirmação `LANÇADO COM SUCESSO NO TRELLO`, botão `ABRIR CARD NO TRELLO` e inspeção do cartão na interface Trello.
+- **Banco Cora cache oficial:** débito de **R$ 150,00**, 23/10/2026, descrição **Combustível**, `source_id=ent_Kn8uoKAfRme4691Uco1rrXA`.
+- **Obra alvo:** **799-26** — orçamento **R$ 2.830,22**, cartão `https://trello.com/c/CJ27HA7S`, lista **AG. ACERTO** (não foi fechado ou movido pelo fluxo).
+- **Ledger Supabase** `public.cr_finance_v12_operations` consultado diretamente: `operation_id=CORA_da7301bde13c5c750703b147ae336262d22397e26d60df89f5d53680668772b4` com `status=COMMITTED`, `error_code=NULL`; criado em **2026-10-23T16:04:37Z** e finalizado às **16:04:40Z**; `payload.case=799-26`, `payload.reference=ent_Kn8uoKAfRme4691Uco1rrXA`, `payload.category=Combustível`, `trello_url=https://trello.com/c/CJ27HA7S`.
+- **Idempotência observada:** query por esse `operation_id` retornou **total=1, committed=1**; consulta do cartão Trello por conector confirmou **uma** linha nova única `23/10 - R$150,00 Combustível ... ID bancário Cora: ent_Kn8uoKAfRme4691Uco1rrXA`.
+- **Efeito no acerto** visível no cartão `ACERTOS 2026 — AGUARDANDO ACERTO`: obra 799-26 com **Custos R$ 1.375,53**, **Lucro R$ 1.454,69** e **Margem 51,40%**; cálculo conferido por soma das 10 despesas listadas e `R$ 2.830,22 - R$ 1.375,53 = R$ 1.454,69`.
+- **Dados bancários não foram alterados**; o fluxo registrou custo no cartão Trello por autenticação do próprio usuário. O agente realizou **somente leituras** no Supabase e Trello durante a auditoria deste vídeo.
+
+**Resultado:** PRIMEIRO E2E Cora → operação determinística no Supabase → Trello → acerto visível: **APROVADO para esse caso concreto**. **Não equivale à homologação integral** de toda a candidata (entradas, aprovisionamentos com antecipação, rateio multiobra, estornos, capital de giro, replay via formulário manual, mobile re-login e outras classes de movimentos ainda exigem gates apropriados). PR #148 permanece **DRAFT**, candidata isolada e V12 homologada inalterada.
+
+**Observação de acabamento:** Trello mantém o `source_id` completo na descrição após a confirmação; o sufixo visível em `Ref.` fica abreviado pela rotina de marcador temporário do writer. Não há perda da referência completa para auditoria.
