@@ -420,9 +420,9 @@
         }
       ],
       "admin_url": "https://drive.google.com/",
-      "source": "23/10/2026: GitHub Actions CAS #40005884467 e RESTORE PostgreSQL17 #40034006428, a partir do CAS/seed imutável; logs do executor original Cloud Run não auditados diretamente.",
+      "source": "GitHub PG17 40034006428 PASS, Cofre CAS 40035175426 PASS, registro Mestre Supabase 23/10 (Cloud Run/Scheduler não auditados diretamente)",
       "alerts": [
-        "Restauração SQL/PostgreSQL17 de 23/10 confirmada: 194 tabelas, 193 RLS, 20 políticas, 208 migrações, 4.546 objetos Storage cruzados e 3 binários MD5. Isso não homologa Edge/Netlify/OAuth/DNS externos.",
+        "Restauração SQL/PG17 de 23/10 comprovada. Recuperação de Edge/Netlify/OAuth e recorrência Trello não comprovadas por esse teste; manter pendências separadas.",
         "Google Cloud Run/Scheduler e logs de execução não acessados diretamente nesta sessão."
       ],
       "health_label": "PG17 23/10 RESTAURADO • SISTEMAS EXTERNOS PARCIAIS"
@@ -449,7 +449,7 @@
       "installed_at": "2026-10-05 • migração cloud oficial",
       "state": "attention",
       "last_attempt": "Snapshot oficial RUN_ID 20261023-060011 (23/10 03h BRT); Cloud Run/Scheduler não inspecionados diretamente nesta auditoria",
-      "last_result": "Cofre CAS 23/10 Actions #40005884467 SUCCESS e RESTORE real PostgreSQL17 em 23/10 Actions #40034006428 SUCCESS, 3 SQL, 194 tabelas, 208 migrações e 4.546 Storage IDs.",
+      "last_result": "PG17 real do backup imutável 23/10: #40034006428 PASS; CAS main posterior #40035175426 SUCCESS, 4551 referências com 0 novos objetos e 0 bytes de CAS duplicados. Não confirma por si só novo ciclo do Cloud Run/Scheduler.",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
       "verification": "Restauração SQL/PG17 REAL, isolada, aprovada em 23/10; prova de hash SHA/MD5 e isolamento. Cobertura externa de aplicativos ainda não homologada. Item canônico EXEC-COFRE-COVERAGE-20261010.",
@@ -459,7 +459,7 @@
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Manter Cloud Scheduler/Run e CAS atuais; apenas monitorar falhas. Resolver cobertura externa Netlify/Edge/OAuth nos controles existentes; sem cron/FULL duplicado."
+      "action": "Manter execução Cloud e CAS existentes; apenas monitorar eventos de falha reais. Lacunas externas Netlify/Edge/OAuth e Trello permanecem separadas no Gestor, sem FULL ou cron paralelo."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
