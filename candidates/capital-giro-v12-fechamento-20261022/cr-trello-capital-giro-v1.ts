@@ -1,6 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
-const BUILD="CR-CAPITAL-GIRO-V1-FIX-BALANCE-PARSER-20261016-R3";
+const BUILD="CR-CAPITAL-GIRO-V12-AUTOTEST-READONLY-20261022-R4";
 const BASE="https://api.trello.com/1";
 const FUNCTION_SLUG="cr-trello-capital-giro-v1";
 
