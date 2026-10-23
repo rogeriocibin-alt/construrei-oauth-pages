@@ -321,3 +321,28 @@ jobs:
           echo "Status: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
           echo "No new cron/Cloud service/full Storage copy; no CURRENT write" >> "$GITHUB_STEP_SUMMARY"
 
+  isolated_current_pg17_restore:
+    name: Cofre Zero | PG17 real isolated restore of immutable 23 Oct CAS
+    if: github.event_name == 'pull_request' && github.head_ref == 'candidate/cofre-zero-pg17-restore-20261023' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+      SUPABASE_ACCESS_TOKEN: ""
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Shell syntax and private backup credentials preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n .github/scripts/cr_pg17_integrated_restore_candidate.sh
+          test -n "$RCLONE_CONFIG_B64"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+      - name: Real PG17 recovery from immutable CAS in disconnected ephemeral Supabase lab
+        shell: bash
+        run: bash .github/scripts/cr_pg17_integrated_restore_candidate.sh
