@@ -321,3 +321,38 @@ jobs:
           echo "Status: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
           echo "No new cron/Cloud service/full Storage copy; no CURRENT write" >> "$GITHUB_STEP_SUMMARY"
 
+  trello_text_weekly_dispatch:
+    name: Single-schedule weekly Trello backup dispatch (original approved OIDC)
+    needs: [detect, archive]
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      needs.archive.result == 'success' &&
+      (github.event_name == 'schedule' ||
+       (github.event_name == 'push' && github.event.head_commit.message == 'cofre: activate Trello text CAS once via existing schedule'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: Dispatch original read-only Trello OIDC workflow on Sunday or one-time activation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_TYPE: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_TYPE" == "schedule" && "$(date -u +%u)" != "7" ]]; then
+            echo 'Trello export is weekly; daily CAS unchanged'
+            exit 0
+          fi
+          curl --fail --silent --show-error --retry 2 --connect-timeout 15 --max-time 35 \
+            -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            -H 'Content-Type: application/json' \
+            -d '{"ref":"main"}' \
+            "https://api.github.com/repos/$REPO/actions/workflows/cofre-zero-trello-offsite.yml/dispatches"
+          echo 'TRELLO_DISPATCH_ACCEPTED: original exact OIDC workflow; no new cron'
