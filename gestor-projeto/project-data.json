@@ -3,7 +3,7 @@
     "title": "Gestor do Projeto CONSTRU-REI",
     "version": "V1.2.7 • FINANCEIRO V4 OFICIAL • 07/10 ENCERRADO",
     "status": "OFICIAL / HOMOLOGADA • FINANCEIRO V4 CONGELADO • CENTRAL ATUALIZADA",
-    "generated_at": "2026-10-22",
+    "generated_at": "2026-10-23",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
@@ -20,7 +20,7 @@
     "canonical_checkpoint": "CHECKPOINT_CANONICAL_GOVERNANCE_INDEX_V1_20261007",
     "pwa_mobile_status": "PASS_OWNER_CONFIRMED",
     "previous_official_checkpoint": "CHECKPOINT_PROJECT_MANAGER_V1_1_2_H4_OFFICIAL_20261005",
-    "reconciled_at": "2026-10-06T21:30:00-03:00",
+    "reconciled_at": "2026-10-23T22:40:48.112Z",
     "owner_validation": "PASS_OWNER_PUBLICATION_AUTHORIZATION",
     "current_baseline": "CR-PM-V1.2.7-FINANCEIRO-V4-OFFICIAL-20261007",
     "baseline_freeze_checkpoint": "CHECKPOINT_CURRENT_OFFICIAL_LOGOS_RECOVERED_20261006",
@@ -35,7 +35,7 @@
     "operational_checkpoint": "CHECKPOINT_GESTOR_REVISAO_GLOBAL_20261022",
     "operational_rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
     "operational_scope": "Atualização documental e de indicadores; NÃO altera release 1.2.x, código, rotas ou SW do PWA",
-    "operational_current_focus": "Financeiro V12 para teste em 23/10; APP/ORÇA-REI E2E; Cofre Zero recuperação como monitoramento",
+    "operational_current_focus": "Financeiro V12 e APP/ORÇA-REI; Cofre Zero SQL/PG17 23/10 restaurado e verificado; pendências somente de cobertura externa/operacional.",
     "operational_total_cc_items": 263,
     "operational_cc_items": {
       "completed": 120,
@@ -921,7 +921,7 @@
       "objective": "Preservar rotina Cloud independente do notebook e checkpoints já aprovados, monitorando execução corrente. Recuperação integral e CAS permanecem no controle de cobertura separado.",
       "progress": 100,
       "owner": "Bio + CR Assertivo",
-      "last_advance": "22/10: runs GitHub CAS 39869814025 e 39865384972 SUCCESS. Não são prova de restauração integral do Cloud Run/Scheduler/Storage.",
+      "last_advance": "23/10: Cofre CAS Actions #40005884467 SUCCESS; snapshot 20261023-060011 restaurado em PG17 isolado Actions #40034006428 PASS. Execução original Cloud Run não revalidada por logs nesta rodada.",
       "next_action": "Manter execução homologada; problemas de CAS/restore registrados separadamente em EXEC-COFRE-COVERAGE-20261010.",
       "dependency": "Nenhuma para baseline; restauração integral pendente no item de cobertura.",
       "blocked": false,
@@ -1005,10 +1005,10 @@
       "priority": "P1",
       "objective": "Validar CAS incremental sem novos serviços e recuperação isolada de PostgreSQL 17, dados financeiros e Trello textual.",
       "progress": 60,
-      "progress_basis": "estimativa operacional, restore ainda não comprovado",
+      "progress_basis": "PG17/SQL, RLS/ACL, migrações e metadados Storage de 23/10 comprovados; cobertura de sistemas externos permanece parcial",
       "owner": "CR Assertivo",
-      "last_advance": "22/10: GitHub Actions CAS e Guard SUCCESS; PR #146 DRAFT corrige rejeição de CURRENT. Execução Cloud/restore integral não foram comprovados nesta leitura.",
-      "next_action": "Acompanhar PR #146 e validar readback/restore integral isolado antes de declarar 100%; sem FULL repetido.",
+      "last_advance": "23/10: restauração real PASS no PG17 offline do CAS/seed, Actions #40034006428 (194 tabelas, 193 RLS, 20 políticas, 208 migrações, 4546 objetos Storage); PR #149 isolada sem merge.",
+      "next_action": "Dar por concluída a prova SQL/PG17 de 23/10; monitorar CAS original e completar somente as lacunas Edge/Netlify/OAuth nos controles existentes, sem cron ou backups duplicados.",
       "dependency": "Provas de restauração e histórico completo",
       "blocked": false,
       "age_days": 0
@@ -1532,10 +1532,10 @@
       "priority": "P1",
       "state": "in_progress",
       "owner": "Bio + CR Assertivo",
-      "last_movement": "2026-10-22",
-      "next_action": "PR #146 DRAFT CAS idempotente; conferir recorrência Cloud e restore PostgreSQL17/Storage/Auth; conservar baseline FULL/CAS anterior sem agenda paralela.",
-      "dependency": "Sem bloqueio humano atual. Execução CAS agendada futura e ensaio integral não comprovados. Cobertura Trello/Netlify após remoção PR124 deve ser reconciliada sem criar novas rotinas.",
-      "source": "Supabase public.cc_items + GitHub runs #39869814025/#39865384972 (sucesso do workflow, não recuperação integral)",
+      "last_movement": "2026-10-23",
+      "next_action": "SQL/PG17 23/10 PASS (Actions #40034006428); sem nova restauração redundante. Continuar somente cobertura externa Edge/Netlify/OAuth e monitorar CAS/Cloud existentes.",
+      "dependency": "PG17 SQL, RLS, migrações e Storage do snapshot recuperados; dependência residual: prova de reativação funcional dos provedores externos e status Cloud Run direto.",
+      "source": "Supabase Mestre cc_items/cc_changes; GitHub CAS 40005884467; PG17 real 40034006428; checkpoint issue #53.",
       "close_when": "CAS recorrente comprovado, backup principal finalizado e validado, custo/duplicação sob controle, recuperação isolada reproduzível, rollback testado.",
       "human_action": false,
       "provenance": "master_readonly_projection"
@@ -3483,16 +3483,16 @@
       "name": "Backups automáticos",
       "status": "not_confirmed",
       "confidence": "medium",
-      "last_read": "2026-10-22",
-      "note": "GitHub Actions CAS SUCCESS em 22/10; Cloud Run/Scheduler e restauração integral não foram consultados diretamente. PR #146 DRAFT; cobertura e recovery ainda pendentes."
+      "last_read": "2026-10-23",
+      "note": "Cofre CAS 23/10 SUCCESS (#40005884467), SQL/PostgreSQL17 de 23/10 recuperado isoladamente PASS (#40034006428), 4546 Storage IDs e 208 migrações. Execução Cloud original e provedores externos não testados integralmente."
     },
     {
       "id": "SRC-COFRE-ZERO",
       "name": "Cofre Zero",
       "status": "not_confirmed",
       "confidence": "medium",
-      "last_read": "2026-10-22",
-      "note": "Rotina Cloud anterior preservada; execução GitHub CAS/Guard recente confirmada, mas restore PostgreSQL17/Storage/Auth integral não provado nesta rodada."
+      "last_read": "2026-10-23",
+      "note": "Cofre CAS 23/10 SUCCESS (#40005884467), SQL/PostgreSQL17 de 23/10 recuperado isoladamente PASS (#40034006428), 4546 Storage IDs e 208 migrações. Execução Cloud original e provedores externos não testados integralmente."
     }
   ],
   "reconciliations": [

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-22",
+  "generated_at": "2026-10-23",
   "title": "Infraestrutura do Projeto CONSTRU-REI",
   "policy": {
     "owner_view": "Gestor do Projeto",
@@ -400,15 +400,15 @@
       "usage": [
         {
           "label": "Conectividade",
-          "value": "Drive acessível; CURRENT 15/10 06h UTC e HISTORY_FULL 15/10 22h UTC visíveis"
+          "value": "Snapshot de 23/10/2026 identificado, SQL e arquivos recuperados de CAS/seed imutáveis; nenhuma escrita no Drive"
         },
         {
           "label": "Destino",
-          "value": "CURRENT, HISTORY_FULL, HISTORY_DELTAS, HISTORY_CAS (manifesto 20261015-222541 verificado via Actions)"
+          "value": "CURRENT preservado; HISTORY_FULL seed + HISTORY_CAS imutável verificados para RUN_ID 20261023-060011"
         },
         {
           "label": "Última conclusão diária",
-          "value": "Cloud q2tjm 15/10 03h SUCCESS; CAS manual 15/10 SUCCESS; recorrência CAS monitorada."
+          "value": "GitHub CAS 23/10 SUCCESS; restauração PostgreSQL 17 isolada 23/10 SUCCESS; rotina Cloud histórica mantida"
         }
       ],
       "assets": [
@@ -420,18 +420,18 @@
         }
       ],
       "admin_url": "https://drive.google.com/",
-      "source": "Conector Drive 22/10: busca de metadados; GitHub backup Actions 22/10",
+      "source": "23/10/2026: GitHub Actions CAS #40005884467 e RESTORE PostgreSQL17 #40034006428, a partir do CAS/seed imutável; logs do executor original Cloud Run não auditados diretamente.",
       "alerts": [
-        "Documentos Drive aparecem na pesquisa, mas nenhum restore PostgreSQL17/Storage/Auth foi executado na auditoria.",
+        "Restauração SQL/PostgreSQL17 de 23/10 confirmada: 194 tabelas, 193 RLS, 20 políticas, 208 migrações, 4.546 objetos Storage cruzados e 3 binários MD5. Isso não homologa Edge/Netlify/OAuth/DNS externos.",
         "Google Cloud Run/Scheduler e logs de execução não acessados diretamente nesta sessão."
       ],
-      "health_label": "DRIVE METADADOS ACESSÍVEIS • RESTORE NÃO ATESTADO"
+      "health_label": "PG17 23/10 RESTAURADO • SISTEMAS EXTERNOS PARCIAIS"
     }
   ],
   "backups": {
     "cofre_zero": {
       "status": "restore_proven_preserved",
-      "validation_date": "2026-10-05",
+      "validation_date": "2026-10-23",
       "local_baseline": "Baseline de recuperação preservada; backup oficial corrente migrou para nuvem",
       "contents": [
         "dump de banco",
@@ -440,7 +440,7 @@
         "restore runbook",
         "checksums"
       ],
-      "note": "Baseline histórica de recuperação preservada; STATUS ATUAL não deve exibir restore integral como comprovado sem teste recente. CAS GitHub SUCCESS != restauração completa.",
+      "note": "PG17 real restaurado em ambiente isolado sem rede a partir do histórico imutável de 23/10/2026 (Actions #40034006428, PASS): roles/schema/data, RLS/ACL, 208 migrações e 4.546 referências Storage com 3 arquivos binários. Cobertura externa Edge/Netlify/OAuth ainda parcial, não anunciar recuperação total do ecossistema.",
       "edge_function_snapshot_count": 254,
       "current_live_edge_functions": 370
     },
@@ -448,18 +448,18 @@
       "schedule": "03:00 diariamente • America/Sao_Paulo",
       "installed_at": "2026-10-05 • migração cloud oficial",
       "state": "attention",
-      "last_attempt": "2026-10-15 03:00:01 BRT • Cloud Run construrei-backup-q2tjm",
-      "last_result": "GitHub Cofre Zero CAS Action runs 39869814025 e 39865384972 SUCCESS em 22/10; prova do job Cloud Run/Scheduler às 03h e restauração integral neste dia INDISPONÍVEL.",
+      "last_attempt": "Snapshot oficial RUN_ID 20261023-060011 (23/10 03h BRT); Cloud Run/Scheduler não inspecionados diretamente nesta auditoria",
+      "last_result": "Cofre CAS 23/10 Actions #40005884467 SUCCESS e RESTORE real PostgreSQL17 em 23/10 Actions #40034006428 SUCCESS, 3 SQL, 194 tabelas, 208 migrações e 4.546 Storage IDs.",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
-      "verification": "CI CAS SUCCESS; não assumir que checksum readback/restore PostgreSQL17/Storage/Auth foram executados. Caso no Gestor: EXEC-COFRE-COVERAGE-20261010.",
+      "verification": "Restauração SQL/PG17 REAL, isolada, aprovada em 23/10; prova de hash SHA/MD5 e isolamento. Cobertura externa de aplicativos ainda não homologada. Item canônico EXEC-COFRE-COVERAGE-20261010.",
       "independence": "Independente do notebook/Docker local",
       "upstream_connectivity": [
         "Google Drive CURRENT/HISTORY",
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Preservar Scheduler/Run histórico; revisão da PR #146 antes de merge; obter prova job Cloud recente e restore isolado sem FULL repetido."
+      "action": "Manter Cloud Scheduler/Run e CAS atuais; apenas monitorar falhas. Resolver cobertura externa Netlify/Edge/OAuth nos controles existentes; sem cron/FULL duplicado."
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
@@ -600,9 +600,9 @@
     },
     {
       "severity": "attention",
-      "title": "Restauração SQL PG17 atual não homologada",
-      "detail": "Drill no workflow verifica 3 SQL e 3 amostras Storage com hashes, mas não executa replay PostgreSQL17 em ambiente isolado, nem prova Auth/Storage e E2E.",
-      "action": "Ensaio integral ADIADO_MONITORADO pelo contrato 12/10; manter backup_restore_ok=false até prova e isolamento disponíveis."
+      "title": "PG17 SQL do backup 23/10 restaurado; aplicativos externos não testados",
+      "detail": "Restauração integrada real 23/10 PASS em PG17 descartável, sem rede: 3 SQL, 194 tabelas, 193 RLS, 20 políticas, 208 migrações, 4.546 Storage IDs e 3 corpos binários MD5. Aplicativos, Edge, OAuth, DNS e Netlify exigem provas independentes.",
+      "action": "Prova SQL PG17 encerrada; preservar a rotina e os backups. Não marcar todo o ecossistema como restaurado antes de recuperar provedores externos."
     },
     {
       "severity": "attention",
@@ -618,9 +618,9 @@
     },
     {
       "severity": "high",
-      "title": "Cofre Zero — restauração integral ainda sem comprovação atual",
-      "detail": "GitHub CAS Actions SUCCESS não atestam restauração isolada do PostgreSQL 17/Storage/Auth nem Cloud Run/Scheduler do dia.",
-      "action": "Validar somente após prova controlada, preservando backup atual e rollback."
+      "title": "Cofre Zero — SQL PG17 recuperado; cobertura externa parcial",
+      "detail": "SQL/PG17 do snapshot 23/10 e metadados Storage recuperados com sucesso, Actions #40034006428. Netlify, Edge Functions, OAuth, DNS e retomada funcional das aplicações não fazem parte do teste.",
+      "action": "Acompanhar apenas lacunas externas e preservar idempotência, hashes, backups e cron existentes."
     }
   ],
   "next_actions": [
@@ -662,9 +662,9 @@
     },
     {
       "priority": "P0",
-      "title": "Replay PostgreSQL17 isolado e recuperação Auth/Storage",
+      "title": "Replay SQL/PG17 do backup imutável 23/10 e identidade Storage",
       "owner": "CR Assertivo",
-      "status": "deferred"
+      "status": "completed"
     },
     {
       "priority": "P0",
