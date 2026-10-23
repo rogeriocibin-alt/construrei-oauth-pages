@@ -1569,7 +1569,7 @@ document.getElementById("cr-ap-prepare").addEventListener("click",async()=>{
 if(!selected){editorStatus.textContent="Selecione uma movimentação.";return}
  const current=bankStatuses.get(String(selected.source_id||""));
  if(!current||current.state!=="PENDENTE"||statusFailed){editorStatus.textContent="Registro financeiro não está livre para lançamento. Atualize a consulta e confirme o histórico.";return}
-const obra=caseField.value.trim();if(!/^\\d{1,5}-\\d{2}$/.test(obra)){editorStatus.textContent="Informe a obra no formato 818-26.";return}
+const obra=caseField.value.trim();if(!/^\d{1,5}-\d{2}$/.test(obra)){editorStatus.textContent="Informe a obra no formato 818-26.";return}
 if(existing.value==="yes"){editorStatus.textContent="Custo já antecipado: novo lançamento bloqueado para evitar duplicidade. A conciliação automática com o Trello ainda não está disponível.";return}
 if(existing.value!=="no"){editorStatus.textContent="Confira se o custo já consta no Trello antes de lançar.";return}
 const m=selected,amount=Math.abs(Number(m.amount_centavos||0)),ref=String(m.source_id??m.id??m.transaction_id??m.external_id??"").trim();
