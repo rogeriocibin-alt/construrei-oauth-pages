@@ -147,6 +147,7 @@ async function sha256(s:string){
 async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string){
  if(p.direction!=="OUT"||!p.operation_id.startsWith("CORA_"))throw Error("EXISTING_ONLY_BANK_DEBITS");
  const pre=await legacy("manual-cora-preview",withMarker(p),k);
+ if(String(pre?.target?.case||"").trim()!==p.case)throw Error("TRELLO_CASE_MISMATCH");
  const short=shortLink(pre?.target?.trello_url);
  if(!short)throw Error("TRELLO_TARGET_UNVERIFIED");
  const target=await card(short);
@@ -157,6 +158,8 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string){
  for(const line of lines){
   if(/^\s*Custos\s*:/i.test(line)){inCosts=true;continue}
   if(!inCosts)continue;
+  // Lines already linked by the Cora writer must never be reused as an old manual expense.
+  if(/\bRef\.\s*Cora\b|\bID bancário Cora\s*:/i.test(line))continue;
   if(/^\s*(?:Total\s+Custos|Lucro|Saldo|Recebimentos?|Entradas?|Observa[cç][oõ]es?|Rateio)\s*:/i.test(line))break;
   const m=line.trim().match(/^(\d{2})\/(\d{2})(?:\/(\d{2}|\d{4}))?\s*[-–]\s*R\$\s*([\d.,]+)\b(.*)$/i);
   if(!m||m[1]!==dd||m[2]!==mm)continue;
