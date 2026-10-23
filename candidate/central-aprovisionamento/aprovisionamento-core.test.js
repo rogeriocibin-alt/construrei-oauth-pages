@@ -9,6 +9,8 @@ assert.throws(()=>validar(m,{destino:"rateio",partes:[{obra:"818-26",valor:99}]}
 assert.throws(()=>validar(m,{destino:"impostos"}),/Competência/);
 assert.equal(estado(m,{chaveIdempotencia:chave(m),persistido:true,exigeTrello:true,trelloConfirmado:false}),"PENDENTE_REPROCESSAMENTO");
 assert.equal(estado(m,{chaveIdempotencia:chave(m),persistido:true,exigeTrello:true,trelloConfirmado:true}),"APROVISIONADO");
+assert.equal(validar({source_id:"real-789",amount_centavos:4501,direction:"debit"},{destino:"obra",obra:"818-26"}).valorCentavos,4501);
+assert.throws(()=>validar({source_id:"real-789",amount_centavos:"errado"},{destino:"obra",obra:"818-26"}),/bancário inválido/);
 assert.equal(bankId({source_id:"cora-real-123"}),"cora-real-123");
 assert.equal(chave({source_id:"cora-real-123"}),"cora:cora-real-123");
 Promise.all([operationId({source_id:"cora-real-123"}),operationId({source_id:"cora-real-123"}),operationId({source_id:"outro-456"})]).then(([id,a,b])=>{
