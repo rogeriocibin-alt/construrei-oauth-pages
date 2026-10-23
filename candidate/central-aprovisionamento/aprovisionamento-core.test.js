@@ -113,7 +113,7 @@ assert.ok(ui.includes('<option>Recebimento</option>'),"Receipt select option not
 assert.ok(ui.includes('id="cr-ap-kind"'),"Unified operations selector missing");
 assert.ok(ui.includes('id="cr-ap-preview-parts"'),"Server-verified split preview missing");
 const receiptCode=backend.slice(backend.indexOf("async function receiptPlan("),backend.indexOf("async function writeReceipt("))
- .replace("p:ReturnType<typeof clean>","p");
+ .replace("p:ReturnType<typeof clean>,verifiedCase?:{case:string;id:string;url:string;list:string;name:string}","p,verifiedCase");
 const testReceipt=new Function("liveCases","shortLink","card","amount",receiptCode+";return receiptPlan")(
  async()=>[{case:"800-26",id:"0123456789abcdef01234567",url:"https://trello.com/c/ABCD1234",list:"EM ANDAMENTO",name:"800-26 TESTE"}],
  ()=> "ABCD1234",
