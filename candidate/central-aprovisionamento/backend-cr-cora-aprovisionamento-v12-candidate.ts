@@ -285,9 +285,10 @@ async function bankAlreadyUsed(p:ReturnType<typeof clean>,k:string){
 
 /* Receipt writes update both the visible Recebido movement and Valor Recebido
  * in a SINGLE Trello description update; never move/close the job card. */
-async function receiptPlan(p:ReturnType<typeof clean>){
+async function receiptPlan(p:ReturnType<typeof clean>,verifiedCase?:{case:string;id:string;url:string;list:string;name:string}){
  if(p.direction!=="IN")throw Error("RECEIPT_DIRECTION_INVALID");
- const cases=await liveCases("IN"),eligible=cases.filter(x=>x.case===p.case);
+ if(verifiedCase&&verifiedCase.case!==p.case)throw Error("RECEIPT_CASE_MISMATCH");
+ const eligible=verifiedCase?[verifiedCase]:(await liveCases("IN")).filter(x=>x.case===p.case);
  if(eligible.length!==1)throw Error("RECEIPT_CASE_NOT_OPEN_FOR_PAYMENT");
  const known=eligible[0],short=shortLink(known.url);
  if(!short)throw Error("RECEIPT_TARGET_URL_INVALID");
@@ -389,7 +390,7 @@ async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:stri
    amount_cents:part.cents,category:p.direction==="IN"?"Recebimento":p.category,
    counterparty:p.counterparty,description:p.description,reference:"Cora"};
   const tagged=withMarker(child);
-  const receipt=p.direction==="IN"?await receiptPlan(child):null;
+  const receipt=p.direction==="IN"?await receiptPlan(child,part.card as {case:string;id:string;url:string;list:string;name:string}):null;
   const target=receipt?{duplicate:false,target:receipt.target}:await legacy("manual-cora-preview",tagged,k);
   const link=String(target?.target?.trello_url||"");
   if(target.duplicate||shortLink(link)!==shortLink((part.card as any).url))throw Error("MULTI_TARGET_PREVIEW_CONFLICT_"+part.case);
