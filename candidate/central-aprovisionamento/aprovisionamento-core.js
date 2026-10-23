@@ -7,7 +7,10 @@ function bankId(m){const id=String(m?.source_id??m?.id??m?.transaction_id??m?.ex
 function chave(m){return "cora:"+bankId(m);}
 async function operationId(m){const raw=new TextEncoder().encode("CR-CORA-APROVISIONAMENTO-V1:"+bankId(m));const digest=await globalThis.crypto.subtle.digest("SHA-256",raw);return "CORA_"+Array.from(new Uint8Array(digest),v=>v.toString(16).padStart(2,"0")).join("");}
 function validar(m,operacao){
- const id=chave(m), total=Math.abs(centavos(m.valor)), destino=operacao?.destino;
+ const id=chave(m), destino=operacao?.destino;
+ const bankCents=m?.amount_centavos;
+ const total=bankCents==null?Math.abs(centavos(m.valor)):(Number.isSafeInteger(Number(bankCents))&&Number(bankCents)>0?Number(bankCents):NaN);
+ if(!Number.isSafeInteger(total))throw Error("Valor bancário inválido");
  if(!total)throw Error("Movimentação sem valor");
  if(!DESTINOS.has(destino))throw Error("Destino inválido");
  if(destino==="obra"&&!/^\d{1,5}-\d{2}$/.test(operacao.obra||""))throw Error("Obra inválida");
