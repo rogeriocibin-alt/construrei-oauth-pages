@@ -51,3 +51,17 @@ Vídeo de validação no Android mostrou a fila **Cora real** com movimentos ban
 - **Correção:** adicionar regra mais específica exclusivamente para `#cora #cr-ap-results button.manualbtn` com `display:inline-flex!important`, inclusive estado `:disabled` e layout responsivo mobile. A proteção original de ocultação/negação fora da fila permanece inalterada. Commit da branch `95e6d566bda1efd43c993e84e60eafac197106f4`.
 - **Prévia isolada publicada:** https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-v12-aprovisionamento-cora-20261023/?v=4876715f ; main commit `4876715f7a19acab656a323a991cd9be53a5a6d4`, GitHub Pages build `39979854325` com **SUCCESS**.
 - **Testes realizados:** sintaxe dos 13 blocos JavaScript sem erros; regra CSS presente na candidata e na prévia; nenhuma alteração em `production/`, na Edge Function, no saldo Cora ou nas obras fechadas. **Ainda falta aceitação visual do botão e E2E de gravação Trello real**, manter PR #148 DRAFT.
+
+## Terceiro vídeo Android — 23/10/2026 12h55 BRT | obra válida rejeitada
+
+Vídeo `1000967196.mp4` (32,7 s): função de consulta autenticada e botões individuais `Aprovisionar →` agora aparecem. Usuário escolhe o débito bancário real `Combustível`, **R$ 150,00, 23/10/2026**, informa obra **799-26** e seleciona **Não — lançar custo realizado**. Ao pressionar **Preparar lançamento V12**, a UI responde erroneamente `Informe a obra no formato 818-26.`. O vídeo também mostra a seleção `Sim — já foi lançado`, que deve continuar impedindo duplicação.
+
+**Causa-raiz verificada no código da candidata:** formulário tinha regex literal JavaScript `/^\\d{1,5}-\\d{2}$/`; procurava uma barra invertida literal e recusava `799-26`. A validação correta usa `/^\d{1,5}-\d{2}$/`. A pesquisa dos demais regex âncora no arquivo apontou **somente esta** expressão com barras duplicadas.
+
+**Correções verificáveis:**
+- Candidate: commit `2795e1caba7daec5dfb4b0171b0cbf85cfb66b87`, alteração de uma expressão única.
+- Preview GitHub Pages main: commit `44a0f3bb51c356011e79bf99a6574d96aff5e3a5`, modificando somente `preview/dashboard-v12-aprovisionamento-cora-20261023/index.html`. GitHub Pages run `39982809990` **SUCCESS**.
+- Testes da expressão executados: **10 vetores** incluindo `799-26`, `818-26` e inválidos, todos passaram. **13 scripts** HTML passaram na checagem de sintaxe.
+- Teste de regressão ancorado na expressão real da UI acrescentado em `candidate/central-aprovisionamento/aprovisionamento-core.test.js`, commit `b5803db6460cbdf5a30ef88276d2b47236e38db0`.
+- **Link para o teste:** https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-v12-aprovisionamento-cora-20261023/?v=44a0f3bb
+- Não houve gravação financeira ou Trello na correção, nem alterações ao `production/`, às obras fechadas ou ao saldo Cora. **Ainda falta validar o próximo passo no Android e executar preview/commit real controlado**; PR #148 deve continuar DRAFT.
