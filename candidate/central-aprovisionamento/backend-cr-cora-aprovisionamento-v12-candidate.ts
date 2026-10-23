@@ -60,10 +60,23 @@ async function fingerprint(p:ReturnType<typeof clean>){
  const buffer=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(parts.join("|")));
  return Array.from(new Uint8Array(buffer),x=>x.toString(16).padStart(2,"0")).join("");
 }
+/* Human-readable Trello lines; immutable source_id and deterministic operation_id
+ * live in the idempotent Supabase ledger, never duplicated in the card text.
+ * Keep a temporary CRV12OP marker until BOTH Trello and ledger confirm commit. */
 function withMarker(p:ReturnType<typeof clean>){
  const marker="CRV12OP_"+p.operation_id;
- const ref=(p.reference.slice(0,Math.max(0,98-marker.length))+" "+marker).trim();
- return {operation_id:p.operation_id,case:p.case,direction:p.direction,date:p.date,amount:p.amount,category:p.category,counterparty:p.counterparty,description:p.description,reference:ref};
+ const isBank=/^CORA_[0-9a-f]{64}$/.test(p.operation_id);
+ let counterparty=p.counterparty,description=p.description,reference=p.reference;
+ if(isBank){
+  // The original reference is never discarded from p/fingerprint/ledger.
+  description=description.split(p.reference).join("").replace(/ID bancário Cora\s*:/gi,"").replace(/^\s*[|·–-]\s*/,"").trim();
+  const normalized=(x:string)=>x.normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLocaleLowerCase("pt-BR");
+  if(normalized(description)===normalized(counterparty)||normalized(description)===normalized(p.category))description="";
+  if(normalized(counterparty)===normalized(p.category))counterparty="";
+  reference="Cora";
+ }
+ const ref=(reference.slice(0,Math.max(0,98-marker.length))+" "+marker).trim();
+ return {operation_id:p.operation_id,case:p.case,direction:p.direction,date:p.date,amount:p.amount,category:p.category,counterparty,description,reference:ref};
 }
 /* Visible operation markers are removed only AFTER the ledger is COMMITTED.
  * The operation ID and fingerprint remain in Supabase; failed/uncertain writes
