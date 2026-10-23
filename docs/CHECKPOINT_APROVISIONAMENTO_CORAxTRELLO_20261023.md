@@ -30,3 +30,15 @@
 - Validar atualização de KPIs e margem depois de escrita, notebook e celular; revisar segurança/rollback antes de qualquer merge ou promoção.
 
 **Estado**: candidata publicada com backend protegido; **não homologada de ponta a ponta**. V12 homologada e recursos financeiros oficiais intocados.
+
+## Evidência de vídeo e correção de bloqueio — 23/10, 12h11 BRT
+
+Vídeo de validação no Android mostrou a fila **Cora real** com movimentos bancários (por exemplo, R$ 150,00), mas todos permaneciam `AGUARDANDO CONSULTA DO REGISTRO` e os botões inativos. A mensagem literal foi: `V12_SOMENTE_LEITURA: gravacao fora do canal protegido`.
+
+**Causa-raiz identificada no código:** script `v12-netguard` intercepta `window.fetch` e permitia chamadas POST apenas para endpoints anteriores da V12. O endpoint novo `cr-cora-aprovisionamento-v12-candidate-20261023?action=bank-status` era bloqueado antes de alcançar o servidor. A mensagem sugeria erroneamente falha na consulta financeira; não era perda de movimentações.
+
+**Correção aplicada** na própria branch candidata (commit `5ad95b7dfcfe82cdf83fe6df1b33fbab9d1d97ce`) e na prévia isolada (commit `73d16acfc327ab666c00e3694957622880917548`): adicionar lista estrita para `bank-status`, `preview`, `commit`, `status` **somente** no slug exato da Edge candidata, exigindo cabeçalho de sessão. Sem wildcard, sem alterar os canais V12 originais e sem permitir outras operações. A Edge candidata continua verificando a role de diretor, o ID Cora e o ledger, independentemente do filtro do navegador.
+
+**Testes nesta sessão:** 13 blocos JavaScript da página compilados; 7 casos simulados de interceptador de rede passaram (consulta autorizada, commit autorizado com sessão, ausência de sessão negada, ação não prevista negada, outro endpoint negado, GET preservado, writer anterior preservado). GitHub Pages run `39977127563` **SUCCESS**. Não foi executado POST financeiro autenticado real, não houve gravação Trello ou alteração Cora. **Reteste visual Android com nova URL e autenticação permanece necessário**.
+
+**Link sem cache antigo:** https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-v12-aprovisionamento-cora-20261023/?v=73d16acf
