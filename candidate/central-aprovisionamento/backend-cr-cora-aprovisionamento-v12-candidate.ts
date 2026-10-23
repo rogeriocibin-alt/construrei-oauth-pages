@@ -382,8 +382,6 @@ async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:stri
  const byCase=new Map(eligible.map((x:any)=>[x.case,x]));
  const list=parts.map(part=>({...part,card:byCase.get(part.case)}));
  if(list.some(x=>!x.card))throw Error("TARGET_CASE_NOT_ELIGIBLE_OR_DUPLICATE");
- const fp=await sha256(JSON.stringify({type:"MULTI_TRELLO",bank:p.operation_id,
-  direction:p.direction,date:p.date,cents:p.amount_cents,parts}));
  const planned=[];
  for(const part of list){
   const itemId="CORA_"+await sha256("CR-CORA-MULTI-ITEM-V1|"+p.operation_id+"|"+part.case);
@@ -399,8 +397,11 @@ async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:stri
   const tag="CRV12OP_"+itemId;
   if(String(fresh.desc||"").includes(tag))throw Error("MULTI_ITEM_ALREADY_PRESENT_REVIEW");
   planned.push({case:part.case,cents:part.cents,id:(part.card as any).id,url:link,
-   card_name:(part.card as any).name,tag,tagged,receipt,target:target.target});
+   card_name:(part.card as any).name,tag,tagged,receipt,target:target.target,desc_digest:await sha256(String(fresh.desc||""))});
  }
+ const fp=await sha256(JSON.stringify({type:"MULTI_TRELLO",bank:p.operation_id,
+  direction:p.direction,date:p.date,cents:p.amount_cents,parts,
+  targets:planned.map(x=>({id:x.id,desc_digest:x.desc_digest}))}));
  if(action==="multi-preview")return reply({ok:true,preview:true,bank_amount_centavos:p.amount_cents,
    direction:p.direction,parts:planned.map(({case:cs,cents,card_name,url,target})=>({case:cs,cents,card_name,url,line:target.line})),
    fingerprint:fp,source:"LIVE_TRELLO_CASES"});
@@ -454,7 +455,9 @@ async function capitalBridge(req:Request,action:string,p:ReturnType<typeof clean
  const byId=new Map(available.map((x:any)=>[x.id,x]));
  if(allocations.some(a=>!byId.has(a.id)))throw Error("CAPITAL_PERIOD_NOT_FOUND");
  for(const a of allocations){if(Number((byId.get(a.id) as any).balance_cents)<a.cents)throw Error("CAPITAL_INSUFFICIENT_"+a.id)}
- const fp=await sha256(JSON.stringify({type:"CAPITAL_GIRO",bank:p.operation_id,allocations:[...allocations].sort((a,b)=>a.id.localeCompare(b.id))}));
+ const sorted=[...allocations].sort((a,b)=>a.id.localeCompare(b.id));
+ const fp=await sha256(JSON.stringify({type:"CAPITAL_GIRO",bank:p.operation_id,
+  allocations:sorted,balances:sorted.map(a=>({id:a.id,balance_cents:(byId.get(a.id) as any).balance_cents}))}));
  const response={ok:true,preview:true,source:"V11_CAPITAL_LIVE",total_cents:p.amount_cents,fingerprint:fp,
   allocations:allocations.map(a=>({id:a.id,cents:a.cents,period:(byId.get(a.id) as any).period,
    balance_cents:(byId.get(a.id) as any).balance_cents}))};
