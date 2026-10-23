@@ -1,0 +1,12 @@
+const assert=require("node:assert/strict");const {validar,estado,chave}=require("./aprovisionamento-core.js");
+const m={id:"tx-001",valor:-100};
+assert.equal(estado(m,null),"PENDENTE");
+assert.equal(chave(m),"cora:tx-001");
+assert.equal(validar(m,{destino:"obra",obra:"818-26"}).valorCentavos,10000);
+assert.equal(validar(m,{destino:"capital_giro"}).destino,"capital_giro");
+assert.equal(validar(m,{destino:"rateio",partes:[{obra:"818-26",valor:60},{obra:"768-26",valor:40}]}).valorCentavos,10000);
+assert.throws(()=>validar(m,{destino:"rateio",partes:[{obra:"818-26",valor:99}]}),/não fecha/);
+assert.throws(()=>validar(m,{destino:"impostos"}),/Competência/);
+assert.equal(estado(m,{chaveIdempotencia:chave(m),persistido:true,exigeTrello:true,trelloConfirmado:false}),"PENDENTE_REPROCESSAMENTO");
+assert.equal(estado(m,{chaveIdempotencia:chave(m),persistido:true,exigeTrello:true,trelloConfirmado:true}),"APROVISIONADO");
+console.log("Aprovisionamento: 9 verificações passaram");
