@@ -81,3 +81,28 @@ Vídeo `1000967196.mp4` (32,7 s): função de consulta autenticada e botões ind
 **Resultado:** PRIMEIRO E2E Cora → operação determinística no Supabase → Trello → acerto visível: **APROVADO para esse caso concreto**. **Não equivale à homologação integral** de toda a candidata (entradas, aprovisionamentos com antecipação, rateio multiobra, estornos, capital de giro, replay via formulário manual, mobile re-login e outras classes de movimentos ainda exigem gates apropriados). PR #148 permanece **DRAFT**, candidata isolada e V12 homologada inalterada.
 
 **Observação de acabamento:** Trello mantém o `source_id` completo na descrição após a confirmação; o sufixo visível em `Ref.` fica abreviado pela rotina de marcador temporário do writer. Não há perda da referência completa para auditoria.
+
+## Confirmação persistente e higienização de descrição — 23/10/2026
+
+**Escopo autorizado:** exibir `TRELLO CONFIRMADO` na fila Cora, inclusive após recarga/reentrada; impedir repetição do lançamento; evitar repetição de IDs/CORA_ e outros códigos técnicos na descrição dos cartões Trello. Preservar Ledger Supabase como fonte oficial de rastreabilidade e todas as obras/valores originais.
+
+### Alterações técnicas
+
+1. **Backend Cora candidato** `candidate/central-aprovisionamento/backend-cr-cora-aprovisionamento-v12-candidate.ts`: atualização de `withMarker` (commit `1d36e36dd6e6ccaac42c5b8837521e1cf2a4f2f7`), de forma que lançamentos com `operation_id=CORA_<sha256>` sejam escritos temporariamente com referência visual `Cora CRV12OP_<id>`. A rotina existente remove o marcador temporário apenas **depois** de confirmar escrita Trello e `COMMITTED` no Supabase, resultando em `Ref. Cora`. Texto `ID bancário Cora:<source_id>` é filtrado da descrição visível; campos id/source/fingerprint e idempotência permanecem na `public.cr_finance_v12_operations`. Os lançamentos manuais sem id CORA_ preservam a lógica original. Edge isolada `cr-cora-aprovisionamento-v12-candidate-20261023` implantada **ACTIVE v3**, sem alterações ao writer oficial da V12.
+2. **Frontend candidato** `candidates/central-operacoes-unificada-v12-20261023/index.html`: reconsulta ledger ao recarregar página quando já autenticado e ao retornar à aba bancária, atualiza a fila após `cr:ap:confirmed` com checagem `bank-status`, colore de verde `✓ TRELLO CONFIRMADO · Obra <n>`, exibe link validado `Abrir cartão Trello ↗`, bloqueia `Aprovisionar` para operações `COMMITTED` e não exibe ID bancário completo ao lado da transação (fica disponível como título técnico). Descrição na preparação não injeta `source_id` no texto. Commits `617cdb9fb276b491a46471c4661a95b871af1c06` e `76e3c8f65cdfbe203604d6503974d0874b81eb9e`.
+3. **Barreira pós-commit**: se formulário manual for reutilizado na mesma sessão sem limpar, e a referência ainda for o mesmo `source_id` Cora previamente confirmado, a prévia é bloqueada. Commit `3006536fb5dfb7ca17685ac69d93e7069c7c9e25`. Não substitui controles no backend nem aplica bloqueio indiscriminado em todos os lançamentos manuais.
+4. **Prévia isolada publicada** em `main`, sem tocar `production/*`: URL https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-v12-aprovisionamento-cora-20261023/?v=f19494a4 (último commit `f19494a4e7d9c2afcc1ebc292057a68d0548d84a`).
+
+### Trello existente — uma edição real limitada a texto
+
+- Cartão da obra **799-26**, `https://trello.com/c/CJ27HA7S`, permaneceu em **AG. ACERTO**.
+- ÚNICA linha alterada de `23/10 - R$150,00 Combustível - Combustível - ID bancário Cora: ent_Kn8uoKAfRme4691Uco1rrXA | Combustível - Ref. ent_Kn8uoKAfRme4691Uc` para **`23/10 - R$150,00 Combustível - Ref. Cora`**. Os demais **22 separadores/linhas** e todas as outras despesas ficaram intactos; mesmo total, nenhuma inclusão/exclusão de valores ou mudança de lista/fechamento.
+- Confirmação posterior via conector Trello: linha legível presente, código antigo ausente; **23 linhas no cartão**.
+- Confirmação posterior via Supabase SQL: exatamente **1 registro** bancário, `status=COMMITTED`, `reference=ent_Kn8uoKAfRme4691Uco1rrXA`, `amount_cents=15000`, `trello_url=https://trello.com/c/CJ27HA7S`. A limpeza visual **não altera nem invalida** a idempotência.
+
+### Testes e gates
+
+- Novo backend deploy v3 ACTIVE; proteção de autenticação de diretor intacta; ref Cora original completa continua no ledger.
+- 13 blocos JS da candidata e da prévia foram sintaticamente validados após mudanças.
+- Teste unitário de `withMarker` em execução JavaScript comprovou remoção de código técnico e duplicidade textual para banco e preservação de comportamento para operação manual.
+- **Não foi feito um segundo débito real de teste**; replay, troca de dispositivo, entradas bancárias, revisão de antecipações e outras categorias ainda carecem de E2E próprio antes de homologação global. Não promover PR #148 nem atualizar `production/` com base apenas neste teste.
