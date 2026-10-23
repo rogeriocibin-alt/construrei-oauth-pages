@@ -282,6 +282,99 @@ async function bankAlreadyUsed(p:ReturnType<typeof clean>,k:string){
   reconciliation_kind:String(existing.payload?.reconciliation_kind||"DIRECT_TRELLO"),trello_url:existing.trello_url};
  throw Error("BANK_OPERATION_ALREADY_"+String(existing.status||"UNKNOWN"));
 }
+
+/* Receipt writes update both the visible Recebido movement and Valor Recebido
+ * in a SINGLE Trello description update; never move/close the job card. */
+async function receiptPlan(p:ReturnType<typeof clean>){
+ if(p.direction!=="IN")throw Error("RECEIPT_DIRECTION_INVALID");
+ const cases=await liveCases("IN"),eligible=cases.filter(x=>x.case===p.case);
+ if(eligible.length!==1)throw Error("RECEIPT_CASE_NOT_OPEN_FOR_PAYMENT");
+ const known=eligible[0],short=shortLink(known.url);
+ if(!short)throw Error("RECEIPT_TARGET_URL_INVALID");
+ const target=await card(short);
+ if(target.id!==known.id)throw Error("RECEIPT_TARGET_CHANGED");
+ const desc=String(target.desc||"");
+ const grossLine=desc.match(/^\s*Valor\s+Fechado\s*:\s*R\$\s*([\d.,]+)\s*$/im);
+ if(!grossLine)throw Error("RECEIPT_GROSS_TOTAL_MISSING");
+ const gross=amount(grossLine[1]);if(gross===null)throw Error("RECEIPT_GROSS_TOTAL_INVALID");
+ const receivedLines=[...desc.matchAll(/^\s*Valor\s+Recebido\s*:\s*R\$\s*([\d.,]+)\s*$/gim)];
+ if(receivedLines.length>1||receivedLines.length===0&&/Valor\s+Recebido\s*:/i.test(desc))
+   throw Error("RECEIPT_EXISTING_TOTAL_AMBIGUOUS");
+ let existing=0;
+ if(receivedLines.length){
+  const v=amount(receivedLines[0][1]);if(v===null)throw Error("RECEIPT_PREVIOUS_TOTAL_INVALID");
+  existing=v;
+ }else{
+  for(const l of desc.split(/\r?\n/)){
+   if(!/\bRecebido\b/i.test(l)||/Valor\s+Recebido\s*:/i.test(l))continue;
+   const hit=l.match(/^\s*\d{2}\/\d{2}\s*[-–]\s*R\$\s*([\d.,]+)\s+Recebido\b/i);
+   if(!hit)throw Error("RECEIPT_HISTORIC_LINE_REVIEW");
+   const cents=amount(hit[1]);if(cents===null)throw Error("RECEIPT_HISTORIC_AMOUNT_INVALID");
+   existing+=cents;
+  }
+ }
+ const next=existing+p.amount_cents;
+ if(!Number.isSafeInteger(next)||next>gross)throw Error("RECEIPT_EXCEEDS_CONTRACT_AMOUNT");
+ const m=p.date;
+ const day=m.slice(8,10)+"/"+m.slice(5,7);
+ const tag="CRV12OP_"+p.operation_id;
+ if(desc.includes(tag))throw Error("RECEIPT_TRELLO_MARKER_EXISTS_REVIEW");
+ const counterparty=String(p.counterparty||"").replace(/[\r\n]/g," ").slice(0,70);
+ const line=day+" - R$"+(p.amount_cents/100).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})
+  +" Recebido"+(counterparty?" - "+counterparty:"")+" - Ref. Cora "+tag;
+ const totalLine="Valor Recebido: R$ "+(next/100).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+ let updated=desc;
+ if(receivedLines.length)updated=updated.replace(receivedLines[0][0],totalLine);
+ else updated=updated.replace(grossLine[0],grossLine[0]+"\n"+totalLine);
+ const costPos=updated.search(/\n\s*Custos\s*:/i);
+ if(costPos<0)throw Error("RECEIPT_COST_SECTION_MISSING");
+ updated=updated.slice(0,costPos)+"\n"+line+updated.slice(costPos);
+ if(updated===desc||!updated.includes(tag))throw Error("RECEIPT_PREVIEW_INVALID");
+ return {card:target,short,updated,tag,line,previous_cents:existing,received_cents:next,gross_cents:gross,
+  target:{case:p.case,list:known.list,trello_url:known.url,card_name:known.name,line,amount_cents:p.amount_cents}};
+}
+async function writeReceipt(plan:Awaited<ReturnType<typeof receiptPlan>>){
+ const latest=await card(plan.short);
+ if(latest.id!==plan.card.id||String(latest.desc||"")!==String(plan.card.desc||""))
+  throw Error("RECEIPT_CARD_CHANGED_REVALIDATE");
+ const ak=env("TRELLO_API_KEY"),tk=env("TRELLO_API_TOKEN");
+ if(!ak||!tk)throw Error("RECEIPT_TRELLO_CREDENTIALS_UNAVAILABLE");
+ const url=new URL("https://api.trello.com/1/cards/"+latest.id);
+ url.searchParams.set("key",ak);url.searchParams.set("token",tk);
+ const r=await fetch(url,{method:"PUT",headers:{"content-type":"application/json"},body:JSON.stringify({desc:plan.updated}),
+  signal:AbortSignal.timeout(16000)});
+ if(!r.ok)throw Error("RECEIPT_TRELLO_WRITE_"+r.status);
+ const confirmed=await card(plan.short);
+ if(confirmed.id!==latest.id||!String(confirmed.desc||"").includes(plan.tag)||
+  !String(confirmed.desc||"").includes("Valor Recebido: R$ "+(plan.received_cents/100).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})))
+  throw Error("RECEIPT_VERIFICATION_REVIEW");
+ return confirmed;
+}
+async function singleReceipt(action:string,p:ReturnType<typeof clean>,k:string,fp:string){
+ const already=await bankAlreadyUsed(p,k);
+ if(already)return reply({...already,committed:true});
+ const plan=await receiptPlan(p);
+ if(action==="preview")return reply({ok:true,preview:true,target:plan.target,receipt:{
+  previous_cents:plan.previous_cents,new_cents:p.amount_cents,received_total_cents:plan.received_cents,gross_cents:plan.gross_cents}});
+ const claimed=await rpc("cr_finance_v12_claim",{p_operation_id:p.operation_id,p_fingerprint:fp,
+  p_card_id:plan.card.id,p_payload:{case:p.case,direction:p.direction,date:p.date,amount_cents:p.amount_cents,
+   reference:p.reference,category:"Recebimento",reconciliation_kind:"RECEIPT_TRELLO"}},k);
+ if(claimed.ok!==true||claimed.claimed!==true)throw Error(String(claimed.error||"RECEIPT_ALREADY_CLAIMED"));
+ try{
+  const confirmed=await writeReceipt(plan);
+  const done=await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,p_status:"COMMITTED",
+   p_trello_url:plan.target.trello_url,p_error_code:null},k);
+  if(done.ok!==true)throw Error("RECEIPT_LEDGER_NOT_CONFIRMED");
+  try{await tidyCommittedMarker(plan.short,plan.tag,String(confirmed.desc||""))}catch{}
+  return reply({ok:true,committed:true,target:plan.target,reconciliation_kind:"RECEIPT_TRELLO",received_total_cents:plan.received_cents});
+ }catch(e){
+  const error=String((e as Error)?.message||e);
+  try{await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,p_status:"REVIEW_REQUIRED",
+   p_trello_url:plan.target.trello_url,p_error_code:error.slice(0,100)},k)}catch{}
+  return reply({ok:false,error:"RECEIPT_REVIEW_REQUIRED",detail:error.slice(0,100),possible_trello_write:true},409);
+ }
+}
+
 async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
  const already=await bankAlreadyUsed(p,k);if(already)return reply(already);
  const parts=splitValidate(raw,p.amount_cents);
@@ -298,14 +391,15 @@ async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:stri
    amount_cents:part.cents,category:p.direction==="IN"?"Recebimento":p.category,
    counterparty:p.counterparty,description:p.description,reference:"Cora"};
   const tagged=withMarker(child);
-  const target=await legacy("manual-cora-preview",tagged,k);
+  const receipt=p.direction==="IN"?await receiptPlan(child):null;
+  const target=receipt?{duplicate:false,target:receipt.target}:await legacy("manual-cora-preview",tagged,k);
   const link=String(target?.target?.trello_url||"");
   if(target.duplicate||shortLink(link)!==shortLink((part.card as any).url))throw Error("MULTI_TARGET_PREVIEW_CONFLICT_"+part.case);
   const fresh=await card(shortLink(link)!);
   const tag="CRV12OP_"+itemId;
   if(String(fresh.desc||"").includes(tag))throw Error("MULTI_ITEM_ALREADY_PRESENT_REVIEW");
   planned.push({case:part.case,cents:part.cents,id:(part.card as any).id,url:link,
-   card_name:(part.card as any).name,tag,tagged,target:target.target});
+   card_name:(part.card as any).name,tag,tagged,receipt,target:target.target});
  }
  if(action==="multi-preview")return reply({ok:true,preview:true,bank_amount_centavos:p.amount_cents,
    direction:p.direction,parts:planned.map(({case:cs,cents,card_name,url,target})=>({case:cs,cents,card_name,url,line:target.line})),
@@ -319,9 +413,9 @@ async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:stri
  const wrote=[];
  try{
   for(const part of planned){
-   const wr=await legacy("manual-cora-commit",part.tagged,k);
+   const wr=part.receipt?{committed:true,duplicate:false}:await legacy("manual-cora-commit",part.tagged,k);
    if(wr?.committed!==true||wr?.duplicate===true)throw Error("MULTI_WRITE_NOT_NEW_"+part.case);
-   const confirmed=await card(shortLink(part.url)!);
+   const confirmed=part.receipt?await writeReceipt(part.receipt):await card(shortLink(part.url)!);
    if(!String(confirmed.desc||"").includes(part.tag))throw Error("MULTI_ITEM_NOT_VERIFIED_"+part.case);
    wrote.push({...part,confirmed});
   }
@@ -453,6 +547,10 @@ Deno.serve(async(req:Request)=>{
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,120)},409)}
  }
  const fp=await fingerprint(p),tag="CRV12OP_"+p.operation_id;
+ if(p.direction==="IN"&&(action==="preview"||action==="commit")){
+  try{return await singleReceipt(action,p,k,fp)}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,120)},409)}
+ }
  if(action==="existing-preview"||action==="existing-confirm"){
   try{return await reconcileExisting(action,p,raw,k,fp)}
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,110),possible_trello_write:false},409)}
