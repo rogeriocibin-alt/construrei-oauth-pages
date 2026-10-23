@@ -228,6 +228,166 @@ async function existingLinksForCardIdByOperation(id:string,k:string){
  return rows[0]||null;
 }
 
+
+/** Read real Trello cards; never fabricate work IDs or consider AG. ACERTO unpaid. */
+const BOARD_2026="6974b24c16d17ca76351a950";
+const CG_FUNCTION="cr-capital-despesas-v11-candidate-20261009";
+async function trelloApiRead(path:string){
+ const a=env("TRELLO_API_KEY"),t=env("TRELLO_API_TOKEN");
+ if(!a||!t)throw Error("TRELLO_CREDENTIALS_UNAVAILABLE");
+ const u=new URL("https://api.trello.com/1"+path);u.searchParams.set("key",a);u.searchParams.set("token",t);
+ const r=await fetch(u,{signal:AbortSignal.timeout(14000)});
+ if(!r.ok)throw Error("TRELLO_READ_"+r.status);
+ return r.json();
+}
+function caseInName(v:unknown){
+ const match=String(v||"").match(/(?:^|[^\d])(\d{1,5})\s*-\s*(26)(?!\d)/);
+ return match?match[1]+"-"+match[2]:null;
+}
+function allowedList(direction:string,name:string){
+ const n=String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim();
+ const open=/EM ANDAMENTO|AGUARDANDO PAGAMENTO|AG\.?\s*PAGAMENTO|PAGAMENTO ATRASADO/.test(n);
+ return direction==="IN"?open:open||/AGUARDANDO ACERTO|AG\.?\s*ACERTO|RETORNO/.test(n);
+}
+async function liveCases(direction:string){
+ if(!["IN","OUT"].includes(direction))throw Error("INVALID_MOVEMENT_DIRECTION");
+ const [lists,cards]=await Promise.all([
+  trelloApiRead("/boards/"+BOARD_2026+"/lists?fields=id,name&filter=open"),
+  trelloApiRead("/boards/"+BOARD_2026+"/cards?fields=id,name,desc,idList,shortUrl&filter=open&limit=1000")
+ ]);
+ if(!Array.isArray(lists)||!Array.isArray(cards))throw Error("TRELLO_LISTS_OR_CARDS_UNAVAILABLE");
+ const lm=new Map(lists.map((x:any)=>[String(x.id),String(x.name||"")]));
+ const filtered=cards.filter((c:any)=>{
+  const name=String(c.name||""),num=caseInName(name);
+  return !!num&&allowedList(direction,lm.get(String(c.idList))||"")&&!/RESUMO|ACERTOS\s+2026/i.test(name);
+ }).map((c:any)=>({case:caseInName(c.name),name:String(c.name).slice(0,155),list:lm.get(String(c.idList)),
+  id:String(c.id),url:String(c.shortUrl||"")}));
+ const counts=new Map<string,number>();
+ filtered.forEach((c:any)=>counts.set(c.case,(counts.get(c.case)||0)+1));
+ return filtered.filter((c:any)=>counts.get(c.case)===1).sort((a:any,b:any)=>a.case.localeCompare(b.case,"pt-BR",{numeric:true}));
+}
+function splitValidate(raw:any,total:number){
+ const rows=raw?.allocations;
+ if(!Array.isArray(rows)||rows.length<2||rows.length>10)throw Error("SPLIT_REQUIRES_2_TO_10_TARGETS");
+ const parts=rows.map((r:any)=>({case:String(r.case||"").trim(),cents:Number(r.cents)}));
+ if(parts.some(a=>!/^\d{1,5}-26$/.test(a.case)||!Number.isSafeInteger(a.cents)||a.cents<=0))throw Error("INVALID_ALLOCATION_CASE_OR_CENTS");
+ if(new Set(parts.map(a=>a.case)).size!==parts.length)throw Error("DUPLICATED_CASE_IN_SPLIT");
+ if(parts.reduce((v,a)=>v+a.cents,0)!==total)throw Error("ALLOCATIONS_DO_NOT_SUM_TO_BANK_AMOUNT");
+ return parts.sort((a,b)=>a.case.localeCompare(b.case,"pt-BR",{numeric:true}));
+}
+async function bankAlreadyUsed(p:ReturnType<typeof clean>,k:string){
+ const existing=await existingLinksForCardIdByOperation(p.operation_id,k);
+ if(!existing)return null;
+ if(existing.status==="COMMITTED")return {ok:true,already_committed:true,
+  reconciliation_kind:String(existing.payload?.reconciliation_kind||"DIRECT_TRELLO"),trello_url:existing.trello_url};
+ throw Error("BANK_OPERATION_ALREADY_"+String(existing.status||"UNKNOWN"));
+}
+async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
+ const already=await bankAlreadyUsed(p,k);if(already)return reply(already);
+ const parts=splitValidate(raw,p.amount_cents);
+ const eligible=await liveCases(p.direction);
+ const byCase=new Map(eligible.map((x:any)=>[x.case,x]));
+ const list=parts.map(part=>({...part,card:byCase.get(part.case)}));
+ if(list.some(x=>!x.card))throw Error("TARGET_CASE_NOT_ELIGIBLE_OR_DUPLICATE");
+ const fp=await sha256(JSON.stringify({type:"MULTI_TRELLO",bank:p.operation_id,
+  direction:p.direction,date:p.date,cents:p.amount_cents,parts}));
+ const planned=[];
+ for(const part of list){
+  const itemId="CORA_"+await sha256("CR-CORA-MULTI-ITEM-V1|"+p.operation_id+"|"+part.case);
+  const child={...p,operation_id:itemId,case:part.case,amount:(part.cents/100).toFixed(2),
+   amount_cents:part.cents,category:p.direction==="IN"?"Recebimento":p.category,
+   counterparty:p.counterparty,description:p.description,reference:"Cora"};
+  const tagged=withMarker(child);
+  const target=await legacy("manual-cora-preview",tagged,k);
+  const link=String(target?.target?.trello_url||"");
+  if(target.duplicate||shortLink(link)!==shortLink((part.card as any).url))throw Error("MULTI_TARGET_PREVIEW_CONFLICT_"+part.case);
+  const fresh=await card(shortLink(link)!);
+  const tag="CRV12OP_"+itemId;
+  if(String(fresh.desc||"").includes(tag))throw Error("MULTI_ITEM_ALREADY_PRESENT_REVIEW");
+  planned.push({case:part.case,cents:part.cents,id:(part.card as any).id,url:link,
+   card_name:(part.card as any).name,tag,tagged,target:target.target});
+ }
+ if(action==="multi-preview")return reply({ok:true,preview:true,bank_amount_centavos:p.amount_cents,
+   direction:p.direction,parts:planned.map(({case:cs,cents,card_name,url,target})=>({case:cs,cents,card_name,url,line:target.line})),
+   fingerprint:fp,source:"LIVE_TRELLO_CASES"});
+ if(String(raw?.expected_fingerprint||"")!==fp)throw Error("MULTI_PREVIEW_CHANGED");
+ const payload={case:p.case,date:p.date,direction:p.direction,amount_cents:p.amount_cents,category:p.category,
+  reference:p.reference,reconciliation_kind:"MULTI_TRELLO",allocations:parts};
+ const claim=await rpc("cr_finance_v12_claim",{p_operation_id:p.operation_id,p_fingerprint:fp,
+  p_card_id:planned[0].id,p_payload:payload},k);
+ if(claim.ok!==true||claim.claimed!==true)return reply({ok:false,error:claim.error||"MULTI_ALREADY_CLAIMED",status:claim.status},409);
+ const wrote=[];
+ try{
+  for(const part of planned){
+   const wr=await legacy("manual-cora-commit",part.tagged,k);
+   if(wr?.committed!==true||wr?.duplicate===true)throw Error("MULTI_WRITE_NOT_NEW_"+part.case);
+   const confirmed=await card(shortLink(part.url)!);
+   if(!String(confirmed.desc||"").includes(part.tag))throw Error("MULTI_ITEM_NOT_VERIFIED_"+part.case);
+   wrote.push({...part,confirmed});
+  }
+  const done=await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,
+   p_status:"COMMITTED",p_trello_url:planned[0].url,p_error_code:null},k);
+  if(done.ok!==true)throw Error("MULTI_LEDGER_FINISH_NOT_CONFIRMED");
+  for(const part of wrote){try{await tidyCommittedMarker(shortLink(part.url)!,part.tag,String(part.confirmed.desc||""))}catch{}}
+  return reply({ok:true,committed:true,reconciliation_kind:"MULTI_TRELLO",parts:planned.map(x=>({case:x.case,cents:x.cents,url:x.url})),
+   total_cents:p.amount_cents});
+ }catch(e){
+  const error=String((e as Error)?.message||e).slice(0,99);
+  try{await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,
+   p_status:"REVIEW_REQUIRED",p_trello_url:planned[0].url,p_error_code:error},k)}catch{}
+  return reply({ok:false,error:"PARTIAL_MULTI_REVIEW_REQUIRED",detail:error,possible_trello_write:true,
+   verified_parts:wrote.map(x=>({case:x.case,cents:x.cents}))},409);
+ }
+}
+async function capitalBridge(req:Request,action:string,p:ReturnType<typeof clean>,raw:any,k:string){
+ if(p.direction!=="OUT")throw Error("CAPITAL_REQUIRES_BANK_DEBIT");
+ const origin=SB+"/functions/v1/"+CG_FUNCTION;
+ const auth=req.headers.get("x-cr-session")||"";
+ const requestCapital=async(kind:string,body?:any)=>{
+  const r=await fetch(origin+"?action="+kind,{method:body?"POST":"GET",headers:{"x-cr-session":auth,
+    ...(body?{"content-type":"application/json"}:{})},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(45000)});
+  const j=await r.json().catch(()=>({ok:false,error:"CAPITAL_RESPONSE_INVALID"}));
+  if(!r.ok||j?.ok!==true)throw Error("CAPITAL_"+String(j?.error||r.status));
+  return j;
+ };
+ const periods=await requestCapital("periods");
+ const available=Array.isArray(periods.periods)?periods.periods:[];
+ if(action==="capital-periods")return reply({ok:true,periods:available,source:"V11_CAPITAL_LIVE"});
+ const allocations=(Array.isArray(raw?.allocations)?raw.allocations:[]).map((x:any)=>({id:String(x.id||""),cents:Number(x.cents)}));
+ if(!allocations.length||allocations.length>20||new Set(allocations.map(a=>a.id)).size!==allocations.length
+   ||allocations.some(a=>!Number.isSafeInteger(a.cents)||a.cents<=0)||allocations.reduce((v,a)=>v+a.cents,0)!==p.amount_cents)
+  throw Error("CAPITAL_ALLOCATION_SUM_INVALID");
+ const byId=new Map(available.map((x:any)=>[x.id,x]));
+ if(allocations.some(a=>!byId.has(a.id)))throw Error("CAPITAL_PERIOD_NOT_FOUND");
+ for(const a of allocations){if(Number((byId.get(a.id) as any).balance_cents)<a.cents)throw Error("CAPITAL_INSUFFICIENT_"+a.id)}
+ const fp=await sha256(JSON.stringify({type:"CAPITAL_GIRO",bank:p.operation_id,allocations:[...allocations].sort((a,b)=>a.id.localeCompare(b.id))}));
+ const response={ok:true,preview:true,source:"V11_CAPITAL_LIVE",total_cents:p.amount_cents,fingerprint:fp,
+  allocations:allocations.map(a=>({id:a.id,cents:a.cents,period:(byId.get(a.id) as any).period,
+   balance_cents:(byId.get(a.id) as any).balance_cents}))};
+ if(action==="capital-preview")return reply(response);
+ const already=await bankAlreadyUsed(p,k);if(already)return reply(already);
+ if(raw?.expected_fingerprint!==fp)throw Error("CAPITAL_PREVIEW_CHANGED");
+ const payload={case:p.case,date:p.date,direction:p.direction,amount_cents:p.amount_cents,reference:p.reference,
+  category:p.category,reconciliation_kind:"CAPITAL_GIRO",allocations};
+ const claim=await rpc("cr_finance_v12_claim",{p_operation_id:p.operation_id,p_fingerprint:fp,
+  p_card_id:allocations[0].id,p_payload:payload},k);
+ if(claim.ok!==true||claim.claimed!==true)return reply({ok:false,error:claim.error||"CAPITAL_OPERATION_CLAIMED"},409);
+ try{
+  const x=await requestCapital("debit",{operation_id:p.operation_id,total_cents:p.amount_cents,
+   description:(p.category||"Custo")+" · "+(p.description||p.counterparty||"Cora"),allocations});
+  if(x.booked!==true)throw Error("CAPITAL_DEBIT_NOT_CONFIRMED");
+  const done=await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,
+   p_status:"COMMITTED",p_trello_url:(byId.get(allocations[0].id) as any).url||null,p_error_code:null},k);
+  if(done.ok!==true)throw Error("CAPITAL_LEDGER_FINISH_UNCONFIRMED");
+  return reply({ok:true,committed:true,reconciliation_kind:"CAPITAL_GIRO",allocations,amount_cents:p.amount_cents});
+ }catch(e){
+  try{await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,p_status:"REVIEW_REQUIRED",
+   p_trello_url:(byId.get(allocations[0].id) as any).url||null,p_error_code:String((e as Error)?.message||e).slice(0,100)},k)}catch{}
+  return reply({ok:false,error:"CAPITAL_REVIEW_REQUIRED",detail:String((e as Error)?.message||e).slice(0,100),
+   possible_trello_write:true},409);
+ }
+}
+
 async function batchBankStatus(raw:any,k:string){
  const given=raw?.ids;
  if(!Array.isArray(given)||given.length>120)return {ok:false,error:"INVALID_BANK_ID_LIST"};
@@ -249,7 +409,7 @@ async function batchBankStatus(raw:any,k:string){
    if(!id)continue;
    const verifiedReference=String(record.payload?.reference||"")===id;
    statuses[id]={
-    state:verifiedReference&&record.status==="COMMITTED"?(record.payload?.reconciliation_kind==="EXISTING_TRELLO"?"TRELLO_EXISTING":"TRELLO_CONFIRMED"): "REVIEW_REQUIRED",
+    state:verifiedReference&&record.status==="COMMITTED"?(record.payload?.reconciliation_kind==="EXISTING_TRELLO"?"TRELLO_EXISTING":record.payload?.reconciliation_kind==="MULTI_TRELLO"?"TRELLO_MULTI":record.payload?.reconciliation_kind==="CAPITAL_GIRO"?"CAPITAL_CONFIRMED":"TRELLO_CONFIRMED"): "REVIEW_REQUIRED",
     reconciliation_kind:record.payload?.reconciliation_kind||"DIRECT_TRELLO",
     ledger_status:String(record.status||"UNKNOWN"),
     verified_reference:verifiedReference,
@@ -267,11 +427,15 @@ Deno.serve(async(req:Request)=>{
  if(req.headers.get("origin")&&req.headers.get("origin")!==ORIGIN)return reply({ok:false,error:"ORIGIN_DENIED"},403);
  const u=new URL(req.url),action=u.searchParams.get("action")||"health";
  if(action==="health"&&req.method==="GET")return reply({ok:true,candidate:true,build:NAME,trello_writes:"DIRECTOR_ONLY",bank_verification:"SERVER_SIDE_CACHE",status:"LEDGER_PERSISTENT"});
- if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
+ if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return reply({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const k=key();if(!k)return reply({ok:false,error:"SERVICE_AUTH_UNAVAILABLE"},503);
  let raw:any=null;
  try{const t=await req.text();if(t.length>10000)return reply({ok:false,error:"PAYLOAD_TOO_LARGE"},413);raw=JSON.parse(t)}catch{return reply({ok:false,error:"INVALID_JSON"},400)}
+ if(action==="eligible-cases"){
+  try{const direction=String(raw?.direction||"IN");return reply({ok:true,cases:await liveCases(direction),source:"TRELLO_2026_LIVE"})}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e)},502)}
+ }
  if(action==="bank-status"){
   try{const data=await batchBankStatus(raw,k);return reply(data,data.ok?200:400)}
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e)},502)}
@@ -280,6 +444,14 @@ Deno.serve(async(req:Request)=>{
  try{p=clean(raw)}catch(e){return reply({ok:false,error:String(e?.message||e)},400)}
  try{await verifiedBankOrigin(p,k)}
  catch(e){return reply({ok:false,error:String((e as Error)?.message||e)},409)}
+ if(action==="multi-preview"||action==="multi-commit"){
+  try{return await multiFlow(action,p,raw,k)}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,120)},409)}
+ }
+ if(["capital-periods","capital-preview","capital-commit"].includes(action)){
+  try{return await capitalBridge(req,action,p,raw,k)}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,120)},409)}
+ }
  const fp=await fingerprint(p),tag="CRV12OP_"+p.operation_id;
  if(action==="existing-preview"||action==="existing-confirm"){
   try{return await reconcileExisting(action,p,raw,k,fp)}
