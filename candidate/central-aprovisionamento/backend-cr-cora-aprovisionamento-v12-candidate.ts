@@ -351,6 +351,85 @@ async function writeReceipt(plan:Awaited<ReturnType<typeof receiptPlan>>){
   throw Error("RECEIPT_VERIFICATION_REVIEW");
  return confirmed;
 }
+
+/** Financial reconciliation for previously paid jobs in AG. ACERTO.
+ * NEVER writes Trello; the user's explicit confirmation only links an
+ * authenticated bank movement to the already-paid operational record. */
+async function existingReceiptCandidate(p:ReturnType<typeof clean>,k:string){
+ if(p.direction!=="IN"||!p.operation_id.startsWith("CORA_"))throw Error("RECEIPT_ONLY_BANK_CREDITS");
+ const [lists,cards]=await Promise.all([
+  trelloApiRead("/boards/"+BOARD_2026+"/lists?fields=id,name&filter=open"),
+  trelloApiRead("/boards/"+BOARD_2026+"/cards?fields=id,name,desc,idList,shortUrl&filter=open&limit=1000")
+ ]);
+ if(!Array.isArray(lists)||!Array.isArray(cards))throw Error("TRELLO_RECEIPT_CONTEXT_UNAVAILABLE");
+ const matches=cards.filter((c:any)=>caseInName(c.name)===p.case&&!/RESUMO|ACERTOS\s+2026/i.test(String(c.name||"")));
+ if(matches.length!==1)throw Error(matches.length?"RECEIPT_DUPLICATE_WORK_CARDS":"RECEIPT_CASE_NOT_FOUND");
+ const entry=matches[0];
+ const lm=new Map(lists.map((x:any)=>[String(x.id),String(x.name||"")]));
+ const rawList=String(lm.get(String(entry.idList))||"");
+ const normalized=rawList.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim();
+ if(!/AGUARDANDO ACERTO|AG\.?\s*ACERTO/.test(normalized))
+  throw Error(allowedList("IN",rawList)?"RECEIPT_NOT_ALREADY_PAID":"RECEIPT_WORK_NOT_ELIGIBLE");
+ const short=shortLink(entry.shortUrl);
+ if(!short)throw Error("RECEIPT_CARD_LINK_INVALID");
+ const record=await card(short);
+ if(record.id!==entry.id||record.idList!==entry.idList)throw Error("RECEIPT_CARD_MOVED_RETRY");
+ const desc=String(record.desc||"");
+ const grossLine=desc.match(/^\s*Valor\s+Fechado\s*:\s*R\$\s*([\d.,]+)\s*$/im);
+ if(!grossLine||!grossLine[1])throw Error("RECEIPT_CONTRACT_TOTAL_MISSING");
+ const gross=amount(grossLine[1]);
+ if(!gross||gross!==p.amount_cents)throw Error("RECEIPT_AMOUNT_DIFFERS_FROM_PREVIOUSLY_PAID_WORK");
+ const explicit=[...desc.matchAll(/^\s*Valor\s+Recebido\s*:\s*R\$\s*([\d.,]+)\s*$/gim)];
+ if(explicit.length>1||explicit.length===0&&/Valor\s+Recebido\s*:/i.test(desc))throw Error("RECEIPT_EXISTING_AMOUNT_AMBIGUOUS");
+ if(explicit.length&&amount(explicit[0][1])!==p.amount_cents)throw Error("RECEIPT_RECORDED_AMOUNT_MISMATCH");
+ const linked=await existingLinksForCard(record.id,k);
+ if(linked.some(x=>x.status!=="FAILED"&&
+   (x.payload?.reconciliation_kind==="RECEIPT_EXISTING"||x.payload?.reconciliation_kind==="RECEIPT_TRELLO"||
+   x.payload?.reconciliation_kind==="MULTI_TRELLO"&&x.payload?.direction==="IN")&&
+   (x.payload?.case===p.case||x.payload?.allocations?.some?.((a:any)=>a.case===p.case))))
+  throw Error("RECEIPT_ALREADY_LINKED_TO_THIS_WORK");
+ const fp=await sha256(JSON.stringify({type:"RECEIPT_EXISTING",card:record.id,work:p.case,amount:p.amount_cents,
+  date:p.date,description_digest:await sha256(desc),list:record.idList,bank:p.operation_id}));
+ return {card:record,short,list:rawList,amount_cents:p.amount_cents,fingerprint:fp,
+  target:{case:p.case,card_name:String(record.name||""),list:rawList,trello_url:entry.shortUrl,
+   line:"Recebimento de "+p.date.slice(8,10)+"/"+p.date.slice(5,7)+": R$ "+
+    (p.amount_cents/100).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+
+    " — obra em AG. ACERTO, sem novo lançamento."}};
+}
+async function existingReceiptFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
+ const prior=await bankAlreadyUsed(p,k);
+ if(prior)return reply({...prior,committed:true});
+ const pre=await existingReceiptCandidate(p,k);
+ if(action==="receipt-existing-preview")return reply({ok:true,preview:true,already_received:true,
+  requires_explicit_confirmation:true,target:pre.target,fingerprint:pre.fingerprint,trello_write:false,
+  note:"O Trello já classifica esta obra como recebida. Confira o comprovante antes de vincular a movimentação; nenhum valor será escrito no cartão."});
+ if(String(raw?.expected_fingerprint||"")!==pre.fingerprint)throw Error("RECEIPT_EXISTING_PREVIEW_CHANGED");
+ const payload={case:p.case,date:p.date,direction:"IN",amount_cents:p.amount_cents,reference:p.reference,
+  category:"Recebimento",reconciliation_kind:"RECEIPT_EXISTING",trello_match_key:pre.fingerprint,
+  trello_line_text:"AG. ACERTO · Valor Fechado confirmado"};
+ const claim=await rpc("cr_finance_v12_claim",{p_operation_id:p.operation_id,p_fingerprint:await fingerprint(p),
+  p_card_id:pre.card.id,p_payload:payload},k);
+ if(claim.ok===true&&claim.claimed===false&&claim.status==="COMMITTED")
+  return reply({ok:true,already_committed:true,reconciliation_kind:"RECEIPT_EXISTING",trello_url:pre.target.trello_url});
+ if(claim.ok!==true||claim.claimed!==true)throw Error("RECEIPT_EXISTING_ALREADY_CLAIMED");
+ try{
+  // Final read before marking the bank movement; no Trello PUT/POST.
+  const check=await card(pre.short);
+  if(check.id!==pre.card.id||check.idList!==pre.card.idList||String(check.desc||"")!==String(pre.card.desc||""))
+   throw Error("RECEIPT_WORK_CHANGED_DURING_CONFIRMATION");
+  const done=await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,
+   p_fingerprint:await fingerprint(p),p_status:"COMMITTED",p_trello_url:pre.target.trello_url,p_error_code:null},k);
+  if(done.ok!==true)throw Error("RECEIPT_EXISTING_LEDGER_FINISH_MISSING");
+  return reply({ok:true,committed:true,reconciliation_kind:"RECEIPT_EXISTING",target:pre.target,
+   trello_write:false});
+ }catch(e){
+  try{await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:await fingerprint(p),
+   p_status:"REVIEW_REQUIRED",p_trello_url:pre.target.trello_url,
+   p_error_code:String((e as Error)?.message||e).slice(0,100)},k)}catch{}
+  return reply({ok:false,error:"RECEIPT_EXISTING_REVIEW_REQUIRED",possible_trello_write:false},409);
+ }
+}
+
 async function singleReceipt(action:string,p:ReturnType<typeof clean>,k:string,fp:string){
  const already=await bankAlreadyUsed(p,k);
  if(already)return reply({...already,committed:true});
@@ -507,7 +586,7 @@ async function batchBankStatus(raw:any,k:string){
    if(!id)continue;
    const verifiedReference=String(record.payload?.reference||"")===id;
    statuses[id]={
-    state:verifiedReference&&record.status==="COMMITTED"?(record.payload?.reconciliation_kind==="EXISTING_TRELLO"?"TRELLO_EXISTING":record.payload?.reconciliation_kind==="MULTI_TRELLO"?"TRELLO_MULTI":record.payload?.reconciliation_kind==="CAPITAL_GIRO"?"CAPITAL_CONFIRMED":"TRELLO_CONFIRMED"): "REVIEW_REQUIRED",
+    state:verifiedReference&&record.status==="COMMITTED"?(record.payload?.reconciliation_kind==="RECEIPT_EXISTING"?"RECEIPT_EXISTING":record.payload?.reconciliation_kind==="EXISTING_TRELLO"?"TRELLO_EXISTING":record.payload?.reconciliation_kind==="MULTI_TRELLO"?"TRELLO_MULTI":record.payload?.reconciliation_kind==="CAPITAL_GIRO"?"CAPITAL_CONFIRMED":"TRELLO_CONFIRMED"): "REVIEW_REQUIRED",
     reconciliation_kind:record.payload?.reconciliation_kind||"DIRECT_TRELLO",
     ledger_status:String(record.status||"UNKNOWN"),
     verified_reference:verifiedReference,
@@ -525,7 +604,7 @@ Deno.serve(async(req:Request)=>{
  if(req.headers.get("origin")&&req.headers.get("origin")!==ORIGIN)return reply({ok:false,error:"ORIGIN_DENIED"},403);
  const u=new URL(req.url),action=u.searchParams.get("action")||"health";
  if(action==="health"&&req.method==="GET")return reply({ok:true,candidate:true,build:NAME,trello_writes:"DIRECTOR_ONLY",bank_verification:"SERVER_SIDE_CACHE",status:"LEDGER_PERSISTENT"});
- if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
+ if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return reply({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const k=key();if(!k)return reply({ok:false,error:"SERVICE_AUTH_UNAVAILABLE"},503);
  let raw:any=null;
@@ -542,6 +621,10 @@ Deno.serve(async(req:Request)=>{
  try{p=clean(raw)}catch(e){return reply({ok:false,error:String(e?.message||e)},400)}
  try{await verifiedBankOrigin(p,k)}
  catch(e){return reply({ok:false,error:String((e as Error)?.message||e)},409)}
+ if(action==="receipt-existing-preview"||action==="receipt-existing-confirm"){
+  try{return await existingReceiptFlow(action,p,raw,k)}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,135),possible_trello_write:false},409)}
+ }
  if(action==="multi-preview"||action==="multi-commit"){
   try{return await multiFlow(action,p,raw,k)}
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,120)},409)}
