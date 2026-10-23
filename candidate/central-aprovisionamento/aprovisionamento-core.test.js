@@ -29,3 +29,25 @@ const validCase=new Function("obra","return "+match[1]+".test(obra)");
 for(const work of ["799-26","818-26","1-26","12345-26"])assert.equal(validCase(work),true,"Valid case was rejected: "+work);
 for(const work of ["79926","799-2","ABC-26","799-260","799-26e"])assert.equal(validCase(work),false,"Invalid case was accepted: "+work);
 console.log("Aprovisionamento: validacao de obra no formulario passou");
+
+/* Regression 23/10: after a Cora COMMITTED movement, the next distinct bank
+ * cost must not inherit the prior reference/operation. Cora NF must preserve
+ * the actual debited amount; only non-bank NF uses estimated 8.5% calculation. */
+const input=ui.slice(ui.indexOf("function manualNfUpdate(){"),ui.indexOf("function manualPayload(){"));
+assert.ok(input.startsWith("function manualNfUpdate(){"),"NF function not found");
+const v=(bankMode,category)=>{
+ const S={manualBankMovement:bankMode?{id:"ent_new",amount:15000}:null,manualNf:null};
+ const nodes={mc_category:{value:category},mc_dir:{value:"OUT"},mc_amount:{value:"150,00",readOnly:false},mc_nf_note:{style:{display:"none"},textContent:""}};
+ const document={getElementById:id=>nodes[id]};
+ const manualNfInvalidate=()=>{};
+ const fn=new Function("S","document","manualNfInvalidate","manualNfAmount","brl",input+";return manualNfUpdate;")(S,document,manualNfInvalidate,()=>({tax:850,gross:10000}),v=>String(v));
+ fn();return {amount:nodes.mc_amount.value,readOnly:nodes.mc_amount.readOnly,nf:S.manualNf,note:nodes.mc_nf_note.textContent};
+};
+assert.equal(v(true,"NF").amount,"150,00");
+assert.equal(v(true,"NF").readOnly,true);
+assert.equal(v(true,"Materiais").readOnly,true);
+assert.equal(v(false,"NF").amount,"8,50");
+assert.equal(v(false,"Materiais").readOnly,false);
+assert.ok(ui.includes("manualClear();S.manualOp=opId;S.manualBankMovement="),"New bank transaction must clear previous operation first");
+assert.ok(ui.includes("if(!S.manualBankMovement&&!S.manualNf)"),"Bank NF preview must skip estimate requirement");
+console.log("Aprovisionamento: new operation reset and bank-NF amount guards passed");
