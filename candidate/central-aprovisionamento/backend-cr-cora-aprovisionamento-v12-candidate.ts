@@ -302,7 +302,7 @@ async function receiptPlan(p:ReturnType<typeof clean>){
    throw Error("RECEIPT_EXISTING_TOTAL_AMBIGUOUS");
  let existing=0;
  if(receivedLines.length){
-  const v=amount(receivedLines[0][1]);if(v===null)throw Error("RECEIPT_PREVIOUS_TOTAL_INVALID");
+  const v=amount(receivedLines[0][1])??(/^0+(?:[.,]0{1,2})?$/.test(receivedLines[0][1])?0:null);if(v===null)throw Error("RECEIPT_PREVIOUS_TOTAL_INVALID");
   existing=v;
  }else{
   for(const l of desc.split(/\r?\n/)){
