@@ -5,7 +5,7 @@ set -euo pipefail
 umask 077
 test -n "$RCLONE_CONFIG_B64" || { echo 'BLOCKED: private Drive authorization absent'; exit 4; }
 test "$GITHUB_EVENT_NAME" = 'pull_request'
-test "$GITHUB_HEAD_REF" = 'checkpoint/cofre-zero-integrated-lab-20261012'
+test "$GITHUB_HEAD_REF" = 'candidate/cofre-zero-pg17-restore-20261023'
 WORK="$(mktemp -d)"
 CID=""
 cleanup() {
@@ -69,21 +69,65 @@ test "$AUTH_COUNT" -ge 27 && test "$STORAGE_COUNT" -ge 8 || { echo 'BLOCKED: off
 CONFIG="$WORK/rclone.conf"
 printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$CONFIG"
 chmod 600 "$CONFIG"
-REMOTE="construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL/20261012-060012"
+# Restore an immutable 23/10 snapshot from HISTORY_CAS seed/objects; CURRENT is never used.
+RUN_ID="20261023-060011"
+CAS_ROOT="construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_CAS"
+SEED_ROOT="construrei-drive:CONSTRUREI-BACKUP-AUTO/HISTORY_FULL/20261011-060021"
+export CR_LAB_RUN_ID="$RUN_ID"
+rclone --config "$CONFIG" copyto "$CAS_ROOT/MANIFESTS/$RUN_ID.json" "$WORK/cas-manifest.json" --retries 3 >/dev/null
 mkdir -p "$WORK/03_DATABASE"
-for file in BACKUP_STATUS.txt SHA256SUMS.txt; do
-  rclone --config "$CONFIG" copyto "$REMOTE/$file" "$WORK/$file" --retries 2 --retries-sleep 2s >/dev/null
+python3 - "$WORK/cas-manifest.json" "$WORK" <<'PY'
+import json,pathlib,re,sys
+manifest=json.loads(pathlib.Path(sys.argv[1]).read_text())
+root=pathlib.Path(sys.argv[2])
+assert manifest.get("format")=="CR-CAS-1"
+assert manifest.get("run_id")=="20261023-060011"
+assert manifest.get("source_project")=="yspuaamokjbrosytqjpg"
+assert manifest.get("immutable_seed_id")=="20261011-060021"
+assert isinstance(manifest.get("entries"),list)
+entries={e.get("path"):e for e in manifest["entries"]}
+assert len(entries)==manifest["entry_count"]==len(manifest["entries"])
+required=["BACKUP_STATUS.txt","SHA256SUMS.txt","03_DATABASE/roles.sql","03_DATABASE/schema.sql","03_DATABASE/data.sql"]
+storage=[e for e in manifest["entries"] if str(e.get("path","")).startswith("06_STORAGE/")]
+assert len(storage)>4500 and len(storage)<10000
+assert len(entries)==len(storage)+len(required)
+for p in required:
+ e=entries[p]
+ assert e["store"] in ("seed","cas")
+ assert re.fullmatch(r"[a-f0-9]{32}",e["md5"])
+ if e["store"]=="seed":assert e["key"]==p
+ else:assert re.fullmatch(r"[a-f0-9]{2}/[a-f0-9]{32}-[0-9]+",e["key"])
+assert all(e["store"] in ("seed","cas") for e in storage)
+(root/"storage-expected.txt").write_text(str(len(storage)))
+(root/"sql-cas-locations.json").write_text(json.dumps([{"path":p,"store":entries[p]["store"],"key":entries[p]["key"],"md5":entries[p]["md5"],"bytes":entries[p]["bytes"]} for p in required]))
+print("PASS: immutable snapshot manifest verified, SQL required and Storage catalog indexed")
+PY
+STORAGE_EXPECTED="$(cat "$WORK/storage-expected.txt")"
+python3 - "$WORK/sql-cas-locations.json" <<'PY' | while IFS="$(printf '\t')" read -r dest kind key md5 size; do
+import json,sys
+for x in json.load(open(sys.argv[1])):
+ print("\t".join(str(x[k]) for k in ("path","store","key","md5","bytes")))
+PY
+  if test "$kind" = seed; then REMOTE="$SEED_ROOT/$key"; else REMOTE="$CAS_ROOT/OBJECTS/$key"; fi
+  rclone --config "$CONFIG" copyto "$REMOTE" "$WORK/$dest" --retries 3 >/dev/null
 done
-for file in roles.sql schema.sql data.sql; do
-  rclone --config "$CONFIG" copyto "$REMOTE/03_DATABASE/$file" "$WORK/03_DATABASE/$file" --retries 2 --retries-sleep 2s >/dev/null
-done
+python3 - "$WORK" <<'PY'
+import hashlib,json,pathlib,sys
+r=pathlib.Path(sys.argv[1])
+for x in json.loads((r/"sql-cas-locations.json").read_text()):
+ b=r.joinpath(x["path"]).read_bytes()
+ assert len(b)==x["bytes"] and hashlib.md5(b).hexdigest()==x["md5"]
+s=(r/"BACKUP_STATUS.txt").read_text()
+assert "RUN_ID: 20261023-060011" in s
+print("PASS: current historical SQL recovered solely from immutable CAS/seed, MD5 verified")
+PY
 python3 .github/scripts/cr_sql_restore_preflight.py --root "$WORK" > "$WORK/preflight.json"
 python3 .github/scripts/cr_sql_copy_inventory.py --root "$WORK" > "$WORK/copy.json"
 python3 - "$WORK" <<'PY'
 import json, pathlib, sys
 folder=pathlib.Path(sys.argv[1])
 status=(folder/"BACKUP_STATUS.txt").read_text()
-assert "RUN_ID: 20261012-060012" in status, "Historical snapshot mismatch"
+assert "RUN_ID: 20261023-060011" in status, "Historical snapshot mismatch"
 pre=json.loads((folder/"preflight.json").read_text())
 inv=json.loads((folder/"copy.json").read_text())
 assert pre["hashes_verified"]==3 and pre["bootstrap_supabase_required"]
