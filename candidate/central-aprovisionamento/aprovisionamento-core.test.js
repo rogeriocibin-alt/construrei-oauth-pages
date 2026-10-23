@@ -178,3 +178,34 @@ Promise.all([
  assert.ok(ui.includes('id="cr-ap-receipt-agree"')&&ui.includes('"receipt-existing-confirm",receiptCheck.payload'));
  console.log("Receipt AG. ACERTO: explicit confirmation, no Trello writes, status and mismatch tests passed");
 }).catch(e=>{console.error(e);process.exitCode=1});
+
+
+/* Receipt ledger-only end-to-end stub: preview/commit must NEVER call Trello writer. */
+const receiptFlow=backend.slice(backend.indexOf("async function existingReceiptFlow("),
+ backend.indexOf("async function singleReceipt("))
+ .replace("action:string,p:ReturnType<typeof clean>,raw:any,k:string","action,p,raw,k")
+ .replaceAll("(e as Error)","e");
+const receiptCalls=[];
+const receiptFn=new Function("bankAlreadyUsed","existingReceiptCandidate","reply","rpc","fingerprint","card",
+ receiptFlow+";return existingReceiptFlow")(
+ async()=>null,
+ async p=>({fingerprint:"receipt-checkpoint-123",card:{id:"0123456789abcdef01234567",idList:"ag_acerto",desc:"unchanged"},
+  short:"CJ27HA7S",target:{case:p.case,trello_url:"https://trello.com/c/CJ27HA7S"}}),
+ (data,status)=>({body:data,httpStatus:status||200}),
+ async(name,args)=>{receiptCalls.push(name);return name==="cr_finance_v12_claim"?{ok:true,claimed:true,status:"PENDING"}:{ok:true}},
+ async()=> "bank-fingerprint",async()=>({id:"0123456789abcdef01234567",idList:"ag_acerto",desc:"unchanged"})
+);
+const receiptBank={operation_id:"CORA_"+"c".repeat(64),case:"799-26",direction:"IN",
+ date:"2026-10-23",amount_cents:283022,reference:"ent_existing_receipt"};
+Promise.resolve().then(async()=>{
+ const preview=await receiptFn("receipt-existing-preview",receiptBank,{},"test");
+ assert.equal(preview.body.preview,true);
+ assert.equal(preview.body.requires_explicit_confirmation,true);
+ assert.equal(preview.body.trello_write,false);
+ assert.equal(receiptCalls.length,0,"Preview must not claim or write anything");
+ const ok=await receiptFn("receipt-existing-confirm",receiptBank,{expected_fingerprint:"receipt-checkpoint-123"},"test");
+ assert.equal(ok.body.committed,true);
+ assert.equal(ok.body.trello_write,false);
+ assert.deepEqual(receiptCalls,["cr_finance_v12_claim","cr_finance_v12_finish"]);
+ console.log("Receipt ledger-only flow: preview safe, explicit confirm, no Trello writer passed");
+}).catch(e=>{console.error(e);process.exitCode=1});
