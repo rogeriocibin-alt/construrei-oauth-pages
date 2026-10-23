@@ -3,7 +3,9 @@
 "use strict";
 const DESTINOS=new Set(["obra","capital_giro","despesas_gerais","impostos","transferencia_interna","estorno","rateio"]);
 function centavos(valor){if(typeof valor!=="number"||!Number.isFinite(valor))throw Error("Valor inválido");return Math.round(valor*100);}
-function chave(m){const id=String(m?.id??"").trim();if(!id)throw Error("Identificador bancário obrigatório");return "cora:"+id;}
+function bankId(m){const id=String(m?.source_id??m?.id??m?.transaction_id??m?.external_id??"").trim();if(!id)throw Error("Identificador bancário obrigatório");return id;}
+function chave(m){return "cora:"+bankId(m);}
+async function operationId(m){const raw=new TextEncoder().encode("CR-CORA-APROVISIONAMENTO-V1:"+bankId(m));const digest=await globalThis.crypto.subtle.digest("SHA-256",raw);return "CORA_"+Array.from(new Uint8Array(digest),v=>v.toString(16).padStart(2,"0")).join("");}
 function validar(m,operacao){
  const id=chave(m), total=Math.abs(centavos(m.valor)), destino=operacao?.destino;
  if(!total)throw Error("Movimentação sem valor");
@@ -19,5 +21,5 @@ function validar(m,operacao){
  return {id,valorCentavos:total,destino,chaveIdempotencia:id,estado:"PRONTO_PARA_CONFIRMACAO"};
 }
 function estado(m,registro){const id=chave(m);if(!registro)return "PENDENTE";if(registro.chaveIdempotencia!==id)throw Error("Conciliação inconsistente");return registro.persistido&&(!registro.exigeTrello||registro.trelloConfirmado)?"APROVISIONADO":"PENDENTE_REPROCESSAMENTO";}
-return Object.freeze({validar,estado,chave,centavos});
+return Object.freeze({validar,estado,chave,bankId,operationId,centavos});
 });
