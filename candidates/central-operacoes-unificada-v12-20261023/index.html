@@ -607,7 +607,7 @@ body{background:var(--v12-bg)}
 <option value="multi-receipt">Entrada → distribuir recebimento entre várias obras</option>
 <option value="manual">Lançamento manual livre (informar obra)</option>
 </select></label>
-<div id="cr-ap-single"><label style="display:block;margin-bottom:10px">Obra de destino <input id="cr-ap-case" inputmode="numeric" placeholder="Ex.: 818-26" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"></label><label style="display:block;margin-bottom:10px">Este custo já está antecipado no Trello? <select id="cr-ap-existing" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"><option value="">Selecione para continuar</option><option value="yes">Sim — já foi lançado (não duplicar)</option><option value="no">Não — lançar custo realizado</option><option value="unsure">Não sei — preciso conferir</option></select></label></div><div id="cr-ap-split" hidden style="margin:12px 0;padding:14px;background:#fff;border:1px solid #c6dbe9;border-radius:12px"><div style="font-weight:800;margin-bottom:7px">Obras / contas disponíveis</div><p style="font-size:12px;color:#536d83;margin:3px 0 10px">Selecione e informe o valor de cada parcela. A soma deve corresponder exatamente à transação bancária.</p><div id="cr-ap-choices" style="max-height:330px;overflow:auto;display:grid;gap:7px"></div><div id="cr-ap-split-total" role="status" style="font-weight:800;margin:12px 0"></div><div class="manualactions"><button class="manualbtn" id="cr-ap-split-preview" type="button">1. Conferir distribuição</button><button class="manualbtn primary" id="cr-ap-split-commit" type="button" disabled>2. Confirmar distribuição</button></div><div id="cr-ap-split-status" role="status"></div></div><div class="manualactions"><button type="button" class="manualbtn primary" id="cr-ap-prepare">Preparar lançamento V12</button><button type="button" class="manualbtn" id="cr-ap-cancel">Cancelar</button></div><div id="cr-ap-editor-status" role="status"></div><div id="cr-ap-existing-review" hidden style="margin-top:12px;background:#eef8ff;border:1px solid #b9d9ed;border-radius:10px;padding:13px">
+<div id="cr-ap-single"><label style="display:block;margin-bottom:10px">Obra de destino <input id="cr-ap-case" inputmode="numeric" placeholder="Ex.: 818-26" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"></label><label style="display:block;margin-bottom:10px">Este custo já está antecipado no Trello? <select id="cr-ap-existing" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"><option value="">Selecione para continuar</option><option value="yes">Sim — já foi lançado (não duplicar)</option><option value="no">Não — lançar custo realizado</option><option value="unsure">Não sei — preciso conferir</option></select></label></div><div id="cr-ap-split" hidden style="margin:12px 0;padding:14px;background:#fff;border:1px solid #c6dbe9;border-radius:12px"><div style="font-weight:800;margin-bottom:7px">Obras / contas disponíveis</div><p style="font-size:12px;color:#536d83;margin:3px 0 10px">Selecione e informe o valor de cada parcela. A soma deve corresponder exatamente à transação bancária.</p><div id="cr-ap-choices" style="max-height:330px;overflow:auto;display:grid;gap:7px"></div><div id="cr-ap-split-total" role="status" style="font-weight:800;margin:12px 0"></div><div id="cr-ap-preview-parts" style="margin:8px 0;display:grid;gap:5px" aria-live="polite"></div><div class="manualactions"><button class="manualbtn" id="cr-ap-split-preview" type="button">1. Conferir distribuição</button><button class="manualbtn primary" id="cr-ap-split-commit" type="button" disabled>2. Confirmar distribuição</button></div><div id="cr-ap-split-status" role="status"></div></div><div class="manualactions"><button type="button" class="manualbtn primary" id="cr-ap-prepare">Preparar lançamento V12</button><button type="button" class="manualbtn" id="cr-ap-cancel">Cancelar</button></div><div id="cr-ap-editor-status" role="status"></div><div id="cr-ap-existing-review" hidden style="margin-top:12px;background:#eef8ff;border:1px solid #b9d9ed;border-radius:10px;padding:13px">
  <strong style="display:block;margin-bottom:8px;color:#164d75">Custo localizado no Trello · revisar antes de conciliar</strong>
  <label style="display:block">Selecione a linha correspondente <select id="cr-ap-existing-line" style="display:block;width:100%;min-height:45px;margin:8px 0;padding:9px;border:1px solid #b8d0e1;border-radius:8px"></select></label>
  <p style="font-size:12px;color:#344c64">Confirmar apenas se for exatamente a mesma despesa. Esta ação não inclui outra despesa no cartão, nem altera os valores.</p>
@@ -1590,6 +1590,7 @@ const more=document.getElementById("cr-ap-more");more.addEventListener("click",(
 
 const kind=document.getElementById("cr-ap-kind"),single=document.getElementById("cr-ap-single"),split=document.getElementById("cr-ap-split");
 const choices=document.getElementById("cr-ap-choices"),splitTotal=document.getElementById("cr-ap-split-total");
+const previewParts=document.getElementById("cr-ap-preview-parts");
 const splitStatus=document.getElementById("cr-ap-split-status"),splitPreviewButton=document.getElementById("cr-ap-split-preview"),splitCommitButton=document.getElementById("cr-ap-split-commit");
 let splitSelection=new Map(),splitPreview=null,splitBusy=false;
 function bankDirection(m){return /OUT|SAIDA|DÉBITO|DEBIT/i.test(String(m?.direction||""))?"OUT":/IN|ENTRADA|CRÉDITO|CREDIT/i.test(String(m?.direction||""))?"IN":null}
@@ -1619,7 +1620,7 @@ async function bankPayload(obra){
   counterparty:m.description,description:m.description,reference:m.reference};
 }
 function resetSplit(){
- splitSelection.clear();splitPreview=null;splitCommitButton.disabled=true;choices.replaceChildren();splitTotal.textContent="";
+ splitSelection.clear();splitPreview=null;splitCommitButton.disabled=true;choices.replaceChildren();splitTotal.textContent="";previewParts.replaceChildren();
  splitStatus.textContent="";
 }
 function splitSum(){
@@ -1648,7 +1649,7 @@ async function loadTargets(){
    const val=document.createElement("input");val.type="text";val.inputMode="decimal";val.placeholder="Valor R$";val.disabled=true;
    val.style.cssText="padding:8px;width:128px;max-width:40%;border:1px solid #b7cada;border-radius:7px";
    const edit=()=>{
-    splitPreview=null;splitCommitButton.disabled=true;
+    splitPreview=null;splitCommitButton.disabled=true;previewParts.replaceChildren();
     const cents=moneyCentavos(val.value);
     if(cb.checked&&cents&&cents>0){splitSelection.set(key,{key,cents,source:item})}
     else splitSelection.delete(key);
@@ -1693,6 +1694,14 @@ splitPreviewButton.addEventListener("click",async()=>{
   const response=await existingRequest(capital?"capital-preview":"multi-preview",{...p,allocations:alloc});
   if(!response.preview||!response.fingerprint)throw Error("Prévia não validada pelo servidor");
   splitPreview={source_id:p.reference,kind:kind.value,payload:{...p,allocations:alloc,expected_fingerprint:response.fingerprint}};
+  previewParts.replaceChildren();
+  const confirmedItems=capital?response.allocations:response.parts;
+  if(!Array.isArray(confirmedItems)||confirmedItems.length!==items.length)throw Error("Resumo de distribuição incompleto");
+  for(const part of confirmedItems){
+   const n=document.createElement("div");n.style.cssText="padding:9px;border:1px solid #d3e1ed;border-radius:7px;background:#f5f9fc;font-size:13px";
+   n.textContent=(capital?part.period:part.case+" · "+part.card_name)+" — "+displayBank(Number(part.cents));
+   previewParts.append(n);
+  }
   splitStatus.textContent="✓ PRÉVIA APROVADA · "+items.length+" destinos · "+displayBank(Number(selected.amount_centavos))+". Confira os valores e clique Confirmar distribuição.";
   splitCommitButton.disabled=false;
  }catch(e){splitPreview=null;splitStatus.textContent="Não foi possível validar: "+String(e?.message||e)}
