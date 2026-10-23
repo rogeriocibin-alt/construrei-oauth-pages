@@ -1,4 +1,4 @@
-name: Cofre Zero | Ciclo semanal unico (candidata)
+name: Cofre Zero | Trello textos incrementais (OIDC protegido)
 # RESTAURADO no caminho OIDC Trello original; jamais criar bridge, segredo ou credencial.
 # AINDA NAO ATIVAR EM MAIN ate o Cloud Scheduler produtor estar comprovadamente semanal.
 on:

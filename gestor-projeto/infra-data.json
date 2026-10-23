@@ -309,11 +309,11 @@
         }
       ],
       "admin_url": "https://app.netlify.com/teams/rogeriocibin",
-      "source": "Inventário histórico 03/10; sem conector Netlify nesta sessão de 22/10",
+      "source": "Conector Netlify direto 23/10: 7 projetos, 1 deploy pronto e 6 sem deploy atual; pacote restaurável do dashboard #38178583034.",
       "alerts": [
         "Sete sites no inventário anterior, sem verificação atual de saúde/deploy. Evitar concluir ou desativar sem auditoria independente."
       ],
-      "health_label": "NÃO REVALIDADO"
+      "health_label": "1 DEPLOY ATIVO RECUPERÁVEL • 6 SITES HISTÓRICOS SEM DEPLOY"
     },
     {
       "id": "vercel",
@@ -420,12 +420,12 @@
         }
       ],
       "admin_url": "https://drive.google.com/",
-      "source": "GitHub PG17 40034006428 PASS, Cofre CAS 40035175426 PASS, registro Mestre Supabase 23/10 (Cloud Run/Scheduler não auditados diretamente)",
+      "source": "Drive privado Cofre Zero/24_EXTERNAL_SOURCES: fonte Edge 386/386 e 22 funções delta 23/10 com readback; PG17 23/10 e CAS automatizado confirmados.",
       "alerts": [
-        "Restauração SQL/PG17 de 23/10 comprovada. Recuperação de Edge/Netlify/OAuth e recorrência Trello não comprovadas por esse teste; manter pendências separadas.",
+        "OAuth/segredos e reativação funcional dos aplicativos externos permanecem fora do restore PG17; Trello OIDC primeira carga ainda sem manifesto validado.",
         "Google Cloud Run/Scheduler e logs de execução não acessados diretamente nesta sessão."
       ],
-      "health_label": "PG17 23/10 RESTAURADO • SISTEMAS EXTERNOS PARCIAIS"
+      "health_label": "EDGE 386/386 + PG17 PASS • TRELLO OIDC EM TESTE"
     }
   ],
   "backups": {
@@ -440,7 +440,7 @@
         "restore runbook",
         "checksums"
       ],
-      "note": "PG17 real restaurado em ambiente isolado sem rede a partir do histórico imutável de 23/10/2026 (Actions #40034006428, PASS): roles/schema/data, RLS/ACL, 208 migrações e 4.546 referências Storage com 3 arquivos binários. Cobertura externa Edge/Netlify/OAuth ainda parcial, não anunciar recuperação total do ecossistema.",
+      "note": "PG17 real do snapshot 23/10 restaurado PASS #40034006428. Edge 386/386 fontes versionadas e verificadas no acervo privado Cofre Zero/24_EXTERNAL_SOURCES; 22 versões delta guardadas em quatro Docs privados, zero drift naquele checkpoint. Netlify apenas um deploy publicado e recuperável; seis sites sem deploy atual. Trello OIDC ativado sem novo cron, primeira carga textual real em andamento. OAuth/segredos não restaurados pelos arquivos.",
       "edge_function_snapshot_count": 254,
       "current_live_edge_functions": 370
     },
@@ -632,9 +632,9 @@
     },
     {
       "priority": "P0",
-      "title": "Comprovar cobertura semanal atual das 385 Edge Functions",
+      "title": "Preservar 386 fontes Edge (22 deltas atualizados em 23/10)",
       "owner": "CR Assertivo",
-      "status": "monitoring"
+      "status": "completed"
     },
     {
       "priority": "P1",

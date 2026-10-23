@@ -324,11 +324,7 @@ jobs:
   trello_text_weekly_dispatch:
     name: Single-schedule weekly Trello backup dispatch (original approved OIDC)
     needs: [detect, archive]
-    if: >-
-      github.ref == 'refs/heads/main' &&
-      needs.archive.result == 'success' &&
-      (github.event_name == 'schedule' ||
-       (github.event_name == 'push' && github.event.head_commit.message == 'cofre: activate Trello text CAS once via existing schedule'))
+    if: github.ref == 'refs/heads/main' && needs.archive.result == 'success' && github.event_name == 'schedule'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
