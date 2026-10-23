@@ -137,3 +137,11 @@ Vídeo `1000967196.mp4` (32,7 s): função de consulta autenticada e botões ind
 - Função matcher testada em JavaScript extraído da função real, com cartão Trello real: **1 candidato** para 23/10 R$100,00; **0** para data e valor divergentes; custo pré-marcado `Ref. Cora` passou a ser excluído após hardening. UI: 13 blocos script validados sintaticamente. A prévia e a versão isolada foram publicadas; **não há teste assinado de existing-confirm no celular** nesta sessão.
 - Consulta de ledger no momento da publicação: **4 operações CORA_ já `COMMITTED`** (lançamentos reais existentes do usuário), **0 `EXISTING_TRELLO`**. A rotina de conciliação não alterou/desduplicou nenhuma linha de Trello nem marcou movimentos históricos automaticamente. Primeiro E2E de conciliação manual de custo preexistente ainda **pendente de confirmação no celular**, por segurança.
 - PR #148 permanece DRAFT, sem merge, sem publicar em produção; capital giro, obras fechadas e saldo Cora preservados.
+
+### Complemento UX de 23/10 — consulta automática ao selecionar já lançado
+
+- Usuário não precisa acionar `Preparar lançamento V12` para iniciar a busca quando a obra já está preenchida: ao selecionar `Sim — já foi lançado`, a candidata chama somente `existing-preview`. Quando opção foi escolhida antes da obra, busca inicia ao concluir a edição do número da obra. `existingBusy` previne sobreposição e verificação do ID/obra/estado evita aplicar resposta antiga após mudar seleção.
+- Commit candidata `c9e0883dcc8da9ae1a072a4e39ff5cd9c81efac5`; main preview `5cc30ce0e24f35f2b55a90b1042e5e1715c0d5c2` exclusivamente `preview/`.
+- Testes sobre leitura Trello real da obra 799-26: R$100,00 em 23/10 presente `Ref. PIX` como **1 candidato**; R$150,00 ou R$105,70 com `Ref. Cora` = **zero candidato**; R$99,99 = zero. 13 scripts HTML validados sintaticamente.
+- O usuário ainda **não executou uma conciliação `EXISTING_TRELLO` concluída**; no último relatório SQL, cinco operações Cora `COMMITTED` de escrita comum do usuário, zero conciliações preexistentes. A atualização não fez gravações bancárias nem Trello. Antes de homologar, aguardar E2E do vínculo existente.
+- **Link final desta revisão:** https://rogeriocibin-alt.github.io/construrei-oauth-pages/preview/dashboard-v12-aprovisionamento-cora-20261023/?v=5cc30ce0
