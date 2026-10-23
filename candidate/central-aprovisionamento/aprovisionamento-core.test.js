@@ -134,3 +134,47 @@ Promise.all([
  assert.ok(backend.includes("CAPITAL_REVIEW_REQUIRED")&&backend.includes("PARTIAL_MULTI_REVIEW_REQUIRED"));
  console.log("Unified operations: split, dates, receipt totals and revision gates passed");
 }).catch(e=>{console.error(e);process.exitCode=1});
+
+/* Receipt already paid in AG. ACERTO: reconcile only, no Trello mutation. */
+const paidMatch=backend.slice(backend.indexOf("async function existingReceiptCandidate("),
+ backend.indexOf("async function existingReceiptFlow("))
+ .replace("p:ReturnType<typeof clean>,k:string","p,k").replace(/\((\w+):any\)/g,"($1)");
+assert.ok(paidMatch.startsWith("async function existingReceiptCandidate("));
+const testPaid=(list,linked=[])=>new Function(
+ "trelloApiRead","BOARD_2026","caseInName","allowedList","shortLink","card","amount","existingLinksForCard","sha256",
+ paidMatch+";return existingReceiptCandidate;")(
+ async path=>path.includes("/lists?")?[{id:"6800f3a6b0c58c0518f249b5",name:list}]:[
+  {id:"6ad2ac38d0717aaacc307c3c",idList:"6800f3a6b0c58c0518f249b5",
+   name:"✅ (799-26) R$ 2.830,22 Orçamento",shortUrl:"https://trello.com/c/CJ27HA7S"}],
+ "6974b24c16d17ca76351a950",
+ n=>{const m=String(n).match(/\((\d+)-26\)/);return m?m[1]+"-26":null},
+ (direction,name)=>/EM ANDAMENTO|AGUARDANDO PAGAMENTO/.test(name),
+ url=>(String(url).match(/trello\.com\/c\/([a-zA-Z0-9]{6,12})/)||[])[1]||null,
+ async()=>({id:"6ad2ac38d0717aaacc307c3c",idList:"6800f3a6b0c58c0518f249b5",
+  desc:"MOVIMENTAÇOES FINANCEIRAS:\nValor Fechado: R$ 2.830,22\nCustos:\n23/10 - R$ 150,00 Combustível - Ref. Cora",
+  shortUrl:"https://trello.com/c/CJ27HA7S"}),
+ v=>{const amount=Math.round(Number(String(v).replace(/\./g,"").replace(",","."))*100);return amount>0?amount:null},
+ async()=>linked,
+ async value=>"hash_"+String(value).length
+);
+const paidPayload=cents=>({operation_id:"CORA_"+"f".repeat(64),
+ case:"799-26",direction:"IN",date:"2026-10-23",amount_cents:cents});
+Promise.all([
+ testPaid("AG. ACERTO")({...paidPayload(283022)},"test"),
+ testPaid("AG. ACERTO")({...paidPayload(200000)},"test").then(()=>null,e=>e.message),
+ testPaid("AGUARDANDO PAGAMENTO")({...paidPayload(283022)},"test").then(()=>null,e=>e.message),
+ testPaid("AG. ACERTO",[{status:"COMMITTED",payload:{
+   case:"799-26",direction:"IN",reconciliation_kind:"RECEIPT_TRELLO"}}])({...paidPayload(283022)},"test").then(()=>null,e=>e.message)
+]).then(([match,wrongAmount,unpaid,linked])=>{
+ assert.equal(match.amount_cents,283022);
+ assert.equal(match.target.list,"AG. ACERTO");
+ assert.equal(wrongAmount,"RECEIPT_AMOUNT_DIFFERS_FROM_PREVIOUSLY_PAID_WORK");
+ assert.equal(unpaid,"RECEIPT_NOT_ALREADY_PAID");
+ assert.equal(linked,"RECEIPT_ALREADY_LINKED_TO_THIS_WORK");
+ const block=backend.slice(backend.indexOf("async function existingReceiptFlow("),
+  backend.indexOf("async function singleReceipt("));
+ assert.ok(block.includes("cr_finance_v12_claim")&&block.includes("cr_finance_v12_finish"));
+ assert.ok(!block.includes("writeReceipt("));
+ assert.ok(ui.includes('id="cr-ap-receipt-agree"')&&ui.includes('"receipt-existing-confirm",receiptCheck.payload'));
+ console.log("Receipt AG. ACERTO: explicit confirmation, no Trello writes, status and mismatch tests passed");
+}).catch(e=>{console.error(e);process.exitCode=1});
