@@ -367,7 +367,7 @@ async function capitalBridge(req:Request,action:string,p:ReturnType<typeof clean
  if(action==="capital-preview")return reply(response);
  const already=await bankAlreadyUsed(p,k);if(already)return reply(already);
  if(raw?.expected_fingerprint!==fp)throw Error("CAPITAL_PREVIEW_CHANGED");
- const payload={case:p.case,date:p.date,direction:p.direction,amount_cents:p.amount_cents,reference:p.reference,
+ const payload={case:"CAPITAL_GIRO",date:p.date,direction:p.direction,amount_cents:p.amount_cents,reference:p.reference,
   category:p.category,reconciliation_kind:"CAPITAL_GIRO",allocations};
  const claim=await rpc("cr_finance_v12_claim",{p_operation_id:p.operation_id,p_fingerprint:fp,
   p_card_id:allocations[0].id,p_payload:payload},k);
