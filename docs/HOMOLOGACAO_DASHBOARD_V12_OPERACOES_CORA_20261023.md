@@ -35,3 +35,20 @@ O workflow `Central Canonical Guard` protege **byte a byte** o arquivo `producti
 
 ## Próxima etapa
 Somente após o teste do usuário, revisar e homologar separadamente `Fechar Obra` e `Acertos`; preservar valores fechados, rateio do lucro líquido, capital de giro e proteção idempotente. Não reabrir obras fechadas sem autorização específica.
+
+## Verificação final da publicação — 23/10/2026
+
+**Evidências verificadas diretamente após a homologação seletiva:**
+
+- Versão oficial: `production/dashboard-financeiro-v12-operacoes-homologada-20261023/index.html`, Git blob `90befb41c47e2a6fe0cc030f6c23f7241fabd216`, **idêntico** ao arquivo `preview/dashboard-v12-aprovisionamento-cora-20261023/index.html` na `main`.
+- Rota oficial na Central: `production/central-operacional-v2-ux-r1-2-homologada-20261005/index.html`, apontando explicitamente para o URL `/production/dashboard-financeiro-v12-operacoes-homologada-20261023/?v=fd7cf40a`.
+- **GitHub Pages da Central após alteração:** [run 40005884131](https://github.com/rogeriocibin-alt/construrei-oauth-pages/actions/runs/40005884131) `completed/success`.
+- **Central Canonical Guard após alteração:** [run 40005884665](https://github.com/rogeriocibin-alt/construrei-oauth-pages/actions/runs/40005884665) `completed/success`.
+- **GitHub Pages mais recente da `main`:** [run 40006057226](https://github.com/rogeriocibin-alt/construrei-oauth-pages/actions/runs/40006057226) `completed/success`, commit `fa172d3a55b93077032f47e5c715efc0503a8b33`.
+- **Original congelado e cópia de segurança:** `production/dashboard-financeiro-v12-homologada-20261022/index.html`, `production/dashboard-financeiro-v12-homologada-20261022/index-pre-operacoes-20261023.html` e a mesma versão na branch `archive/financeiro-v12-pre-operacoes-20261023` têm o Git blob canônico **`31ae6a8e9b2c231ada71628dc25416a1157b2b98`**.
+- Supabase `cr-cora-aprovisionamento-v12-candidate-20261023` **ACTIVE v10**; a denominação do serviço é preservada para evitar duplicação de serviços ou alteração de integração. Consulta de auditoria: **9 operações Cora COMMITTED, 0 REVIEW_REQUIRED e 1 RECEIPT_EXISTING**.
+- A PR [#148](https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/148) permanece **DRAFT / sem merge**. Sua diferença ampla em relação à `main` não deve ser mesclada em massa, pois a promoção seletiva já foi concluída.
+- **Fechar Obra e Acertos** não foram homologados nesta publicação; aguardam o teste específico do diretor, sem qualquer baixa ou fechamento automatizado.
+- O workflow independente Cofre Zero possuía execução pendente na auditoria de GitHub Actions. A presença da branch de rollback e do HTML preservado **não deve ser confundida com restauração integral/backup Cofre Zero homologado**.
+
+**Conclusão:** release seletiva da Central de Operações **publicada, vinculada no acesso oficial, guardada e tecnicamente verificada**. As operações financeiras em aberto, fechamentos e acertos permanecem sob seus próprios controles.
