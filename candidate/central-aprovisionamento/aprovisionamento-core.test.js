@@ -1,4 +1,4 @@
-const assert=require("node:assert/strict");const {validar,estado,chave}=require("./aprovisionamento-core.js");
+const assert=require("node:assert/strict");const {validar,estado,chave,bankId,operationId}=require("./aprovisionamento-core.js");
 const m={id:"tx-001",valor:-100};
 assert.equal(estado(m,null),"PENDENTE");
 assert.equal(chave(m),"cora:tx-001");
@@ -9,4 +9,9 @@ assert.throws(()=>validar(m,{destino:"rateio",partes:[{obra:"818-26",valor:99}]}
 assert.throws(()=>validar(m,{destino:"impostos"}),/Competência/);
 assert.equal(estado(m,{chaveIdempotencia:chave(m),persistido:true,exigeTrello:true,trelloConfirmado:false}),"PENDENTE_REPROCESSAMENTO");
 assert.equal(estado(m,{chaveIdempotencia:chave(m),persistido:true,exigeTrello:true,trelloConfirmado:true}),"APROVISIONADO");
-console.log("Aprovisionamento: 9 verificações passaram");
+assert.equal(bankId({source_id:"cora-real-123"}),"cora-real-123");
+assert.equal(chave({source_id:"cora-real-123"}),"cora:cora-real-123");
+Promise.all([operationId({source_id:"cora-real-123"}),operationId({source_id:"cora-real-123"}),operationId({source_id:"outro-456"})]).then(([id,a,b])=>{
+ assert.match(id,/^CORA_[0-9a-f]{64}$/);assert.equal(id,a);assert.notEqual(id,b);
+ console.log("Aprovisionamento: verificações de ID bancário e idempotência passaram");
+}).catch(e=>{console.error(e);process.exitCode=1});
