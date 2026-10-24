@@ -31,11 +31,11 @@
     "reconciliation_candidate_at": "2026-10-22",
     "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP.",
     "operational_snapshot_at": "2026-10-23",
-    "operational_audit_status": "Cora PROD leitura real + visão privada 46 meses (security_invoker, sem acesso público) verificada, PRs financeiras P0 abertas, E2E browser notebook/Android não executado nesta conexão.",
+    "operational_audit_status": "QA REAL Opera leitor + SQL read-only + Trello + GitHub: PASS acesso autenticado existente, login requerido nova aba, Cora PROD, ledger V12, CG 27 cards e chave única, 46 meses derivados com 6/6 âncoras oficiais; BLOQUEIO P0 econômica; ainda não 100%. Relatório https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
     "operational_checkpoint": "FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023",
     "operational_rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
     "operational_scope": "Espelho informativo no Gestor (dados + link): PWA/runtime, Service Worker, login e release 1.2.x intocados; nenhuma escrita financeira.",
-    "operational_current_focus": "Dashboard V12 oficial; Cora PROD incremental saudável; Saldo histórico Cora derivado 46 meses (VIEW PRIVADA) com 6/6 ancoras oficiais conferidas, 40 derivadas, sem modificar dados originais. P0 Acertos 740/768/579 (possível taxa dupla) e conferência 740 ledger R$1.239,80 mantidos em auditoria. CG 10–23/10 registrado sem repetir.",
+    "operational_current_focus": "QA OPERA REAL 23/10: navegador conectado e V12 autenticada lida; Cora live healthy, 31/31 ledger COMMITTED, Capital Giro UI 27 períodos R$3.537,75 batendo com banco de dados e período único 10/10–23/10 R$1.058,06. Aba nova exigiu chave (segurança PASS). PR #154 de dois rótulos oficiais incorporada. P0 regra do Acerto Vivo 740/768/579, dupla candidata ledger 740 e DIVERGENTE GestãoClick 768/818. E2E interação/clique NÃO executado — Opera só permite leitura/navegação e Desktop Commander offline.",
     "operational_total_cc_items": 263,
     "operational_cc_items": {
       "completed": 120,
@@ -992,8 +992,8 @@
       "progress": 86,
       "progress_basis": "estimativa gerencial: release V12 + 1 período Capital Giro comprovado; não representa E2E completo nem conciliação do extrato",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
-      "last_advance": "23/10 21h18 BRT: Capital Giro período 10/10–23/10 criado, R$ 1.058,06 no Trello/Supabase, consolidado 27 períodos gerados R$ 21.706,71 saldo R$ 3.537,75 e divergências 0. Acerto Vivo 11 obras, lucro R$ 10.580,94, taxa CG R$ 1.058,06. V12 oficial; PR #151 merged. Ledger 31 COMMITTED (13 Cora). | CORA LIVE 23/10 21h35 BRT: atualização incremental PROD healthy=true, balance_healthy=true; 46/46 meses em cache; títulos Acertos PR151 oficiais. Replays E2E e saldos históricos ainda pendentes. | P0 ACERTOS BASE BRUTO/LÍQUIDO 23/10: três diferenças exatamente iguais a custos de taxas, e um par de operações manuais R$1239,80 em 740-26 com apenas uma linha no card. Acertos/CG não certificados economicamente; preservar operações concluídas e V12 oficial. | Saldo histórico Cora derivado 46 meses (VIEW PRIVADA): 7692 movimentos, UTC agrega 46/46, saldo vivo e 6/6 ancoras oficiais; view cora_cache.monthly_balance_derived_v1 read-only, 40 meses derivados sem reclassificar saldos oficiais.",
-      "next_action": "P0 corrigir em candidata regra Acertos net recebido/taxas em 740/768/579, ledger 740 par ambíguo. Integrar view mensal privada à API autenticada dos gráficos com selo DERIVADO (sem dar public SQL) e validar notebook+Android. Confirmar comprovantes antes de qualquer acerto retroativo.",
+      "last_advance": "23/10 21h18 BRT: Capital Giro período 10/10–23/10 criado, R$ 1.058,06 no Trello/Supabase, consolidado 27 períodos gerados R$ 21.706,71 saldo R$ 3.537,75 e divergências 0. Acerto Vivo 11 obras, lucro R$ 10.580,94, taxa CG R$ 1.058,06. V12 oficial; PR #151 merged. Ledger 31 COMMITTED (13 Cora). | CORA LIVE 23/10 21h35 BRT: atualização incremental PROD healthy=true, balance_healthy=true; 46/46 meses em cache; títulos Acertos PR151 oficiais. Replays E2E e saldos históricos ainda pendentes. | P0 ACERTOS BASE BRUTO/LÍQUIDO 23/10: três diferenças exatamente iguais a custos de taxas, e um par de operações manuais R$1239,80 em 740-26 com apenas uma linha no card. Acertos/CG não certificados economicamente; preservar operações concluídas e V12 oficial. | Saldo histórico Cora derivado 46 meses (VIEW PRIVADA): 7692 movimentos, UTC agrega 46/46, saldo vivo e 6/6 ancoras oficiais; view cora_cache.monthly_balance_derived_v1 read-only, 40 meses derivados sem reclassificar saldos oficiais. | QA Opera REAL 23/10: sessão autenticada leu CG saldo R$3.537,75/27 períodos e acerto único R$1.058,06, registro 31 COMMITTED e Cora healthy; nova aba requer chave. PR #154 rótulos candidate corrigidos. Sem clique E2E, P0 740/768/579 aberta.",
+      "next_action": "P0: comprovantes bruto/líquido e taxas 740/768/579, verificar dupla entrada ledger 740 R$1.239,80 e DIVERGENTE GClick 768/818; invalidar autoteste anterior no GUI. Com controle interativo, rodar close-test idempotência somente leitura, títulos copiar/PDF, Fechar Obra e mobile. Sem repetir CG registrado.",
       "dependency": "Evidência independente de replay seguro e reconciliação bancária real, sem criar custos ou cartões duplicados.",
       "blocked": false,
       "age_days": 0
@@ -1330,6 +1330,13 @@
       "title": "Cora: visão privada reconstrói 46 meses com 6 âncoras oficiais",
       "detail": "Migração Supabase cora_monthly_balance_private_derived_v1: cora_cache.monthly_balance_derived_v1 security_invoker=true, anônimo/autenticado sem acesso direto. 6/6 meses oficiais coincidentes, 40 derivados rotulados, 0 alterações bancárias; 7692 movimentos agrupados UTC em 46/46 competências. UI V12 ainda não ligada à view, saldo mensal derivado não vira oficial automaticamente.",
       "confidence": "verified_supabase_read_only_sql_after_migration"
+    },
+    {
+      "date": "2026-10-23",
+      "type": "v12_qa_opera_20261023",
+      "title": "V12 QA real no Opera: Cora/CG/ledger e autenticação aprovados; P0 econômico ainda aberto",
+      "detail": "Leitura da aba V12 autenticada e gate de nova aba, conferência dos 27 períodos de CG R$3.537,75 com Supabase, único período R$1.058,06, 31 COMMITTED e Cora live. PR #154 corrige rótulos oficiais. Bloqueio: 740/768/579 taxas, 740 entradas ledger mesmo valor, GClick 768/818. Conector Opera sem clique, portanto não afirmar E2E de escrita ou exportação. https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
+      "confidence": "verified_browser_readonly_supabase_trello_github"
     }
   ],
   "recoverables": [
@@ -1606,9 +1613,9 @@
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
       "last_movement": "2026-10-23",
-      "next_action": "Não repetir período 10–23/10 já criado. Auditar previamente lucro/base Acerto Vivo com taxas 740/768/579 e validar efeito econômico do Capital R$1.058,06. Somente ajuste financeiro autorizado e rastreável.",
+      "next_action": "QA leitura PASS: conferir autoteste stale sem repetir período, testar close-test sem lançamento + celular, e resolver taxas 740/768/579 antes de homologação econômica.",
       "dependency": "Validação econômica da base dos Acertos + testes autenticados.",
-      "source": "Supabase cr_working_capital_periods_v1 + Trello card lUHP2wNe • checkpoint 23/10",
+      "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
       "close_when": "Teste de não duplicação e funcionamento de interface comprovados, sem novo crédito no Trello",
       "human_action": true,
       "provenance": "public.cc_items_operational_audit_20261022"
@@ -1621,9 +1628,9 @@
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo",
       "last_movement": "2026-10-23",
-      "next_action": "Usar view mensal privada aditiva validada (46 meses, 6 ancoras oficiais) em API autenticada dos gráficos, rotulando 40 meses derivados. Resolver taxa recebimento líquido x custo 740/768/579 e prova Cora/Trello. Não alterar 10–23/10 CG sem auditoria.",
+      "next_action": "P0 taxas 740/768/579, 740 ledger par duplicado-candidato, GClick 768/818; suíte E2E real de clique/teclado ainda não executada, homologação econômica aberta. Corrigir UI marcador de autoteste stale.",
       "dependency": "Prova banco/recebimento líquido × tarifa, ledger e E2E de todos os fluxos.",
-      "source": "Supabase VIEW cora_cache.monthly_balance_derived_v1 e repo docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
+      "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
       "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
       "human_action": false,
       "provenance": "public.cc_items_operational_audit_20261022"
@@ -1681,9 +1688,9 @@
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo",
       "last_movement": "2026-10-23",
-      "next_action": "Confirmar extrato/ID bancário e liquidação das taxas das obras 740-26, 768-26 e 579-26; conferir histórico do duplo COMMITTED R$1239,80 obra 740; não alterar obras ou rateio automaticamente.",
+      "next_action": "Reconciliar bruto/liquido e taxas de 740/768/579 por banco; validar dupla entrada 740 e status GestãoClick 768/818; evitar qualquer gravação automática sem comprovantes.",
       "dependency": "Comprovantes da Cora, trilha Trello, definição contábil de líquido/bruto",
-      "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
+      "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
       "close_when": "Base correta com documentos e validação sem duplicar operações.",
       "human_action": false,
       "provenance": "public.cc_items_existing"
@@ -4049,6 +4056,31 @@
       "monthly_utc_amounts_match_months": 46,
       "monthly_brt_amounts_match_months": 31,
       "note": "Migracao privada aditiva; reconstrucao matematica com ancora bancaria, NAO substitui saldos originais ou prova bilateral de transacoes por obra. Vista nao conectada ao UI."
+    },
+    "qa_opera_20261023": {
+      "status": "READ_ONLY_TESTS_PASS_WITH_P0_FINANCIAL_BLOCKERS",
+      "dashboard_url": "https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v12-operacoes-homologada-20261023/",
+      "report": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
+      "verified_at_brt": "2026-10-23 22:22",
+      "browser_connected": true,
+      "desktop_commander_connected": false,
+      "tests": {
+        "preauthenticated_v12_page": "PASS",
+        "fresh_tab_login_gate": "PASS",
+        "capital_ui_vs_db": "PASS",
+        "capital_unique_period": "PASS_READ_ONLY",
+        "cora_live": "PASS",
+        "v12_ledger_31_committed": "PASS",
+        "historical_months_46": "PASS_DERIVED_LABELS",
+        "finance_economic_profit": "BLOCK_740_768_579",
+        "gestaoclick_cross_sync": "WARN_768_818",
+        "close_replay": "NOT_EXECUTED",
+        "trello_write": "NOT_EXECUTED",
+        "pdf_export": "NOT_EXECUTED",
+        "mobile_viewport": "NOT_EXECUTED"
+      },
+      "branch_fix_pr": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/154",
+      "warning": "Tela guarda resposta antiga de autoteste 0 períodos enquanto período 10/10–23/10 já existe; não refazer acerto. Opera conector não oferece click/setValue; leitura não prova E2E."
     }
   }
 }
