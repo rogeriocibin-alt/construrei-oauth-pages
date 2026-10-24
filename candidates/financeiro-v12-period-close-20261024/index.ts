@@ -65,7 +65,7 @@ async function gather(body:any){
  const capitals=await trello("/lists/692e0d6c360c13a9cd738f33/cards?fields=id,name,desc");
  const ckey="CG_PERIOD_KEY|"+p.start+"_"+p.end;
  const existing=capitals.find((x:any)=>String(x.desc||"").includes(ckey));
- const cm=existing?String(existing.desc||"").match(/CG_CREDIT\\|([0-9]+(?:\\.[0-9]{1,2})?)/):null;
+ const cm=existing?String(existing.desc||"").match(/CG_CREDIT\|([0-9]+(?:\.[0-9]{1,2})?)/):null;
  const credit=cm?Math.round(Number(cm[1])*100):null;
  const capital_validation={exists:!!existing,period_card_url:existing?.shortUrl||null,credit_cents:credit,expected_cents:totals.capital_cents,difference_cents:credit==null?null:totals.capital_cents-credit,ok:credit!=null&&Math.abs(credit-totals.capital_cents)<=1};
  const fingerprint=await sha(JSON.stringify({p,month:[month.id,month.desc],capital_validation,rows:rows.map(r=>[r.case,r.base_cents,r.cost_cents,r.profit_cents,r.rateio]),cards:cards.map(c=>[c.id,c.idList,c.desc,c.dateLastActivity])}));
