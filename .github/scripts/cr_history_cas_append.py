@@ -208,14 +208,14 @@ def execute(mode, restore=None, pilot_seed=False):
         raise ValueError("Recovery directory mandatory for commit")
     if not re.fullmatch(r"\d{8}-\d{6}", run_id):
         raise ValueError("Unsafe manifest ID")
+    from datetime import datetime, timezone
     if pilot_seed:
         if (run_id != "20261011-060021" or missing
                 or len(entries) != len(seed)
                 or any(e["store"] != "seed" for e in entries)):
             raise ValueError("Seed-only pilot preconditions not fulfilled")
-    # A verified CURRENT may legitimately predate a change-driven or scheduled CAS run.
-    # Integrity and immutable manifest identity are checked above and below;
-    # never infer freshness from the wall-clock date of the GitHub runner.
+    elif run_id[:8] != datetime.now(timezone.utc).strftime("%Y%m%d"):
+        raise ValueError("Stale source snapshot; no archive written")
 
     present_manifests = inventory_manifest_files()
     if run_id + ".json" in present_manifests:
