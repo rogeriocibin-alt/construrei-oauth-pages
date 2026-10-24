@@ -3,7 +3,7 @@
     "title": "Gestor do Projeto CONSTRU-REI",
     "version": "V1.2.7 • DASHBOARD FINANCEIRO V12 OFICIAL • 23/10",
     "status": "GESTOR/PWA OFICIAL PRESERVADO • FINANCEIRO V12 OPERACOES HOMOLOGADO SELETIVAMENTE • GATES HISTORICOS ABERTOS",
-    "generated_at": "2026-10-23",
+    "generated_at": "2026-10-24",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
@@ -1137,6 +1137,14 @@
         "flows"
       ],
       "evidence": "CHECKPOINT_CONSTRUREI_BASELINE_FINAL_APPROVED_20261005_1855"
+    },
+    {
+      "date": "2026-10-24",
+      "type": "finance_v12_cora_appropriation_owner_acceptance",
+      "title": "Aprovisionamento Cora no celular — aceite funcional do titular",
+      "detail": "Titular confirmou funcionamento OK. Aceite gravado e relido no Banco Mestre public.cc_items, item FIN-V12-GLOBAL-20261022, marcador BIO_ACEITE_20261024. Subfluxo aprovado, sem alegar E2E integral, sem alterar status geral Em validação, sem reabrir V5 substituída.",
+      "source": "Supabase public.cc_items / GitHub issue #53 comentário 6385586174",
+      "confidence": "owner_accepted_and_master_readback"
     }
   ],
   "demands": [
