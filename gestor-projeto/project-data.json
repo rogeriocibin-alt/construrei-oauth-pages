@@ -2,7 +2,7 @@
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
     "version": "V1.2.7 • DASHBOARD FINANCEIRO V12 OFICIAL • 23/10",
-    "status": "GESTOR/PWA OFICIAL PRESERVADO • FINANCEIRO V12 OPERACOES HOMOLOGADO SELETIVAMENTE • GATES HISTORICOS ABERTOS",
+    "status": "REVISÃO EXECUTIVA 24/10 • DUAS FRENTES ATIVAS • HISTÓRICO NÃO É BACKLOG",
     "generated_at": "2026-10-24",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
@@ -1001,7 +1001,7 @@
     {
       "id": "front-cofre-coverage",
       "name": "Cofre Zero — versão semanal única + recuperação integral em validação",
-      "status": "executing",
+      "status": "homologation",
       "priority": "P1",
       "objective": "Validar CAS incremental sem novos serviços e recuperação isolada de PostgreSQL 17, dados financeiros e Trello textual.",
       "progress": 60,
@@ -1011,7 +1011,8 @@
       "next_action": "25/10: verificar primeiro ciclo dominical real: Cloud 03h, CAS 05h47, Trello, Git offsite e HTML CI; depois apenas recuperação E2E externamente isolada. Não ressuscitar candidatos antigos.",
       "dependency": "Primeiro domingo natural 25/10 e testes funcionais OAuth/Edge/Netlify/APP não comprovados.",
       "blocked": false,
-      "age_days": 0
+      "age_days": 0,
+      "summary": "Cofre semanal canônico homologado; apenas monitoramento do ciclo natural 25/10 e recuperação externa E2E, sem nova engenharia paralela."
     }
   ],
   "decisions": [
@@ -1605,8 +1606,8 @@
       "priority": "P1",
       "state": "in_progress",
       "owner": "BIO Gestor + CR Assertivo",
-      "last_movement": "2026-10-22",
-      "next_action": "Conferir contador banco mestre 263 (120 concluídos / 39 cancelados / 104 abertos) vs UI estática. Conteúdo de governança sincronizado, release do app 1.2.4 / SW 1.2.5.2 / catálogo V1.2.7 não alterados sem gate E2E PWA.",
+      "last_movement": "2026-10-24",
+      "next_action": "Projeção estática atualizada com aceite Cora e nova ordem executiva; validar apresentação real no PWA antes de concluir o gate de UI/cache. Não criar segundo Banco Mestre.",
       "dependency": "PWA renderiza project_pending do JSON estático; mudanças Banco Mestre não migram automaticamente; precisa homologação de release/caching",
       "source": "Projeção (não mestre): public.cc_items/ARCH-TRUTH-20261012 • GitHub issue #53",
       "close_when": "Fonte única para pendências, status e lançamento do Gestor comprovados sem divergência, regressão ou segundo escritor.",
@@ -1635,8 +1636,8 @@
       "priority": "P0",
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo",
-      "last_movement": "2026-10-23",
-      "next_action": "Dashboard V12 já sincronizado com backend v26: 11 obras, lucro R$12.218,49, margem 31,72% confirmado no Opera real; PR157 legenda correta e Guard PASS. Não repetir correção de base ou reprocessar período protegido. Próximas pendências independentes: compensação histórica CG R$163,77 somente com idempotência; trilha 740; alertas GClick 768/818; E2E PDF/Excel, escrita e Android.",
+      "last_movement": "2026-10-24",
+      "next_action": "Aprovisionamento Cora no celular ACEITO pelo titular e registrado no Banco Mestre. Restam apenas gates independentes: evidência econômica 740/768/579, trilha 740, Click 768/818, idempotência CG e E2E de exportação/Android. Não repetir aprovação do aprovisionamento.",
       "dependency": "Somente para encerramento histórico integral: reconciliação idempotente CG +R$ 163,77 sem reabrir período; trilha ledger 740; GestãoClick 768/818; E2E PDF/Excel, escrita e Android.",
       "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
       "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
@@ -4163,5 +4164,56 @@
     "precedence": "LIVE_AUTHENTICATED_OPERATOR > MAIN_CANONICAL_WITH_GREEN_CI > SUPABASE_MASTER_EVIDENCE > HISTORICAL_SNAPSHOT",
     "read_only_evidence": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/issues/53",
     "not_a_second_control_plane": true
+  },
+  "executive_review_20261024": {
+    "date": "2026-10-24",
+    "source": "public.cc_items + GitHub issue #53 + Gestor main",
+    "policy": "Sem atualização em massa, sem reabrir auditorias, até duas frentes de engenharia",
+    "active_engineering": [
+      {
+        "rank": 1,
+        "id": "FIN-V12-GLOBAL-20261022",
+        "priority": "P0",
+        "objective": "Resolver somente riscos reais da base econômica dos Acertos e comprovar E2E financeiro"
+      },
+      {
+        "rank": 2,
+        "id": "EXEC-APP-E2E-20261006",
+        "priority": "P0",
+        "objective": "Homologar integração F00–F09 sem regressão; ORÇA-REI isolado aprovado não equivale a E2E"
+      }
+    ],
+    "monitor_only": [
+      {
+        "id": "EXEC-COFRE-COVERAGE-20261010",
+        "priority": "P1",
+        "next": "Primeiro ciclo natural semanal 25/10 e OAuth/Edge/Netlify/APP restore funcional"
+      },
+      {
+        "id": "EXEC-COFRE-TRELLO-20261011",
+        "priority": "P1",
+        "next": "Despacho subordinado semanal, sem FULL manual"
+      }
+    ],
+    "governance_queue": [
+      "ARCH-TRUTH-20261012",
+      "GOV-REVIEW-GERAL-20261022"
+    ],
+    "deferred": [
+      "EXEC-WIZY-MANUAL-20261006",
+      "PM-26",
+      "ARCH-SAN-20261012"
+    ],
+    "already_delivered": [
+      "FIN-CORA-API-20261007",
+      "FIN-V11-CAPITAL-GIRO-20261009",
+      "FIN-V11-CORA-COMPROVANTES-20261009",
+      "EXEC-BACKUP-AUTO-20261006"
+    ],
+    "superseded": [
+      "EXEC-FIN-V5-20261006"
+    ],
+    "owner_accepted": "Aprovisionamento Cora no celular; evidência Banco Mestre FIN-V12-GLOBAL-20261022 BIO_ACEITE_20261024",
+    "warning": "Registro de revisão executiva, não homologação de E2E, não altera dados financeiros ou obras fechadas."
   }
 }
