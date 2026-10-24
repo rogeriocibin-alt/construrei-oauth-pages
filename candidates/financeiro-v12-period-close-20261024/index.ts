@@ -62,8 +62,14 @@ async function gather(body:any){
  }));
  const totals={count:rows.length,base_cents:sum(rows,r=>r.base_cents),cost_cents:sum(rows,r=>r.cost_cents),profit_cents:sum(rows,r=>r.profit_cents),fabricio_cents:sum(rows,r=>r.rateio.fabricio_cents),eder_cents:sum(rows,r=>r.rateio.eder_cents),rogerio_cents:sum(rows,r=>r.rateio.rogerio_cents),gabi_cents:sum(rows,r=>r.rateio.gabi_cents),capital_cents:sum(rows,r=>r.rateio.capital_giro_cents)};
  if(totals.base_cents-totals.cost_cents!==totals.profit_cents||totals.fabricio_cents+totals.eder_cents+totals.rogerio_cents+totals.gabi_cents+totals.capital_cents!==totals.profit_cents)throw Error("PERIODO_NAO_FECHA");
- const fingerprint=await sha(JSON.stringify({p,month:[month.id,month.desc],rows:rows.map(r=>[r.case,r.base_cents,r.cost_cents,r.profit_cents,r.rateio]),cards:cards.map(c=>[c.id,c.idList,c.desc,c.dateLastActivity])}));
- return {p,rows,cards,month,target,totals,duplicate,fingerprint};
+ const capitals=await trello("/lists/692e0d6c360c13a9cd738f33/cards?fields=id,name,desc");
+ const ckey="CG_PERIOD_KEY|"+p.start+"_"+p.end;
+ const existing=capitals.find((x:any)=>String(x.desc||"").includes(ckey));
+ const cm=existing?String(existing.desc||"").match(/CG_CREDIT\\|([0-9]+(?:\\.[0-9]{1,2})?)/):null;
+ const credit=cm?Math.round(Number(cm[1])*100):null;
+ const capital_validation={exists:!!existing,period_card_url:existing?.shortUrl||null,credit_cents:credit,expected_cents:totals.capital_cents,difference_cents:credit==null?null:totals.capital_cents-credit,ok:credit!=null&&Math.abs(credit-totals.capital_cents)<=1};
+ const fingerprint=await sha(JSON.stringify({p,month:[month.id,month.desc],capital_validation,rows:rows.map(r=>[r.case,r.base_cents,r.cost_cents,r.profit_cents,r.rateio]),cards:cards.map(c=>[c.id,c.idList,c.desc,c.dateLastActivity])}));
+ return {p,rows,cards,month,target,totals,capital_validation,duplicate,fingerprint};
 }
 function block(c:any){
  const p=c.p,t=c.totals;
@@ -83,8 +89,9 @@ Deno.serve(async req=>{
  if(!b)return ans({ok:false,error:"INVALID_BODY"},400);
  try{
   const c=await gather(b);
-  if(action==="preview")return ans({ok:true,preview:true,period:c.p,totals:c.totals,fingerprint:c.fingerprint,duplicate:c.duplicate,writes:false});
+  if(action==="preview")return ans({ok:true,preview:true,period:c.p,totals:c.totals,capital_validation:c.capital_validation,fingerprint:c.fingerprint,duplicate:c.duplicate,writes:false});
   if(c.duplicate)return ans({ok:false,error:"PERIOD_ALREADY_SENT"},409);
+  if(!c.capital_validation.ok)return ans({ok:false,error:"CAPITAL_PERIOD_NOT_RECONCILED",capital_validation:c.capital_validation},409);
   if(b.fingerprint!==c.fingerprint)return ans({ok:false,error:"STALE_PREVIEW"},409);
   const next=String(c.month.desc||"").trimEnd()+"\n"+block(c)+"\n";
   if(next.length>16384)return ans({ok:false,error:"MONTH_CARD_CAPACITY_EXCEEDED",length:next.length},409);
