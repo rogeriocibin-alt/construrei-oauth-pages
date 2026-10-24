@@ -2,7 +2,7 @@
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
     "version": "V1.2.7 • DASHBOARD FINANCEIRO V12 OFICIAL • 23/10",
-    "status": "AUDITORIA INVENTÁRIO 274 REGISTROS • APP P0 • COFRE SEMANAL MONITORADO • V12 ACEITA",
+    "status": "AUDITORIA 24/10 • 275 REGISTROS • 23 SUBTAREFAS REPRIORIZADAS • APP E2E P0",
     "generated_at": "2026-10-24",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
@@ -41,7 +41,7 @@
       "completed": 135,
       "canceled": 41,
       "open": 99,
-      "source": "Supabase public.cc_items • leitura e reconciliação 24/10/2026"
+      "source": "Supabase public.cc_items leitura atual 24/10/2026"
     },
     "operational_audit_file": "docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
     "operational_audit_url": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
@@ -4231,13 +4231,13 @@
     "owner_accepted": "Aprovisionamento Cora no celular; evidência Banco Mestre FIN-V12-GLOBAL-20261022 BIO_ACEITE_20261024; diferenças 740/768/579 confirmadas como descontos aplicados em 24/10",
     "warning": "Operação V12 e CG aceitas; não confundir aceite de desconto com homologação de toda exportação/identidade/restore E2E. Documento vivo é projeção de cc_items; 1 frente APP em engenharia, Cofre sob monitoramento P1, demais fila.",
     "inventory": {
-      "total": 274,
+      "total": 275,
       "completed": 135,
       "canceled": 41,
-      "other": 98,
+      "other": 99,
       "verified_on": "2026-10-24",
       "source": "public.cc_items",
-      "interpretation": "98 registros em estados não finais incluem subtarefas e filas dependentes, não 98 frentes executivas"
+      "interpretation": "Contagem viva; 99 registros não finais incluem subtarefas e validações, não 99 frentes"
     },
     "master_statistics": {
       "total": 275,
@@ -4247,6 +4247,15 @@
       "reclassified_legacy": 19,
       "master_transitions": 9,
       "write_audit_logs": 28
+    },
+    "evidence_review": {
+      "nonfinal": 99,
+      "without_note": 29,
+      "stale_before_october": 38,
+      "subtasks_reprioritized_p0_to_p1": 23,
+      "scope": "Revisão individual de identificação, estágio e trechos de evidência disponíveis; provas externas e notas integrais de cada item ainda exigem validação",
+      "preserved": "Nenhum status concluído por inferência; financeiro V12 aceito, Cofre semanal preservado",
+      "remaining": "Verificação externa de evidências por item, validação PWA/APP e homologação E2E"
     }
   }
 }
