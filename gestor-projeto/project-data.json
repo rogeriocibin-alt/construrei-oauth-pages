@@ -2,7 +2,7 @@
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
     "version": "V1.2.7 • DASHBOARD FINANCEIRO V12 OFICIAL • 23/10",
-    "status": "REVISÃO EXECUTIVA 24/10 • DUAS FRENTES ATIVAS • HISTÓRICO NÃO É BACKLOG",
+    "status": "AUDITORIA INVENTÁRIO 274 REGISTROS • APP P0 • COFRE SEMANAL MONITORADO • V12 ACEITA",
     "generated_at": "2026-10-24",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
@@ -30,18 +30,18 @@
     "previous_official_build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006",
     "reconciliation_candidate_at": "2026-10-22",
     "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP.",
-    "operational_snapshot_at": "2026-10-23",
-    "operational_audit_status": "DASHBOARD V12 DESATUALIZADO RESOLVIDO: backend de dados v26 publicado, Opera autenticado PASS após Atualizar Agora (base R$38.518,51, custos R$26.300,02, lucro R$12.218,49, margem 31,72%), números antigos eliminados. Trello resumo v62 conferido, PR #157 HTML oficial com 13 scripts e guard CI SUCCESS. Supabase CG pendente alinhado R$1.221,83, saldo operacional R$3.537,75 e período 10–23 protegido R$1.058,06, diferença histórica R$163,77 não lançada. Cora healthy. Pendem apenas ajustes independentes: ledger 740, GClick 768/818, acerto histórico e testes PDF/Excel/escrita/Android. Relatório https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
+    "operational_snapshot_at": "2026-10-24",
+    "operational_audit_status": "V12 financeira aceita pelo titular quanto a descontos 740/768/579; aprovisionamento Cora aceito. Não declarar conciliação bancária histórica ou E2E não demonstrados. Indicadores de inventário atualizados 24/10.",
     "operational_checkpoint": "FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023",
     "operational_rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
     "operational_scope": "Espelho informativo no Gestor (dados + link): PWA/runtime, Service Worker, login e release 1.2.x intocados; nenhuma escrita financeira.",
-    "operational_current_focus": "QA OPERA REAL 23/10: navegador conectado e V12 autenticada lida; Cora live healthy, 31/31 ledger COMMITTED, Capital Giro UI 27 períodos R$3.537,75 batendo com banco de dados e período único 10/10–23/10 R$1.058,06. Aba nova exigiu chave (segurança PASS). PR #154 de dois rótulos oficiais incorporada. P0 regra do Acerto Vivo 740/768/579, dupla candidata ledger 740 e DIVERGENTE GestãoClick 768/818. E2E interação/clique NÃO executado — Opera só permite leitura/navegação e Desktop Commander offline.",
-    "operational_total_cc_items": 263,
+    "operational_current_focus": "24/10: V12 descontos 740/768/579 aceitos pelo titular; não reabrir. APP F00-F09 E2E é única frente P0 executiva; Cofre Zero semanal canônico monitorado para ciclo 25/10 e restore externo; Wizy/Click na fila. Banco Mestre 274 (135 concluídos,41 cancelados,98 demais estados). Pendências históricas não são projetos paralelos.",
+    "operational_total_cc_items": 274,
     "operational_cc_items": {
-      "completed": 120,
-      "canceled": 39,
-      "open": 104,
-      "source": "Supabase public.cc_items consulta 22/10/2026"
+      "completed": 135,
+      "canceled": 41,
+      "open": 98,
+      "source": "Supabase public.cc_items auditoria inventário 24/10/2026"
     },
     "operational_audit_file": "docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
     "operational_audit_url": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md"
@@ -986,8 +986,8 @@
     {
       "id": "front-finance-v12",
       "name": "Financeiro V12 — Capital de Giro, Cora, Trello e conciliação",
-      "status": "executing",
-      "priority": "P0",
+      "status": "homologation",
+      "priority": "P1",
       "objective": "Preservar V12 oficial operante, completar provas de conciliação Cora PROD ↔ Trello, proteção a replay e testes de fluxo sem duplicidade.",
       "progress": 86,
       "progress_basis": "estimativa gerencial: release V12 + 1 período Capital Giro comprovado; não representa E2E completo nem conciliação do extrato",
@@ -996,7 +996,8 @@
       "next_action": "P0: comprovantes bruto/líquido e taxas 740/768/579, verificar dupla entrada ledger 740 R$1.239,80 e DIVERGENTE GClick 768/818; invalidar autoteste anterior no GUI. Com controle interativo, rodar close-test idempotência somente leitura, títulos copiar/PDF, Fechar Obra e mobile. Sem repetir CG registrado.",
       "dependency": "Evidência independente de replay seguro e reconciliação bancária real, sem criar custos ou cartões duplicados.",
       "blocked": false,
-      "age_days": 0
+      "age_days": 0,
+      "current": "Descontos 740/768/579 esclarecidos pelo titular e aprovisionamento Cora aceito. Apenas gates independentes não homologados, sem reabrir V12."
     },
     {
       "id": "front-cofre-coverage",
@@ -1614,7 +1615,7 @@
       "state": "in_progress",
       "owner": "BIO Gestor + CR Assertivo",
       "last_movement": "2026-10-24",
-      "next_action": "Projeção estática atualizada com aceite Cora e nova ordem executiva; validar apresentação real no PWA antes de concluir o gate de UI/cache. Não criar segundo Banco Mestre.",
+      "next_action": "Contador 274 (135 concluídos, 41 cancelados, 98 demais estados) sincronizado no JSON. Validar PWA/cache e projeção APP sem segundo escritor.",
       "dependency": "PWA renderiza project_pending do JSON estático; mudanças Banco Mestre não migram automaticamente; precisa homologação de release/caching",
       "source": "Projeção (não mestre): public.cc_items/ARCH-TRUTH-20261012 • GitHub issue #53",
       "close_when": "Fonte única para pendências, status e lançamento do Gestor comprovados sem divergência, regressão ou segundo escritor.",
@@ -1626,7 +1627,7 @@
       "title": "Capital de Giro V12 — período registrado; revisão da base dos Acertos",
       "domain": "Financeiro",
       "priority": "P1",
-      "state": "in_progress",
+      "state": "monitoring",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
       "last_movement": "2026-10-24",
       "next_action": "Fechamento do período já registrado e descontos aceitos. Não repetir fechamento; apenas gate independente de replay/idempotência quando necessário.",
@@ -1641,7 +1642,7 @@
       "title": "Financeiro V12 oficial — P0 base de Acertos e conciliação",
       "domain": "Financeiro",
       "priority": "P1",
-      "state": "in_progress",
+      "state": "monitoring",
       "owner": "Financeiro REI + CR Assertivo",
       "last_movement": "2026-10-24",
       "next_action": "Descontos 740/768/579 confirmados pelo titular, sem erro a corrigir. Não reabrir essas obras. Manter apenas acompanhamento dos gates independentes ainda sem prova (E2E/exportação, conciliação histórica/ledger).",
@@ -1658,8 +1659,8 @@
       "priority": "P1",
       "state": "in_progress",
       "owner": "BIO Gestor + CR Assertivo",
-      "last_movement": "2026-10-22",
-      "next_action": "Validar página e indicadores no notebook+celular e rechecagem dos provedores sem conector direto (Cloud/Netlify).",
+      "last_movement": "2026-10-24",
+      "next_action": "Inventário 274 registros conferido e prioridades executivas atualizadas; resta validar UI real Gestor/APP e divergências de cache antes de concluir.",
       "dependency": "Gate específico descrito no registro mestre",
       "source": "GitHub checkpoint/gestor-auditoria-global-preupdate-20261022",
       "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
@@ -1701,7 +1702,7 @@
       "title": "Cora × Trello — auditoria econômica P0 dos Acertos e transações",
       "domain": "Financeiro",
       "priority": "P1",
-      "state": "in_progress",
+      "state": "queue",
       "owner": "Financeiro REI + CR Assertivo",
       "last_movement": "2026-10-24",
       "next_action": "Suspeita de desconto duplicado 740/768/579 encerrada por confirmação do titular. Conciliação histórica bancária por ID permanece escopo separado, sem nova auditoria econômica dessas obras.",
@@ -4175,7 +4176,7 @@
   "executive_review_20261024": {
     "date": "2026-10-24",
     "source": "public.cc_items + GitHub issue #53 + Gestor main",
-    "policy": "Sem atualização em massa, sem reabrir auditorias, até duas frentes de engenharia",
+    "policy": "Uma frente executiva P0: APP E2E. Histórico, subtarefas e projetos futuros não concorrem com a frente principal; não encerrar itens sem prova.",
     "active_engineering": [
       {
         "rank": 1,
@@ -4220,6 +4221,15 @@
       "EXEC-FIN-V5-20261006"
     ],
     "owner_accepted": "Aprovisionamento Cora no celular; evidência Banco Mestre FIN-V12-GLOBAL-20261022 BIO_ACEITE_20261024; diferenças 740/768/579 confirmadas como descontos aplicados em 24/10",
-    "warning": "Registro de revisão executiva, não homologação de E2E, não altera dados financeiros ou obras fechadas."
+    "warning": "Registro de revisão executiva, não homologação de E2E, não altera dados financeiros ou obras fechadas.",
+    "inventory": {
+      "total": 274,
+      "completed": 135,
+      "canceled": 41,
+      "other": 98,
+      "verified_on": "2026-10-24",
+      "source": "public.cc_items",
+      "interpretation": "98 registros em estados não finais incluem subtarefas e filas dependentes, não 98 frentes executivas"
+    }
   }
 }
