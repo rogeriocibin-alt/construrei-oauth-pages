@@ -75,7 +75,15 @@
       "security_ci_r2_live_reject": "6/6 rotas anônimas negadas ou health pública conforme contrato, sem escrita",
       "security_ci_r2_f00_handoff_fk": "14 passagens F01-F02 e F03-F04 sem case_id: FK cr_cases_v1(case_id), apenas 800-26 com case_code correspondente; sem atualização automática",
       "security_ci_r2_runtime_hmac": "PENDING_INTEGRATION_AND_CALLBACK_MIGRATION",
-      "security_ci_r2_report": "docs/P0_TRELLO_APP_CHECKPOINT_20261024_R2.md"
+      "security_ci_r2_report": "docs/P0_TRELLO_APP_CHECKPOINT_20261024_R2.md",
+      "runtime_auth_r3": "P0_ABERTO: cr-flow-runtime-v2 e F00 requerem autenticação real no handler; política isolada apenas 31/31 testes offline",
+      "runtime_auth_r3_ci": "PR_172_MERGED_349486981149f65fa9c2aea68dda5ea2f831b021_CANONICAL_GUARD_SUCCESS_40130266959",
+      "runtime_auth_r3_report": "docs/P0_APP_AUTH_POLICY_CANDIDATE_R3_20261024.md",
+      "f04_f09_unsafe_cutover_guard": "PR_173_MERGED_127420183f58e93c79c90435ee32835e362abf38_CANONICAL_GUARD_SUCCESS_40130577737",
+      "f04_f09_functional_fix": "PR_171_DRAFT_HOLD: 24 endpoints corrigidos porém nenhum deploy antes de RBAC E2E",
+      "trello_runtime_hmac": "P0_ABERTO: HMAC real nos webhooks não homologado; PR 170 só garante suíte CI",
+      "fin_v12_preserved": true,
+      "cofre_zero_weekly_preserved": true
     }
   },
   "governance": [
