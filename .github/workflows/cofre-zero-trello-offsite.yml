@@ -2,6 +2,11 @@ name: Cofre Zero | Trello textos incrementais (OIDC protegido)
 # RESTAURADO no caminho OIDC Trello original; jamais criar bridge, segredo ou credencial.
 # Ativo em main por workflow_dispatch acionado pelo cron CAS existente aos domingos. Nenhum segundo schedule.
 on:
+  # Verification-only on workflow edits; does NOT query Trello or export another FULL.
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cofre-zero-trello-offsite.yml
   workflow_dispatch:
   pull_request:
     branches: [main]
@@ -76,3 +81,29 @@ jobs:
           echo "Destino: CONSTRUREI-BACKUP-AUTO/HISTORY_CAS/TRELLO_TEXT." >> "$GITHUB_STEP_SUMMARY"
           echo "Nenhuma escrita na producao e nenhuma exclusao dos FULL anteriores." >> "$GITHUB_STEP_SUMMARY"
 
+
+  restore_proof:
+    name: Independently rebuild immutable Trello snapshot (no Trello API)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Reuse authorized read-only Drive access (no new credentials)
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64" || { echo "::error::Drive not authorized"; exit 2; }
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+          mkdir -p "$HOME/.config/rclone"
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          rclone lsd construrei-drive: >/dev/null
+      - name: Reconstruct exact prior immutable manifest independently
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/cr_trello_restore_verify.py --manifest 20261023-232947-40039261383.json
