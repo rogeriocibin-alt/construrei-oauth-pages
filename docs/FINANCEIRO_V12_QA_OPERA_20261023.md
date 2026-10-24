@@ -43,3 +43,24 @@
 - **E2E autenticado de somente leitura na aba Opera existente:** botão real `Executar autoteste sem lançar` disparado por UI Automation. O serviço reconheceu **1** período registrado, cartão Trello duplicado e bloqueio de reentrada; início necessário **24/10/2026**, 11 obras e Capital em R$ 3.537,75. Botão real `Pré-visualizar encerramento` retornou `PERIOD_ALREADY_REGISTERED`. **Nenhuma confirmação, novo cartão ou movimentação financeira foi feita**; ledger V12 seguiu **31 COMMITTED** e período 10/10–23/10 permaneceu único, `ACTIVE`, R$ 1.058,06.
 - **Risco P0 contábil não encerrado:** obra 740-26 possui **um** débito Cora de R$ 1.239,80 (17/10), **dois** lançamentos manuais `COMMITTED` de R$ 1.239,80 no ledger (identificadores distintos) e **uma** despesa correspondente no cartão Trello. Não excluir ledger nem lançar custo novamente sem trilha de correção. Obra 768-26 possui crédito Cora R$ 3.200,00 em 21/10 com referência ao orçamento, mas a retenção R$ 208,60 consta também como custo no Trello. Na 579-26 o cartão registra segunda parcela em 26/10 como `OK` apesar de essa data ser posterior ao corte da auditoria em 23/10; depósitos de R$ 832,50 não foram localizados no cache Cora consultado até 23/10, o que não exclui recebimento por outro canal. **Não reinterpretar pagamento, modificar base ou rateio sem comprovação externa.**
 - **Ainda fora da homologação E2E:** `close-commit` de um período novo, lançamentos financeiros reais adicionais, PDF/Excel autenticados e aceite visual interativo em Android físico. Estes testes não podem ser classificados como PASS por inferência dos testes acima.
+
+
+## Validação do diretor e ajuste de escopo — 23/10/2026
+
+**Confirmação expressa da Diretoria:** os lançamentos das obras **740-26, 768-26 e 579-26 estão corretos**; o valor **bruto** foi lançado e os descontos também foram registrados como despesas. Não corrigir nem reabrir os cartões das obras, nem mudar custos/rateios históricos por presunção de erro.
+
+**Defeito efetivamente comprovado é no consolidado Acertos Vivo, não nas obras:** `cr-trello-gestao-vista-v2` v60 usa `base=received??closed` e `profit=base-totalCosts`. Para estas três obras, o recebido já está reduzido da taxa que também aparece em `totalCosts`, ocorrendo dupla dedução na agregação:
+
+| Obra | Bruto no cartão | Líquido recebido | Custo registrado (incluindo desconto) | Lucro correto do cartão | Lucro no consolidado | Diferença |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 740-26 | R$ 8.260,00 | R$ 7.016,05 | R$ 5.455,85 | R$ 2.804,15 | R$ 1.560,20 | R$ 1.243,95 |
+| 768-26 | R$ 3.408,60 | R$ 3.200,00 | R$ 2.378,24 | R$ 1.030,36 | R$ 821,76 | R$ 208,60 |
+| 579-26 | R$ 1.850,00 | R$ 1.665,00 | R$ 1.317,37 | R$ 532,63 | R$ 347,63 | R$ 185,00 |
+
+**Total subestimado no consolidado: R$ 1.637,55.** Se os demais dez/oitros componentes permanecerem inalterados, a visão de 11 obras seria base R$ 38.518,51, custos R$ 26.300,02, lucro R$ 12.218,49 e margem 31,72%; projeção aritmética **não publicada nem homologada**. A regra de cálculo deve identificar desconto bruto→líquido que já está nos custos e aplicar base bruta **apenas nos casos provados**; preservar casos de recebimento parcial e reembolsos como a obra 818-26, evitando correções globais ingênuas. Desenvolver/testar em candidata antes da promoção.
+
+**Não reprocessar** o período 10/10–23/10 já encerrado: Capital de Giro de R$ 1.058,06 segue registrado uma única vez, sob proteção de duplicidade. Qualquer eventual ajuste de distribuição decorrente da correção econômica precisa ser reconciliado e lançado separadamente, sem adulterar o histórico.
+
+**Risco distinto remanescente:** os dois registros `COMMITTED` de R$ 1.239,80 da obra 740-26 permanecem caso de rastreabilidade do ledger; há somente uma linha de custo Trello e um débito bancário observado. Não concluir que os cartões estão duplicados, não deletar as operações de auditoria às cegas.
+
+**Pendências funcionais independentes:** alertas GestãoClick das obras 768-26/818-26; exportação PDF/Excel E2E autenticada; fluxo E2E de escrita/finalização para um evento legítimo; Android físico. Cora e Capital de Giro seguem operacionais nas últimas verificações. Aprovação de dados pela Diretoria não equivale a homologação do código do consolidado.
