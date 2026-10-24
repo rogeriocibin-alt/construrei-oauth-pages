@@ -1146,6 +1146,13 @@
       "detail": "Titular confirmou funcionamento OK. Aceite gravado e relido no Banco Mestre public.cc_items, item FIN-V12-GLOBAL-20261022, marcador BIO_ACEITE_20261024. Subfluxo aprovado, sem alegar E2E integral, sem alterar status geral Em validação, sem reabrir V5 substituída.",
       "source": "Supabase public.cc_items / GitHub issue #53 comentário 6385586174",
       "confidence": "owner_accepted_and_master_readback"
+    },
+    {
+      "date": "2026-10-24",
+      "type": "finance_v12_discounts_owner_accepted",
+      "title": "Descontos das obras 740/768/579 — esclarecimento encerrado",
+      "detail": "Titular confirmou que diferenças decorrem de descontos aplicados corretamente. Não tratar como incidente P0; manter obras fechadas intocadas e não reabrir auditoria. Banco Mestre 3 registros atualizados.",
+      "source": "Supabase cc_items / aceite explícito do titular"
     }
   ],
   "demands": [
@@ -1618,11 +1625,11 @@
       "id": "FIN-CAPITAL-V12-FECHAMENTO-20261022",
       "title": "Capital de Giro V12 — período registrado; revisão da base dos Acertos",
       "domain": "Financeiro",
-      "priority": "P0",
+      "priority": "P1",
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
-      "last_movement": "2026-10-23",
-      "next_action": "QA leitura PASS: conferir autoteste stale sem repetir período, testar close-test sem lançamento + celular, e resolver taxas 740/768/579 antes de homologação econômica.",
+      "last_movement": "2026-10-24",
+      "next_action": "Fechamento do período já registrado e descontos aceitos. Não repetir fechamento; apenas gate independente de replay/idempotência quando necessário.",
       "dependency": "Validação econômica da base dos Acertos + testes autenticados.",
       "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
       "close_when": "Teste de não duplicação e funcionamento de interface comprovados, sem novo crédito no Trello",
@@ -1633,11 +1640,11 @@
       "id": "FIN-V12-GLOBAL-20261022",
       "title": "Financeiro V12 oficial — P0 base de Acertos e conciliação",
       "domain": "Financeiro",
-      "priority": "P0",
+      "priority": "P1",
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo",
       "last_movement": "2026-10-24",
-      "next_action": "Aprovisionamento Cora no celular ACEITO pelo titular e registrado no Banco Mestre. Restam apenas gates independentes: evidência econômica 740/768/579, trilha 740, Click 768/818, idempotência CG e E2E de exportação/Android. Não repetir aprovação do aprovisionamento.",
+      "next_action": "Descontos 740/768/579 confirmados pelo titular, sem erro a corrigir. Não reabrir essas obras. Manter apenas acompanhamento dos gates independentes ainda sem prova (E2E/exportação, conciliação histórica/ledger).",
       "dependency": "Somente para encerramento histórico integral: reconciliação idempotente CG +R$ 163,77 sem reabrir período; trilha ledger 740; GestãoClick 768/818; E2E PDF/Excel, escrita e Android.",
       "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
       "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
@@ -1693,11 +1700,11 @@
       "id": "FIN-V12-CORA-TRELLO-AUDITORIA-20261022",
       "title": "Cora × Trello — auditoria econômica P0 dos Acertos e transações",
       "domain": "Financeiro",
-      "priority": "P0",
+      "priority": "P1",
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo",
-      "last_movement": "2026-10-23",
-      "next_action": "Reconciliar bruto/liquido e taxas de 740/768/579 por banco; validar dupla entrada 740 e status GestãoClick 768/818; evitar qualquer gravação automática sem comprovantes.",
+      "last_movement": "2026-10-24",
+      "next_action": "Suspeita de desconto duplicado 740/768/579 encerrada por confirmação do titular. Conciliação histórica bancária por ID permanece escopo separado, sem nova auditoria econômica dessas obras.",
       "dependency": "Comprovantes da Cora, trilha Trello, definição contábil de líquido/bruto",
       "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
       "close_when": "Base correta com documentos e validação sem duplicar operações.",
@@ -4172,15 +4179,9 @@
     "active_engineering": [
       {
         "rank": 1,
-        "id": "FIN-V12-GLOBAL-20261022",
-        "priority": "P0",
-        "objective": "Resolver somente riscos reais da base econômica dos Acertos e comprovar E2E financeiro"
-      },
-      {
-        "rank": 2,
         "id": "EXEC-APP-E2E-20261006",
         "priority": "P0",
-        "objective": "Homologar integração F00–F09 sem regressão; ORÇA-REI isolado aprovado não equivale a E2E"
+        "objective": "Integração real F00–F09, E2E e homologação sem regressão"
       }
     ],
     "monitor_only": [
@@ -4193,6 +4194,11 @@
         "id": "EXEC-COFRE-TRELLO-20261011",
         "priority": "P1",
         "next": "Despacho subordinado semanal, sem FULL manual"
+      },
+      {
+        "id": "FIN-V12-GLOBAL-20261022",
+        "priority": "P1",
+        "next": "Descontos 740/768/579 aceitos pelo titular; não reabrir. Demais E2E e conciliação histórica são gates independentes, não frente de correção econômica."
       }
     ],
     "governance_queue": [
@@ -4213,7 +4219,7 @@
     "superseded": [
       "EXEC-FIN-V5-20261006"
     ],
-    "owner_accepted": "Aprovisionamento Cora no celular; evidência Banco Mestre FIN-V12-GLOBAL-20261022 BIO_ACEITE_20261024",
+    "owner_accepted": "Aprovisionamento Cora no celular; evidência Banco Mestre FIN-V12-GLOBAL-20261022 BIO_ACEITE_20261024; diferenças 740/768/579 confirmadas como descontos aplicados em 24/10",
     "warning": "Registro de revisão executiva, não homologação de E2E, não altera dados financeiros ou obras fechadas."
   }
 }
