@@ -46,7 +46,8 @@
     "operational_audit_file": "docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
     "operational_audit_url": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
     "master_snapshot_provenance": "public.cc_items, 24/10/2026; GitHub main PRs #132, #155–163; Cora/Trello por evidências no Banco Mestre; documentação Cofre Zero semanal R1",
-    "pwa_release_discrepancy": "project-data.meta V1.2.7 é revisão editorial; version.json/SW/HTML 1.2.5.2; app.js CURRENT_RELEASE 1.2.4. Não chamar 1.2.7 de build executável nem corrigir sem QA cache/navegador."
+    "pwa_release_discrepancy": "project-data.meta V1.2.7 é revisão editorial; version.json/SW/HTML 1.2.5.2; app.js CURRENT_RELEASE 1.2.4. Não chamar 1.2.7 de build executável nem corrigir sem QA cache/navegador.",
+    "cockpit_active_fronts_evidence": "APP único em homologação (1/2); Financeiro V12 concluído no escopo operacional; Cofre semanal em revisão/monitoramento não ocupa vaga. Opera 24/10 exibia 3/2 antes da correção dos status."
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -988,34 +989,35 @@
     {
       "id": "front-finance-v12",
       "name": "Financeiro V12 — Capital de Giro, Cora, Trello e conciliação",
-      "status": "homologation",
+      "status": "completed",
       "priority": "P1",
       "objective": "Preservar V12 oficial operante, completar provas de conciliação Cora PROD ↔ Trello, proteção a replay e testes de fluxo sem duplicidade.",
-      "progress": 86,
-      "progress_basis": "estimativa gerencial: release V12 + 1 período Capital Giro comprovado; não representa E2E completo nem conciliação do extrato",
+      "progress": 100,
+      "progress_basis": "100% somente no escopo operacional aprovado pelo proprietário; NÃO significa E2E total de exportação e auditoria histórica.",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
-      "last_advance": "23/10 21h18 BRT: Capital Giro período 10/10–23/10 criado, R$ 1.058,06 no Trello/Supabase, consolidado 27 períodos gerados R$ 21.706,71 saldo R$ 3.537,75 e divergências 0. Acerto Vivo 11 obras, lucro R$ 10.580,94, taxa CG R$ 1.058,06. V12 oficial; PR #151 merged. Ledger 31 COMMITTED (13 Cora). | CORA LIVE 23/10 21h35 BRT: atualização incremental PROD healthy=true, balance_healthy=true; 46/46 meses em cache; títulos Acertos PR151 oficiais. Replays E2E e saldos históricos ainda pendentes. | P0 ACERTOS BASE BRUTO/LÍQUIDO 23/10: três diferenças exatamente iguais a custos de taxas, e um par de operações manuais R$1239,80 em 740-26 com apenas uma linha no card. Acertos/CG não certificados economicamente; preservar operações concluídas e V12 oficial. | Saldo histórico Cora derivado 46 meses (VIEW PRIVADA): 7692 movimentos, UTC agrega 46/46, saldo vivo e 6/6 ancoras oficiais; view cora_cache.monthly_balance_derived_v1 read-only, 40 meses derivados sem reclassificar saldos oficiais. | QA Opera REAL 23/10: sessão autenticada leu CG saldo R$3.537,75/27 períodos e acerto único R$1.058,06, registro 31 COMMITTED e Cora healthy; nova aba requer chave. PR #154 rótulos candidate corrigidos. Sem clique E2E, P0 740/768/579 aberta.",
-      "next_action": "P0: comprovantes bruto/líquido e taxas 740/768/579, verificar dupla entrada ledger 740 R$1.239,80 e DIVERGENTE GClick 768/818; invalidar autoteste anterior no GUI. Com controle interativo, rodar close-test idempotência somente leitura, títulos copiar/PDF, Fechar Obra e mobile. Sem repetir CG registrado.",
+      "last_advance": "24/10: titular confirmou descontos das obras 740/768/579, Financeiro V12 e fechamento CG aceitos; Banco Mestre FIN-V12-GLOBAL e FIN-CAPITAL-V12-FECHAMENTO Concluído.",
+      "next_action": "Nenhuma ação para reabrir V12. Somente provas independentes de histórico (ledger 740, Click 768/818) sob FIN-V12-CORA-TRELLO-AUDITORIA-20261022 e eventuais testes de interface sem lançamentos.",
       "dependency": "Evidência independente de replay seguro e reconciliação bancária real, sem criar custos ou cartões duplicados.",
       "blocked": false,
       "age_days": 0,
-      "current": "Descontos 740/768/579 esclarecidos pelo titular e aprovisionamento Cora aceito. Apenas gates independentes não homologados, sem reabrir V12."
+      "current": "OPERACIONALMENTE CONCLUÍDO/ACEITO em 24/10: descontos 740/768/579 validados pelo proprietário. Auditoria histórica do ledger e UX/E2E pertencem à fila P1 separada, não são bloqueio do Financeiro V12."
     },
     {
       "id": "front-cofre-coverage",
       "name": "Cofre Zero — versão semanal única + recuperação integral em validação",
-      "status": "homologation",
+      "status": "review",
       "priority": "P1",
       "objective": "Validar CAS incremental sem novos serviços e recuperação isolada de PostgreSQL 17, dados financeiros e Trello textual.",
       "progress": 60,
       "progress_basis": "24/10: Cloud Scheduler semanal confirmado, PRs 159/160/161 em main; PG17+Trello isolados PASS; 386 Edge fontes arquivadas, HTML Central/Gestor em localhost PASS; teste de OAuth/Edge runtime/Netlify E2E ainda não homologado.",
       "owner": "CR Assertivo",
       "last_advance": "24/10: Cofre Zero semanal e testes estáticos incorporados à main, Cloud Run produtor 24/10 PASS, manifesto atualizado no Drive, sem novos serviços ou crons.",
-      "next_action": "25/10: verificar primeiro ciclo dominical real: Cloud 03h, CAS 05h47, Trello, Git offsite e HTML CI; depois apenas recuperação E2E externamente isolada. Não ressuscitar candidatos antigos.",
+      "next_action": "Monitorar evento natural 25/10 (Cloud 03h BRT / GitHub 05h47 BRT) e registrar evidência; recuperação de provedores segue em revisão segregada.",
       "dependency": "Primeiro domingo natural 25/10 e testes funcionais OAuth/Edge/Netlify/APP não comprovados.",
       "blocked": false,
       "age_days": 0,
-      "summary": "Cofre semanal canônico homologado; apenas monitoramento do ciclo natural 25/10 e recuperação externa E2E, sem nova engenharia paralela."
+      "summary": "MONITORAMENTO da única rotina semanal aprovada. O primeiro evento natural de domingo 25/10 e recuperação funcional OAuth/Edge/Netlify/APP seguem sem prova final; não é nova frente de engenharia ativa.",
+      "current": "MONITORAMENTO da única rotina semanal aprovada. O primeiro evento natural de domingo 25/10 e recuperação funcional OAuth/Edge/Netlify/APP seguem sem prova final; não é nova frente de engenharia ativa."
     }
   ],
   "decisions": [
