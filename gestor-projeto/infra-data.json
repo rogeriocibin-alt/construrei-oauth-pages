@@ -422,10 +422,10 @@
       "admin_url": "https://drive.google.com/",
       "source": "Drive privado Cofre Zero/24_EXTERNAL_SOURCES: fonte Edge 386/386 e 22 funções delta 23/10 com readback; PG17 23/10 e CAS automatizado confirmados.",
       "alerts": [
-        "Trello textual CAS real #40039261383 SUCCESS: manifesto e 986 objetos (13 quadros, 1.736 cartões, 58.233 ações) conferidos no Drive; reconstrução independente #40046340593 ainda em execução. OAuth externo pós-desastre não homologado.",
+        "Trello textual CAS real #40039261383 SUCCESS; restore read-only integral #40051773338 PASS: 986/986 shards, 13 quadros, 1.736 cartões, 58.233 ações, SHA256/gzip/IDs/contagens íntegros. Primeiro domingo natural pendente; OAuth externo pós-desastre não homologado.",
         "Google Cloud Run/Scheduler e logs de execução não acessados diretamente nesta sessão."
       ],
-      "health_label": "EDGE 386/386 + PG17 PASS • TRELLO CAS REAL PASS, RESTORE PENDENTE"
+      "health_label": "EDGE 386/386 + PG17 PASS • TRELLO CAS + RESTORE PASS, DOMINGO PENDENTE"
     }
   ],
   "backups": {
@@ -440,7 +440,7 @@
         "restore runbook",
         "checksums"
       ],
-      "note": "PG17 real do snapshot 23/10 restaurado PASS #40034006428. Edge 386/386 fontes versionadas e verificadas no acervo privado Cofre Zero/24_EXTERNAL_SOURCES; 22 versões delta guardadas em quatro Docs privados, zero drift naquele checkpoint. Netlify apenas um deploy publicado e recuperável; seis sites sem deploy atual. Trello OIDC sem novo cron: primeira carga textual real #40039261383 SUCCESS, 986 objetos e manifesto privado conferidos; restauração independente #40046340593 ainda pendente. OAuth/segredos não restaurados pelos arquivos.",
+      "note": "PG17 real do snapshot 23/10 restaurado PASS #40034006428. Edge 386/386 fontes versionadas e verificadas no acervo privado Cofre Zero/24_EXTERNAL_SOURCES; 22 versões delta guardadas em quatro Docs privados, zero drift naquele checkpoint. Netlify apenas um deploy publicado e recuperável; seis sites sem deploy atual. Trello OIDC sem novo cron: carga textual real #40039261383 SUCCESS, 986 objetos e manifesto privado conferidos; restauração integral independente #40051773338 SUCCESS (13 quadros, 1.736 cards, 58.233 ações, 130.537.691 bytes). Primeiro domingo natural pendente. OAuth/segredos não restaurados pelos arquivos.",
       "edge_function_snapshot_count": 254,
       "current_live_edge_functions": 386,
       "private_archive_covered": 386
@@ -502,17 +502,17 @@
       }
     },
     "trello_text": {
-      "status": "CAS_REAL_PASS_RESTORE_PENDING",
+      "status": "CAS_REAL_RESTORE_PASS_WEEKLY_TRIGGER_PENDING",
       "manifest": "20261023-232947-40039261383.json",
       "export_run": 40039261383,
-      "restore_run": 40046340593,
+      "restore_run": 40051773338,
       "boards": 13,
       "cards": 1736,
       "actions": 58233,
       "immutable_shards": 986,
       "compressed_bytes": 8611862,
-      "inventory": "986/986 names and sizes match manifest; 19 SHA256/gzip samples PASS",
-      "restore": "NOT_HOMOLOGATED_UNTIL_INDEPENDENT_RUN_SUCCESS",
+      "inventory": "986/986 names and sizes match manifest; 986/986 SHA256/gzip/IDs/contagens verified by independent full restore",
+      "restore": "PASS_INDEPENDENT_20261024_40051773338_130537691_BYTES",
       "recurrence": "First natural Sunday trigger still unproven",
       "unchanged": "No extra cron, FULL, binary attachment copy or production financial changes"
     }
