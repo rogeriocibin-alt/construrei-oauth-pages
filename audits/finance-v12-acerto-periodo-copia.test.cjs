@@ -1,0 +1,34 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const file='production/dashboard-financeiro-v12-operacoes-homologada-20261023/index.html';
+const html=fs.readFileSync(file,'utf8');
+function between(start,end){const a=html.indexOf(start),b=html.indexOf(end,a+start.length);assert.ok(a>=0&&b>a,'Missing tested function: '+start);return html.slice(a,b)}
+const start={value:'2026-10-10',focus(){},scrollIntoView(){}},end={value:'2026-10-23'};
+const label={textContent:''};const errs=[];
+const elements={'cg-close-start':start,'cg-close-end':end,'ac-period-heading':label};
+for(const v of Object.values(elements))v.addEventListener=()=>{};
+const ctx=vm.createContext({Date,console,document:{getElementById:id=>elements[id]||null},alert:t=>errs.push(String(t)),navigator:{clipboard:{writeText:()=>{throw Error('no clipboard in test')}}},ACSEP:'==',brl:()=> 'R$ 0,00',pct:()=> '0%',acertoTotals:()=>({cases:0,profit_cents:0,base_cents:0,cost_cents:0,difference_cents:0,distributed_cents:0}),acertoAuditPass:()=>false,acertoMetaLines:()=>[],acertoCustomerName:()=>'',acertoKeycap:x=>String(x),acertoOutputRows:()=>[],acertoCopyText:async x=>x});
+vm.runInContext(between('function acertoPeriodDate','function acertoMetaLines'),ctx);
+vm.runInContext(between('function acertoSummaryText','async function acertoCopyText'),ctx);
+vm.runInContext(between('async function copyAcerto(){','function pdfAcerto'),ctx);
+assert.equal(ctx.acertoPeriod().head,'DE 10/10 a 23/10');
+assert.match(label.textContent,/ACERTOS DE 10\/10 a 23\/10/);
+assert.match(ctx.acertoCompleteText([]),/💰 ACERTOS DE 10\/10 a 23\/10/);
+assert.match(ctx.acertoCompleteText([]),/📋 RESUMO GERAL – ACERTOS DE 10\/10 a 23\/10/);
+assert.match(ctx.acertoSummaryText([]),/CONSTRU-REI \| ACERTOS DE 10\/10 a 23\/10/);
+assert.equal(ctx.acertoPeriodFromSelection('2026-12-29','2027-01-02').head,'DE 29/12/2026 a 02/01/2027');
+assert.throws(()=>ctx.acertoPeriodFromSelection('2026-02-30','2026-03-02'),/datas do período/);
+assert.throws(()=>ctx.acertoPeriodFromSelection('2026-10-24','2026-10-23'),/igual ou posterior/);
+assert.throws(()=>ctx.acertoPeriodFromSelection('','2026-10-23'),/duas datas/);
+assert.throws(()=>ctx.acertoPeriodFromSelection('2026-10-10',''),/duas datas/);
+(async()=>{
+ const output=await ctx.copyAcerto();assert.match(output,/💰 ACERTOS DE 10\/10 a 23\/10/);
+ const summary=await ctx.copyAcertoResumo();assert.match(summary,/ACERTOS DE 10\/10 a 23\/10/);
+ start.value='';assert.equal(await ctx.copyAcerto(),undefined);
+ assert.equal(await ctx.copyAcertoResumo(),undefined);
+ assert.equal(errs.length,2);
+ assert.match(errs[0],/duas datas/);
+ console.log('PASS: copied full report, summary and PDF templates follow chosen 10/10–23/10; invalid dates rejected; financial formulas left unchanged');
+})().catch(x=>{console.error(x);process.exitCode=1});
