@@ -17,6 +17,9 @@ test('controle: fechamento exige integridade e idempotencia',()=>{
  assert.match(edge,/OBRA_JA_REGISTRADA/);
  assert.match(edge,/CR-ACERTO-PERIODO/);
  assert.match(edge,/MONTH_CARD_CAPACITY_EXCEEDED/);
+ assert.match(edge,/CAPITAL_PERIOD_NOT_RECONCILED/);
+ assert.match(edge,/CG_PERIOD_KEY/);
+ assert.match(edge,/CG_CREDIT/);
  assert.match(edge,/MONTH_SAVE_UNCONFIRMED/);
 });
 test('escopo: nenhuma escrita no banco Cora',()=>{
@@ -32,6 +35,8 @@ test('interface V12: botoes ativos somente apos previa',()=>{
  assert.match(html,/!protectedBank&&!safePeriod/);
  assert.match(html,/id="cg-close-start"/);
  assert.match(html,/id="cg-close-end"/);
+ assert.match(html,/capital_validation/);
+ assert.match(html,/if\(!cv.ok\)/);
  assert.match(html,/V12-OPERACAO-HOMOLOGADA-ACERTOS-BRUTO-TAXA-20261023/);
 });
 test('scripts inline da V12 candidata tem sintaxe valida',()=>{
