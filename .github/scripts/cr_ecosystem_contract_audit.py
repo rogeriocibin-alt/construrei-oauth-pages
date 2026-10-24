@@ -19,7 +19,7 @@ RULES = DOCS / "CANONICAL_RULES_MASTER_INDEX_V1_20261007.md"
 LINKS = DOCS / "official-links-registry.json"
 PROJECT = ROOT / "gestor-projeto/project-data.json"
 VERSION = ROOT / "gestor-projeto/version.json"
-PREVIEW = DOCS / "AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
+PREVIEW = DOCS / "AMBIENTES_PREVIEW_INVENTARIO_20261013.json"
 OWNERS = DOCS / "MATRIZ_PROPRIEDADE_DADOS_E_ROTEAMENTO_20261012.md"
 EDGE_GRAPH = DOCS / "EDGE_OFFICIAL_LITERAL_GRAPH_20261012.json"
 WORKFLOWS = ROOT / ".github/workflows"
@@ -340,7 +340,7 @@ def main():
             "links": "docs/official-links-registry.json",
             "governance_rules": "docs/CANONICAL_RULES_MASTER_INDEX_V1_20261007.md",
             "gestor_snapshot": "gestor-projeto/project-data.json (projection, not verified live)",
-            "preview_snapshot": "docs/AMBIENTES_PREVIEW_INVENTARIO_20261011.json",
+            "preview_snapshot": "docs/AMBIENTES_PREVIEW_INVENTARIO_20261013.json",
             "workflow_definitions": ".github/workflows/ (configured, execution unverified)",
         },
         "official_aliases": len(aliases),

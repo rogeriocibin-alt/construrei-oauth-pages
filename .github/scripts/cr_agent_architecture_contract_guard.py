@@ -17,7 +17,7 @@ RULES = ROOT / "docs" / "CANONICAL_RULES_MASTER_INDEX_V1_20261007.md"
 ARCH = ROOT / "docs" / "ARQUITETURA_TRES_AMBIENTES_PLANO_20261011.md"
 ADR = ROOT / "docs" / "ADR_ECOSSISTEMA_UNICO_CONTROL_PLANE_SAAS_20261011.md"
 LINKS = ROOT / "docs" / "official-links-registry.json"
-PREVIEW = ROOT / "docs" / "AMBIENTES_PREVIEW_INVENTARIO_20261011.json"
+PREVIEW = ROOT / "docs" / "AMBIENTES_PREVIEW_INVENTARIO_20261013.json"
 AGENTS = ROOT / "agents"
 SCOPE = {
     "bio", "bio-gestor", "cr-assertivo", "infra-rei",
@@ -86,8 +86,8 @@ def main():
         problems.append("Cadastro de 39 aliases sofreu reducao ou duplicacao")
     preview = json.loads(PREVIEW.read_text(encoding="utf-8"))
     entries = preview.get("folders", [])
-    if preview.get("folder_count") != 121 or len(entries) != 121:
-        problems.append("Inventario de 121 pastas preview requer nova auditoria")
+    if preview.get("folder_count") != 123 or len(entries) != 123:
+        problems.append("Inventario de 123 pastas preview requer nova auditoria")
     if any(x.get("authorized_to_delete") or x.get("authorized_to_move") for x in entries):
         problems.append("Movimento/exclusao requer homologacao segregada")
     summary = {
