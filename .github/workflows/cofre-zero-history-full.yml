@@ -1,23 +1,15 @@
 name: Cofre Zero | Smart immutable CAS archive
 on:
   schedule:
-    - cron: '47 8 * * *'
+    - cron: '47 8 * * 0'
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'supabase/**'
-      - 'production/**'
-      - 'central-runtime/**'
-      - 'gestor-projeto/**'
-      - '.github/scripts/**'
-      - '!**/*.md'
   pull_request:
     branches: [main]
     paths:
       - .github/workflows/cofre-zero-history-full.yml
       - .github/scripts/cr_cofre_direct_cas_fallback.py
       - .github/scripts/cr_history_cas_append.py
+      - .github/scripts/cr_pg17_integrated_restore_candidate.sh
 
 permissions:
   contents: read
@@ -41,7 +33,7 @@ jobs:
           python3 .github/scripts/cr_history_cas_append.py --selftest
 
   detect:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     outputs:
@@ -79,6 +71,11 @@ jobs:
           # Change-driven policy: a trusted primary snapshot is enough. Do not
           # require a new snapshot merely because the calendar day changed.
           trusted=bool(ident)
+          run_time=datetime.datetime.strptime(ident.group(1),"%Y%m%d-%H%M%S").replace(tzinfo=datetime.timezone.utc)
+          age_hours=(datetime.datetime.now(datetime.timezone.utc)-run_time).total_seconds()/3600
+          if os.environ.get("GITHUB_EVENT_NAME")=="schedule" and not (-4 <= age_hours <= 36):
+              raise SystemExit("BLOCKED: scheduled weekly CAS source is stale or timestamp invalid")
+          print("PRIMARY_AGE_HOURS=%.2f"%age_hours)
           fresh=ident.group(1)[:8] == datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
           with open(os.environ["GITHUB_OUTPUT"],"a") as out:
               out.write("primary="+("true" if trusted else "false")+"\n")
@@ -89,7 +86,7 @@ jobs:
 
   archive:
     needs: detect
-    if: needs.detect.outputs.primary == 'true' && (github.event_name != 'push' || needs.detect.outputs.fresh == 'true')
+    if: needs.detect.outputs.primary == 'true'
     runs-on: ubuntu-22.04
     timeout-minutes: 90
     env:
@@ -346,7 +343,7 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$EVENT_TYPE" == "schedule" && "$(date -u +%u)" != "7" ]]; then
-            echo 'Trello export is weekly; daily CAS unchanged'
+            echo 'Trello export is weekly; CAS weekly on Sundays'
             exit 0
           fi
           curl --fail --silent --show-error --retry 2 --connect-timeout 15 --max-time 35 \
@@ -358,3 +355,47 @@ jobs:
             -d '{"ref":"main"}' \
             "https://api.github.com/repos/$REPO/actions/workflows/cofre-zero-trello-offsite.yml/dispatches"
           echo 'TRELLO_DISPATCH_ACCEPTED: original exact OIDC workflow; no new cron'
+
+  weekly_integrated_recovery_proof:
+    name: Cofre Zero | PG17 + Trello independent recovery in one isolated test
+    if: github.event_name == 'pull_request' && github.head_ref == 'candidate/cofre-zero-weekly-integrated-20261024' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    permissions:
+      contents: read
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+      SUPABASE_ACCESS_TOKEN: ""
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify restored code and private backup access
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n .github/scripts/cr_pg17_integrated_restore_candidate.sh
+          python3 -m py_compile .github/scripts/cr_trello_restore_verify.py
+          test -n "$RCLONE_CONFIG_B64"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+      - name: Recover PostgreSQL 17, Auth/Storage schema, RLS, ledger and immutable binary identities
+        shell: bash
+        run: bash .github/scripts/cr_pg17_integrated_restore_candidate.sh
+      - name: Independently recover Trello from the same private archive without Trello API
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.config/rclone"
+          trap 'rm -f "$HOME/.config/rclone/rclone.conf"' EXIT
+          printf '%s' "$RCLONE_CONFIG_B64" | base64 --decode > "$HOME/.config/rclone/rclone.conf"
+          chmod 600 "$HOME/.config/rclone/rclone.conf"
+          python3 .github/scripts/cr_trello_restore_verify.py --manifest 20261023-232947-40039261383.json
+          echo 'INTEGRATED_RESTORE=PASS: PG17 and Trello recovered in one isolated CI run'
+      - name: Declare externally scoped recovery limitations
+        if: always()
+        shell: bash
+        run: |
+          echo '## Cofre Zero — integrated isolated recovery proof' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Result: ${{ job.status }}; PG17 real + Trello immutable historical snapshot.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'OUT OF SCOPE: Cloud Scheduler, live OAuth, Edge redeployment, Netlify and running APP restore.' >> "$GITHUB_STEP_SUMMARY"
