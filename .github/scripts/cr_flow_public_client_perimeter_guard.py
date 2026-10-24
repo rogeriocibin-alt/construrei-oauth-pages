@@ -60,9 +60,25 @@ def run_offline_trello_security_contracts():
     print("PASS: 3 Trello contract suites enforced by existing Central CI job (offline)")
 
 
+def run_app_role_contracts():
+    """Require deny-by-default APP policy regression suite without external writes."""
+    suite = ROOT / "security/candidates/cr-flow-runtime-v2-secure-20261024/flow-auth-policy.test.mjs"
+    if not suite.is_file():
+        raise RuntimeError("APP authorization policy suite missing")
+    try:
+        result = subprocess.run(["node", "--test", str(suite)],
+                                cwd=ROOT, timeout=30, check=False)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RuntimeError("APP authorization policy tests unavailable") from exc
+    if result.returncode != 0:
+        raise RuntimeError("APP authorization policy regression")
+    print("PASS: 31 isolated APP role and action tests. Runtime integration remains P0 OPEN.")
+
+
 def main():
     self_test()
     run_offline_trello_security_contracts()
+    run_app_role_contracts()
     findings = []
     errors = []
     for flow in sorted(EXPECTED):
