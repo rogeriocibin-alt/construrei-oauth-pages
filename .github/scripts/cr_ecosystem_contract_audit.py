@@ -31,9 +31,10 @@ MIN_ALIASES = 39
 # Identity/function contracts replace the obsolete pre-V2 total workflow count.
 CRITICAL_BACKUP_WORKFLOWS = {
     "construrei-cloud-backup.yml": "canonical",
-    "cofre-zero-history-full.yml": "daily_archive",
+    "cofre-zero-history-full.yml": "weekly_archive",
+    "cofre-zero-trello-offsite.yml": "same_schedule_dispatch",
 }
-ARCHIVE_UTC_CRON = "47 8 * * *"
+ARCHIVE_UTC_CRON = "47 8 * * 0"
 
 
 def load(path):
@@ -242,7 +243,7 @@ def main():
             errors.append("Canonical Cofre Zero lost dispatch or concurrency lock")
         if "HISTORY_FULL" not in text or "SHA256SUMS.txt" not in text or "rclone check" not in text:
             errors.append("Canonical Cofre Zero lost archive/manifest/integrity gates")
-        # FULL snapshots are manual-only; source push/schedule belongs to the separate daily CAS.
+        # FULL snapshots are manual-only; the historical CAS now uses the approved weekly schedule.
         # Fail if an accidental automatic trigger would reintroduce full Storage copies.
         if not re.search(r"(?m)^on:\s*$", text):
             errors.append("Canonical FULL workflow lost its event block")
@@ -252,8 +253,10 @@ def main():
     if history.is_file():
         text = history.read_text(encoding="utf-8")
         scheduled = re.findall(r'^\s*-\s*cron:\s*["\x27]?([^"\x27\n#]+)', text, re.MULTILINE)
-        if ARCHIVE_UTC_CRON not in [x.strip() for x in scheduled]:
-            errors.append("Cofre Zero history schedule changed: expected 05:47 America/Sao_Paulo")
+        if [x.strip() for x in scheduled] != [ARCHIVE_UTC_CRON]:
+            errors.append("Cofre Zero history must have one Sunday 05:47 America/Sao_Paulo schedule")
+        if re.search(r"(?m)^  push:\\s*$", text):
+            errors.append("Cofre Zero weekly CAS must not run on ordinary pushes")
         if "cofre-zero-history-full" not in text or "cancel-in-progress: false" not in text:
             errors.append("Cofre Zero history concurrency contract changed")
         if "cr_history_cas_append.py" not in text or "cr_sql_restore_preflight.py" not in text:
