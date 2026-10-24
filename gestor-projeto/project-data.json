@@ -67,7 +67,15 @@
       "security_tests_20261024": "22/22 testes sinteticos PASS; 6/6 recusas anonimas reais PASS; 5/5 recursos publicos do Gestor/APP PASS",
       "security_runtime_status": "P0_ABERTO: rotas Trello legadas usam segredo fixo em URL; HMAC, replay e testes E2E autenticados nao comprovados",
       "security_test_report": "docs/SECURITY_APP_REAL_TESTS_20261024.md",
-      "security_test_pr": 169
+      "security_test_pr": 169,
+      "security_ci_r2_pr": 170,
+      "security_ci_r2_check": "CENTRAL_CANONICAL_GUARD_SUCCESS_40128423489_20261024",
+      "security_ci_r2_enforcement": "3 suites HMAC, envelope e caller obrigatorias no script de auditoria existente, sem novo workflow",
+      "security_ci_r2_public_app": "10/10 rotas F00-F09 com GET 200 e destinos Edge esperados; sem E2E autenticado",
+      "security_ci_r2_live_reject": "6/6 rotas anônimas negadas ou health pública conforme contrato, sem escrita",
+      "security_ci_r2_f00_handoff_fk": "14 passagens F01-F02 e F03-F04 sem case_id: FK cr_cases_v1(case_id), apenas 800-26 com case_code correspondente; sem atualização automática",
+      "security_ci_r2_runtime_hmac": "PENDING_INTEGRATION_AND_CALLBACK_MIGRATION",
+      "security_ci_r2_report": "docs/P0_TRELLO_APP_CHECKPOINT_20261024_R2.md"
     }
   },
   "governance": [
