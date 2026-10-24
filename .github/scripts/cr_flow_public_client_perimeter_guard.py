@@ -4,6 +4,7 @@ import json
 import os
 import re
 import sys
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -42,8 +43,26 @@ def self_test():
     print("PASS: ten baseline routes, twenty negative routing tests, and marker classification")
 
 
+def run_offline_trello_security_contracts():
+    """Mandatory pure security tests in existing Central Guard CI; no network or writes."""
+    paths = sorted((ROOT / "security/contracts").glob("trello-webhook-*.test.mjs"))
+    if len(paths) != 3:
+        raise RuntimeError(f"Trello security test baseline missing/duplicated: {len(paths)} suites")
+    try:
+        result = subprocess.run(
+            ["node", "--test", *(str(p) for p in paths)],
+            cwd=ROOT, timeout=45, check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RuntimeError("Trello security contract tests unavailable") from exc
+    if result.returncode != 0:
+        raise RuntimeError("Trello HMAC/caller/replay contract regression")
+    print("PASS: 3 Trello contract suites enforced by existing Central CI job (offline)")
+
+
 def main():
     self_test()
+    run_offline_trello_security_contracts()
     findings = []
     errors = []
     for flow in sorted(EXPECTED):
