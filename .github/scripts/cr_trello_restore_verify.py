@@ -24,10 +24,50 @@ MNAME = re.compile(r"\d{8}-\d{6}-\d+\.json")
 TYPES = {"board", "card", "list", "label", "custom_field", "action"}
 
 
-def rclone(*args):
+def rclone(*args, timeout=240):
     process = subprocess.run(["rclone", *args], stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE, check=True, timeout=240)
+                             stderr=subprocess.PIPE, check=True, timeout=timeout)
     return process.stdout
+
+
+def stage_immutable_objects(manifest, root):
+    """Fetch only manifest-listed CAS objects in one bounded, parallel rclone pass.
+
+    The previous verifier ran 986 sequential Drive subprocesses and exceeded
+    the 45-minute proof job. Stage to ephemeral disk, then independently hash,
+    inflate and count every record with checked_restore (fail closed).
+    """
+    shards = manifest.get("shards")
+    if (manifest.get("format") != "CONSTRUREI_TRELLO_TEXT_CAS_V1"
+            or manifest.get("complete") is not True
+            or manifest.get("binary_attachments") is not False
+            or not isinstance(shards, dict)
+            or not 13 <= len(shards) <= 2000):
+        raise ValueError("Invalid or incomplete manifest for staging")
+    keys = set()
+    for ref in shards.values():
+        if not isinstance(ref, dict):
+            raise ValueError("Invalid object reference")
+        key = ref.get("object")
+        if (not isinstance(key, str) or not OBJECT.fullmatch(key)
+                or ref.get("sha256") != key[:64]
+                or not isinstance(ref.get("bytes"), int)
+                or not 1 <= ref["bytes"] <= 50_000_000):
+            raise ValueError("Unsafe object reference for staging")
+        keys.add(key)
+    requested = root / "requested-objects.txt"
+    requested.write_text("\n".join(sorted(keys)) + "\n", encoding="ascii")
+    objects = root / "objects"
+    objects.mkdir()
+    rclone("copy", OBJECTS, str(objects),
+           "--files-from", str(requested),
+           "--transfers", "16", "--checkers", "16",
+           "--retries", "3", "--low-level-retries", "5",
+           "--timeout", "2m", timeout=1800)
+    present = {p.name for p in objects.iterdir() if p.is_file()}
+    if present != keys:
+        raise ValueError("Immutable object inventory incomplete after transfer")
+    return objects
 
 
 def checked_restore(manifest, get_object, dest):
@@ -170,7 +210,10 @@ def main():
         raise ValueError("Unbounded manifest")
     manifest = json.loads(raw)
     with tempfile.TemporaryDirectory() as tmp:
-        outcome = checked_restore(manifest, lambda key: rclone("cat", OBJECTS + "/" + key), Path(tmp))
+        root = Path(tmp)
+        objects = stage_immutable_objects(manifest, root)
+        outcome = checked_restore(manifest, lambda key: (objects / key).read_bytes(),
+                                  root / "recovered")
     print("TRELLO_CAS_RECOVERY_PASS " + json.dumps(outcome, sort_keys=True))
 
 
