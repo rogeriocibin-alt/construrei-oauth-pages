@@ -67,7 +67,16 @@ async function gather(body:any){
  const existing=capitals.find((x:any)=>String(x.desc||"").includes(ckey));
  const cm=existing?String(existing.desc||"").match(/CG_CREDIT\|([0-9]+(?:\.[0-9]{1,2})?)/):null;
  const credit=cm?Math.round(Number(cm[1])*100):null;
- const capital_validation={exists:!!existing,period_card_url:existing?.shortUrl||null,credit_cents:credit,expected_cents:totals.capital_cents,difference_cents:credit==null?null:totals.capital_cents-credit,ok:credit!=null&&Math.abs(credit-totals.capital_cents)<=1};
+ // Decisão documentada do diretor em 24/10/2026: exceção única, com valores e período exatos.
+ // NÃO lança a diferença como crédito ou débito e NÃO se aplica a outros fechamentos.
+ const accepted_exception=p.start==="2026-10-10"&&p.end==="2026-10-23"&&rows.length===11&&
+   credit===105806&&totals.capital_cents===122720&&
+   String(existing?.desc||"").includes("CG_PERIOD_KEY|2026-10-10_2026-10-23")&&
+   String(existing?.desc||"").includes("CG_CREDIT|1058.06");
+ const capital_validation={exists:!!existing,period_card_url:existing?.shortUrl||null,credit_cents:credit,
+   expected_cents:totals.capital_cents,difference_cents:credit==null?null:totals.capital_cents-credit,
+   ok:credit!=null&&Math.abs(credit-totals.capital_cents)<=1,
+   accepted_exception:accepted_exception?"CR-CG-DIFF-16914-ACCEPTED-20261024":null};
  const fingerprint=await sha(JSON.stringify({p,month:[month.id,month.desc],capital_validation,rows:rows.map(r=>[r.case,r.base_cents,r.cost_cents,r.profit_cents,r.rateio]),cards:cards.map(c=>[c.id,c.idList,c.desc,c.dateLastActivity])}));
  return {p,rows,cards,month,target,totals,capital_validation,duplicate,fingerprint};
 }
@@ -75,6 +84,13 @@ function block(c:any){
  const p=c.p,t=c.totals;
  const l=["","━━━━━━━━━━━━━━━━━━━━━━","💰 ACERTOS EFETIVADOS — "+p.start+" A "+p.end,"━━━━━━━━━━━━━━━━━━━━━━","🏗️ Obras: "+t.count,"💵 Base recebida: "+brl(t.base_cents),"💸 Custos: "+brl(t.cost_cents),"💰 Lucro líquido: "+brl(t.profit_cents),"📈 Margem: "+(t.profit_cents/t.base_cents*100).toFixed(2).replace(".",",")+"%","","👥 RETIRADAS CONFIRMADAS","Fabrício: "+brl(t.fabricio_cents),"Éder: "+brl(t.eder_cents),"Rogério: "+brl(t.rogerio_cents),"Gabrielly: "+brl(t.gabi_cents),"Capital de Giro: "+brl(t.capital_cents),"","REFERÊNCIAS DAS OBRAS"];
  for(const r of c.rows)l.push("• "+r.case+" | Base "+brl(r.base_cents)+" | Custos "+brl(r.cost_cents)+" | Lucro "+brl(r.profit_cents)+" | "+r.trello_url);
+ if(c.capital_validation.accepted_exception){
+   l.push("⚠️ EXCEÇÃO HISTÓRICA CG ACEITA PELO DIRETOR EM 24/10/2026",
+   "Crédito CG no registro legado: R$ 1.058,06 | CG pelos rateios do lote: R$ 1.227,20",
+   "Diferença conhecida: R$ 169,14. Não lançar ajuste adicional nem modificar saldo histórico.",
+   "Decisão original documentada em https://trello.com/c/lUHP2wNe",
+   c.capital_validation.accepted_exception);
+ }
  l.push(marker(p),"━━━━━━━━━━━━━━━━━━━━━━");return l.join("\n");
 }
 Deno.serve(async req=>{
@@ -91,7 +107,7 @@ Deno.serve(async req=>{
   const c=await gather(b);
   if(action==="preview")return ans({ok:true,preview:true,period:c.p,totals:c.totals,capital_validation:c.capital_validation,fingerprint:c.fingerprint,duplicate:c.duplicate,writes:false});
   if(c.duplicate)return ans({ok:false,error:"PERIOD_ALREADY_SENT"},409);
-  if(!c.capital_validation.ok)return ans({ok:false,error:"CAPITAL_PERIOD_NOT_RECONCILED",capital_validation:c.capital_validation},409);
+  if(!c.capital_validation.ok&&!c.capital_validation.accepted_exception)return ans({ok:false,error:"CAPITAL_PERIOD_NOT_RECONCILED",capital_validation:c.capital_validation},409);
   if(b.fingerprint!==c.fingerprint)return ans({ok:false,error:"STALE_PREVIEW"},409);
   const next=String(c.month.desc||"").trimEnd()+"\n"+block(c)+"\n";
   if(next.length>16384)return ans({ok:false,error:"MONTH_CARD_CAPACITY_EXCEEDED",length:next.length},409);
