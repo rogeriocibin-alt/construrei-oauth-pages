@@ -81,6 +81,14 @@ def main():
     run_app_role_contracts()
     findings = []
     errors = []
+    # A live Edge handler currently lacks authenticated role checks. F04-F09
+    # must not suddenly make write-capable ?api= calls while their clients
+    # have no verified session mechanism. This blocks accidental PR #171 merges.
+    # Removing this gate requires separate runtime RBAC E2E evidence.
+    UNAUTHENTICATED_WRITE_CALL = re.compile(
+        r'''API\s*\+\s*["']\?api=flow-(?:save|advance)["']''',
+        re.IGNORECASE,
+    )
     for flow in sorted(EXPECTED):
         source = FLOW / flow / "index.html"
         if not source.is_file():
@@ -92,6 +100,12 @@ def main():
                          "client_session_marker_present": bool(SESSION_MARKER.search(content))})
         if missing or introduced:
             errors.append({"flow": flow, "missing": missing, "introduced": introduced})
+        if flow in {f"f{i:02d}" for i in range(4, 10)} and UNAUTHENTICATED_WRITE_CALL.search(content):
+            errors.append({
+                "flow": flow,
+                "security": "F04-F09 authenticated runtime unproven; forbid enabling ?api=flow-save/advance",
+                "required_gate": "server-side RBAC and authenticated live E2E before PR171 promotion",
+            })
     print(json.dumps({
         "audit": "CR_F00_F09_OFFICIAL_EDGE_CLIENT_ROUTING",
         "source": "existing official HTML pages",
