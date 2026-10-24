@@ -162,6 +162,7 @@ jobs:
         run: |
           node --check security/contracts/trello-webhook-signature.mjs
           node --check security/contracts/trello-webhook-envelope.mjs
+          node --check security/contracts/trello-webhook-caller-gate.mjs
           node --test security/contracts/trello-webhook-*.test.mjs
       - name: Verify Trello OIDC identities (offline, no secrets)
         run: |
