@@ -49,7 +49,7 @@ def self_test():
 
 def changed_files():
     p = subprocess.run(
-        ["git", "show", "--pretty=format:", "--name-only", "HEAD"],
+        ["git", "diff", "--name-only", "HEAD^", "HEAD"],
         capture_output=True, text=True, check=True, timeout=30,
     )
     return sorted(set(x.strip() for x in p.stdout.splitlines() if x.strip()))[:500]
@@ -91,7 +91,7 @@ def run():
     elif event_name == "push":
         head = event.get("head_commit") or {}
         msg = head.get("message") or ""
-        pr_reference = bool(re.search(r"(?:Merge pull request #|\\(#)[0-9]+", msg))
+        pr_reference = bool(re.search(r"(?:Merge pull request #[0-9]+|\(#[0-9]+\))", msg))
         receipt.update({
             "commit": head.get("id") or receipt["sha"],
             "commit_subject": msg.splitlines()[0][:200] if msg else "",
