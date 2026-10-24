@@ -10,6 +10,7 @@ on:
       - .github/scripts/cr_cofre_direct_cas_fallback.py
       - .github/scripts/cr_history_cas_append.py
       - .github/scripts/cr_pg17_integrated_restore_candidate.sh
+      - .github/scripts/cr_git_bundle_offsite_weekly.sh
 
 permissions:
   contents: read
@@ -31,6 +32,10 @@ jobs:
           python3 -m py_compile .github/scripts/cr_cofre_direct_cas_fallback.py
           python3 .github/scripts/cr_cofre_direct_cas_fallback.py --selftest
           python3 .github/scripts/cr_history_cas_append.py --selftest
+      - name: Offline immutable Git bundle restore regression
+        run: |
+          bash -n .github/scripts/cr_git_bundle_offsite_weekly.sh
+          bash .github/scripts/cr_git_bundle_offsite_weekly.sh --selftest
 
   detect:
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
@@ -399,3 +404,33 @@ jobs:
           echo '## Cofre Zero — integrated isolated recovery proof' >> "$GITHUB_STEP_SUMMARY"
           echo 'Result: ${{ job.status }}; PG17 real + Trello immutable historical snapshot.' >> "$GITHUB_STEP_SUMMARY"
           echo 'OUT OF SCOPE: Cloud Scheduler, live OAuth, Edge redeployment, Netlify and running APP restore.' >> "$GITHUB_STEP_SUMMARY"
+
+  git_offsite_weekly:
+    name: Cofre Zero | independent Git history bundle on existing weekly schedule
+    if: github.event_name == 'schedule' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    env:
+      RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Reuse existing private Google Drive destination
+        run: |
+          set -euo pipefail
+          test -n "$RCLONE_CONFIG_B64"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq rclone >/dev/null
+      - name: Archive immutable Git bundle and independently clone readback
+        run: bash .github/scripts/cr_git_bundle_offsite_weekly.sh
+      - name: Status evidence
+        if: always()
+        run: |
+          echo '## Cofre Zero Git offsite' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Result: ${{ job.status }}' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Private Drive immutable content-addressed bundle, restored and clone checked.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Existing weekly schedule only; no new cron, no extra project, no CURRENT changes.' >> "$GITHUB_STEP_SUMMARY"
