@@ -262,6 +262,9 @@ def main():
     if any("Backup automático diário às 03:00 permanece inalterado" in str(x)
            for x in version.get("changes", [])):
         errors.append("Stale Cofre Zero daily claim leaked into published PWA metadata")
+    if (cofre.get("deprecated", {}).get("legacy_scheduler_mode") != "DELETED_ARCHIVED"
+            or cofre.get("cloud_scheduler", {}).get("only_active_job_confirmed") is not True):
+        errors.append("Cofre Zero legacy Cloud Scheduler deletion / unique live job proof missing")
     if not (cofre.get("precedence", "").startswith("LIVE_AUTHENTICATED_OPERATOR")
             and cofre.get("deprecated", {}).get("prior_snapshots") == "READ_ONLY_RECOVERY_ONLY"):
         errors.append("Historical Cofre Zero snapshots could regain operational authority")

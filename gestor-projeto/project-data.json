@@ -1570,7 +1570,7 @@
       "last_movement": "2026-10-24",
       "next_action": "25/10 confirmar primeiro ciclo semanal produtor/CAS/Trello/Git/static. Depois validar autenticação OAuth/Edge runtime/Netlify/APP em isolamento; evitar duplicatas e reativação legada.",
       "dependency": "Operação semanal configurada; prova natural dom 25/10 e recuperação E2E de provedores externos ainda pendentes; testes de HTML e fonte não são recuperação funcional completa.",
-      "source": "Manifesto docs/COFRE_ZERO_CANONICO_SEMANAL_20261024.md, Cloud Scheduler e CURRENT autenticados 24/10, PRs #159/#160/#161, issue #53; Master Supabase EXEC-COFRE-COVERAGE-20261010.",
+      "source": "Manifesto docs/COFRE_ZERO_CANONICO_SEMANAL_20261024.md, Cloud Scheduler e CURRENT autenticados 24/10, PRs #159/#160/#161, issue #53; Master Supabase EXEC-COFRE-COVERAGE-20261010. Cloud Scheduler legado excluído 24/10 após arquivamento imutável do inventário no Drive; readback confirmou 1/1 job semanal ENABLED.",
       "close_when": "CAS recorrente comprovado, backup principal finalizado e validado, custo/duplicação sob controle, recuperação isolada reproduzível, rollback testado.",
       "human_action": false,
       "provenance": "master_readonly_projection"
@@ -2995,7 +2995,7 @@
       "access": "MASTER",
       "url": "https://console.cloud.google.com/run/jobs/details/southamerica-east1/construrei-backup?project=app-construrei",
       "source": "Google Cloud Run • construrei-backup • Cloud Scheduler",
-      "description": "COFRE ZERO CANÔNICO SEMANAL: domingo 03h BRT (Cloud Run), 05h47 BRT (GitHub CAS/Trello/Git/static); acesso manual exige autenticação Google Cloud; versão histórica diária desativada."
+      "description": "COFRE ZERO ÚNICO SEMANAL: produtor domingo 03h BRT e CAS/Trello/Git/static domingo 05h47 BRT. Scheduler diário antigo removido, configuração arquivada para rollback controlado. Controle manual exige login Google Cloud."
     },
     {
       "id": "links_oficiais",
@@ -4115,7 +4115,9 @@
       "cron": "0 3 * * 0",
       "timezone": "America/Sao_Paulo",
       "status": "ENABLED",
-      "next_natural_run": "2026-10-25"
+      "next_natural_run": "2026-10-25",
+      "only_active_job_confirmed": true,
+      "verified_at": "2026-10-24"
     },
     "github": {
       "workflow": ".github/workflows/cofre-zero-history-full.yml",
@@ -4143,9 +4145,12 @@
     "complete_ecosystem_restore_homologated": false,
     "deprecated": {
       "legacy_scheduler": "construrei-cloud-backup-daily",
-      "legacy_scheduler_mode": "RETIRED_NOT_AUTHORIZED",
+      "legacy_scheduler_mode": "DELETED_ARCHIVED",
       "prior_snapshots": "READ_ONLY_RECOVERY_ONLY",
-      "manual_full_workflow": "EMERGENCY_DISPATCH_ONLY"
+      "manual_full_workflow": "EMERGENCY_DISPATCH_ONLY",
+      "retirement_record": "CONSTRUREI-BACKUP-AUTO/HISTORY_CAS/CONTROL_PLANE/RETIRED_SCHEDULER_20261024.json",
+      "legacy_cloud_run_job": "construrei-cloud-backup",
+      "legacy_cloud_run_job_policy": "NO_SCHEDULE_COLD_ROLLBACK_ONLY"
     },
     "precedence": "LIVE_AUTHENTICATED_OPERATOR > MAIN_CANONICAL_WITH_GREEN_CI > SUPABASE_MASTER_EVIDENCE > HISTORICAL_SNAPSHOT",
     "read_only_evidence": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/issues/53",
