@@ -60,9 +60,25 @@ def run_offline_trello_security_contracts():
     print("PASS: 3 Trello contract suites enforced by existing Central CI job (offline)")
 
 
+def run_app_edge_query_contracts():
+    """Fail if F04–F09 silently return to the wrong Edge query parameter."""
+    suite = ROOT / "audits/app-f04-f09-api-contract.test.mjs"
+    if not suite.is_file():
+        raise RuntimeError("Canonical F04-F09 Edge query suite missing")
+    try:
+        result = subprocess.run(["node", "--test", str(suite)],
+                                cwd=ROOT, timeout=30, check=False)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RuntimeError("F04-F09 API query tests unavailable") from exc
+    if result.returncode != 0:
+        raise RuntimeError("F04-F09 Edge request query regression")
+    print("PASS: F04-F09 six offline Edge api query contracts")
+
+
 def main():
     self_test()
     run_offline_trello_security_contracts()
+    run_app_edge_query_contracts()
     findings = []
     errors = []
     for flow in sorted(EXPECTED):
