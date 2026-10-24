@@ -5,7 +5,7 @@ const vm=require('node:vm');
 const path=require('node:path');
 const root=path.join(__dirname,'..');
 const edge=fs.readFileSync(path.join(root,'candidates/financeiro-v12-period-close-20261024/index.ts'),'utf8');
-const html=fs.readFileSync(path.join(root,'production/dashboard-financeiro-v12-homologada-20261022/index.html'),'utf8');
+const html=fs.readFileSync(path.join(root,'preview/dashboard-financeiro-v12-envio-acertos-20261024/index.html'),'utf8');
 test('seguranca: envio somente para diretor autenticado',()=>{
  assert.match(edge,/DIRECTOR_SESSION_REQUIRED/);
  assert.match(edge,/ADMIN_MASTER_ROGERIO/);
