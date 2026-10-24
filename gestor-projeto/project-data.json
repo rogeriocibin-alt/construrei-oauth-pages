@@ -3952,7 +3952,12 @@
       "other_committed": 18,
       "non_committed": 0,
       "source": "Supabase public.cr_finance_v12_operations 23/10",
-      "not_bank_reconciliation": true
+      "not_bank_reconciliation": true,
+      "cora_new_debits": 9,
+      "cora_existing_trello_linked": 3,
+      "cora_existing_receipt_linked": 1,
+      "other_manual_debits": 18,
+      "source_breakdown": "Supabase cr_finance_v12_operations payload.direction/reconciliation_kind, leitura somente 23/10; não representa transações não conciliadas nem prova E2E de todos os destinos."
     },
     "source_counts": {
       "healthy": 5,
