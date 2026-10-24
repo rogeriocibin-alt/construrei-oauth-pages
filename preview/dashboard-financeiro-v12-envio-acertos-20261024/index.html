@@ -567,7 +567,7 @@ body{background:var(--v12-bg)}
   <div id="v11cap-slot"></div><section id="cr2026-history" class="panel" style="margin:14px 0;border-left:4px solid #216ab5">
 <h3>Consultar histórico financeiro de 2026</h3><p class="small muted">Consulta somente leitura dos registros operacionais do Trello carregados pela V12. Não encerra períodos, não cria cards, não confirma recebimentos nem altera valores. Para lançamentos sem dia exato, o filtro utiliza competência mensal e identifica a aproximação.</p>
 <div class="v11row" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px"><label>De <input type="date" id="cr26-from" min="2026-01-01" max="2026-12-31" value="2026-01-01" style="width:100%;padding:10px;border:1px solid #bfd5e5;border-radius:8px"></label><label>Até <input type="date" id="cr26-to" min="2026-01-01" max="2026-12-31" value="2026-12-31" style="width:100%;padding:10px;border:1px solid #bfd5e5;border-radius:8px"></label></div>
-<button type="button" id="cr26-consult" class="v11button">Consultar registros de 2026</button><div id="cr26-output" role="status" aria-live="polite" style="margin-top:12px">Faça login e consulte. O filtro não utiliza o bloqueio de início do próximo fechamento.</div>
+<button type="button" id="cr26-consult" class="v11button">Consultar registros de 2026</button><button type="button" id="cr26-copy" class="v11button" disabled>Copiar texto histórico</button><div id="cr26-output" role="status" aria-live="polite" style="margin-top:12px">Faça login e consulte. O filtro não utiliza o bloqueio de início do próximo fechamento.</div>
 </section><div id="v12-close-period" class="panel" style="margin:14px 0;padding:17px;border:1px solid #d2e2ec;border-radius:13px;background:#f7fafc">
 <h3 style="font-size:15px;color:#143e5b;margin:0 0 7px">Encerrar período de acertos</h3>
 <p class="small muted">O valor do Capital de Giro vem do Acerto Vivo no Trello. Apenas a Diretoria confirma; nenhuma obra é fechada automaticamente e um período já existente não é recriado.</p>
@@ -1977,33 +1977,42 @@ async function crpSend(){if(!CRP_LAST)return;try{const current=crpData();if(JSON
 for(const id of ["cg-close-start","cg-close-end"]){document.addEventListener("change",ev=>{if(ev.target?.id===id){CRP_LAST=null;const btn=document.getElementById("crp-send");if(btn)btn.disabled=true;}})}
 </script><script id="cr2026-history-runtime">(function(){
 "use strict";
-const by=id=>document.getElementById(id);
-const fmt=c=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(c/100);
-const integer=x=>x!==null&&x!==undefined&&x!==""&&Number.isSafeInteger(Number(x))?Number(x):null;
-const escape=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function show(message){by("cr26-output").textContent=message}
-function query(){
-const start=by("cr26-from").value,end=by("cr26-to").value;
-if(!/^2026-\d\d-\d\d$/.test(start)||!/^2026-\d\d-\d\d$/.test(end)||start>end){show("Informe um intervalo válido dentro de 2026.");return}
-const model=window.CR_V12_MODEL?.(),items=model?.years?.["2026"]?.rows;
-if(!Array.isArray(items)){show("Histórico 2026 não carregado. Faça login no Dashboard e aguarde a leitura autenticada do Trello.");return}
-const fromM=Number(start.slice(5,7)),toM=Number(end.slice(5,7));
-const rows=items.filter(x=>Number(x.month)>=fromM&&Number(x.month)<=toM);
-const ids=new Set();let duplicates=0,unpriced=0,dated=0,notPrecise=0,gross=0,cost=0,profit=0,balanced=0;
-const data=[];
-for(const x of rows){
- const id=String(x.case||x.case_no||"").trim();if(!id||ids.has(id)){duplicates++;continue}ids.add(id);
- const exact=String(x.received_at||x.settled_at||x.payment_date||"");
- if(/^2026-\d\d-\d\d/.test(exact)){dated++;if(exact.slice(0,10)<start||exact.slice(0,10)>end)continue}else notPrecise++;
- const v=[integer(x.gross_cents),integer(x.cost_cents),integer(x.profit_cents)];
- if(v.some(z=>z===null)||v[0]<=0||v[1]<0||Math.abs(v[0]-v[1]-v[2])>1){unpriced++;continue}
- gross+=v[0];cost+=v[1];profit+=v[2];balanced++;
- data.push(x);
+const $=id=>document.getElementById(id);
+const cash=c=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(c/100);
+const num=x=>x!==null&&x!==undefined&&x!==""&&Number.isSafeInteger(Number(x))?Number(x):null;
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const months=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+let printable=null;
+function date(v){if(!/^2026-\d{2}-\d{2}$/.test(v))return false;const d=new Date(v+"T12:00:00Z");return !Number.isNaN(d.valueOf())&&d.toISOString().slice(0,10)===v}
+function calc(){
+const from=$("cr26-from").value,to=$("cr26-to").value;if(!date(from)||!date(to)||from>to)throw Error("Datas inválidas. Selecione um período dentro de 2026.");
+const items=window.CR_V12_MODEL?.()?.years?.["2026"]?.rows;if(!Array.isArray(items))throw Error("Base de 2026 ainda não carregada. Faça login e aguarde a leitura da fonte Trello.");
+const inMonths=items.filter(r=>Number(r.month)>=Number(from.slice(5,7))&&Number(r.month)<=Number(to.slice(5,7)));
+const used=new Set(),valid=[],excluded=[],ambiguous=[];
+for(const r of inMonths){const key=String(r.case||r.case_no||"").trim();if(!key||used.has(key)){excluded.push({key:key||"sem obra",reason:"chave ausente ou duplicada"});continue}used.add(key);
+const exact=String(r.settled_at||r.acerto_date||r.received_at||r.payment_date||"").slice(0,10);
+if(/^2026-\d\d-\d\d$/.test(exact)){if(exact<from||exact>to)continue}else ambiguous.push(key);
+const gross=num(r.gross_cents),cost=num(r.cost_cents),profit=num(r.profit_cents);
+if(gross===null||cost===null||profit===null||gross<=0||cost<0||gross-cost!==profit){excluded.push({key,reason:"bruto/custo/lucro incompleto ou incompatível"});continue}
+valid.push({key,gross,cost,profit,month:Number(r.month),url:String(r.short_url||"")});
 }
-const fullMonths=start.endsWith("-01")&&end.endsWith("-"+new Date(2026,Number(end.slice(5,7)),0).getDate());
-const note="Atenção: este painel consulta obras por competência 2026, não confirma que elas foram recebidas ou acertadas. "+notPrecise+" registro(s) sem data diária de acerto; "+duplicates+" registros sem identificação única ou repetidos; "+unpriced+" com valores incompletos/incompatíveis. "+(fullMonths?"":"O filtro inclui meses parcialmente selecionados quando não existe data diária; não interprete o subtotal como fechamento exato.");
-const url=x=>typeof x.short_url==="string"&&/^https:\/\/trello\.com\//.test(x.short_url)?'<a target="_blank" rel="noopener noreferrer" href="'+escape(x.short_url)+'">Trello</a>':"—";
-by("cr26-output").innerHTML='<div style="padding:10px;border-radius:9px;background:#f0f6fb;color:#173e63"><b>'+escape(start)+' a '+escape(end)+'</b> · '+balanced+' obras com base comparável em '+rows.length+' registro(s) mensais.<p style="margin:7px 0">'+escape(note)+'</p><div class="rows"><div class="r"><span>Bruto das obras comparáveis</span><b>'+fmt(gross)+'</b></div><div class="r"><span>Custos das mesmas obras</span><b>'+fmt(cost)+'</b></div><div class="r"><span>Lucro das mesmas obras</span><b>'+fmt(profit)+'</b></div><div class="r"><span>Margem do subconjunto</span><b>'+(gross?(profit/gross*100).toFixed(2).replace(".",",")+"%":"N/D")+'</b></div></div></div><details style="margin-top:10px"><summary>Ver obras encontradas ('+data.length+')</summary><div class="tablewrap"><table class="table"><thead><tr><th>Obra</th><th>Competência</th><th>Bruto</th><th>Custos</th><th>Lucro</th><th>Origem</th></tr></thead><tbody>'+data.map(x=>'<tr><td>'+escape(x.case||x.case_no)+'</td><td>'+String(x.month).padStart(2,"0")+'/2026</td><td>'+fmt(x.gross_cents)+'</td><td>'+fmt(x.cost_cents)+'</td><td>'+fmt(x.profit_cents)+'</td><td>'+url(x)+'</td></tr>').join("")+'</tbody></table></div></details>';
+const totals=valid.reduce((o,r)=>{o.gross+=r.gross;o.cost+=r.cost;o.profit+=r.profit;return o},{gross:0,cost:0,profit:0});
+return {from,to,valid,excluded,ambiguous,totals,sourceCount:inMonths.length,completeMonths:from.endsWith("-01")&&to.endsWith("-"+new Date(2026,Number(to.slice(5,7)),0).getDate())};
 }
-by("cr26-consult")?.addEventListener("click",query);
+function standard(d){
+const sep="━━━━━━━━━━━━━━━━━━━━━━",t=d.totals,pct=t.gross?t.profit/t.gross*100:0;
+const lines=["CONSTRU-REI | CONSULTA HISTÓRICA 2026",sep,"PERÍODO: "+d.from+" a "+d.to,"ORIGEM: HISTÓRICO OPERACIONAL TRELLO, NÃO FECHAMENTO DE ACERTOS","OBRAS COM BASE COMPLETA: "+d.valid.length,sep];
+for(const r of d.valid)lines.push("OBRA "+r.key+" | "+months[r.month]+"/2026","Bruto: "+cash(r.gross),"Custos: "+cash(r.cost),"Lucro: "+cash(r.profit),"Margem: "+(r.profit/r.gross*100).toFixed(2).replace(".",",")+"%",r.url||"Sem link Trello","—");
+lines.push(sep,"RESUMO DO SUBCONJUNTO","Bruto: "+cash(t.gross),"Custos: "+cash(t.cost),"Lucro: "+cash(t.profit),"Margem: "+pct.toFixed(2).replace(".",",")+"%", "Rateios individuais, valores efetivamente recebidos e retirados: NÃO CONFIRMADOS POR ESTA FONTE.", "Obras com referência mensal mas sem data diária de acerto: "+d.ambiguous.length,"Registros excluídos/incompletos: "+d.excluded.length,"Consulta somente leitura. Nenhum acerto realizado ou confirmado.");
+return lines.join("\n")
+}
+function render(){printable=null;$("cr26-copy").disabled=true;const target=$("cr26-output");try{
+const d=calc(),t=d.totals;printable=standard(d);$("cr26-copy").disabled=false;
+const note="Consulta por competência de obra, não por data confirmada de acerto. "+d.ambiguous.length+" obra(s) sem data diária comprovada; "+d.excluded.length+" registro(s) incompleto(s) ou repetido(s). "+(!d.completeMonths?"O recorte inclui meses parciais sem poder atribuir dias precisos. ":"")+"Rateios, recebimentos e retiradas não são inferidos.";
+target.innerHTML='<div style="border:1px solid #cadde9;background:#f4f9fd;border-radius:10px;padding:12px"><b>'+d.from+' a '+d.to+'</b> · '+d.valid.length+' obra(s) com base financeira consistente de '+d.sourceCount+' registros.<p>'+esc(note)+'</p><div class="rows">'+[["Bruto",cash(t.gross)],["Custos",cash(t.cost)],["Lucro",cash(t.profit)],["Margem",t.gross?(t.profit/t.gross*100).toFixed(2).replace(".",",")+"%":"N/D"]].map(x=>'<div class="r"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("")+'</div></div><details style="margin-top:11px"><summary>Detalhar '+d.valid.length+' obras</summary><div class="tablewrap"><table class="table"><thead><tr><th>Obra</th><th>Competência</th><th>Bruto</th><th>Custos</th><th>Lucro</th><th>Origem</th></tr></thead><tbody>'+d.valid.map(x=>'<tr><td>'+esc(x.key)+'</td><td>'+months[x.month]+'</td><td>'+cash(x.gross)+'</td><td>'+cash(x.cost)+'</td><td>'+cash(x.profit)+'</td><td>'+(x.url.startsWith("https://trello.com/")?'<a target="_blank" rel="noopener noreferrer" href="'+esc(x.url)+'">Trello</a>':"—")+'</td></tr>').join("")+'</tbody></table></div></details>';
+}catch(e){target.textContent=String(e.message||e)}
+}
+$("cr26-consult")?.addEventListener("click",render);
+$("cr26-copy")?.addEventListener("click",async()=>{if(!printable)return;try{await navigator.clipboard.writeText(printable);$("cr26-copy").textContent="Texto copiado"}catch{prompt("Copie o histórico",printable)}});
+for(const id of ["cr26-from","cr26-to"])$(id)?.addEventListener("change",()=>{printable=null;$("cr26-copy").disabled=true;$("cr26-copy").textContent="Copiar texto histórico"});
 })();</script></body></html>
