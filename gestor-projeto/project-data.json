@@ -4063,7 +4063,7 @@
       "report": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
       "verified_at_brt": "2026-10-23 22:22",
       "browser_connected": true,
-      "desktop_commander_connected": false,
+      "desktop_commander_connected": true,
       "tests": {
         "preauthenticated_v12_page": "PASS",
         "fresh_tab_login_gate": "PASS",
@@ -4077,10 +4077,14 @@
         "close_replay": "NOT_EXECUTED",
         "trello_write": "NOT_EXECUTED",
         "pdf_export": "NOT_EXECUTED",
-        "mobile_viewport": "NOT_EXECUTED"
+        "mobile_viewport": "PASS_HEADLESS_UNAUTHENTICATED_390PX"
       },
       "branch_fix_pr": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/154",
-      "warning": "Tela guarda resposta antiga de autoteste 0 períodos enquanto período 10/10–23/10 já existe; não refazer acerto. Opera conector não oferece click/setValue; leitura não prova E2E."
+      "desktop_qa": "PASS_1440PX_HTTP200_LOGIN_NO_JS_ERRORS",
+      "desktop_mobile_autotest_stale": "PASS_1440_390_FIX_MERGED_PR155_AND_VERIFIED_PUBLIC_HTML",
+      "autotest_fix_pr": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/155",
+      "merge_commit": "8ee3fe59c0afe9967d4a4a243bb0775da6166952",
+      "warning": "BUG visual de autoteste antigo corrigido e publicado em PR #155, testado com Desktop Commander em 1440/390. Ainda NÃO EXECUTADOS: E2E autenticado de confirmação, PDF/Excel e gravação real. Não refazer período 10/10–23/10. P0 econômico 740/768/579 ainda exige conciliação documental; obra 740 tem 1 débito Cora R$1.239,80, dois COMMITTED manuais e uma linha Trello — nunca gravar automaticamente outro custo."
     }
   }
 }
