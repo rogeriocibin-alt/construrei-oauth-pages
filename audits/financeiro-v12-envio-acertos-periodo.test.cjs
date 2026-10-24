@@ -36,7 +36,7 @@ test('interface V12: botoes ativos somente apos previa',()=>{
  assert.match(html,/id="cg-close-start"/);
  assert.match(html,/id="cg-close-end"/);
  assert.match(html,/capital_validation/);
- assert.match(html,/if\(!cv.ok\)/);
+ assert.match(html,/if\(!cv.ok&&!cv.accepted_exception\)/);
  assert.match(html,/V12-OPERACAO-HOMOLOGADA-ACERTOS-BRUTO-TAXA-20261023/);
 });
 test('scripts inline da V12 candidata tem sintaxe valida',()=>{
@@ -53,4 +53,14 @@ test('auditoria: setembro 21+12 obras sem dupla contagem',()=>{
 test('auditoria: outubro apresenta divergencia de rateio nao homologavel',()=>{
  assert.equal(1734910-1269786,465124);
  assert.equal(433611+42444-465124,10931);
+});
+
+test('excecao CG historica: restrita ao lote aceito e sem lancamento de ajuste',()=>{
+ assert.match(edge,/p\.start==="2026-10-10"&&p\.end==="2026-10-23"&&rows\.length===11/);
+ assert.match(edge,/credit===105806&&totals\.capital_cents===122720/);
+ assert.match(edge,/CR-CG-DIFF-16914-ACCEPTED-20261024/);
+ assert.match(edge,/!c\.capital_validation\.ok&&!c\.capital_validation\.accepted_exception/);
+ assert.match(html,/Ressalva autorizada/);
+ assert.match(html,/!cv\.ok&&!cv\.accepted_exception/);
+ assert.doesNotMatch(edge,/\+16914\b/);
 });
