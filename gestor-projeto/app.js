@@ -307,10 +307,14 @@ function renderPending(){
   const blocked=all.filter(x=>x.state==='blocked').length;
   const old=all.filter(x=>(ageDays(x.last_movement)||0)>=3&&x.state!=='completed').length;
 
+  const inventory=d.executive_review_20261024?.inventory;
+  const evidence=d.executive_review_20261024?.evidence_review;
+  const masterSummary=inventory?`<section class="card" style="padding:16px;margin-bottom:16px"><h3>Banco Mestre — fotografia ${esc(inventory.verified_on||'')}</h3><p><strong>${inventory.total}</strong> registros: <strong>${inventory.completed}</strong> concluídos, <strong>${inventory.canceled}</strong> cancelados, <strong>${inventory.other}</strong> não finais. Esta é uma fotografia de auditoria, não uma consulta em tempo real. Os cartões abaixo são uma seleção de acompanhamento, não o banco completo.</p><p><strong>Prioridade executiva:</strong> APP F00–F09 E2E. Financeiro V12: descontos aceitos; Cofre Zero: semanal único. ${evidence?`<small>${evidence.subtasks_reprioritized_p0_to_p1} subtarefas repriorizadas; provas externas ainda dependem de verificação.</small>`:''}</p></section>`:'';
   $('#view-pending').innerHTML=`
-    <div class="page-intro"><div><h2>Pendências do Projeto</h2><p>Banco Mestre vivo do projeto inteiro. Não confundir com pendências operacionais do APP/Central. A idade é calculada automaticamente e ação humana só aparece quando realmente depende do Owner.</p></div></div>
+    ${masterSummary}
+    <div class="page-intro"><div><h2>Pendências do Projeto</h2><p>Seleção executiva do Gestor, baseada em dados versionados. O Banco Mestre completo é Supabase cc_items; consulte a fotografia auditada acima. Não confundir com pendências operacionais do APP/Central. A idade é calculada automaticamente e ação humana só aparece quando realmente depende do Owner.</p></div></div>
     <section class="metrics pending-metrics">
-      ${metric('Itens visíveis',all.length,'Banco Mestre atual','!')}
+      ${metric('Itens na seleção',all.length,'Projeção curada, não Banco Mestre','!')}
       ${metric('Em execução',active,'Limite geral: 2 frentes','⇢')}
       ${metric('Ação do Rogério',human,'Decisões humanas explícitas','◎')}
       ${metric('Bloqueadas',blocked,'Precisam destravar dependência','×')}
@@ -835,7 +839,7 @@ window.addEventListener('appinstalled',()=>{const b=$('#installPwaBtn'); if(b)b.
 
 async function init(){
   try{
-    const r=await fetch('./project-data.json?v=20261007pendingroutingv1',{cache:'no-store'});
+    const r=await fetch('./project-data.json?v=20261024audit99v2',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     state.data=await r.json();
     renderAll();
