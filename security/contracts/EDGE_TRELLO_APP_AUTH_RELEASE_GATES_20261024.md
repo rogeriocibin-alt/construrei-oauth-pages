@@ -5,8 +5,8 @@
 ## Evidência confirmada
 - Inspeção SOMENTE LEITURA do código real publicado das funções Edge em 24/10: existem integrações históricas Trello de leitura/atualização com `verify_jwt=false` e sem prova de controle uniforme de caller/autorização para todas as ações privilegiadas. Outras rotas usam segredo de callback, distinto de HMAC verificado sobre bytes brutos.
 - O runtime de etapas APP depende de cliente privilegiado e ainda precisa de prova de autorização por identidade/role para leitura e transições, além do contrato de handoff. **Esta auditoria não enviou POST nem alterou funções.**
-- PR #74: contratos sintéticos `trello-webhook-signature.mjs` e `trello-webhook-envelope.mjs`; testes executados no notebook conectado (Node v24.19.0) em 24/10: **13 PASS / 0 FAIL**, sem banco, segredos reais, rede operacional ou efeitos colaterais.
-- O sucesso dos 13 testes **NÃO** prova que endpoints reais estejam protegidos. `verify_jwt=false` é apropriado para webhook externo apenas quando a função faz sua própria verificação, segundo documentação Supabase.
+- PR #74: contratos sintéticos `trello-webhook-signature.mjs`, `trello-webhook-envelope.mjs` e NOVO `trello-webhook-caller-gate.mjs` com leitura limitada e fail-closed de webhook, usuário e workload. Testes executados no notebook conectado (Node v24.19.0) em 24/10: **22 PASS / 0 FAIL**, sem banco, segredos reais, rede operacional ou efeitos colaterais. O gate só declara caller verificado, `writeAuthorized:false` até autorização de domínio, claim persistente e idempotência downstream.
+- O sucesso dos 22 testes **NÃO** prova que endpoints reais estejam protegidos. `verify_jwt=false` é apropriado para webhook externo apenas quando a função faz sua própria verificação, segundo documentação Supabase.
 
 ## Contrato exigido por origem da chamada
 | Origem | Proteção obrigatória | Comportamento em erro |
