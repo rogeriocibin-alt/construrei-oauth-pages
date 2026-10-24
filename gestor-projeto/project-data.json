@@ -31,11 +31,11 @@
     "reconciliation_candidate_at": "2026-10-22",
     "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP.",
     "operational_snapshot_at": "2026-10-23",
-    "operational_audit_status": "GitHub Pages/Guard/CAS SUCCESS no commit 0773cb686; Cora PROD live status e importação histórica verificados; conferência E2E de replay/UI e conciliação histórica ainda não comprovadas",
+    "operational_audit_status": "V12 release CI/Pages/Guard aprovados, Cora PROD incremental saudável; exceções econômicas P0 de base recebido-líquido versus taxas nos Acertos sob auditoria, sem modificação de movimentações.",
     "operational_checkpoint": "FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023",
     "operational_rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
     "operational_scope": "Espelho informativo no Gestor (dados + link): PWA/runtime, Service Worker, login e release 1.2.x intocados; nenhuma escrita financeira.",
-    "operational_current_focus": "Dashboard V12 OFICIAL (PR #151), Acertos 11 obras sem diferença de rateio, Capital Giro 10/10–23/10 R$1.058,06 em Trello+Supabase; ledger 31 COMMITTED (13 CORA_). CORA LIVE 23/10 21h35 BRT: monitor Cora PROD incremental saudável, 46/46 meses cache importados, mas saldos históricos/IDs bancários ainda sob auditoria. Cofre Zero em controle separado.",
+    "operational_current_focus": "Financeiro V12 oficial; Cora PROD incremental healthy, Capital Giro 10/10–23/10 registrado R$1.058,06 e ledger 31 COMMITTED. P0 ACERTOS BASE BRUTO/LÍQUIDO 23/10: obras 740-26 (R$1.243,95), 768-26 (R$208,60), 579-26 (R$185,00) têm diferença recebido-fechado exatamente igual a custo de taxa/comissão; Acerto Vivo usa recebido e deduz taxa, enquanto card individual usa bruto. Exige verificação bancária antes de qualquer correção. Ainda não homologar Acertos/CG 100%.",
     "operational_total_cc_items": 263,
     "operational_cc_items": {
       "completed": 120,
@@ -992,8 +992,8 @@
       "progress": 86,
       "progress_basis": "estimativa gerencial: release V12 + 1 período Capital Giro comprovado; não representa E2E completo nem conciliação do extrato",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
-      "last_advance": "23/10 21h18 BRT: Capital Giro período 10/10–23/10 criado, R$ 1.058,06 no Trello/Supabase, consolidado 27 períodos gerados R$ 21.706,71 saldo R$ 3.537,75 e divergências 0. Acerto Vivo 11 obras, lucro R$ 10.580,94, taxa CG R$ 1.058,06. V12 oficial; PR #151 merged. Ledger 31 COMMITTED (13 Cora). | CORA LIVE 23/10 21h35 BRT: atualização incremental PROD healthy=true, balance_healthy=true; 46/46 meses em cache; títulos Acertos PR151 oficiais. Replays E2E e saldos históricos ainda pendentes.",
-      "next_action": "Não repetir Capital Giro 10/10–23/10. Completar reconciliação de saldos históricos (37 meses placeholder), conciliação ID Cora↔Trello e prova autenticada de bloqueio de replay + UI Android/notebook; produção V12 intacta.",
+      "last_advance": "23/10 21h18 BRT: Capital Giro período 10/10–23/10 criado, R$ 1.058,06 no Trello/Supabase, consolidado 27 períodos gerados R$ 21.706,71 saldo R$ 3.537,75 e divergências 0. Acerto Vivo 11 obras, lucro R$ 10.580,94, taxa CG R$ 1.058,06. V12 oficial; PR #151 merged. Ledger 31 COMMITTED (13 Cora). | CORA LIVE 23/10 21h35 BRT: atualização incremental PROD healthy=true, balance_healthy=true; 46/46 meses em cache; títulos Acertos PR151 oficiais. Replays E2E e saldos históricos ainda pendentes. | P0 ACERTOS BASE BRUTO/LÍQUIDO 23/10: três diferenças exatamente iguais a custos de taxas, e um par de operações manuais R$1239,80 em 740-26 com apenas uma linha no card. Acertos/CG não certificados economicamente; preservar operações concluídas e V12 oficial.",
+      "next_action": "P0: conciliar documentos de 740/768/579 e 740 R$1.239,80 ledger duplicidade candidata; corrigir regra recebido bruto/líquido em candidata com testes, sem tocar período CG já registrado. Depois E2E notebook/celular e histórico Cora.",
       "dependency": "Evidência independente de replay seguro e reconciliação bancária real, sem criar custos ou cartões duplicados.",
       "blocked": false,
       "age_days": 0
@@ -1316,6 +1316,13 @@
       "title": "Cora PROD incremental saudável; pendência API antiga absorvida",
       "detail": "Cora PROD: RPC cr_cora_live_status healthy=true/balance_healthy=true, last_success_at 2026-10-24T00:35:11Z, janela 22–24/10; cr_cora_cache_years 46/46 meses importados sem erros, mas 37 meses têm saldos placeholder e somente seis registros de agregação bancária oficial. A importação não prova conciliação histórica. Task mestre FIN-CORA-API-20261007 concluída apenas para API/credenciais PROD; reconciliação histórica continua em FIN-V12-GLOBAL e auditoria Cora×Trello.",
       "confidence": "read_only_supabase_rpc"
+    },
+    {
+      "date": "2026-10-23",
+      "type": "financial_p0_acerto_double_fee_20261023",
+      "title": "Financeiro V12 — P0 suspeita de taxa duplicada na base dos Acertos",
+      "detail": "Três obras 740/768/579: diferença bruto-recebido igual a tarifa/comissão incluída nos custos; Edge Acertos usa recebido como base, diferente do Fechar Obra. Ledger 740 tem dois COMMITTED R$1.239,80 e uma linha Trello: revisar origem. Nenhum saldo, rateio ou cartão alterado. https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
+      "confidence": "verified_trello_supabase_code_read_only_pending_bank"
     }
   ],
   "recoverables": [
@@ -1586,14 +1593,14 @@
     },
     {
       "id": "FIN-CAPITAL-V12-FECHAMENTO-20261022",
-      "title": "Capital de Giro V12 — período real registrado, gate anti-replay",
+      "title": "Capital de Giro V12 — período registrado; revisão da base dos Acertos",
       "domain": "Financeiro",
       "priority": "P0",
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
       "last_movement": "2026-10-23",
-      "next_action": "Período 10/10–23/10 JÁ CRIADO em https://trello.com/c/lUHP2wNe (R$1.058,06). Não repetir fechamento. Validar segunda tentativa sem novo card/crédito e UX notebook+Android antes de encerrar gate geral.",
-      "dependency": "Apenas prova do bloqueio de replay e validação de interface nos dois dispositivos",
+      "next_action": "Não repetir período 10–23/10 já criado. Auditar previamente lucro/base Acerto Vivo com taxas 740/768/579 e validar efeito econômico do Capital R$1.058,06. Somente ajuste financeiro autorizado e rastreável.",
+      "dependency": "Validação econômica da base dos Acertos + testes autenticados.",
       "source": "Supabase cr_working_capital_periods_v1 + Trello card lUHP2wNe • checkpoint 23/10",
       "close_when": "Teste de não duplicação e funcionamento de interface comprovados, sem novo crédito no Trello",
       "human_action": true,
@@ -1601,14 +1608,14 @@
     },
     {
       "id": "FIN-V12-GLOBAL-20261022",
-      "title": "Financeiro V12 oficial — concluir reconciliação e gates E2E",
+      "title": "Financeiro V12 oficial — P0 base de Acertos e conciliação",
       "domain": "Financeiro",
       "priority": "P0",
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo",
       "last_movement": "2026-10-23",
-      "next_action": "Cora PROD incremental healthy às 21h35 BRT e cache 46/46 meses; validar saldos históricos oficiais/IDs por transação e E2E de replay+UI. Não duplicar lançamentos ou alterar a V12 homologada.",
-      "dependency": "36+ meses sem saldos oficiais certificados, matching Cora×Trello por evidência e teste autenticado de replay/UX",
+      "next_action": "P0: verificar bruto versus recebido líquido e taxas nas obras 740/768/579, conferir banco e ledger 740 R$1.239,80; bloquear recálculo automático do CG 10–23/10 até revisão; atualizar código em candidata com testes e aceite.",
+      "dependency": "Prova banco/recebimento líquido × tarifa, ledger e E2E de todos os fluxos.",
       "source": "RPC cr_cora_live_status + cr_cora_cache_years; PRs #142/#143/#145; Trello/Supabase 23/10",
       "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
       "human_action": false,
@@ -1658,6 +1665,21 @@
       "close_when": "Entrega documental/visual concluída, não operação cliente",
       "human_action": false,
       "provenance": "public.cc_items_operational_audit_20261022"
+    },
+    {
+      "id": "FIN-V12-CORA-TRELLO-AUDITORIA-20261022",
+      "title": "Cora × Trello — auditoria econômica P0 dos Acertos e transações",
+      "domain": "Financeiro",
+      "priority": "P0",
+      "state": "in_progress",
+      "owner": "Financeiro REI + CR Assertivo",
+      "last_movement": "2026-10-23",
+      "next_action": "Confirmar extrato/ID bancário e liquidação das taxas das obras 740-26, 768-26 e 579-26; conferir histórico do duplo COMMITTED R$1239,80 obra 740; não alterar obras ou rateio automaticamente.",
+      "dependency": "Comprovantes da Cora, trilha Trello, definição contábil de líquido/bruto",
+      "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
+      "close_when": "Base correta com documentos e validação sem duplicar operações.",
+      "human_action": false,
+      "provenance": "public.cc_items_existing"
     }
   ],
   "history_catalog": {
@@ -3457,7 +3479,7 @@
       "status": "healthy",
       "confidence": "high",
       "last_read": "2026-10-23",
-      "note": "Gestão Financeira: lista Capital Giro R$21.706,71 gerado, R$3.537,75 saldo; período único 10/10–23/10 R$1.058,06 https://trello.com/c/lUHP2wNe. Acerto Vivo 11 obras, R$10.580,94 lucro, diferença do rateio 0 (consulta 23/10)."
+      "note": "Gestão Financeira: lista Capital Giro R$21.706,71 gerado, R$3.537,75 saldo; período único 10/10–23/10 R$1.058,06 https://trello.com/c/lUHP2wNe. Acerto Vivo 11 obras, R$10.580,94 lucro, diferença do rateio 0 (consulta 23/10). | P0 ACERTOS BASE BRUTO/LÍQUIDO 23/10: Acerto Vivo registra 0 pendências aritméticas, mas 740/768/579 podem deduzir taxa na base e custo; registro CG já fechado não deve ser refeito."
     },
     {
       "id": "SRC-GESTAOCLICK",
@@ -3933,7 +3955,26 @@
       "margin_percent": 28.69,
       "capital_giro_brl": 1058.06,
       "ratios_balance_brl": 0,
-      "source": "Trello Acertos Vivo sa0x7eVL, última atividade 23/10 19h45 BRT; conferência 23/10"
+      "source": "Trello Acertos Vivo sa0x7eVL, última atividade 23/10 19h45 BRT; conferência 23/10",
+      "validation_status": "VALORES_REPORTADOS_PELO_TRELLO_NAO_AUDITADOS_ECONOMICAMENTE",
+      "validation_warning": "O cartão soma rateios com diferença zero, mas três obras 740/768/579 podem deduzir taxa/comissão duas vezes. Não usar os totais como fechamento definitivo sem conciliação dos recebimentos bancários.",
+      "p0_cases": [
+        {
+          "case": "740-26",
+          "possible_double_deduction_brl": 1243.95,
+          "card": "https://trello.com/c/ZQxYGEcY"
+        },
+        {
+          "case": "768-26",
+          "possible_double_deduction_brl": 208.6,
+          "card": "https://trello.com/c/eqRchlZA"
+        },
+        {
+          "case": "579-26",
+          "possible_double_deduction_brl": 185,
+          "card": "https://trello.com/c/lsg5ojHi"
+        }
+      ]
     },
     "capital_giro": {
       "generated_brl": 21706.71,
@@ -3944,7 +3985,9 @@
       "current_period_credit_brl": 1058.06,
       "divergences": 0,
       "source": "Trello cartão lUHP2wNe + Supabase cr_working_capital_periods_v1/cr_working_capital_state_v1, 23/10",
-      "no_new_period_created": false
+      "no_new_period_created": false,
+      "status": "PERIODO_REGISTRADO_VALORES_EM_AUDITORIA",
+      "validation_warning": "Capital Giro 10/10-23/10 foi registrado uma vez, mas origem do lucro depende de revisão de base e tarifas no Acerto Vivo. Proibido refazer/estornar automaticamente."
     },
     "financeiro_v12_operations": {
       "committed": 31,
@@ -3957,7 +4000,16 @@
       "cora_existing_trello_linked": 3,
       "cora_existing_receipt_linked": 1,
       "other_manual_debits": 18,
-      "source_breakdown": "Supabase cr_finance_v12_operations payload.direction/reconciliation_kind, leitura somente 23/10; não representa transações não conciliadas nem prova E2E de todos os destinos."
+      "source_breakdown": "Supabase cr_finance_v12_operations payload.direction/reconciliation_kind, leitura somente 23/10; não representa transações não conciliadas nem prova E2E de todos os destinos.",
+      "ledger_exception_candidate": {
+        "case": "740-26",
+        "amount_brl": 1239.8,
+        "date": "2026-10-17",
+        "committed_records": 2,
+        "trello_cost_lines_visible": 1,
+        "verification": "verificar trilha; NÃO provar duplicidade só por assinatura",
+        "source": "Supabase ledger + Trello ZQxYGEcY"
+      }
     },
     "source_counts": {
       "healthy": 5,
