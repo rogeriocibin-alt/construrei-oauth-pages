@@ -47,3 +47,9 @@
 - **Cofre:** observar evento natural 25/10 e provar restauração externa isolada sem segredos nos logs.
 - **Gestor:** após CI/merge, conferir dados na URL única e diferenciar snapshot/release sem quebrar cache.
 - **Financeiro:** operação aceite preservada, auditoria histórica opcional sob prova documental; nunca repetir fechamento já registrado.
+
+## 7. Auditoria visual Opera — correção de frentes executivas (24/10)
+- Leitura autenticada do Gestor no Opera indicou **3/2 frentes** porque `front-finance-v12` e `front-cofre-coverage` estavam ambos em `homologation`, além da frente APP. Este não era indicador adequado à decisão atual.
+- Corrigido em `project-data.json`: Financeiro V12 `completed` (somente escopo operacional aceite pelo titular); Cofre `review` (monitoramento/restauração externa futura); APP `homologation` continua única engenharia ativa. Contador derivado por `app.js`: **1/2** em vez de **3/2**, **sem alteração de JavaScript**.
+- Evidência distinta ainda pendente: navegador Opera aberto mostrava `V1.2.4 • OFICIAL` no chip versus `V1.2.5.2 • Homologada` lateral e aviso de atualização. O mismatch é **real** e precisa de ensaio cache/PWA, não um erro a corrigir publicando build não testado.
+- O card editorial `Pendências 16` é recorte `project_pending` e **não** a contagem da fonte mestre `cc_items=275`. Distinguir explicitamente estes conceitos na futura revisão UI; sem homologação de interface nesta alteração.
