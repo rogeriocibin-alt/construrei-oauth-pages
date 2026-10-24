@@ -12,6 +12,10 @@ on:
       - .github/scripts/cr_pg17_integrated_restore_candidate.sh
       - .github/scripts/cr_git_bundle_offsite_weekly.sh
       - .github/scripts/cr_static_site_recovery_smoke.py
+      - .github/scripts/cr_ecosystem_contract_audit.py
+      - gestor-projeto/project-data.json
+      - gestor-projeto/version.json
+      - docs/COFRE_ZERO_CANONICO_SEMANAL_20261024.md
 
 permissions:
   contents: read

@@ -915,15 +915,15 @@
     },
     {
       "id": "front-backup-auto",
-      "name": "Cofre Zero — rotina Cloud de execução automática (escopo histórico)",
+      "name": "Histórico — Cofre Zero produtor antigo (não é uma segunda rotina)",
       "status": "completed",
-      "priority": "P1",
-      "objective": "Preservar rotina Cloud independente do notebook e checkpoints já aprovados, monitorando execução corrente. Recuperação integral e CAS permanecem no controle de cobertura separado.",
+      "priority": "P3",
+      "objective": "Registro de proveniência/rollback do produtor original; não representa uma segunda automação homologada.",
       "progress": 100,
       "owner": "Bio + CR Assertivo",
-      "last_advance": "23/10: Cofre CAS Actions #40005884467 SUCCESS; snapshot 20261023-060011 restaurado em PG17 isolado Actions #40034006428 PASS. Execução original Cloud Run não revalidada por logs nesta rodada.",
-      "next_action": "Manter execução homologada; problemas de CAS/restore registrados separadamente em EXEC-COFRE-COVERAGE-20261010.",
-      "dependency": "Nenhuma para baseline; restauração integral pendente no item de cobertura.",
+      "last_advance": "24/10: producer atual (Cloud Run construrei-backup) migrou para domingo 03h e mantém CURRENT; histórico anterior foi despromovido, sem cron diário.",
+      "next_action": "Não reativar rotina diária nem criar outro executor. Usar somente COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1 e evidências da frente de cobertura.",
+      "dependency": "Nenhuma; histórico de auditoria, não controle corrente.",
       "blocked": false,
       "age_days": 0
     },
@@ -1000,16 +1000,16 @@
     },
     {
       "id": "front-cofre-coverage",
-      "name": "Cofre Zero — cobertura incremental e restauração integral",
+      "name": "Cofre Zero — versão semanal única + recuperação integral em validação",
       "status": "executing",
       "priority": "P1",
       "objective": "Validar CAS incremental sem novos serviços e recuperação isolada de PostgreSQL 17, dados financeiros e Trello textual.",
       "progress": 60,
-      "progress_basis": "PG17, código Edge 386/386 e escopo Netlify ativo concluídos. Bloqueios remanescentes: 1ª carga/restauração Trello e OAuth E2E (externos).",
+      "progress_basis": "24/10: Cloud Scheduler semanal confirmado, PRs 159/160/161 em main; PG17+Trello isolados PASS; 386 Edge fontes arquivadas, HTML Central/Gestor em localhost PASS; teste de OAuth/Edge runtime/Netlify E2E ainda não homologado.",
       "owner": "CR Assertivo",
-      "last_advance": "23/10: sites Netlify históricos encerrados como não ativos, PR #46 histórica fechada sem merge; prova de recuperação Trello independente adicionada ao mesmo workflow sem cron extra; GitHub CAS e Guard PASS.",
-      "next_action": "Não criar novas candidatas/cópias. Validar somente fim do Trello #40039261383, restauração pelo manifesto e OAuth E2E. Encerrar o restante mediante evidência.",
-      "dependency": "Primeiro manifesto Trello e testes pós-desastre dos provedores OAuth não comprovados",
+      "last_advance": "24/10: Cofre Zero semanal e testes estáticos incorporados à main, Cloud Run produtor 24/10 PASS, manifesto atualizado no Drive, sem novos serviços ou crons.",
+      "next_action": "25/10: verificar primeiro ciclo dominical real: Cloud 03h, CAS 05h47, Trello, Git offsite e HTML CI; depois apenas recuperação E2E externamente isolada. Não ressuscitar candidatos antigos.",
+      "dependency": "Primeiro domingo natural 25/10 e testes funcionais OAuth/Edge/Netlify/APP não comprovados.",
       "blocked": false,
       "age_days": 0
     }
@@ -1503,10 +1503,10 @@
       "priority": "P1",
       "state": "completed",
       "owner": "Bio + CR Assertivo",
-      "last_movement": "2026-10-23",
-      "next_action": "23/10: backup automático principal preservado; Cofre CAS #40035175426 SUCCESS (4551 referências, zero bytes/objetos novos), PG17 #40034006428 PASS. Monitorar somente regressões reais do Scheduler/Run original; cobertura externa e Trello em seus IDs existentes.",
+      "last_movement": "2026-10-24",
+      "next_action": "Concluído como marco histórico. Rotina operacional única aprovada: COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1; acompanhamento e recuperação integral exclusivamente em EXEC-COFRE-COVERAGE-20261010.",
       "dependency": "Nenhuma dependência operacional do notebook",
-      "source": "Supabase EXEC-BACKUP-AUTO-20261006 (Concluído) + GitHub CAS 40035175426 + PG17 40034006428; sem prova de nova execução direta do Cloud Run.",
+      "source": "Cloud Scheduler leitura autenticada 24/10; PRs GitHub 159/160/161; CURRENT Drive 20261024-060009; documento canônico. Não é executor paralelo.",
       "close_when": "Concluído: execução automática independente do notebook e restore verificável.",
       "human_action": false,
       "provenance": "current_explicit"
@@ -1562,15 +1562,15 @@
     },
     {
       "id": "EXEC-COFRE-COVERAGE-20261010",
-      "title": "Cofre Zero — operação homologada; recorrência CAS e recuperação integral monitoradas",
+      "title": "Cofre Zero semanal único homologado — recuperação externa E2E pendente",
       "domain": "Infraestrutura / Recuperação",
       "priority": "P1",
       "state": "in_progress",
       "owner": "Bio + CR Assertivo",
-      "last_movement": "2026-10-23",
-      "next_action": "PG17 PASS, Edge 386/386 fontespreservadas, Netlify único deploy publicado 1/1 estático recuperado: frentes encerradas. Os seis sites sem deploy são históricos, não reconstruir; PR #46 encerrada sem merge. Pendente somente prova funcional de OAuth/reauthorização dos provedores externos realmente usados.",
-      "dependency": "Restauração SQL/PG17, códigos Edge e deploy Netlify atual comprovada. Testes de reautorização e restabelecimento pós-desastre de OAuth/Cora/Google/Trello exigem credenciais vigentes/autorizações de provedores; não armazenar tokens.",
-      "source": "Supabase Mestre cc_items EXEC-COFRE-COVERAGE-20261010; PG17 40034006428 PASS; Edge private Drive archive 386; Netlify 1 deploy ativo; GitHub #53, PR Netlify #46 encerrada historicamente.",
+      "last_movement": "2026-10-24",
+      "next_action": "25/10 confirmar primeiro ciclo semanal produtor/CAS/Trello/Git/static. Depois validar autenticação OAuth/Edge runtime/Netlify/APP em isolamento; evitar duplicatas e reativação legada.",
+      "dependency": "Operação semanal configurada; prova natural dom 25/10 e recuperação E2E de provedores externos ainda pendentes; testes de HTML e fonte não são recuperação funcional completa.",
+      "source": "Manifesto docs/COFRE_ZERO_CANONICO_SEMANAL_20261024.md, Cloud Scheduler e CURRENT autenticados 24/10, PRs #159/#160/#161, issue #53; Master Supabase EXEC-COFRE-COVERAGE-20261010.",
       "close_when": "CAS recorrente comprovado, backup principal finalizado e validado, custo/duplicação sob controle, recuperação isolada reproduzível, rollback testado.",
       "human_action": false,
       "provenance": "master_readonly_projection"
@@ -1583,9 +1583,9 @@
       "state": "in_progress",
       "owner": "Bio + CR Assertivo",
       "last_movement": "2026-10-24",
-      "next_action": "CAS textual real #40039261383 SUCCESS; 986 objetos e manifesto privado confirmados. Aguardar prova integral independente no job read-only #40046340593 (sem exportação Trello). Se PASS, homologar restauração textual; depois comprovar primeiro domingo de agendamento natural, sem repetir FULL.",
-      "dependency": "Exportação OIDC 13 quadros/1.736 cards/58.233 ações concluída e inventário Drive 986/986 igual ao manifesto. Restauração integral ainda NÃO homologada enquanto o verificador não terminar; anexos binários antigos preservados.",
-      "source": "Supabase Mestre EXEC-COFRE-TRELLO-20261011; GitHub Actions #40039261383 SUCCESS, manifesto 20261023-232947-40039261383.json; PR #152 merge 95a7bd96; restore independente #40046340593 em execução; GitHub issue #53.",
+      "next_action": "Restauração isolada Trello PASS (#40094538430). Confirmar apenas primeiro despacho OIDC semanal em 25/10 e readback incremental; nenhuma cópia FULL paralela.",
+      "dependency": "Prova integrada Trello textual aprovada; primeiro disparo dominical 25/10 pendente. Legado imutável preservado.",
+      "source": "GitHub Cofre #159 + restore integrado #40094538430, arquivo Trello privado + issue #53. Job subordinado do cron único, não projeto separado.",
       "close_when": "Primeira recorrência Trello e restauração incremental autenticadas, com integridade dos cards e custos, sem serviços ou duplicação de backups.",
       "human_action": false,
       "provenance": "master_readonly_projection"
@@ -2995,7 +2995,7 @@
       "access": "MASTER",
       "url": "https://console.cloud.google.com/run/jobs/details/southamerica-east1/construrei-backup?project=app-construrei",
       "source": "Google Cloud Run • construrei-backup • Cloud Scheduler",
-      "description": "Backup automático diário às 03:00; controle manual exige autenticação Google Cloud."
+      "description": "COFRE ZERO CANÔNICO SEMANAL: domingo 03h BRT (Cloud Run), 05h47 BRT (GitHub CAS/Trello/Git/static); acesso manual exige autenticação Google Cloud; versão histórica diária desativada."
     },
     {
       "id": "links_oficiais",
@@ -3548,16 +3548,16 @@
       "name": "Backups automáticos",
       "status": "not_confirmed",
       "confidence": "medium",
-      "last_read": "2026-10-23",
-      "note": "PG17 #40034006428 restaurado. Edge 386/386 preservada. Netlify único deploy ativo 1/1 pacote estático recuperado; seis históricos sem deploy excluídos de obrigação ativa. Trello CAS #40039261383 segue em execução, verificador E2E privado acrescentado. OAuth pós-desastre ainda sem prova."
+      "last_read": "2026-10-24",
+      "note": "COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1: Cloud Scheduler domingo 03h BRT único ativo; GitHub domingo 05h47 CAS + Trello OIDC + Git offsite + HTML localhost. CURRENT 24/10 RUN_ID 20261024-060009, 3 SQL e 4547 Storage. PG17+Trello PASS; fontes 386 Edge arquivadas; Central/Gestor estático PASS. Netlify 7 sites inventariados, 1 HTTP200/6 HTTP404; OAuth/Edge runtime/APP pós-desastre pendentes. Histórico anterior somente para auditoria/rollback, sem status vigente."
     },
     {
       "id": "SRC-COFRE-ZERO",
       "name": "Cofre Zero",
       "status": "not_confirmed",
       "confidence": "medium",
-      "last_read": "2026-10-23",
-      "note": "PG17 #40034006428 restaurado. Edge 386/386 preservada. Netlify único deploy ativo 1/1 pacote estático recuperado; seis históricos sem deploy excluídos de obrigação ativa. Trello CAS #40039261383 segue em execução, verificador E2E privado acrescentado. OAuth pós-desastre ainda sem prova."
+      "last_read": "2026-10-24",
+      "note": "COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1: Cloud Scheduler domingo 03h BRT único ativo; GitHub domingo 05h47 CAS + Trello OIDC + Git offsite + HTML localhost. CURRENT 24/10 RUN_ID 20261024-060009, 3 SQL e 4547 Storage. PG17+Trello PASS; fontes 386 Edge arquivadas; Central/Gestor estático PASS. Netlify 7 sites inventariados, 1 HTTP200/6 HTTP404; OAuth/Edge runtime/APP pós-desastre pendentes. Histórico anterior somente para auditoria/rollback, sem status vigente."
     }
   ],
   "reconciliations": [
@@ -4102,5 +4102,53 @@
       "merge_commit": "8ee3fe59c0afe9967d4a4a243bb0775da6166952",
       "warning": "CAUSA RAIZ DO DASHBOARD ANTIGO RESOLVIDA: Trello Edge v62 + backend consumido pelo Dashboard v26. Autenticação REAL no Opera: valores antigos R$10.580,94 / 28,69% desapareceram; novos R$12.218,49 / 31,72% confirmados. PR157 incorporada ao HTML da produção; 13 scripts OK; Central Canonical Guard SUCCESS. Capital pendente sincronizado a R$1.221,83, saldo histórico preservado R$3.537,75 e período 10–23 em R$1.058,06; diferença histórica R$163,77 permanece sem lançamento. PDF/Excel, escrita real, Android, ledger 740 e GClick 768/818 ainda pendentes."
     }
+  },
+  "cofre_zero_canonical": {
+    "version": "COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1",
+    "homologation": "WEEKLY_SCHEDULE_AND_PROVEN_PARTIAL_RESTORE",
+    "operational_status": "weekly_active",
+    "canonical_manifest": "docs/COFRE_ZERO_CANONICO_SEMANAL_20261024.md",
+    "cloud_scheduler": {
+      "project": "app-construrei",
+      "region": "southamerica-east1",
+      "job": "construrei-backup-diario",
+      "cron": "0 3 * * 0",
+      "timezone": "America/Sao_Paulo",
+      "status": "ENABLED",
+      "next_natural_run": "2026-10-25"
+    },
+    "github": {
+      "workflow": ".github/workflows/cofre-zero-history-full.yml",
+      "cron_utc": "47 8 * * 0",
+      "roles": [
+        "CAS",
+        "TRELLO_DISPATCH",
+        "GIT_OFFSITE",
+        "STATIC_RECOVERY"
+      ]
+    },
+    "primary_last_verified": "2026-10-24",
+    "primary_run_id": "20261024-060009",
+    "db_files": 3,
+    "storage_files": 4547,
+    "isolated_restore": {
+      "postgresql17": "PASS",
+      "trello_snapshot": "PASS",
+      "central_gestor_static": "PASS",
+      "edge_code_archive": "386_FILES_INDEXED",
+      "edge_runtime": "NOT_TESTED",
+      "oauth": "NOT_TESTED",
+      "netlify_full": "NOT_TESTED"
+    },
+    "complete_ecosystem_restore_homologated": false,
+    "deprecated": {
+      "legacy_scheduler": "construrei-cloud-backup-daily",
+      "legacy_scheduler_mode": "RETIRED_NOT_AUTHORIZED",
+      "prior_snapshots": "READ_ONLY_RECOVERY_ONLY",
+      "manual_full_workflow": "EMERGENCY_DISPATCH_ONLY"
+    },
+    "precedence": "LIVE_AUTHENTICATED_OPERATOR > MAIN_CANONICAL_WITH_GREEN_CI > SUPABASE_MASTER_EVIDENCE > HISTORICAL_SNAPSHOT",
+    "read_only_evidence": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/issues/53",
+    "not_a_second_control_plane": true
   }
 }

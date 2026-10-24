@@ -231,8 +231,51 @@ def main():
     status = collections.Counter(f.get("status", "UNREVIEWED") for f in folders)
     warnings.append("preview/ inventory is a dated Git snapshot, not a proven runtime dependency graph")
 
+    # COFRE ZERO canonico: artefatos antigos são rollback, não execução concorrente.
+    cofre_release = "COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1"
+    cofre = project.get("cofre_zero_canonical", {})
+    declared = version.get("cofre_zero_canonical", {})
+    manifest = DOCS / "COFRE_ZERO_CANONICO_SEMANAL_20261024.md"
+    if not manifest.is_file() or cofre_release not in manifest.read_text(encoding="utf-8"):
+        errors.append("Missing unique Cofre Zero canonical weekly release manifest")
+    if cofre.get("version") != cofre_release or declared.get("release") != cofre_release:
+        errors.append("Cofre Zero project-data and version registry not linked to canonical weekly release")
+    if (cofre.get("operational_status") != "weekly_active"
+            or cofre.get("complete_ecosystem_restore_homologated") is not False
+            or declared.get("ecosystem_full_restore_proven") is not False
+            or declared.get("legacy_daily_active") is not False):
+        errors.append("Cofre Zero release lost weekly authority or external restore truth boundary")
+    planned = cofre.get("cloud_scheduler", {})
+    if (planned.get("job") != "construrei-backup-diario"
+            or planned.get("cron") != "0 3 * * 0"
+            or planned.get("timezone") != "America/Sao_Paulo"
+            or planned.get("status") != "ENABLED"):
+        errors.append("Cofre Zero Cloud scheduler declaration reverted to legacy/daily")
+    if cofre.get("github", {}).get("cron_utc") != ARCHIVE_UTC_CRON:
+        errors.append("Cofre Zero GitHub weekly schedule declaration diverged")
+    if not any(
+        x.get("id") == "backup" and "SEMANAL" in x.get("description", "")
+        and "diário às 03:00" not in x.get("description", "")
+        for x in project.get("owner_access", [])
+    ):
+        errors.append("Gestor still presents historical daily backup as active")
+    if any("Backup automático diário às 03:00 permanece inalterado" in str(x)
+           for x in version.get("changes", [])):
+        errors.append("Stale Cofre Zero daily claim leaked into published PWA metadata")
+    if not (cofre.get("precedence", "").startswith("LIVE_AUTHENTICATED_OPERATOR")
+            and cofre.get("deprecated", {}).get("prior_snapshots") == "READ_ONLY_RECOVERY_ONLY"):
+        errors.append("Historical Cofre Zero snapshots could regain operational authority")
+
     workflow_files = sorted([*WORKFLOWS.glob("*.yml"), *WORKFLOWS.glob("*.yaml")])
     workflow_names = {f.name for f in workflow_files}
+    cofre_crons = []
+    for file in workflow_files:
+        if any(token in file.stem.lower() for token in ("cofre", "backup")):
+            workflow = file.read_text(encoding="utf-8")
+            found = re.findall(r'^\s*-\s*cron:\s*["\x27]?([^"\x27\n#]+)', workflow, re.MULTILINE)
+            cofre_crons.extend((file.name, cron.strip()) for cron in found)
+    if cofre_crons != [("cofre-zero-history-full.yml", ARCHIVE_UTC_CRON)]:
+        errors.append("Cofre Zero duplicate/obsolete cron reintroduced: " + repr(cofre_crons))
     for essential, role in CRITICAL_BACKUP_WORKFLOWS.items():
         if essential not in workflow_names:
             errors.append("Missing critical Cofre Zero workflow: " + essential + " (role=" + role + ")")
@@ -261,6 +304,10 @@ def main():
             errors.append("Cofre Zero history concurrency contract changed")
         if "cr_history_cas_append.py" not in text or "cr_sql_restore_preflight.py" not in text:
             errors.append("Cofre Zero history lost CAS or SQL restore preflight")
+        if "static_site_recovery_weekly:" not in text or "git_offsite_weekly:" not in text:
+            errors.append("Cofre Zero weekly lost Git history or Central/Gestor recovery proof")
+        if "trello_text_weekly_dispatch:" not in text:
+            errors.append("Cofre Zero Trello incremental dispatch no longer under single weekly schedule")
         if "exit 21" not in text:
             errors.append("Cofre Zero history lost fail-closed Drive marker access check")
     workflows = []

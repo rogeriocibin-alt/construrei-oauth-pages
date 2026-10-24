@@ -11,7 +11,7 @@
     "Status do acesso deriva da fonte de continuidade do próprio Gestor.",
     "Controle manual abre o Cloud Run autenticado; nenhuma credencial ou endpoint público de escrita é exposto.",
     "Infraestrutura atualizada para refletir Cloud Run + Cloud Scheduler e independência do notebook.",
-    "Backup automático diário às 03:00 permanece inalterado.",
+    "Backup Cofre Zero atual: uma rotina SEMANAL, domingo 03h BRT produtor Cloud e 05h47 BRT CAS/Trello/Git/HTML; registro histórico diário sem autoridade operacional.",
     "Correção somente dos indicadores da Infraestrutura / Cofre Zero com prova Drive 10/10, sem alteração do executor Cloud Run, Cloud Scheduler, lógica financeira ou APP.",
     "Alertas legados de Docker retirados; cobertura externa GitHub/Netlify/Edge permanece parcial, documentada no Gestor.",
     "Revisão final dos riscos e contadores estáticos; avisos históricos de segurança permanecem auditáveis, sem serem apresentados como métricas atuais."
@@ -21,7 +21,10 @@
     "cloud_backup_evidence": "DRIVE_PACKAGE_PRESENT_20261010",
     "restore_drill": "PASS_20261005",
     "owner_publication_authorization": "APPROVED_20261007",
-    "source_coverage": "PARTIAL_GITHUB_NETLIFY_EDGE"
+    "source_coverage": "PARTIAL_GITHUB_NETLIFY_EDGE",
+    "cofre_zero_schedule": "PASS_WEEKLY_SINGLE_ACTIVE",
+    "cofre_zero_partial_recovery": "PG17_TRELLO_STATIC_PASS_EDGE_SOURCE_ARCHIVED",
+    "cofre_zero_end_to_end": "PENDING_EXTERNAL_FUNCTIONAL_RESTORE"
   },
   "released_at": "2026-10-07",
   "branch": "main",
@@ -39,5 +42,15 @@
     "merge_sha": "e44d82810cd56d03247df9e7e1008ae3d61ce0c2",
     "state": "MERGED_TO_MAIN"
   },
-  "patch_note": "Atualização documental/indicadores; rollback checkpoint/cofre-zero-pre-infra-refresh-20261010; exigir checagem visual pós-publicação."
+  "patch_note": "24/10/2026: atualizada projeção de continuidade para rotina semanal única; identidade/build do PWA preservados, sem novo cache nem alteração de funcionalidade. Registros históricos do backup diário não são fonte operacional.",
+  "cofre_zero_canonical": {
+    "release": "COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1",
+    "manifest": "docs/COFRE_ZERO_CANONICO_SEMANAL_20261024.md",
+    "weekly_active": true,
+    "legacy_daily_active": false,
+    "first_sunday_run_pending": "2026-10-25",
+    "ecosystem_full_restore_proven": false,
+    "backup_source": "app-construrei/southamerica-east1/construrei-backup-diario",
+    "authority": "CURRENT_OPERATOR_NOT_HISTORICAL_BUILD"
+  }
 }
