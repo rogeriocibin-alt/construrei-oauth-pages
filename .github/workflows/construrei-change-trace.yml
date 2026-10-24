@@ -1,0 +1,35 @@
+name: CONSTRU-REI Change Trace
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, edited, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  record-change:
+    name: Registrar origem, testes e rollback (sem gravacao produtiva)
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Testar contrato do registro (offline)
+        run: python3 .github/scripts/cr_change_trace_guard.py --self-test
+      - name: Gerar recibo e bloquear PR pronta sem rastreabilidade
+        run: python3 .github/scripts/cr_change_trace_guard.py
+      - name: Armazenar recibo da execucao (retencao limitada)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cr-change-trace-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/change-trace-receipt.json
+          retention-days: 30
+          if-no-files-found: warn
