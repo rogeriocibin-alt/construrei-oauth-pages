@@ -63,7 +63,11 @@
         "SEC-FIN-TRELLO-AUTH-20261012"
       ],
       "report": "docs/GESTOR_BANCO_MESTRE_99_REVISAO_INDIVIDUAL_20261024.md",
-      "external_functional_proofs": "NOT_ALL_VERIFIED"
+      "external_functional_proofs": "NOT_ALL_VERIFIED",
+      "security_tests_20261024": "22/22 testes sinteticos PASS; 6/6 recusas anonimas reais PASS; 5/5 recursos publicos do Gestor/APP PASS",
+      "security_runtime_status": "P0_ABERTO: rotas Trello legadas usam segredo fixo em URL; HMAC, replay e testes E2E autenticados nao comprovados",
+      "security_test_report": "docs/SECURITY_APP_REAL_TESTS_20261024.md",
+      "security_test_pr": 169
     }
   },
   "governance": [
