@@ -48,6 +48,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Acertos V12 — copiar respeita datas escolhidas no encerramento (offline)
+        shell: bash
+        run: node audits/finance-v12-acerto-periodo-copia.test.cjs
       - name: ORÇA-REI R5 auth, model and PDF preservation (offline)
         shell: bash
         run: |
