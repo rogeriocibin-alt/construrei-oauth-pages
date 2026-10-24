@@ -51,6 +51,8 @@
     "first_sunday_run_pending": "2026-10-25",
     "ecosystem_full_restore_proven": false,
     "backup_source": "app-construrei/southamerica-east1/construrei-backup-diario",
-    "authority": "CURRENT_OPERATOR_NOT_HISTORICAL_BUILD"
+    "authority": "CURRENT_OPERATOR_NOT_HISTORICAL_BUILD",
+    "legacy_daily_job_removed": "2026-10-24",
+    "legacy_job_archive": "HISTORY_CAS/CONTROL_PLANE/RETIRED_SCHEDULER_20261024.json"
   }
 }
