@@ -93,7 +93,7 @@ function attention(x){
   var d=x.data||{}, list=[];
   var gate=(d.cycle0&&d.cycle0.promotion_gate&&d.cycle0.promotion_gate.decision)||'BLOCKED';
   var backup=x.rows.find(function(s){return /backup/i.test(String(s.source_id||s.source_name||''));});
-  if(String(gate).toUpperCase()==='BLOCKED')list.push({tone:'red',icon:'⛔',title:'Homologada com P0 aberto',summary:'A versão foi homologada pelo proprietário, mas continuidade/backup e validações de instalação permanecem abertas como P0.',meta:'Homologação explícita • continuidade ainda aberta',view:'governance'});
+  if(String(gate).toUpperCase()==='BLOCKED')list.push({tone:'red',icon:'⛔',title:'Homologação funcional pendente',summary:'Os gates precisam ser comprovados separadamente: APP E2E P0 e recuperação funcional externa do Cofre P1.',meta:'Aceite parcial • provas restantes sem PASS global',view:'governance'});
   if(backup&&backup.status!=='healthy')list.push({tone:'red',icon:'↺',title:'Continuidade / backup exige ação',summary:backup.notes||'A rotina de continuidade ainda não está saudável.',meta:(backup.source_name||'Backup')+' • '+label(backup.status),view:'infrastructure'});
   x.human.slice(0,2).forEach(function(p){list.push({tone:'amber',icon:'◎',title:p.title,summary:p.next_action||'Decisão humana pendente.',meta:(p.priority||'—')+' • proprietário',view:'pending',filter:'human'});});
   x.severe.slice(0,2).forEach(function(f){list.push({tone:'orange',icon:'!',title:f.title,summary:'Achado '+(f.finding_code||f.code||'')+' permanece '+label(f.status)+'.',meta:'Auditoria • '+String(f.severity||'').toUpperCase(),view:'audits'});});
@@ -133,7 +133,7 @@ function render(payload){
 
   html.push('<div class="xd-section-head"><div><small>PROJETO EM NÚMEROS</small><h3>Tamanho, pressão e capacidade</h3></div><span>Clique para chegar ao detalhe.</span></div><section class="xd-metrics">');
   html.push(metric('Frentes ativas',x.active.length+'/2',x.queue.length+' na fila','▦','fronts',x.active.length>=2?'amber':'green'));
-  html.push(metric('Pendências',x.pending.length,x.blocked.length+' bloqueada(s) • '+x.old.length+' envelhecendo','!','pending',x.blocked.length?'red':'blue'));
+  html.push(metric('Pendências em destaque',x.pending.length,(d.executive_review_20261024&&d.executive_review_20261024.inventory?d.executive_review_20261024.inventory.other:'—')+' não finais no Banco Mestre • 24/10','!','pending',x.blocked.length?'red':'blue'));
   html.push(metric('Ação do proprietário',x.human.length,x.human.length?'Itens que realmente dependem de você':'Nenhuma decisão imediata','◎','pending',x.human.length?'amber':'green','human'));
   html.push(metric('Fontes saudáveis',x.healthy+'/'+x.total,sourceAttention+' atenção/revalidação','⌁','audits',sourceTone));
   html.push(metric('Achados abertos',x.openFindings.length,x.severe.length+' alta/crítica','⚑','audits',x.severe.length?'orange':'green'));
