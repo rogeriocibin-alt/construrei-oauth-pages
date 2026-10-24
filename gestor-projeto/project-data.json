@@ -31,7 +31,7 @@
     "reconciliation_candidate_at": "2026-10-22",
     "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP.",
     "operational_snapshot_at": "2026-10-23",
-    "operational_audit_status": "ACERTOS VIVO P0 RESOLVIDO em Edge v62 ACTIVE e 2 cartões derivados Trello confirmados: base R$38.518,51, custo R$26.300,02, lucro R$12.218,49, margem 31,72%, rateio 100%. 740/768/579 bruto e descontos validados pelo diretor; 8 obras inalteradas. Período CG 10-23 preservado R$1.058,06, novo derivado R$1.221,83 (diferença histórica R$163,77 ainda não lançada), Cora healthy. E2E escrita/PDF/Excel/Android e GClick pendentes. Relatório https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
+    "operational_audit_status": "DASHBOARD V12 DESATUALIZADO RESOLVIDO: backend de dados v26 publicado, Opera autenticado PASS após Atualizar Agora (base R$38.518,51, custos R$26.300,02, lucro R$12.218,49, margem 31,72%), números antigos eliminados. Trello resumo v62 conferido, PR #157 HTML oficial com 13 scripts e guard CI SUCCESS. Supabase CG pendente alinhado R$1.221,83, saldo operacional R$3.537,75 e período 10–23 protegido R$1.058,06, diferença histórica R$163,77 não lançada. Cora healthy. Pendem apenas ajustes independentes: ledger 740, GClick 768/818, acerto histórico e testes PDF/Excel/escrita/Android. Relatório https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
     "operational_checkpoint": "FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023",
     "operational_rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
     "operational_scope": "Espelho informativo no Gestor (dados + link): PWA/runtime, Service Worker, login e release 1.2.x intocados; nenhuma escrita financeira.",
@@ -1628,7 +1628,7 @@
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo",
       "last_movement": "2026-10-23",
-      "next_action": "CONCLUÍDA a correção da dupla dedução (Edge v62 + 2 cartões de resumo Trello, +R$ 1.637,55 lucro), sem tocar 11 cartões operacionais. DIFERENÇA HISTÓRICA CG R$ 163,77 entre resumo novo (1.221,83) e período protegido 10-23 (1.058,06): ajustar somente com procedimento compensatório idempotente separado. Auditar trilha 740 e alertas GClick 768/818; PDF/Excel, E2E de escrita e Android real não executados.",
+      "next_action": "Dashboard V12 já sincronizado com backend v26: 11 obras, lucro R$12.218,49, margem 31,72% confirmado no Opera real; PR157 legenda correta e Guard PASS. Não repetir correção de base ou reprocessar período protegido. Próximas pendências independentes: compensação histórica CG R$163,77 somente com idempotência; trilha 740; alertas GClick 768/818; E2E PDF/Excel, escrita e Android.",
       "dependency": "Somente para encerramento histórico integral: reconciliação idempotente CG +R$ 163,77 sem reabrir período; trilha ledger 740; GestãoClick 768/818; E2E PDF/Excel, escrita e Android.",
       "source": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_QA_OPERA_20261023.md",
       "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
@@ -4072,7 +4072,7 @@
         "cora_live": "PASS",
         "v12_ledger_31_committed": "PASS",
         "historical_months_46": "PASS_DERIVED_LABELS",
-        "finance_economic_profit": "PASS_EDGE_V62_TRELLO_ACERTOS_LIVE_12218_49_31_72",
+        "finance_economic_profit": "PASS_BACKEND_V26_OPERA_AUTHENTICATED_12218_49_31_72",
         "gestaoclick_cross_sync": "WARN_768_818",
         "close_replay": "PASS_READONLY_BLOCK_DUPLICATE_EXISTING_PERIOD",
         "trello_write": "NOT_EXECUTED",
@@ -4089,10 +4089,18 @@
       "aggregate_difference_cents": 163755,
       "aggregate_previous_profit_cents": 1058094,
       "aggregate_corrected_profit_cents": 1221849,
-      "aggregate_fix_status": "DEPLOYED_EDGE_V62_TRELLO_DERIVED_VERIFIED",
+      "v12_api_version": 26,
+      "v12_trello_summary_version": 62,
+      "v12_auth_opera_live_verified": "PASS_OLD_10580_94_REMOVED_NEW_12218_49_31_72",
+      "capital_pending_state_cents": 122183,
+      "capital_period_20261010_20261023_cents": 105806,
+      "capital_period_preserved": true,
+      "pr_157": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/157",
+      "pr_157_merge": "21d4b4961809d1b161e949ff319906fe90cf8a73",
+      "aggregate_fix_status": "PASS_TRELLO_V62_DASHBOARD_API_V26_AUTH_OPERA_PR157",
       "autotest_fix_pr": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/155",
       "merge_commit": "8ee3fe59c0afe9967d4a4a243bb0775da6166952",
-      "warning": "ACERTOS VIVO CORRIGIDO E PUBLICADO (Edge v62; report e resumo Trello): lucro R$12.218,49, margem 31,72%, custo preservado e 8 obras intactas. HISTÓRICO NÃO REABERTO: período CG 10/10–23/10 preserva R$1.058,06, novo derivado R$1.221,83 (diferença R$163,77 a tratar sem duplicar). E2E PDF/Excel, escrita real e Android; rastreio ledger 740 e GClick 768/818 ainda pendentes."
+      "warning": "CAUSA RAIZ DO DASHBOARD ANTIGO RESOLVIDA: Trello Edge v62 + backend consumido pelo Dashboard v26. Autenticação REAL no Opera: valores antigos R$10.580,94 / 28,69% desapareceram; novos R$12.218,49 / 31,72% confirmados. PR157 incorporada ao HTML da produção; 13 scripts OK; Central Canonical Guard SUCCESS. Capital pendente sincronizado a R$1.221,83, saldo histórico preservado R$3.537,75 e período 10–23 em R$1.058,06; diferença histórica R$163,77 permanece sem lançamento. PDF/Excel, escrita real, Android, ledger 740 e GClick 768/818 ainda pendentes."
     }
   }
 }
