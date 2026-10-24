@@ -29,7 +29,10 @@ test('interface V12: botoes ativos somente apos previa',()=>{
  assert.match(html,/onclick="crpPreview\(\)"/);
  assert.match(html,/id="crp-send"[^>]*disabled/);
  assert.match(html,/onclick="crpSend\(\)"/);
- assert.match(html,/!safeClose&&!safePeriod/);
+ assert.match(html,/!protectedBank&&!safePeriod/);
+ assert.match(html,/id="cg-close-start"/);
+ assert.match(html,/id="cg-close-end"/);
+ assert.match(html,/V12-OPERACAO-HOMOLOGADA-ACERTOS-BRUTO-TAXA-20261023/);
 });
 test('scripts inline da V12 candidata tem sintaxe valida',()=>{
  const src=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
