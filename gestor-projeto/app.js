@@ -128,7 +128,7 @@ function renderLiveRibbon(){
   const attention=Number((s.degraded_or_error??0)+(s.stale??0)+(s.not_confirmed??0)) || fallback.filter(x=>x.status!=='healthy').length;
   return `<section class="live-ribbon ${sync?.ok?'is-live':'is-fallback'}">
     <div class="live-main"><span class="live-dot"></span><div><b>${sync?.ok?'Banco Mestre persistente conectado':'Fallback versionado ativo'}</b><small>${sync?.ok?('Snapshot '+fmtLiveTs(live?.generated_at)):'Sem resposta viva neste instante; o snapshot local permanece disponível.'}</small></div></div>
-    <div class="live-facts"><span><b>${healthy}/${total}</b> fontes saudáveis</span><span><b>${attention}</b> atenção/revalidação</span><span><b>V1.2.4</b> canônica homologada • riscos abertos preservados</span></div>
+    <div class="live-facts"><span><b>${healthy}/${total}</b> fontes saudáveis</span><span><b>${attention}</b> atenção/revalidação</span><span><b>V${CURRENT_RELEASE.version}</b> PWA oficial • saúde das fontes avaliada separadamente</span></div>
   </section>`;
 }
 async function refreshProjectManagerLive(){
