@@ -255,7 +255,7 @@ def main():
         scheduled = re.findall(r'^\s*-\s*cron:\s*["\x27]?([^"\x27\n#]+)', text, re.MULTILINE)
         if [x.strip() for x in scheduled] != [ARCHIVE_UTC_CRON]:
             errors.append("Cofre Zero history must have one Sunday 05:47 America/Sao_Paulo schedule")
-        if re.search(r"(?m)^  push:\\s*$", text):
+        if re.search(r"(?m)^  push:\s*$", text):
             errors.append("Cofre Zero weekly CAS must not run on ordinary pushes")
         if "cofre-zero-history-full" not in text or "cancel-in-progress: false" not in text:
             errors.append("Cofre Zero history concurrency contract changed")
