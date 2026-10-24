@@ -31,11 +31,11 @@
     "reconciliation_candidate_at": "2026-10-22",
     "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP.",
     "operational_snapshot_at": "2026-10-23",
-    "operational_audit_status": "V12 release CI/Pages/Guard aprovados, Cora PROD incremental saudável; exceções econômicas P0 de base recebido-líquido versus taxas nos Acertos sob auditoria, sem modificação de movimentações.",
+    "operational_audit_status": "Cora PROD leitura real + visão privada 46 meses (security_invoker, sem acesso público) verificada, PRs financeiras P0 abertas, E2E browser notebook/Android não executado nesta conexão.",
     "operational_checkpoint": "FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023",
     "operational_rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
     "operational_scope": "Espelho informativo no Gestor (dados + link): PWA/runtime, Service Worker, login e release 1.2.x intocados; nenhuma escrita financeira.",
-    "operational_current_focus": "Financeiro V12 oficial; Cora PROD incremental healthy, Capital Giro 10/10–23/10 registrado R$1.058,06 e ledger 31 COMMITTED. P0 ACERTOS BASE BRUTO/LÍQUIDO 23/10: obras 740-26 (R$1.243,95), 768-26 (R$208,60), 579-26 (R$185,00) têm diferença recebido-fechado exatamente igual a custo de taxa/comissão; Acerto Vivo usa recebido e deduz taxa, enquanto card individual usa bruto. Exige verificação bancária antes de qualquer correção. Ainda não homologar Acertos/CG 100%.",
+    "operational_current_focus": "Dashboard V12 oficial; Cora PROD incremental saudável; Saldo histórico Cora derivado 46 meses (VIEW PRIVADA) com 6/6 ancoras oficiais conferidas, 40 derivadas, sem modificar dados originais. P0 Acertos 740/768/579 (possível taxa dupla) e conferência 740 ledger R$1.239,80 mantidos em auditoria. CG 10–23/10 registrado sem repetir.",
     "operational_total_cc_items": 263,
     "operational_cc_items": {
       "completed": 120,
@@ -992,8 +992,8 @@
       "progress": 86,
       "progress_basis": "estimativa gerencial: release V12 + 1 período Capital Giro comprovado; não representa E2E completo nem conciliação do extrato",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
-      "last_advance": "23/10 21h18 BRT: Capital Giro período 10/10–23/10 criado, R$ 1.058,06 no Trello/Supabase, consolidado 27 períodos gerados R$ 21.706,71 saldo R$ 3.537,75 e divergências 0. Acerto Vivo 11 obras, lucro R$ 10.580,94, taxa CG R$ 1.058,06. V12 oficial; PR #151 merged. Ledger 31 COMMITTED (13 Cora). | CORA LIVE 23/10 21h35 BRT: atualização incremental PROD healthy=true, balance_healthy=true; 46/46 meses em cache; títulos Acertos PR151 oficiais. Replays E2E e saldos históricos ainda pendentes. | P0 ACERTOS BASE BRUTO/LÍQUIDO 23/10: três diferenças exatamente iguais a custos de taxas, e um par de operações manuais R$1239,80 em 740-26 com apenas uma linha no card. Acertos/CG não certificados economicamente; preservar operações concluídas e V12 oficial.",
-      "next_action": "P0: conciliar documentos de 740/768/579 e 740 R$1.239,80 ledger duplicidade candidata; corrigir regra recebido bruto/líquido em candidata com testes, sem tocar período CG já registrado. Depois E2E notebook/celular e histórico Cora.",
+      "last_advance": "23/10 21h18 BRT: Capital Giro período 10/10–23/10 criado, R$ 1.058,06 no Trello/Supabase, consolidado 27 períodos gerados R$ 21.706,71 saldo R$ 3.537,75 e divergências 0. Acerto Vivo 11 obras, lucro R$ 10.580,94, taxa CG R$ 1.058,06. V12 oficial; PR #151 merged. Ledger 31 COMMITTED (13 Cora). | CORA LIVE 23/10 21h35 BRT: atualização incremental PROD healthy=true, balance_healthy=true; 46/46 meses em cache; títulos Acertos PR151 oficiais. Replays E2E e saldos históricos ainda pendentes. | P0 ACERTOS BASE BRUTO/LÍQUIDO 23/10: três diferenças exatamente iguais a custos de taxas, e um par de operações manuais R$1239,80 em 740-26 com apenas uma linha no card. Acertos/CG não certificados economicamente; preservar operações concluídas e V12 oficial. | Saldo histórico Cora derivado 46 meses (VIEW PRIVADA): 7692 movimentos, UTC agrega 46/46, saldo vivo e 6/6 ancoras oficiais; view cora_cache.monthly_balance_derived_v1 read-only, 40 meses derivados sem reclassificar saldos oficiais.",
+      "next_action": "P0 corrigir em candidata regra Acertos net recebido/taxas em 740/768/579, ledger 740 par ambíguo. Integrar view mensal privada à API autenticada dos gráficos com selo DERIVADO (sem dar public SQL) e validar notebook+Android. Confirmar comprovantes antes de qualquer acerto retroativo.",
       "dependency": "Evidência independente de replay seguro e reconciliação bancária real, sem criar custos ou cartões duplicados.",
       "blocked": false,
       "age_days": 0
@@ -1323,6 +1323,13 @@
       "title": "Financeiro V12 — P0 suspeita de taxa duplicada na base dos Acertos",
       "detail": "Três obras 740/768/579: diferença bruto-recebido igual a tarifa/comissão incluída nos custos; Edge Acertos usa recebido como base, diferente do Fechar Obra. Ledger 740 tem dois COMMITTED R$1.239,80 e uma linha Trello: revisar origem. Nenhum saldo, rateio ou cartão alterado. https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
       "confidence": "verified_trello_supabase_code_read_only_pending_bank"
+    },
+    {
+      "date": "2026-10-23",
+      "type": "finance_private_derived_balance_20261023",
+      "title": "Cora: visão privada reconstrói 46 meses com 6 âncoras oficiais",
+      "detail": "Migração Supabase cora_monthly_balance_private_derived_v1: cora_cache.monthly_balance_derived_v1 security_invoker=true, anônimo/autenticado sem acesso direto. 6/6 meses oficiais coincidentes, 40 derivados rotulados, 0 alterações bancárias; 7692 movimentos agrupados UTC em 46/46 competências. UI V12 ainda não ligada à view, saldo mensal derivado não vira oficial automaticamente.",
+      "confidence": "verified_supabase_read_only_sql_after_migration"
     }
   ],
   "recoverables": [
@@ -1614,9 +1621,9 @@
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo",
       "last_movement": "2026-10-23",
-      "next_action": "P0: verificar bruto versus recebido líquido e taxas nas obras 740/768/579, conferir banco e ledger 740 R$1.239,80; bloquear recálculo automático do CG 10–23/10 até revisão; atualizar código em candidata com testes e aceite.",
+      "next_action": "Usar view mensal privada aditiva validada (46 meses, 6 ancoras oficiais) em API autenticada dos gráficos, rotulando 40 meses derivados. Resolver taxa recebimento líquido x custo 740/768/579 e prova Cora/Trello. Não alterar 10–23/10 CG sem auditoria.",
       "dependency": "Prova banco/recebimento líquido × tarifa, ledger e E2E de todos os fluxos.",
-      "source": "RPC cr_cora_live_status + cr_cora_cache_years; PRs #142/#143/#145; Trello/Supabase 23/10",
+      "source": "Supabase VIEW cora_cache.monthly_balance_derived_v1 e repo docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
       "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
       "human_action": false,
       "provenance": "public.cc_items_operational_audit_20261022"
@@ -3455,7 +3462,7 @@
       "status": "healthy",
       "confidence": "high",
       "last_read": "2026-10-23",
-      "note": "Projeto yspuaamokjbrosytqjpg, Edge Capital v35 ACTIVE: chave única period_key e bloqueios no código contra período repetido. Cora PROD status live saudável e balance_healthy, última leitura 23/10 21h35 BRT. Cache 46/46 meses importados; 37 com saldo histórico placeholder e apenas seis agregações oficiais. Ledger V12 31 COMMITTED (13 CORA_). CG 27 períodos R$21.706,71 gerado / R$3.537,75 disponível. Não equiparar cache completo a saldo histórico bancário certificado."
+      "note": "Cora PROD read-only healthy e balance_healthy; private cora_cache.monthly_balance_derived_v1 criada/verificada. 46 meses reconciliados por UTC, 6/6 ancoras oficiais de saldos confirmadas, 40 saldo DERIVADO (sem sobrescrever mensal original), 7692 movimentos, 3693 sem descrição. 31 operações ledger COMMITTED. Risco P0 de taxas repetidas nos Acertos requer conciliação banco/obras."
     },
     {
       "id": "SRC-CENTRAL",
@@ -4031,7 +4038,17 @@
       "cache_months_total": 46,
       "placeholder_balance_months": 37,
       "official_aggregation_months": 6,
-      "disclaimer": "Sync 24–48h funciona, mas saldos históricos e conciliação ID bancário não têm evidência de conclusão integral."
+      "disclaimer": "Sync 24–48h funciona, mas saldos históricos e conciliação ID bancário não têm evidência de conclusão integral.",
+      "synced_transactions": 7692,
+      "transaction_months": 46,
+      "transactions_without_description": 3693,
+      "derived_balance_view": "cora_cache.monthly_balance_derived_v1",
+      "private_view_official_anchor_matches": 6,
+      "private_view_official_anchor_conflicts": 0,
+      "private_view_derived_months": 40,
+      "monthly_utc_amounts_match_months": 46,
+      "monthly_brt_amounts_match_months": 31,
+      "note": "Migracao privada aditiva; reconstrucao matematica com ancora bancaria, NAO substitui saldos originais ou prova bilateral de transacoes por obra. Vista nao conectada ao UI."
     }
   }
 }
