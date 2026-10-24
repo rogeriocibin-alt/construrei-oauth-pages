@@ -30,12 +30,12 @@
     "previous_official_build": "CR-PM-V1.2.3-PROJECT-FRONTS-20261006",
     "reconciliation_candidate_at": "2026-10-22",
     "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP.",
-    "operational_snapshot_at": "2026-10-24T00:18:23Z",
-    "operational_audit_status": "EVIDÊNCIA VERIFICADA • GitHub/Trello/Supabase/Vercel; Google Cloud/Netlify E2E não confirmado nesta sessão",
+    "operational_snapshot_at": "2026-10-23",
+    "operational_audit_status": "GitHub Pages/Guard/CAS SUCCESS no commit 0773cb686; Cora PROD live status e importação histórica verificados; conferência E2E de replay/UI e conciliação histórica ainda não comprovadas",
     "operational_checkpoint": "FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023",
     "operational_rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
     "operational_scope": "Espelho informativo no Gestor (dados + link): PWA/runtime, Service Worker, login e release 1.2.x intocados; nenhuma escrita financeira.",
-    "operational_current_focus": "Dashboard V12 oficial / PR #151 integrada: Acertos período 10/10–23/10; Capital Giro período real R$1.058,06 registrado no Trello; ledger 31 COMMITTED, 13 CORA_. Saldo atual Cora PROD e auditoria histórica banco↔Trello ainda sob prova. Cofre Zero tratado em controle separado.",
+    "operational_current_focus": "Dashboard V12 OFICIAL (PR #151), Acertos 11 obras sem diferença de rateio, Capital Giro 10/10–23/10 R$1.058,06 em Trello+Supabase; ledger 31 COMMITTED (13 CORA_). CORA LIVE 23/10 21h35 BRT: monitor Cora PROD incremental saudável, 46/46 meses cache importados, mas saldos históricos/IDs bancários ainda sob auditoria. Cofre Zero em controle separado.",
     "operational_total_cc_items": 263,
     "operational_cc_items": {
       "completed": 120,
@@ -992,8 +992,8 @@
       "progress": 86,
       "progress_basis": "estimativa gerencial: release V12 + 1 período Capital Giro comprovado; não representa E2E completo nem conciliação do extrato",
       "owner": "Financeiro REI + CR Assertivo + Rogério",
-      "last_advance": "23/10 21h18 BRT: Capital Giro período 10/10–23/10 criado, R$ 1.058,06 no Trello/Supabase, consolidado 27 períodos gerados R$ 21.706,71 saldo R$ 3.537,75 e divergências 0. Acerto Vivo 11 obras, lucro R$ 10.580,94, taxa CG R$ 1.058,06. V12 oficial; PR #151 merged. Ledger 31 COMMITTED (13 Cora).",
-      "next_action": "Não repetir fechamento do período. Conferir estado anti-duplicidade e E2E celular/notebook, saldo bancário PROD real, matching Cora × Trello onde faltam IDs; manter PRs draft não promovidas.",
+      "last_advance": "23/10 21h18 BRT: Capital Giro período 10/10–23/10 criado, R$ 1.058,06 no Trello/Supabase, consolidado 27 períodos gerados R$ 21.706,71 saldo R$ 3.537,75 e divergências 0. Acerto Vivo 11 obras, lucro R$ 10.580,94, taxa CG R$ 1.058,06. V12 oficial; PR #151 merged. Ledger 31 COMMITTED (13 Cora). | CORA LIVE 23/10 21h35 BRT: atualização incremental PROD healthy=true, balance_healthy=true; 46/46 meses em cache; títulos Acertos PR151 oficiais. Replays E2E e saldos históricos ainda pendentes.",
+      "next_action": "Não repetir Capital Giro 10/10–23/10. Completar reconciliação de saldos históricos (37 meses placeholder), conciliação ID Cora↔Trello e prova autenticada de bloqueio de replay + UI Android/notebook; produção V12 intacta.",
       "dependency": "Evidência independente de replay seguro e reconciliação bancária real, sem criar custos ou cartões duplicados.",
       "blocked": false,
       "age_days": 0
@@ -1309,6 +1309,13 @@
       "title": "Capital Giro V12 — 1º período real registrado e reconciliado",
       "detail": "10/10–23/10, R$ 1.058,06 no cartão Trello lUHP2wNe e no Supabase; Acertos Vivo 11 obras R$10.580,94 lucro, diferença zero. CG 27 períodos, gerado R$21.706,71, saldo R$3.537,75. V12 oficial + PR #151; 31 COMMITTED no ledger. Saldo bancário PROD e replay não comprovados neste checkpoint.",
       "confidence": "verified_trello_and_supabase_read"
+    },
+    {
+      "date": "2026-10-23",
+      "type": "finance_cora_prod_live_20261023",
+      "title": "Cora PROD incremental saudável; pendência API antiga absorvida",
+      "detail": "Cora PROD: RPC cr_cora_live_status healthy=true/balance_healthy=true, last_success_at 2026-10-24T00:35:11Z, janela 22–24/10; cr_cora_cache_years 46/46 meses importados sem erros, mas 37 meses têm saldos placeholder e somente seis registros de agregação bancária oficial. A importação não prova conciliação histórica. Task mestre FIN-CORA-API-20261007 concluída apenas para API/credenciais PROD; reconciliação histórica continua em FIN-V12-GLOBAL e auditoria Cora×Trello.",
+      "confidence": "read_only_supabase_rpc"
     }
   ],
   "recoverables": [
@@ -1600,9 +1607,9 @@
       "state": "in_progress",
       "owner": "Financeiro REI + CR Assertivo",
       "last_movement": "2026-10-23",
-      "next_action": "Release oficial e Acertos PR #151 aplicados; ledger 31 COMMITTED. Demonstrar saldo online Cora PROD, identificar exceções bancárias históricas e verificar replay/manuais/Fechar Obra sem duplicidade.",
-      "dependency": "Conciliação bancária Cora histórica/online e E2E notebook+Android",
-      "source": "GitHub main + Trello Acerto Vivo + Supabase V12 (checkpoint 23/10)",
+      "next_action": "Cora PROD incremental healthy às 21h35 BRT e cache 46/46 meses; validar saldos históricos oficiais/IDs por transação e E2E de replay+UI. Não duplicar lançamentos ou alterar a V12 homologada.",
+      "dependency": "36+ meses sem saldos oficiais certificados, matching Cora×Trello por evidência e teste autenticado de replay/UX",
+      "source": "RPC cr_cora_live_status + cr_cora_cache_years; PRs #142/#143/#145; Trello/Supabase 23/10",
       "close_when": "Evidência real, aprovação e checkpoint antes de promoção",
       "human_action": false,
       "provenance": "public.cc_items_operational_audit_20261022"
@@ -3426,7 +3433,7 @@
       "status": "healthy",
       "confidence": "high",
       "last_read": "2026-10-23",
-      "note": "Projeto yspuaamokjbrosytqjpg: 386 Edge ACTIVE consultadas; ledger V12 31 COMMITTED, 13 CORA_. CG período real 10/10–23/10 R$1.058,06; 27 cartões, saldo R$3.537,75, 0 divergências. Não comprova saldo bancário online em Cora PROD."
+      "note": "Projeto yspuaamokjbrosytqjpg, Edge Capital v35 ACTIVE: chave única period_key e bloqueios no código contra período repetido. Cora PROD status live saudável e balance_healthy, última leitura 23/10 21h35 BRT. Cache 46/46 meses importados; 37 com saldo histórico placeholder e apenas seis agregações oficiais. Ledger V12 31 COMMITTED (13 CORA_). CG 27 períodos R$21.706,71 gerado / R$3.537,75 disponível. Não equiparar cache completo a saldo histórico bancário certificado."
     },
     {
       "id": "SRC-CENTRAL",
@@ -3954,6 +3961,20 @@
       "source": "cr_project_manager_snapshot_v1()"
     },
     "warning": "Período real registrado e reconciliado nas duas fontes; não repetir o encerramento. Validação de replay, saldo bancário Cora PROD e exceções históricas ainda pendentes.",
-    "report": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md"
+    "report": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
+    "cora_prod_live": {
+      "as_of": "2026-10-24T00:35:11Z",
+      "healthy": true,
+      "balance_healthy": true,
+      "last_error": null,
+      "incremental_start": "2026-10-22",
+      "incremental_end": "2026-10-24",
+      "observed_last_run_records": 44,
+      "cache_months_imported": 46,
+      "cache_months_total": 46,
+      "placeholder_balance_months": 37,
+      "official_aggregation_months": 6,
+      "disclaimer": "Sync 24–48h funciona, mas saldos históricos e conciliação ID bancário não têm evidência de conclusão integral."
+    }
   }
 }
