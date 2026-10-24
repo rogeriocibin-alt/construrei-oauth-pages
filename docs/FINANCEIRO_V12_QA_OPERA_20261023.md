@@ -64,3 +64,22 @@
 **Risco distinto remanescente:** os dois registros `COMMITTED` de R$ 1.239,80 da obra 740-26 permanecem caso de rastreabilidade do ledger; há somente uma linha de custo Trello e um débito bancário observado. Não concluir que os cartões estão duplicados, não deletar as operações de auditoria às cegas.
 
 **Pendências funcionais independentes:** alertas GestãoClick das obras 768-26/818-26; exportação PDF/Excel E2E autenticada; fluxo E2E de escrita/finalização para um evento legítimo; Android físico. Cora e Capital de Giro seguem operacionais nas últimas verificações. Aprovação de dados pela Diretoria não equivale a homologação do código do consolidado.
+
+
+## Correção efetiva em produção — 23/10/2026 (após confirmação do diretor)
+
+A regra do **Acertos Vivo** foi corrigida diretamente na Edge Function existente `cr-trello-gestao-vista-v2` (**v62**, projeto `yspuaamokjbrosytqjpg`, status ACTIVE). Não foi criada integração paralela e o modo de autenticação anterior foi preservado. Código de produção com a lógica nova foi relido após o deploy, e o health check HTTP 200 retornou o build `...GROSS-NET-20261023-R2`.
+
+**Regra nova limitada e auditável:** usar a base bruta no consolidado somente quando o valor `Base do Acerto` do cartão é igual ao bruto, existe diferença positiva bruto–recebido e um custo explicitamente identificado como taxa/desconto/comissão/retenção coincide **em centavos** com essa diferença. Caso contrário, manter a prioridade do valor recebido. A regra evita dupla dedução sem transformar pagamentos parciais e reembolsos em receita confirmada. Os cartões individuais nunca foram modificados.
+
+**Teste isolado REAL com os 11 cartões da lista AG. ACERTO:** antes base R$ 36.880,96, custos R$ 26.300,02, lucro R$ 10.580,94, margem 28,69%; depois base **R$ 38.518,51**, custos preservados **R$ 26.300,02**, lucro **R$ 12.218,49**, margem **31,72%**. Obras alteradas pelo cálculo: **740-26, 768-26, 579-26**; as outras **8** mantiveram a mesma base. Foram verificados casos sintéticos de pagamento parcial, desconto divergente, retenção coincidente com base bruta confirmada, valor recebido maior que o fechado e custo sem taxa; sintaxe compilada pelo Node VM, sem acesso à rede. Rateio: Fabrício R$ 2.443,71; Éder R$ 3.421,18; Rogério R$ 3.421,18; Gabrielly R$ 1.710,59; **CG R$ 1.221,83**; distribuído R$ 12.218,49 e diferença zero.
+
+**Publicação Trello confirmada por leitura posterior dos dois cartões derivados** (e nenhum cartão de obra foi escrito):
+- <https://trello.com/c/sa0x7eVL> — Acertos 2026 aguardando acerto: 11 obras, lucro R$ 12.218,49, margem 31,72% e CG R$ 1.221,83.
+- <https://trello.com/c/JLSXnD29> — Resumo da lista: 11 obras, base R$ 38.518,51, mesmos indicadores e regra de exceção explícita.
+
+**Proteção histórica e diferença remanescente:** período persistido `2026-10-10_2026-10-23` mantém **CG R$ 1.058,06**; novo cálculo derivado é R$ 1.221,83 (**diferença R$ 163,77**). A correção da **apresentação/cálculo futuro** foi concluída, mas **não foi feito lançamento compensatório nem redistribuição de períodos fechados**, para preservar a integridade e não duplicar operações. A diferença histórica deve ser tratada por procedimento de ajuste separado e idempotente antes de classificar o fechamento financeiro histórico como reconciliado. Saldo operacional persistido do Capital de Giro: R$ 3.537,75; capital gerado histórico R$ 21.706,71; ambos intocados. Sincronização Cora saudável, `last_error=null` na leitura posterior.
+
+**Rollback técnico:** cópia integral e original da Edge Function v60 preservada **somente no notebook autorizado** em `C:\Temp\cr-gestao-vista-backup-v60-20261023.ts`, candidata testada v61 em arquivo adjacente. Não publicar código completo no GitHub público, pois contém identificadores de callbacks/rotas sensíveis. Serviços existentes e cartões operacionais preservados.
+
+**Permanecem fora desta correção:** trilha de dois registros `COMMITTED` de R$ 1.239,80 na 740-26 versus um gasto Trello/bancário (não alterados), eventual diferença GestãoClick 768/818, fechamento autenticado de um período legitimamente novo, exportação PDF/Excel e teste real em Android. **Não declarar esses itens homologados por arrastamento.**
