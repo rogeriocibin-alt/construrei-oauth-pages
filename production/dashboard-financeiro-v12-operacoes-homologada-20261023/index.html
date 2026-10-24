@@ -1454,7 +1454,7 @@ const money=c=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).
 let preview=null,busy=false,refreshing=false;
 const session=()=>sessionStorage.getItem("crv2")||"";
 function msg(s){by("cg-close-status").textContent=s}
-function invalidate(){preview=null;by("cg-close-confirm").disabled=true}
+function invalidate(){preview=null;by("cg-close-confirm").disabled=true;const test=by("cg-test-status");if(test)test.textContent="AUTOTESTE DESATUALIZADO — confira as datas e execute novamente antes de encerrar. Nenhum lançamento foi realizado."}
 async function request(action,data){
  const r=await fetch(URL+"?action="+action,{method:"POST",headers:{"content-type":"application/json","x-cr-session":session()},body:JSON.stringify(data),cache:"no-store"});
  const j=await r.json().catch(()=>({error:"Resposta inválida"}));if(!r.ok||j.ok!==true)throw Error(j.error||"Falha da operação");return j;
@@ -1488,6 +1488,7 @@ async function runSafeTest(){
  try{
   const start=by("cg-close-start").value,end=by("cg-close-end").value;
   const j=await request("close-test",{start,end});
+  if(by("cg-close-start").value!==start||by("cg-close-end").value!==end){testMessage("AUTOTESTE DESATUALIZADO — datas alteradas durante a consulta. Execute novamente.");return;}
   if(j.no_write!==true||j.mode!=="SIMULACAO_SEM_LANCAMENTOS")throw Error("Resposta de simulação não validada.");
   const label={PASS:"✓",WARN:"!",BLOCK:"×"};
   const steps=(j.checks||[]).map(x=>(label[x.state]||"?")+" "+x.code.replace(/_/g," ")+" — "+x.detail);
