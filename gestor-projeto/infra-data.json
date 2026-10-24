@@ -18,19 +18,19 @@
     "vercel_projects": 54,
     "github_repositories": 2,
     "supabase_projects": 2,
-    "supabase_edge_functions": 385,
+    "supabase_edge_functions": 386,
     "supabase_public_tables": 157,
-    "updated_at": "2026-10-22",
+    "updated_at": "2026-10-24 (parcial; provedores Vercel/Netlify e cotas não reauditados)",
     "vercel_construrei_named_projects": 26,
     "vercel_other_projects": 28,
-    "supabase_edge_active": 385,
+    "supabase_edge_active": 386,
     "supabase_edge_without_jwt": 276,
     "github_open_pull_requests": 22,
     "github_latest_guard": "39871026550 SUCCESS",
     "github_latest_pages": "39869813490 SUCCESS",
     "github_latest_cas": "39869814025 SUCCESS",
     "netlify_sites_last_verified": "2026-10-03 • histórico, não revalidado",
-    "source_caveat": "Números Vercel/Supabase/GitHub são leituras ao vivo de 22/10; Netlify e Google Cloud carecem de conector de runtime nesta sessão."
+    "source_caveat": "Atualização de governança em 24/10: contagens históricas Vercel/GitHub/Supabase de 22/10 não são verificação atual de todo provedor. Cofre semanal em manifesto canônico, não seguir `daily` legado. 386 funções Edge registradas em prova Cofre 24/10; testes funcionais de restore externo não aprovados."
   },
   "topology": [
     {
@@ -443,12 +443,16 @@
       "note": "PG17 real do snapshot 23/10 restaurado PASS #40034006428. Edge 386/386 fontes versionadas e verificadas no acervo privado Cofre Zero/24_EXTERNAL_SOURCES; 22 versões delta guardadas em quatro Docs privados, zero drift naquele checkpoint. Netlify apenas um deploy publicado e recuperável; seis sites sem deploy atual. Trello OIDC sem novo cron: carga textual real #40039261383 SUCCESS, 986 objetos e manifesto privado conferidos; restauração integral independente #40051773338 SUCCESS (13 quadros, 1.736 cards, 58.233 ações, 130.537.691 bytes). Primeiro domingo natural pendente. OAuth/segredos não restaurados pelos arquivos.",
       "edge_function_snapshot_count": 254,
       "current_live_edge_functions": 386,
-      "private_archive_covered": 386
+      "private_archive_covered": 386,
+      "current_schedule": "Domingo 03h BRT Cloud Scheduler único + 05h47 BRT GitHub CAS/Trello/Git/HTML",
+      "canonical_version": "COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1",
+      "canonical_status": "PASS_WEEKLY_POLICY_FIRST_SUNDAY_PENDING_20261025_PARTIAL_E2E",
+      "restore_status": "PG17/Trello/static em isolamento PASS; OAuth/Edge runtime/Netlify/APP pós-desastre NÃO HOMOLOGADOS"
     },
     "daily": {
-      "schedule": "03:00 diariamente • America/Sao_Paulo",
+      "schedule": "INATIVO — REGISTRO HISTÓRICO; substituído por Cofre Zero único semanal domingo 03h BRT",
       "installed_at": "2026-10-05 • migração cloud oficial",
-      "state": "attention",
+      "state": "historical_only_inactive",
       "last_attempt": "Snapshot oficial RUN_ID 20261023-060011 (23/10 03h BRT); Cloud Run/Scheduler não inspecionados diretamente nesta auditoria",
       "last_result": "PG17 real do backup imutável 23/10: #40034006428 PASS; CAS main posterior #40035175426 SUCCESS, 4551 referências com 0 novos objetos e 0 bytes de CAS duplicados. Não confirma por si só novo ciclo do Cloud Run/Scheduler. Ajuste CAS após virada UTC mesclado PR #146 em 23/10; confirmação pós-merge em execução natural pendente.",
       "cloud_job": "construrei-backup",
@@ -460,7 +464,7 @@
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Backup Cloud 03h preservado. PR #146 incorporada à main, testes CAS/Guard PASS: detectar RUN_ID da data UTC anterior e pular apenas archive em pushes; schedule/manual continuam fail-closed. Validar no próximo evento natural e acompanhar Trello/OAuth nos controles separados; não repetir FULL ou criar cron.",
+      "action": "NÃO EXECUTAR nem reativar agendamento diário; usar manifesto COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1.",
       "cas_guard": {
         "status": "IN_MAIN_CI_PASS_NATURAL_RUN_PENDING",
         "verified_date": "2026-10-23",
@@ -471,24 +475,25 @@
         "change": "push apos virada UTC com CURRENT anterior nao arquiva; evento schedule/manual preserva falha segura para origem desatualizada",
         "production_post_merge_run_verified": false,
         "unchanged": "sem novo cron, copia FULL, mudanca Cloud Run/Scheduler, segredo ou funcao financeira"
-      }
+      },
+      "legacy_only_since": "2026-10-24"
     },
     "edge_weekly": {
-      "schedule": "Domingo 04:30",
+      "schedule": "SUBCOMPONENTE do Cofre semanal, sem cron paralelo confirmado",
       "state": "partial",
       "evidence": "23/10/2026: 386/386 fontes Edge no acervo privado do Cofre Zero com hashes e readback no instante auditado; não comprova deploy funcional, credenciais ou recuperação OAuth.",
-      "action": "Manter o acervo imutável, acompanhar apenas novos deltas, sem rotina paralela; recuperação de secrets/callbacks externos permanece em procedimento autorizado."
+      "action": "Preservar deltas no Cofre e demonstrar runtime isolado no futuro; não ativar schedule independente."
     },
     "external": {
       "netlify": {
-        "frequency": "daily 04:15 America/Sao_Paulo",
+        "frequency": "Periodicidade histórica não verificada nesta auditoria; não considerar segundo Cofre autorizado",
         "status": "verified_published_static",
         "run": 38181895937,
         "scope": "7 inventariados, 1 site com deploy / 14 arquivos preservados, 6 sem publicação",
         "restore": "Drive readback + extração ZIP estático PASS"
       },
       "private_git": {
-        "frequency": "daily 02:15 America/Sao_Paulo",
+        "frequency": "Regra atual subordinada ao Cofre domingo 05h47; horário diário legado apenas histórico",
         "status": "verified",
         "run": 38182272365,
         "scope": "repositório financeiro privado e delta Edge de quatro fontes",
@@ -653,7 +658,7 @@
   "next_actions": [
     {
       "priority": "P0",
-      "title": "Restaurar backup diário confiável e independente do notebook",
+      "title": "Cofre Zero semanal único — rotina homologada, histórico diário desativado",
       "owner": "CR Assertivo",
       "status": "completed"
     },
@@ -682,10 +687,11 @@
       "status": "open"
     },
     {
-      "priority": "P0",
-      "title": "Comprovar CAS e cópia FULL econômica sem concorrência",
+      "priority": "P1",
+      "title": "Confirmar primeiro ciclo natural do Cofre semanal (25/10)",
       "owner": "BIO + CR Assertivo",
-      "status": "monitoring"
+      "status": "monitoring",
+      "action": "Sem disparar FULL paralelo; conferir cloud 03h, CAS GitHub 05h47, Trello/Git/HTML e evidência de Drive."
     },
     {
       "priority": "P0",
@@ -694,20 +700,20 @@
       "status": "completed"
     },
     {
-      "priority": "P0",
-      "title": "Teste de encerramento Capital de Giro V12 — 23/10",
+      "priority": "P1",
+      "title": "Capital de Giro V12 — período 10/10–23/10 já fechado",
       "owner": "Financeiro REI + CR Assertivo",
-      "status": "awaiting_owner_validation",
-      "evidence": "PR #147 / função v34; novo card ainda não criado",
-      "action": "Conferir 10% e obras reais, preview sem escrita, commit único, verificar card/Trello/Supabase/notebook+celular."
+      "status": "completed",
+      "evidence": "Primeiro período confirmado no Banco Mestre; titular aceitou diferenças como descontos",
+      "action": "Não repetir fechamento nem alterar obra; ensaios E2E posteriores separados."
     },
     {
-      "priority": "P0",
-      "title": "Conciliar Cora × Trello por obra V12",
+      "priority": "P1",
+      "title": "Auditoria bancária histórica pontual (não bloqueia V12)",
       "owner": "Financeiro REI + CR Assertivo",
-      "status": "in_progress",
+      "status": "queued",
       "evidence": "PR #143 DRAFT / divergências sem comprovantes; manter read-only",
-      "action": "Sanear exceções apenas com evidência independente, sem retificar fechamento por suposição."
+      "action": "Conferir exceções reais ledger/Click quando houver comprovantes; PR #143 read-only, não reabrir descontos aceitos."
     }
   ],
   "audit_20261022": {
@@ -722,5 +728,21 @@
       "E2E notebook/celular"
     ],
     "never_claim": "TODO_SERVICE_HEALTHY"
+  },
+  "audit_20261024": {
+    "scope": "data_and_governance_only",
+    "canonical_master": "Supabase public.cc_items",
+    "master_count": 275,
+    "master_done": 135,
+    "master_canceled": 41,
+    "master_active": 99,
+    "source_changes": 28,
+    "priority": "APP F00–F09 P0; Cofre Único P1; financeiro V12/CG encerrado operacionalmente",
+    "cofre": "COFRE_ZERO_WEEKLY_CANONICAL_20261024_R1",
+    "first_sunday_pending": "2026-10-25",
+    "independent_external_restore": "pending",
+    "pwa_cache_qa": "pending",
+    "rollback": "GitHub main anterior à presente candidata",
+    "no_financial_writes": true
   }
 }
