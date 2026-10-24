@@ -1,0 +1,584 @@
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+
+const BUILD="CR-CAPITAL-GIRO-V12-AUTOTEST-READONLY-20261022-R4";
+const BASE="https://api.trello.com/1";
+const FUNCTION_SLUG="cr-trello-capital-giro-v1";
+
+const FINANCE_BOARD="65b2fbebdb0ed307a75d88f6";
+const CAPITAL_LIST="692e0d6c360c13a9cd738f33";
+const RECEIVED_2026_LIST="6952fd5947e9864456eab14a";
+const WORKS_BOARD="6974b24c16d17ca76351a950";
+const SETTLEMENT_LIST="6800f3a6b0c58c0518f249b5";
+const SETTLEMENT_CARD="6ab6f27658e42565c7413b7b";
+
+const SUMMARY_MARK="CR-CAPITAL-GIRO-SUMMARY-V1";
+const CARD_MARK="CR-CAPITAL-GIRO-PERIOD-V1";
+const MANUAL_BEGIN="CR-CG-MANUAL-BEGIN";
+const MANUAL_END="CR-CG-MANUAL-END";
+const WH_SIG="CRCG26-7f0e5c9db81a4d31";
+const AUTO_START="2026-09-19";
+
+function json(data:any,status=200){
+  return new Response(JSON.stringify(data),{status,headers:{
+    "content-type":"application/json; charset=utf-8",
+    "cache-control":"no-store",
+    "x-content-type-options":"nosniff",
+    "access-control-allow-origin":"*",
+    "access-control-allow-headers":"content-type,x-cr-session",
+    "access-control-allow-methods":"GET,POST,OPTIONS",
+    "x-construrei-build":BUILD
+  }});
+}
+function env(n:string){return (Deno.env.get(n)||"").trim()}
+function dbSecret(){
+  try{
+    const x=JSON.parse(env("SUPABASE_SECRET_KEYS")||"{}");
+    return String(x.default||x.service_role||Object.values(x)[0]||"");
+  }catch{return env("SUPABASE_SERVICE_ROLE_KEY")}
+}
+async function db(path:string,init:RequestInit={}){
+  const base=env("SUPABASE_URL").replace(/\/$/,""),key=dbSecret();
+  if(!base||!key)throw new Error("SUPABASE_DB_CREDENTIAL_GATE");
+  const r=await fetch(base+"/rest/v1/"+path,{...init,headers:{
+    "apikey":key,"authorization":"Bearer "+key,"content-type":"application/json",
+    ...(init.headers||{})
+  }});
+  const t=await r.text();let j:any=null;try{j=t?JSON.parse(t):null}catch{j=t}
+  if(!r.ok)throw new Error("DB_HTTP_"+r.status+"_"+String(t).slice(0,140));
+  return j;
+}
+function keyDates(key:string){
+  const p=String(key||"").split("_");
+  return {start:p[0]||"",end:p[1]||""};
+}
+function autoEligible(key:string){return keyDates(key).start>=AUTO_START}
+function sleep(ms:number){return new Promise(r=>setTimeout(r,ms))}
+function round2(n:number){return Math.round((Number(n)||0)*100)/100}
+function brl(n:number){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(round2(n))}
+function pad(n:number){return String(n).padStart(2,"0")}
+
+function money(v:any){
+  if(v===null||v===undefined)return null;
+  let raw=String(v).trim();
+  let neg=/^\s*-/.test(raw)||/R\$\s*-/.test(raw);
+  let s=raw.replace(/\s/g,"").replace(/R\$/gi,"").replace(/[()]/g,"").replace(/[^0-9,.-]/g,"");
+  if(!s)return null;
+  if(s.includes(","))s=s.replace(/\./g,"").replace(",",".");
+  else{
+    const p=s.split(".");
+    if(p.length>2)s=p.join("");
+  }
+  const n=Number(s);
+  return Number.isFinite(n)?round2(neg?-Math.abs(n):n):null;
+}
+function firstMoney(text:any){
+  const m=String(text||"").match(/R\$\s*([-]?\s*[0-9.]+,\s*[0-9]{1,2})/i);
+  return m?money(m[1]):null;
+}
+function allSaldo(text:any){
+  const out:number[]=[];
+  const re=/SALDO(?:\s+REAL(?:\s+DISPON[IÍ]VEL)?)?(?:\s*\/[^:\n]+)?\s*(?:=|:)?\s*R?\$?\s*(-?\s*[0-9.]+,\s*[0-9]{1,2})/gi;
+  let m; const s=String(text||"");
+  while((m=re.exec(s))!==null){const n=money(m[1]);if(n!==null)out.push(n)}
+  return out;
+}
+function allCapital(text:any){
+  const out:number[]=[];
+  const s=String(text||"").replace(/\*/g,"");
+  const re=/Capital\s+(?:de\s+)?Giro(?:\s+Tempor[aá]rio)?[\s\S]{0,100}?R\$\s*([0-9.]+,\s*[0-9]{1,2})/gi;
+  let m;while((m=re.exec(s))!==null){const n=money(m[1]);if(n!==null)out.push(n)}
+  return out;
+}
+function periodMatch(text:any){
+  const s=String(text||"");
+  const m=s.match(/ACERTOS?(?:\s+DE|\s+de|\s+De|\s*)?\s*(\d{1,2})\/(\d{1,2})\s*(?:a|A|AT[EÉ]|at[eé]|-|–)\s*(\d{1,2})\/(\d{1,2})/);
+  if(!m)return null;
+  return {sd:+m[1],sm:+m[2],ed:+m[3],em:+m[4],display:pad(+m[1])+"/"+pad(+m[2])+" a "+pad(+m[3])+"/"+pad(+m[4])};
+}
+function periodKey(p:any,endYear:number){
+  const startYear=p.sm>p.em?endYear-1:endYear;
+  return startYear+"-"+pad(p.sm)+"-"+pad(p.sd)+"_"+endYear+"-"+pad(p.em)+"-"+pad(p.ed);
+}
+function keyFromMarker(desc:any){
+  const m=String(desc||"").match(/CG_PERIOD_KEY\|([0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{4}-[0-9]{2}-[0-9]{2})/);
+  return m?m[1]:null;
+}
+function extractManual(desc:any){
+  const s=String(desc||"");
+  const a=s.indexOf(MANUAL_BEGIN),b=s.indexOf(MANUAL_END);
+  if(a<0||b<a)return "";
+  return s.slice(a+MANUAL_BEGIN.length,b).trim();
+}
+function manualTotals(text:string){
+  let credits=0,debits=0,count=0;
+  for(const raw of String(text||"").split(/\r?\n/)){
+    const line=raw.trim();
+    if(!line||line.startsWith("#"))continue;
+    const m=line.match(/(?:R\$\s*([+-]?\s*[0-9.]+,\s*[0-9]{1,2})|([+-])\s*R\$\s*([0-9.]+,\s*[0-9]{1,2}))/i);
+    if(!m)continue;
+    let val=money(m[1]||m[3]);
+    if(val===null)continue;
+    const credit=/CR[EÉ]DITO|ESTORNO|DEVOLU[CÇ][AÃ]O|REEMBOLSO/i.test(line)||/\+\s*R\$/i.test(line)||m[2]==="+";
+    val=Math.abs(val);
+    if(credit)credits+=val;else debits+=val;
+    count++;
+  }
+  return {credits:round2(credits),debits:round2(debits),count};
+}
+async function trello(path:string,method="GET",body:any=null){
+  const key=env("TRELLO_API_KEY"),token=env("TRELLO_API_TOKEN");
+  if(!key||!token)throw new Error("TRELLO_CREDENTIAL_GATE_REQUIRED");
+  const u=new URL(BASE+path);
+  u.searchParams.set("key",key);u.searchParams.set("token",token);
+  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),12000);
+  try{
+    const r=await fetch(u.toString(),{method,headers:{"accept":"application/json","content-type":"application/json","x-trello-client-identifier":"CONSTRU-REI-CAPITAL-GIRO-V1"},body:body===null?undefined:JSON.stringify(body),signal:ctl.signal});
+    const t=await r.text();let j:any=null;try{j=t?JSON.parse(t):null}catch{j=t}
+    if(!r.ok)throw new Error("TRELLO_HTTP_"+r.status+"_"+String(t).slice(0,120));
+    return j;
+  }finally{clearTimeout(tm)}
+}
+async function cards(listId:string){
+  const x=await trello("/lists/"+encodeURIComponent(listId)+"/cards?filter=open&fields=id,name,desc,idList,pos,dateLastActivity,shortUrl");
+  return Array.isArray(x)?x:[];
+}
+async function updateCard(id:string,p:any){return trello("/cards/"+id,"PUT",p)}
+async function createCard(name:string,desc:string){return trello("/cards","POST",{idList:CAPITAL_LIST,name,desc,pos:"top"})}
+async function updateListName(name:string){return trello("/lists/"+CAPITAL_LIST,"PUT",{name})}
+
+function sourcePeriodsFromCard(card:any){
+  const desc=String(card?.desc||"").replace(/\*/g,"");
+  const y=(String(card?.name||"").match(/\b(20\d{2})\b/)||[])[1];
+  const endYear=y?Number(y):2026;
+  const re=/ACERTOS?(?:\s+DE|\s+de|\s+De|\s*)?\s*(\d{1,2})\/(\d{1,2})\s*(?:a|A|AT[EÉ]|at[eé]|-|–)\s*(\d{1,2})\/(\d{1,2})/g;
+  const ms=[...desc.matchAll(re)];
+  const out:any[]=[];
+  for(let i=0;i<ms.length;i++){
+    const m=ms[i],start=m.index||0,end=i+1<ms.length?(ms[i+1].index||desc.length):desc.length;
+    const seg=desc.slice(start,end);
+    const p={sd:+m[1],sm:+m[2],ed:+m[3],em:+m[4],display:pad(+m[1])+"/"+pad(+m[2])+" a "+pad(+m[3])+"/"+pad(+m[4])};
+    const vals=allCapital(seg);
+    if(!vals.length)continue;
+    const capital=vals[vals.length-1];
+    out.push({key:periodKey(p,endYear),display:p.display,capital,source_card_id:String(card.id),source_card_name:String(card.name||""),source_url:String(card.shortUrl||"")});
+  }
+  return out;
+}
+function legacyInfo(card:any,knownPeriods:any[]){
+  const credit=firstMoney(card?.name)||0;
+  const d=allSaldo(card?.desc),n=allSaldo(card?.name);
+  const explicit=String(card?.desc||"").match(/CG_BALANCE\|(-?\d+(?:\.\d+)?)/);
+  const balance=explicit?Number(explicit[1]):(d.length?d[d.length-1]:(n.length?n[n.length-1]:credit));
+  const pm=periodMatch(card?.name);
+  let key=keyFromMarker(card?.desc);
+  if(!key&&pm){
+    const same=knownPeriods.find(x=>x.display===pm.display);
+    if(same)key=same.key;
+  }
+  const titleBal=n.length?n[n.length-1]:null;
+  const descBal=d.length?d[d.length-1]:null;
+  return {card,credit:round2(credit),balance:round2(balance||0),period:pm?.display||null,key,titleBal,descBal,
+    divergent:titleBal!==null&&descBal!==null&&Math.abs(titleBal-descBal)>0.009,
+    machine:String(card?.desc||"").includes(CARD_MARK)};
+}
+function buildMachineDesc(src:any,manual:string){
+  const mv=manualTotals(manual),balance=round2(src.capital+mv.credits-mv.debits);
+  const lines=[
+    "🏦 CAPITAL DE GIRO — ACERTO "+src.display,
+    "",
+    "💰 Crédito gerado no acerto: "+brl(src.capital),
+    "➕ Créditos / estornos manuais: "+brl(mv.credits),
+    "➖ Débitos / despesas manuais: "+brl(mv.debits),
+    "✅ SALDO REAL DISPONÍVEL: "+brl(balance),
+    "",
+    "📌 Origem: "+src.source_card_name,
+    src.source_url?"🔗 "+src.source_url:"",
+    "",
+    "🧾 LANÇAMENTOS MANUAIS",
+    "Use uma linha por movimentação.",
+    "Débito: 26/09 - R$ 120,00 Contabilidade",
+    "Crédito: 26/09 + R$ 50,00 Estorno",
+    MANUAL_BEGIN,
+    manual||"",
+    MANUAL_END,
+    "",
+    CARD_MARK,
+    "CG_PERIOD_KEY|"+src.key,
+    "CG_CREDIT|"+src.capital.toFixed(2),
+    "CG_BALANCE|"+balance.toFixed(2)
+  ].filter(Boolean);
+  return {desc:lines.join("\n"),balance,mv};
+}
+async function pendingCurrent(){
+  try{
+    const c=await trello("/cards/"+SETTLEMENT_CARD+"?fields=id,name,desc,dateLastActivity,shortUrl");
+    const d=String(c?.desc||"").replace(/\*/g,"");
+    const sm=d.match(/Gabi:[^\n]*Capital\s+(?:de\s+)?Giro:\s*R\$\s*([0-9.]+,\s*[0-9]{1,2})/i);
+    let v=sm?money(sm[1]):null;
+    if(v===null){const vals=allCapital(d);v=vals.length?vals[vals.length-1]:null}
+    return {capital:v===null?null:round2(v),updated_at:c?.dateLastActivity||null,url:c?.shortUrl||null};
+  }catch{return {capital:null,updated_at:null,url:null}}
+}
+async function authorized(req:Request){
+  const s=(req.headers.get("x-cr-session")||"").trim();
+  if(!s)return false;
+  const base=env("SUPABASE_URL").replace(/\/$/,"");
+  try{
+    const r=await fetch(base+"/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=me",{headers:{"x-cr-session":s},signal:AbortSignal.timeout(8000)});
+    return r.ok;
+  }catch{return false}
+}
+async function reconcile(doWrites:boolean){
+  const [capCards,receivedCards,pending]=await Promise.all([cards(CAPITAL_LIST),cards(RECEIVED_2026_LIST),pendingCurrent()]);
+  const periods:any[]=[];
+  for(const c of receivedCards)periods.push(...sourcePeriodsFromCard(c));
+  const byKey=new Map<string,any>();
+  for(const p of periods)byKey.set(p.key,p);
+  const known=[...byKey.values()];
+  const summaries=capCards.filter(c=>String(c.desc||"").includes(SUMMARY_MARK)||String(c.name||"").startsWith("📊 CAPITAL DE GIRO"));
+  let info=capCards.filter(c=>!summaries.includes(c)&&periodMatch(c.name)).map(c=>legacyInfo(c,known));
+  const existingByKey=new Map<string,any>();
+  for(const x of info)if(x.key)existingByKey.set(x.key,x);
+  const created:any[]=[];const updated:any[]=[];
+
+  if(doWrites){
+    for(const src of known){
+      if(!autoEligible(src.key))continue;
+      const ex=existingByKey.get(src.key);
+      const kd=keyDates(src.key);
+      if(!ex){
+        const lock=await db("cr_working_capital_periods_v1?on_conflict=period_key",{
+          method:"POST",
+          headers:{"prefer":"resolution=ignore-duplicates,return=representation"},
+          body:JSON.stringify({
+            period_key:src.key,period_start:kd.start,period_end:kd.end,period_label:src.display,
+            source_card_id:src.source_card_id,source_card_name:src.source_card_name,
+            capital_generated:src.capital,real_balance:src.capital,status:"CREATING",
+            metadata:{source_url:src.source_url,build:BUILD}
+          })
+        });
+        if(Array.isArray(lock)&&lock.length){
+          const built=buildMachineDesc(src,"");
+          const name=(brl(src.capital)+" ACERTOS "+src.display+" — SALDO REAL "+brl(built.balance)).slice(0,512);
+          const c=await createCard(name,built.desc);
+          await db("cr_working_capital_periods_v1?period_key=eq."+encodeURIComponent(src.key),{
+            method:"PATCH",headers:{"prefer":"return=minimal"},
+            body:JSON.stringify({trello_card_id:String(c?.id||""),capital_generated:src.capital,manual_credits:0,manual_debits:0,real_balance:built.balance,status:"ACTIVE",updated_at:new Date().toISOString()})
+          });
+          created.push({period:src.display,capital:src.capital,id:c?.id||null});
+        }
+      }else if(ex.machine){
+        const manual=extractManual(ex.card.desc);
+        const built=buildMachineDesc(src,manual);
+        const name=(brl(src.capital)+" ACERTOS "+src.display+" — SALDO REAL "+brl(built.balance)).slice(0,512);
+        if(String(ex.card.name||"")!==name||String(ex.card.desc||"")!==built.desc){
+          await updateCard(ex.card.id,{name,desc:built.desc});
+          updated.push({period:src.display,balance:built.balance,id:ex.card.id});
+        }
+        await db("cr_working_capital_periods_v1?on_conflict=period_key",{
+          method:"POST",headers:{"prefer":"resolution=merge-duplicates,return=minimal"},
+          body:JSON.stringify({
+            period_key:src.key,period_start:kd.start,period_end:kd.end,period_label:src.display,
+            source_card_id:src.source_card_id,source_card_name:src.source_card_name,
+            trello_card_id:String(ex.card.id||""),capital_generated:src.capital,
+            manual_credits:built.mv.credits,manual_debits:built.mv.debits,real_balance:built.balance,
+            status:"ACTIVE",metadata:{source_url:src.source_url,build:BUILD},updated_at:new Date().toISOString()
+          })
+        });
+      }
+    }
+    if(created.length||updated.length){
+      info=(await cards(CAPITAL_LIST)).filter(c=>!String(c.desc||"").includes(SUMMARY_MARK)&&!String(c.name||"").startsWith("📊 CAPITAL DE GIRO")&&periodMatch(c.name)).map(c=>legacyInfo(c,known));
+    }
+  }
+
+  let generated=0,balance=0;
+  const divergent:any[]=[];
+  for(const x of info){
+    generated+=x.credit;balance+=x.balance;
+    if(x.divergent)divergent.push({id:x.card.id,name:x.card.name,title_balance:x.titleBal,description_balance:x.descBal,url:x.card.shortUrl});
+  }
+  generated=round2(generated);balance=round2(balance);
+  const consumed=round2(generated-balance);
+  const listName=("💱 CAPITAL DE GIRO TEMPORÁRIO | GERADO: "+brl(generated)+" | SALDO REAL: "+brl(balance)).slice(0,512);
+  const summaryName=("📊 CAPITAL DE GIRO — GERADO "+brl(generated)+" | SALDO REAL "+brl(balance)).slice(0,512);
+  const summaryDesc=[
+    "📊 CAPITAL DE GIRO — CONTROLE AUTOMÁTICO",
+    "",
+    "💰 CAPITAL GERADO / HISTÓRICO: "+brl(generated),
+    "✅ SALDO REAL DISPONÍVEL: "+brl(balance),
+    "➖ CONSUMO LÍQUIDO HISTÓRICO: "+brl(consumed),
+    "",
+    "⏳ CAPITAL DO ACERTO ATUAL AINDA NÃO TRANSFERIDO: "+(pending.capital===null?"N/D":brl(pending.capital)),
+    "📋 Períodos de Capital: "+info.length,
+    "⚠️ Títulos divergentes do último saldo interno: "+divergent.length,
+    "",
+    "REGRA:",
+    "• Capital Gerado = soma dos créditos de Capital de Giro por período.",
+    "• Saldo Real = soma do saldo disponível de cada período após despesas, débitos, estornos e créditos.",
+    "• O acerto atual só entra no histórico quando o período é registrado em VALORES RECEBIDOS 2026.",
+    "• Débitos futuros devem ser lançados no bloco LANÇAMENTOS MANUAIS do card do período; a matemática é automática.",
+    "",
+    SUMMARY_MARK
+  ].join("\n");
+
+  if(doWrites){
+    await db("cr_working_capital_state_v1?on_conflict=state_key",{
+      method:"POST",headers:{"prefer":"resolution=merge-duplicates,return=minimal"},
+      body:JSON.stringify({
+        state_key:"GLOBAL",capital_generated:generated,real_balance:balance,net_consumed:consumed,
+        pending_current_acerto:pending.capital,historical_cards:info.length,divergence_count:divergent.length,
+        last_period_label:known.length?known[known.length-1].display:null,
+        metadata:{build:BUILD,auto_start:AUTO_START,source:"TRELLO_RECONCILED"},
+        updated_at:new Date().toISOString()
+      })
+    });
+    const currentList=await trello("/lists/"+CAPITAL_LIST+"?fields=id,name");
+    if(String(currentList?.name||"")!==listName)await updateListName(listName);
+    let s=summaries[0]||null;
+    if(!s){
+      s=await createCard(summaryName,summaryDesc);
+    }else if(String(s.name||"")!==summaryName||String(s.desc||"")!==summaryDesc){
+      await updateCard(s.id,{name:summaryName,desc:summaryDesc});
+    }
+    if(s?.id)await updateCard(s.id,{pos:"top"});
+  }
+  return {
+    ok:true,build:BUILD,
+    capital_generated:generated,
+    real_balance:balance,
+    net_consumed:consumed,
+    periods:info.length,
+    pending_current_acerto:pending.capital,
+    pending_current_updated_at:pending.updated_at,
+    title_description_divergences:divergent,
+    created_period_cards:created,
+    updated_period_cards:updated,
+    list_name:listName,
+    rule:"CAPITAL_GENERATED_IS_NOT_AVAILABLE_BALANCE"
+  };
+}
+async function installWebhook(){
+  const token=env("TRELLO_API_TOKEN"),key=env("TRELLO_API_KEY");
+  if(!token||!key)throw new Error("TRELLO_CREDENTIAL_GATE_REQUIRED");
+  const base=env("SUPABASE_URL").replace(/\/$/,"");
+  const cb=base+"/functions/v1/"+FUNCTION_SLUG+"?action=webhook&sig="+encodeURIComponent(WH_SIG);
+  const existing=await trello("/tokens/"+encodeURIComponent(token)+"/webhooks");
+  const found=Array.isArray(existing)?existing.find((x:any)=>String(x?.idModel)===FINANCE_BOARD&&String(x?.callbackURL)===cb&&x?.active!==false):null;
+  if(found)return {created:false,id:found.id,callback:cb};
+  const path="/tokens/"+encodeURIComponent(token)+"/webhooks?key="+encodeURIComponent(key)+"&callbackURL="+encodeURIComponent(cb)+"&idModel="+encodeURIComponent(FINANCE_BOARD)+"&description="+encodeURIComponent("CONSTRU-REI Capital de Giro V1");
+  const w=await trello(path,"POST",{});
+  return {created:true,id:w?.id||null,callback:cb};
+}
+function webhookRelevant(payload:any){
+  const a=payload?.action||{},d=a?.data||{};
+  const board=String(d?.board?.id||payload?.model?.id||"");
+  if(board!==FINANCE_BOARD)return false;
+  const type=String(a?.type||"");
+  if(!["createCard","updateCard","deleteCard","copyCard","moveCardFromBoard","moveCardToBoard"].includes(type))return false;
+  const name=String(d?.card?.name||"");
+  if(name.startsWith("📊 CAPITAL DE GIRO"))return false;
+  return true;
+}
+
+
+/* V12 · Close a verified, complete acerto only after Director confirmation. */
+async function closeAuthorized(req:Request){
+ const session=req.headers.get("x-cr-session")||"";
+ if(session.length<12)return false;
+ try{const r=await fetch(env("SUPABASE_URL")+"/functions/v1/central-gestao-api?api=me",{headers:{"x-cr-session":session},signal:AbortSignal.timeout(9000)});const j=await r.json();return r.ok&&j.ok===true&&j.role==="ADMIN_MASTER_ROGERIO"}catch{return false}
+}
+function isoDate(v:any){
+ const s=String(v||"");if(!/^20[0-9]{2}-[0-9]{2}-[0-9]{2}$/.test(s))return null;
+ const d=new Date(s+"T12:00:00Z");return Number.isNaN(+d)||d.toISOString().slice(0,10)!==s?null:s;
+}
+function nextDate(s:string){const d=new Date(s+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+1);return d.toISOString().slice(0,10)}
+async function sourceForClosing(){
+ const c=await trello("/cards/"+SETTLEMENT_CARD+"?fields=id,name,desc,shortUrl");
+ const d=String(c.desc||""),pivot=d.lastIndexOf("📋 RESUMO");
+ if(pivot<0)throw Error("SUMMARY_UNAVAILABLE");
+ const item=d.slice(0,pivot),summary=d.slice(pivot);
+ const amounts=[...item.matchAll(/Capital de Giro:\s*R\$\s*([0-9.,]+)/gi)].map(m=>money(m[1]));
+ const declared=(summary.match(/Capital de Giro:\s*R\$\s*([0-9.,]+)/i)||[])[1];
+ const capital=declared?money(declared):null;
+ const works=Number((summary.match(/Obras:\s*(\d+)/i)||[])[1]||0);
+ const case_ids=[...item.matchAll(/\b(\d{1,5}-2[456])\s*\|/g)].map(m=>m[1]);
+ const difference=(summary.match(/Diferen[cç]a:\s*R\$\s*(-?[0-9.,]+)/i)||[])[1];
+ if(!capital||works<1||case_ids.length!==works||new Set(case_ids).size!==works||amounts.length!==works||Math.round(amounts.reduce((a,b)=>a+(b||0),0)*100)!==Math.round(capital*100)||money(difference)!==0||!/Pend[eê]ncias:\s*Nenhuma/i.test(summary))throw Error("ACERTO_INCONSISTENT_OR_PENDING");
+ return {id:c.id,name:c.name,url:c.shortUrl||"",desc:d,works,capital,case_ids};
+}
+async function closeCapital(req:Request,action:string){
+ if(req.method!=="POST")return json({ok:false,error:"POST_REQUIRED"},405);
+ if(!await closeAuthorized(req))return json({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},403);
+ const input=await req.json().catch(()=>null);
+ if(!input||JSON.stringify(input).length>1500)return json({ok:false,error:"INVALID_REQUEST"},400);
+ const start=isoDate(input.start),end=isoDate(input.end);
+ if(!start||!end||start>end)return json({ok:false,error:"INVALID_DATES"},400);
+ const currentBR=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+ if(end>currentBR||((+new Date(end))-(+new Date(start)))/86400000>60)return json({ok:false,error:"PERIOD_OUT_OF_RANGE"},409);
+ const all=await cards(CAPITAL_LIST);
+ let last="",duplicate=false;const periodKeyValue=start+"_"+end;
+ for(const card of all){
+  if(String(card.desc||"").includes(SUMMARY_MARK))continue;
+  const key=keyFromMarker(card.desc),p=periodMatch(card.name);
+  const yr=p&&p.em>Number(currentBR.slice(5,7))?Number(currentBR.slice(0,4))-1:Number(currentBR.slice(0,4));
+  const match=key||(p?periodKey(p,yr):"");
+  if(match===periodKeyValue)duplicate=true;
+  const closing=key?keyDates(key).end:p?periodKey(p,yr).split("_")[1]:"";
+  if(closing>last)last=closing;
+ }
+ if(duplicate)return json({ok:false,error:"PERIOD_ALREADY_REGISTERED"},409);
+ if(last&&start!==nextDate(last))return json({ok:false,error:"EXPECTED_START_"+nextDate(last)},409);
+ let source:any;try{source=await sourceForClosing()}catch(e){return json({ok:false,error:String(e?.message||e)},409)}
+ const fpArr=new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode([periodKeyValue,source.desc,source.capital].join("|"))));
+ const fingerprint=Array.from(fpArr,v=>v.toString(16).padStart(2,"0")).join("");
+ const snapArr=new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(source.desc)));
+ const snapshot_hash=Array.from(snapArr,v=>v.toString(16).padStart(2,"0")).join("");
+ const earlier=await db("cr_working_capital_periods_v1?select=period_key,metadata,status&source_card_id=eq."+encodeURIComponent(String(source.id)));
+ if(Array.isArray(earlier)&&earlier.some(p=>["ACTIVE","CREATING"].includes(String(p.status))&&
+   (String(p.metadata?.snapshot_hash||"")===snapshot_hash||
+    (Array.isArray(p.metadata?.case_ids)&&p.metadata.case_ids.some((x:string)=>source.case_ids.includes(x))))))
+  return json({ok:false,error:"ACERTO_JA_REGISTRADO_OU_OBRAS_REPETIDAS",review_required:true},409);
+ const period=pad(+start.slice(8,10))+"/"+pad(+start.slice(5,7))+" a "+pad(+end.slice(8,10))+"/"+pad(+end.slice(5,7));
+ if(action==="close-preview")return json({ok:true,preview:true,period,start,end,capital_cents:Math.round(source.capital*100),works:source.works,source_url:source.url,fingerprint,previous_end:last,no_write:true});
+ if(input.fingerprint!==fingerprint)return json({ok:false,error:"STALE_PREVIEW"},409);
+ const reservation=await db("cr_working_capital_periods_v1?on_conflict=period_key",{method:"POST",headers:{"prefer":"resolution=ignore-duplicates,return=representation"},body:JSON.stringify({period_key:periodKeyValue,period_start:start,period_end:end,period_label:period,source_card_id:source.id,source_card_name:source.name,capital_generated:source.capital,manual_credits:0,manual_debits:0,real_balance:source.capital,status:"CREATING",metadata:{source_url:source.url,source_fingerprint:fingerprint,snapshot_hash,case_ids:source.case_ids,source:"V12_CLOSE"}})});
+ if(!Array.isArray(reservation)||reservation.length!==1)return json({ok:false,error:"PERIOD_RESERVED_REVIEW_REQUIRED"},409);
+ let created:any=null;
+ try{
+  const built=buildMachineDesc({key:periodKeyValue,display:period,capital:source.capital,source_card_name:source.name,source_url:source.url},"");
+  created=await createCard(brl(source.capital)+" ACERTOS "+period+" — SALDO REAL "+brl(built.balance),built.desc);
+  if(!created?.id)throw Error("CARD_CONFIRMATION_FAILED");
+  await db("cr_working_capital_periods_v1?period_key=eq."+encodeURIComponent(periodKeyValue),{method:"PATCH",headers:{"prefer":"return=minimal"},body:JSON.stringify({trello_card_id:String(created.id),status:"ACTIVE",updated_at:new Date().toISOString()})});
+ }catch(e){return json({ok:false,error:"CREATION_REQUIRES_REVIEW",detail:String(e),possible_write:!!created?.id},409)}
+ try{const summary=await reconcile(true);return json({ok:true,created:true,period,card_url:created.shortUrl||null,summary})}
+ catch(e){return json({ok:true,created:true,period,card_url:created.shortUrl||null,summary_pending:true})}
+}
+
+
+/* V12 safe diagnostic: read-only live Trello + PostgREST checks. Does NOT create
+   cards, update the settlement, reserve periods, or modify bank balances.
+   Only the Director session can request its financial results. */
+async function capitalDryRun(req:Request){
+ if(req.method!=="POST")return json({ok:false,error:"POST_REQUIRED"},405);
+ if(!await closeAuthorized(req))return json({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},403);
+ const body=await req.json().catch(()=>null);
+ if(!body||JSON.stringify(body).length>1500)return json({ok:false,error:"INVALID_REQUEST"},400);
+ const start=isoDate(body.start),end=isoDate(body.end);
+ if(!start||!end||start>end)return json({ok:false,error:"INVALID_DATES"},400);
+ const today=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+ const checks:any[]=[];
+ let blocks=0,warns=0;
+ const add=(code:string,pass:boolean,detail:string,warning=false)=>{
+  const state=pass?"PASS":warning?"WARN":"BLOCK";
+  checks.push({code,state,detail});
+  if(!pass){if(warning)warns++;else blocks++}
+ };
+ const dayCount=(+new Date(end+"T12:00:00Z")-(+new Date(start+"T12:00:00Z")))/86400000;
+ add("PERIODO_VALIDADE",dayCount<=60,"Intervalo de "+dayCount+" dias; limite operacional 60 dias.");
+ add("DATA_FINAL",end<=today,end>today?"O período termina em data futura; o encerramento real ficará bloqueado até a data final.":"Data final permitida.",true);
+ let current:any=null,all:any[]=[],rows:any[]=[],state:any[]=[],sourceError="";
+ try{current=await sourceForClosing();add("ACERTO_VIVO",true,"Conferidas "+current.works+" obras; Capital de Giro apurado no Trello em centavos.");}
+ catch(e){sourceError=String((e as Error)?.message||e);add("ACERTO_VIVO",false,"Acerto Vivo indisponível ou pendente: "+sourceError);}
+ try{all=await cards(CAPITAL_LIST);add("TRELLO_LEITURA",true,"A lista financeira responde e contém "+all.length+" cartões abertos.");}
+ catch(e){add("TRELLO_LEITURA",false,"Não foi possível consultar a lista do Capital de Giro.");}
+ try{
+  rows=await db("cr_working_capital_periods_v1?select=period_key,status,metadata,source_card_id&limit=250");
+  if(!Array.isArray(rows))throw Error("INVALID_LEDGER_RESPONSE");
+  add("LEDGER_LEITURA",true,"Controle persistente acessível ("+rows.length+" períodos registrados).");
+ }catch(e){add("LEDGER_LEITURA",false,"Não foi possível consultar a proteção de períodos duplicados.");}
+ try{
+  state=await db("cr_working_capital_state_v1?select=capital_generated,real_balance,pending_current_acerto,historical_cards&state_key=eq.GLOBAL&limit=1");
+  if(!Array.isArray(state)||!state.length)throw Error("EMPTY_STATE");
+  add("SALDO_PERSISTIDO",true,"Estado do Capital de Giro acessível, sem alterar valores.");
+ }catch(e){add("SALDO_PERSISTIDO",false,"O estado de saldo do Capital de Giro não respondeu.");}
+ let last="",cardDuplicate=false,perCount=0,sumGenerated=0,sumBalance=0,negative=0;
+ for(const c of all){
+  if(String(c.desc||"").includes(SUMMARY_MARK)||String(c.name||"").startsWith("📊"))continue;
+  const p=periodMatch(c.name);
+  if(!p)continue;
+  perCount++;
+  const info=legacyInfo(c,[]);
+  sumGenerated+=Math.round(info.credit*100);
+  sumBalance+=Math.round(info.balance*100);
+  if(info.balance<0)negative+=Math.round(-info.balance*100);
+  const key=keyFromMarker(c.desc);
+  const inferredYear=p.em>Number(today.slice(5,7))?Number(today.slice(0,4))-1:Number(today.slice(0,4));
+  const candidate=key||(p?periodKey(p,inferredYear):"");
+  if(candidate===start+"_"+end)cardDuplicate=true;
+  const periodEnd=key?keyDates(key).end:candidate.split("_")[1];
+  if(periodEnd>last)last=periodEnd;
+ }
+ add("TRELLO_DUPLICIDADE",!cardDuplicate,cardDuplicate?"Já existe cartão Trello com o mesmo período.":"Nenhum cartão Trello com período idêntico.");
+ const already=rows.some(r=>String(r.period_key)===start+"_"+end&&["ACTIVE","CREATING"].includes(String(r.status)));
+ add("LEDGER_DUPLICIDADE",!already,already?"Período já reservado no controle persistente.":"Nenhuma reserva ativa para o mesmo período.");
+ const dt=new Date(last+"T12:00:00Z");
+ if(last&&!Number.isNaN(+dt))dt.setUTCDate(dt.getUTCDate()+1);
+ const next=last&&!Number.isNaN(+dt)?dt.toISOString().slice(0,10):null;
+ add("PERIODO_CONTIGUO",!next||start===next,next?"Início necessário: "+next+".":"Sem período anterior confirmado.");
+ const overlaps=current&&rows.some(r=>["ACTIVE","CREATING"].includes(String(r.status))&&
+   (Array.isArray(r.metadata?.case_ids)&&r.metadata.case_ids.some((x:string)=>current.case_ids.includes(x))));
+ add("OBRAS_NAO_DUPLICADAS",!overlaps,overlaps?"Uma obra do Acerto Vivo já está em período ativo.":"Nenhuma obra do Acerto Vivo aparece nas reservas anteriores.");
+ if(state.length&&all.length){
+  const dbGenerated=Math.round(Number(state[0].capital_generated)*100);
+  const dbBalance=Math.round(Number(state[0].real_balance)*100);
+  add("SALDO_CONCILIADO",sumGenerated===dbGenerated&&sumBalance===dbBalance,
+    sumGenerated===dbGenerated&&sumBalance===dbBalance?"Totais da lista Trello e do estado persistente são iguais.":"O resumo persistido diverge dos cartões; não fechar sem conciliação.");
+ }
+ if(state.length&&current){
+  const reported=Math.round(Number(state[0].pending_current_acerto)*100);
+  const expected=Math.round(current.capital*100);
+  add("PENDENCIA_ATUALIZADA",reported===expected,reported===expected?
+   "Valor pendente no estado agregado confere.":"Valor agregado de acerto anterior está desatualizado. O fechamento sempre deve reler o Acerto Vivo.",true);
+ }
+ return json({
+  ok:true,mode:"SIMULACAO_SEM_LANCAMENTOS",no_write:true,build:BUILD,
+  period:{start,end,last_registered:last||null,expected_next_start:next},
+  live_acerto:current?{works:current.works,capital_cents:Math.round(current.capital*100),source_url:current.url}:null,
+  capital:{historical_cards:perCount,generated_cents:sumGenerated,real_balance_cents:sumBalance,negative_periods_cents:negative},
+  checks,blocked:blocks>0,warnings:warns,passed:checks.filter((x:any)=>x.state==="PASS").length,
+  technical_ready:blocks===0,
+  ready_to_close:blocks===0&&warns===0,
+  note:"Esta simulação NÃO gera card, NÃO encerra o período e NÃO libera confirmação automática."
+ });
+}
+
+Deno.serve(async(req:Request)=>{
+  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:{"access-control-allow-origin":"*","access-control-allow-headers":"content-type,x-cr-session","access-control-allow-methods":"GET,POST,OPTIONS"}});
+  const u=new URL(req.url),action=(u.searchParams.get("action")||"health").toLowerCase();
+  if(req.method==="HEAD")return new Response(null,{status:200,headers:{"x-construrei-build":BUILD}});
+  if(action==="health")return json({ok:true,build:BUILD,mode:"trello-ledger-reconcile",finance_board:FINANCE_BOARD,capital_list:CAPITAL_LIST,received_list:RECEIVED_2026_LIST});
+  if(action==="close-test")return capitalDryRun(req);
+  if(action==="close-preview"||action==="close-commit")return closeCapital(req,action);
+   if(action==="summary"){
+    if(!(await authorized(req)))return json({ok:false,error:"UNAUTHORIZED"},401);
+    try{return json(await reconcile(false))}catch(e){return json({ok:false,build:BUILD,error:String(e?.message||e)},500)}
+  }
+  if(action==="sync"){
+    if(u.searchParams.get("sig")!==WH_SIG)return json({ok:false,error:"FORBIDDEN"},403);
+    try{return json(await reconcile(true))}catch(e){return json({ok:false,build:BUILD,error:String(e?.message||e)},500)}
+  }
+  if(action==="install-webhook"){
+    if(u.searchParams.get("sig")!==WH_SIG)return json({ok:false,error:"FORBIDDEN"},403);
+    try{return json({ok:true,build:BUILD,webhook:await installWebhook()})}catch(e){return json({ok:false,build:BUILD,error:String(e?.message||e)},500)}
+  }
+  if(action==="kick"){
+    if(u.searchParams.get("sig")!==WH_SIG)return json({ok:false,error:"FORBIDDEN"},403);
+    // @ts-ignore
+    EdgeRuntime.waitUntil(reconcile(true));
+    return json({ok:true,build:BUILD,accepted:true},202);
+  }
+  if(action==="bootstrap"){
+    if(u.searchParams.get("sig")!==WH_SIG)return json({ok:false,error:"FORBIDDEN"},403);
+    try{const w=await installWebhook();const s=await reconcile(true);return json({ok:true,build:BUILD,webhook:w,summary:s})}catch(e){return json({ok:false,build:BUILD,error:String(e?.message||e)},500)}
+  }
+  if(action==="webhook"){
+    if(u.searchParams.get("sig")!==WH_SIG)return json({ok:false,error:"FORBIDDEN"},403);
+    if(req.method!=="POST")return json({ok:false,error:"POST_REQUIRED"},405);
+    let p:any=null;try{p=await req.json()}catch{return json({ok:false,error:"INVALID_JSON"},400)}
+    if(!webhookRelevant(p))return json({ok:true,build:BUILD,ignored:true});
+    await sleep(700);
+    try{return json(await reconcile(true))}catch(e){return json({ok:false,build:BUILD,error:String(e?.message||e)},500)}
+  }
+  return json({ok:false,error:"NOT_FOUND"},404);
+});
