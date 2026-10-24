@@ -11,10 +11,10 @@ test('technical can edit F04 through F07 but not F08/F09, budgets, route or prop
  for(const i of [8,9])assert.equal(allowed(ROLE_TECH,'flow-save',{flow_code:'F0'+i}),false);
  for(const op of ['route','proposal-save','budget-release','budget-save'])assert.equal(allowed(ROLE_TECH,op,{}),false);
 });
-test('F00 operator can list only F01; may navigate existing F01 but not edit budgets',()=>{
+test('F00 operator can list only F01; deny per-case operations until server scope checked',()=>{
  assert.equal(allowed(ROLE_F00,'list',{phase:'F01'}),true);
  for(const phase of ['F02','F03','F04',''])assert.equal(allowed(ROLE_F00,'list',{phase}),false);
- for(const a of ['budget-save','budget-release','flow-save','proposal-save'])assert.equal(allowed(ROLE_F00,a,{}),false);
+ for(const a of ['get','route','visit-return','budget-save','budget-release','flow-save','proposal-save'])assert.equal(allowed(ROLE_F00,a,{}),false);
 });
 test('scope cannot be granted by caller-supplied actor',()=>assert.equal(allowed(null,'route',{actor:'Rogério',phase:'F01'}),false));
 test('health never confers action authority',()=>assert.equal(allowed(ROLE_DIRECTOR,'health'),false));
