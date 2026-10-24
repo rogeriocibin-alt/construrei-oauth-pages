@@ -22,9 +22,15 @@
 - Acertos Vivo de 23/10: 11 obras conferidas e 0 pendências segundo o cartão de origem. Obra 735-26 constava com 12 linhas discriminadas e custo R$ 1.301,45; não reutilizar a antiga hipótese R$ 142,84 sem nova prova.
 - Lançamentos posteriores em obras fechadas, conciliação por igualdade de valor e rateios sem origem bancária inequívoca continuam proibidos.
 
+### 3.1 Integração Cora PROD — prova objetiva de 23/10 às 21h35 BRT
+- RPC de leitura `public.cr_cora_live_status()`: `healthy=true`, `balance_healthy=true`, `last_error=null`, última execução e leitura de saldo em `2026-10-24T00:35:11Z`. Janela incremental `2026-10-22` a `2026-10-24`; 44 registros vistos, 0 novos nesta rodada. **A integração PROD e a atualização incremental estavam operacionais nessa leitura**, sem realizar lançamento.
+- RPC `public.cr_cora_cache_years()`: 46/46 competências mensais (jan/2023 a out/2026) importadas, 0 falhas ou meses na fila. Entretanto, 37 competências têm saldos inicial e final zerados/placeholder, e apenas 6 registros são de agregação bancária oficial. **A importação 46/46 não autoriza chamar todos os saldos históricos de conciliados.**
+- Item `FIN-CORA-API-20261007` foi concluído **somente no escopo de credenciais/integração PROD e carga incremental**, enquanto a qualidade dos saldos históricos e conciliação transação a transação permanecem sob `FIN-V12-GLOBAL-20261022` e `FIN-V12-CORA-TRELLO-AUDITORIA-20261022`.
+- Supabase Edge `cr-trello-capital-giro-v1` v35 contém verificações `PERIOD_ALREADY_REGISTERED`, bloqueio por obras repetidas, fingerprint da prévia e reserva atômica `on_conflict=period_key`. O banco possui `PRIMARY KEY(period_key)`; isto é **prova da proteção técnica existente**, não um teste autenticado de segunda tentativa no navegador.
+
 ## 4. Gates preservados (não declarar 100% funcional sem provas)
 1. Teste read-only / operação não duplicada ao tentar reabrir período encerrado; E2E autenticado notebook + Android ainda sem prova nesta auditoria.
-2. Leitura do **saldo real atual de Cora PROD**, atualização incremental e conciliação externa com documentos onde faltam IDs, inclusive históricos 2023–2026.
+2. **Já comprovado:** monitor PROD e atualização incremental saudáveis às 21h35 BRT de 23/10. **Ainda pendente:** certificação dos saldos históricos (especialmente 37 meses placeholder) e conciliação externa com comprovantes/IDs onde faltam vínculos Cora × Trello.
 3. Casos não amostrados de lançamento multiobra, Capital de Giro, estorno e Fechar Obra: testar sob confirmação explícita e sem custos/duplicidade; não criar movimentos fictícios na produção.
 4. Ajustes visuais, gráficos, filtros e anexos físicos só são homologados onde houver evidência específica, sem promover PR draft indiscriminadamente.
 
@@ -35,5 +41,5 @@
 
 ## 6. Resultado rigoroso
 **Confirmado:** UI V12 release oficial em GitHub; fix do período dos Acertos; criação de período real e concordância Trello × Supabase; ledger COMMITTED e 0 divergência no consolidado CG.  
-**Ainda não certificado:** toda movimentação Cora de 2023 a hoje, saldo bancário online no segundo da consulta, todos os fluxos E2E e comportamento de duplicidade após replay.  
+**Ainda não certificado:** saldos bancários históricos de todas as competências, vinculação Cora×Trello de cada movimentação, E2E de todos os fluxos e comportamento real após replay. O monitor PROD teve sucesso recente, mas isto não substitui conferência do número exibido em tela.  
 **Decisão:** manter oficial estável, atualizar governança, impedir falso status de “pendente de primeiro fechamento”, e não confundir progresso operacional com homologação total.
