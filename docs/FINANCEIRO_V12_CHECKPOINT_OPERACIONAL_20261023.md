@@ -43,3 +43,20 @@
 **Confirmado:** UI V12 release oficial em GitHub; fix do período dos Acertos; criação de período real e concordância Trello × Supabase; ledger COMMITTED e 0 divergência no consolidado CG.  
 **Ainda não certificado:** saldos bancários históricos de todas as competências, vinculação Cora×Trello de cada movimentação, E2E de todos os fluxos e comportamento real após replay. O monitor PROD teve sucesso recente, mas isto não substitui conferência do número exibido em tela.  
 **Decisão:** manter oficial estável, atualizar governança, impedir falso status de “pendente de primeiro fechamento”, e não confundir progresso operacional com homologação total.
+
+
+## 7. Auditoria complementar dos Acertos — P0, sem alteração financeira
+
+Leitura bilateral do `CR-TRELLO-ACERTOS-LIVE-V2` e cartões reais em 23/10. **O resumo automático escolhe o valor recebido, quando informado, como base para lucro e também deduz os custos integrais.** Isso pode descontar duas vezes tarifas/comissões já abatidas do recebimento líquido. Há três casos particularmente fortes, que exigem conciliação bancária antes de qualquer ajuste:
+
+| Obra | Fechado | Recebido | Diferença | Custo de taxa/comissão indicado | Lucro no cartão | Lucro no Acerto Vivo |
+|---|---:|---:|---:|---|---:|---:|
+| [740-26](https://trello.com/c/ZQxYGEcY) | R$ 8.260,00 | R$ 7.016,05 | R$ 1.243,95 | Taxa 10X R$ 1.243,95 | R$ 2.804,15 | R$ 1.560,20 |
+| [768-26](https://trello.com/c/eqRchlZA) | R$ 3.408,60 | R$ 3.200,00 | R$ 208,60 | Taxa/Desconto R$ 208,60 | R$ 1.030,36 | R$ 821,76 |
+| [579-26](https://trello.com/c/lsg5ojHi) | R$ 1.850,00 | R$ 1.665,00 | R$ 185,00 | Comissão JBA R$ 185,00 | R$ 532,63 | R$ 347,63 |
+
+**Causa no código lido:** Edge ativa `cr-trello-gestao-vista-v2` v60, função `settlementAnalyze`, define `const base=received!=null?received:closed` e depois `profit=base-totalCosts`, enquanto a descrição dos cartões individuais já contém as respectivas tarifas dentro de `Total de Custos`. A regra não separa receita bruta, recebimento líquido e taxa de intermediador; **o fato de a diferença coincidir com a taxa é forte indício, não prova do extrato Cora para cada um desses movimentos**. Não alterar valores até identificar se a taxa foi efetivamente retida ou cobrada separadamente, se houve pagamento parcial e se o período já está encerrado. O cartão 579-26 também menciona parcela 26/10 como OK embora a inspeção tenha ocorrido 23/10: conferir origem/data da confirmação.
+
+**Controle de repetição de lançamento:** na tabela `cr_finance_v12_operations`, cinco pares partilham cartão+data+valor+direção. Três são correlações esperadas com `EXISTING_TRELLO` entre lançamento manual e transação bancária; outro par de R$150,00 em 818-26 descreve dois apoios distintos (Fabrício/Éder), logo não é duplicidade provada. Resta um par **740-26, 17/10, R$1.239,80**, com dois `COMMITTED` manuais e apenas uma linha visível no card: checar trilha de mutação antes de classificar. **Não excluir ledger nem replicar custo.**
+
+**Impacto de governança:** o Acerto Vivo informa 11 obras, 0 pendências e rateio que soma zero, porém isto verifica a aritmética do algoritmo atual, **não valida a base econômica e tributária**. O crédito Capital de Giro de R$1.058,06 do período 10–23/10 já foi gravado e está protegido contra novo registro; **não estornar, refazer acertos, nem corrigir automaticamente**. Homologação operacional completa de Acertos/Capital deve aguardar esta auditoria de base. O saldo bancário Cora PROD incremental continua saudável, mas não resolve sozinho o vínculo destas obras.
