@@ -11,6 +11,7 @@ on:
       - .github/scripts/cr_history_cas_append.py
       - .github/scripts/cr_pg17_integrated_restore_candidate.sh
       - .github/scripts/cr_git_bundle_offsite_weekly.sh
+      - .github/scripts/cr_static_site_recovery_smoke.py
 
 permissions:
   contents: read
@@ -36,6 +37,8 @@ jobs:
         run: |
           bash -n .github/scripts/cr_git_bundle_offsite_weekly.sh
           bash .github/scripts/cr_git_bundle_offsite_weekly.sh --selftest
+      - name: Isolated static Central Gestor and landing recovery
+        run: python3 .github/scripts/cr_static_site_recovery_smoke.py --root .
 
   detect:
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
@@ -404,6 +407,25 @@ jobs:
           echo '## Cofre Zero — integrated isolated recovery proof' >> "$GITHUB_STEP_SUMMARY"
           echo 'Result: ${{ job.status }}; PG17 real + Trello immutable historical snapshot.' >> "$GITHUB_STEP_SUMMARY"
           echo 'OUT OF SCOPE: Cloud Scheduler, live OAuth, Edge redeployment, Netlify and running APP restore.' >> "$GITHUB_STEP_SUMMARY"
+
+  static_site_recovery_weekly:
+    name: Cofre Zero | weekly isolated Central Gestor HTML recovery smoke
+    if: github.event_name == 'schedule' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Serve restored static apps on disposable localhost
+        run: python3 .github/scripts/cr_static_site_recovery_smoke.py --root .
+      - name: Declare scope boundaries
+        if: always()
+        run: |
+          echo 'Cofre Zero HTML restoration smoke: ${{ job.status }}' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Localhost only; login, OAuth, APIs, Netlify and backend recovery NOT tested.' >> "$GITHUB_STEP_SUMMARY"
 
   git_offsite_weekly:
     name: Cofre Zero | independent Git history bundle on existing weekly schedule
