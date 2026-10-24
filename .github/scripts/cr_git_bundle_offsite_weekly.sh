@@ -7,7 +7,6 @@ umask 077
 selftest() {
   local root
   root="$(mktemp -d)"
-  trap 'rm -rf "$root"' EXIT
   git init -q -b main "$root/source"
   git -C "$root/source" config user.email 'cofre-test@example.invalid'
   git -C "$root/source" config user.name 'Cofre Test'
@@ -21,6 +20,7 @@ selftest() {
   git clone -q "$root/snapshot.bundle" "$root/restored"
   git -C "$root/restored" cat-file -e "${rev}^{commit}"
   test "$(git -C "$root/restored" show HEAD:sample.txt)" = 'Cofre Zero offline smoke test'
+  rm -rf "$root"
   echo 'GIT_BUNDLE_OFFLINE_RESTORE_PASS'
 }
 if [[ "${1:-}" == '--selftest' ]]; then selftest; exit 0; fi
