@@ -2,14 +2,14 @@
   "meta": {
     "title": "Gestor do Projeto CONSTRU-REI",
     "version": "V1.2.7 • DASHBOARD FINANCEIRO V12 OFICIAL • 23/10",
-    "status": "AUDITORIA 24/10 • 275 REGISTROS • 23 SUBTAREFAS REPRIORIZADAS • APP E2E P0",
+    "status": "AUDITORIA INDIVIDUAL 24/10 • BANCO MESTRE 275 • 99 NÃO FINAIS REVISADOS • 2 P0 DISTINTOS",
     "generated_at": "2026-10-24",
     "repository": "rogeriocibin-alt/construrei-oauth-pages",
     "branch": "main",
     "coverage": "Gestão à vista + Banco Mestre de pendências + genealogia viva do repositório. O histórico verificável é indexado por referências leves (branches/checkpoints/commits/links), sem anexar artefatos pesados.",
     "source_policy": "A numeração Vx não determina canonicidade. Status só é considerado confirmado quando há checkpoint, branch, commit, arquivo canônico ou decisão explícita registrada.",
     "audit_snapshot": "2026-10-24",
-    "audit_state": "Auditoria delta 24/10: Banco Mestre 275 itens, 135 concluídos, 41 cancelados/consolidados, 99 ativos; 28 atualizações com 28 cc_changes; legado não compete com frente ativa.",
+    "audit_state": "Banco Mestre 275: 135 concluídos, 41 cancelados, 99 não finais; 28 mudanças iniciais + 5 correções logadas 24/10. 99 registros analisados em notas, status, prioridade, data de evidência e próximo gate; 18 sem data, sem comprovação externa E2E global.",
     "checkpoint_before_live": "CHECKPOINT_PROJECT_MANAGER_V1_BEFORE_LIVE_GOVERNANCE_20261003",
     "build": "CR-PM-V1.2.5-COFRE-ZERO-SAFE-CONTROL-20261007",
     "environment": "canonical",
@@ -31,7 +31,7 @@
     "reconciliation_candidate_at": "2026-10-22",
     "reconciliation_scope": "Atualização informativa autorizada/homologada por Rogério em 15/10/2026; sem alteração de release, JS/CSS, rotas ou homologação E2E do APP.",
     "operational_snapshot_at": "2026-10-24",
-    "operational_audit_status": "Auditoria geral 24/10: Supabase mestre 275 registros (135 concluídos, 41 cancelados, 99 ativos). Reclassificados 19 subitens legados Wizy/Agenda e reconciliados 9 registros mestres; 28 logs cc_changes. PWA estático é projeção, não fonte de estado. Backup semanal canônico R1; evitar rotina diária antiga. V12 e CG fechados operacionalmente por aceite do titular; testes externos E2E seguem sem falsa homologação.",
+    "operational_audit_status": "Revisão individual 99/99 documentada; 0 registros não finais sem nota, próximo passo ou critério de aceite; 18 registros não finais sem data de evidência. 5 reclassificações/ajustes adicionais auditados. V12/CG descontos 740/768/579 aceitos. Cofre único semanal, execução natural de 25/10 a verificar. PWA/APP E2E e segurança de rota financeira sem PASS global.",
     "operational_checkpoint": "FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023",
     "operational_rollback": "checkpoint/gestor-auditoria-global-preupdate-20261022",
     "operational_scope": "Sincronização de metadados/projeções no Gestor e inventário de infraestrutura, sem JS/CSS/PWA build, sem endpoints, saldo Cora, Trello, obras ou financeiros alterados.",
@@ -43,11 +43,28 @@
       "open": 99,
       "source": "Supabase public.cc_items leitura atual 24/10/2026"
     },
-    "operational_audit_file": "docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
-    "operational_audit_url": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
+    "operational_audit_file": "docs/GESTOR_BANCO_MESTRE_99_REVISAO_INDIVIDUAL_20261024.md",
+    "operational_audit_url": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/GESTOR_BANCO_MESTRE_99_REVISAO_INDIVIDUAL_20261024.md",
     "master_snapshot_provenance": "public.cc_items, 24/10/2026; GitHub main PRs #132, #155–163; Cora/Trello por evidências no Banco Mestre; documentação Cofre Zero semanal R1",
-    "pwa_release_discrepancy": "project-data.meta V1.2.7 é revisão editorial; version.json/SW/HTML 1.2.5.2; app.js CURRENT_RELEASE 1.2.4. Não chamar 1.2.7 de build executável nem corrigir sem QA cache/navegador.",
-    "cockpit_active_fronts_evidence": "APP único em homologação (1/2); Financeiro V12 concluído no escopo operacional; Cofre semanal em revisão/monitoramento não ocupa vaga. Opera 24/10 exibia 3/2 antes da correção dos status."
+    "pwa_release_discrepancy": "Fotografia editorial V1.2.7 é diferente do build executável 1.2.5.2. MAIN commit e74a6c7 corrigiu CURRENT_RELEASE/chip para 1.2.5.2; badge LIVE/FALLBACK corrigido na candidata de auditoria. Ainda requer teste real de cache/atualização notebook+celular antes de homologação PWA; PR #99 permanece DRAFT.",
+    "cockpit_active_fronts_evidence": "APP único em homologação (1/2); Financeiro V12 concluído no escopo operacional; Cofre semanal em revisão/monitoramento não ocupa vaga. Opera 24/10 exibia 3/2 antes da correção dos status.",
+    "last_individual_audit_20261024": {
+      "source": "Supabase public.cc_items read after 5 logged updates",
+      "total": 275,
+      "completed": 135,
+      "canceled": 41,
+      "nonfinal": 99,
+      "nonfinal_missing_date": 18,
+      "nonfinal_missing_note": 0,
+      "nonfinal_missing_next_step": 0,
+      "nonfinal_missing_acceptance": 0,
+      "priority_p0": [
+        "EXEC-APP-E2E-20261006",
+        "SEC-FIN-TRELLO-AUTH-20261012"
+      ],
+      "report": "docs/GESTOR_BANCO_MESTRE_99_REVISAO_INDIVIDUAL_20261024.md",
+      "external_functional_proofs": "NOT_ALL_VERIFIED"
+    }
   },
   "governance": [
     "Máximo de 2 frentes em execução simultaneamente.",
@@ -4000,24 +4017,36 @@
       "ratios_balance_brl": 0,
       "source": "Trello Acertos Vivo sa0x7eVL, última atividade 23/10 19h45 BRT; conferência 23/10",
       "validation_status": "VALORES_REPORTADOS_PELO_TRELLO_NAO_AUDITADOS_ECONOMICAMENTE",
-      "validation_warning": "O cartão soma rateios com diferença zero, mas três obras 740/768/579 podem deduzir taxa/comissão duas vezes. Não usar os totais como fechamento definitivo sem conciliação dos recebimentos bancários.",
+      "validation_warning": "Avisos de 23/10 sobre 740/768/579 eram suspeitas históricas, esclarecidas em 24/10 como descontos reais aceitos. Os valores seguem sendo fotografia do Trello de 23/10; aceite operacional não equivale a conciliação bancária geral.",
       "p0_cases": [
         {
           "case": "740-26",
           "possible_double_deduction_brl": 1243.95,
-          "card": "https://trello.com/c/ZQxYGEcY"
+          "card": "https://trello.com/c/ZQxYGEcY",
+          "case_status_20261024": "OWNER_ACCEPTED_DISCOUNT_HISTORICAL_ALERT_NOT_ACTIVE_P0"
         },
         {
           "case": "768-26",
           "possible_double_deduction_brl": 208.6,
-          "card": "https://trello.com/c/eqRchlZA"
+          "card": "https://trello.com/c/eqRchlZA",
+          "case_status_20261024": "OWNER_ACCEPTED_DISCOUNT_HISTORICAL_ALERT_NOT_ACTIVE_P0"
         },
         {
           "case": "579-26",
           "possible_double_deduction_brl": 185,
-          "card": "https://trello.com/c/lsg5ojHi"
+          "card": "https://trello.com/c/lsg5ojHi",
+          "case_status_20261024": "OWNER_ACCEPTED_DISCOUNT_HISTORICAL_ALERT_NOT_ACTIVE_P0"
         }
-      ]
+      ],
+      "discount_resolution_20261024": {
+        "status": "OWNER_ACCEPTED_VERIFIED_DISCOUNTS",
+        "cases": [
+          "740-26",
+          "768-26",
+          "579-26"
+        ],
+        "meaning": "Alertas de suspeita de desconto duplo do checkpoint 23/10 esclarecidos pelo titular em 24/10; não reabrir obras ou reprocessar rateios sem nova evidência"
+      }
     },
     "capital_giro": {
       "generated_brl": 21706.71,
@@ -4030,7 +4059,7 @@
       "source": "Trello cartão lUHP2wNe + Supabase cr_working_capital_periods_v1/cr_working_capital_state_v1, 23/10",
       "no_new_period_created": false,
       "status": "PERIODO_REGISTRADO_VALORES_EM_AUDITORIA",
-      "validation_warning": "Capital Giro 10/10-23/10 foi registrado uma vez, mas origem do lucro depende de revisão de base e tarifas no Acerto Vivo. Proibido refazer/estornar automaticamente."
+      "validation_warning": "Período 10/10–23/10 registrado uma vez e Capital de Giro V12 aceito operacionalmente em 24/10; proibir refazer, estornar ou reabrir fechamento por suspeitas históricas sem nova prova. Extrato bilateral completo é escopo distinto."
     },
     "financeiro_v12_operations": {
       "committed": 31,
@@ -4060,7 +4089,7 @@
       "not_confirmed": 5,
       "source": "cr_project_manager_snapshot_v1()"
     },
-    "warning": "Período real registrado e reconciliado nas duas fontes; não repetir o encerramento. Validação de replay, saldo bancário Cora PROD e exceções históricas ainda pendentes.",
+    "warning": "Aceite operacional V12/Capital Giro preservado. Suspeitas 740/768/579 esclarecidas como descontos reais em 24/10; não reabrir. PWA/APP E2E, prova Cofre 25/10 e conciliação histórica abrangente ainda têm gates distintos.",
     "report": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/FINANCEIRO_V12_CHECKPOINT_OPERACIONAL_20261023.md",
     "cora_prod_live": {
       "as_of": "2026-10-24T00:35:11Z",
@@ -4129,7 +4158,8 @@
       "aggregate_fix_status": "PASS_TRELLO_V62_DASHBOARD_API_V26_AUTH_OPERA_PR157",
       "autotest_fix_pr": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/155",
       "merge_commit": "8ee3fe59c0afe9967d4a4a243bb0775da6166952",
-      "warning": "CAUSA RAIZ DO DASHBOARD ANTIGO RESOLVIDA: Trello Edge v62 + backend consumido pelo Dashboard v26. Autenticação REAL no Opera: valores antigos R$10.580,94 / 28,69% desapareceram; novos R$12.218,49 / 31,72% confirmados. PR157 incorporada ao HTML da produção; 13 scripts OK; Central Canonical Guard SUCCESS. Capital pendente sincronizado a R$1.221,83, saldo histórico preservado R$3.537,75 e período 10–23 em R$1.058,06; diferença histórica R$163,77 permanece sem lançamento. PDF/Excel, escrita real, Android, ledger 740 e GClick 768/818 ainda pendentes."
+      "warning": "CAUSA RAIZ DO DASHBOARD ANTIGO RESOLVIDA: Trello Edge v62 + backend consumido pelo Dashboard v26. Autenticação REAL no Opera: valores antigos R$10.580,94 / 28,69% desapareceram; novos R$12.218,49 / 31,72% confirmados. PR157 incorporada ao HTML da produção; 13 scripts OK; Central Canonical Guard SUCCESS. Capital pendente sincronizado a R$1.221,83, saldo histórico preservado R$3.537,75 e período 10–23 em R$1.058,06; diferença histórica R$163,77 permanece sem lançamento. PDF/Excel, escrita real, Android, ledger 740 e GClick 768/818 ainda pendentes.",
+      "follow_up_20261024": "Checkpoint QA do dia 23/10 é histórico. Em 24/10 o titular confirmou os descontos 740/768/579 e aceitou a operação V12 e CG. Não promover antigos alertas financeiros a P0 ativos."
     }
   },
   "cofre_zero_canonical": {
@@ -4248,16 +4278,56 @@
       "active": 99,
       "reclassified_legacy": 19,
       "master_transitions": 9,
-      "write_audit_logs": 28
+      "write_audit_logs": 33
     },
     "evidence_review": {
       "nonfinal": 99,
-      "without_note": 29,
+      "without_note": 0,
       "stale_before_october": 38,
       "subtasks_reprioritized_p0_to_p1": 23,
-      "scope": "Revisão individual de identificação, estágio e trechos de evidência disponíveis; provas externas e notas integrais de cada item ainda exigem validação",
+      "scope": "99 registros avaliados por identificação, status, prioridade, notas, bloqueio, campo data de evidência, próxima ação e critério. Inspeção funcional de TODOS os links e E2E não comprovada.",
       "preserved": "Nenhum status concluído por inferência; financeiro V12 aceito, Cofre semanal preservado",
-      "remaining": "Verificação externa de evidências por item, validação PWA/APP e homologação E2E"
-    }
+      "remaining": "18 datas de evidência ausentes e inspeção externa de provas, gate APP E2E, prova PWA notebook+celular, segurança de rotas financeiras e restore externo Cofre. Nunca completar artificialmente.",
+      "without_next_step": 0,
+      "without_acceptance": 0,
+      "without_evidence_date": 18,
+      "individual_records_reviewed": 99,
+      "additional_reclassifications": 3,
+      "additional_verified_metadata_corrections": 2,
+      "report": "https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/GESTOR_BANCO_MESTRE_99_REVISAO_INDIVIDUAL_20261024.md"
+    },
+    "security_p0": {
+      "id": "SEC-FIN-TRELLO-AUTH-20261012",
+      "state": "Em andamento",
+      "reason": "Rota financeira externa potencialmente exposta; PR #74 ainda DRAFT/contrato isolado, não integrado",
+      "no_false_pass": true
+    },
+    "reclassifications_20261024": [
+      {
+        "id": "ARCH-AGENTS-20261012",
+        "from": "P0",
+        "to": "P1"
+      },
+      {
+        "id": "F01-HOST-004",
+        "from": "P0/Aguardando",
+        "to": "P1/Bloqueado"
+      },
+      {
+        "id": "ROG-04",
+        "from": "P0",
+        "to": "P1"
+      },
+      {
+        "id": "ARCH-TRUTH-20261012",
+        "from": "Em andamento",
+        "to": "Em validação"
+      },
+      {
+        "id": "GOV-REVIEW-GERAL-20261022",
+        "from": "Próxima ação desatualizada",
+        "to": "Próxima ação baseada em 99 registros e UI"
+      }
+    ]
   }
 }

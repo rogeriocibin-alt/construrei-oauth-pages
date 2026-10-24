@@ -139,10 +139,10 @@ async function refreshProjectManagerLive(){
     if(!body?.ok)throw new Error(body?.error||'snapshot inválido');
     state.pmLive=body;
     state.pmSync={ok:true,at:body.generated_at||new Date().toISOString()};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.4 • OFICIAL • LIVE';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent=`V${CURRENT_RELEASE.version} • OFICIAL • LIVE`;
   }catch(err){
     state.pmSync={ok:false,at:new Date().toISOString(),error:String(err?.message||err)};
-    const chip=$('#liveBuildChip'); if(chip)chip.textContent='V1.2.4 • OFICIAL • FALLBACK';
+    const chip=$('#liveBuildChip'); if(chip)chip.textContent=`V${CURRENT_RELEASE.version} • OFICIAL • FALLBACK`;
   }
   renderNow();
   renderAudits();
@@ -197,7 +197,7 @@ function renderNow(){
 
     <section class="metrics">
       ${metric('Frentes em execução',active.length,'Limite rígido: 2','⇢')}
-      ${metric('Pendências do projeto',pp.length,`${pActive.length} ativas • ${pBlocked.length} bloqueada(s)`,'!')}
+      ${metric('Seleção de pendências',pp.length,`Recorte editorial • mestre ${d.executive_review_20261024?.inventory?.other??'—'} não finais`,'!')}
       ${metric('Ação do Rogério',pHuman.length,pHuman.length?'Somente decisões realmente humanas':'Nenhuma ação humana pendente','◎')}
       ${metric('Sem avanço ≥3d',pOld.length,'Envelhecimento calculado automaticamente','◷')}
       ${metric('Referências históricas',hist.length,state.liveSync?.ok?'GitHub atualizado ao vivo':'Snapshot com atualização automática','↺')}
@@ -309,7 +309,7 @@ function renderPending(){
 
   const inventory=d.executive_review_20261024?.inventory;
   const evidence=d.executive_review_20261024?.evidence_review;
-  const masterSummary=inventory?`<section class="card" style="padding:16px;margin-bottom:16px"><h3>Banco Mestre — fotografia ${esc(inventory.verified_on||'')}</h3><p><strong>${inventory.total}</strong> registros: <strong>${inventory.completed}</strong> concluídos, <strong>${inventory.canceled}</strong> cancelados, <strong>${inventory.other}</strong> não finais. Esta é uma fotografia de auditoria, não uma consulta em tempo real. Os cartões abaixo são uma seleção de acompanhamento, não o banco completo.</p><p><strong>Prioridade executiva:</strong> APP F00–F09 E2E. Financeiro V12: descontos aceitos; Cofre Zero: semanal único. ${evidence?`<small>${evidence.subtasks_reprioritized_p0_to_p1} subtarefas repriorizadas; provas externas ainda dependem de verificação.</small>`:''}</p></section>`:'';
+  const masterSummary=inventory?`<section class="card" style="padding:16px;margin-bottom:16px"><h3>Banco Mestre — fotografia ${esc(inventory.verified_on||'')}</h3><p><strong>${inventory.total}</strong> registros: <strong>${inventory.completed}</strong> concluídos, <strong>${inventory.canceled}</strong> cancelados, <strong>${inventory.other}</strong> não finais. Esta é uma fotografia de auditoria, não uma consulta em tempo real. Os cartões abaixo são uma seleção de acompanhamento, não o banco completo. <a href="https://github.com/rogeriocibin-alt/construrei-oauth-pages/blob/main/docs/GESTOR_BANCO_MESTRE_99_REVISAO_INDIVIDUAL_20261024.md" target="_blank" rel="noopener noreferrer">Ver auditoria individual dos 99 registros</a>.</p><p><strong>Prioridade executiva:</strong> APP F00–F09 E2E. Financeiro V12: descontos aceitos; Cofre Zero: semanal único. ${evidence?`<small>${evidence.subtasks_reprioritized_p0_to_p1} subtarefas repriorizadas; provas externas ainda dependem de verificação.</small>`:''}</p></section>`:'';
   $('#view-pending').innerHTML=`
     ${masterSummary}
     <div class="page-intro"><div><h2>Pendências do Projeto</h2><p>Seleção executiva do Gestor, baseada em dados versionados. O Banco Mestre completo é Supabase cc_items; consulte a fotografia auditada acima. Não confundir com pendências operacionais do APP/Central. A idade é calculada automaticamente e ação humana só aparece quando realmente depende do Owner.</p></div></div>
