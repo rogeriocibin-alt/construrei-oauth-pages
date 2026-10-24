@@ -337,6 +337,9 @@ def selftest():
         raise AssertionError("Missing CAS object accepted")
     except ValueError:
         pass
+    # Same immutable source identity is safe to reprocess on a later day;
+    # a changed manifest with the same run ID must still fail closed in execute().
+    assert RUN_RX.search("RUN_ID: 20261017-060011") is not None
     print("PASS: immutable CAS plan, independent manifest recovery, corruption fixtures")
 
 

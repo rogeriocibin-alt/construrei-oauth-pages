@@ -17,6 +17,7 @@ on:
     paths:
       - .github/workflows/cofre-zero-history-full.yml
       - .github/scripts/cr_cofre_direct_cas_fallback.py
+      - .github/scripts/cr_history_cas_append.py
 
 permissions:
   contents: read
@@ -37,6 +38,7 @@ jobs:
         run: |
           python3 -m py_compile .github/scripts/cr_cofre_direct_cas_fallback.py
           python3 .github/scripts/cr_cofre_direct_cas_fallback.py --selftest
+          python3 .github/scripts/cr_history_cas_append.py --selftest
 
   detect:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
@@ -44,6 +46,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       primary: ${{ steps.marker.outputs.primary }}
+      fresh: ${{ steps.marker.outputs.fresh }}
     env:
       RCLONE_CONFIG_B64: ${{ secrets.RCLONE_CONFIG_B64 }}
     steps:
@@ -76,14 +79,17 @@ jobs:
           # Change-driven policy: a trusted primary snapshot is enough. Do not
           # require a new snapshot merely because the calendar day changed.
           trusted=bool(ident)
+          fresh=ident.group(1)[:8] == datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
           with open(os.environ["GITHUB_OUTPUT"],"a") as out:
               out.write("primary="+("true" if trusted else "false")+"\n")
+              out.write("fresh="+("true" if fresh else "false")+"\n")
           print("PRIMARY_STATUS="+("TRUSTED" if trusted else "UNTRUSTED"))
+          print("PRIMARY_DAY="+("TODAY_UTC" if fresh else "PRIOR_DAY_UTC"))
           PY
 
   archive:
     needs: detect
-    if: needs.detect.outputs.primary == 'true'
+    if: needs.detect.outputs.primary == 'true' && (github.event_name != 'push' || needs.detect.outputs.fresh == 'true')
     runs-on: ubuntu-22.04
     timeout-minutes: 90
     env:
