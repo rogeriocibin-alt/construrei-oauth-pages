@@ -442,14 +442,15 @@
       ],
       "note": "PG17 real do snapshot 23/10 restaurado PASS #40034006428. Edge 386/386 fontes versionadas e verificadas no acervo privado Cofre Zero/24_EXTERNAL_SOURCES; 22 versões delta guardadas em quatro Docs privados, zero drift naquele checkpoint. Netlify apenas um deploy publicado e recuperável; seis sites sem deploy atual. Trello OIDC ativado sem novo cron, primeira carga textual real em andamento. OAuth/segredos não restaurados pelos arquivos.",
       "edge_function_snapshot_count": 254,
-      "current_live_edge_functions": 370
+      "current_live_edge_functions": 386,
+      "private_archive_covered": 386
     },
     "daily": {
       "schedule": "03:00 diariamente • America/Sao_Paulo",
       "installed_at": "2026-10-05 • migração cloud oficial",
       "state": "attention",
       "last_attempt": "Snapshot oficial RUN_ID 20261023-060011 (23/10 03h BRT); Cloud Run/Scheduler não inspecionados diretamente nesta auditoria",
-      "last_result": "PG17 real do backup imutável 23/10: #40034006428 PASS; CAS main posterior #40035175426 SUCCESS, 4551 referências com 0 novos objetos e 0 bytes de CAS duplicados. Não confirma por si só novo ciclo do Cloud Run/Scheduler.",
+      "last_result": "PG17 real do backup imutável 23/10: #40034006428 PASS; CAS main posterior #40035175426 SUCCESS, 4551 referências com 0 novos objetos e 0 bytes de CAS duplicados. Não confirma por si só novo ciclo do Cloud Run/Scheduler. Ajuste CAS após virada UTC mesclado PR #146 em 23/10; confirmação pós-merge em execução natural pendente.",
       "cloud_job": "construrei-backup",
       "cloud_scheduler": "construrei-backup-diario",
       "verification": "Restauração SQL/PG17 REAL, isolada, aprovada em 23/10; prova de hash SHA/MD5 e isolamento. Cobertura externa de aplicativos ainda não homologada. Item canônico EXEC-COFRE-COVERAGE-20261010.",
@@ -459,13 +460,24 @@
         "Supabase Storage",
         "Banco PostgreSQL"
       ],
-      "action": "Manter execução Cloud e CAS existentes; apenas monitorar eventos de falha reais. Lacunas externas Netlify/Edge/OAuth e Trello permanecem separadas no Gestor, sem FULL ou cron paralelo."
+      "action": "Backup Cloud 03h preservado. PR #146 incorporada à main, testes CAS/Guard PASS: detectar RUN_ID da data UTC anterior e pular apenas archive em pushes; schedule/manual continuam fail-closed. Validar no próximo evento natural e acompanhar Trello/OAuth nos controles separados; não repetir FULL ou criar cron.",
+      "cas_guard": {
+        "status": "IN_MAIN_CI_PASS_NATURAL_RUN_PENDING",
+        "verified_date": "2026-10-23",
+        "pr": 146,
+        "merge_commit": "27d7c8ce8d72c5d08a5b97c7b133e5d04357717a",
+        "ci_cas_run": 40044434311,
+        "ci_central_guard_run": 40044434343,
+        "change": "push apos virada UTC com CURRENT anterior nao arquiva; evento schedule/manual preserva falha segura para origem desatualizada",
+        "production_post_merge_run_verified": false,
+        "unchanged": "sem novo cron, copia FULL, mudanca Cloud Run/Scheduler, segredo ou funcao financeira"
+      }
     },
     "edge_weekly": {
       "schedule": "Domingo 04:30",
       "state": "partial",
-      "evidence": "22/10 Supabase: 385 Edge Functions ACTIVE; último snapshot semanal 370 documentado, diferença de cobertura ainda não verificada.",
-      "action": "Comprovar exportação versionada/readback de Edge novas sem gerar rotina paralela, monitorar orçamento/cotas."
+      "evidence": "23/10/2026: 386/386 fontes Edge no acervo privado do Cofre Zero com hashes e readback no instante auditado; não comprova deploy funcional, credenciais ou recuperação OAuth.",
+      "action": "Manter o acervo imutável, acompanhar apenas novos deltas, sem rotina paralela; recuperação de secrets/callbacks externos permanece em procedimento autorizado."
     },
     "external": {
       "netlify": {
