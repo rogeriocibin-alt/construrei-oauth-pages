@@ -585,7 +585,17 @@ async function withdrawalFlow(req:Request,action:string,p:ReturnType<typeof clea
    classification:"RETIRADA_PAGA_CORA",fingerprint:fp,writes:false};
  if(action==="withdrawal-preview")return reply({...result,preview:true});
  const prev=await bankAlreadyUsed(p,k);
- if(prev)return reply(prev);
+ if(prev){
+  // A bank debit already committed as an expense or CG use must never be
+  // presented as a successfully linked withdrawal for this period.
+  const prior=await existingLinksForCardIdByOperation(p.operation_id,k);
+  const saved=prior?.payload||{};
+  if(prev.reconciliation_kind!=="WITHDRAWAL_SETTLEMENT"||
+     saved.period_id!==periodId||saved.beneficiary!==beneficiary||
+     saved.justification!==note||saved.amount_cents!==p.amount_cents)
+    throw Error("BANK_OPERATION_ALREADY_CLASSIFIED_DIFFERENTLY");
+  return reply({...result,already_committed:true,writes:false,ledger_only:true});
+ }
  if(String(raw?.expected_fingerprint||"")!==fp)throw Error("WITHDRAWAL_PREVIEW_CHANGED");
  const payload={case:null,direction:"OUT",date:p.date,amount_cents:p.amount_cents,
   category:"Retiradas",reference:p.reference,
