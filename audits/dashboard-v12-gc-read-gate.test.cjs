@@ -5,7 +5,7 @@ test('gateway libera apenas ação comercial read-only, prévia e confirmação 
  assert.ok(x,'gateway safety not found');
  assert.match(x[1],/method==="POST"/);
  assert.match(x[1],/yspuaamokjbrosytqjpg.supabase.co/);
- assert.match(x[1],/\["preview","commit","gc-awaiting-payment"\]/);
+ assert.match(x[1],/\["preview","commit","gc-awaiting-payment","preview-diagnostic"\]/);
  assert.doesNotMatch(x[1],/delete|admin|service-role/);
 });
 test('filtro deny-by-default continua bloqueando escritas não mapeadas',()=>{
