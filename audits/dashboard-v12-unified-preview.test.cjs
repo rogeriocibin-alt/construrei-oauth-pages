@@ -1,0 +1,12 @@
+const test=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const path=require('node:path');const vm=require('node:vm');
+const root=path.join(__dirname,'..');
+const html=fs.readFileSync(path.join(root,'preview/dashboard-financeiro-v12-envio-acertos-20261024/index.html'),'utf8');
+const prod=fs.readFileSync(path.join(root,'production/dashboard-financeiro-v12-operacoes-homologada-20261023/index.html'),'utf8');
+test('único Capital de Giro e um só endereço operacional',()=>{assert.equal((html.match(/id="v12-capital-workspace"/g)||[]).length,1);assert.match(html,/slot\.appendChild\(cap\)/);assert.doesNotMatch(html,/capAnchor/);assert.match(html,/window\.crShowCapital/);});
+test('acesso ao Capital de Giro aponta para Central',()=>{assert.match(html,/r8Go\("cora"\)/);assert.match(html,/Capital de Giro: abrir Central/);assert.match(html,/id="cr-central-capital-slot"/);});
+test('resultados financeiros separadamente do Capital de Giro',()=>{assert.match(html,/periodPanel.*getElementById\("cr-period-send"\)/);assert.match(html,/insertBefore\(periodPanel,acertoPanel\)/);assert.match(html,/id="crp-start"/);assert.match(html,/id="crp-end"/);assert.match(html,/function crpData\(\)\{const start=document\.getElementById\("crp-start"\)/);});
+test('data sincronizada sem segundo registro',()=>{assert.match(html,/\["crp-start","cg-close-start"\]/);assert.match(html,/\["cg-close-start","crp-start"\]/);assert.equal((html.match(/id="crp-send"/g)||[]).length,1);});
+test('modos operacionais principais continuam disponíveis',()=>{for(const id of ['cr-op-bank','cr-op-manual','cr-op-capital','cr-op-close'])assert.match(html,new RegExp('id="'+id+'"'));assert.match(html,/cr-cora-aprovisionamento-v12-candidate-20261023/);});
+test('backend mantém exigência de sessão e confirmação no cliente',()=>{assert.match(html,/DIRECTOR_SESSION_REQUIRED|Faça login no Dashboard como diretor/);assert.match(html,/CRP_LAST/);assert.match(html,/STALE_PREVIEW|Obras ou datas mudaram/);});
+test('scripts inline executam sintaxe JavaScript válida',()=>{const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];assert.ok(scripts.length>=10);for(const m of scripts){if(!/\bsrc=/.test(m[1]))assert.doesNotThrow(()=>new vm.Script(m[2]));}});
+test('somente preview; produção oficial é distinta e mantém fluxos',()=>{assert.ok(prod.length>200000);assert.notEqual(html,prod);assert.match(prod,/id="cr-op-close"/);assert.match(prod,/id="v12-capital-workspace"/);});
