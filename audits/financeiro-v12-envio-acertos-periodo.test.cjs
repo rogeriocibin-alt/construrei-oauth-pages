@@ -64,3 +64,15 @@ test('excecao CG historica: restrita ao lote aceito e sem lancamento de ajuste',
  assert.match(html,/!cv\.ok&&!cv\.accepted_exception/);
  assert.doesNotMatch(edge,/\+16914\b/);
 });
+
+test('datas reais e competência: bloqueia calendário inválido e período multimensal',()=>{
+ assert.match(edge,/new Date\(t1\)\.toISOString\(\)\.slice\(0,10\)!==start/);
+ assert.match(edge,/new Date\(t2\)\.toISOString\(\)\.slice\(0,10\)!==end/);
+ assert.match(edge,/RATEIO_ENTRE_MESES_NAO_IMPLEMENTADO/);
+ assert.match(edge,/p\.start\.slice\(0,7\)!==p\.end\.slice\(0,7\)/);
+});
+test('não confunde rateios estimados com saques ou recebimentos bancários',()=>{
+ assert.match(edge,/RATEIOS APURADOS \(RETIRADAS NÃO COMPROVADAS PELO FECHAMENTO\)/);
+ assert.match(edge,/Base financeira das obras/);
+ assert.doesNotMatch(edge,/RETIRADAS CONFIRMADAS|Base recebida:|ACERTOS EFETIVADOS/);
+});
