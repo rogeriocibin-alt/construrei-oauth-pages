@@ -44,6 +44,26 @@ function normal(x:string){return x.normalize("NFD").replace(/[\u0300-\u036f]/g,"
 function hasCase(desc:string,c:string){return new RegExp("(^|[^0-9])"+c+"(?![0-9])","i").test(desc)}
 function marker(p:any){return "CR-ACERTO-PERIODO|"+p.start+"_"+p.end+"|"+p.cases.join(",")}
 async function sha(s:string){const d=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return Array.from(new Uint8Array(d),x=>x.toString(16).padStart(2,"0")).join("")}
+/* A director-only READ-ONLY diagnostic when a financial preview cannot be homologated.
+ * It never creates a fingerprint or permits commit. Information is explicitly provisional. */
+async function diagnosticPreview(body:any){
+ const p=input(body);
+ const live=await acertos();
+ const rows=p.cases.map((caseNo:string)=>{
+  const all=live.filter((r:any)=>r.case===caseNo);
+  const r=all.length===1?all[0]:null;
+  const vals=r?[r.base_cents,r.cost_cents,r.profit_cents,r.rateio?.fabricio_cents,r.rateio?.eder_cents,
+    r.rateio?.rogerio_cents,r.rateio?.gabi_cents,r.rateio?.capital_giro_cents]:[];
+  const valid=r&&vals.every(x=>Number.isSafeInteger(x))&&r.base_cents>0&&r.base_cents-r.cost_cents===r.profit_cents&&
+    r.rateio.fabricio_cents+r.rateio.eder_cents+r.rateio.rogerio_cents+r.rateio.gabi_cents+r.rateio.capital_giro_cents===r.profit_cents;
+  return {case:caseNo,found:!!r,unique:all.length===1,source:"AG_ACERTO_TRELLO_LIVE",
+    base_cents:valid?r.base_cents:null,cost_cents:valid?r.cost_cents:null,profit_cents:valid?r.profit_cents:null,
+    valid_for_arithmetic:!!valid,issues:(r?.issues||[]).map((x:any)=>String(x).slice(0,100)).slice(0,15),
+    trello_url:r?.trello_url||null};
+ });
+ return {ok:true,diagnostic:true,period:p,rows,writes:false,preview_validated:false,can_commit:false,
+   note:"CONSULTA NAO HOMOLOGADA: exige previas financeiras regulares e confirmacao posterior."};
+}
 async function gather(body:any){
  const p=input(body);
  if(!p.monthName)throw Error("MES_INVALIDO");
@@ -139,13 +159,14 @@ Deno.serve(async req=>{
  if(req.method!=="POST")return ans({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return ans({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const action=new URL(req.url).searchParams.get("action");
- if(!["preview","commit","gc-awaiting-payment"].includes(action||""))return ans({ok:false,error:"INVALID_ACTION"},400);
+ if(!["preview","commit","gc-awaiting-payment","preview-diagnostic"].includes(action||""))return ans({ok:false,error:"INVALID_ACTION"},400);
  if(action==="gc-awaiting-payment"){
   try{return ans(await gcAwaitingPayment())}catch(e){return ans({ok:false,error:String((e as Error)?.message||e)},503)}
  }
  const b=await req.json().catch(()=>null);
  if(!b)return ans({ok:false,error:"INVALID_BODY"},400);
  try{
+  if(action==="preview-diagnostic")return ans(await diagnosticPreview(b));
   const c=await gather(b);
   if(action==="preview")return ans({ok:true,preview:true,period:c.p,totals:c.totals,capital_validation:c.capital_validation,fingerprint:c.fingerprint,duplicate:c.duplicate,writes:false});
   if(c.duplicate)return ans({ok:false,error:"PERIOD_ALREADY_SENT"},409);
