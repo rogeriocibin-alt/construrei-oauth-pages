@@ -22,6 +22,11 @@ test('botão real de fechamento mantém confirmação inicialmente bloqueada',()
   assert.match(html,/function invalidate\(\)\{preview=null;by\("cg-close-confirm"\)\.disabled=true;/);
 });
 
+test('autoteste continua leitura sem lançamentos antes de qualquer confirmação',()=>{
+  assert.match(html,/const j=await request\("close-test",\{start,end\}\)/);
+  assert.match(html,/j\.no_write!==true\|\|j\.mode!=="SIMULACAO_SEM_LANCAMENTOS"/);
+});
+
 test('scripts inline continuam válidos',()=>{
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.ok(scripts.length>0);
