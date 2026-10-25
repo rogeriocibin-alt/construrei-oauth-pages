@@ -34,3 +34,11 @@ test('falha de autenticação de serviço é distinta de login do diretor',()=>{
  assert.match(explain('DIRECTOR_SESSION_REQUIRED'),/Sessão de diretor/);
  assert.match(html,/PRÉVIA BLOQUEADA: "\+crpFriendlyError\(e\.message\)/);
 });
+
+test('falha de serviço indisponível mantém fronteiras e não expõe segredos',()=>{
+ const explain=helper('crpFriendlyError');
+ assert.match(explain('ACERTO_LIVE_SERVICE_AUTH_UNAVAILABLE'),/sem credencial de serviço/);
+ assert.match(html,/const token=sessionStorage\.getItem\("crv2"\)/);
+ assert.match(html,/x-cr-session/);
+ assert.match(html,/Nenhuma retirada transferida nesta sessão/);
+});
