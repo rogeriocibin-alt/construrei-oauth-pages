@@ -73,9 +73,14 @@ async function gather(body:any){
  const target=workLists.find((x:any)=>normal(x.name).includes(p.monthName)&&normal(x.name).includes("26"));
  const pending=workLists.find((x:any)=>normal(x.name)==="AG. ACERTO");
  if(!month||!target||!pending)throw Error("DESTINO_NAO_ENCONTRADO");
- const duplicate=String(month.desc||"").includes(marker(p));
+ // Comments are part of this SAME canonical monthly card, especially once 16K is reached.
+ const monthlyActions=await trello("/cards/"+month.id+"/actions?filter=commentCard&limit=1000");
+ if(!Array.isArray(monthlyActions))throw Error("MONTH_COMMENTS_UNAVAILABLE");
+ const monthlyTexts=monthlyActions.map((x:any)=>String(x?.data?.text||""));
+ const duplicate=String(month.desc||"").includes(marker(p))||monthlyTexts.some((t:string)=>t.includes(marker(p)));
+ if(duplicate)throw Error("PERIOD_ALREADY_SENT");
  for(const c of p.cases){
-  if(!duplicate&&finCards.some((x:any)=>hasCase(x.desc||"",c)))throw Error("OBRA_JA_REGISTRADA:"+c);
+  if(finCards.some((x:any)=>hasCase(x.desc||"",c))||monthlyTexts.some((t:string)=>hasCase(t,c)))throw Error("OBRA_JA_REGISTRADA:"+c);
  }
  const rows=p.cases.map(c=>live.find((x:any)=>x.case===c));
  if(rows.some(x=>!x))throw Error("OBRA_FORA_DA_LISTA_AG_ACERTO");
