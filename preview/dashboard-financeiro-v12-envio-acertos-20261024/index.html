@@ -1484,6 +1484,7 @@ async function suggest(){
  const d=new Date(ends[ends.length-1]+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+1);
  by("cg-close-start").value=d.toISOString().slice(0,10);
  by("cg-close-end").value=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+ for(const id of ["cg-close-start","cg-close-end"])by(id).dispatchEvent(new Event("change",{bubbles:true}));
  if(typeof acertoPeriodStatus==="function")acertoPeriodStatus();
  msg("Datas sugeridas pelo último período registrado. Confira e pré-visualize; nenhum card foi criado.");
  }catch(e){msg("Datas: "+e.message)}
