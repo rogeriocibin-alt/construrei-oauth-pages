@@ -10,3 +10,7 @@ test('modos operacionais principais continuam disponíveis',()=>{for(const id of
 test('backend mantém exigência de sessão e confirmação no cliente',()=>{assert.match(html,/DIRECTOR_SESSION_REQUIRED|Faça login no Dashboard como diretor/);assert.match(html,/CRP_LAST/);assert.match(html,/STALE_PREVIEW|Obras ou datas mudaram/);});
 test('scripts inline executam sintaxe JavaScript válida',()=>{const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];assert.ok(scripts.length>=10);for(const m of scripts){if(!/\bsrc=/.test(m[1]))assert.doesNotThrow(()=>new vm.Script(m[2]));}});
 test('somente preview; produção oficial é distinta e mantém fluxos',()=>{assert.ok(prod.length>200000);assert.notEqual(html,prod);assert.match(prod,/id="cr-op-close"/);assert.match(prod,/id="v12-capital-workspace"/);});
+
+test('sugestão de datas também sincroniza Resultados e Acertos',()=>{
+ assert.match(html,/for\(const id of \["cg-close-start","cg-close-end"\]\)by\(id\)\.dispatchEvent\(new Event\("change",\{bubbles:true\}\)\)/);
+});
