@@ -105,7 +105,7 @@ function block(c:any){
 Deno.serve(async req=>{
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:CORS});
  if(req.headers.get("origin")&&req.headers.get("origin")!==HOST)return ans({ok:false,error:"ORIGIN_DENIED"},403);
- if(req.method==="GET")return ans({ok:true,build:"CR-V12-PERIODO-20261024-GUARDS-V4",production:false,mode:"CANDIDATE",bank_writes:false});
+ if(req.method==="GET")return ans({ok:true,build:"CR-V12-PERIODO-20261025-AUTH-UPSTREAM-V5",production:false,mode:"CANDIDATE",bank_writes:false});
  if(req.method!=="POST")return ans({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return ans({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const action=new URL(req.url).searchParams.get("action");
