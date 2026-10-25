@@ -25,7 +25,7 @@ async function acertos(){
 const months=["","JANEIRO","FEVEREIRO","MARÇO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO","SETEMBRO","OUTUBRO","NOVEMBRO","DEZEMBRO"];
 function input(b:any){
  const start=String(b.start||""),end=String(b.end||""),t1=Date.parse(start+"T12:00:00Z"),t2=Date.parse(end+"T12:00:00Z");
- if(!/^\d{4}-\d{2}-\d{2}$/.test(start)||!/^\d{4}-\d{2}-\d{2}$/.test(end)||!Number.isFinite(t1)||!Number.isFinite(t2)||t1>t2||t2-t1>45*86400000||!end.startsWith("2026-"))throw Error("PERIODO_INVALIDO");
+ if(!/^2026-\d{2}-\d{2}$/.test(start)||!/^2026-\d{2}-\d{2}$/.test(end)||!Number.isFinite(t1)||!Number.isFinite(t2)||new Date(t1).toISOString().slice(0,10)!==start||new Date(t2).toISOString().slice(0,10)!==end||t1>t2||t2-t1>45*86400000)throw Error("PERIODO_INVALIDO");
  const cases=Array.isArray(b.cases)?[...new Set(b.cases.map((x:any)=>String(x).trim()))].sort((x:any,y:any)=>x.localeCompare(y,undefined,{numeric:true})):[];
  if(!cases.length||cases.length>40||cases.some((x:any)=>!/^\d{1,5}-26$/.test(x)))throw Error("OBRAS_INVALIDAS");
  return {start,end,cases,month:Number(end.slice(5,7)),monthName:months[Number(end.slice(5,7))]};
@@ -43,7 +43,7 @@ async function gather(body:any){
  const month=finCards.find((x:any)=>normal(x.name).trim()===p.monthName+" 2026");
  const target=workLists.find((x:any)=>normal(x.name).includes(p.monthName)&&normal(x.name).includes("26"));
  const pending=workLists.find((x:any)=>normal(x.name)==="AG. ACERTO");
- if(!month||!target||!pending)throw Error("DESTINO_NAO_ENCONTRADO");
+ if(!month||!target||!pending)throw Error("DESTINO_NAO_ENCONTRADO");\n // Evita registrar o período completo no mês final sem discriminar competência.\n if(p.start.slice(0,7)!==p.end.slice(0,7))throw Error("RATEIO_ENTRE_MESES_NAO_IMPLEMENTADO");
  const duplicate=String(month.desc||"").includes(marker(p));
  for(const c of p.cases){
   if(!duplicate&&finCards.some((x:any)=>hasCase(x.desc||"",c)))throw Error("OBRA_JA_REGISTRADA:"+c);
