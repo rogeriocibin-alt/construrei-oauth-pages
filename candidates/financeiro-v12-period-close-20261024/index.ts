@@ -77,10 +77,16 @@ async function gather(body:any){
  const monthlyActions=await trello("/cards/"+month.id+"/actions?filter=commentCard&limit=1000");
  if(!Array.isArray(monthlyActions))throw Error("MONTH_COMMENTS_UNAVAILABLE");
  const monthlyTexts=monthlyActions.map((x:any)=>String(x?.data?.text||""));
- const duplicate=String(month.desc||"").includes(marker(p))||monthlyTexts.some((t:string)=>t.includes(marker(p)));
+ // Historical cuts can reside in comments of another month once its text filled.
+ // Check every canonical 2026 month, not merely the destination month's comments.
+ const otherMonths=finCards.filter((x:any)=>x.id!==month.id&&months.slice(1).some((m:string)=>normal(x.name).trim()===m+" 2026"));
+ const otherActions=await Promise.all(otherMonths.map((x:any)=>trello("/cards/"+x.id+"/actions?filter=commentCard&limit=1000")));
+ if(otherActions.some((a:any)=>!Array.isArray(a)))throw Error("OTHER_MONTH_COMMENTS_UNAVAILABLE");
+ const historicalTexts=otherActions.flatMap((a:any)=>a.map((x:any)=>String(x?.data?.text||"")));
+ const duplicate=String(month.desc||"").includes(marker(p))||monthlyTexts.some((t:string)=>t.includes(marker(p)))||historicalTexts.some((t:string)=>t.includes(marker(p)));
  if(duplicate)throw Error("PERIOD_ALREADY_SENT");
  for(const c of p.cases){
-  if(finCards.some((x:any)=>hasCase(x.desc||"",c))||monthlyTexts.some((t:string)=>hasCase(t,c)))throw Error("OBRA_JA_REGISTRADA:"+c);
+  if(finCards.some((x:any)=>hasCase(x.desc||"",c))||monthlyTexts.some((t:string)=>hasCase(t,c))||historicalTexts.some((t:string)=>hasCase(t,c)))throw Error("OBRA_JA_REGISTRADA:"+c);
  }
  const rows=p.cases.map(c=>live.find((x:any)=>x.case===c));
  if(rows.some(x=>!x))throw Error("OBRA_FORA_DA_LISTA_AG_ACERTO");
