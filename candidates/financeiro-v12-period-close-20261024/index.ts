@@ -18,7 +18,15 @@ async function trello(path:string,method="GET",payload:any=null){
  return r.json();
 }
 async function acertos(){
- const r=await fetch(SB+"/functions/v1/cr-dashboard-gerencial-v4-manual-cora-candidate-20261007?api=acerto-live&gc=0",{signal:AbortSignal.timeout(30000)});
+ // O endpoint upstream exige verify_jwt=true. A sessão do diretor já foi validada
+ // na entrada; esta chamada servidor->servidor usa uma credencial de serviço
+ // mantida exclusivamente no ambiente da Edge, nunca enviada ao navegador.
+ const key=(Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"").trim();
+ if(!key)throw Error("ACERTO_LIVE_SERVICE_AUTH_UNAVAILABLE");
+ const r=await fetch(SB+"/functions/v1/cr-dashboard-gerencial-v4-manual-cora-candidate-20261007?api=acerto-live&gc=0",{
+  headers:{Authorization:"Bearer "+key},signal:AbortSignal.timeout(30000)
+ });
+ if(r.status===401||r.status===403)throw Error("ACERTO_LIVE_SERVICE_AUTH_REJECTED");
  if(!r.ok)throw Error("ACERTO_LIVE_HTTP_"+r.status);const j=await r.json();
  if(!j.ok||!Array.isArray(j.items))throw Error("ACERTO_LIVE_INVALID");return j.items;
 }
