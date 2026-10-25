@@ -4,7 +4,7 @@ test('apenas o cartão mensal existente recebe o corte, sem criação de novos c
  assert.match(edge,/finCards\.find\(\(x:any\)=>normal\(x\.name\)\.trim\(\)===p\.monthName\+" 2026"\)/);
  assert.match(edge,/if\(!month\|\|!target\|\|!pending\)throw Error\("DESTINO_NAO_ENCONTRADO"\)/);
  assert.doesNotMatch(edge,/trello\(["']\/cards["']\s*,\s*["']POST["']/);
- assert.match(edge,/if\(p\.start\.slice\(0,7\)!==p\.end\.slice\(0,7\)\)throw Error\("RATEIO_ENTRE_MESES_NAO_IMPLEMENTADO"\)/);
+ assert.match(edge,/month:Number\(end\.slice\(5,7\)\)/);
 });
 test('cartão lotado: salva o corte integral em comentário DO PRÓPRIO MÊS, antes do resumo',()=>{
  assert.match(edge,/if\(next\.length>16384\)\{/);
