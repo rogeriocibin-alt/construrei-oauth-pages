@@ -533,6 +533,58 @@ async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:stri
    verified_parts:wrote.map(x=>({case:x.case,cents:x.cents}))},409);
  }
 }
+/* Read-only settlement attribution of a real Cora debit to a selected acerto
+ * period. A withdrawal is not a job cost, nor a Capital de Giro debit.
+ * The existing financial ledger guarantees a bank source ID is only claimed once.
+ * This action does not write to Trello or Cora. */
+async function withdrawalFlow(req:Request,action:string,p:ReturnType<typeof clean>,raw:any,k:string){
+ if(p.direction!=="OUT"||!p.operation_id.startsWith("CORA_"))throw Error("WITHDRAWAL_REQUIRES_VERIFIED_CORA_DEBIT");
+ const beneficiary=String(raw?.beneficiary||"").trim().toUpperCase();
+ if(!["FABRICIO","EDER","ROGERIO","GABRIELLY"].includes(beneficiary))throw Error("WITHDRAWAL_BENEFICIARY_INVALID");
+ const periodId=String(raw?.period_id||"").trim();
+ if(!/^[0-9a-f]{24}$/.test(periodId))throw Error("WITHDRAWAL_PERIOD_INVALID");
+ const note=String(raw?.justification||"").trim().slice(0,300);
+ if(!note)throw Error("WITHDRAWAL_JUSTIFICATION_REQUIRED");
+ const r=await fetch(SB+"/functions/v1/"+CG_FUNCTION+"?action=periods",{
+  headers:{"x-cr-session":req.headers.get("x-cr-session")||""},
+  signal:AbortSignal.timeout(25000)});
+ const j=await r.json().catch(()=>({ok:false}));
+ if(!r.ok||j.ok!==true||!Array.isArray(j.periods))throw Error("WITHDRAWAL_PERIODS_UNAVAILABLE");
+ const found=j.periods.filter((x:any)=>String(x.id)===periodId);
+ if(found.length!==1)throw Error("WITHDRAWAL_PERIOD_NOT_FOUND");
+ const period=found[0];
+ const fp=await sha256(JSON.stringify({kind:"WITHDRAWAL_SETTLEMENT",bank:p.operation_id,
+  amount_cents:p.amount_cents,date:p.date,period_id:periodId,beneficiary,justification:note}));
+ const result={ok:true,period:{id:periodId,label:String(period.period||""),url:String(period.url||"")},
+   beneficiary,date:p.date,bank_reference:p.reference,amount_cents:p.amount_cents,
+   classification:"RETIRADA_PAGA_CORA",fingerprint:fp,writes:false};
+ if(action==="withdrawal-preview")return reply({...result,preview:true});
+ const prev=await bankAlreadyUsed(p,k);
+ if(prev)return reply(prev);
+ if(String(raw?.expected_fingerprint||"")!==fp)throw Error("WITHDRAWAL_PREVIEW_CHANGED");
+ const payload={case:null,direction:"OUT",date:p.date,amount_cents:p.amount_cents,
+  category:"Retiradas",reference:p.reference,
+  reconciliation_kind:"WITHDRAWAL_SETTLEMENT",beneficiary,period_id:periodId,
+  period:String(period.period||""),justification:note,bank_transaction_id:p.operation_id,
+  bank_original_description:p.description};
+ const claim=await rpc("cr_finance_v12_claim",{p_operation_id:p.operation_id,
+  p_fingerprint:fp,p_card_id:periodId,p_payload:payload},k);
+ if(claim.ok!==true||claim.claimed!==true)throw Error("WITHDRAWAL_OPERATION_ALREADY_CLAIMED");
+ try{
+  // Metadata only. A bank debit is never issued or duplicated here.
+  const done=await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,
+   p_fingerprint:fp,p_status:"COMMITTED",p_trello_url:String(period.url||"")||null,
+   p_error_code:null},k);
+  if(done.ok!==true)throw Error("WITHDRAWAL_LEDGER_CONFIRMATION_FAILED");
+  return reply({...result,committed:true,writes:true,ledger_only:true});
+ }catch(e){
+  try{await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,
+   p_fingerprint:fp,p_status:"REVIEW_REQUIRED",
+   p_trello_url:String(period.url||"")||null,
+   p_error_code:String((e as Error).message||e).slice(0,100)},k)}catch{}
+  throw Error("WITHDRAWAL_REVIEW_REQUIRED");
+ }
+}
 async function capitalBridge(req:Request,action:string,p:ReturnType<typeof clean>,raw:any,k:string){
  if(p.direction!=="OUT")throw Error("CAPITAL_REQUIRES_BANK_DEBIT");
  const origin=SB+"/functions/v1/"+CG_FUNCTION;
@@ -623,7 +675,7 @@ Deno.serve(async(req:Request)=>{
  if(req.headers.get("origin")&&req.headers.get("origin")!==ORIGIN)return reply({ok:false,error:"ORIGIN_DENIED"},403);
  const u=new URL(req.url),action=u.searchParams.get("action")||"health";
  if(action==="health"&&req.method==="GET")return reply({ok:true,candidate:true,build:NAME,trello_writes:"DIRECTOR_ONLY",bank_verification:"SERVER_SIDE_CACHE",status:"LEDGER_PERSISTENT"});
- if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
+ if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","withdrawal-preview","withdrawal-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return reply({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const k=key();if(!k)return reply({ok:false,error:"SERVICE_AUTH_UNAVAILABLE"},503);
  let raw:any=null;
@@ -646,6 +698,10 @@ Deno.serve(async(req:Request)=>{
  }
  if(action==="multi-preview"||action==="multi-commit"){
   try{return await multiFlow(action,p,raw,k)}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,120)},409)}
+ }
+ if(action==="withdrawal-preview"||action==="withdrawal-commit"){
+  try{return await withdrawalFlow(req,action,p,raw,k)}
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,120)},409)}
  }
  if(["capital-periods","capital-preview","capital-commit"].includes(action)){
