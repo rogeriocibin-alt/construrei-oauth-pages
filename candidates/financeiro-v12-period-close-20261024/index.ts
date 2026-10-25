@@ -82,7 +82,7 @@ async function gather(body:any){
 }
 function block(c:any){
  const p=c.p,t=c.totals;
- const l=["","━━━━━━━━━━━━━━━━━━━━━━","💰 ACERTOS EFETIVADOS — "+p.start+" A "+p.end,"━━━━━━━━━━━━━━━━━━━━━━","🏗️ Obras: "+t.count,"💵 Base recebida: "+brl(t.base_cents),"💸 Custos: "+brl(t.cost_cents),"💰 Lucro líquido: "+brl(t.profit_cents),"📈 Margem: "+(t.profit_cents/t.base_cents*100).toFixed(2).replace(".",",")+"%","","👥 RETIRADAS CONFIRMADAS","Fabrício: "+brl(t.fabricio_cents),"Éder: "+brl(t.eder_cents),"Rogério: "+brl(t.rogerio_cents),"Gabrielly: "+brl(t.gabi_cents),"Capital de Giro: "+brl(t.capital_cents),"","REFERÊNCIAS DAS OBRAS"];
+ const l=["","━━━━━━━━━━━━━━━━━━━━━━","📋 ACERTOS REGISTRADOS — "+p.start+" A "+p.end,"━━━━━━━━━━━━━━━━━━━━━━","🏗️ Obras: "+t.count,"💵 Base financeira das obras: "+brl(t.base_cents),"💸 Custos: "+brl(t.cost_cents),"💰 Lucro líquido: "+brl(t.profit_cents),"📈 Margem: "+(t.profit_cents/t.base_cents*100).toFixed(2).replace(".",",")+"%","","👥 RATEIOS APURADOS (RETIRADAS NÃO COMPROVADAS PELO FECHAMENTO)","Fabrício: "+brl(t.fabricio_cents),"Éder: "+brl(t.eder_cents),"Rogério: "+brl(t.rogerio_cents),"Gabrielly: "+brl(t.gabi_cents),"Capital de Giro: "+brl(t.capital_cents),"","REFERÊNCIAS DAS OBRAS"];
  for(const r of c.rows)l.push("• "+r.case+" | Base "+brl(r.base_cents)+" | Custos "+brl(r.cost_cents)+" | Lucro "+brl(r.profit_cents)+" | "+r.trello_url);
  if(c.capital_validation.accepted_exception){
    l.push("⚠️ EXCEÇÃO HISTÓRICA CG ACEITA PELO DIRETOR EM 24/10/2026",
