@@ -144,7 +144,9 @@ async function sha256(s:string){
  const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
  return Array.from(new Uint8Array(bytes),v=>v.toString(16).padStart(2,"0")).join("");
 }
-async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string){
+async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costCase:string=p.case){
+ if(!/^\d{1,5}-26$/.test(costCase))throw Error("COST_DESTINATION_CASE_INVALID");
+ const crossed=costCase!==p.case;
  if(p.direction!=="OUT"||!p.operation_id.startsWith("CORA_"))throw Error("EXISTING_ONLY_BANK_DEBITS");
  // Existing-cost matching is read-only and must not depend on legacy writer preview.
  // Resolve the work directly from the same canonical Trello board used by receipt reconciliation.
@@ -153,7 +155,7 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string){
   trelloApiRead("/boards/"+BOARD_2026+"/cards?fields=id,name,idList,shortUrl&filter=open&limit=1000")
  ]);
  if(!Array.isArray(lists)||!Array.isArray(cards))throw Error("TRELLO_EXISTING_CONTEXT_UNAVAILABLE");
- const matchesByWork=cards.filter((c:any)=>caseInName(c.name)===p.case&&!/RESUMO|ACERTOS\\s+2026/i.test(String(c.name||"")));
+ const matchesByWork=cards.filter((c:any)=>caseInName(c.name)===costCase&&!/RESUMO|ACERTOS\\s+2026/i.test(String(c.name||"")));
  if(matchesByWork.length!==1)throw Error(matchesByWork.length?"EXISTING_DUPLICATE_WORK_CARDS":"EXISTING_CASE_NOT_FOUND");
  const entry=matchesByWork[0];
  const nameByList=new Map(lists.map((x:any)=>[String(x.id),String(x.name||"")]));
@@ -161,9 +163,9 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string){
  const short=shortLink(entry.shortUrl);
  if(!short)throw Error("TRELLO_TARGET_UNVERIFIED");
  const target=await card(short);
- if(target.id!==entry.id||target.idList!==entry.idList||caseInName(target.name)!==p.case)
+ if(target.id!==entry.id||target.idList!==entry.idList||caseInName(target.name)!==costCase)
   throw Error("EXISTING_WORK_MOVED_OR_CHANGED");
- const pre={target:{case:p.case,trello_url:target.shortUrl}};
+ const pre={target:{case:costCase,origin_case:p.case,trello_url:target.shortUrl}};
  const lines=String(target.desc||"").split(/\r?\n/);
  const matches:{match_key:string;line:string}[]=[];
  const mm=p.date.slice(5,7),dd=p.date.slice(8,10),yy=p.date.slice(2,4);
@@ -178,12 +180,14 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string){
   if(!m||m[1]!==dd||m[2]!==mm)continue;
   if(m[3]&&m[3]!==yy&&m[3]!==p.date.slice(0,4))continue;
   if(amount(m[4])!==p.amount_cents)continue;
+  // Only link a cross-work cost if the exact line explicitly names the origin work.
+  if(crossed&&!new RegExp("(^|[^0-9])"+p.case+"(?![0-9])","i").test(line))continue;
   const normalized=line.trim();
   // Two visually identical entries cannot be safely disambiguated.
   if(lines.filter(x=>x.trim()===normalized).length!==1)continue;
   matches.push({match_key:await sha256("CR-CORA-EXISTING-V1|"+target.id+"|"+normalized),line:normalized});
  }
- return {target,pre,matches:matches.slice(0,20)};
+ return {target,pre,matches:matches.slice(0,20),origin_case:p.case,cost_case:costCase};
 }
 async function existingLinksForCard(cardId:string,k:string){
  const endpoint=new URL(SB+"/rest/v1/cr_finance_v12_operations");
@@ -202,9 +206,10 @@ async function reconcileExisting(action:string,p:ReturnType<typeof clean>,raw:an
   if(already.status==="COMMITTED")return reply({ok:true,already_committed:true,reconciliation_kind:already.payload?.reconciliation_kind||"DIRECT_TRELLO",trello_url:already.trello_url});
   return reply({ok:false,error:"BANK_OPERATION_NEEDS_REVIEW",status:already.status},409);
  }
- const scan=await existingMatchCandidates(p,k);
+ const costCase=String(raw?.cost_case||p.case).trim();
+ const scan=await existingMatchCandidates(p,k,costCase);
  const candidates=scan.matches;
- const prev= {ok:true,source:"TRELLO_EXISTING_CARD_VERIFIED",case:p.case,amount_centavos:p.amount_cents,date:p.date,
+ const prev= {ok:true,source:"TRELLO_EXISTING_CARD_VERIFIED",case:p.case,origin_case:p.case,cost_case:scan.cost_case,amount_centavos:p.amount_cents,date:p.date,
   trello_url:scan.target.shortUrl||scan.pre?.target?.trello_url,candidates};
  if(action==="existing-preview")return reply(prev);
  const matchKey=String(raw?.match_key||"");
@@ -214,7 +219,8 @@ async function reconcileExisting(action:string,p:ReturnType<typeof clean>,raw:an
  if(linked.some(x=>x.status!=="FAILED"&&String(x.payload?.trello_match_key||"")===matchKey))
   return reply({ok:false,error:"TRELLO_LINE_ALREADY_LINKED",possible_trello_write:false},409);
  const payload={case:p.case,date:p.date,direction:p.direction,amount_cents:p.amount_cents,category:p.category,
-  reference:p.reference,reconciliation_kind:"EXISTING_TRELLO",trello_match_key:matchKey,trello_line_text:found[0].line};
+  reference:p.reference,origin_case:p.case,cost_case:scan.cost_case,
+  reconciliation_kind:scan.cost_case===p.case?"EXISTING_TRELLO":"EXISTING_TRELLO_CROSS_WORK",trello_match_key:matchKey,trello_line_text:found[0].line};
  const claim=await rpc("cr_finance_v12_claim",{p_operation_id:p.operation_id,p_fingerprint:fp,p_card_id:scan.target.id,p_payload:payload},k);
  if(claim.ok===true&&claim.claimed===false&&claim.status==="COMMITTED")return reply({ok:true,already_committed:true,reconciliation_kind:"EXISTING_TRELLO",trello_url:claim.trello_url});
  if(claim.ok!==true||claim.claimed!==true)return reply({ok:false,error:claim.error||"RECONCILIATION_ALREADY_CLAIMED",status:claim.status},409);
@@ -224,7 +230,7 @@ async function reconcileExisting(action:string,p:ReturnType<typeof clean>,raw:an
   if(!String(secondScan.desc||"").split(/\r?\n/).some(x=>x.trim()===found[0].line))throw Error("EXISTING_LINE_CHANGED");
   const confirmed=await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,p_status:"COMMITTED",p_trello_url:scan.target.shortUrl||scan.pre?.target?.trello_url||null,p_error_code:null},k);
   if(confirmed.ok!==true)throw Error("LEDGER_CONFIRMATION_MISSING");
-  return reply({ok:true,committed:true,reconciliation_kind:"EXISTING_TRELLO",trello_url:scan.target.shortUrl||null,
+  return reply({ok:true,committed:true,reconciliation_kind:payload.reconciliation_kind,origin_case:p.case,cost_case:scan.cost_case,trello_url:scan.target.shortUrl||null,
    case:p.case,line:found[0].line,bank_source_id:p.reference});
  }catch(e){
   try{await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,p_status:"REVIEW_REQUIRED",
