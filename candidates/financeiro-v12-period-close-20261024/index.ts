@@ -122,6 +122,27 @@ function block(c:any){
  }
  l.push(marker(p),"━━━━━━━━━━━━━━━━━━━━━━");return l.join("\n");
 }
+// A month is the ONLY Trello financial card for a period. The card's description has a
+// 16K limit; use its own verified comments to retain the full cut, never create period cards.
+function compactMonthCut(c:any){
+ const p=c.p,t=c.totals;
+ return ["","━━━━━━━━━━━━","📋 CORTE DE ACERTOS "+p.start+" A "+p.end+" ("+t.count+" obras)",
+ "OBRAS: "+p.cases.join(", "),
+ "Base "+brl(t.base_cents)+" | Custos "+brl(t.cost_cents)+" | Lucro "+brl(t.profit_cents),
+ "RATEIO: Fabrício "+brl(t.fabricio_cents)+" | Éder "+brl(t.eder_cents)+" | Rogério "+brl(t.rogerio_cents)+" | Gabrielly "+brl(t.gabi_cents)+" | CG "+brl(t.capital_cents),
+ "DETALHAMENTO INTEGRAL: comentário neste MESMO cartão mensal, associado à chave abaixo.",
+ marker(p),"━━━━━━━━━━━━"].join("\n");
+}
+async function ensureMonthCutComment(c:any,full:string){
+ if(full.length>16384)throw Error("MONTH_COMMENT_CAPACITY_EXCEEDED");
+ const path="/cards/"+c.month.id+"/actions?filter=commentCard&limit=100";
+ const has=(a:any[])=>Array.isArray(a)&&a.some((x:any)=>String(x?.data?.text||"").includes(marker(c.p)));
+ const before=await trello(path);
+ if(has(before))return;
+ await trello("/cards/"+c.month.id+"/actions/comments","POST",{text:full});
+ const after=await trello(path);
+ if(!has(after))throw Error("MONTH_COMMENT_SAVE_UNCONFIRMED");
+}
 /* Indicador comercial: Gestão Click é fonte dos orçamentos; não inferir a receber de movimentos Cora/Trello. */
 async function gcAwaitingPayment(){
  const access=(Deno.env.get("GESTAOCLICK_ACCESS_TOKEN")||"").trim();
@@ -172,8 +193,15 @@ Deno.serve(async req=>{
   if(c.duplicate)return ans({ok:false,error:"PERIOD_ALREADY_SENT"},409);
   if(!c.capital_validation.ok&&!c.capital_validation.accepted_exception)return ans({ok:false,error:"CAPITAL_PERIOD_NOT_RECONCILED",capital_validation:c.capital_validation},409);
   if(b.fingerprint!==c.fingerprint)return ans({ok:false,error:"STALE_PREVIEW"},409);
-  const next=String(c.month.desc||"").trimEnd()+"\n"+block(c)+"\n";
-  if(next.length>16384)return ans({ok:false,error:"MONTH_CARD_CAPACITY_EXCEEDED",length:next.length},409);
+  const full=block(c);
+  let next=String(c.month.desc||"").trimEnd()+"\n"+full+"\n";
+  if(next.length>16384){
+   // Safe fallback: full details stay INSIDE the existing monthly card as a comment.
+   // Save and verify that comment before indexing the cut; a retry reuses its marker.
+   next=String(c.month.desc||"").trimEnd()+"\n"+compactMonthCut(c)+"\n";
+   if(next.length>16384)return ans({ok:false,error:"MONTH_CARD_CAPACITY_EXCEEDED",length:next.length},409);
+   await ensureMonthCutComment(c,full);
+  }
   await trello("/cards/"+c.month.id,"PUT",{desc:next});
   const confirmed=await trello("/cards/"+c.month.id+"?fields=desc");
   if(confirmed.desc!==next)return ans({ok:false,error:"MONTH_SAVE_UNCONFIRMED",possible_write:true},409);
