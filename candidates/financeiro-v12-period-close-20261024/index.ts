@@ -67,7 +67,8 @@ async function diagnosticPreview(body:any){
 async function gather(body:any){
  const p=input(body);
  if(!p.monthName)throw Error("MES_INVALIDO");
- if(p.start.slice(0,7)!==p.end.slice(0,7))throw Error("RATEIO_ENTRE_MESES_NAO_IMPLEMENTADO");
+ // Cross-month cuts are valid: financial competence is always the month of the end date.
+ // Each distinct work ID may be sent once, regardless of overlap between date ranges.
  const [live,finCards,workLists]=await Promise.all([acertos(),trello("/lists/"+FIN+"/cards?fields=id,name,desc,shortUrl"),trello("/boards/"+WORK+"/lists?fields=id,name")]);
  const month=finCards.find((x:any)=>normal(x.name).trim()===p.monthName+" 2026");
  const target=workLists.find((x:any)=>normal(x.name).includes(p.monthName)&&normal(x.name).includes("26"));
