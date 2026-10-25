@@ -75,3 +75,14 @@ No runtime candidato `candidates/financeiro-v12-period-close-20261024/index.ts`,
 - Comprovar duas execuções do mesmo fechamento com **um único** efeito financeiro e sem novo cartão; testar indisponibilidade após gravação parcial.
 - Teste em notebook e celular, snapshot da produção congelada, plano de retorno à versão anterior e gates CI PASS recentes.
 - Entregar uma única URL candidata somente depois do pacote inteiro pronto, com evidências e pendências residuais reais; merge apenas após homologação.
+
+
+## Checkpoint executado 24/10/2026 — importação dos resumos mensais existentes
+
+**Mudança real no Supabase** `yspuaamokjbrosytqjpg`: migração `cr_finance_2026_monthly_source_snapshots_readonly_import_20261024` criou `public.cr_finance_2026_monthly_source_snapshots`, com RLS ativa, sem grants para anon/authenticated; chave primária `year_month`, restrita a 2026. Inserção `ON CONFLICT DO NOTHING` preserva dados anteriores. Importados 9 resumos declarados dos cartões originais JANEIRO–SETEMBRO e OUTUBRO como `OPEN_UNCONFIRMED`. Importação de resumos, **não** lançamentos de obras, pagamentos ou retiradas. Trello, Cora, capital e V12 produção não foram modificados por essa operação.
+
+**Verificação SQL após importação:** 9 meses `DECLARED_UNRECONCILED`, 1 mês `OPEN_UNCONFIRMED`; bruto 40.749.553 centavos (R$ 407.495,53), custos 27.322.890 (R$ 273.228,90), lucro declarado 13.426.653 (R$ 134.266,53), lucro aritmético 13.426.663 (R$ 134.266,63). Diferença de R$ 0,10 originária de fevereiro, mantida sem correção arbitrária. Status exige conciliação antes de publicar como dado de retiradas comprovadas.
+
+**Constatação documental:** existe no Trello o cartão anual https://trello.com/c/3CddF0rf, com os mesmos agregados históricos. Não duplicar. No card anual, a soma dos rateios históricos informados excede o lucro declarado em R$ 5.105,10; concentração em abril (R$ 5.105,80), ainda sem conciliação. Setembro está parcial (21 de 33 obras); outubro tem cartão mas não comprova retiradas. Preservar como ressalvas, não corrigir automaticamente.
+
+**Próxima ação obrigatória:** ingerir e validar dados por obra/operação, inclusive datas efetivas de acerto e rateios históricos, com staging idempotente e conferência contra cartões operacionais, antes de atualizar KPIs de retiradas como conciliados. Depois concluir backend de fechamento, saldo CG, mês/anual, capas e Central com testes E2E. Não homologar a candidata com o trabalho parcial.
