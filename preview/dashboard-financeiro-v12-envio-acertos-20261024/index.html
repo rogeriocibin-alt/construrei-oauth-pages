@@ -522,7 +522,7 @@ body{background:var(--v12-bg)}
   <button type="button" class="v12ex-kpi" data-go="profit"><span>Lucro apurado</span><strong id="v12ex-profit">—</strong><small id="v12ex-profit-note">Sujeito à conciliação</small></button>
   <button type="button" class="v12ex-kpi" data-go="margin"><span>Margem apurável</span><strong id="v12ex-margin">—</strong><small id="v12ex-margin-note">Somente com base equivalente</small></button>
   <button type="button" class="v12ex-kpi v12ex-bank" data-go="bank"><span>Saldo oficial Cora</span><strong id="v12ex-bank-balance">—</strong><small id="v12ex-bank-note">Requer login da Diretoria</small></button>
-  <button type="button" class="v12ex-kpi" data-go="receivable"><span>A receber confirmado</span><strong id="v12ex-receive">N/D</strong><small>Não estimado por status da obra</small></button>
+  <button type="button" class="v12ex-kpi" data-go="receivable"><span>Orçamentos aguardando pagamento · Gestão Click</span><strong id="v12ex-receive">N/D</strong><small id="v12ex-receive-note">Consulta comercial autenticada pendente</small></button>
  </div>
  <div class="v12ex-tools v12-capital-shortcut"><button type="button" id="v12ex-capital-shortcut">Abrir Capital de Giro →</button><small>Operação concentrada em Resultados e Acertos · Trello</small></div><div class="v12ex-note" id="v12ex-integrity" role="status">Os valores financeiros serão exibidos após consulta autenticada. Sem estimativas ou substituição de dados ausentes por zero.</div>
  <div class="v12ex-grids">
@@ -683,7 +683,7 @@ async function api(q,opt={}){
  }
  return j;
 }async function cgapi(){const r=await fetch(CG_API_BASE+"?action=summary",{headers:{"x-cr-session":S.session}}),j=await r.json().catch(()=>({}));if(!r.ok||!j.ok)throw Error(j.error||"CAPITAL_UNAVAILABLE");return j}async function login(){const r=await fetch(CR_API_BASE+"?api=login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:document.getElementById("key").value.trim()})}),j=await r.json();if(!r.ok||!j.ok){document.getElementById("err").textContent=j.error||"Acesso negado";return}S.session=j.session;sessionStorage.setItem("crv2",S.session);document.getElementById("login").classList.add("hide");refresh(true)}function logout(){sessionStorage.removeItem("crv2");location.reload()}
-async function refresh(gc){document.getElementById("live").textContent="atualizando";try{const nowTs=Date.now(),wantGc=!!gc||!S.gcLastAt||(nowTs-S.gcLastAt)>=300000;const [a,b,c,d,e]=await Promise.all([api("api=year&year=2024"),api("api=year&year=2025"),api("api=year&year=2026"),api("api=current&gc="+(wantGc?1:0)),cgapi().catch(()=>null)]);if(wantGc)S.gcLastAt=nowTs;if(d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick}else if(S.gcLast&&(d?.gestaoclick?.skipped||d?.gestaoclick?.ok===false)){d.gestaoclick={...S.gcLast,stale:d?.gestaoclick?.ok===false,last_error_status:d?.gestaoclick?.http_status??null}}S.years={2024:a,2025:b,2026:c};S.current=d;S.capital=e;const apiBuild=c?.build||d?.build||b?.build||a?.build||"não informado";const bf=document.getElementById("buildfoot");bf.textContent="CONSTRU-REI · V12 OPERAÇÃO HOMOLOGADA · CORA PRO V2 / TRELLO";bf.title="API "+apiBuild;render();if(!S.acertoHistoryLoaded)loadAcertoHistory();document.getElementById("live").textContent="online"}catch(e){const live=document.getElementById("live");live.textContent="degradado";live.title="Falha ao atualizar dados. A interface preserva o último estado carregado."}}
+async function refresh(gc){document.getElementById("live").textContent="atualizando";try{const nowTs=Date.now(),wantGc=!!gc||!S.gcLastAt||(nowTs-S.gcLastAt)>=300000;const [a,b,c,d,e]=await Promise.all([api("api=year&year=2024"),api("api=year&year=2025"),api("api=year&year=2026"),api("api=current&gc="+(wantGc?1:0)),cgapi().catch(()=>null)]);if(wantGc)S.gcLastAt=nowTs;if(d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick}else if(S.gcLast&&(d?.gestaoclick?.skipped||d?.gestaoclick?.ok===false)){d.gestaoclick={...S.gcLast,stale:d?.gestaoclick?.ok===false,last_error_status:d?.gestaoclick?.http_status??null}}S.years={2024:a,2025:b,2026:c};S.current=d;S.capital=e;const apiBuild=c?.build||d?.build||b?.build||a?.build||"não informado";const bf=document.getElementById("buildfoot");bf.textContent="CONSTRU-REI · V12 OPERAÇÃO HOMOLOGADA · CORA PRO V2 / TRELLO";bf.title="API "+apiBuild;render();if(wantGc&&typeof crGcPaymentRefresh==="function")crGcPaymentRefresh();if(!S.acertoHistoryLoaded)loadAcertoHistory();document.getElementById("live").textContent="online"}catch(e){const live=document.getElementById("live");live.textContent="degradado";live.title="Falha ao atualizar dados. A interface preserva o último estado carregado."}}
 function render(){now();fin();hist();qual();recon();costs();if(typeof window.v12ExecRender==="function")window.v12ExecRender()}function manualLocalDate(){const d=new Date(),z=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
 const CORA_BASE_BALANCE_CENTS=3256462,CORA_BASE_BALANCE_DATE="09/10/2026",CORA_PROJECTED_KEY="cr-cora-projected-balance-cents-preview-v12",CORA_VERIFIED_KEY="cr-cora-verified-balance-cents-preview-v12",CORA_VERIFIED_DATE_KEY="cr-cora-verified-balance-date-preview-v12";
 if(localStorage.getItem(CORA_PROJECTED_KEY)===null)localStorage.setItem(CORA_PROJECTED_KEY,String(CORA_BASE_BALANCE_CENTS));
@@ -2080,4 +2080,32 @@ target.innerHTML='<div style="border:1px solid #cadde9;background:#f4f9fd;border
 $("cr26-consult")?.addEventListener("click",render);
 $("cr26-copy")?.addEventListener("click",async()=>{if(!printable)return;try{await navigator.clipboard.writeText(printable);$("cr26-copy").textContent="Texto copiado"}catch{prompt("Copie o histórico",printable)}});
 for(const id of ["cr26-from","cr26-to"])$(id)?.addEventListener("change",()=>{printable=null;$("cr26-copy").disabled=true;$("cr26-copy").textContent="Copiar texto histórico"});
-})();</script></body></html>
+})();</script><script id="v12-gc-awaiting-payment">
+/* Gestão Click é a fonte dos orçamentos. Não é saldo Cora nem valor bancário recebido. */
+let crGcPaymentRequest=0;
+async function crGcPaymentRefresh(){
+ const element=document.getElementById("v12ex-receive"),note=document.getElementById("v12ex-receive-note");
+ if(!element||!note)return;
+ const token=sessionStorage.getItem("crv2")||"",rid=++crGcPaymentRequest;
+ if(token.length<12){element.textContent="N/D";note.textContent="Entre como diretor para consultar a Gestão Click";return}
+ note.textContent="Consultando orçamentos na Gestão Click...";
+ try{
+  const resp=await fetch("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-finance-v12-period-close-candidate-20261024?action=gc-awaiting-payment",{
+   method:"POST",headers:{"content-type":"application/json","x-cr-session":token},
+   body:"{}",cache:"no-store",signal:AbortSignal.timeout(65000)
+  });
+  const data=await resp.json().catch(()=>null);
+  if(rid!==crGcPaymentRequest)return;
+  if(!resp.ok||data?.ok!==true||data.complete!==true||data.source!=="GESTAOCLICK_ORCAMENTOS_2026"||
+     !Number.isSafeInteger(data.total_cents)||data.total_cents<0||!Number.isSafeInteger(data.count)||data.count<0)
+   throw Error(String(data?.error||"GC_RESULT_UNVERIFIED"));
+  element.textContent=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(data.total_cents/100);
+  const stamp=new Date(data.read_at);
+  note.textContent=data.count+" orçamento(s) · Gestão Click · "+(Number.isFinite(stamp.getTime())?stamp.toLocaleString("pt-BR"):"data não informada");
+ }catch(err){
+  if(rid!==crGcPaymentRequest)return;
+  element.textContent="N/D";
+  note.textContent="Gestão Click indisponível: "+String(err?.message||"consulta falhou").slice(0,95)+". Sem estimativas.";
+ }
+}
+</script></body></html>
