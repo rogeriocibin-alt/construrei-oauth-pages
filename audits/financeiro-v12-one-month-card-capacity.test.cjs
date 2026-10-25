@@ -34,3 +34,11 @@ test('resumo compacto inclui todas obras, base, custos, lucro, rateio e chave',(
  for(const key of ['37418.48','26273.03','11145.45','2229.09','3120.73','1560.36','1114.54'])assert.ok(out.includes(key),key);
  assert.match(out,/CR-ACERTO-PERIODO/);
 });
+
+test('indexa também os comentários históricos do cartão mensal antes de autorizar novo corte',()=>{
+ assert.match(edge,/monthlyActions=await trello\("\/cards\/"\+month\.id\+"\/actions\?filter=commentCard&limit=1000"\)/);
+ assert.match(edge,/if\(!Array\.isArray\(monthlyActions\)\)throw Error\("MONTH_COMMENTS_UNAVAILABLE"\)/);
+ assert.match(edge,/monthlyTexts\.some\(\(t:string\)=>t\.includes\(marker\(p\)\)\)/);
+ assert.match(edge,/if\(duplicate\)throw Error\("PERIOD_ALREADY_SENT"\)/);
+ assert.match(edge,/monthlyTexts\.some\(\(t:string\)=>hasCase\(t,c\)\)/);
+});
