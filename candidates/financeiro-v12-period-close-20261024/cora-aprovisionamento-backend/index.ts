@@ -151,15 +151,15 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costC
  // Existing-cost matching is read-only and must not depend on legacy writer preview.
  // Resolve the work directly from the same canonical Trello board used by receipt reconciliation.
  const [lists,cards]=await Promise.all([
-  trelloApiRead("/boards/"+BOARD_2026+"/lists?fields=id,name&filter=open"),
-  trelloApiRead("/boards/"+BOARD_2026+"/cards?fields=id,name,idList,shortUrl&filter=open&limit=1000")
+  trelloApiRead("/boards/"+BOARD_2026+"/lists?fields=id,name&filter=all"),
+  trelloApiRead("/boards/"+BOARD_2026+"/cards?fields=id,name,idList,shortUrl&filter=all&limit=1000")
  ]);
  if(!Array.isArray(lists)||!Array.isArray(cards))throw Error("TRELLO_EXISTING_CONTEXT_UNAVAILABLE");
  const matchesByWork=cards.filter((c:any)=>caseInName(c.name)===costCase&&!/RESUMO|ACERTOS\\s+2026/i.test(String(c.name||"")));
  if(matchesByWork.length!==1)throw Error(matchesByWork.length?"EXISTING_DUPLICATE_WORK_CARDS":"EXISTING_CASE_NOT_FOUND");
  const entry=matchesByWork[0];
  const nameByList=new Map(lists.map((x:any)=>[String(x.id),String(x.name||"")]));
- if(!allowedList("OUT",String(nameByList.get(String(entry.idList))||"")))throw Error("EXISTING_WORK_LIST_NOT_ELIGIBLE");
+ if(!nameByList.has(String(entry.idList)))throw Error("EXISTING_WORK_LIST_NOT_VERIFIED");
  const short=shortLink(entry.shortUrl);
  if(!short)throw Error("TRELLO_TARGET_UNVERIFIED");
  const target=await card(short);
