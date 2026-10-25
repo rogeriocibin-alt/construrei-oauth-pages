@@ -583,7 +583,7 @@ body{background:var(--v12-bg)}
 <button type="button" id="cg-close-preview" class="v11button">Pré-visualizar encerramento</button>
 <button type="button" id="cg-close-confirm" class="v11button" style="background:#0e694f" disabled>Confirmar e gerar card no Trello</button></div>
 <div id="cg-test-status" role="status" aria-live="polite" class="v11msg" style="white-space:pre-wrap;margin-top:12px;border-left:3px solid #155b7d;padding-left:10px">Autoteste disponível: consulta somente leitura, sem encerrar acertos ou criar cards.</div>
-<div id="cg-close-status" class="v11msg" role="status" style="white-space:pre-wrap;margin-top:12px">Nenhum período encerrado. Use a prévia para conferir o rateio.</div>
+<div id="cg-close-status" class="v11msg" role="status" style="white-space:pre-wrap;margin-top:12px">Nenhum encerramento foi executado nesta tela. A mensagem não representa o histórico: consulte os períodos anteriores na fonte do Capital de Giro. Use a prévia para conferir o rateio sem gravar.</div>
 <div id="cr-period-send" style="margin:14px 0 5px;padding:13px;border:1px solid #b7d1df;border-radius:10px;background:#edf6fc">
  <p style="font-weight:800;font-size:13px;margin:0 0 7px;color:#173e63">Resultados e Acertos · Envio financeiro por período</p>
  <p style="font-size:12px;line-height:1.5;margin:0 0 10px">Selecione as datas e as obras abaixo. A prévia não grava; o envio exige autenticação e confirmação e não representa pagamento bancário. Não repita após falha parcial.</p><div class="crp-period-grid"><label>Início do período<input type="date" id="crp-start"></label><label>Fim do período<input type="date" id="crp-end"></label></div>
@@ -1485,7 +1485,7 @@ const money=c=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).
 let preview=null,busy=false,refreshing=false;
 const session=()=>sessionStorage.getItem("crv2")||"";
 function msg(s){by("cg-close-status").textContent=s}
-function invalidate(){preview=null;by("cg-close-confirm").disabled=true;const test=by("cg-test-status");if(test)test.textContent="AUTOTESTE DESATUALIZADO — confira as datas e execute novamente antes de encerrar. Nenhum lançamento foi realizado."}
+function invalidate(){preview=null;by("cg-close-confirm").disabled=true;const test=by("cg-test-status");if(test)test.textContent="AUTOTESTE PENDENTE OU DESATUALIZADO — confira as datas e execute novamente antes de encerrar. Este aviso não informa se já existem períodos encerrados."}
 async function request(action,data){
  const r=await fetch(URL+"?action="+action,{method:"POST",headers:{"content-type":"application/json","x-cr-session":session()},body:JSON.stringify(data),cache:"no-store"});
  const j=await r.json().catch(()=>({error:"Resposta inválida"}));if(!r.ok||j.ok!==true)throw Error(j.error||"Falha da operação");return j;
