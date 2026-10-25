@@ -12,7 +12,7 @@ function helper(name){
  return ctx.helper;
 }
 test('todos os scripts inline continuam com sintaxe válida',()=>{
- const scripts=[...html.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)];
+ const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
  assert.ok(scripts.length>=10);
  for(const [i,m] of scripts.entries())if(!m[0].includes('src='))assert.doesNotThrow(()=>new vm.Script(m[1]),'script '+i);
 });
@@ -20,7 +20,7 @@ test('lista mensal fechada mantém custo pendente e orienta conferência sem nov
  const explain=helper('crExistingError');
  const s=explain('EXISTING_WORK_LIST_NOT_ELIGIBLE','791-26');
  assert.match(s,/791-26/);assert.match(s,/outra obra/);assert.match(s,/pendente/);assert.match(s,/Não altere/);
- assert.match(html,/editorStatus\\.textContent=crExistingError\\(e\\?\\.message\\|\\|e,obra\\)/);
+ assert.match(html,/editorStatus\.textContent=crExistingError\(e\?\.message\|\|e,obra\)/);
 });
 test('exceções de cartão duplicado ou transferido não sugerem gravação',()=>{
  const explain=helper('crExistingError');
@@ -32,5 +32,5 @@ test('falha de autenticação de serviço é distinta de login do diretor',()=>{
  assert.match(explain('ACERTO_LIVE_SERVICE_AUTH_REJECTED'),/autenticação interna/);
  assert.match(explain('ACERTO_LIVE_HTTP_401'),/autenticação interna/);
  assert.match(explain('DIRECTOR_SESSION_REQUIRED'),/Sessão de diretor/);
- assert.match(html,/PRÉVIA BLOQUEADA: "\\+crpFriendlyError\\(e\\.message\\)/);
+ assert.match(html,/PRÉVIA BLOQUEADA: "\+crpFriendlyError\(e\.message\)/);
 });
