@@ -4,7 +4,7 @@ function extract(name,next){const i=edge.indexOf('function '+name+'('),j=edge.in
 const costSrc=extract('foreignCostCaseRefs','async function manualCloseWork(').replace('desc:string,ownCase:string','desc,ownCase').replace('const matches:any[]=[]','const matches=[]');
 const foreignCostCaseRefs=vm.runInNewContext(costSrc+';foreignCostCaseRefs',{});
 const jsonSrc=extract('json','function sec(').replace('data:any,status=200','data,status=200');
-const json=vm.runInNewContext(jsonSrc+';json',{Response});
+const json=vm.runInNewContext(jsonSrc+';json',{Response,BUILD:"UNIT_TEST_BUILD"});
 const sample=['MOVIMENTAÇOES FINANCEIRAS:','Valor Fechado: R$ 6.980,00','Custos:','23/10 - R$150,00 Diária - JOÃO VICTOR CIBIN - Obra 799-26 - Ref. PIX','23/10 - R$150,00 Apoio - FABRICIO LUCAS BERTO - Obra 799-26 - Ref. PIX','23/10 - R$150,00 Apoio - EDER CIBIN - Obra 799-26 - Ref. PIX','21/10 - R$89,96 Materiais - CASA CASTRO','FECHAMENTO DA OBRA','Valor Fechado: R$ 6.980,00'].join('\n');
 test('HTTP status literal de obra não derruba resposta em 500 sem corpo',async()=>{
  assert.equal(json({ok:false,error:'CASE_NOT_OPERATIONALLY_OPEN'},'FINALIZADO').status,500);
@@ -15,7 +15,7 @@ test('HTTP status literal de obra não derruba resposta em 500 sem corpo',async(
 test('atribuição cruzada 755/799 identifica precisamente três linhas',()=>{
  const found=foreignCostCaseRefs(sample,'755-26');
  assert.equal(found.length,3);
- assert.deepEqual(found.map(x=>x.other_case),['799-26','799-26','799-26']);
+ assert.deepEqual(Array.from(found,x=>String(x.other_case)),['799-26','799-26','799-26']);
  assert.ok(found.every(x=>x.line.includes('R$150,00')));
 });
 test('costos da própria obra não disparam bloqueio',()=>{
