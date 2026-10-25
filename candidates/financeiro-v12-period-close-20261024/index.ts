@@ -58,7 +58,7 @@ async function diagnosticPreview(body:any){
     r.rateio.fabricio_cents+r.rateio.eder_cents+r.rateio.rogerio_cents+r.rateio.gabi_cents+r.rateio.capital_giro_cents===r.profit_cents;
   return {case:caseNo,found:!!r,unique:all.length===1,source:"AG_ACERTO_TRELLO_LIVE",
     base_cents:valid?r.base_cents:null,cost_cents:valid?r.cost_cents:null,profit_cents:valid?r.profit_cents:null,
-    valid_for_arithmetic:!!valid,issues:(r?.issues||[]).map((x:any)=>String(x).slice(0,100)).slice(0,15),
+    valid_for_arithmetic:!!valid,issues:(Array.isArray(r?.issues)?r.issues:[]).map((x:any)=>String(x).slice(0,100)).slice(0,15),
     trello_url:r?.trello_url||null};
  });
  return {ok:true,diagnostic:true,period:p,rows,writes:false,preview_validated:false,can_commit:false,
