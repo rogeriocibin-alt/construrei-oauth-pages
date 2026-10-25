@@ -102,6 +102,36 @@ function block(c:any){
  }
  l.push(marker(p),"━━━━━━━━━━━━━━━━━━━━━━");return l.join("\n");
 }
+/* Indicador comercial: Gestão Click é fonte dos orçamentos; não inferir a receber de movimentos Cora/Trello. */
+async function gcAwaitingPayment(){
+ const access=(Deno.env.get("GESTAOCLICK_ACCESS_TOKEN")||"").trim();
+ const secret=(Deno.env.get("GESTAOCLICK_SECRET_ACCESS_TOKEN")||"").trim();
+ if(!access||!secret)throw Error("GC_CREDENTIALS_UNAVAILABLE");
+ const unique=new Set<string>();let total=0,count=0,processed=0,pages=0,complete=false;
+ for(let page=1;page<=30;page++){
+  const url=new URL("https://api.gestaoclick.com/api/orcamentos");
+  url.searchParams.set("pagina",String(page));url.searchParams.set("limite","100");
+  url.searchParams.set("ordenacao","data");url.searchParams.set("direcao","desc");
+  const r=await fetch(url,{headers:{"access-token":access,"secret-access-token":secret,"accept":"application/json"},signal:AbortSignal.timeout(15000)});
+  if(!r.ok)throw Error("GC_ORCAMENTOS_HTTP_"+r.status);
+  const body=await r.json();if(!Array.isArray(body?.data))throw Error("GC_ORCAMENTOS_FORMAT_INVALID");
+  const rows=body.data;pages=page;
+  for(const q of rows){
+   const id=String(q.id||q.codigo||"").trim();if(!id||unique.has(id))continue;unique.add(id);
+   const digits=String(q.codigo||"").replace(/\\D/g,"");if(!digits.endsWith("26")||digits.length<3)continue;
+   processed++;
+   const status=String(q.nome_situacao||"").normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toUpperCase().replace(/\\s+/g," ").trim();
+   if(!/(^|\\s)AGUARDANDO PAGAMENTO(\\s|$)/.test(status))continue;
+   const raw=String(q.valor_total??"").trim().replace(/R\\$/gi,"").replace(/\\s/g,"");
+   const n=Number(raw.includes(",")?raw.replace(/\\./g,"").replace(",","."):raw);
+   if(!Number.isFinite(n)||n<0)throw Error("GC_AWAITING_PAYMENT_AMOUNT_INVALID");
+   total+=Math.round(n*100);count++;
+  }
+  if(rows.length<100){complete=true;break}
+ }
+ if(!complete)throw Error("GC_PAGINATION_INCOMPLETE");
+ return {ok:true,source:"GESTAOCLICK_ORCAMENTOS_2026",status:"AGUARDANDO PAGAMENTO",total_cents:total,count,quotes_2026_seen:processed,pages,complete,read_at:new Date().toISOString(),writes:false};
+}
 Deno.serve(async req=>{
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:CORS});
  if(req.headers.get("origin")&&req.headers.get("origin")!==HOST)return ans({ok:false,error:"ORIGIN_DENIED"},403);
@@ -109,7 +139,10 @@ Deno.serve(async req=>{
  if(req.method!=="POST")return ans({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return ans({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const action=new URL(req.url).searchParams.get("action");
- if(!["preview","commit"].includes(action||""))return ans({ok:false,error:"INVALID_ACTION"},400);
+ if(!["preview","commit","gc-awaiting-payment"].includes(action||""))return ans({ok:false,error:"INVALID_ACTION"},400);
+ if(action==="gc-awaiting-payment"){
+  try{return ans(await gcAwaitingPayment())}catch(e){return ans({ok:false,error:String((e as Error)?.message||e)},503)}
+ }
  const b=await req.json().catch(()=>null);
  if(!b)return ans({ok:false,error:"INVALID_BODY"},400);
  try{
