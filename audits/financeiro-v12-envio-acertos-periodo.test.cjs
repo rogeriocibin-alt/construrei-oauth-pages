@@ -94,3 +94,26 @@ test('V12 Resultados: envio financeiro isolado e datas sincronizadas',()=>{
  assert.match(html,/\["cg-close-start","crp-start"\]/);
  assert.match(html,/id="cr-v12-owner-nav-20261024"/);
 });
+
+test('fechamento: trava linhas de custos identificadas com outra obra',()=>{
+ assert.match(html,/function manualForeignCostRefs\(items,work\)/);
+ assert.match(html,/FECHAMENTO BLOQUEADO — REFERÊNCIAS DE OUTRA OBRA/);
+ assert.match(html,/const audit=await api\("api=case&case="\+encodeURIComponent\(normalizedCase\)\)/);
+ assert.ok(html.indexOf('const foreign=manualForeignCostRefs') < html.indexOf('const pre=await closurePost({case:caseNo,dry_run:true})'));
+});
+test('reconhece 3 custos da 799-26 dentro do cartão 755-26, mas não os próprios',()=>{
+ const script=html.match(/function manualForeignCostRefs\(items,work\)\{[\s\S]*?\n\}\nasync function manualCloseWork/);
+ assert.ok(script);
+ const ctx=vm.createContext({});
+ vm.runInContext(script[0].replace(/\nasync function manualCloseWork$/,'')+'\nthis.scan=manualForeignCostRefs;',ctx);
+ const entries=[{description_original:'23/10 - R$150,00 Diária - Obra 799-26 - Ref. PIX',value_cents:15000},{description_original:'23/10 - R$150,00 Apoio - Obra 799-26 - Ref. PIX',value_cents:15000},{description_original:'23/10 - R$150,00 Apoio - Obra 799-26 - Ref. PIX',value_cents:15000},{description_original:'21/10 - R$100,00 Materiais - Obra 755-26',value_cents:10000}];
+ const match=ctx.scan(entries,'755-26');
+ assert.equal(match.length,3);
+ assert.equal(match.reduce((t,x)=>t+x.cents,0),45000);
+ assert.equal(ctx.scan(entries.slice(-1),'755-26').length,0);
+});
+test('resposta nula e lista AG ACERTO vazia não geram falso sucesso',()=>{
+ assert.match(html,/if\(!j\|\|typeof j!=="object"\)throw Error\("BACKEND_RESPOSTA_VAZIA"\)/);
+ assert.match(html,/A lista AG\. ACERTO está vazia ou indisponível/);
+ assert.match(html,/Não foi possível auditar as linhas de custo antes do fechamento/);
+});
