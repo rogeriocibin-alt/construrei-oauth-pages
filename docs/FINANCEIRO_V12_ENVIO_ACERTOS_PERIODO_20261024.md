@@ -46,3 +46,32 @@ O Acerto Vivo consultado em 24/10 encontra **11 obras** em AG. ACERTO: base R$ 3
 - Verificar notebook e celular, atualizar agregação de acertos mensais do Dashboard V12, Gestor e Central antes de promover como homologado.
 
 **Nenhuma retirada retroativa presumida nesta candidata.**
+
+
+## Escopo executivo autorizado em 24/10/2026 — V12 2026 (não homologado)
+
+**Contrato de entrega — duas listas, um fechamento**. O Dashboard é a interface de operação; banco registra movimentos, saldos e evidências; Trello é espelho operacional/de leitura. Escopo exclusivo 01/01/2026–31/12/2026. Não reconstruir 2023–2025. Janeiro–agosto de 2026 são somente leitura e devem ser preservados. Setembro será conciliado sem presumir retiradas. Histórico até hoje serve para consulta (intervalo livre, texto padrão, base/custos/lucro/margem/rateios com proveniência); somente cards atualmente em AG. ACERTO podem compor novo fechamento.
+
+**Ao confirmar uma prévia autenticada**, executar uma única operação lógica, idempotente e auditável:
+1. Revalidar elegibilidade das obras, datas, rateios, saldo e fingerprint sob bloqueio de concorrência no servidor; rejeitar duplicatas por chave única do período e conjunto de obras.
+2. Registrar a operação e discriminar valores: orçamento bruto, entrada/recebimento efetivo comprovado, custos, lucro, percentual de custo, margem, Fabrício 20%, Éder 28%, Rogério 28%, Gabrielly 14%, Capital de Giro 10% (apenas quando regra aplicável; não recalcular históricos antigos). Não equiparar faturamento a recebimento bancário.
+3. Criar/atualizar o cartão do período no **topo da lista Capital de Giro — Temporário/Gerado**, com datas, valor gerado, saldo acumulado e saldo real/disponível após os acertos. Débito operacional de saldo disponível **não é** movimentação fictícia da conta Cora. Caso já exista, atualizar sem duplicar crédito/débito.
+4. Criar cartão mensal em **Valores Recebidos 2026** se ausente; anexar texto detalhado dos acertos ao mês correto, consolidar acumulado mensal e total anual a partir de registros únicos, preservando imagens/textos anteriores. Cortes entre meses: ratear por competência comprovada, jamais atribuir arbitrariamente.
+5. Recalcular cabeçalho/resumo anual: total de orçamentos, recebimentos reais, custos, lucro, custo %, margem %, rateios individuais e Capital de Giro. Evitar substituir o **título literal da lista** se isso quebrar automações/identificação por nome; oferecer resumo em posição visualmente superior (cartão fixado/primeiro ou interface da lista).
+6. Refletir os mesmos dados no Dashboard V12 e na Central; validar retorno de leitura bilateral banco↔Trello e consistência dos indicadores. Persistir comprovantes de execução, erro e recuperações.
+7. Gerar anexo/arte mensal no padrão da imagem **Modelo Setembro.png** (fundo claro; tipografia amarela/laranja com contorno azul e ornamentos laranja), para outubro e próximos meses, sem refazer meses já concluídos. **Arquivo de referência anexado na conversa; não há arte gerada/publicada nesta etapa.**
+8. Em falha parcial, não repetir o débito nem o bloco de acertos; retomar pela mesma chave de idempotência com status parcial e relatório de pendências. Testar concorrência, repetição, indisponibilidade Trello, cartão mensal ausente e rollback sem destruir o histórico.
+
+**Exceção aprovada:** divergência R$ 169,14 referente ao período 10/10–23/10 é ressalva específica documentada; **não** fazer ajuste retroativo ou alterar saldo Cora. Divergências R$ 70,00 (setembro) e R$ 109,31 (outubro) exigem classificação e rastreabilidade; não presumir conciliação.
+
+### Gap confirmado na implementação corrente
+
+No runtime candidato `candidates/financeiro-v12-period-close-20261024/index.ts`, a ação `commit` atualmente **somente** acrescenta bloco no card mensal já existente e move cartões entre listas após confirmação. Não cria cartão de Capital de Giro, não debita/controla saldo, não cria mês ausente, não persiste livro financeiro do período, não recalcula consolidado anual, não publica Central, não gera arte mensal. Além disso a seleção de destino é pelo **mês final**, insuficiente para intervalos que cruzam meses. **Não homologar nem operar fechamento real como fluxo completo** até essas lacunas serem resolvidas e comprovadas.
+
+### Critérios adicionais de homologação
+
+- Verificar fonte oficial de recebimentos, custos e rateios de todas as obras do corte e testes de igualdade dos totais, incluindo arredondamentos centesimais e apoio Éder isolado de rateio.
+- Testes unitários, integração e E2E autenticado com testemunho de ambos cartões novos, saldo real/disponível, acumulados mensal/anual, Dashboard, Central e imagem.
+- Comprovar duas execuções do mesmo fechamento com **um único** efeito financeiro e sem novo cartão; testar indisponibilidade após gravação parcial.
+- Teste em notebook e celular, snapshot da produção congelada, plano de retorno à versão anterior e gates CI PASS recentes.
+- Entregar uma única URL candidata somente depois do pacote inteiro pronto, com evidências e pendências residuais reais; merge apenas após homologação.
