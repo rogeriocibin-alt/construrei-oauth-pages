@@ -117,3 +117,40 @@ test('resposta nula e lista AG ACERTO vazia não geram falso sucesso',()=>{
  assert.match(html,/A lista AG\. ACERTO está vazia ou indisponível/);
  assert.match(html,/Não foi possível auditar as linhas de custo antes do fechamento/);
 });
+
+
+test('acerto-live: autenticação servidor-servidor protege leitura sem expor chave',async()=>{
+ const block=edge.match(/async function acertos\(\)\{[\s\S]*?\n\}\n(?=const months=)/);
+ assert.ok(block,'função acertos localizada');
+ let got=null;
+ const fakeKey='test-fake-service-role-jwt';
+ const context=vm.createContext({
+  Deno:{env:{get:(name)=>name==='SUPABASE_SERVICE_ROLE_KEY'?fakeKey:''}},
+  SB:'https://example.supabase.co',
+  AbortSignal:{timeout:()=>undefined},
+  fetch:async(url,options)=>{got={url,options};return {ok:true,status:200,json:async()=>({ok:true,items:[{case:'791-26'}]})}},
+ });
+ vm.runInContext(block[0]+'\nthis.readAcertos=acertos;',context);
+ const records=await context.readAcertos();
+ assert.equal(records[0].case,'791-26');
+ assert.match(got.url,/\?api=acerto-live&gc=0/);
+ assert.equal(got.options.headers.Authorization,'Bearer '+fakeKey);
+ assert.equal(got.options.method,undefined,'consulta apenas leitura');
+ assert.doesNotMatch(edge,/console\.(?:log|warn|error)\s*\([^)]*SUPABASE_SERVICE_ROLE_KEY/);
+});
+test('acerto-live: falha fechada com erro identificável quando não há credencial ou acesso',async()=>{
+ const block=edge.match(/async function acertos\(\)\{[\s\S]*?\n\}\n(?=const months=)/);
+ assert.ok(block);
+ const setup=(key,status)=>{
+  const context=vm.createContext({
+    Deno:{env:{get:()=>key}},SB:'https://example.supabase.co',
+    AbortSignal:{timeout:()=>undefined},
+    fetch:async()=>({status,ok:status===200,json:async()=>({ok:true,items:[]})}),
+  });
+  vm.runInContext(block[0]+'\nthis.readAcertos=acertos;',context);
+  return context;
+ };
+ await assert.rejects(setup('',200).readAcertos(),/ACERTO_LIVE_SERVICE_AUTH_UNAVAILABLE/);
+ await assert.rejects(setup('fake',401).readAcertos(),/ACERTO_LIVE_SERVICE_AUTH_REJECTED/);
+ await assert.rejects(setup('fake',403).readAcertos(),/ACERTO_LIVE_SERVICE_AUTH_REJECTED/);
+});
