@@ -595,6 +595,16 @@ body{background:var(--v12-bg)}
  </div>
 </div>
 </section>
+<div class="panel" id="cr-withdraw-history" style="margin:12px 0;padding:15px;border:1px solid #c4d7e7;border-radius:12px">
+ <h3>Retiradas financeiras conciliadas por corte</h3>
+ <p class="small muted">Somente saídas reais Cora vinculadas a períodos de acerto. Rateio calculado não é retirada paga.</p>
+ <div class="v11row" style="display:flex;gap:8px;flex-wrap:wrap">
+ <label>Ano<select id="cr-wdh-year"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option></select></label>
+ <label>Mês<select id="cr-wdh-month"><option value="">Todos</option><option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option><option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option><option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option><option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option></select></label>
+ <button id="cr-wdh-search" type="button" class="v11button">Consultar retiradas</button></div>
+ <div id="cr-wdh-status" role="status" aria-live="polite">Clique para consultar os registros reais.</div>
+ <div id="cr-wdh-rows"></div>
+</div>
 <div class="panel aclive" id="v12-live-acertos">
   <div class="aclivehead">
     <div><div class="r6eyebrow">ACERTO VIVO · FONTE OPERACIONAL TRELLO</div><h3>Acertos em aberto</h3><div class="small muted">Somente obras reais em AG. ACERTO. Se o desconto está registrado nos custos e a base bruta foi confirmada no cartão, use o bruto para evitar desconto duplo. Esta tela não lança dados no Trello.</div><div id="acstatus" class="acstatus" style="margin-top:8px"></div></div>
@@ -2115,4 +2125,41 @@ target.innerHTML='<div style="border:1px solid #cadde9;background:#f4f9fd;border
 $("cr26-consult")?.addEventListener("click",render);
 $("cr26-copy")?.addEventListener("click",async()=>{if(!printable)return;try{await navigator.clipboard.writeText(printable);$("cr26-copy").textContent="Texto copiado"}catch{prompt("Copie o histórico",printable)}});
 for(const id of ["cr26-from","cr26-to"])$(id)?.addEventListener("change",()=>{printable=null;$("cr26-copy").disabled=true;$("cr26-copy").textContent="Copiar texto histórico"});
-})();</script></body></html>
+})();</script><script id="cr-v12-withdraw-history-runtime">(function(){
+"use strict";
+const get=id=>document.getElementById(id);
+const year=get("cr-wdh-year"),month=get("cr-wdh-month"),btn=get("cr-wdh-search"),
+ status=get("cr-wdh-status"),rows=get("cr-wdh-rows");
+if(!year||!month||!btn||!status||!rows)return;
+const brl=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(n/100);
+let busy=false;
+async function search(){
+ if(busy)return;busy=true;btn.disabled=true;rows.replaceChildren();status.textContent="Consultando retiradas conciliadas...";
+ try{
+  const token=sessionStorage.getItem("crv2")||"";
+  if(!token)throw Error("Faça login com perfil da Diretoria.");
+  const endpoint="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-cora-aprovisionamento-v12-candidate-20261023?action=withdrawal-history";
+  const r=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json","x-cr-session":token},
+   body:JSON.stringify({year:year.value,month:month.value}),cache:"no-store",signal:AbortSignal.timeout(25000)});
+  const json=await r.json().catch(()=>({}));
+  if(!r.ok||json.ok!==true||json.source!=="V12_SETTLED_WITHDRAWALS_CORA"||!Array.isArray(json.rows))
+   throw Error(json.error||"Histórico não confirmado");
+  const sum=json.rows.reduce((n,x)=>n+Number(x.amount_cents||0),0);
+  if(sum!==json.total_cents)throw Error("Total divergente da fonte");
+  status.textContent=json.count+" retirada(s) bancária(s) conciliada(s) · Total "+brl(sum)+" · Fonte: ledger V12/Cora";
+  for(const item of json.rows){
+   const d=document.createElement("div");d.style.cssText="border-bottom:1px solid #d6e0e8;padding:9px 0;font-size:13px";
+   const h=document.createElement("strong");
+   h.textContent=item.date+" · "+item.beneficiary+" · "+brl(Number(item.amount_cents||0));
+   const p=document.createElement("div");p.textContent="Acerto: "+(item.period||item.period_id)+" · ID Cora: "+item.bank_reference;
+   d.append(h,p);
+   try{const url=new URL(item.trello_url);if(url.hostname==="trello.com"&&url.protocol==="https:"&&url.pathname.startsWith("/c/")){const a=document.createElement("a");a.href=url.href;a.rel="noopener noreferrer";a.target="_blank";a.textContent="Ver corte no Trello";d.append(a)}}catch{}
+   rows.append(d);
+  }
+ }catch(e){status.textContent="Consulta indisponível: "+String(e?.message||e)+". Nenhum valor presumido."}
+ finally{busy=false;btn.disabled=false}
+}
+btn.addEventListener("click",search);
+window.addEventListener("cr:ap:confirmed",()=>{if(!busy)search()});
+})();</script>
+</body></html>
