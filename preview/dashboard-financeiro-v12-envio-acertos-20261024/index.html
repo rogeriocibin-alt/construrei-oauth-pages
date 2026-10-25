@@ -2043,8 +2043,8 @@ async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").di
    const diagnostic=await crpApi("preview-diagnostic",crpData());
    const text=diagnostic.rows.map(x=>x.case+": "+(x.valid_for_arithmetic?
      "Base "+crpFmt(x.base_cents)+", custos "+crpFmt(x.cost_cents)+", lucro "+crpFmt(x.profit_cents):
-     "INCOMPLETA / EM REVISÃO")+(x.issues.length?" | "+x.issues.join(", "):"")).join("\\n");
-   crpShow("PRÉVIA DIAGNÓSTICA SOMENTE LEITURA — envio DESABILITADO.\\n"+text+"\\nMotivo: "+crpFriendlyError(message));
+     "INCOMPLETA / EM REVISÃO")+(x.issues.length?" | "+x.issues.join(", "):"")).join("\n");
+   crpShow("PRÉVIA DIAGNÓSTICA SOMENTE LEITURA — envio DESABILITADO.\n"+text+"\nMotivo: "+crpFriendlyError(message));
   }catch(diagError){crpShow("PRÉVIA SEM LIBERAÇÃO: "+crpFriendlyError(message)+" | Consulta diagnóstica: "+crpFriendlyError(diagError.message))}
  }else crpShow("PRÉVIA BLOQUEADA: "+crpFriendlyError(message))
 }}
