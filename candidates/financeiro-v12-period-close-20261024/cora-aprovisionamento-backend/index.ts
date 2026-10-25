@@ -177,8 +177,13 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costC
   if(/\bRef\.\s*Cora\b|\bID bancário Cora\s*:/i.test(line))continue;
   if(/^\s*(?:Total\s+Custos|Lucro|Saldo|Recebimentos?|Entradas?|Observa[cç][oõ]es?|Rateio)\s*:/i.test(line))break;
   const m=line.trim().match(/^(\d{2})\/(\d{2})(?:\/(\d{2}|\d{4}))?\s*[-–]\s*R\$\s*([\d.,]+)\b(.*)$/i);
-  if(!m||m[1]!==dd||m[2]!==mm)continue;
-  if(m[3]&&m[3]!==yy&&m[3]!==p.date.slice(0,4))continue;
+  if(!m)continue;
+  // One calendar day tolerance for documented prepayment; still require exact line selection.
+  const lineYear=m[3]?(m[3].length===2?"20"+m[3]:m[3]):p.date.slice(0,4);
+  const ledgerDay=new Date(lineYear+"-"+m[2]+"-"+m[1]+"T12:00:00Z");
+  const bankDay=new Date(p.date+"T12:00:00Z");
+  if(Number.isNaN(ledgerDay.getTime())||Math.abs(ledgerDay.getTime()-bankDay.getTime())>86400000)continue;
+  if(ledgerDay.toISOString().slice(0,10)!==lineYear+"-"+m[2]+"-"+m[1])continue;
   if(amount(m[4])!==p.amount_cents)continue;
   // Only link a cross-work cost if the exact line explicitly names the origin work.
   if(crossed&&!new RegExp("(^|[^0-9])"+p.case+"(?![0-9])","i").test(line))continue;
@@ -210,7 +215,7 @@ async function reconcileExisting(action:string,p:ReturnType<typeof clean>,raw:an
  const scan=await existingMatchCandidates(p,k,costCase);
  const candidates=scan.matches;
  const prev= {ok:true,source:"TRELLO_EXISTING_CARD_VERIFIED",case:p.case,origin_case:p.case,cost_case:scan.cost_case,amount_centavos:p.amount_cents,date:p.date,
-  trello_url:scan.target.shortUrl||scan.pre?.target?.trello_url,candidates};
+  trello_url:scan.target.shortUrl||scan.pre?.target?.trello_url,candidates,date_tolerance_days:1,requires_explicit_line_selection:true};
  if(action==="existing-preview")return reply(prev);
  const matchKey=String(raw?.match_key||"");
  const found=candidates.filter(x=>x.match_key===matchKey);
