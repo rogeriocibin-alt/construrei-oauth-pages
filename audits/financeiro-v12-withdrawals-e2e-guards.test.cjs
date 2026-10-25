@@ -52,3 +52,15 @@ test("scripts in the candidate HTML parse as JavaScript",()=>{
  }
  assert.ok(checked>=5,"Expected inline JavaScript scripts; checked "+checked);
 });
+
+test("retirada conciliada integra consulta histórica mensal sem criar pagamento presumido",()=>{
+ assert.match(edge,/async function withdrawalHistory\(/);
+ assert.match(edge,/payload->>reconciliation_kind/);
+ assert.match(edge,/eq\.WITHDRAWAL_SETTLEMENT/);
+ assert.match(edge,/status","eq\.COMMITTED"/);
+ assert.match(edge,/read_only:true/);
+ assert.ok(ui.includes('id="cr-withdraw-history"'));
+ assert.ok(ui.includes('action=withdrawal-history'));
+ assert.ok(ui.includes('json.source!=="V12_SETTLED_WITHDRAWALS_CORA"'));
+ assert.ok(ui.includes('Nenhum valor presumido'));
+});
