@@ -118,12 +118,12 @@ async function gcAwaitingPayment(){
   const rows=body.data;pages=page;
   for(const q of rows){
    const id=String(q.id||q.codigo||"").trim();if(!id||unique.has(id))continue;unique.add(id);
-   const digits=String(q.codigo||"").replace(/\\D/g,"");if(!digits.endsWith("26")||digits.length<3)continue;
+   const digits=String(q.codigo||"").replace(/\D/g,"");if(!digits.endsWith("26")||digits.length<3)continue;
    processed++;
-   const status=String(q.nome_situacao||"").normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toUpperCase().replace(/\\s+/g," ").trim();
-   if(!/(^|\\s)AGUARDANDO PAGAMENTO(\\s|$)/.test(status))continue;
-   const raw=String(q.valor_total??"").trim().replace(/R\\$/gi,"").replace(/\\s/g,"");
-   const n=Number(raw.includes(",")?raw.replace(/\\./g,"").replace(",","."):raw);
+   const status=String(q.nome_situacao||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/\s+/g," ").trim();
+   if(!/(^|\s)AGUARDANDO PAGAMENTO(\s|$)/.test(status))continue;
+   const raw=String(q.valor_total??"").trim().replace(/R\$/gi,"").replace(/\s/g,"");
+   const n=Number(raw.includes(",")?raw.replace(/\./g,"").replace(",","."):raw);
    if(!Number.isFinite(n)||n<0)throw Error("GC_AWAITING_PAYMENT_AMOUNT_INVALID");
    total+=Math.round(n*100);count++;
   }
