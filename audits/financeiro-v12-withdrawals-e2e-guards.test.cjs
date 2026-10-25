@@ -64,3 +64,13 @@ test("retirada conciliada integra consulta histórica mensal sem criar pagamento
  assert.ok(ui.includes('json.source!=="V12_SETTLED_WITHDRAWALS_CORA"'));
  assert.ok(ui.includes('Nenhum valor presumido'));
 });
+
+test("does not misreport a previously classified bank expense as withdrawal",()=>{
+ const body=edge.slice(edge.indexOf("async function withdrawalFlow("),edge.indexOf("async function capitalBridge("));
+ assert.match(body,/BANK_OPERATION_ALREADY_CLASSIFIED_DIFFERENTLY/);
+ assert.match(body,/prev\.reconciliation_kind!==\"WITHDRAWAL_SETTLEMENT\"/);
+ assert.match(body,/saved\.period_id!==periodId/);
+ assert.match(body,/saved\.beneficiary!==beneficiary/);
+ assert.match(body,/saved\.amount_cents!==p\.amount_cents/);
+ assert.match(body,/already_committed:true,writes:false,ledger_only:true/);
+});
