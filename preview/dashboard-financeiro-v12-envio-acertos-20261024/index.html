@@ -719,7 +719,7 @@ function manualForeignCostRefs(items,work){
  const found=[];
  for(const entry of Array.isArray(items)?items:[]){
   const desc=String(entry?.description_original||"");
-  const references=[...desc.matchAll(/\\b(?:OBRA|ORÇAMENTO|ORCAMENTO)\\s*(\\d{1,5})\\s*[-/]\\s*(2[456])\\b/gi)].map(m=>m[1]+"-"+m[2]);
+  const references=[...desc.matchAll(/\b(?:OBRA|ORÇAMENTO|ORCAMENTO)\s*(\d{1,5})\s*[-/]\s*(2[456])\b/gi)].map(m=>m[1]+"-"+m[2]);
   if(references.some(ref=>ref!==work))found.push({description:desc,cents:entry?.value_cents||0,work:references.filter(ref=>ref!==work)});
  }
  return found;
@@ -733,7 +733,7 @@ async function manualCloseWork(){
  const closurePost=payload=>api("api=manual-close-work",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)});
  try{
   manualMsg("Consultando Trello para calcular o fechamento. Nenhuma alteração realizada...");
-  const normalizedCase=caseNo.includes("-")?caseNo:caseNo.replace(/^(\\d+)(2[456])$/,"$1-$2");
+  const normalizedCase=caseNo.includes("-")?caseNo:caseNo.replace(/^(\d+)(2[456])$/,"$1-$2");
   const audit=await api("api=case&case="+encodeURIComponent(normalizedCase));
   if(!audit?.ok||!Array.isArray(audit?.trello?.cost_items))throw Error("Não foi possível auditar as linhas de custo antes do fechamento. Nenhuma escrita autorizada.");
   const foreign=manualForeignCostRefs(audit.trello.cost_items,normalizedCase);
