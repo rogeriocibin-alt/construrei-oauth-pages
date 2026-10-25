@@ -7,6 +7,7 @@ const data={lists:[{id:'monthly',name:'10. OUTUBRO 26'},{id:'open',name:'AG. PAG
 const baseLine='23/10 - R$41,90 Materiais - ANDREY JOHNNY - Reembolso 791-26 - Ref. PIX';
 function run(desc){
 const context=vm.createContext({
+BOARD_2026:'6974b24c16d17ca76351a950',
 trelloApiRead:async url=>url.includes('/lists?')?data.lists:data.cards,
 caseInName:s=>(String(s).match(/(\d{1,5}-26)/)||[])[1]||null,
 allowedList:(dir,name)=>/AG\.? PAGAMENTO|EM ANDAMENTO|AG\.? ACERTO/.test(name),
