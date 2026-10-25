@@ -1124,13 +1124,13 @@ function replaceCloseBlock(desc:string,block:string){
 // Fail closed when a line under Custos explicitly names a different obra.
 // The textual source remains unchanged: no automatic debit, reversal or reallocation.
 function foreignCostCaseRefs(desc:string,ownCase:string){
-  const lines=String(desc||"").replace(/\\*/g,"").split(/\\r?\\n/);
+  const lines=String(desc||"").replace(/\*/g,"").split(/\r?\n/);
   let inCosts=false;const matches:any[]=[];
   for(const line of lines){
-    if(/^\\s*Custos\\s*:/i.test(line)){inCosts=true;continue}
-    if(inCosts&&/^\\s*(?:FECHAMENTO\\s+DA\\s+OBRA|Total\\s+(?:de\\s+)?Custos|Saldo\\s*\\/|Lucro\\s+L[ií]quido|RATEIO\\s+DO\\s+LUCRO)/i.test(line))break;
-    if(!inCosts||!/R\\$\\s*[-]?[0-9.]+,[0-9]{2}/i.test(line))continue;
-    const regex=/\\b(?:obra|or[cç]amento)\\s*[:#-]?\\s*(\\d{1,5})\\s*-\\s*(2[456])\\b/gi;
+    if(/^\s*Custos\s*:/i.test(line)){inCosts=true;continue}
+    if(inCosts&&/^\s*(?:FECHAMENTO\s+DA\s+OBRA|Total\s+(?:de\s+)?Custos|Saldo\s*\/|Lucro\s+L[ií]quido|RATEIO\s+DO\s+LUCRO)/i.test(line))break;
+    if(!inCosts||!/R\$\s*[-]?[0-9.]+,[0-9]{2}/i.test(line))continue;
+    const regex=/\b(?:obra|or[cç]amento)\s*[:#-]?\s*(\d{1,5})\s*-\s*(2[456])\b/gi;
     let m;while((m=regex.exec(line))!==null){
       const ref=m[1]+"-"+m[2];
       if(ref!==ownCase)matches.push({other_case:ref,line:line.trim().slice(0,240)});
