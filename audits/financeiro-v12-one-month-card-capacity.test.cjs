@@ -42,3 +42,11 @@ test('indexa também os comentários históricos do cartão mensal antes de auto
  assert.match(edge,/if\(duplicate\)throw Error\("PERIOD_ALREADY_SENT"\)/);
  assert.match(edge,/monthlyTexts\.some\(\(t:string\)=>hasCase\(t,c\)\)/);
 });
+
+test('busca duplicidades também nos comentários de outros meses sem escrever em cartões adicionais',()=>{
+ assert.match(edge,/otherMonths=finCards\.filter/);
+ assert.match(edge,/otherActions=await Promise\.all\(otherMonths\.map/);
+ assert.match(edge,/OTHER_MONTH_COMMENTS_UNAVAILABLE/);
+ assert.match(edge,/historicalTexts\.some\(\(t:string\)=>hasCase\(t,c\)\)/);
+ assert.match(edge,/historicalTexts\.some\(\(t:string\)=>t\.includes\(marker\(p\)\)\)/);
+});
