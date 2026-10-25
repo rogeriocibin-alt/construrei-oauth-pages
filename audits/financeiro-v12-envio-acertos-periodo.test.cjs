@@ -90,7 +90,7 @@ test('V12 Resultados: envio financeiro isolado e datas sincronizadas',()=>{
  assert.match(html,/id="crp-start"/);
  assert.match(html,/id="crp-end"/);
  assert.match(html,/acertoPanel\.parentNode\.insertBefore\(periodPanel,acertoPanel\)/);
- assert.match(html,/function crpData\(\)\{const start=document\.getElementById\("crp-start"\)/);
+ assert.match(html,/function crpData\(\)\{\s*const start=document\.getElementById\("crp-start"\)/);
  assert.match(html,/\["crp-start","cg-close-start"\]/);
  assert.match(html,/\["cg-close-start","crp-start"\]/);
  assert.match(html,/id="cr-v12-owner-nav-20261024"/);
@@ -114,8 +114,8 @@ test('reconhece 3 custos da 799-26 dentro do cartão 755-26, mas não os própri
  assert.equal(ctx.scan(entries.slice(-1),'755-26').length,0);
 });
 test('resposta nula e lista AG ACERTO vazia não geram falso sucesso',()=>{
- assert.match(html,/if\(!j\|\|typeof j!=="object"\)throw Error\("BACKEND_RESPOSTA_VAZIA"\)/);
- assert.match(html,/A lista AG\. ACERTO está vazia ou indisponível/);
+ assert.match(html,/RESPOSTA_SERVIDOR_NULA/);
+ assert.match(html,/Lista AG\. ACERTO do Trello está vazia/);
  assert.match(html,/Não foi possível auditar as linhas de custo antes do fechamento/);
 });
 
