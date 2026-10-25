@@ -624,9 +624,16 @@ body{background:var(--v12-bg)}
 <option value="capital">Saída → distribuir entre contas do Capital de Giro</option>
 <option value="receipt">Entrada → registrar recebimento de uma obra</option>
 <option value="multi-receipt">Entrada → distribuir recebimento entre várias obras</option>
-<option value="manual">Lançamento manual livre (informar obra)</option>
+<option value="withdrawal">Saída → retirada financeira (vincular ao acerto)</option><option value="manual">Lançamento manual livre (informar obra)</option>
 </select></label>
-<div id="cr-ap-single"><label style="display:block;margin-bottom:10px">Obra de destino <input id="cr-ap-case" inputmode="numeric" placeholder="Ex.: 818-26" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"></label><label id="cr-ap-existing-label" style="display:block;margin-bottom:10px">Este custo já está antecipado no Trello? <select id="cr-ap-existing" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"><option value="">Selecione para continuar</option><option value="yes">Sim — já foi lançado (não duplicar)</option><option value="no">Não — lançar custo realizado</option><option value="unsure">Não sei — preciso conferir</option></select></label></div><div id="cr-ap-split" hidden style="margin:12px 0;padding:14px;background:#fff;border:1px solid #c6dbe9;border-radius:12px"><div style="font-weight:800;margin-bottom:7px">Obras / contas disponíveis</div><p style="font-size:12px;color:#536d83;margin:3px 0 10px">Selecione e informe o valor de cada parcela. A soma deve corresponder exatamente à transação bancária.</p><div id="cr-ap-choices" style="max-height:330px;overflow:auto;display:grid;gap:7px"></div><div id="cr-ap-split-total" role="status" style="font-weight:800;margin:12px 0"></div><div id="cr-ap-preview-parts" style="margin:8px 0;display:grid;gap:5px" aria-live="polite"></div><div class="manualactions"><button class="manualbtn" id="cr-ap-split-preview" type="button">1. Conferir distribuição</button><button class="manualbtn primary" id="cr-ap-split-commit" type="button" disabled>2. Confirmar distribuição</button></div><div id="cr-ap-split-status" role="status"></div></div><div class="manualactions"><button type="button" class="manualbtn primary" id="cr-ap-prepare">Preparar lançamento V12</button><button type="button" class="manualbtn" id="cr-ap-cancel">Cancelar</button></div><div id="cr-ap-editor-status" role="status"></div><div id="cr-ap-existing-review" hidden style="margin-top:12px;background:#eef8ff;border:1px solid #b9d9ed;border-radius:10px;padding:13px">
+<div id="cr-ap-withdrawal" hidden style="border:1px solid #bdd3e3;border-radius:12px;background:#f3f8fc;padding:12px;margin:12px 0">
+ <h4>Retirada financeira Cora — vincular ao acerto</h4><p>Registra a classificação da saída bancária existente. Não faz pagamento, não lança custo na obra e não debita Capital de Giro.</p>
+ <label>Período de acerto<select id="cr-ap-withdraw-period" style="width:100%;padding:10px"></select></label>
+ <label>Beneficiário<select id="cr-ap-withdraw-beneficiary" style="width:100%;padding:10px"><option value="">Selecionar...</option><option value="FABRICIO">Fabrício</option><option value="EDER">Éder</option><option value="ROGERIO">Rogério</option><option value="GABRIELLY">Gabrielly</option></select></label>
+ <label>Identificação/justificativa<input id="cr-ap-withdraw-note" maxlength="300" placeholder="Referência ao acerto" style="width:100%;padding:10px"></label>
+ <div class="manualactions"><button type="button" id="cr-ap-withdraw-preview" class="manualbtn">1. Prévia de retirada</button><button type="button" id="cr-ap-withdraw-confirm" class="manualbtn primary" disabled>2. Confirmar vínculo</button></div>
+ <div id="cr-ap-withdraw-status" class="manualnote" role="status" aria-live="polite">Selecione o período, beneficiário e justificativa.</div>
+ </div><div id="cr-ap-single"><label style="display:block;margin-bottom:10px">Obra de destino <input id="cr-ap-case" inputmode="numeric" placeholder="Ex.: 818-26" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"></label><label id="cr-ap-existing-label" style="display:block;margin-bottom:10px">Este custo já está antecipado no Trello? <select id="cr-ap-existing" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"><option value="">Selecione para continuar</option><option value="yes">Sim — já foi lançado (não duplicar)</option><option value="no">Não — lançar custo realizado</option><option value="unsure">Não sei — preciso conferir</option></select></label></div><div id="cr-ap-split" hidden style="margin:12px 0;padding:14px;background:#fff;border:1px solid #c6dbe9;border-radius:12px"><div style="font-weight:800;margin-bottom:7px">Obras / contas disponíveis</div><p style="font-size:12px;color:#536d83;margin:3px 0 10px">Selecione e informe o valor de cada parcela. A soma deve corresponder exatamente à transação bancária.</p><div id="cr-ap-choices" style="max-height:330px;overflow:auto;display:grid;gap:7px"></div><div id="cr-ap-split-total" role="status" style="font-weight:800;margin:12px 0"></div><div id="cr-ap-preview-parts" style="margin:8px 0;display:grid;gap:5px" aria-live="polite"></div><div class="manualactions"><button class="manualbtn" id="cr-ap-split-preview" type="button">1. Conferir distribuição</button><button class="manualbtn primary" id="cr-ap-split-commit" type="button" disabled>2. Confirmar distribuição</button></div><div id="cr-ap-split-status" role="status"></div></div><div class="manualactions"><button type="button" class="manualbtn primary" id="cr-ap-prepare">Preparar lançamento V12</button><button type="button" class="manualbtn" id="cr-ap-cancel">Cancelar</button></div><div id="cr-ap-editor-status" role="status"></div><div id="cr-ap-existing-review" hidden style="margin-top:12px;background:#eef8ff;border:1px solid #b9d9ed;border-radius:10px;padding:13px">
  <strong style="display:block;margin-bottom:8px;color:#164d75">Custo localizado no Trello · revisar antes de conciliar</strong>
  <label style="display:block">Selecione a linha correspondente <select id="cr-ap-existing-line" style="display:block;width:100%;min-height:45px;margin:8px 0;padding:9px;border:1px solid #b8d0e1;border-radius:8px"></select></label>
  <p style="font-size:12px;color:#344c64">Confirmar apenas se for exatamente a mesma despesa. Esta ação não inclui outra despesa no cartão, nem altera os valores.</p>
@@ -1745,7 +1752,10 @@ function applyKind(){
  const chosen=kind.value;
  if(chosen==="manual"){editor.hidden=true;selected=null;manualClear();select("manual");document.getElementById("mc_case")?.focus();return}
  const multi=["multi-expense","multi-receipt","capital"].includes(chosen);
- single.hidden=multi;split.hidden=!multi;
+ const withdrawal=chosen==="withdrawal";
+ document.getElementById("cr-ap-withdrawal").hidden=!withdrawal;
+ single.hidden=multi||withdrawal;split.hidden=!multi;
+ if(withdrawal)loadWithdrawalPeriods();
  const incoming=chosen==="receipt"||chosen==="multi-receipt";
  const existingLabel=document.getElementById("cr-ap-existing-label");existingLabel.hidden=chosen!=="expense"&&chosen!=="existing";existingLabel.style.display=existingLabel.hidden?"none":"block";
  hideReceiptReview();
@@ -1753,10 +1763,67 @@ function applyKind(){
  else existing.value="no";
  editorStatus.textContent="";
  if(incoming&&dir!=="IN"||!incoming&&dir!=="OUT")editorStatus.textContent="A operação selecionada não corresponde à direção do movimento bancário.";
- document.getElementById("cr-ap-prepare").hidden=multi;
+ document.getElementById("cr-ap-prepare").hidden=multi||withdrawal;
  if(multi)loadTargets();
 }
 kind.addEventListener("change",applyKind);
+const wdPeriod=document.getElementById("cr-ap-withdraw-period"),
+ wdBeneficiary=document.getElementById("cr-ap-withdraw-beneficiary"),
+ wdNote=document.getElementById("cr-ap-withdraw-note"),
+ wdPreviewButton=document.getElementById("cr-ap-withdraw-preview"),
+ wdConfirmButton=document.getElementById("cr-ap-withdraw-confirm"),
+ wdStatus=document.getElementById("cr-ap-withdraw-status");
+let wdPreview=null,wdBusy=false;
+function clearWithdrawal(){wdPreview=null;wdConfirmButton.disabled=true}
+for(const el of [wdPeriod,wdBeneficiary,wdNote]){el.addEventListener("change",clearWithdrawal);el.addEventListener("input",clearWithdrawal)}
+async function loadWithdrawalPeriods(){
+ clearWithdrawal();wdPeriod.replaceChildren();wdStatus.textContent="Consultando cortes registrados no Capital de Giro...";
+ const source=selected?.source_id;
+ try{
+  const response=await existingRequest("capital-periods",await bankPayload("1-26"));
+  if(kind.value!=="withdrawal"||selected?.source_id!==source)return;
+  if(!Array.isArray(response.periods)||!response.periods.length)throw Error("Nenhum corte registrado");
+  const o=document.createElement("option");o.value="";o.textContent="Selecione o corte";wdPeriod.append(o);
+  for(const p of response.periods){const x=document.createElement("option");x.value=String(p.id||"");x.textContent=String(p.period||"Período");wdPeriod.append(x)}
+  wdStatus.textContent="Selecione o período do acerto. O saldo de Capital de Giro não será debitado.";
+ }catch(e){wdStatus.textContent="Consulta bloqueada: "+String(e?.message||e)}
+}
+async function withdrawalPayload(){
+ if(!selected||kind.value!=="withdrawal")throw Error("Selecione uma movimentação Cora");
+ const p=await bankPayload("1-26");
+ if(p.direction!=="OUT")throw Error("Retiradas exigem uma saída da Cora");
+ if(!wdPeriod.value||!wdBeneficiary.value||!wdNote.value.trim())throw Error("Preencha período, beneficiário e justificativa");
+ return {...p,period_id:wdPeriod.value,beneficiary:wdBeneficiary.value,justification:wdNote.value.trim()};
+}
+wdPreviewButton.addEventListener("click",async()=>{
+ if(wdBusy||!selected||statusFailed||statusBusy)return;
+ wdBusy=true;clearWithdrawal();wdStatus.textContent="Conferindo referência bancária e corte...";
+ try{
+  const p=await withdrawalPayload(),r=await existingRequest("withdrawal-preview",p);
+  if(r.preview!==true||!r.fingerprint)throw Error("Prévia não confirmada");
+  wdPreview={source_id:selected.source_id,payload:{...p,expected_fingerprint:r.fingerprint}};
+  wdConfirmButton.disabled=false;
+  wdStatus.textContent="PRÉVIA SEM ESCRITA · "+r.period.label+" · "+r.beneficiary+" · "+displayBank(r.amount_cents);
+ }catch(e){wdStatus.textContent="Prévia bloqueada: "+String(e?.message||e)}
+ finally{wdBusy=false}
+});
+wdConfirmButton.addEventListener("click",async()=>{
+ if(wdBusy||!wdPreview||!selected)return;
+ wdBusy=true;wdConfirmButton.disabled=true;
+ try{
+  const current=await withdrawalPayload(),{expected_fingerprint,...original}=wdPreview.payload;
+  if(wdPreview.source_id!==selected.source_id||JSON.stringify(current)!==JSON.stringify(original))throw Error("Dados alterados; refaça a prévia");
+  if(!confirm("Confirmar o vínculo da saída bancária já existente ao corte de acerto? Nenhum pagamento ou débito adicional será realizado."))return;
+  wdStatus.textContent="Registrando vínculo de retirada no ledger...";
+  const res=await existingRequest("withdrawal-commit",wdPreview.payload);
+  if(!res.committed&&!res.already_committed)throw Error("Confirmação não comprovada");
+  const id=selected.source_id;clearWithdrawal();
+  wdStatus.textContent="✓ Retirada vinculada ao corte, sem alteração bancária.";
+  window.dispatchEvent(new CustomEvent("cr:ap:confirmed",{detail:{source_id:id}}));
+ }catch(e){wdStatus.textContent="Revisão necessária: "+String(e?.message||e)+". Não reenvie sem conferir."}
+ finally{wdBusy=false}
+});
+
 splitPreviewButton.addEventListener("click",async()=>{
  if(splitBusy||!splitSum()||!selected)return;
  const capital=kind.value==="capital",items=[...splitSelection.values()],direction=bankDirection(selected);
