@@ -76,3 +76,21 @@ test('não confunde rateios estimados com saques ou recebimentos bancários',()=
  assert.match(edge,/Base financeira das obras/);
  assert.doesNotMatch(edge,/RETIRADAS CONFIRMADAS|Base recebida:|ACERTOS EFETIVADOS/);
 });
+
+test('V12 navegação única: Capital de Giro pertence à Central',()=>{
+ assert.match(html,/window\.v12CapitalGo=function\(\)\{if\(typeof r8Go==="function"\)r8Go\("cora"\)/);
+ assert.match(html,/slot\.appendChild\(cap\)/);
+ assert.match(html,/window\.crShowCapital=\(\)=>select\("capital"\)/);
+ assert.doesNotMatch(html,/capAnchor/);
+ assert.match(html,/Capital de Giro: abrir Central/);
+});
+test('V12 Resultados: envio financeiro isolado e datas sincronizadas',()=>{
+ assert.match(html,/id="cr-period-send"/);
+ assert.match(html,/id="crp-start"/);
+ assert.match(html,/id="crp-end"/);
+ assert.match(html,/acertoPanel\.parentNode\.insertBefore\(periodPanel,acertoPanel\)/);
+ assert.match(html,/function crpData\(\)\{const start=document\.getElementById\("crp-start"\)/);
+ assert.match(html,/\["crp-start","cg-close-start"\]/);
+ assert.match(html,/\["cg-close-start","crp-start"\]/);
+ assert.match(html,/id="cr-v12-owner-nav-20261024"/);
+});
