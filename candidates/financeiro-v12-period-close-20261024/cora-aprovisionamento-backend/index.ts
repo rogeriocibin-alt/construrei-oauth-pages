@@ -537,6 +537,31 @@ async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:stri
  * period. A withdrawal is not a job cost, nor a Capital de Giro debit.
  * The existing financial ledger guarantees a bank source ID is only claimed once.
  * This action does not write to Trello or Cora. */
+/* Director-only, read-only bank-settled withdrawals, never rateios inferred. */
+async function withdrawalHistory(raw:any,k:string){
+ const u=new URL(SB+"/rest/v1/cr_finance_v12_operations");
+ u.searchParams.set("select","operation_id,payload,created_at,updated_at,trello_url");
+ u.searchParams.set("payload->>reconciliation_kind","eq.WITHDRAWAL_SETTLEMENT");
+ u.searchParams.set("status","eq.COMMITTED");
+ u.searchParams.set("order","updated_at.desc");u.searchParams.set("limit","500");
+ const r=await fetch(u,{headers:headers(k),signal:AbortSignal.timeout(18000)});
+ if(!r.ok)throw Error("WITHDRAWAL_LEDGER_HISTORY_UNAVAILABLE");
+ const all=await r.json();
+ if(!Array.isArray(all))throw Error("WITHDRAWAL_HISTORY_INVALID");
+ const year=String(raw?.year||"").trim(),month=String(raw?.month||"").trim();
+ if(year&&!/^20\d{2}$/.test(year))throw Error("WITHDRAWAL_YEAR_INVALID");
+ if(month&&!/^(0[1-9]|1[0-2])$/.test(month))throw Error("WITHDRAWAL_MONTH_INVALID");
+ const rows=all.map((x:any)=>({id:String(x.operation_id||""),date:String(x.payload?.date||""),
+  period:String(x.payload?.period||""),period_id:String(x.payload?.period_id||""),
+  beneficiary:String(x.payload?.beneficiary||""),
+  amount_cents:Number(x.payload?.amount_cents||0),
+  bank_reference:String(x.payload?.reference||""),
+  trello_url:String(x.trello_url||""),registered_at:String(x.updated_at||"")}))
+  .filter((x:any)=>/^20\d{2}-\d{2}-\d{2}$/.test(x.date)&&Number.isSafeInteger(x.amount_cents)&&x.amount_cents>0)
+  .filter((x:any)=>(!year||x.date.startsWith(year))&&(!month||x.date.slice(5,7)===month));
+ return {ok:true,source:"V12_SETTLED_WITHDRAWALS_CORA",rows,total_cents:rows.reduce((a:number,x:any)=>a+x.amount_cents,0),
+  count:rows.length,read_only:true,filters:{year:year||null,month:month||null}};
+}
 async function withdrawalFlow(req:Request,action:string,p:ReturnType<typeof clean>,raw:any,k:string){
  if(p.direction!=="OUT"||!p.operation_id.startsWith("CORA_"))throw Error("WITHDRAWAL_REQUIRES_VERIFIED_CORA_DEBIT");
  const beneficiary=String(raw?.beneficiary||"").trim().toUpperCase();
@@ -675,7 +700,7 @@ Deno.serve(async(req:Request)=>{
  if(req.headers.get("origin")&&req.headers.get("origin")!==ORIGIN)return reply({ok:false,error:"ORIGIN_DENIED"},403);
  const u=new URL(req.url),action=u.searchParams.get("action")||"health";
  if(action==="health"&&req.method==="GET")return reply({ok:true,candidate:true,build:NAME,trello_writes:"DIRECTOR_ONLY",bank_verification:"SERVER_SIDE_CACHE",status:"LEDGER_PERSISTENT"});
- if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","withdrawal-preview","withdrawal-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
+ if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","withdrawal-history","withdrawal-preview","withdrawal-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return reply({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const k=key();if(!k)return reply({ok:false,error:"SERVICE_AUTH_UNAVAILABLE"},503);
  let raw:any=null;
@@ -683,6 +708,10 @@ Deno.serve(async(req:Request)=>{
  if(action==="eligible-cases"){
   try{const direction=String(raw?.direction||"IN");return reply({ok:true,cases:await liveCases(direction),source:"TRELLO_2026_LIVE"})}
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e)},502)}
+ }
+ if(action==="withdrawal-history"){
+  try{return reply(await withdrawalHistory(raw,k))}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e)},503)}
  }
  if(action==="bank-status"){
   try{const data=await batchBankStatus(raw,k);return reply(data,data.ok?200:400)}
