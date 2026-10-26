@@ -86,7 +86,39 @@ async function diagnosticPreview(body:any){
  return {ok:true,diagnostic:true,period:p,rows,writes:false,preview_validated:false,can_commit:false,
    note:"CONSULTA NAO HOMOLOGADA: exige previas financeiras regulares e confirmacao posterior."};
 }
-async function gather(body:any){
+// Reuse the existing, guarded Capital de Giro period-close service. It owns the
+// unique card reservation, balance reconciliation and bank-neutral credit record.
+// This connector never writes Cora or creates a separate CG implementation.
+async function cgPeriodService(action:string,p:any,session:string,fingerprint?:string){
+ if(!session||session.length<12)throw Error("CG_DIRECTOR_SESSION_MISSING");
+ const body:any={start:p.start,end:p.end};
+ if(fingerprint)body.fingerprint=fingerprint;
+ const url=SB+"/functions/v1/cr-trello-capital-giro-v1?action="+action;
+ const r=await fetch(url,{method:"POST",headers:{"content-type":"application/json","x-cr-session":session},
+  body:JSON.stringify(body),signal:AbortSignal.timeout(45000)});
+ const j=await r.json().catch(()=>null);
+ if(!r.ok||!j?.ok)throw Error("CAPITAL_PERIOD_SERVICE_"+String(j?.error||r.status));
+ return j;
+}
+async function cgCreationPlan(p:any,rows:any[],expected:number,session:string){
+ const preview=await cgPeriodService("close-preview",p,session);
+ if(preview.no_write!==true||preview.preview!==true||!(/^[0-9a-f]{64}$/i.test(String(preview.fingerprint||""))))
+  throw Error("CG_PREVIEW_UNVERIFIED");
+ if(preview.works!==rows.length||preview.capital_cents!==expected)
+  throw Error("CG_PREVIEW_DIFFERENT_ACERTO");
+ // Same amount and count are not enough: verify EXACT work IDs from the canonical
+ // Trello acerto the capital service will consume.
+ const source=await trello("/cards/6ab6f27658e42565c7413b7b?fields=id,desc,shortUrl");
+ const description=String(source.desc||""),pivot=description.lastIndexOf("📋 RESUMO");
+ if(pivot<0||source.shortUrl!==preview.source_url)throw Error("CG_SOURCE_MISMATCH");
+ const ids=[...description.slice(0,pivot).matchAll(/\b(\d{1,5}-2[456])\s*\|/g)].map(x=>x[1]).sort();
+ const want=rows.map((x:any)=>x.case).sort();
+ if(ids.length!==want.length||ids.some((x:string,i:number)=>x!==want[i]))
+  throw Error("CG_SOURCE_WORKS_DIFFER");
+ return {fingerprint:preview.fingerprint,capital_cents:preview.capital_cents,
+  works:preview.works,source_url:preview.source_url,case_ids:ids};
+}
+async function gather(body:any,session:string=""){
  const p=input(body);
  if(!p.monthName)throw Error("MES_INVALIDO");
  // Cross-month cuts are valid: financial competence is always the month of the end date.
@@ -141,12 +173,17 @@ async function gather(body:any){
    credit===105806&&totals.capital_cents===122720&&
    String(existing?.desc||"").includes("CG_PERIOD_KEY|2026-10-10_2026-10-23")&&
    String(existing?.desc||"").includes("CG_CREDIT|1058.06");
+ const cg_plan=!existing&&session?await cgCreationPlan(p,rows,totals.capital_cents,session):null;
  const capital_validation={exists:!!existing,period_card_url:existing?.shortUrl||null,credit_cents:credit,
    expected_cents:totals.capital_cents,difference_cents:credit==null?null:totals.capital_cents-credit,
    ok:credit!=null&&Math.abs(credit-totals.capital_cents)<=1,
+   can_create:!!cg_plan,creation_preview:cg_plan,
    accepted_exception:accepted_exception?"CR-CG-DIFF-16914-ACCEPTED-20261024":null};
- const fingerprint=await sha(JSON.stringify({p,month:month?[month.id,month.desc]:["MONTH_MISSING",p.monthName],capital_validation,rows:rows.map(r=>[r.case,r.base_cents,r.cost_cents,r.profit_cents,r.rateio]),cards:cards.map(c=>[c.id,c.idList,c.desc,c.dateLastActivity])}));
- return {p,rows,cards,month,target,totals,capital_validation,duplicate,fingerprint};
+ const work_fingerprint=await sha(JSON.stringify({p,month:month?[month.id,month.desc]:["MONTH_MISSING",p.monthName],
+  rows:rows.map(r=>[r.case,r.base_cents,r.cost_cents,r.profit_cents,r.rateio]),
+  cards:cards.map(c=>[c.id,c.idList,c.desc,c.dateLastActivity])}));
+ const fingerprint=await sha(JSON.stringify({work_fingerprint,capital_validation}));
+ return {p,rows,cards,month,target,totals,capital_validation,duplicate,fingerprint,work_fingerprint};
 }
 function block(c:any){
  const p=c.p,t=c.totals;
@@ -344,11 +381,23 @@ Deno.serve(async req=>{
    const x=await recoverPeriod(b,action==="recovery-commit");
    return ans(x,x.partial?207:200);
   }
-  const c=await gather(b);
+  let c=await gather(b,req.headers.get("x-cr-session")||"");
   if(action==="preview")return ans({ok:true,preview:true,period:c.p,totals:c.totals,capital_validation:c.capital_validation,fingerprint:c.fingerprint,duplicate:c.duplicate,requires_month_creation:!c.month,writes:false});
   if(c.duplicate)return ans({ok:false,error:"PERIOD_ALREADY_SENT"},409);
-  if(!c.capital_validation.ok&&!c.capital_validation.accepted_exception)return ans({ok:false,error:"CAPITAL_PERIOD_NOT_RECONCILED",capital_validation:c.capital_validation},409);
+  if(!c.capital_validation.ok&&!c.capital_validation.accepted_exception&&!c.capital_validation.can_create)
+   return ans({ok:false,error:"CAPITAL_PERIOD_NOT_RECONCILED",capital_validation:c.capital_validation},409);
   if(b.fingerprint!==c.fingerprint)return ans({ok:false,error:"STALE_PREVIEW"},409);
+  let cgCreated:any=null;
+  if(c.capital_validation.can_create){
+   const plan=c.capital_validation.creation_preview;
+   const created=await cgPeriodService("close-commit",c.p,req.headers.get("x-cr-session")||"",plan.fingerprint);
+   if(created.created!==true||!created.card_url)throw Error("CAPITAL_CREATION_UNVERIFIED_REVIEW");
+   cgCreated=created;
+   const after=await gather(b,req.headers.get("x-cr-session")||"");
+   if(after.work_fingerprint!==c.work_fingerprint||!after.capital_validation.ok)
+    throw Error("CAPITAL_CREATED_MONTH_PENDING_REVIEW");
+   c=after;
+  }
   if(!c.month)c.month=await provisionMonth(c);
   const full=block(c);
   let next=String(c.month.desc||"").trimEnd()+"\n"+full+"\n";
@@ -372,6 +421,8 @@ Deno.serve(async req=>{
     if(check.idList===c.target.id)moved.push(c.rows[i].case);else fail.push(c.rows[i].case+":UNVERIFIED");
    }catch(e){fail.push(c.rows[i].case+":"+String(e).slice(0,55))}
   }
-  return ans({ok:fail.length===0,recorded:true,month:c.p.monthName,moved,unresolved:fail,month_url:c.month.shortUrl,partial:!!fail.length},fail.length?207:200);
+  return ans({ok:fail.length===0,recorded:true,month:c.p.monthName,moved,unresolved:fail,
+   month_url:c.month.shortUrl,capital_created:!!cgCreated,capital_card_url:cgCreated?.card_url||c.capital_validation.period_card_url,
+   partial:!!fail.length},fail.length?207:200);
  }catch(e){return ans({ok:false,error:String(e).slice(0,300)},409)}
 });
