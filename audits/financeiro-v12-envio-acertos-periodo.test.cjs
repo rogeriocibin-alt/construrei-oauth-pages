@@ -157,7 +157,7 @@ test('acerto-live: falha fechada com erro identificável quando não há credenc
 });
 
 test('antiduplicidade: varre 1050 comentários em duas páginas sem repetir corte',async()=>{
- const helper=edge.match(/async function readAllMonthCommentTexts\(cardId:string\)\{[\s\S]*?\n\}\n(?=async function gather)/);
+ const helper=edge.match(/async function readAllMonthCommentTexts\(cardId:string\)\{[\s\S]*?\n\}\n(?=\/\* A director-only)/);
  const guard=edge.match(/async function ensureMonthCutComment\(c:any,full:string\)\{[\s\S]*?\n\}\n(?=\/\* Indicador)/);
  assert.ok(helper&&guard,'rotinas de leitura e guarda encontradas');
  const js=helper[0].replace('cardId:string','cardId').replace('out:string[]','out').replace('new Set<string>()','new Set()')+
@@ -180,7 +180,7 @@ test('antiduplicidade: varre 1050 comentários em duas páginas sem repetir cort
  assert.equal(calls.filter(x=>x.method==='POST').length,0);
 });
 test('antiduplicidade: falha fechada se a paginação Trello for inconsistente',async()=>{
- const helper=edge.match(/async function readAllMonthCommentTexts\(cardId:string\)\{[\s\S]*?\n\}\n(?=async function gather)/);
+ const helper=edge.match(/async function readAllMonthCommentTexts\(cardId:string\)\{[\s\S]*?\n\}\n(?=\/\* A director-only)/);
  assert.ok(helper);
  const js=helper[0].replace('cardId:string','cardId').replace('out:string[]','out').replace('new Set<string>()','new Set()');
  const repeated=Array.from({length:1000},(_,i)=>({id:'000000000000000000000001',data:{text:'corte '+i}}));
