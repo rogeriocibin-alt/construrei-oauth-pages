@@ -15,7 +15,7 @@ test('cartão lotado: salva o corte integral em comentário DO PRÓPRIO MÊS, an
  assert.match(edge,/MONTH_COMMENT_SAVE_UNCONFIRMED/);
 });
 test('comentário idempotente — não repete conteúdo do mesmo período',()=>{
- assert.match(edge,/if\(has\(before\)\)return;/);
+ assert.match(edge,/before\.some\(\(text:string\)=>text\.includes\(marker\(c\.p\)\)\)/);
  assert.match(edge,/marker\(c\.p\)/);
  assert.match(edge,/PERIOD_ALREADY_SENT/);
  assert.match(edge,/MONTH_CARD_CAPACITY_EXCEEDED/);
@@ -36,8 +36,8 @@ test('resumo compacto inclui todas obras, base, custos, lucro, rateio e chave',(
 });
 
 test('indexa também os comentários históricos do cartão mensal antes de autorizar novo corte',()=>{
- assert.match(edge,/monthlyActions=await trello\("\/cards\/"\+month\.id\+"\/actions\?filter=commentCard&limit=1000"\)/);
- assert.match(edge,/if\(!Array\.isArray\(monthlyActions\)\)throw Error\("MONTH_COMMENTS_UNAVAILABLE"\)/);
+ assert.match(edge,/monthlyTexts=await readAllMonthCommentTexts\(month\.id\)/);
+ assert.match(edge,/MONTH_COMMENTS_PAGINATION_INCOMPLETE/);
  assert.match(edge,/monthlyTexts\.some\(\(t:string\)=>t\.includes\(marker\(p\)\)\)/);
  assert.match(edge,/if\(duplicate\)throw Error\("PERIOD_ALREADY_SENT"\)/);
  assert.match(edge,/monthlyTexts\.some\(\(t:string\)=>hasCase\(t,c\)\)/);
@@ -45,8 +45,8 @@ test('indexa também os comentários históricos do cartão mensal antes de auto
 
 test('busca duplicidades também nos comentários de outros meses sem escrever em cartões adicionais',()=>{
  assert.match(edge,/otherMonths=finCards\.filter/);
- assert.match(edge,/otherActions=await Promise\.all\(otherMonths\.map/);
- assert.match(edge,/OTHER_MONTH_COMMENTS_UNAVAILABLE/);
+ assert.match(edge,/Promise\.all\(otherMonths\.map\(\(x:any\)=>readAllMonthCommentTexts\(x\.id\)\)/);
+ assert.match(edge,/MONTH_COMMENTS_UNAVAILABLE/);
  assert.match(edge,/historicalTexts\.some\(\(t:string\)=>hasCase\(t,c\)\)/);
  assert.match(edge,/historicalTexts\.some\(\(t:string\)=>t\.includes\(marker\(p\)\)\)/);
 });
