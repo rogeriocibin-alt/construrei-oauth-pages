@@ -2022,7 +2022,7 @@ splitPreviewButton.addEventListener("click",async()=>{
   }
   splitStatus.textContent="✓ PRÉVIA VALIDADA · "+items.length+" destinos · "+displayBank(Number(selected.amount_centavos))+(recon?" · SOMENTE CONCILIAÇÃO; nenhum valor da obra será alterado.":"")+". Confira e confirme.";
   splitCommitButton.disabled=false;
- }catch(e){splitPreview=null;splitStatus.textContent="Não foi possível validar: "+String(e?.message||e)}
+ }catch(e){splitPreview=null;const reason=String(e?.message||e);if(kind.value==="multi-existing"&&/MULTI_EXISTING_NO_UNMARKED_COST_LINE|MULTI_EXISTING_EXPLICIT_LINE_REQUIRED|EXISTING_LINE_NOT_VERIFIED/.test(reason)){kind.value="bank-note";applyKind();noteStatus.textContent="Modo corrigido: ANOTAR no extrato (SEM lançar custo). As diárias do João Victor são apenas informações bancárias; preencha beneficiário, finalidade e distribuição entre obras, depois valide a prévia. Nenhuma despesa foi gravada.";editorStatus.textContent="A conciliação exige custo já lançado no Trello. Para somente informar diárias, foi selecionado ANOTAR no extrato, sem criar custo.";notePanel.scrollIntoView({behavior:"smooth",block:"nearest"});}else splitStatus.textContent="Não foi possível validar: "+reason}
  finally{splitBusy=false}
 });
 splitCommitButton.addEventListener("click",async()=>{
