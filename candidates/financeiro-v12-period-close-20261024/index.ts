@@ -221,6 +221,80 @@ async function ensureMonthCutComment(c:any,full:string){
  const after=await readAllMonthCommentTexts(c.month.id);
  if(!after.some((text:string)=>text.includes(marker(c.p))))throw Error("MONTH_COMMENT_SAVE_UNCONFIRMED");
 }
+// Recovery is a separate operation. The acerto must ALREADY be fully recorded.
+ // Never reissue month text, CG credits, bank movements or other accounting entries.
+async function recoverySelection(b:any){
+ const p=input(b);
+ const [finCards,lists]=await Promise.all([
+  trello("/lists/"+FIN+"/cards?fields=id,name,desc,shortUrl"),
+  trello("/boards/"+WORK+"/lists?fields=id,name")
+ ]);
+ const matches=finCards.filter((x:any)=>normal(x.name).trim()===p.monthName+" 2026");
+ if(matches.length!==1)throw Error("RECOVERY_MONTH_NOT_UNIQUE");
+ const month=matches[0];
+ const target=lists.filter((x:any)=>normal(x.name).includes(p.monthName)&&normal(x.name).includes("26"));
+ const pending=lists.filter((x:any)=>normal(x.name)==="AG. ACERTO");
+ if(target.length!==1||pending.length!==1)throw Error("RECOVERY_LIST_NOT_UNIQUE");
+ const mark=marker(p);
+ const header="📋 ACERTOS REGISTRADOS — "+p.start+" A "+p.end;
+ const texts=[String(month.desc||""),...await readAllMonthCommentTexts(month.id)];
+ const recorded=texts.filter((t:string)=>{
+  const pos=t.indexOf(mark);
+  return pos>=0&&t.lastIndexOf(header,pos)>=0;
+ });
+ if(recorded.length!==1)throw Error("RECOVERY_FULL_PERIOD_RECORD_NOT_UNIQUE");
+ const full=recorded[0],end=full.indexOf(mark),start=full.lastIndexOf(header,end);
+ if(end<0||start<0)throw Error("RECOVERY_PERIOD_RECORD_INVALID");
+ const section=full.slice(start,end);
+ const refs=new Map<string,string>();
+ for(const line of section.split(/\r?\n/)){
+  const m=line.match(/^\s*•\s*(\d{1,5}-26)\s*\|\s*Base\b.+https:\/\/trello\.com\/c\/([a-zA-Z0-9]{6,20})/);
+  if(!m)continue;
+  if(refs.has(m[1]))throw Error("RECOVERY_DUPLICATE_WORK_REF");
+  refs.set(m[1],m[2]);
+ }
+ if(refs.size!==p.cases.length||p.cases.some((c:string)=>!refs.has(c)))
+  throw Error("RECOVERY_WORK_REFS_MISMATCH");
+ const records=await Promise.all(p.cases.map(async (no:string)=>{
+  const card=await trello("/cards/"+refs.get(no)+"?fields=id,name,idList,shortUrl");
+  if(!card||!new RegExp("(^|[^0-9])"+no+"(?![0-9])").test(String(card.name||"")))
+   throw Error("RECOVERY_WORK_ID_MISMATCH:"+no);
+  if(card.idList!==target[0].id&&card.idList!==pending[0].id)
+   throw Error("RECOVERY_WORK_OUTSIDE_ALLOWED_LIST:"+no);
+  return {case:no,id:card.id,idList:card.idList,url:card.shortUrl||null,
+   needs_move:card.idList===pending[0].id};
+ }));
+ const fingerprint=await sha(JSON.stringify({
+  p,month_id:month.id,month_desc:month.desc,record:full,target_id:target[0].id,
+  refs:records.map((x:any)=>[x.case,x.id,x.idList])
+ }));
+ return {p,month,target:target[0],pending:pending[0],records,fingerprint};
+}
+async function recoverPeriod(b:any,commit:boolean){
+ const c=await recoverySelection(b);
+ if(!commit)return {ok:true,preview:true,recovery:true,
+  period:c.p,already_moved:c.records.filter((x:any)=>!x.needs_move).map((x:any)=>x.case),
+  pending_move:c.records.filter((x:any)=>x.needs_move).map((x:any)=>x.case),
+  fingerprint:c.fingerprint,writes:false,month_url:c.month.shortUrl||null};
+ if(String(b.fingerprint||"")!==c.fingerprint)throw Error("RECOVERY_STALE_PREVIEW");
+ const moved:string[]=[],already_moved=c.records.filter((x:any)=>!x.needs_move).map((x:any)=>x.case);
+ const unresolved:string[]=[];
+ for(const item of c.records.filter((x:any)=>x.needs_move)){
+  try{
+   const now=await trello("/cards/"+item.id+"?fields=idList");
+   if(now.idList===c.target.id){already_moved.push(item.case);continue}
+   if(now.idList!==c.pending.id){unresolved.push(item.case+":LIST_CHANGED");continue}
+   await trello("/cards/"+item.id,"PUT",{idList:c.target.id});
+   const after=await trello("/cards/"+item.id+"?fields=idList");
+   if(after.idList===c.target.id)moved.push(item.case);
+   else unresolved.push(item.case+":MOVE_NOT_VERIFIED");
+  }catch(e){unresolved.push(item.case+":"+String((e as Error)?.message||e).slice(0,90))}
+ }
+ return {ok:unresolved.length===0,recovery:true,recorded:true,moved,already_moved,
+  unresolved,partial:unresolved.length>0,month_url:c.month.shortUrl||null,
+  no_accounting_writes:true};
+}
+
 /* Indicador comercial: Gestão Click é fonte dos orçamentos; não inferir a receber de movimentos Cora/Trello. */
 async function gcAwaitingPayment(){
  const access=(Deno.env.get("GESTAOCLICK_ACCESS_TOKEN")||"").trim();
@@ -258,7 +332,7 @@ Deno.serve(async req=>{
  if(req.method!=="POST")return ans({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return ans({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const action=new URL(req.url).searchParams.get("action");
- if(!["preview","commit","gc-awaiting-payment","preview-diagnostic"].includes(action||""))return ans({ok:false,error:"INVALID_ACTION"},400);
+ if(!["preview","commit","gc-awaiting-payment","preview-diagnostic","recovery-preview","recovery-commit"].includes(action||""))return ans({ok:false,error:"INVALID_ACTION"},400);
  if(action==="gc-awaiting-payment"){
   try{return ans(await gcAwaitingPayment())}catch(e){return ans({ok:false,error:String((e as Error)?.message||e)},503)}
  }
@@ -266,6 +340,10 @@ Deno.serve(async req=>{
  if(!b)return ans({ok:false,error:"INVALID_BODY"},400);
  try{
   if(action==="preview-diagnostic")return ans(await diagnosticPreview(b));
+  if(action==="recovery-preview"||action==="recovery-commit"){
+   const x=await recoverPeriod(b,action==="recovery-commit");
+   return ans(x,x.partial?207:200);
+  }
   const c=await gather(b);
   if(action==="preview")return ans({ok:true,preview:true,period:c.p,totals:c.totals,capital_validation:c.capital_validation,fingerprint:c.fingerprint,duplicate:c.duplicate,requires_month_creation:!c.month,writes:false});
   if(c.duplicate)return ans({ok:false,error:"PERIOD_ALREADY_SENT"},409);
