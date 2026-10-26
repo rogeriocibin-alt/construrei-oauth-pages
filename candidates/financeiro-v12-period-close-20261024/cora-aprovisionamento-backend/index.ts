@@ -155,7 +155,7 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costC
   trelloApiRead("/boards/"+BOARD_2026+"/cards?fields=id,name,idList,shortUrl&filter=all&limit=1000")
  ]);
  if(!Array.isArray(lists)||!Array.isArray(cards))throw Error("TRELLO_EXISTING_CONTEXT_UNAVAILABLE");
- const matchesByWork=cards.filter((c:any)=>caseInName(c.name)===costCase&&!/RESUMO|ACERTOS\\s+2026/i.test(String(c.name||"")));
+ const matchesByWork=cards.filter((c:any)=>caseInName(c.name)===costCase&&!/RESUMO|ACERTOS\s+2026/i.test(String(c.name||"")));
  if(matchesByWork.length!==1)throw Error(matchesByWork.length?"EXISTING_DUPLICATE_WORK_CARDS":"EXISTING_CASE_NOT_FOUND");
  const entry=matchesByWork[0];
  const nameByList=new Map(lists.map((x:any)=>[String(x.id),String(x.name||"")]));
