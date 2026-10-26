@@ -21,7 +21,7 @@ function fake({capital=9000,works=2,cases=['799-26','818-26'],source=sourceUrl,n
   AbortSignal:{timeout:()=>null}
  };
  vm.runInNewContext(js+'\nthis.plan=cgCreationPlan;this.service=cgPeriodService',sandbox);
- return {plan:p=>sandbox.plan(period,p,capital,session),service:sandbox.service,calls};
+ return {plan:p=>sandbox.plan(period,p,9000,session),service:sandbox.service,calls};
 }
 test('CG: reusa serviço canônico, autentica diretor e compara códigos',async()=>{
  const h=fake(),p=await h.plan(rows);
