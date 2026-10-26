@@ -158,7 +158,7 @@ test('acerto-live: falha fechada com erro identificável quando não há credenc
 
 test('antiduplicidade: varre 1050 comentários em duas páginas sem repetir corte',async()=>{
  const helper=edge.match(/async function readAllMonthCommentTexts\(cardId:string\)\{[\s\S]*?\n\}\n(?=\/\* A director-only)/);
- const guard=edge.match(/async function ensureMonthCutComment\(c:any,full:string\)\{[\s\S]*?\n\}\n(?=\/\* Indicador)/);
+ const guard=edge.match(/async function ensureMonthCutComment\(c:any,full:string\)\{[\s\S]*?\n\}\n(?=\/\/ Recovery)/);
  assert.ok(helper&&guard,'rotinas de leitura e guarda encontradas');
  const js=helper[0].replace('cardId:string','cardId').replace('out:string[]','out').replace('new Set<string>()','new Set()')+
   guard[0].replace('c:any,full:string','c,full').replaceAll('(text:string)','(text)');
