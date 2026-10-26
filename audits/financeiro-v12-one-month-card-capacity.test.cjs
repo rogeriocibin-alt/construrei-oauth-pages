@@ -1,9 +1,12 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const edge=fs.readFileSync(path.join(__dirname,'../candidates/financeiro-v12-period-close-20261024/index.ts'),'utf8');
-test('apenas o cartão mensal existente recebe o corte, sem criação de novos cartões',()=>{
+test('mês ausente é criado somente após reserva idempotente e confirmação do diretor',()=>{
  assert.match(edge,/finCards\.find\(\(x:any\)=>normal\(x\.name\)\.trim\(\)===p\.monthName\+" 2026"\)/);
- assert.match(edge,/if\(!month\|\|!target\|\|!pending\)throw Error\("DESTINO_NAO_ENCONTRADO"\)/);
- assert.doesNotMatch(edge,/trello\(["']\/cards["']\s*,\s*["']POST["']/);
+ assert.match(edge,/if\(!target\|\|!pending\)throw Error\("DESTINO_NAO_ENCONTRADO"\)/);
+ assert.match(edge,/await monthRegistry\("claim"/);
+ assert.match(edge,/created=await trello\("\/cards","POST"/);
+ assert.ok(edge.indexOf('await monthRegistry("claim"')<edge.indexOf('created=await trello("/cards","POST"'));
+ assert.match(edge,/MONTH_CREATION_ALREADY_RESERVED_REVIEW/);
  assert.match(edge,/month:Number\(end\.slice\(5,7\)\)/);
 });
 test('cartão lotado: salva o corte integral em comentário DO PRÓPRIO MÊS, antes do resumo',()=>{
@@ -36,7 +39,7 @@ test('resumo compacto inclui todas obras, base, custos, lucro, rateio e chave',(
 });
 
 test('indexa também os comentários históricos do cartão mensal antes de autorizar novo corte',()=>{
- assert.match(edge,/monthlyTexts=await readAllMonthCommentTexts\(month\.id\)/);
+ assert.match(edge,/monthlyTexts=month\?await readAllMonthCommentTexts\(month\.id\):\[\]/);
  assert.match(edge,/MONTH_COMMENTS_PAGINATION_INCOMPLETE/);
  assert.match(edge,/monthlyTexts\.some\(\(t:string\)=>t\.includes\(marker\(p\)\)\)/);
  assert.match(edge,/if\(duplicate\)throw Error\("PERIOD_ALREADY_SENT"\)/);
