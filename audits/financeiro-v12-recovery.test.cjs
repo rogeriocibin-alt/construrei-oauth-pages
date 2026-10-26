@@ -18,7 +18,7 @@ const src=edge.slice(at,end)
 const FIN='monthly',WORK='operational';
 const monthId='a'.repeat(24),listPending='b'.repeat(24),listTarget='c'.repeat(24);
 const ids={'579-26':'lsg5ojHi','799-26':'CJ27HA7S'};
-const p={start:'2026-10-10',end:'2026-10-23',cases:['579-26','799-26']};
+const p={start:'2026-10-10',end:'2026-10-23',month:10,monthName:'OUTUBRO',cases:['579-26','799-26']};
 const marker='CR-ACERTO-PERIODO|2026-10-10_2026-10-23|579-26,799-26';
 const doc=[
  '📋 ACERTOS REGISTRADOS — 2026-10-10 A 2026-10-23',
