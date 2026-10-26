@@ -188,3 +188,16 @@ test('antiduplicidade: falha fechada se a paginação Trello for inconsistente',
  vm.runInContext(js+'\nthis.read=readAllMonthCommentTexts;',ctx);
  await assert.rejects(ctx.read('monthly'),/MONTH_COMMENT_INVALID_OR_REPEATED/);
 });
+
+test('acerto vivo rejeita obra ambígua, aceita única e rejeita ausente',()=>{
+ const from=edge.indexOf('const rows=p.cases.map(c=>{',edge.indexOf('async function gather(body:any)'));
+ const to=edge.indexOf('for(const r of rows)',from);
+ assert.ok(from>0&&to>from);
+ const excerpt=edge.slice(from,to).replace('(x:any)','(x)');
+ const attempt=(live)=>vm.runInNewContext('(function(){'+excerpt+'return rows;})()', {p:{cases:['579-26']},live});
+ assert.throws(()=>attempt([{case:'579-26'},{case:'579-26'}]),/OBRA_LIVE_AMBIGUA:579-26/);
+ const good=attempt([{case:'579-26',profit_cents:53263}]);
+ assert.equal(good.length,1);
+ assert.equal(good[0].profit_cents,53263);
+ assert.throws(()=>attempt([{case:'818-26'}]),/OBRA_FORA_DA_LISTA_AG_ACERTO/);
+});
