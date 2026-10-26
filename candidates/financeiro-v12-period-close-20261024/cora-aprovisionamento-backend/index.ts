@@ -499,6 +499,27 @@ async function singleReceipt(action:string,p:ReturnType<typeof clean>,k:string,f
 /* Reconcile multiple existing historical costs without changing a settled work.
  * All parcels must match an explicit date/amount/line in their original cards.
  * Complementary expenses are intentionally NOT forwarded to the legacy writer. */
+/* Read-only search for an explicit expense line in each selected work.
+ * Verified bank transaction + exact parcel totals. No legacy writer is invoked.
+ * The returned keys must be selected and revalidated at commit time. */
+async function multiExistingCandidates(p:ReturnType<typeof clean>,raw:any,k:string){
+ if(p.direction!=="OUT")throw Error("MULTI_EXISTING_DEBIT_ONLY");
+ if(raw?.mode!=="reconcile-existing")throw Error("MULTI_EXISTING_MODE_REQUIRED");
+ const prior=await bankAlreadyUsed(p,k);if(prior)throw Error("MULTI_EXISTING_ALREADY_COMMITTED");
+ const parts=splitValidate(raw,p.amount_cents),choices=[];
+ for(const part of parts){
+  const scan=await existingMatchCandidates({...p,case:part.case,amount_centavos:part.cents,
+   amount_cents:part.cents,amount:(part.cents/100).toFixed(2)},k,part.case,3);
+  const linked=await existingLinksForCard(scan.target.id,k);
+  const taken=new Set(linked.filter((x:any)=>x.status!=="FAILED").map((x:any)=>String(x.payload?.trello_match_key||"")));
+  const options=scan.matches.filter((x:any)=>!taken.has(x.match_key));
+  if(!options.length)throw Error("MULTI_EXISTING_NO_UNLINKED_EXACT_LINE_"+part.case);
+  choices.push({case:part.case,cents:part.cents,trello_url:String(scan.target.shortUrl||""),
+   options:options.map(({match_key,line})=>({match_key,line}))});
+ }
+ return reply({ok:true,read_only:true,reconciliation_kind:"MULTI_EXISTING_TRELLO",
+  requires_explicit_line_selection:true,trello_write:false,parts:choices,total_cents:p.amount_cents});
+}
 async function multiExistingFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
  if(p.direction!=="OUT")throw Error("MULTI_EXISTING_DEBIT_ONLY");
  const prior=await bankAlreadyUsed(p,k);if(prior)return reply(prior);
@@ -765,7 +786,7 @@ async function batchBankStatus(raw:any,k:string){
    if(!id)continue;
    const verifiedReference=String(record.payload?.reference||"")===id;
    statuses[id]={
-    state:verifiedReference&&record.status==="COMMITTED"?(record.payload?.reconciliation_kind==="RECEIPT_EXISTING"?"RECEIPT_EXISTING":record.payload?.reconciliation_kind==="EXISTING_TRELLO"?"TRELLO_EXISTING":record.payload?.reconciliation_kind==="MULTI_TRELLO"?"TRELLO_MULTI":record.payload?.reconciliation_kind==="CAPITAL_GIRO"?"CAPITAL_CONFIRMED":"TRELLO_CONFIRMED"): "REVIEW_REQUIRED",
+    state:verifiedReference&&record.status==="COMMITTED"?(record.payload?.reconciliation_kind==="RECEIPT_EXISTING"?"RECEIPT_EXISTING":record.payload?.reconciliation_kind==="EXISTING_TRELLO"?"TRELLO_EXISTING":(record.payload?.reconciliation_kind==="MULTI_TRELLO"||record.payload?.reconciliation_kind==="MULTI_EXISTING_TRELLO")?"TRELLO_MULTI":record.payload?.reconciliation_kind==="CAPITAL_GIRO"?"CAPITAL_CONFIRMED":"TRELLO_CONFIRMED"): "REVIEW_REQUIRED",
     reconciliation_kind:record.payload?.reconciliation_kind||"DIRECT_TRELLO",
     ledger_status:String(record.status||"UNKNOWN"),
     verified_reference:verifiedReference,
@@ -783,7 +804,7 @@ Deno.serve(async(req:Request)=>{
  if(req.headers.get("origin")&&req.headers.get("origin")!==ORIGIN)return reply({ok:false,error:"ORIGIN_DENIED"},403);
  const u=new URL(req.url),action=u.searchParams.get("action")||"health";
  if(action==="health"&&req.method==="GET")return reply({ok:true,candidate:true,build:NAME,trello_writes:"DIRECTOR_ONLY",bank_verification:"SERVER_SIDE_CACHE",status:"LEDGER_PERSISTENT"});
- if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","withdrawal-history","withdrawal-preview","withdrawal-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
+ if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-candidates","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","withdrawal-history","withdrawal-preview","withdrawal-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return reply({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const k=key();if(!k)return reply({ok:false,error:"SERVICE_AUTH_UNAVAILABLE"},503);
  let raw:any=null;
@@ -807,6 +828,10 @@ Deno.serve(async(req:Request)=>{
  if(action==="receipt-existing-preview"||action==="receipt-existing-confirm"){
   try{return await existingReceiptFlow(action,p,raw,k)}
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,135),possible_trello_write:false},409)}
+ }
+ if(action==="multi-candidates"){
+  try{return await multiExistingCandidates(p,raw,k)}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,120)},409)}
  }
  if(action==="multi-preview"||action==="multi-commit"){
   try{return await multiFlow(action,p,raw,k)}
