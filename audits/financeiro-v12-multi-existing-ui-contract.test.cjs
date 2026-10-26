@@ -22,9 +22,9 @@ test("authenticated multi-candidates route is read only and verifies the full Co
  assert.doesNotMatch(body,/\blegacy\(|trelloApiWrite\(|\bwriteReceipt\(|manual-cora-commit|cr_finance_v12_claim|cr_finance_v12_finish/);
 });
 test("each parcel requires a specific unlinked Trello expense line before preview and commit",()=>{
- assert.match(ui,/choose\.dataset\.crMultiMatch=String\(part.case\)/);
- assert.match(ui,/const empty=document.createElement\("option"\);empty.value=""/);
- assert.match(ui,/if\(alloc.some\(x=>!x.match_key\)\)throw Error/);
+ assert.match(ui,/lines\.dataset\.crMultiMatch=String\(part.case\)/);
+ assert.match(ui,/check\.type="checkbox"/);
+ assert.match(ui,/if\(alloc.some\(x=>!x.match_keys.length\)\)throw Error/);
  assert.match(ui,/expected_fingerprint:response.fingerprint/);
  assert.match(ui,/JSON.stringify\(splitPreview.payload.allocations\)!==JSON.stringify\(currentAlloc\)/);
  assert.match(edge,/MULTI_EXISTING_EXPLICIT_LINE_REQUIRED_/);
@@ -41,8 +41,8 @@ test("no historical work edit, bank payment, or CG charge on settled reconciliat
 test("cancelled or revised allocation cannot use stale matching choices",()=>{
  assert.match(ui,/splitCandidates=null;splitLineKeys.clear\(\)/);
  assert.match(ui,/JSON.stringify\(splitCandidates.allocations\)!==JSON.stringify\(baseAlloc\)/);
- assert.match(ui,/splitLineKeys.get\(x.key\)\?\.value/);
- assert.match(ui,/choose.addEventListener\("change",\(\)=>\{splitPreview=null;splitCommitButton.disabled=true\}/);
+ assert.match(ui,/chosenExpenseLines\(x.key\)\.map\(a=>a.match_key\)/);
+ assert.match(ui,/check.addEventListener\("change",\(\)=>\{splitPreview=null;splitCommitButton.disabled=true\}/);
 });
 test("ledger distinguishes committed multi reconciliation and retains bank status visibility",()=>{
  assert.match(edge,/reconciliation_kind==="MULTI_EXISTING_TRELLO"\)\?"TRELLO_MULTI"/);
