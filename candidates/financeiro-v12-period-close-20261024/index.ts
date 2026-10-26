@@ -89,6 +89,20 @@ async function diagnosticPreview(body:any){
 // Reuse the existing, guarded Capital de Giro period-close service. It owns the
 // unique card reservation, balance reconciliation and bank-neutral credit record.
 // This connector never writes Cora or creates a separate CG implementation.
+// Service-role-only operation journal. Prevents two simultaneous confirmations for
+// the same cutoff. An ambiguous failure remains REVIEW_REQUIRED, never auto-retried.
+async function periodRegistry(action:string,payload:any){
+ const key=(Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"").trim();
+ if(!key)throw Error("PERIOD_REGISTRY_SERVICE_UNAVAILABLE");
+ const rpc=action==="claim"?"cr_finance_v12_period_claim":"cr_finance_v12_period_checkpoint";
+ const r=await fetch(SB+"/rest/v1/rpc/"+rpc,{method:"POST",
+  headers:{"apikey":key,Authorization:"Bearer "+key,"content-type":"application/json"},
+  body:JSON.stringify(payload),signal:AbortSignal.timeout(14000)});
+ if(!r.ok)throw Error("PERIOD_REGISTRY_HTTP_"+r.status);
+ const result=await r.json();
+ if(!result?.ok)throw Error(String(result?.error||"PERIOD_REGISTRY_DENIED"));
+ return result;
+}
 async function cgPeriodService(action:string,p:any,session:string,fingerprint?:string){
  if(!session||session.length<12)throw Error("CG_DIRECTOR_SESSION_MISSING");
  const body:any={start:p.start,end:p.end};
@@ -375,6 +389,7 @@ Deno.serve(async req=>{
  }
  const b=await req.json().catch(()=>null);
  if(!b)return ans({ok:false,error:"INVALID_BODY"},400);
+ let periodClaim:any=null;
  try{
   if(action==="preview-diagnostic")return ans(await diagnosticPreview(b));
   if(action==="recovery-preview"||action==="recovery-commit"){
@@ -387,12 +402,17 @@ Deno.serve(async req=>{
   if(!c.capital_validation.ok&&!c.capital_validation.accepted_exception&&!c.capital_validation.can_create)
    return ans({ok:false,error:"CAPITAL_PERIOD_NOT_RECONCILED",capital_validation:c.capital_validation},409);
   if(b.fingerprint!==c.fingerprint)return ans({ok:false,error:"STALE_PREVIEW"},409);
+  const periodKey=c.p.start+"_"+c.p.end;
+  const claim=await periodRegistry("claim",{p_period_key:periodKey,p_fingerprint:c.fingerprint});
+  if(claim.claimed!==true)throw Error("PERIOD_ALREADY_RESERVED_REVIEW");
+  periodClaim={p_period_key:periodKey,p_fingerprint:c.fingerprint};
   let cgCreated:any=null;
   if(c.capital_validation.can_create){
    const plan=c.capital_validation.creation_preview;
    const created=await cgPeriodService("close-commit",c.p,req.headers.get("x-cr-session")||"",plan.fingerprint);
    if(created.created!==true||!created.card_url)throw Error("CAPITAL_CREATION_UNVERIFIED_REVIEW");
    cgCreated=created;
+   await periodRegistry("checkpoint",{...periodClaim,p_status:"CG_RECORDED",p_capital_card_url:created.card_url});
    const after=await gather(b,req.headers.get("x-cr-session")||"");
    if(after.work_fingerprint!==c.work_fingerprint||!after.capital_validation.ok)
     throw Error("CAPITAL_CREATED_MONTH_PENDING_REVIEW");
@@ -410,7 +430,8 @@ Deno.serve(async req=>{
   }
   await trello("/cards/"+c.month.id,"PUT",{desc:next});
   const confirmed=await trello("/cards/"+c.month.id+"?fields=desc");
-  if(confirmed.desc!==next)return ans({ok:false,error:"MONTH_SAVE_UNCONFIRMED",possible_write:true},409);
+  if(confirmed.desc!==next)throw Error("MONTH_SAVE_UNCONFIRMED_POSSIBLE_WRITE");
+  await periodRegistry("checkpoint",{...periodClaim,p_status:"MONTH_RECORDED",p_month_card_id:c.month.id});
   const moved:string[]=[],fail:string[]=[];
   for(let i=0;i<c.cards.length;i++){
    try{
@@ -421,8 +442,16 @@ Deno.serve(async req=>{
     if(check.idList===c.target.id)moved.push(c.rows[i].case);else fail.push(c.rows[i].case+":UNVERIFIED");
    }catch(e){fail.push(c.rows[i].case+":"+String(e).slice(0,55))}
   }
+  await periodRegistry("checkpoint",{...periodClaim,p_status:fail.length?"PARTIAL":"COMMITTED",
+   p_month_card_id:c.month.id,p_capital_card_url:cgCreated?.card_url||c.capital_validation.period_card_url||null,
+   p_error_code:fail.length?("UNRESOLVED_WORKS_"+fail.length):null});
+  periodClaim=null;
   return ans({ok:fail.length===0,recorded:true,month:c.p.monthName,moved,unresolved:fail,
    month_url:c.month.shortUrl,capital_created:!!cgCreated,capital_card_url:cgCreated?.card_url||c.capital_validation.period_card_url,
    partial:!!fail.length},fail.length?207:200);
- }catch(e){return ans({ok:false,error:String(e).slice(0,300)},409)}
+ }catch(e){
+  if(periodClaim)await periodRegistry("checkpoint",{...periodClaim,p_status:"REVIEW_REQUIRED",
+   p_error_code:String((e as Error)?.message||e).slice(0,150)}).catch(()=>null);
+  return ans({ok:false,error:String(e).slice(0,300)},409);
+ }
 });
