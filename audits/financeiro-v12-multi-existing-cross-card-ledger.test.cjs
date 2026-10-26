@@ -29,3 +29,9 @@ test("cross-card guard never mutates financial or Trello data",()=>{
  assert.doesNotMatch(h,/\blegacy\(|trelloApiWrite\(|cr_finance_v12_claim|cr_finance_v12_finish|manual-cora-commit|method:"POST"/);
  assert.match(h,/fetch\(url,\{headers:headers\(k\),signal:AbortSignal\.timeout\(12000\)\}\)/);
 });
+
+test("repeat bank reconciliation returns no-write and original classification only",()=>{
+ const body=section("async function multiExistingFlow(","async function multiFlow(");
+ assert.match(body,/if\(prior\)return reply\(\{\.\.\.prior,trello_write:false\}\)/);
+ assert.match(body,/const prior=await bankAlreadyUsed\(p,k\)/);
+});
