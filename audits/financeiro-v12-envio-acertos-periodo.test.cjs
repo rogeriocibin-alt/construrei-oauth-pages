@@ -155,3 +155,19 @@ test('acerto-live: falha fechada com erro identificável quando não há credenc
  await assert.rejects(setup('fake',401).readAcertos(),/ACERTO_LIVE_SERVICE_AUTH_REJECTED/);
  await assert.rejects(setup('fake',403).readAcertos(),/ACERTO_LIVE_SERVICE_AUTH_REJECTED/);
 });
+
+test('antiduplicidade: verifica comentários históricos além dos 100 primeiros antes de gravar',async()=>{
+ const section=edge.match(/async function ensureMonthCutComment\(c:any,full:string\)\{[\s\S]*?\n\}\n(?=\/\* Indicador)/);
+ assert.ok(section,'rotina de comentários encontrada');
+ const js=section[0].replace('(c:any,full:string)','(c,full)').replace('(a:any[])','(a)').replace('(x:any)','(x)');
+ const calls=[];
+ const history=Array.from({length:151},(_,i)=>({data:{text:i===150?'CR-ACERTO-PERIODO|2026-10-10_2026-10-23|579-26':('comentario '+i)}}));
+ const ctx=vm.createContext({
+   trello:async(path,method='GET',payload)=>{calls.push({path,method,payload});return history;},
+   marker:(p)=>'CR-ACERTO-PERIODO|'+p.start+'_'+p.end+'|'+p.cases.join(',')
+ });
+ vm.runInContext(js+'\nthis.verify=ensureMonthCutComment;',ctx);
+ await ctx.verify({p:{start:'2026-10-10',end:'2026-10-23',cases:['579-26']},month:{id:'monthly'}},'conteúdo do corte');
+ assert.match(calls[0].path,/limit=1000/);
+ assert.equal(calls.filter(x=>x.method==='POST').length,0,'corte existente não pode gerar comentário duplicado');
+});
