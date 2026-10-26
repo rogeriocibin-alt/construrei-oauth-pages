@@ -14,7 +14,7 @@ const src=edge.slice(at,end)
  .replaceAll('(c:string)','(c)')
  .replace('const moved:string[]','const moved')
  .replace('const unresolved:string[]','const unresolved')
- .replace('String((e as Error)?.message||e)','String(e?.message||e)');
+ .replaceAll('String((e as Error)?.message||e)','String(e?.message||e)');
 const FIN='monthly',WORK='operational';
 const monthId='a'.repeat(24),listPending='b'.repeat(24),listTarget='c'.repeat(24);
 const ids={'579-26':'lsg5ojHi','799-26':'CJ27HA7S'};
