@@ -290,6 +290,23 @@ async function liveCases(direction:string){
  filtered.forEach((c:any)=>counts.set(c.case,(counts.get(c.case)||0)+1));
  return filtered.filter((c:any)=>counts.get(c.case)===1).sort((a:any,b:any)=>a.case.localeCompare(b.case,"pt-BR",{numeric:true}));
 }
+/* Selector for reconciliation only: include settled lists, never authorize legacy writes. */
+async function reconciliationCases(){
+ const [lists,cards]=await Promise.all([
+  trelloApiRead("/boards/"+BOARD_2026+"/lists?fields=id,name&filter=all"),
+  trelloApiRead("/boards/"+BOARD_2026+"/cards?fields=id,name,idList,shortUrl&filter=all&limit=1000")
+ ]);
+ if(!Array.isArray(lists)||!Array.isArray(cards))throw Error("RECONCILIATION_TRELLO_UNAVAILABLE");
+ const names=new Map(lists.map((x:any)=>[String(x.id),String(x.name||"")]));
+ const items=cards.filter((c:any)=>!!caseInName(c.name)&&!/RESUMO|ACERTOS\\s+2026/i.test(String(c.name||"")))
+  .map((c:any)=>({case:caseInName(c.name),name:String(c.name).slice(0,155),
+   list:names.get(String(c.idList))||"",id:String(c.id),url:String(c.shortUrl||""),
+   state:allowedList("OUT",names.get(String(c.idList))||"")?"OPEN":"SETTLED_OR_OTHER"}));
+ const count=new Map<string,number>();
+ for(const item of items)count.set(item.case,(count.get(item.case)||0)+1);
+ return items.filter((x:any)=>count.get(x.case)===1&&x.list)
+  .sort((a:any,b:any)=>a.case.localeCompare(b.case,"pt-BR",{numeric:true}));
+}
 function splitValidate(raw:any,total:number){
  const rows=raw?.allocations;
  if(!Array.isArray(rows)||rows.length<2||rows.length>10)throw Error("SPLIT_REQUIRES_2_TO_10_TARGETS");
@@ -772,7 +789,7 @@ Deno.serve(async(req:Request)=>{
  let raw:any=null;
  try{const t=await req.text();if(t.length>10000)return reply({ok:false,error:"PAYLOAD_TOO_LARGE"},413);raw=JSON.parse(t)}catch{return reply({ok:false,error:"INVALID_JSON"},400)}
  if(action==="eligible-cases"){
-  try{const direction=String(raw?.direction||"IN");return reply({ok:true,cases:await liveCases(direction),source:"TRELLO_2026_LIVE"})}
+  try{const direction=String(raw?.direction||"IN");const recon=direction==="OUT"&&raw?.mode==="reconcile-existing";return reply({ok:true,cases:recon?await reconciliationCases():await liveCases(direction),source:"TRELLO_2026_LIVE",reconciliation_only:recon})}
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e)},502)}
  }
  if(action==="withdrawal-history"){
