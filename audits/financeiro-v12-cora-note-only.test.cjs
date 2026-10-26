@@ -30,10 +30,19 @@ test("João Victor five daily annotations can be split across four works without
 test("never silently accepts a missing R$150 allocation",()=>{
  assert.throws(()=>ctx.validate(p(75000),{beneficiary:"João Victor",purpose:"Diárias",allocations:[row("799-26",2),row("818-26",1),row("820-26",1)]}),/ANNOTATION_TOTAL_DIFFERS_FROM_BANK/);
 });
-test("duplicate work, invalid values and direction never create annotations",()=>{
+test("duplicate work, invalid values and unverifiable direction never create annotations",()=>{
  assert.throws(()=>ctx.validate(p(45000),{beneficiary:"Éder Cibin",purpose:"Apoio",allocations:[row("799-26",2),row("799-26",1)]}),/ANNOTATION_DUPLICATED_WORK/);
- assert.throws(()=>ctx.validate({...p(45000),direction:"IN"},{beneficiary:"Éder Cibin",purpose:"Apoio",allocations:[row("799-26",3)]}),/BANK_ANNOTATION_REQUIRES_CORA_DEBIT/);
+ assert.throws(()=>ctx.validate({...p(45000),direction:"OTHER"},{beneficiary:"Éder Cibin",purpose:"Apoio",allocations:[row("799-26",3)]}),/BANK_ANNOTATION_REQUIRES_VERIFIED_CORA_MOVEMENT/);
  assert.throws(()=>ctx.validate(p(45000),{beneficiary:"Éder Cibin",purpose:"Apoio",allocations:[{case:"799-26",daily_count:3,cents:44000}]}),/ANNOTATION_WORK_COUNT_OR_VALUE_INVALID/);
+});
+test("IN: recebimento informativo preserva direção e soma sem lançar custo",()=>{
+ const out=ctx.validate({...p(45000),direction:"IN"},{
+  beneficiary:"Imobiliária",purpose:"Recebimento informativo",allocations:[{case:"799-26",daily_count:1,cents:45000}]
+ });
+ assert.equal(out.direction,"IN");
+ assert.equal(out.amount_cents,45000);
+ assert.equal(out.allocations.length,1);
+ assert.equal(out.allocations[0].cents,45000);
 });
 test("no operational write or bank operation in bankAnnotationFlow",()=>{
  const body=edge.split("async function bankAnnotationFlow(")[1].split("async function batchBankStatus(")[0];
