@@ -109,7 +109,12 @@ async function gather(body:any){
  for(const c of p.cases){
   if(finCards.some((x:any)=>hasCase(x.desc||"",c))||monthlyTexts.some((t:string)=>hasCase(t,c))||historicalTexts.some((t:string)=>hasCase(t,c)))throw Error("OBRA_JA_REGISTRADA:"+c);
  }
- const rows=p.cases.map(c=>live.find((x:any)=>x.case===c));
+ // A repeated source row is ambiguous: never pick the first matching work silently.
+ const rows=p.cases.map(c=>{
+  const matches=live.filter((x:any)=>x.case===c);
+  if(matches.length>1)throw Error("OBRA_LIVE_AMBIGUA:"+c);
+  return matches[0]||null;
+ });
  if(rows.some(x=>!x))throw Error("OBRA_FORA_DA_LISTA_AG_ACERTO");
  for(const r of rows){
   const a=r.rateio;
