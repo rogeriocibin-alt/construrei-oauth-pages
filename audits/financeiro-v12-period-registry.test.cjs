@@ -3,7 +3,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),fs=require(
 const root=path.join(__dirname,'..');
 const ts=fs.readFileSync(path.join(root,'candidates/financeiro-v12-period-close-20261024/index.ts'),'utf8');
 const sql=fs.readFileSync(path.join(root,'candidates/financeiro-v12-period-close-20261024/period-send-registry-CANDIDATE.sql'),'utf8');
-const a=ts.indexOf('async function periodRegistry('),b=ts.indexOf('async function cgPeriodService(',a);
+const a=ts.indexOf('async function periodRegistry('),b=ts.indexOf('async function periodRegistryLookup(',a);
 assert.ok(a>0&&b>a);
 const source=ts.slice(a,b).replace('action:string,payload:any','action,payload');
 const fp='a'.repeat(64),key='2026-10-24_2026-10-26';
