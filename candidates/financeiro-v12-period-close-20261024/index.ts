@@ -92,15 +92,17 @@ async function gather(body:any){
  // Cross-month cuts are valid: financial competence is always the month of the end date.
  // Each distinct work ID may be sent once, regardless of overlap between date ranges.
  const [live,finCards,workLists]=await Promise.all([acertos(),trello("/lists/"+FIN+"/cards?fields=id,name,desc,shortUrl"),trello("/boards/"+WORK+"/lists?fields=id,name")]);
- const month=finCards.find((x:any)=>normal(x.name).trim()===p.monthName+" 2026");
+ const matchingMonths=finCards.filter((x:any)=>normal(x.name).trim()===p.monthName+" 2026");
+ if(matchingMonths.length>1)throw Error("MONTH_DUPLICATED_REVIEW");
+ const month=matchingMonths[0]||null;
  const target=workLists.find((x:any)=>normal(x.name).includes(p.monthName)&&normal(x.name).includes("26"));
  const pending=workLists.find((x:any)=>normal(x.name)==="AG. ACERTO");
- if(!month||!target||!pending)throw Error("DESTINO_NAO_ENCONTRADO");
+ if(!target||!pending)throw Error("DESTINO_NAO_ENCONTRADO");
  // Comments are part of this SAME canonical monthly card, especially once 16K is reached.
- const monthlyTexts=await readAllMonthCommentTexts(month.id);
+ const monthlyTexts=month?await readAllMonthCommentTexts(month.id):[];
  // Historical cuts can reside in comments of another month once its text filled.
  // Check every canonical 2026 month, not merely the destination month's comments.
- const otherMonths=finCards.filter((x:any)=>x.id!==month.id&&months.slice(1).some((m:string)=>normal(x.name).trim()===m+" 2026"));
+ const otherMonths=finCards.filter((x:any)=>x.id!==month?.id&&months.slice(1).some((m:string)=>normal(x.name).trim()===m+" 2026"));
  const historicalTexts=(await Promise.all(otherMonths.map((x:any)=>readAllMonthCommentTexts(x.id)))).flat();
  const duplicate=String(month.desc||"").includes(marker(p))||monthlyTexts.some((t:string)=>t.includes(marker(p)))||historicalTexts.some((t:string)=>t.includes(marker(p)));
  if(duplicate)throw Error("PERIOD_ALREADY_SENT");
@@ -136,7 +138,7 @@ async function gather(body:any){
    expected_cents:totals.capital_cents,difference_cents:credit==null?null:totals.capital_cents-credit,
    ok:credit!=null&&Math.abs(credit-totals.capital_cents)<=1,
    accepted_exception:accepted_exception?"CR-CG-DIFF-16914-ACCEPTED-20261024":null};
- const fingerprint=await sha(JSON.stringify({p,month:[month.id,month.desc],capital_validation,rows:rows.map(r=>[r.case,r.base_cents,r.cost_cents,r.profit_cents,r.rateio]),cards:cards.map(c=>[c.id,c.idList,c.desc,c.dateLastActivity])}));
+ const fingerprint=await sha(JSON.stringify({p,month:month?[month.id,month.desc]:["MONTH_MISSING",p.monthName],capital_validation,rows:rows.map(r=>[r.case,r.base_cents,r.cost_cents,r.profit_cents,r.rateio]),cards:cards.map(c=>[c.id,c.idList,c.desc,c.dateLastActivity])}));
  return {p,rows,cards,month,target,totals,capital_validation,duplicate,fingerprint};
 }
 function block(c:any){
@@ -151,6 +153,47 @@ function block(c:any){
    c.capital_validation.accepted_exception);
  }
  l.push(marker(p),"━━━━━━━━━━━━━━━━━━━━━━");return l.join("\n");
+}
+// A missing month can be created only inside an authenticated, fingerprint-confirmed commit.
+// A unique PostgreSQL reservation MUST succeed before POST /cards. On uncertainty, stop;
+// never retry card creation blindly (manual readback/reconciliation required).
+async function monthRegistry(action:string,payload:any){
+ const key=(Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"").trim();
+ if(!key)throw Error("MONTH_CLAIM_SERVICE_UNAVAILABLE");
+ const name=action==="claim"?"cr_finance_2026_month_claim":"cr_finance_2026_month_finish";
+ const r=await fetch(SB+"/rest/v1/rpc/"+name,{method:"POST",headers:{"apikey":key,Authorization:"Bearer "+key,"content-type":"application/json"},
+  body:JSON.stringify(payload),signal:AbortSignal.timeout(16000)});
+ if(!r.ok)throw Error("MONTH_CLAIM_HTTP_"+r.status);
+ const result=await r.json();
+ if(!result?.ok)throw Error(String(result?.error||"MONTH_CLAIM_DENIED"));
+ return result;
+}
+async function provisionMonth(c:any){
+ const yearMonth="2026-"+String(c.p.month).padStart(2,"0");
+ const name=c.p.monthName+" 2026",tag="CR-MONTH-CANONICAL|"+yearMonth;
+ const bankMonth=(await trello("/lists/"+FIN+"/cards?fields=id,name,desc,shortUrl")).filter((x:any)=>normal(x.name).trim()===name);
+ if(bankMonth.length)throw Error("MONTH_CREATED_SINCE_PREVIEW_RELOAD");
+ const lock=await monthRegistry("claim",{p_year_month:yearMonth,p_fingerprint:c.fingerprint});
+ if(lock.claimed!==true)throw Error("MONTH_CREATION_ALREADY_RESERVED_REVIEW");
+ let created:any=null;
+ try{
+  const check=await trello("/lists/"+FIN+"/cards?fields=id,name,desc,shortUrl");
+  if(check.some((x:any)=>normal(x.name).trim()===name))throw Error("MONTH_CREATED_CONCURRENTLY_REVIEW");
+  created=await trello("/cards","POST",{idList:FIN,name,desc:"CONSTRU-REI | VALORES RECEBIDOS "+name+
+    "\\nACERTOS CONFIRMADOS: nenhum corte incluído até esta criação. Não equivale a recebimento bancário.\\n"+tag,pos:"bottom"});
+  if(!/^[0-9a-f]{24}$/i.test(String(created?.id||"")))throw Error("MONTH_CREATE_RESULT_INVALID");
+  const after=await trello("/cards/"+created.id+"?fields=id,idList,name,desc,shortUrl");
+  if(after.id!==created.id||after.idList!==FIN||normal(after.name).trim()!==name||!String(after.desc||"").includes(tag))
+   throw Error("MONTH_CREATE_READBACK_MISMATCH");
+  const siblings=await trello("/lists/"+FIN+"/cards?fields=id,name");
+  if(siblings.filter((x:any)=>normal(x.name).trim()===name).length!==1)throw Error("MONTH_DUPLICATE_AFTER_CREATE_REVIEW");
+  const finish=await monthRegistry("finish",{p_year_month:yearMonth,p_fingerprint:c.fingerprint,p_card_id:created.id,p_status:"COMMITTED"});
+  if(finish.status!=="COMMITTED"||finish.card_id!==created.id)throw Error("MONTH_RESERVATION_FINISH_UNVERIFIED");
+  return after;
+ }catch(e){
+  await monthRegistry("finish",{p_year_month:yearMonth,p_fingerprint:c.fingerprint,p_card_id:created?.id||null,p_status:"REVIEW_REQUIRED"}).catch(()=>null);
+  throw Error("MONTH_CREATION_UNCERTAIN_REVIEW_REQUIRED:"+String((e as Error)?.message||e));
+ }
 }
 // A month is the ONLY Trello financial card for a period. The card's description has a
 // 16K limit; use its own verified comments to retain the full cut, never create period cards.
@@ -217,10 +260,11 @@ Deno.serve(async req=>{
  try{
   if(action==="preview-diagnostic")return ans(await diagnosticPreview(b));
   const c=await gather(b);
-  if(action==="preview")return ans({ok:true,preview:true,period:c.p,totals:c.totals,capital_validation:c.capital_validation,fingerprint:c.fingerprint,duplicate:c.duplicate,writes:false});
+  if(action==="preview")return ans({ok:true,preview:true,period:c.p,totals:c.totals,capital_validation:c.capital_validation,fingerprint:c.fingerprint,duplicate:c.duplicate,requires_month_creation:!c.month,writes:false});
   if(c.duplicate)return ans({ok:false,error:"PERIOD_ALREADY_SENT"},409);
   if(!c.capital_validation.ok&&!c.capital_validation.accepted_exception)return ans({ok:false,error:"CAPITAL_PERIOD_NOT_RECONCILED",capital_validation:c.capital_validation},409);
   if(b.fingerprint!==c.fingerprint)return ans({ok:false,error:"STALE_PREVIEW"},409);
+  if(!c.month)c.month=await provisionMonth(c);
   const full=block(c);
   let next=String(c.month.desc||"").trimEnd()+"\n"+full+"\n";
   if(next.length>16384){
