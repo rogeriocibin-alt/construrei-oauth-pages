@@ -6,7 +6,7 @@ const sql=fs.readFileSync(path.join(root,'candidates/financeiro-v12-period-close
 const html=fs.readFileSync(path.join(root,'preview/dashboard-financeiro-v12-envio-acertos-20261024/index.html'),'utf8');
 const i=edge.indexOf('async function monthRegistry('),j=edge.indexOf('// A month is the ONLY Trello financial card',i);
 assert.ok(i>0&&j>i);
-const js=edge.slice(i,j).replace('action:string,payload:any','action,payload').replace('c:any','c').replaceAll('(x:any)','(x)').replace('(e as Error)','e');
+const js=edge.slice(i,j).replace('action:string,payload:any','action,payload').replace('c:any','c').replaceAll('(x:any)','(x)').replace('let created:any=null','let created=null').replace('(e as Error)','e');
 const monthId='abcdefabcdefabcdefabcdef',name='NOVEMBRO 2026',tag='CR-MONTH-CANONICAL|2026-11';
 const candidate={p:{month:11,monthName:'NOVEMBRO'},fingerprint:'b'.repeat(64)};
 const card={id:monthId,idList:'6952fd5947e9864456eab14a',name,desc:'registro '+tag,shortUrl:'https://trello.com/c/test'};
