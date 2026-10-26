@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const ts=fs.readFileSync(path.join(__dirname,'../candidates/financeiro-v12-period-close-20261024/index.ts'),'utf8');
-const a=ts.indexOf('async function diagnosticPreview('),b=ts.indexOf('async function gather(',a);
+const a=ts.indexOf('async function diagnosticPreview('),b=ts.indexOf('// Reuse the existing, guarded Capital de Giro',a);
 assert.ok(a>=0&&b>a);
 const block=ts.slice(a,b);
 test('consulta diagnóstica só lê acertos reais, sem usar Trello PUT ou confirmar lançamento',()=>{
@@ -19,7 +19,7 @@ test('somente diretor chama a rota; commit permanece fail closed',()=>{
  const serve=ts.slice(ts.indexOf('Deno.serve('));
  assert.ok(serve.indexOf('if(!await director(req))')<serve.indexOf('if(action==="preview-diagnostic")'));
  assert.match(serve,/if\(action==="preview-diagnostic"\)return ans\(await diagnosticPreview\(b\)\)/);
- assert.match(serve,/if\(!c\.capital_validation\.ok&&!c\.capital_validation\.accepted_exception\)/);
+ assert.match(serve,/!c\.capital_validation\.ok&&!c\.capital_validation\.accepted_exception&&!c\.capital_validation\.can_create/);
  assert.match(serve,/if\(b\.fingerprint!==c\.fingerprint\)/);
  assert.match(serve,/if\(action==="preview"\)return ans/);
 });
