@@ -44,26 +44,6 @@ function normal(x:string){return x.normalize("NFD").replace(/[\u0300-\u036f]/g,"
 function hasCase(desc:string,c:string){return new RegExp("(^|[^0-9])"+c+"(?![0-9])","i").test(desc)}
 function marker(p:any){return "CR-ACERTO-PERIODO|"+p.start+"_"+p.end+"|"+p.cases.join(",")}
 async function sha(s:string){const d=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return Array.from(new Uint8Array(d),x=>x.toString(16).padStart(2,"0")).join("")}
-/* A director-only READ-ONLY diagnostic when a financial preview cannot be homologated.
- * It never creates a fingerprint or permits commit. Information is explicitly provisional. */
-async function diagnosticPreview(body:any){
- const p=input(body);
- const live=await acertos();
- const rows=p.cases.map((caseNo:string)=>{
-  const all=live.filter((r:any)=>r.case===caseNo);
-  const r=all.length===1?all[0]:null;
-  const vals=r?[r.base_cents,r.cost_cents,r.profit_cents,r.rateio?.fabricio_cents,r.rateio?.eder_cents,
-    r.rateio?.rogerio_cents,r.rateio?.gabi_cents,r.rateio?.capital_giro_cents]:[];
-  const valid=r&&vals.every(x=>Number.isSafeInteger(x))&&r.base_cents>0&&r.base_cents-r.cost_cents===r.profit_cents&&
-    r.rateio.fabricio_cents+r.rateio.eder_cents+r.rateio.rogerio_cents+r.rateio.gabi_cents+r.rateio.capital_giro_cents===r.profit_cents;
-  return {case:caseNo,found:!!r,unique:all.length===1,source:"AG_ACERTO_TRELLO_LIVE",
-    base_cents:valid?r.base_cents:null,cost_cents:valid?r.cost_cents:null,profit_cents:valid?r.profit_cents:null,
-    valid_for_arithmetic:!!valid,issues:(Array.isArray(r?.issues)?r.issues:[]).map((x:any)=>String(x).slice(0,100)).slice(0,15),
-    trello_url:r?.trello_url||null};
- });
- return {ok:true,diagnostic:true,period:p,rows,writes:false,preview_validated:false,can_commit:false,
-   note:"CONSULTA NAO HOMOLOGADA: exige previas financeiras regulares e confirmacao posterior."};
-}
 // Trello limits action reads to 1000 records per request. Continue until exhausted;
  // never infer that missing older comments imply a clean, unsent month.
 async function readAllMonthCommentTexts(cardId:string){
@@ -85,6 +65,26 @@ async function readAllMonthCommentTexts(cardId:string){
   before=cursor;
  }
  throw Error("MONTH_COMMENTS_PAGINATION_INCOMPLETE");
+}
+/* A director-only READ-ONLY diagnostic when a financial preview cannot be homologated.
+ * It never creates a fingerprint or permits commit. Information is explicitly provisional. */
+async function diagnosticPreview(body:any){
+ const p=input(body);
+ const live=await acertos();
+ const rows=p.cases.map((caseNo:string)=>{
+  const all=live.filter((r:any)=>r.case===caseNo);
+  const r=all.length===1?all[0]:null;
+  const vals=r?[r.base_cents,r.cost_cents,r.profit_cents,r.rateio?.fabricio_cents,r.rateio?.eder_cents,
+    r.rateio?.rogerio_cents,r.rateio?.gabi_cents,r.rateio?.capital_giro_cents]:[];
+  const valid=r&&vals.every(x=>Number.isSafeInteger(x))&&r.base_cents>0&&r.base_cents-r.cost_cents===r.profit_cents&&
+    r.rateio.fabricio_cents+r.rateio.eder_cents+r.rateio.rogerio_cents+r.rateio.gabi_cents+r.rateio.capital_giro_cents===r.profit_cents;
+  return {case:caseNo,found:!!r,unique:all.length===1,source:"AG_ACERTO_TRELLO_LIVE",
+    base_cents:valid?r.base_cents:null,cost_cents:valid?r.cost_cents:null,profit_cents:valid?r.profit_cents:null,
+    valid_for_arithmetic:!!valid,issues:(Array.isArray(r?.issues)?r.issues:[]).map((x:any)=>String(x).slice(0,100)).slice(0,15),
+    trello_url:r?.trello_url||null};
+ });
+ return {ok:true,diagnostic:true,period:p,rows,writes:false,preview_validated:false,can_commit:false,
+   note:"CONSULTA NAO HOMOLOGADA: exige previas financeiras regulares e confirmacao posterior."};
 }
 async function gather(body:any){
  const p=input(body);
