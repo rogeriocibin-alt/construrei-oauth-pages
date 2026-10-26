@@ -479,10 +479,61 @@ async function singleReceipt(action:string,p:ReturnType<typeof clean>,k:string,f
  }
 }
 
+/* Reconcile multiple existing historical costs without changing a settled work.
+ * All parcels must match an explicit date/amount/line in their original cards.
+ * Complementary expenses are intentionally NOT forwarded to the legacy writer. */
+async function multiExistingFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
+ if(p.direction!=="OUT")throw Error("MULTI_EXISTING_DEBIT_ONLY");
+ const prior=await bankAlreadyUsed(p,k);if(prior)return reply(prior);
+ const parts=splitValidate(raw,p.amount_cents);
+ const matches=[];
+ for(const part of parts){
+  const scan=await existingMatchCandidates({...p,case:part.case,amount_cents:part.cents,amount:(part.cents/100).toFixed(2)},k,part.case);
+  const selected=String((raw.allocations||[]).find((a:any)=>String(a.case)===part.case)?.match_key||"");
+  const exact=scan.candidates.filter((x:any)=>x.match_key===selected);
+  if(exact.length!==1)throw Error("MULTI_EXISTING_EXPLICIT_LINE_REQUIRED_"+part.case);
+  const links=await existingLinksForCard(scan.target.id,k);
+  if(links.some((x:any)=>x.status!=="FAILED"&&String(x.payload?.trello_match_key||"")===selected))
+   throw Error("MULTI_EXISTING_LINE_ALREADY_LINKED_"+part.case);
+  matches.push({case:part.case,cents:part.cents,match_key:selected,line:exact[0].line,
+   card_id:scan.target.id,url:scan.target.shortUrl||scan.pre?.target?.trello_url,
+   digest:await sha256(String(scan.target.desc||""))});
+ }
+ const fp=await sha256(JSON.stringify({kind:"MULTI_EXISTING_TRELLO",operation:p.operation_id,
+  date:p.date,cents:p.amount_cents,matches}));
+ if(action==="multi-preview")return reply({ok:true,preview:true,reconciliation_kind:"MULTI_EXISTING_TRELLO",
+  trello_write:false,parts:matches.map(({case:cs,cents,line,url,match_key})=>({case:cs,cents,line,url,match_key})),
+  total_cents:p.amount_cents,fingerprint:fp,requires_explicit_confirmation:true});
+ if(String(raw.expected_fingerprint||"")!==fp)throw Error("MULTI_EXISTING_PREVIEW_CHANGED");
+ const payload={reconciliation_kind:"MULTI_EXISTING_TRELLO",case:p.case,date:p.date,
+  amount_cents:p.amount_cents,reference:p.reference,allocations:matches};
+ const claim=await rpc("cr_finance_v12_claim",{p_operation_id:p.operation_id,p_fingerprint:fp,
+  p_card_id:matches[0].card_id,p_payload:payload},k);
+ if(claim.ok!==true||claim.claimed!==true)throw Error("MULTI_EXISTING_LEDGER_ALREADY_CLAIMED");
+ try{
+  for(const m of matches){
+   const now=await card(shortLink(m.url)!);
+   if(now.id!==m.card_id||await sha256(String(now.desc||""))!==m.digest)
+    throw Error("MULTI_EXISTING_CARD_CHANGED_"+m.case);
+  }
+  const done=await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,
+   p_fingerprint:fp,p_status:"COMMITTED",p_trello_url:matches[0].url,p_error_code:null},k);
+  if(done.ok!==true)throw Error("MULTI_EXISTING_LEDGER_FINISH_UNCONFIRMED");
+  return reply({ok:true,committed:true,reconciliation_kind:"MULTI_EXISTING_TRELLO",
+   trello_write:false,total_cents:p.amount_cents,parts:matches.map(({case:cs,cents,url})=>({case:cs,cents,url}))});
+ }catch(e){
+  try{await rpc("cr_finance_v12_finish",{p_operation_id:p.operation_id,p_fingerprint:fp,
+   p_status:"REVIEW_REQUIRED",p_trello_url:matches[0].url,
+   p_error_code:String((e as Error).message||e).slice(0,90)},k)}catch{}
+  throw Error("MULTI_EXISTING_REVIEW_REQUIRED");
+ }
+}
 async function multiFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
+ if(raw?.mode==="reconcile-existing")return multiExistingFlow(action,p,raw,k);
  const already=await bankAlreadyUsed(p,k);if(already)return reply(already);
  const parts=splitValidate(raw,p.amount_cents);
  const eligible=await liveCases(p.direction);
+ // Settled jobs must never reach the legacy financial writer.
  const byCase=new Map(eligible.map((x:any)=>[x.case,x]));
  const list=parts.map(part=>({...part,card:byCase.get(part.case)}));
  if(list.some(x=>!x.card))throw Error("TARGET_CASE_NOT_ELIGIBLE_OR_DUPLICATE");
