@@ -156,18 +156,35 @@ test('acerto-live: falha fechada com erro identificável quando não há credenc
  await assert.rejects(setup('fake',403).readAcertos(),/ACERTO_LIVE_SERVICE_AUTH_REJECTED/);
 });
 
-test('antiduplicidade: verifica comentários históricos além dos 100 primeiros antes de gravar',async()=>{
- const section=edge.match(/async function ensureMonthCutComment\(c:any,full:string\)\{[\s\S]*?\n\}\n(?=\/\* Indicador)/);
- assert.ok(section,'rotina de comentários encontrada');
- const js=section[0].replace('(c:any,full:string)','(c,full)').replace('(a:any[])','(a)').replace('(x:any)','(x)');
+test('antiduplicidade: varre 1050 comentários em duas páginas sem repetir corte',async()=>{
+ const helper=edge.match(/async function readAllMonthCommentTexts\(cardId:string\)\{[\s\S]*?\n\}\n(?=async function gather)/);
+ const guard=edge.match(/async function ensureMonthCutComment\(c:any,full:string\)\{[\s\S]*?\n\}\n(?=\/\* Indicador)/);
+ assert.ok(helper&&guard,'rotinas de leitura e guarda encontradas');
+ const js=helper[0].replace('cardId:string','cardId').replace('out:string[]','out').replace('new Set<string>()','new Set()')+
+  guard[0].replace('c:any,full:string','c,full').replace('(text:string)','(text)');
  const calls=[];
- const history=Array.from({length:151},(_,i)=>({data:{text:i===150?'CR-ACERTO-PERIODO|2026-10-10_2026-10-23|579-26':('comentario '+i)}}));
+ const id=n=>n.toString(16).padStart(24,'0');
+ const pages=[
+  Array.from({length:1000},(_,i)=>({id:id(3000-i),data:{text:'comentário '+i}})),
+  Array.from({length:50},(_,i)=>({id:id(2000-i),data:{text:i===49?'CR-ACERTO-PERIODO|2026-10-10_2026-10-23|579-26':'histórico '+i}}))
+ ];
  const ctx=vm.createContext({
-   trello:async(path,method='GET',payload)=>{calls.push({path,method,payload});return history;},
-   marker:(p)=>'CR-ACERTO-PERIODO|'+p.start+'_'+p.end+'|'+p.cases.join(',')
+  trello:async(path,method='GET')=>{calls.push({path,method});return pages[calls.filter(x=>x.method==='GET').length-1]||[];},
+  marker:p=>'CR-ACERTO-PERIODO|'+p.start+'_'+p.end+'|'+p.cases.join(','),
+  encodeURIComponent
  });
  vm.runInContext(js+'\nthis.verify=ensureMonthCutComment;',ctx);
- await ctx.verify({p:{start:'2026-10-10',end:'2026-10-23',cases:['579-26']},month:{id:'monthly'}},'conteúdo do corte');
- assert.match(calls[0].path,/limit=1000/);
- assert.equal(calls.filter(x=>x.method==='POST').length,0,'corte existente não pode gerar comentário duplicado');
+ await ctx.verify({p:{start:'2026-10-10',end:'2026-10-23',cases:['579-26']},month:{id:'monthly'}},'corte');
+ assert.equal(calls.filter(x=>x.method==='GET').length,2);
+ assert.match(calls[1].path,/before=/);
+ assert.equal(calls.filter(x=>x.method==='POST').length,0);
+});
+test('antiduplicidade: falha fechada se a paginação Trello for inconsistente',async()=>{
+ const helper=edge.match(/async function readAllMonthCommentTexts\(cardId:string\)\{[\s\S]*?\n\}\n(?=async function gather)/);
+ assert.ok(helper);
+ const js=helper[0].replace('cardId:string','cardId').replace('out:string[]','out').replace('new Set<string>()','new Set()');
+ const repeated=Array.from({length:1000},(_,i)=>({id:'000000000000000000000001',data:{text:'corte '+i}}));
+ const ctx=vm.createContext({trello:async()=>repeated,encodeURIComponent});
+ vm.runInContext(js+'\nthis.read=readAllMonthCommentTexts;',ctx);
+ await assert.rejects(ctx.read('monthly'),/MONTH_COMMENT_INVALID_OR_REPEATED/);
 });
