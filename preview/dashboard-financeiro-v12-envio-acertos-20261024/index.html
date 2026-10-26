@@ -628,7 +628,7 @@ body{background:var(--v12-bg)}
 </div><div class="manualactions"><button type="button" class="manualbtn primary" id="cr-ap-load">Consultar extrato Cora</button></div>
 <div id="cr-ap-status" role="status" class="manualnote">Aguardando consulta autenticada.</div><div id="cr-ap-results"></div><div id="cr-ap-editor" hidden style="border:2px solid #d7ad4c;border-radius:14px;padding:14px;margin:14px 0;background:#f6f9fc"><h3 style="margin:0 0 8px;color:#0a3967">Aprovisionar movimentação selecionada</h3><div id="cr-ap-selected" style="font-weight:650;margin-bottom:12px"></div><label style="display:block;margin:10px 0">Destino desta movimentação
 <select id="cr-ap-kind" style="display:block;width:100%;padding:12px;margin-top:5px;border:2px solid #adc6d8;border-radius:9px;font-weight:700">
-<option value="bank-note">Saída → ANOTAR diárias/informações no extrato (SEM lançar custo)</option><option value="expense">Saída → lançar custo em uma obra</option>
+<option value="bank-note">ANOTAR informação no extrato Cora (sem custo ou receita no Trello)</option><option value="expense">Saída → lançar custo em uma obra</option>
 <option value="existing">Saída → custo já lançado no Trello (conciliar)</option>
 <option value="multi-expense">Saída → distribuir custo entre várias obras</option>
 <option value="multi-existing">Saída → conciliar despesas JÁ LANÇADAS em várias obras (inclusive acertadas)</option>
@@ -638,11 +638,11 @@ body{background:var(--v12-bg)}
 <option value="withdrawal">Saída → retirada financeira (vincular ao acerto)</option><option value="manual">Lançamento manual livre (informar obra)</option>
 </select></label>
 <div id="cr-ap-note-only" hidden style="margin:12px 0;padding:14px;background:#f1f8ff;border:2px solid #88bce0;border-radius:11px;color:#123e62">
-<strong>Anotar finalidade do pagamento no EXTRATO CORA</strong>
+<strong id="cr-ap-note-heading">Anotação informativa no EXTRATO CORA</strong>
 <p>Sem custo real, sem Trello, sem rateio, sem alteração do saldo Cora ou Capital de Giro. Inclui obras encerradas e não exige despesas lançadas nos cartões.</p>
 <label style="display:block;margin:8px 0">Prestador / beneficiário<input id="cr-ap-note-person" maxlength="120" placeholder="Éder Cibin / Fabrício / João Victor Cibin" style="display:block;width:100%;padding:10px"></label>
 <label style="display:block;margin:8px 0">Finalidade / observação<input id="cr-ap-note-reason" maxlength="500" value="Apoios / diárias — identificação do extrato Cora" style="display:block;width:100%;padding:10px"></label>
-<p>Uma linha por obra. Informe quantas diárias e o valor de cada diária (padrão R$ 150). Ex.: 2 diárias na 799-26 e 1 diária na 818-26.</p>
+<p id="cr-ap-note-help">Uma linha por obra. Informe as diárias e respectivos valores. Para recebimento, informe 1 parcela por obra e o valor correspondente. Obras encerradas também são aceitas; nenhuma gravação será feita no Trello.</p>
 <div id="cr-ap-note-rows"></div>
 <button type="button" class="manualbtn" id="cr-ap-note-add">+ Adicionar obra</button>
 <div id="cr-ap-note-total" style="margin:12px 0;font-weight:800"></div>
@@ -1770,7 +1770,7 @@ function noteSum(){
   if(Number.isSafeInteger(n)&&n>0&&value){cents+=n*value;count+=n}
  }
  const bank=Number(selected?.amount_centavos||0);
- noteTotal.textContent=count+" diária(s) · "+displayBank(cents)+" informados / "+displayBank(bank)+" no Cora"+(cents===bank?" · ✓ Confere":" · Diferença "+displayBank(bank-cents));
+ noteTotal.textContent=count+(bankDirection(selected)==="IN"?" parcela(s)":" diária(s)")+" · "+displayBank(cents)+" informados / "+displayBank(bank)+" no Cora"+(cents===bank?" · ✓ Confere":" · Diferença "+displayBank(bank-cents));
  noteTotal.style.color=cents===bank?"#13754c":"#ab3939";
 }
 function appendNoteRow(){
@@ -1782,23 +1782,23 @@ function appendNoteRow(){
   el.style.cssText="min-width:75px;padding:9px;border:1px solid #b1c9da;border-radius:6px;width:100%";
   el.addEventListener("input",()=>{noteInvalidate();noteSum()});wrap.append(label,el);row.append(wrap);return el;
  }
- const cs=add("Obra","case","799-26","",120),qty=add("Diárias","count","1","1",80),unit=add("R$ por diária","unit","150,00","150,00",95);unit.inputMode="decimal";qty.inputMode="numeric";
+ const incoming=bankDirection(selected)==="IN";const cs=add("Obra de referência","case","799-26","",120),qty=add(incoming?"Parcelas":"Diárias","count","1","1",80),unit=add(incoming?"R$ por parcela":"R$ por diária","unit",incoming?"Valor R$":"150,00",incoming?"":"150,00",95);unit.inputMode="decimal";qty.inputMode="numeric";
  const del=document.createElement("button");del.type="button";del.className="manualbtn";del.textContent="Remover";
  del.addEventListener("click",()=>{row.remove();noteInvalidate();noteSum()});row.append(del);noteRows.append(row);noteSum();
 }
-function resetBankNote(){noteInvalidate();noteRows.replaceChildren();notePerson.value="";noteReason.value="Apoios / diárias — identificação do extrato Cora";noteStatus.textContent="Nenhum custo será criado.";appendNoteRow()}
+function resetBankNote(){noteInvalidate();noteRows.replaceChildren();const income=bankDirection(selected)==="IN";notePerson.value="";noteReason.value=income?"Recebimento — identificação das obras no extrato Cora":"Apoios / diárias — identificação das obras no extrato Cora";document.getElementById("cr-ap-note-heading").textContent=income?"Anotar RECEBIMENTO e suas obras no extrato Cora":"Anotar DIÁRIAS e suas obras no extrato Cora";document.getElementById("cr-ap-note-help").textContent=income?"Informe uma linha por obra beneficiada, quantidade de parcelas (normalmente 1) e valor por parcela. Mesmo recebimentos de várias obras podem ser apenas anotados, sem registrar receita no Trello.":"Informe as obras referentes a cada diária, a quantidade e o valor por diária; obras já encerradas são permitidas.";noteStatus.textContent="Anotação somente informativa — sem custo, receita ou Trello.";appendNoteRow()}
 [notePerson,noteReason].forEach(x=>x.addEventListener("input",noteInvalidate));
 noteAdd.addEventListener("click",()=>{noteInvalidate();appendNoteRow()});
 async function annotationPayload(){
  const p=await bankPayload("1-26");
- if(p.direction!=="OUT")throw Error("Somente saídas Cora podem ser anotadas neste modo");
+ if(!["IN","OUT"].includes(p.direction))throw Error("Movimento Cora inválido para anotação");
  const allocations=[...noteRows.children].map(row=>{
   const cs=String(row.querySelector('[data-case]').value||"").trim(),daily_count=Number(row.querySelector('[data-count]').value);
   const unit=moneyCentavos(row.querySelector('[data-unit]').value);
   if(!/^\d{1,5}-26$/.test(cs)||!Number.isSafeInteger(daily_count)||daily_count<1||daily_count>30||!unit)throw Error("Confira obra, quantidade e valor unitário");
   return {case:cs,daily_count,cents:daily_count*unit};
  });
- if(!allocations.length||new Set(allocations.map(a=>a.case)).size!==allocations.length)throw Error("Agrupe as diárias por obra, sem repetir o número da obra");
+ if(!allocations.length||new Set(allocations.map(a=>a.case)).size!==allocations.length)throw Error("Agrupe as informações por obra, sem repetir o número da obra");
  if(allocations.reduce((s,a)=>s+a.cents,0)!==Number(selected?.amount_centavos||0))throw Error("A soma deve ser idêntica ao valor Cora");
  return {...p,beneficiary:notePerson.value.trim(),purpose:noteReason.value.trim(),allocations};
 }
@@ -1821,7 +1821,7 @@ noteConfirmButton.addEventListener("click",async()=>{
  try{
   const now=await annotationPayload(),{expected_fingerprint,...original}=notePreview.payload;
   if(notePreview.source_id!==selected.source_id||JSON.stringify(now)!==JSON.stringify(original))throw Error("Dados alterados. Refazer prévia.");
-  if(!confirm("Salvar somente a ANOTAÇÃO no extrato Cora, sem lançar custos no Trello?"))return;
+  if(!confirm("Salvar somente a ANOTAÇÃO no extrato Cora, sem alterar custos, receitas ou cartões do Trello?"))return;
   noteStatus.textContent="Registrando anotação somente leitura contábil...";
   const r=await existingRequest("bank-annotation-commit",notePreview.payload);
   if((!r.committed&&!r.already_committed)||r.annotation_only!==true||r.no_trello_write!==true||r.no_cost_write!==true)
@@ -1896,7 +1896,7 @@ function applyKind(){
  else existing.value="no";
  syncCrossFields();
  editorStatus.textContent="";
- if(incoming&&dir!=="IN"||!incoming&&dir!=="OUT")editorStatus.textContent="A operação selecionada não corresponde à direção do movimento bancário.";
+ if(chosen!=="bank-note"&&(incoming&&dir!=="IN"||!incoming&&dir!=="OUT"))editorStatus.textContent="A operação selecionada não corresponde à direção do movimento bancário.";
  document.getElementById("cr-ap-prepare").hidden=multi||withdrawal||annotate;
  if(multi)loadTargets();
 }
@@ -2078,7 +2078,7 @@ const info=document.createElement("div");info.style.flex="1";const strong=docume
   }catch{}
  }
 const btn=document.createElement("button");btn.type="button";btn.className="manualbtn";btn.textContent=notePresent?"✓ Anotado no extrato":bankDirection(m)==="OUT"?"✎ Anotar saída (sem custo)":existingReceipt?"✓ Recebimento conciliado":capitalLinked?"✓ Capital confirmado":multiLinked?"✓ Distribuído entre obras":existingLinked?"✓ Já lançado · conciliado":committed?"✓ Trello confirmado":review?"Revisão necessária":!ledger?"Verificando registro...":"Aprovisionar →";
- btn.disabled=notePresent||!ledger||statusFailed||statusBusy;btn.addEventListener("click",()=>{selected=m;editor.hidden=false;caseField.value="";existing.value="";editorStatus.textContent="";hideExistingReview();hideReceiptReview();kind.value=bankDirection(m)==="IN"?"receipt":"bank-note";applyKind();selectedLabel.textContent=String(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100)+" · "+String(m.description||"");editor.scrollIntoView({behavior:"smooth",block:"start"});});row.append(info,btn);results.append(row)}
+ if(!notePresent&&bankDirection(m)==="IN")btn.textContent="✎ Anotar entrada (sem Trello)";btn.disabled=notePresent||!ledger||statusFailed||statusBusy;btn.addEventListener("click",()=>{selected=m;editor.hidden=false;caseField.value="";existing.value="";editorStatus.textContent="";hideExistingReview();hideReceiptReview();kind.value="bank-note";applyKind();selectedLabel.textContent=String(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100)+" · "+String(m.description||"");editor.scrollIntoView({behavior:"smooth",block:"start"});});row.append(info,btn);results.append(row)}
 }
 
 const existingDestination=document.getElementById("cr-ap-cost-case"),expenseOrigin=document.getElementById("cr-ap-origin-case");
