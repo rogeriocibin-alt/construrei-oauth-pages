@@ -144,7 +144,7 @@ async function sha256(s:string){
  const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
  return Array.from(new Uint8Array(bytes),v=>v.toString(16).padStart(2,"0")).join("");
 }
-async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costCase:string=p.case){
+async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costCase:string=p.case,toleranceDays:number=1){
  if(!/^\d{1,5}-26$/.test(costCase))throw Error("COST_DESTINATION_CASE_INVALID");
  const crossed=costCase!==p.case;
  if(p.direction!=="OUT"||!p.operation_id.startsWith("CORA_"))throw Error("EXISTING_ONLY_BANK_DEBITS");
@@ -182,7 +182,7 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costC
   const lineYear=m[3]?(m[3].length===2?"20"+m[3]:m[3]):p.date.slice(0,4);
   const ledgerDay=new Date(lineYear+"-"+m[2]+"-"+m[1]+"T12:00:00Z");
   const bankDay=new Date(p.date+"T12:00:00Z");
-  if(Number.isNaN(ledgerDay.getTime())||Math.abs(ledgerDay.getTime()-bankDay.getTime())>86400000)continue;
+  if(Number.isNaN(ledgerDay.getTime())||Math.abs(ledgerDay.getTime()-bankDay.getTime())>toleranceDays*86400000)continue;
   if(ledgerDay.toISOString().slice(0,10)!==lineYear+"-"+m[2]+"-"+m[1])continue;
   if(amount(m[4])!==p.amount_cents)continue;
   // Only link a cross-work cost if the exact line explicitly names the origin work.
@@ -488,9 +488,9 @@ async function multiExistingFlow(action:string,p:ReturnType<typeof clean>,raw:an
  const parts=splitValidate(raw,p.amount_cents);
  const matches=[];
  for(const part of parts){
-  const scan=await existingMatchCandidates({...p,case:part.case,amount_cents:part.cents,amount:(part.cents/100).toFixed(2)},k,part.case);
+  const scan=await existingMatchCandidates({...p,case:part.case,amount_cents:part.cents,amount:(part.cents/100).toFixed(2)},k,part.case,3);
   const selected=String((raw.allocations||[]).find((a:any)=>String(a.case)===part.case)?.match_key||"");
-  const exact=scan.candidates.filter((x:any)=>x.match_key===selected);
+  const exact=scan.matches.filter((x:any)=>x.match_key===selected);
   if(exact.length!==1)throw Error("MULTI_EXISTING_EXPLICIT_LINE_REQUIRED_"+part.case);
   const links=await existingLinksForCard(scan.target.id,k);
   if(links.some((x:any)=>x.status!=="FAILED"&&String(x.payload?.trello_match_key||"")===selected))
