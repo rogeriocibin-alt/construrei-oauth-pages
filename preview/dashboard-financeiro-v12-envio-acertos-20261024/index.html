@@ -602,6 +602,7 @@ body{background:var(--v12-bg)}
    <button class="v11button" type="button" id="crp-recovery-confirm" onclick="crpRecoveryCommit()" disabled>Confirmar somente movimentações pendentes</button>
   </div>
  </details>
+ <button class="v11button" type="button" onclick="crpAnnualPreview()" style="margin-top:10px">Conferir resumo anual 2026 — somente leitura</button>
  <div id="crp-result" class="v11msg" role="status" aria-live="polite" style="white-space:pre-wrap;margin-top:9px;font-size:12px">Nenhuma retirada transferida nesta sessão.</div>
  </div>
 </div>
@@ -2315,6 +2316,20 @@ async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").di
 async function crpSend(){if(!CRP_LAST)return;try{const current=crpData();if(JSON.stringify(current)!==JSON.stringify({start:CRP_LAST.start,end:CRP_LAST.end,cases:CRP_LAST.cases}))throw Error("Obras ou datas mudaram; refaça a prévia.");if(!confirm("Confirma o registro no Trello dos acertos já realizados de "+current.cases.length+" obras no período "+current.start+" a "+current.end+" para "+CRP_LAST.monthName+" 2026? O envio não realiza pagamento bancário."+(CRP_LAST.requires_month_creation?" Será criado também o único cartão mensal desta competência, se a reserva segura for aprovada.":"")))return;document.getElementById("crp-send").disabled=true;crpShow("Enviando acertos e verificando movimentação das obras...");const x=await crpApi("commit",CRP_LAST);CRP_LAST=null;crpShow("ENVIADO: "+x.month+" 2026 | "+x.moved.length+" obras movidas | Cartão: "+(x.month_url||"ver na Gestão Financeira")+". Capital de Giro: "+(x.capital_created?"novo cartão gerado e conferido.":"cartão existente conferido."));await refreshAcerto(false)}catch(e){CRP_LAST=null;document.getElementById("crp-send").disabled=true;crpShow("NÃO CONCLUÍDO: "+crpFriendlyError(e.message)+" Confira os registros antes de qualquer nova tentativa.")}}
 for(const id of ["cg-close-start","cg-close-end"]){document.addEventListener("change",ev=>{if(ev.target?.id===id){CRP_LAST=null;const btn=document.getElementById("crp-send");if(btn)btn.disabled=true;}})}
 
+async function crpAnnualPreview(){
+ try{
+  const r=await crpApi("annual-preview",{});
+  const t=r.declared||{};
+  crpShow("RESUMO ANUAL — CONSULTA SEM GRAVAÇÃO\n"+
+   "Meses históricos declarados: "+(t.months||0)+
+   "\nBruto declarado: "+crpFmt(t.gross_cents)+
+   " | Custos: "+crpFmt(t.costs_cents)+
+   " | Lucro declarado: "+crpFmt(t.profit_cents)+
+   "\nDiferença aritmética: "+crpFmt(r.arithmetic_gap_cents)+
+   "\nPendências: "+(r.issues||[]).join("; ")+
+   "\n⚠️ Valores declarados não comprovam recebimentos na Cora, pagamentos ou rateios efetuados. Cartão anual original não foi alterado.");
+ }catch(e){crpShow("RESUMO ANUAL NÃO DISPONÍVEL: "+crpFriendlyError(e.message))}
+}
 let CRP_RECOVERY=null;
 function crpRecoveryData(){
  const start=document.getElementById("crp-start").value,end=document.getElementById("crp-end").value;
