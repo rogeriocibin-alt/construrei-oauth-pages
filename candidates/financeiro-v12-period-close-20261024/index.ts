@@ -130,7 +130,9 @@ async function gather(body:any){
  if(totals.base_cents-totals.cost_cents!==totals.profit_cents||totals.fabricio_cents+totals.eder_cents+totals.rogerio_cents+totals.gabi_cents+totals.capital_cents!==totals.profit_cents)throw Error("PERIODO_NAO_FECHA");
  const capitals=await trello("/lists/692e0d6c360c13a9cd738f33/cards?fields=id,name,desc");
  const ckey="CG_PERIOD_KEY|"+p.start+"_"+p.end;
- const existing=capitals.find((x:any)=>String(x.desc||"").includes(ckey));
+ const matchingCapitalCards=capitals.filter((x:any)=>String(x.desc||"").includes(ckey));
+ if(matchingCapitalCards.length>1)throw Error("CAPITAL_PERIOD_DUPLICATED_REVIEW");
+ const existing=matchingCapitalCards[0]||null;
  const cm=existing?String(existing.desc||"").match(/CG_CREDIT\|([0-9]+(?:\.[0-9]{1,2})?)/):null;
  const credit=cm?Math.round(Number(cm[1])*100):null;
  // Decisão documentada do diretor em 24/10/2026: exceção única, com valores e período exatos.
