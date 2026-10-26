@@ -64,6 +64,28 @@ async function diagnosticPreview(body:any){
  return {ok:true,diagnostic:true,period:p,rows,writes:false,preview_validated:false,can_commit:false,
    note:"CONSULTA NAO HOMOLOGADA: exige previas financeiras regulares e confirmacao posterior."};
 }
+// Trello limits action reads to 1000 records per request. Continue until exhausted;
+ // never infer that missing older comments imply a clean, unsent month.
+async function readAllMonthCommentTexts(cardId:string){
+ const out:string[]=[],seen=new Set<string>();
+ let before="";
+ for(let page=0;page<30;page++){
+  const uri="/cards/"+cardId+"/actions?filter=commentCard&limit=1000"+(before?"&before="+encodeURIComponent(before):"");
+  const batch=await trello(uri);
+  if(!Array.isArray(batch))throw Error("MONTH_COMMENTS_UNAVAILABLE");
+  for(const action of batch){
+   const id=String(action?.id||"");
+   if(!/^[a-f0-9]{24}$/i.test(id)||seen.has(id)||typeof action?.data?.text!=="string")
+    throw Error("MONTH_COMMENT_INVALID_OR_REPEATED");
+   seen.add(id);out.push(action.data.text);
+  }
+  if(batch.length<1000)return out;
+  const cursor=String(batch[batch.length-1]?.id||"");
+  if(!cursor||cursor===before)throw Error("MONTH_COMMENT_CURSOR_INVALID");
+  before=cursor;
+ }
+ throw Error("MONTH_COMMENTS_PAGINATION_INCOMPLETE");
+}
 async function gather(body:any){
  const p=input(body);
  if(!p.monthName)throw Error("MES_INVALIDO");
@@ -75,15 +97,11 @@ async function gather(body:any){
  const pending=workLists.find((x:any)=>normal(x.name)==="AG. ACERTO");
  if(!month||!target||!pending)throw Error("DESTINO_NAO_ENCONTRADO");
  // Comments are part of this SAME canonical monthly card, especially once 16K is reached.
- const monthlyActions=await trello("/cards/"+month.id+"/actions?filter=commentCard&limit=1000");
- if(!Array.isArray(monthlyActions))throw Error("MONTH_COMMENTS_UNAVAILABLE");
- const monthlyTexts=monthlyActions.map((x:any)=>String(x?.data?.text||""));
+ const monthlyTexts=await readAllMonthCommentTexts(month.id);
  // Historical cuts can reside in comments of another month once its text filled.
  // Check every canonical 2026 month, not merely the destination month's comments.
  const otherMonths=finCards.filter((x:any)=>x.id!==month.id&&months.slice(1).some((m:string)=>normal(x.name).trim()===m+" 2026"));
- const otherActions=await Promise.all(otherMonths.map((x:any)=>trello("/cards/"+x.id+"/actions?filter=commentCard&limit=1000")));
- if(otherActions.some((a:any)=>!Array.isArray(a)))throw Error("OTHER_MONTH_COMMENTS_UNAVAILABLE");
- const historicalTexts=otherActions.flatMap((a:any)=>a.map((x:any)=>String(x?.data?.text||"")));
+ const historicalTexts=(await Promise.all(otherMonths.map((x:any)=>readAllMonthCommentTexts(x.id)))).flat();
  const duplicate=String(month.desc||"").includes(marker(p))||monthlyTexts.some((t:string)=>t.includes(marker(p)))||historicalTexts.some((t:string)=>t.includes(marker(p)));
  if(duplicate)throw Error("PERIOD_ALREADY_SENT");
  for(const c of p.cases){
@@ -147,13 +165,11 @@ function compactMonthCut(c:any){
 }
 async function ensureMonthCutComment(c:any,full:string){
  if(full.length>16384)throw Error("MONTH_COMMENT_CAPACITY_EXCEEDED");
- const path="/cards/"+c.month.id+"/actions?filter=commentCard&limit=1000";
- const has=(a:any[])=>Array.isArray(a)&&a.some((x:any)=>String(x?.data?.text||"").includes(marker(c.p)));
- const before=await trello(path);
- if(has(before))return;
+ const before=await readAllMonthCommentTexts(c.month.id);
+ if(before.some((text:string)=>text.includes(marker(c.p))))return;
  await trello("/cards/"+c.month.id+"/actions/comments","POST",{text:full});
- const after=await trello(path);
- if(!has(after))throw Error("MONTH_COMMENT_SAVE_UNCONFIRMED");
+ const after=await readAllMonthCommentTexts(c.month.id);
+ if(!after.some((text:string)=>text.includes(marker(c.p))))throw Error("MONTH_COMMENT_SAVE_UNCONFIRMED");
 }
 /* Indicador comercial: Gestão Click é fonte dos orçamentos; não inferir a receber de movimentos Cora/Trello. */
 async function gcAwaitingPayment(){
