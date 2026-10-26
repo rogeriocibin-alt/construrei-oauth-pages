@@ -797,6 +797,67 @@ async function capitalBridge(req:Request,action:string,p:ReturnType<typeof clean
  }
 }
 
+/* Cora bank statement ANNOTATION only. Separate table, not an operational
+ * cost, Trello entry, paid withdrawal, Cora transfer or capital movement.
+ * No historical card read is required: a work number is a reference label.
+ * Backend verifies the exact original bank debit before any saved annotation. */
+const ANNOTATIONS="cr_cora_bank_annotations_v12";
+function bankAnnotationData(p:ReturnType<typeof clean>,raw:any){
+ if(p.direction!=="OUT"||!p.operation_id.startsWith("CORA_"))throw Error("BANK_ANNOTATION_REQUIRES_CORA_DEBIT");
+ const beneficiary=String(raw?.beneficiary||"").trim().replace(/\s+/g," ").slice(0,120);
+ const purpose=String(raw?.purpose||"").trim().replace(/\s+/g," ").slice(0,500);
+ if(beneficiary.length<3)throw Error("ANNOTATION_BENEFICIARY_REQUIRED");
+ if(purpose.length<3)throw Error("ANNOTATION_PURPOSE_REQUIRED");
+ const rows=raw?.allocations;
+ if(!Array.isArray(rows)||rows.length<1||rows.length>15)throw Error("ANNOTATION_REQUIRES_1_TO_15_WORKS");
+ const allocations=rows.map((v:any)=>({case:String(v.case||"").trim(),daily_count:Number(v.daily_count),cents:Number(v.cents)}));
+ if(allocations.some((v:any)=>!/^\d{1,5}-26$/.test(v.case)||!Number.isSafeInteger(v.daily_count)||v.daily_count<1||v.daily_count>30||
+  !Number.isSafeInteger(v.cents)||v.cents<1||v.cents>p.amount_cents||v.cents%v.daily_count!==0))
+  throw Error("ANNOTATION_WORK_COUNT_OR_VALUE_INVALID");
+ if(new Set(allocations.map((v:any)=>v.case)).size!==allocations.length)throw Error("ANNOTATION_DUPLICATED_WORK");
+ if(allocations.reduce((sum:number,v:any)=>sum+v.cents,0)!==p.amount_cents)
+  throw Error("ANNOTATION_TOTAL_DIFFERS_FROM_BANK");
+ allocations.sort((a:any,b:any)=>a.case.localeCompare(b.case,"pt-BR",{numeric:true}));
+ return {operation_id:p.operation_id,bank_reference:p.reference,bank_date:p.date,
+  amount_cents:p.amount_cents,direction:p.direction,beneficiary,purpose,allocations};
+}
+async function existingAnnotation(operationId:string,k:string){
+ const url=new URL(SB+"/rest/v1/"+ANNOTATIONS);
+ url.searchParams.set("operation_id","eq."+operationId);
+ url.searchParams.set("select","operation_id,bank_reference,bank_date,amount_cents,beneficiary,purpose,allocations,fingerprint,created_at");
+ const r=await fetch(url,{headers:headers(k),signal:AbortSignal.timeout(12000)});
+ if(!r.ok)throw Error("BANK_ANNOTATION_READ_"+r.status);
+ const j=await r.json();if(!Array.isArray(j)||j.length>1)throw Error("BANK_ANNOTATION_INTEGRITY");
+ return j[0]||null;
+}
+async function bankAnnotationFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
+ const note=bankAnnotationData(p,raw),fingerprintValue=await sha256(JSON.stringify(note));
+ const prev=await existingAnnotation(p.operation_id,k);
+ if(prev){
+  if(prev.fingerprint!==fingerprintValue)throw Error("BANK_ANNOTATION_ALREADY_EXISTS_REVIEW");
+  return reply({ok:true,already_committed:true,annotation_only:true,no_cost_write:true,
+    no_trello_write:true,no_cora_write:true,no_capital_write:true,annotation:prev});
+ }
+ if(action==="bank-annotation-preview")return reply({ok:true,preview:true,fingerprint:fingerprintValue,
+  annotation_only:true,no_cost_write:true,no_trello_write:true,no_cora_write:true,no_capital_write:true,
+  beneficiary:note.beneficiary,purpose:note.purpose,parts:note.allocations,total_cents:note.amount_cents});
+ if(String(raw?.expected_fingerprint||"")!==fingerprintValue)throw Error("BANK_ANNOTATION_PREVIEW_CHANGED");
+ const r=await fetch(SB+"/rest/v1/"+ANNOTATIONS,{method:"POST",
+  headers:{...headers(k),"prefer":"return=minimal"},
+  body:JSON.stringify({...note,fingerprint:fingerprintValue}),signal:AbortSignal.timeout(16000)});
+ if(!r.ok){
+  // A concurrent identical submission is harmless; a conflicting one must fail.
+  const after=await existingAnnotation(p.operation_id,k);
+  if(after&&after.fingerprint===fingerprintValue)return reply({ok:true,already_committed:true,
+    annotation_only:true,no_cost_write:true,no_trello_write:true,no_cora_write:true,no_capital_write:true,annotation:after});
+  throw Error(after?"BANK_ANNOTATION_ALREADY_EXISTS_REVIEW":"BANK_ANNOTATION_SAVE_"+r.status);
+ }
+ const saved=await existingAnnotation(p.operation_id,k);
+ if(!saved||saved.fingerprint!==fingerprintValue||saved.bank_reference!==p.reference)
+  throw Error("BANK_ANNOTATION_UNVERIFIED_DO_NOT_REPEAT");
+ return reply({ok:true,committed:true,annotation_only:true,no_cost_write:true,no_trello_write:true,
+  no_cora_write:true,no_capital_write:true,annotation:saved});
+}
 async function batchBankStatus(raw:any,k:string){
  const given=raw?.ids;
  if(!Array.isArray(given)||given.length>120)return {ok:false,error:"INVALID_BANK_ID_LIST"};
@@ -828,6 +889,25 @@ async function batchBankStatus(raw:any,k:string){
    };
   }
  }
+ // Annotation is independent of accounting ledger and may coexist with a
+ // previous financial classification. Do not promote it to a paid/cost state.
+ for(let i=0;i<names.length;i+=25){
+  const url=new URL(SB+"/rest/v1/"+ANNOTATIONS);
+  url.searchParams.set("operation_id","in.("+names.slice(i,i+25).join(",")+")");
+  url.searchParams.set("select","operation_id,bank_reference,beneficiary,purpose,allocations,amount_cents,bank_date,created_at");
+  const response=await fetch(url,{headers:headers(k),signal:AbortSignal.timeout(12000)});
+  if(!response.ok)throw Error("BANK_ANNOTATION_LIST_"+response.status);
+  const notes=await response.json();if(!Array.isArray(notes))throw Error("BANK_ANNOTATION_LIST_INVALID");
+  for(const note of notes){
+   const id=reverse.get(String(note.operation_id));
+   if(!id||String(note.bank_reference)!==id)throw Error("BANK_ANNOTATION_BANK_ID_MISMATCH");
+   const existing=(statuses[id]||{state:"PENDENTE",ledger_status:"NO_COST_ENTRY",verified_reference:true}) as any;
+   existing.annotated=true;
+   existing.annotation={beneficiary:String(note.beneficiary||""),purpose:String(note.purpose||""),
+    allocations:note.allocations,amount_cents:note.amount_cents,bank_date:note.bank_date,created_at:note.created_at};
+   statuses[id]=existing;
+  }
+ }
  return {ok:true,records:statuses,source:"V12_PERSISTENT_LEDGER",count:ids.length};
 }
 
@@ -836,7 +916,7 @@ Deno.serve(async(req:Request)=>{
  if(req.headers.get("origin")&&req.headers.get("origin")!==ORIGIN)return reply({ok:false,error:"ORIGIN_DENIED"},403);
  const u=new URL(req.url),action=u.searchParams.get("action")||"health";
  if(action==="health"&&req.method==="GET")return reply({ok:true,candidate:true,build:NAME,trello_writes:"DIRECTOR_ONLY",bank_verification:"SERVER_SIDE_CACHE",status:"LEDGER_PERSISTENT"});
- if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","multi-candidates","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","withdrawal-history","withdrawal-preview","withdrawal-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
+ if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","bank-annotation-preview","bank-annotation-commit","multi-candidates","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","withdrawal-history","withdrawal-preview","withdrawal-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return reply({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const k=key();if(!k)return reply({ok:false,error:"SERVICE_AUTH_UNAVAILABLE"},503);
  let raw:any=null;
@@ -860,6 +940,11 @@ Deno.serve(async(req:Request)=>{
  if(action==="receipt-existing-preview"||action==="receipt-existing-confirm"){
   try{return await existingReceiptFlow(action,p,raw,k)}
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,135),possible_trello_write:false},409)}
+ }
+ if(action==="bank-annotation-preview"||action==="bank-annotation-commit"){
+  try{return await bankAnnotationFlow(action,p,raw,k)}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,120),
+    possible_trello_write:false,possible_cora_write:false,possible_cost_write:false},409)}
  }
  if(action==="multi-candidates"){
   try{return await multiExistingCandidates(p,raw,k)}
