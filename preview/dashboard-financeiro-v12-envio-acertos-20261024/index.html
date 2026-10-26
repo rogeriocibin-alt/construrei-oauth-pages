@@ -591,6 +591,17 @@ body{background:var(--v12-bg)}
  <button class="v11button" type="button" onclick="crpPreview()">1. Pré-visualizar envio financeiro</button>
  <button class="v11button" type="button" id="crp-send" style="background:#0e694f" onclick="crpSend()" disabled>2. Enviar para Gestão Financeira</button>
  </div>
+ <details style="margin-top:10px;border-top:1px solid #bdd2df;padding-top:10px">
+  <summary style="font-weight:700;cursor:pointer">Recuperar envio parcial — sem duplicar acerto</summary>
+  <p style="font-size:12px;line-height:1.5">Use somente se o cartão do mês JÁ contém o acerto completo, mas algumas obras permaneceram em AG. ACERTO. Informe todos os códigos do corte original, inclusive as obras já movimentadas. A prévia não grava.</p>
+  <label style="display:block;font-size:12px">Obras do corte original (separadas por vírgula)
+   <input type="text" id="crp-recovery-cases" placeholder="579-26, 799-26, 818-26" style="width:100%;min-height:38px">
+  </label>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:7px">
+   <button class="v11button" type="button" onclick="crpRecoveryPreview()">Conferir retomada</button>
+   <button class="v11button" type="button" id="crp-recovery-confirm" onclick="crpRecoveryCommit()" disabled>Confirmar somente movimentações pendentes</button>
+  </div>
+ </details>
  <div id="crp-result" class="v11msg" role="status" aria-live="polite" style="white-space:pre-wrap;margin-top:9px;font-size:12px">Nenhuma retirada transferida nesta sessão.</div>
  </div>
 </div>
@@ -2303,6 +2314,51 @@ async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").di
 }}
 async function crpSend(){if(!CRP_LAST)return;try{const current=crpData();if(JSON.stringify(current)!==JSON.stringify({start:CRP_LAST.start,end:CRP_LAST.end,cases:CRP_LAST.cases}))throw Error("Obras ou datas mudaram; refaça a prévia.");if(!confirm("Confirma o registro no Trello dos acertos já realizados de "+current.cases.length+" obras no período "+current.start+" a "+current.end+" para "+CRP_LAST.monthName+" 2026? O envio não realiza pagamento bancário."+(CRP_LAST.requires_month_creation?" Será criado também o único cartão mensal desta competência, se a reserva segura for aprovada.":"")))return;document.getElementById("crp-send").disabled=true;crpShow("Enviando acertos e verificando movimentação das obras...");const x=await crpApi("commit",CRP_LAST);CRP_LAST=null;crpShow("ENVIADO: "+x.month+" 2026 | "+x.moved.length+" obras movidas | Cartão: "+(x.month_url||"ver na Gestão Financeira")+".");await refreshAcerto(false)}catch(e){CRP_LAST=null;document.getElementById("crp-send").disabled=true;crpShow("NÃO CONCLUÍDO: "+crpFriendlyError(e.message)+" Confira os registros antes de qualquer nova tentativa.")}}
 for(const id of ["cg-close-start","cg-close-end"]){document.addEventListener("change",ev=>{if(ev.target?.id===id){CRP_LAST=null;const btn=document.getElementById("crp-send");if(btn)btn.disabled=true;}})}
+
+let CRP_RECOVERY=null;
+function crpRecoveryData(){
+ const start=document.getElementById("crp-start").value,end=document.getElementById("crp-end").value;
+ const raw=String(document.getElementById("crp-recovery-cases").value||"");
+ const cases=[...new Set(raw.split(/[\s,;]+/).map(x=>x.trim()).filter(Boolean))]
+  .sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+ if(!cases.length||cases.length>40||cases.some(x=>!/^\d{1,5}-26$/.test(x)))throw Error("Informe os códigos de TODAS as obras do corte original (ex.: 579-26, 799-26).");
+ return {start,end,cases};
+}
+async function crpRecoveryPreview(){
+ CRP_RECOVERY=null;document.getElementById("crp-recovery-confirm").disabled=true;
+ try{
+  const input=crpRecoveryData(),r=await crpApi("recovery-preview",input);
+  CRP_RECOVERY={...input,fingerprint:r.fingerprint};
+  const remaining=r.pending_move||[],finished=r.already_moved||[];
+  crpShow("RECUPERAÇÃO — PRÉVIA SEM ESCRITA. Já movimentadas: "+(finished.join(", ")||"nenhuma")+
+   ". Ainda pendentes: "+(remaining.join(", ")||"nenhuma")+
+   ". Nenhum acerto, crédito CG ou movimento bancário será criado nesta operação.");
+  document.getElementById("crp-recovery-confirm").disabled=remaining.length===0;
+ }catch(e){crpShow("RECUPERAÇÃO BLOQUEADA: "+crpFriendlyError(e.message))}
+}
+async function crpRecoveryCommit(){
+ if(!CRP_RECOVERY)return;
+ try{
+  const now=crpRecoveryData();
+  if(JSON.stringify(now)!==JSON.stringify({start:CRP_RECOVERY.start,end:CRP_RECOVERY.end,cases:CRP_RECOVERY.cases}))
+   throw Error("Datas ou obras mudaram. Faça nova prévia.");
+  if(!confirm("Confirma movimentar SOMENTE as obras ainda em AG. ACERTO do período informado? Nenhum acerto financeiro, crédito de Capital de Giro ou pagamento será recriado."))return;
+  document.getElementById("crp-recovery-confirm").disabled=true;
+  const r=await crpApi("recovery-commit",CRP_RECOVERY);
+  CRP_RECOVERY=null;
+  crpShow("RECUPERAÇÃO CONCLUÍDA. Movidas agora: "+(r.moved.join(", ")||"nenhuma")+
+   ". Já movimentadas: "+(r.already_moved.join(", ")||"nenhuma")+". Cartão financeiro existente preservado.");
+  await refreshAcerto(false);
+ }catch(e){
+  CRP_RECOVERY=null;
+  document.getElementById("crp-recovery-confirm").disabled=true;
+  crpShow("RECUPERAÇÃO NÃO CONCLUÍDA: "+crpFriendlyError(e.message)+". Confira as obras no Trello antes de repetir.");
+ }
+}
+for(const id of ["crp-start","crp-end","crp-recovery-cases"]){
+ document.addEventListener("change",e=>{if(e.target?.id===id){CRP_RECOVERY=null;
+  const b=document.getElementById("crp-recovery-confirm");if(b)b.disabled=true;}})
+}
 </script><script id="cr2026-history-runtime">(function(){
 "use strict";
 const $=id=>document.getElementById(id);
