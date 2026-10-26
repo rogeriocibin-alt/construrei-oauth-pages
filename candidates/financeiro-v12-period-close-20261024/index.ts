@@ -370,6 +370,42 @@ async function recoverPeriod(b:any,commit:boolean){
   no_accounting_writes:true};
 }
 
+// Executive annual preview never promotes declared numbers to bank-confirmed.
+ // Data provenance: preserved monthly Trello snapshots, not hypothetical receipts.
+async function annualPreview2026(){
+ const key=(Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"").trim();
+ if(!key)throw Error("ANNUAL_SOURCE_SERVICE_UNAVAILABLE");
+ const u=new URL(SB+"/rest/v1/cr_finance_2026_monthly_source_snapshots");
+ u.searchParams.set("select","year_month,source_status,gross_cents,costs_cents,declared_profit_cents,computed_profit_cents,source_card_url");
+ u.searchParams.set("year_month","gte.2026-01");
+ u.searchParams.set("order","year_month.asc");
+ const r=await fetch(u,{headers:{"apikey":key,Authorization:"Bearer "+key},signal:AbortSignal.timeout(18000)});
+ if(!r.ok)throw Error("ANNUAL_SOURCE_READ_"+r.status);
+ const rows=await r.json();
+ if(!Array.isArray(rows)||rows.length>12)throw Error("ANNUAL_SOURCE_INVALID");
+ const seen=new Set<string>(),issues:string[]=[],declared:any={months:0,gross_cents:0,costs_cents:0,profit_cents:0};
+ const entries=rows.map((x:any)=>{
+  const id=String(x.year_month||"");
+  if(!/^2026-(0[1-9]|1[0-2])$/.test(id)||seen.has(id))throw Error("ANNUAL_MONTH_DUPLICATE_OR_INVALID");
+  seen.add(id);
+  const state=String(x.source_status||"");
+  const values=[x.gross_cents,x.costs_cents,x.declared_profit_cents];
+  const valid=state==="DECLARED_UNRECONCILED"&&values.every(v=>Number.isSafeInteger(v))&&x.gross_cents>=0&&x.costs_cents>=0;
+  const gap=valid?x.gross_cents-x.costs_cents-x.declared_profit_cents:null;
+  if(valid){declared.months++;declared.gross_cents+=x.gross_cents;declared.costs_cents+=x.costs_cents;declared.profit_cents+=x.declared_profit_cents;}
+  else issues.push(id+":NAO_CONCILIADO");
+  if(gap!==null&&gap!==0)issues.push(id+":DIFERENCA_"+gap+"_CENTAVOS");
+  return {month:id,status:state,valid_declared:valid,arithmetic_gap_cents:gap,source_card_url:x.source_card_url||null};
+ });
+ for(let month=1;month<=12;month++){
+  const id="2026-"+String(month).padStart(2,"0");
+  if(!seen.has(id))issues.push(id+":SEM_FONTE_MENSAL");
+ }
+ return {ok:true,preview:true,source:"TRELLO_MONTHLY_DECLARED_SNAPSHOTS",
+  declared,arithmetic_gap_cents:declared.gross_cents-declared.costs_cents-declared.profit_cents,
+  entries,issues,writes:false,bank_confirmed:false,can_publish_annual:false,
+  caveat:"Totais mensais são históricos declarados; não representam recebimentos bancários auditados, retiradas pagas nem consolidação final."};
+}
 /* Indicador comercial: Gestão Click é fonte dos orçamentos; não inferir a receber de movimentos Cora/Trello. */
 async function gcAwaitingPayment(){
  const access=(Deno.env.get("GESTAOCLICK_ACCESS_TOKEN")||"").trim();
@@ -407,7 +443,7 @@ Deno.serve(async req=>{
  if(req.method!=="POST")return ans({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return ans({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const action=new URL(req.url).searchParams.get("action");
- if(!["preview","commit","gc-awaiting-payment","preview-diagnostic","recovery-preview","recovery-commit"].includes(action||""))return ans({ok:false,error:"INVALID_ACTION"},400);
+ if(!["preview","commit","gc-awaiting-payment","preview-diagnostic","recovery-preview","recovery-commit","annual-preview"].includes(action||""))return ans({ok:false,error:"INVALID_ACTION"},400);
  if(action==="gc-awaiting-payment"){
   try{return ans(await gcAwaitingPayment())}catch(e){return ans({ok:false,error:String((e as Error)?.message||e)},503)}
  }
@@ -416,6 +452,7 @@ Deno.serve(async req=>{
  let periodClaim:any=null;
  try{
   if(action==="preview-diagnostic")return ans(await diagnosticPreview(b));
+  if(action==="annual-preview")return ans(await annualPreview2026());
   if(action==="recovery-preview"||action==="recovery-commit"){
    const x=await recoverPeriod(b,action==="recovery-commit");
    return ans(x,x.partial?207:200);
