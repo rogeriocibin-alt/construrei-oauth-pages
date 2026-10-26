@@ -36,7 +36,7 @@ test('interface V12: botoes ativos somente apos previa',()=>{
  assert.match(html,/id="cg-close-start"/);
  assert.match(html,/id="cg-close-end"/);
  assert.match(html,/capital_validation/);
- assert.match(html,/if\(!cv.ok&&!cv.accepted_exception\)/);
+ assert.match(html,/if\(!cv.ok&&!cv.accepted_exception&&!cv.can_create\)/);
  assert.match(html,/V12-OPERACAO-HOMOLOGADA-ACERTOS-BRUTO-TAXA-20261023/);
 });
 test('scripts inline da V12 candidata tem sintaxe valida',()=>{
