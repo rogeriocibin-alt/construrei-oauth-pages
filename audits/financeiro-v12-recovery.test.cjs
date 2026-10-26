@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const edge=fs.readFileSync(path.join(__dirname,'../candidates/financeiro-v12-period-close-20261024/index.ts'),'utf8');
 const html=fs.readFileSync(path.join(__dirname,'../preview/dashboard-financeiro-v12-envio-acertos-20261024/index.html'),'utf8');
-const at=edge.indexOf('async function recoverySelection(b:any)'),end=edge.indexOf('/* Indicador comercial',at);
+const at=edge.indexOf('async function recoverySelection(b:any)'),end=edge.indexOf('// Executive annual preview',at);
 assert.ok(at>0&&end>at);
 const src=edge.slice(at,end)
  .replace('recoverySelection(b:any)','recoverySelection(b)')
