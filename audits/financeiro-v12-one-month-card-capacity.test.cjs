@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const edge=fs.readFileSync(path.join(__dirname,'../candidates/financeiro-v12-period-close-20261024/index.ts'),'utf8');
 test('mês ausente é criado somente após reserva idempotente e confirmação do diretor',()=>{
- assert.match(edge,/finCards\.find\(\(x:any\)=>normal\(x\.name\)\.trim\(\)===p\.monthName\+" 2026"\)/);
+ assert.match(edge,/matchingMonths=finCards\.filter/);
  assert.match(edge,/if\(!target\|\|!pending\)throw Error\("DESTINO_NAO_ENCONTRADO"\)/);
  assert.match(edge,/await monthRegistry\("claim"/);
  assert.match(edge,/created=await trello\("\/cards","POST"/);
