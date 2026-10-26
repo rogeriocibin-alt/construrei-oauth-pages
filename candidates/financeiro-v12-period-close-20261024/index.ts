@@ -147,7 +147,7 @@ function compactMonthCut(c:any){
 }
 async function ensureMonthCutComment(c:any,full:string){
  if(full.length>16384)throw Error("MONTH_COMMENT_CAPACITY_EXCEEDED");
- const path="/cards/"+c.month.id+"/actions?filter=commentCard&limit=100";
+ const path="/cards/"+c.month.id+"/actions?filter=commentCard&limit=1000";
  const has=(a:any[])=>Array.isArray(a)&&a.some((x:any)=>String(x?.data?.text||"").includes(marker(c.p)));
  const before=await trello(path);
  if(has(before))return;
