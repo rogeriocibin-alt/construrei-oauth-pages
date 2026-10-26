@@ -17,7 +17,7 @@ test("authenticated multi-candidates route is read only and verifies the full Co
  const body=edge.split("async function multiExistingCandidates(")[1].split("async function multiExistingFlow(")[0];
  assert.match(body,/splitValidate\(raw,p.amount_cents\)/);
  assert.match(body,/existingMatchCandidates\(/);
- assert.match(body,/existingLinksForCard\(/);
+ assert.match(body,/linkedCostRows\(/);
  assert.match(body,/trello_write:false/);
  assert.doesNotMatch(body,/\blegacy\(|trelloApiWrite\(|\bwriteReceipt\(|manual-cora-commit|cr_finance_v12_claim|cr_finance_v12_finish/);
 });
