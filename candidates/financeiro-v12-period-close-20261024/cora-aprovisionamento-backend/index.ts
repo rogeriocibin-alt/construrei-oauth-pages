@@ -144,7 +144,7 @@ async function sha256(s:string){
  const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
  return Array.from(new Uint8Array(bytes),v=>v.toString(16).padStart(2,"0")).join("");
 }
-async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costCase:string=p.case,toleranceDays:number=1){
+async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costCase:string=p.case,toleranceDays:number=1,allowMultipleAmounts=false){
  if(!/^\d{1,5}-26$/.test(costCase))throw Error("COST_DESTINATION_CASE_INVALID");
  const crossed=costCase!==p.case;
  if(p.direction!=="OUT"||!p.operation_id.startsWith("CORA_"))throw Error("EXISTING_ONLY_BANK_DEBITS");
@@ -167,7 +167,7 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costC
   throw Error("EXISTING_WORK_MOVED_OR_CHANGED");
  const pre={target:{case:costCase,origin_case:p.case,trello_url:target.shortUrl}};
  const lines=String(target.desc||"").split(/\r?\n/);
- const matches:{match_key:string;line:string}[]=[];
+ const matches:{match_key:string;line:string;cents:number}[]=[];
  const mm=p.date.slice(5,7),dd=p.date.slice(8,10),yy=p.date.slice(2,4);
  let inCosts=false;
  for(const line of lines){
@@ -184,13 +184,13 @@ async function existingMatchCandidates(p:ReturnType<typeof clean>,k:string,costC
   const bankDay=new Date(p.date+"T12:00:00Z");
   if(Number.isNaN(ledgerDay.getTime())||Math.abs(ledgerDay.getTime()-bankDay.getTime())>toleranceDays*86400000)continue;
   if(ledgerDay.toISOString().slice(0,10)!==lineYear+"-"+m[2]+"-"+m[1])continue;
-  if(amount(m[4])!==p.amount_cents)continue;
+  const lineCents=amount(m[4]);if(!lineCents||!allowMultipleAmounts&&lineCents!==p.amount_cents)continue;
   // Only link a cross-work cost if the exact line explicitly names the origin work.
   if(crossed&&!new RegExp("(^|[^0-9])"+p.case+"(?![0-9])","i").test(line))continue;
   const normalized=line.trim();
   // Two visually identical entries cannot be safely disambiguated.
   if(lines.filter(x=>x.trim()===normalized).length!==1)continue;
-  matches.push({match_key:await sha256("CR-CORA-EXISTING-V1|"+target.id+"|"+normalized),line:normalized});
+  matches.push({match_key:await sha256("CR-CORA-EXISTING-V1|"+target.id+"|"+normalized),line:normalized,cents:lineCents});
  }
  return {target,pre,matches:matches.slice(0,20),origin_case:p.case,cost_case:costCase};
 }
@@ -532,16 +532,16 @@ async function multiExistingCandidates(p:ReturnType<typeof clean>,raw:any,k:stri
  const parts=splitValidate(raw,p.amount_cents),choices=[];
  for(const part of parts){
   const scan=await existingMatchCandidates({...p,case:part.case,amount_centavos:part.cents,
-   amount_cents:part.cents,amount:(part.cents/100).toFixed(2)},k,part.case,3);
+   amount_cents:part.cents,amount:(part.cents/100).toFixed(2)},k,part.case,3,true);
   const available=[];
   for(const m of scan.matches){
    const linked=await linkedCostRows(scan.target.id,m.match_key,k);
    if(!linked.length)available.push(m);
   }
-  const options=available;
+  const options=available.filter(x=>x.cents<=part.cents);
   if(!options.length)throw Error("MULTI_EXISTING_NO_UNLINKED_EXACT_LINE_"+part.case);
   choices.push({case:part.case,cents:part.cents,trello_url:String(scan.target.shortUrl||""),
-   options:options.map(({match_key,line})=>({match_key,line}))});
+   options:options.map(({match_key,line,cents})=>({match_key,line,cents}))});
  }
  return reply({ok:true,read_only:true,reconciliation_kind:"MULTI_EXISTING_TRELLO",
   requires_explicit_line_selection:true,trello_write:false,parts:choices,total_cents:p.amount_cents});
@@ -552,20 +552,27 @@ async function multiExistingFlow(action:string,p:ReturnType<typeof clean>,raw:an
  const parts=splitValidate(raw,p.amount_cents);
  const matches=[];
  for(const part of parts){
-  const scan=await existingMatchCandidates({...p,case:part.case,amount_cents:part.cents,amount:(part.cents/100).toFixed(2)},k,part.case,3);
-  const selected=String((raw.allocations||[]).find((a:any)=>String(a.case)===part.case)?.match_key||"");
-  const exact=scan.matches.filter((x:any)=>x.match_key===selected);
-  if(exact.length!==1)throw Error("MULTI_EXISTING_EXPLICIT_LINE_REQUIRED_"+part.case);
-  const links=await linkedCostRows(scan.target.id,selected,k);
-  if(links.length)throw Error("MULTI_EXISTING_LINE_ALREADY_LINKED_"+part.case);
-  matches.push({case:part.case,cents:part.cents,match_key:selected,line:exact[0].line,
-   card_id:scan.target.id,url:scan.target.shortUrl||scan.pre?.target?.trello_url,
-   digest:await sha256(String(scan.target.desc||""))});
+  const scan=await existingMatchCandidates({...p,case:part.case,amount_cents:part.cents,amount:(part.cents/100).toFixed(2)},k,part.case,3,true);
+  const matchKeys=(raw.allocations||[]).find((a:any)=>String(a.case)===part.case)?.match_keys;
+  if(!Array.isArray(matchKeys)||matchKeys.length<1||matchKeys.length>10||
+     matchKeys.some((x:any)=>typeof x!=="string")||new Set(matchKeys).size!==matchKeys.length)
+   throw Error("MULTI_EXISTING_EXPLICIT_LINE_REQUIRED_"+part.case);
+  const exact=matchKeys.map((key:string)=>scan.matches.find(x=>x.match_key===key));
+  if(exact.some(x=>!x)||exact.reduce((s,x)=>s+(x?.cents||0),0)!==part.cents)
+   throw Error("MULTI_EXISTING_PARCEL_SUM_MISMATCH_"+part.case);
+  const digest=await sha256(String(scan.target.desc||""));
+  for(const matched of exact){
+   if(!matched)throw Error("MULTI_EXISTING_LINE_NOT_VERIFIED_"+part.case);
+   const links=await linkedCostRows(scan.target.id,matched.match_key,k);
+   if(links.length)throw Error("MULTI_EXISTING_LINE_ALREADY_LINKED_"+part.case);
+   matches.push({case:part.case,cents:matched.cents,match_key:matched.match_key,line:matched.line,
+    card_id:scan.target.id,url:scan.target.shortUrl||scan.pre?.target?.trello_url,digest});
+  }
  }
  const fp=await sha256(JSON.stringify({kind:"MULTI_EXISTING_TRELLO",operation:p.operation_id,
   date:p.date,cents:p.amount_cents,matches}));
  if(action==="multi-preview")return reply({ok:true,preview:true,reconciliation_kind:"MULTI_EXISTING_TRELLO",
-  trello_write:false,parts:matches.map(({case:cs,cents,line,url,match_key})=>({case:cs,cents,line,url,match_key})),
+  trello_write:false,parts:parts.map(part=>({case:part.case,cents:part.cents,lines:matches.filter(x=>x.case===part.case).map(({cents,line,match_key})=>({cents,line,match_key}))})),
   total_cents:p.amount_cents,fingerprint:fp,requires_explicit_confirmation:true});
  if(String(raw.expected_fingerprint||"")!==fp)throw Error("MULTI_EXISTING_PREVIEW_CHANGED");
  const payload={reconciliation_kind:"MULTI_EXISTING_TRELLO",case:p.case,date:p.date,
