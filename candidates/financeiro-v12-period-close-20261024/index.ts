@@ -104,7 +104,7 @@ async function gather(body:any){
  // Check every canonical 2026 month, not merely the destination month's comments.
  const otherMonths=finCards.filter((x:any)=>x.id!==month?.id&&months.slice(1).some((m:string)=>normal(x.name).trim()===m+" 2026"));
  const historicalTexts=(await Promise.all(otherMonths.map((x:any)=>readAllMonthCommentTexts(x.id)))).flat();
- const duplicate=String(month.desc||"").includes(marker(p))||monthlyTexts.some((t:string)=>t.includes(marker(p)))||historicalTexts.some((t:string)=>t.includes(marker(p)));
+ const duplicate=String(month?.desc||"").includes(marker(p))||monthlyTexts.some((t:string)=>t.includes(marker(p)))||historicalTexts.some((t:string)=>t.includes(marker(p)));
  if(duplicate)throw Error("PERIOD_ALREADY_SENT");
  for(const c of p.cases){
   if(finCards.some((x:any)=>hasCase(x.desc||"",c))||monthlyTexts.some((t:string)=>hasCase(t,c))||historicalTexts.some((t:string)=>hasCase(t,c)))throw Error("OBRA_JA_REGISTRADA:"+c);
@@ -180,7 +180,7 @@ async function provisionMonth(c:any){
   const check=await trello("/lists/"+FIN+"/cards?fields=id,name,desc,shortUrl");
   if(check.some((x:any)=>normal(x.name).trim()===name))throw Error("MONTH_CREATED_CONCURRENTLY_REVIEW");
   created=await trello("/cards","POST",{idList:FIN,name,desc:"CONSTRU-REI | VALORES RECEBIDOS "+name+
-    "\\nACERTOS CONFIRMADOS: nenhum corte incluído até esta criação. Não equivale a recebimento bancário.\\n"+tag,pos:"bottom"});
+    "\nACERTOS CONFIRMADOS: nenhum corte incluído até esta criação. Não equivale a recebimento bancário.\n"+tag,pos:"bottom"});
   if(!/^[0-9a-f]{24}$/i.test(String(created?.id||"")))throw Error("MONTH_CREATE_RESULT_INVALID");
   const after=await trello("/cards/"+created.id+"?fields=id,idList,name,desc,shortUrl");
   if(after.id!==created.id||after.idList!==FIN||normal(after.name).trim()!==name||!String(after.desc||"").includes(tag))
