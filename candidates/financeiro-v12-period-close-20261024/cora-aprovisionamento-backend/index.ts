@@ -803,7 +803,7 @@ async function capitalBridge(req:Request,action:string,p:ReturnType<typeof clean
  * Backend verifies the exact original bank debit before any saved annotation. */
 const ANNOTATIONS="cr_cora_bank_annotations_v12";
 function bankAnnotationData(p:ReturnType<typeof clean>,raw:any){
- if(p.direction!=="OUT"||!p.operation_id.startsWith("CORA_"))throw Error("BANK_ANNOTATION_REQUIRES_CORA_DEBIT");
+ if(!["IN","OUT"].includes(p.direction)||!p.operation_id.startsWith("CORA_"))throw Error("BANK_ANNOTATION_REQUIRES_VERIFIED_CORA_MOVEMENT");
  const beneficiary=String(raw?.beneficiary||"").trim().replace(/\s+/g," ").slice(0,120);
  const purpose=String(raw?.purpose||"").trim().replace(/\s+/g," ").slice(0,500);
  if(beneficiary.length<3)throw Error("ANNOTATION_BENEFICIARY_REQUIRED");
