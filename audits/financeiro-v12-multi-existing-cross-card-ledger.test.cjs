@@ -21,7 +21,7 @@ test("both preview candidate discovery and final commit enforce cross-card uniqu
  const p=section("async function multiExistingCandidates(","async function multiExistingFlow(");
  const c=section("async function multiExistingFlow(","async function multiFlow(");
  assert.match(p,/await linkedCostRows\(scan\.target\.id,m\.match_key,k\)/);
- assert.match(c,/await linkedCostRows\(scan\.target\.id,selected,k\)/);
+ assert.match(c,/await linkedCostRows\(scan\.target\.id,matched\.match_key,k\)/);
  assert.match(c,/MULTI_EXISTING_LINE_ALREADY_LINKED_/);
 });
 test("cross-card guard never mutates financial or Trello data",()=>{
