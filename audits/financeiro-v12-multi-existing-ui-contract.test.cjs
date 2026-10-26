@@ -13,7 +13,7 @@ test("multi-existing is a separate explicit operation, never the legacy multi-ex
 test("authenticated multi-candidates route is read only and verifies the full Cora debit first",()=>{
  const route=edge.indexOf('if(action==="multi-candidates")');
  assert.ok(route>edge.indexOf("await verifiedBankOrigin(p,k)"));
- assert.ok(route<edge.indexOf('if(action==="multi-preview"'));
+ assert.ok(route<edge.indexOf('if(action==="multi-preview"',route));
  const body=edge.split("async function multiExistingCandidates(")[1].split("async function multiExistingFlow(")[0];
  assert.match(body,/splitValidate\(raw,p.amount_cents\)/);
  assert.match(body,/existingMatchCandidates\(/);
