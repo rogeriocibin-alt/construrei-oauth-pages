@@ -103,6 +103,18 @@ async function periodRegistry(action:string,payload:any){
  if(!result?.ok)throw Error(String(result?.error||"PERIOD_REGISTRY_DENIED"));
  return result;
 }
+async function periodRegistryLookup(key:string){
+ const token=(Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"").trim();
+ if(!token)throw Error("PERIOD_REGISTRY_SERVICE_UNAVAILABLE");
+ const u=new URL(SB+"/rest/v1/cr_finance_2026_period_send_registry_v12");
+ u.searchParams.set("period_key","eq."+key);
+ u.searchParams.set("select","period_key,fingerprint,status");
+ const r=await fetch(u,{headers:{"apikey":token,Authorization:"Bearer "+token},signal:AbortSignal.timeout(12000)});
+ if(!r.ok)throw Error("PERIOD_REGISTRY_READ_"+r.status);
+ const rows=await r.json();
+ if(!Array.isArray(rows)||rows.length>1)throw Error("PERIOD_REGISTRY_INTEGRITY");
+ return rows[0]||null;
+}
 async function cgPeriodService(action:string,p:any,session:string,fingerprint?:string){
  if(!session||session.length<12)throw Error("CG_DIRECTOR_SESSION_MISSING");
  const body:any={start:p.start,end:p.end};
@@ -340,6 +352,18 @@ async function recoverPeriod(b:any,commit:boolean){
    if(after.idList===c.target.id)moved.push(item.case);
    else unresolved.push(item.case+":MOVE_NOT_VERIFIED");
   }catch(e){unresolved.push(item.case+":"+String((e as Error)?.message||e).slice(0,90))}
+ }
+ if(unresolved.length===0){
+  try{
+   const key=c.p.start+"_"+c.p.end;
+   const ledger=await periodRegistryLookup(key);
+   if(ledger?.status==="PARTIAL"||ledger?.status==="MONTH_RECORDED"){
+    await periodRegistry("checkpoint",{p_period_key:key,p_fingerprint:ledger.fingerprint,
+     p_status:"COMMITTED",p_month_card_id:c.month.id});
+   }else if(ledger&&ledger.status!=="COMMITTED"){
+    unresolved.push("REGISTRO_DO_PERIODO_EXIGE_REVISAO");
+   }
+  }catch(e){unresolved.push("STATUS_DO_PERIODO_NAO_CONFIRMADO:"+String((e as Error)?.message||e).slice(0,70))}
  }
  return {ok:unresolved.length===0,recovery:true,recorded:true,moved,already_moved,
   unresolved,partial:unresolved.length>0,month_url:c.month.shortUrl||null,
