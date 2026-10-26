@@ -26,7 +26,7 @@ const doc=[
  '• 799-26 | Base R$ 2.830,22 | Custos R$ 1.860,22 | Lucro R$ 970,00 | https://trello.com/c/CJ27HA7S',
  marker
 ].join('\n');
-function rig({record=true,foreign=false,failMove=false,initial={}}={}){
+function rig({record=true,foreign=false,failMove=false,initial={},ledger=null}={}){
  const movement={...{'579-26':listTarget,'799-26':listPending},...initial};
  const requests=[];
  const items=Object.keys(ids).map(no=>({case:no,id:ids[no],name:'Orçamento '+no}));
@@ -50,6 +50,8 @@ function rig({record=true,foreign=false,failMove=false,initial={}}={}){
   normal:s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase(),
   readAllMonthCommentTexts:async()=>[],
   marker:()=>marker,sha:async()=>JSON.stringify(movement),
+  periodRegistryLookup:async()=>ledger,
+  periodRegistry:async(action,payload)=>{requests.push({url:'ledger',method:'CHECKPOINT',action,payload});return {ok:true,status:payload.p_status}},
   ans:()=>null
  };
  vm.runInNewContext(src+'\nthis.resume=recoverPeriod',sandbox);
@@ -109,4 +111,24 @@ test('recuperação é exclusiva do diretor; formulário exige confirmação',()
  assert.match(html,/if\(!confirm\("Confirma movimentar SOMENTE/);
  assert.match(html,/await crpApi\("recovery-preview",input\)/);
  assert.match(html,/await crpApi\("recovery-commit",CRP_RECOVERY\)/);
+});
+
+test('recuperação total encerra estado PARTIAL do ledger, sem novos valores',async()=>{
+ const h=rig({ledger:{period_key:'2026-10-10_2026-10-23',fingerprint:'a'.repeat(64),status:'PARTIAL'}});
+ const pre=await h.resume(p,false);
+ const out=await h.resume({...p,fingerprint:pre.fingerprint},true);
+ assert.equal(out.ok,true);
+ const status=h.requests.filter(x=>x.method==='CHECKPOINT');
+ assert.equal(status.length,1);
+ assert.equal(status[0].payload.p_status,'COMMITTED');
+ assert.equal(status[0].payload.p_month_card_id,monthId);
+ assert.equal(h.requests.filter(x=>x.method==='PUT').length,1);
+});
+test('ledger em revisão exige conciliação sem declarar conclusão',async()=>{
+ const h=rig({ledger:{fingerprint:'a'.repeat(64),status:'REVIEW_REQUIRED'}});
+ const pre=await h.resume(p,false);
+ const out=await h.resume({...p,fingerprint:pre.fingerprint},true);
+ assert.equal(out.ok,false);
+ assert.equal(out.partial,true);
+ assert.ok(out.unresolved.some(x=>String(x).includes('REGISTRO_DO_PERIODO')));
 });
