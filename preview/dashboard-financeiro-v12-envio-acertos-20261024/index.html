@@ -1868,6 +1868,10 @@ wdConfirmButton.addEventListener("click",async()=>{
  finally{wdBusy=false}
 });
 
+function chosenExpenseLines(caseNumber){
+ const group=splitLineKeys.get(caseNumber),inputs=group?.querySelectorAll('input[data-match-key]:checked')||[];
+ return [...inputs].map(x=>({match_key:String(x.dataset.matchKey||""),cents:Number(x.dataset.cents||0)}));
+}
 splitPreviewButton.addEventListener("click",async()=>{
  if(splitBusy||!splitSum()||!selected)return;
  const capital=kind.value==="capital",recon=kind.value==="multi-existing",items=[...splitSelection.values()],direction=bankDirection(selected);
@@ -1887,24 +1891,31 @@ splitPreviewButton.addEventListener("click",async()=>{
    splitLineKeys.clear();previewParts.replaceChildren();
    for(const part of result.parts){
     if(!Array.isArray(part.options)||!part.options.length)throw Error("Despesa sem correspondência na obra "+part.case);
-    const wrap=document.createElement("label");wrap.style.cssText="display:block;padding:10px;border:1px solid #bdd5e5;border-radius:9px";
-    const head=document.createElement("div");head.textContent=part.case+" · "+displayBank(Number(part.cents))+" — escolha a linha JÁ registrada:";head.style.fontWeight="700";
-    const choose=document.createElement("select");choose.style.cssText="width:100%;padding:10px;margin-top:6px;border:1px solid #adc6d8;border-radius:7px";choose.dataset.crMultiMatch=String(part.case);
-    const empty=document.createElement("option");empty.value="";empty.textContent="Selecione a despesa correspondente";choose.append(empty);
-    for(const option of part.options){const opt=document.createElement("option");opt.value=String(option.match_key);opt.textContent=String(option.line||"");choose.append(opt)}
-    choose.addEventListener("change",()=>{splitPreview=null;splitCommitButton.disabled=true});
-    wrap.append(head,choose);previewParts.append(wrap);splitLineKeys.set(String(part.case),choose);
+    const wrap=document.createElement("section");wrap.style.cssText="display:block;padding:10px;border:1px solid #bdd5e5;border-radius:9px";
+    const head=document.createElement("div");head.textContent=part.case+" · "+displayBank(Number(part.cents))+" — selecione TODAS as diárias/despesas correspondentes:";head.style.fontWeight="700";
+    const lines=document.createElement("div");lines.dataset.crMultiMatch=String(part.case);lines.style.cssText="margin-top:8px;display:grid;gap:6px";
+    for(const option of part.options){
+     const row=document.createElement("label");row.style.cssText="display:flex;align-items:flex-start;gap:8px;padding:7px;border:1px solid #dce7ef;border-radius:6px;font-size:13px";
+     const check=document.createElement("input");check.type="checkbox";check.dataset.matchKey=String(option.match_key);check.dataset.cents=String(option.cents);check.style.cssText="width:20px;height:20px;flex:none";
+     const name=document.createElement("span");name.textContent=displayBank(Number(option.cents))+" · "+String(option.line||"");row.append(check,name);lines.append(row);
+     check.addEventListener("change",()=>{splitPreview=null;splitCommitButton.disabled=true});
+    }
+    wrap.append(head,lines);previewParts.append(wrap);splitLineKeys.set(String(part.case),lines);
    }
    splitPreviewButton.textContent="2. Validar linhas escolhidas";
-   splitStatus.textContent="Escolha uma linha específica para cada parcela. Obras encerradas não terão custos reescritos. Sem escolha explícita, a operação permanece bloqueada.";
+   splitStatus.textContent="Marque uma ou mais linhas reais por obra. A soma das despesas marcadas em cada obra deve corresponder à parcela definida; nenhuma linha será regravada.";
    return;
   }
   let alloc=baseAlloc;
   if(recon){
    if(!splitCandidates||splitCandidates.source_id!==p.reference||JSON.stringify(splitCandidates.allocations)!==JSON.stringify(baseAlloc))
     throw Error("Seleção alterada; localize as despesas novamente");
-   alloc=baseAlloc.map(x=>({...x,match_key:String(splitLineKeys.get(x.case)?.value||"")}));
-   if(alloc.some(x=>!x.match_key))throw Error("Selecione a linha exata de todas as despesas antes da prévia");
+   alloc=baseAlloc.map(x=>({...x,match_keys:chosenExpenseLines(x.case).map(a=>a.match_key)}));
+   if(alloc.some(x=>!x.match_keys.length))throw Error("Selecione as linhas exatas de todas as obras antes da prévia");
+   for(const a of alloc){
+    const sum=chosenExpenseLines(a.case).reduce((s,x)=>s+x.cents,0);
+    if(sum!==a.cents)throw Error("As linhas selecionadas para "+a.case+" somam "+displayBank(sum)+" e não "+displayBank(a.cents));
+   }
   }
   const response=await existingRequest(capital?"capital-preview":"multi-preview",{...p,...(recon?{mode:"reconcile-existing"}:{}),allocations:alloc});
   if(!response.preview||!response.fingerprint)throw Error("Prévia não validada pelo servidor");
@@ -1916,7 +1927,7 @@ splitPreviewButton.addEventListener("click",async()=>{
   if(!Array.isArray(confirmedItems)||confirmedItems.length!==items.length)throw Error("Resumo de distribuição incompleto");
   for(const part of confirmedItems){
    const n=document.createElement("div");n.style.cssText="padding:9px;border:1px solid #d3e1ed;border-radius:7px;background:#f5f9fc;font-size:13px";
-   n.textContent=(capital?part.period:part.case+" · "+String(recon?part.line:part.card_name||""))+" — "+displayBank(Number(part.cents));
+   n.textContent=(capital?part.period:part.case+" · "+String(recon?(part.lines||[]).map(x=>x.line).join(" | "):part.card_name||""))+" — "+displayBank(Number(part.cents));
    previewParts.append(n);
   }
   splitStatus.textContent="✓ PRÉVIA VALIDADA · "+items.length+" destinos · "+displayBank(Number(selected.amount_centavos))+(recon?" · SOMENTE CONCILIAÇÃO; nenhum valor da obra será alterado.":"")+". Confira e confirme.";
@@ -1928,7 +1939,7 @@ splitCommitButton.addEventListener("click",async()=>{
  if(splitBusy||!splitPreview||!selected||splitPreview.source_id!==selected.source_id||splitPreview.kind!==kind.value){
   splitStatus.textContent="Seleção alterada; faça uma nova prévia.";splitCommitButton.disabled=true;return;
  }
- const currentAlloc=[...splitSelection.values()].map(x=>kind.value==="capital"?{id:x.key,cents:x.cents}:kind.value==="multi-existing"?{case:x.key,cents:x.cents,match_key:String(splitLineKeys.get(x.key)?.value||"")}:{case:x.key,cents:x.cents});
+ const currentAlloc=[...splitSelection.values()].map(x=>kind.value==="capital"?{id:x.key,cents:x.cents}:kind.value==="multi-existing"?{case:x.key,cents:x.cents,match_keys:chosenExpenseLines(x.key).map(a=>a.match_key)}:{case:x.key,cents:x.cents});
  if(!splitSum()||JSON.stringify(splitPreview.payload.allocations)!==JSON.stringify(currentAlloc)){
   splitStatus.textContent="Parcela alterada; confira novamente.";splitCommitButton.disabled=true;return;
  }
