@@ -548,7 +548,7 @@ async function multiExistingCandidates(p:ReturnType<typeof clean>,raw:any,k:stri
 }
 async function multiExistingFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
  if(p.direction!=="OUT")throw Error("MULTI_EXISTING_DEBIT_ONLY");
- const prior=await bankAlreadyUsed(p,k);if(prior)return reply(prior);
+ const prior=await bankAlreadyUsed(p,k);if(prior)return reply({...prior,trello_write:false});
  const parts=splitValidate(raw,p.amount_cents);
  const matches=[];
  for(const part of parts){
