@@ -205,6 +205,29 @@ async function existingLinksForCard(cardId:string,k:string){
  if(!Array.isArray(rows)||rows.length>=1000)throw Error("RECONCILIATION_LEDGER_INCOMPLETE");
  return rows;
 }
+/* A multi-work reconciliation stores the first Trello card as card_id.
+ * Protect EVERY secondary card too, using JSONB containment on the selected
+ * immutable line signature. Both reads must succeed before any claim.
+ * This also detects direct reconciliations on the same card. */
+async function linkedCostRows(cardId:string,matchKey:string,k:string){
+ if(!/^[a-f0-9]{64}$/.test(matchKey))throw Error("INVALID_EXISTING_LINE_SIGNATURE");
+ const url=new URL(SB+"/rest/v1/cr_finance_v12_operations");
+ url.searchParams.set("payload","cs."+JSON.stringify({allocations:[{card_id:cardId,match_key:matchKey}]}));
+ url.searchParams.set("select","operation_id,status,payload");
+ url.searchParams.set("limit","1000");
+ const [cardRows,otherRes]=await Promise.all([
+  existingLinksForCard(cardId,k),
+  fetch(url,{headers:headers(k),signal:AbortSignal.timeout(12000)})
+ ]);
+ if(!otherRes.ok)throw Error("MULTI_EXISTING_CROSS_CARD_LEDGER_"+otherRes.status);
+ const otherRows=await otherRes.json();
+ if(!Array.isArray(otherRows)||otherRows.length>=1000)throw Error("MULTI_EXISTING_CROSS_CARD_LEDGER_INCOMPLETE");
+ const rows=new Map<string,any>();
+ for(const rec of [...cardRows,...otherRows])rows.set(String(rec.operation_id),rec);
+ return [...rows.values()].filter((x:any)=>x.status!=="FAILED"&&
+  (String(x.payload?.trello_match_key||"")===matchKey ||
+   x.payload?.allocations?.some?.((a:any)=>a.card_id===cardId&&a.match_key===matchKey)));
+}
 async function reconcileExisting(action:string,p:ReturnType<typeof clean>,raw:any,k:string,fp:string){
  const already=await existingLinksForCardIdByOperation(p.operation_id,k);
  if(already){
@@ -510,9 +533,12 @@ async function multiExistingCandidates(p:ReturnType<typeof clean>,raw:any,k:stri
  for(const part of parts){
   const scan=await existingMatchCandidates({...p,case:part.case,amount_centavos:part.cents,
    amount_cents:part.cents,amount:(part.cents/100).toFixed(2)},k,part.case,3);
-  const linked=await existingLinksForCard(scan.target.id,k);
-  const taken=new Set(linked.filter((x:any)=>x.status!=="FAILED").map((x:any)=>String(x.payload?.trello_match_key||"")));
-  const options=scan.matches.filter((x:any)=>!taken.has(x.match_key));
+  const available=[];
+  for(const m of scan.matches){
+   const linked=await linkedCostRows(scan.target.id,m.match_key,k);
+   if(!linked.length)available.push(m);
+  }
+  const options=available;
   if(!options.length)throw Error("MULTI_EXISTING_NO_UNLINKED_EXACT_LINE_"+part.case);
   choices.push({case:part.case,cents:part.cents,trello_url:String(scan.target.shortUrl||""),
    options:options.map(({match_key,line})=>({match_key,line}))});
@@ -530,9 +556,8 @@ async function multiExistingFlow(action:string,p:ReturnType<typeof clean>,raw:an
   const selected=String((raw.allocations||[]).find((a:any)=>String(a.case)===part.case)?.match_key||"");
   const exact=scan.matches.filter((x:any)=>x.match_key===selected);
   if(exact.length!==1)throw Error("MULTI_EXISTING_EXPLICIT_LINE_REQUIRED_"+part.case);
-  const links=await existingLinksForCard(scan.target.id,k);
-  if(links.some((x:any)=>x.status!=="FAILED"&&String(x.payload?.trello_match_key||"")===selected))
-   throw Error("MULTI_EXISTING_LINE_ALREADY_LINKED_"+part.case);
+  const links=await linkedCostRows(scan.target.id,selected,k);
+  if(links.length)throw Error("MULTI_EXISTING_LINE_ALREADY_LINKED_"+part.case);
   matches.push({case:part.case,cents:part.cents,match_key:selected,line:exact[0].line,
    card_id:scan.target.id,url:scan.target.shortUrl||scan.pre?.target?.trello_url,
    digest:await sha256(String(scan.target.desc||""))});
