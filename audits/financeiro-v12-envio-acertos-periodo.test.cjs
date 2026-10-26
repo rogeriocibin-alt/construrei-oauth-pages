@@ -201,3 +201,21 @@ test('acerto vivo rejeita obra ambígua, aceita única e rejeita ausente',()=>{
  assert.equal(good[0].profit_cents,53263);
  assert.throws(()=>attempt([{case:'818-26'}]),/OBRA_FORA_DA_LISTA_AG_ACERTO/);
 });
+
+test('capital de giro: dois cartões com mesma competência interrompem o envio sem escolher o primeiro',()=>{
+ const lines=edge.split('\n');
+ const start=lines.findIndex(x=>x.includes('const matchingCapitalCards=capitals.filter'));
+ const end=lines.findIndex((x,i)=>i>start&&x.includes('const cm=existing?'));
+ assert.ok(start>0&&end>start);
+ const source=lines.slice(start,end).join('\n').replaceAll('(x:any)','(x)');
+ const p={start:'2026-10-10',end:'2026-10-23'};
+ const contexts=[
+  [{desc:'CG_PERIOD_KEY|2026-10-10_2026-10-23'},{desc:'CG_PERIOD_KEY|2026-10-10_2026-10-23'}],
+  [{desc:'CG_PERIOD_KEY|2026-10-10_2026-10-23'}]
+ ];
+ assert.throws(()=>vm.runInNewContext(source+';this.selected=existing;',
+   {capitals:contexts[0],ckey:'CG_PERIOD_KEY|2026-10-10_2026-10-23'}),/CAPITAL_PERIOD_DUPLICATED_REVIEW/);
+ const ctx={capitals:contexts[1],ckey:'CG_PERIOD_KEY|2026-10-10_2026-10-23'};
+ vm.runInNewContext(source+';this.selected=existing;',ctx);
+ assert.match(ctx.selected.desc,/CG_PERIOD_KEY/);
+});
