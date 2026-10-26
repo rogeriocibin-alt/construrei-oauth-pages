@@ -161,7 +161,7 @@ test('antiduplicidade: varre 1050 comentários em duas páginas sem repetir cort
  const guard=edge.match(/async function ensureMonthCutComment\(c:any,full:string\)\{[\s\S]*?\n\}\n(?=\/\* Indicador)/);
  assert.ok(helper&&guard,'rotinas de leitura e guarda encontradas');
  const js=helper[0].replace('cardId:string','cardId').replace('out:string[]','out').replace('new Set<string>()','new Set()')+
-  guard[0].replace('c:any,full:string','c,full').replace('(text:string)','(text)');
+  guard[0].replace('c:any,full:string','c,full').replaceAll('(text:string)','(text)');
  const calls=[];
  const id=n=>n.toString(16).padStart(24,'0');
  const pages=[
