@@ -628,7 +628,7 @@ body{background:var(--v12-bg)}
 </div><div class="manualactions"><button type="button" class="manualbtn primary" id="cr-ap-load">Consultar extrato Cora</button></div>
 <div id="cr-ap-status" role="status" class="manualnote">Aguardando consulta autenticada.</div><div id="cr-ap-results"></div><div id="cr-ap-editor" hidden style="border:2px solid #d7ad4c;border-radius:14px;padding:14px;margin:14px 0;background:#f6f9fc"><h3 style="margin:0 0 8px;color:#0a3967">Aprovisionar movimentação selecionada</h3><div id="cr-ap-selected" style="font-weight:650;margin-bottom:12px"></div><label style="display:block;margin:10px 0">Destino desta movimentação
 <select id="cr-ap-kind" style="display:block;width:100%;padding:12px;margin-top:5px;border:2px solid #adc6d8;border-radius:9px;font-weight:700">
-<option value="bank-note">Saída → ANOTAR no extrato (SEM lançar custo)</option><option value="expense">Saída → lançar custo em uma obra</option>
+<option value="bank-note">Saída → ANOTAR diárias/informações no extrato (SEM lançar custo)</option><option value="expense">Saída → lançar custo em uma obra</option>
 <option value="existing">Saída → custo já lançado no Trello (conciliar)</option>
 <option value="multi-expense">Saída → distribuir custo entre várias obras</option>
 <option value="multi-existing">Saída → conciliar despesas JÁ LANÇADAS em várias obras (inclusive acertadas)</option>
@@ -2022,7 +2022,7 @@ splitPreviewButton.addEventListener("click",async()=>{
   }
   splitStatus.textContent="✓ PRÉVIA VALIDADA · "+items.length+" destinos · "+displayBank(Number(selected.amount_centavos))+(recon?" · SOMENTE CONCILIAÇÃO; nenhum valor da obra será alterado.":"")+". Confira e confirme.";
   splitCommitButton.disabled=false;
- }catch(e){splitPreview=null;splitStatus.textContent="Não foi possível validar: "+String(e?.message||e)}
+ }catch(e){splitPreview=null;const reason=String(e?.message||e);if(kind.value==="multi-existing"&&/MULTI_EXISTING_NO_UNMARKED_COST_LINE|MULTI_EXISTING_EXPLICIT_LINE_REQUIRED|EXISTING_LINE_NOT_VERIFIED/.test(reason)){kind.value="bank-note";applyKind();noteStatus.textContent="Modo corrigido: ANOTAR no extrato (SEM lançar custo). As diárias do João Victor são apenas informações bancárias; preencha beneficiário, finalidade e distribuição entre obras, depois valide a prévia. Nenhuma despesa foi gravada.";editorStatus.textContent="A conciliação exige custo já lançado no Trello. Para somente informar diárias, foi selecionado ANOTAR no extrato, sem criar custo.";notePanel.scrollIntoView({behavior:"smooth",block:"nearest"});}else splitStatus.textContent="Não foi possível validar: "+reason}
  finally{splitBusy=false}
 });
 splitCommitButton.addEventListener("click",async()=>{
