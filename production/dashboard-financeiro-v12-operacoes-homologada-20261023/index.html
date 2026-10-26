@@ -324,7 +324,7 @@ async function v12ProtectedWrite(action,payload){
  }
  return data;
 }
-</script><script id="v12-netguard">(function(){const nativeFetch=window.fetch.bind(window);window.fetch=function(input,init){const raw=typeof input==="string"?input:(input&&input.url)||"";const method=String((init&&init.method)||(input&&input.method)||"GET").toUpperCase();let url;try{url=new URL(raw,location.href)}catch{return Promise.reject(new Error("URL_INVALIDA_V12"))}const login=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname.endsWith("/cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007")&&url.searchParams.get("api")==="login";const capitalV11=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname.endsWith("/cr-capital-despesas-v11-candidate-20261009")&&url.searchParams.get("action")==="debit";const safeFinance=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname.endsWith("/cr-finance-v12-safe-trello-candidate-20261021")&&["preview","commit","status"].includes(url.searchParams.get("action"));const bankFunction=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname==="/functions/v1/cr-cora-aprovisionamento-v12-candidate-20261023";const sessionHeader=init?.headers&&((typeof Headers!=="undefined"&&init.headers instanceof Headers)?init.headers.get("x-cr-session"):init.headers["x-cr-session"]);const protectedBank=bankFunction&&typeof sessionHeader==="string"&&sessionHeader.length>=12&&["bank-status","preview","commit","status","existing-preview","existing-confirm","eligible-cases","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","receipt-existing-preview","receipt-existing-confirm"].includes(url.searchParams.get("action"));const safeClose=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname.endsWith("/cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007")&&url.searchParams.get("api")==="manual-close-work";const capitalV12=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname==="/functions/v1/cr-trello-capital-giro-v1"&&["close-preview","close-commit","close-test"].includes(url.searchParams.get("action"))&&!!((init?.headers&&((typeof Headers!=="undefined"&&init.headers instanceof Headers)?init.headers.get("x-cr-session"):init.headers["x-cr-session"]))||"");if(method!=="GET"&&method!=="HEAD"&&!login&&!safeFinance&&!capitalV11&&!safeClose&&!capitalV12&&!protectedBank)return Promise.reject(new Error("V12_SOMENTE_LEITURA: gravacao fora do canal protegido"));return nativeFetch(input,init)};Object.defineProperty(window,"CR_V12_READ_ONLY",{value:true,writable:false})})();</script><style id="v12-safety-css">#cora .corabalance,#cora .manualgrid,#cora button,#v11cap,#v11receipt,.acactions button[onclick*="snapshotAcerto"]{display:none!important}#cora>.panel:before{content:"PRÉVIA V12 SOMENTE LEITURA — edição de saldo, lançamentos Trello e fechamento de obras estão desativados. Consulte Cora Pro V2 para extratos bancários.";display:block;background:#edf8ff;color:#125581;border:1px solid #acd3ec;border-left:4px solid #0b7ac5;padding:12px;border-radius:8px;margin:5px 0 12px;font-size:12px;font-weight:700}#buildfoot:after{content:" · V12 OPERAÇÃO HOMOLOGADA · ESCRITA CONTROLADA"}</style><style id="v12-scope-css">#v12-scope-note:not([hidden]){padding:12px 15px;border:1px solid #e4b84c;border-left:5px solid #d39b24;background:#fff9e6;color:#654915;border-radius:11px;font-weight:700;line-height:1.5;margin:10px 0 14px;font-size:12px}</style><style id="v12-historical-styles">.v12-historical-note{border-left:4px solid #1683cd;border-radius:9px;padding:11px 13px;margin:4px 0 14px;background:#eef6fc;color:#13476e;font-size:12px;line-height:1.5;font-weight:650}#v12-scope-note{line-height:1.55}</style><style id="v12-capital-audit-css">.v12-audit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.v12-audit-grid>div{background:#f1f7fc;border:1px solid #b6d4e9;border-radius:11px;padding:12px;color:#113e64;display:flex;flex-direction:column;gap:7px}.v12-audit-grid small{color:#496782;font-size:11px}.v12-audit-grid b{font-size:17px}.v12-ok{color:#187c57}.v12-warn{color:#a56713}.v12-audit-note{margin-top:13px;border:1px solid #ecd28e;background:#fff9e9;padding:12px;color:#664e23;font-size:12px;line-height:1.5;border-radius:10px}.v12-audit-note a{color:#125fb2;font-weight:750}</style><style id="v12-bank-audit-style">.v12-bank-audit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.v12-bank-tile{min-height:108px;padding:13px;border-radius:12px;border:1px solid #bdd3e5;background:#f5f9fc;display:flex;flex-direction:column;gap:6px}.v12-bank-tile small{font-size:11px;color:#315b7c;font-weight:850}.v12-bank-tile strong{font-size:21px;color:#132e48}.v12-bank-tile span{font-size:11px;line-height:1.4;color:#344e64}.v12-bank-tile.good{border-top:4px solid #16975e}.v12-bank-tile.attention{border-top:4px solid #d9ac28}.v12-bank-tile.alert{border-top:4px solid #d64c59}.v12-bank-foot{background:#eff7fc;color:#174567;border:1px solid #b8d6e9;border-radius:10px;padding:12px;line-height:1.55;font-size:12px}.v12-bank-foot a{font-weight:800;color:#145fab}@media(max-width:550px){.v12-bank-audit{grid-template-columns:1fr}.v12-bank-tile{min-height:92px}}</style><style id="v12-finance-visual-20261021">
+</script><script id="v12-netguard">(function(){const nativeFetch=window.fetch.bind(window);window.fetch=function(input,init){const raw=typeof input==="string"?input:(input&&input.url)||"";const method=String((init&&init.method)||(input&&input.method)||"GET").toUpperCase();let url;try{url=new URL(raw,location.href)}catch{return Promise.reject(new Error("URL_INVALIDA_V12"))}const login=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname.endsWith("/cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007")&&url.searchParams.get("api")==="login";const capitalV11=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname.endsWith("/cr-capital-despesas-v11-candidate-20261009")&&url.searchParams.get("action")==="debit";const safeFinance=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname.endsWith("/cr-finance-v12-safe-trello-candidate-20261021")&&["preview","commit","status"].includes(url.searchParams.get("action"));const bankFunction=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname==="/functions/v1/cr-cora-aprovisionamento-v12-candidate-20261023";const sessionHeader=init?.headers&&((typeof Headers!=="undefined"&&init.headers instanceof Headers)?init.headers.get("x-cr-session"):init.headers["x-cr-session"]);const protectedBank=bankFunction&&typeof sessionHeader==="string"&&sessionHeader.length>=12&&["bank-status","preview","commit","status","existing-preview","existing-confirm","eligible-cases","multi-candidates","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","receipt-existing-preview","receipt-existing-confirm","withdrawal-preview","withdrawal-commit","withdrawal-history","bank-annotation-preview","bank-annotation-commit"].includes(url.searchParams.get("action"));const safePeriod=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname.endsWith("/cr-finance-v12-period-close-candidate-20261024")&&["preview","commit","gc-awaiting-payment","preview-diagnostic"].includes(url.searchParams.get("action"));const safeClose=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname.endsWith("/cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007")&&url.searchParams.get("api")==="manual-close-work";const capitalV12=method==="POST"&&url.hostname==="yspuaamokjbrosytqjpg.supabase.co"&&url.pathname==="/functions/v1/cr-trello-capital-giro-v1"&&["close-preview","close-commit","close-test"].includes(url.searchParams.get("action"))&&!!((init?.headers&&((typeof Headers!=="undefined"&&init.headers instanceof Headers)?init.headers.get("x-cr-session"):init.headers["x-cr-session"]))||"");if(method!=="GET"&&method!=="HEAD"&&!login&&!safeFinance&&!capitalV11&&!safeClose&&!capitalV12&&!protectedBank&&!safePeriod)return Promise.reject(new Error("V12_SOMENTE_LEITURA: gravacao fora do canal protegido"));return nativeFetch(input,init)};Object.defineProperty(window,"CR_V12_READ_ONLY",{value:true,writable:false})})();</script><style id="v12-safety-css">#cora .corabalance,#cora .manualgrid,#cora button,#v11cap,#v11receipt,.acactions button[onclick*="snapshotAcerto"]{display:none!important}#cora>.panel:before{content:"PRÉVIA V12 SOMENTE LEITURA — edição de saldo, lançamentos Trello e fechamento de obras estão desativados. Consulte Cora Pro V2 para extratos bancários.";display:block;background:#edf8ff;color:#125581;border:1px solid #acd3ec;border-left:4px solid #0b7ac5;padding:12px;border-radius:8px;margin:5px 0 12px;font-size:12px;font-weight:700}#buildfoot:after{content:" · V12 OPERAÇÃO HOMOLOGADA · ESCRITA CONTROLADA"}</style><style id="v12-scope-css">#v12-scope-note:not([hidden]){padding:12px 15px;border:1px solid #e4b84c;border-left:5px solid #d39b24;background:#fff9e6;color:#654915;border-radius:11px;font-weight:700;line-height:1.5;margin:10px 0 14px;font-size:12px}</style><style id="v12-historical-styles">.v12-historical-note{border-left:4px solid #1683cd;border-radius:9px;padding:11px 13px;margin:4px 0 14px;background:#eef6fc;color:#13476e;font-size:12px;line-height:1.5;font-weight:650}#v12-scope-note{line-height:1.55}</style><style id="v12-capital-audit-css">.v12-audit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.v12-audit-grid>div{background:#f1f7fc;border:1px solid #b6d4e9;border-radius:11px;padding:12px;color:#113e64;display:flex;flex-direction:column;gap:7px}.v12-audit-grid small{color:#496782;font-size:11px}.v12-audit-grid b{font-size:17px}.v12-ok{color:#187c57}.v12-warn{color:#a56713}.v12-audit-note{margin-top:13px;border:1px solid #ecd28e;background:#fff9e9;padding:12px;color:#664e23;font-size:12px;line-height:1.5;border-radius:10px}.v12-audit-note a{color:#125fb2;font-weight:750}</style><style id="v12-bank-audit-style">.v12-bank-audit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.v12-bank-tile{min-height:108px;padding:13px;border-radius:12px;border:1px solid #bdd3e5;background:#f5f9fc;display:flex;flex-direction:column;gap:6px}.v12-bank-tile small{font-size:11px;color:#315b7c;font-weight:850}.v12-bank-tile strong{font-size:21px;color:#132e48}.v12-bank-tile span{font-size:11px;line-height:1.4;color:#344e64}.v12-bank-tile.good{border-top:4px solid #16975e}.v12-bank-tile.attention{border-top:4px solid #d9ac28}.v12-bank-tile.alert{border-top:4px solid #d64c59}.v12-bank-foot{background:#eff7fc;color:#174567;border:1px solid #b8d6e9;border-radius:10px;padding:12px;line-height:1.55;font-size:12px}.v12-bank-foot a{font-weight:800;color:#145fab}@media(max-width:550px){.v12-bank-audit{grid-template-columns:1fr}.v12-bank-tile{min-height:92px}}</style><style id="v12-finance-visual-20261021">
 /* Visual de dados reais: identidade azul-marinho e dourado; sem valores artificiais. */
 .kpi{border-top:3px solid #c9a14a;transition:box-shadow .18s ease,transform .18s ease}
 .kpi:hover{box-shadow:0 8px 24px #07182b18;transform:translateY(-2px)}
@@ -494,7 +494,10 @@ body{background:var(--v12-bg)}
   flex:1 1 100%;
  }
 }
-</style></head><body><div id="login" class="login"><div class="box"><div style="display:flex;gap:10px;align-items:center"><img class="logo" src="data:image/jpeg;base64,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"><b>CONSTRU-REI · DASHBOARD V12</b></div><p class="muted small">Módulo oficial da Central CONSTRU-REI. Mesma chave da Central.</p><input id="key" type="password" placeholder="Chave de acesso"><button onclick="login()">Entrar</button><div id="err"></div></div></div>
+</style><style id="cr-v12-owner-nav-20261024">#fin .v12fin-capital-launch{background:#f1f6fa;color:#173e63;border:1px solid #bed4e2;border-radius:9px;padding:9px 12px;font-weight:750;cursor:pointer;font-size:12px}
+#fin #cr-period-send{margin:14px 0 12px!important}.crp-period-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:10px 0 14px}
+.crp-period-grid label{font-size:12px;font-weight:750;color:#244964;display:block}.crp-period-grid input{width:100%;min-height:43px;margin-top:5px;border:1px solid #bdd0e1;border-radius:9px;padding:8px;font:inherit}
+@media(max-width:650px){.crp-period-grid{grid-template-columns:1fr}}</style></head><body><div id="login" class="login"><div class="box"><div style="display:flex;gap:10px;align-items:center"><img class="logo" src="data:image/jpeg;base64,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"><b>CONSTRU-REI · DASHBOARD V12</b></div><p class="muted small">Módulo oficial da Central CONSTRU-REI. Mesma chave da Central.</p><input id="key" type="password" placeholder="Chave de acesso"><button onclick="login()">Entrar</button><div id="err"></div></div></div>
 <header class="top"><div class="topin"><img class="logo" src="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate?api=logo"><div><b>CONSTRU-REI</b><div class="small" style="color:#f3e7c6">DASHBOARD GERENCIAL</div><div class="small">GESTÃO • OPERAÇÃO • FINANCEIRO • INTELIGÊNCIA</div></div><div class="grow"></div><b>V12 · OPERAÇÃO HOMOLOGADA</b><span id="live">online</span></div></header><main class="main"><div class="r6hero"><div class="r6eyebrow">CENTRO DE COMANDO DA DIRETORIA</div><div class="r6title">CONSTRU-REI · Diretoria Agora</div><div class="r6sub">VISÃO EXECUTIVA • OPERAÇÃO • RESULTADO • CUSTOS • RISCOS</div></div><div class="v12-line"><b>V12 · OPERAÇÃO HOMOLOGADA · ESCRITA CONTROLADA</b><span>Extrato Cora conciliado por competências UTC. Saldos históricos derivados identificados; registros por obra e rateios preservam suas fontes e pendências próprias.</span></div><div class="tabs v12tabs">
 <button class="tab" data-t="agora">VISÃO EXECUTIVA</button>
 <button class="tab" data-t="corapro">CORA PRO V2</button>
@@ -519,7 +522,7 @@ body{background:var(--v12-bg)}
   <button type="button" class="v12ex-kpi" data-go="profit"><span>Lucro apurado</span><strong id="v12ex-profit">—</strong><small id="v12ex-profit-note">Sujeito à conciliação</small></button>
   <button type="button" class="v12ex-kpi" data-go="margin"><span>Margem apurável</span><strong id="v12ex-margin">—</strong><small id="v12ex-margin-note">Somente com base equivalente</small></button>
   <button type="button" class="v12ex-kpi v12ex-bank" data-go="bank"><span>Saldo oficial Cora</span><strong id="v12ex-bank-balance">—</strong><small id="v12ex-bank-note">Requer login da Diretoria</small></button>
-  <button type="button" class="v12ex-kpi" data-go="receivable"><span>A receber confirmado</span><strong id="v12ex-receive">N/D</strong><small>Não estimado por status da obra</small></button>
+  <button type="button" class="v12ex-kpi" data-go="receivable"><span>Orçamentos aguardando pagamento · Gestão Click</span><strong id="v12ex-receive">N/D</strong><small id="v12ex-receive-note">Consulta comercial autenticada pendente</small></button>
  </div>
  <div class="v12ex-tools v12-capital-shortcut"><button type="button" id="v12ex-capital-shortcut">Abrir Capital de Giro →</button><small>Operação concentrada em Resultados e Acertos · Trello</small></div><div class="v12ex-note" id="v12ex-integrity" role="status">Os valores financeiros serão exibidos após consulta autenticada. Sem estimativas ou substituição de dados ausentes por zero.</div>
  <div class="v12ex-grids">
@@ -556,7 +559,7 @@ body{background:var(--v12-bg)}
  </div><div class="r8commandbar"><div><div class="r8mode" id="r8mode">OPERAÇÃO VIVA</div><div id="r8context" class="r8context">2026 • ANO TODO</div></div><div class="r8quick"><button onclick="r8Go('agora')">OPERAÇÃO</button><button onclick="r8Go('fin')">FINANCEIRO</button><button onclick="r8Go('cost')">CUSTOS</button><button onclick="r8Go('cost');setTimeout(()=>document.getElementById('prov')?.scrollIntoView({behavior:'smooth'}),0)">PRESTADORES</button><button onclick="r8Go('hist')">HISTÓRICO</button><button onclick="r8Go('qual')">SAÚDE</button></div></div><div id="globalyears" class="yearnav"></div><div id="periodtitle" class="periodtitle"></div><div id="periodnote" class="periodnote"></div><div id="r8result"></div><div id="v12-scope-note" role="status" aria-live="polite"></div><div id="kpis" class="r7master"></div><div id="supportkpis" class="r7support"></div><div id="opkpis" class="opkpis"></div><div id="execalerts" class="r7alerts"></div><div id="r8costcontrol"></div><div class="r7execgrid"><div class="panel r7readpanel"><h3>Leitura da Diretoria</h3><div id="execread"></div></div><div class="panel r7readpanel"><h3>Indicadores do período</h3><div id="execsmart" class="r7smart"></div></div></div><div class="panel"><h3>Operação e obras</h3><div id="chips" class="chips"></div><div id="opmonths" class="chips"></div><div class="opfiltertitle">FILTRAR ORÇAMENTOS / OBRAS</div><div class="filters opfilters"><select id="opyear" onchange="oy(this.value)"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option></select><input id="q" placeholder="Buscar orçamento, cliente, endereço..." oninput="ops()"><select id="sort" onchange="ops()"><option value="recent">Mais recentes</option><option value="old">Mais antigos</option><option value="gross">Maior valor</option><option value="profit">Maior lucro</option><option value="margin">Menor margem</option></select></div><div id="op"></div></div></details>
 </section>
 <section id="fin" class="section">
-<div class="v12fin-intro"><div><div class="v12cap-eyebrow">FINANÇAS OPERACIONAIS · TRELLO</div><h2>Resultados e Acertos</h2><p>Três áreas organizadas, sem repetição de saldos ou funcionalidades.</p></div><nav class="v12fin-nav" aria-label="Seções de resultados e acertos"><a href="#v12-capital-workspace">Capital de Giro</a><a href="#v12-live-acertos">Acertos em aberto</a><a href="#finperiod">Histórico e rateios</a></nav></div>
+<div class="v12fin-intro"><div><div class="v12cap-eyebrow">FINANÇAS OPERACIONAIS · TRELLO</div><h2>Resultados e Acertos</h2><p>Apuração, acertos em aberto e histórico. Operações e Capital de Giro ficam na Central de Operações.</p></div><nav class="v12fin-nav" aria-label="Seções de resultados e acertos"><button type="button" class="v12fin-capital-launch" onclick="window.v12CapitalGo()">Capital de Giro: abrir Central</button><a href="#v12-live-acertos">Acertos em aberto</a><a href="#finperiod">Histórico e rateios</a></nav></div>
 <section id="v12-capital-workspace" class="v12cap-workspace" aria-labelledby="v12-capital-title">
   <div class="v12cap-header">
     <div><div class="v12cap-eyebrow">GESTÃO FINANCEIRA · TRELLO</div><h2 id="v12-capital-title">Capital de Giro</h2><p>Uma única central para consultar o saldo, conferir períodos e registrar despesas. Os acertos pendentes não compõem o saldo disponível.</p></div>
@@ -564,8 +567,12 @@ body{background:var(--v12-bg)}
   </div>
   <div id="cap" class="v12cap-overview" role="status" aria-live="polite"><p class="v12cap-loading">Consultando Capital de Giro no Trello…</p></div>
   <div class="v12cap-divider"><div><h3>Despesas e distribuição por período</h3><p>Operação homologada na V11. Prévia primeiro, confirmação depois; nenhuma despesa é lançada automaticamente.</p></div><span class="v12cap-flow">1 · Consultar&nbsp;&nbsp; 2 · Pré-visualizar&nbsp;&nbsp; 3 · Confirmar</span></div>
-  <div id="v11cap-slot"></div><div id="v12-close-period" class="panel" style="margin:14px 0;padding:17px;border:1px solid #d2e2ec;border-radius:13px;background:#f7fafc">
-<h3 style="font-size:15px;color:#143e5b;margin:0 0 7px">Encerrar período de acertos</h3>
+  <div id="v11cap-slot"></div><section id="cr2026-history" class="panel" style="margin:14px 0;border-left:4px solid #216ab5">
+<h3>Consultar histórico financeiro de 2026</h3><p class="small muted">Consulta somente leitura dos registros operacionais do Trello carregados pela V12. Não encerra períodos, não cria cards, não confirma recebimentos nem altera valores. Para lançamentos sem dia exato, o filtro utiliza competência mensal e identifica a aproximação.</p>
+<div class="v11row" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px"><label>De <input type="date" id="cr26-from" min="2026-01-01" max="2026-12-31" value="2026-01-01" style="width:100%;padding:10px;border:1px solid #bfd5e5;border-radius:8px"></label><label>Até <input type="date" id="cr26-to" min="2026-01-01" max="2026-12-31" value="2026-12-31" style="width:100%;padding:10px;border:1px solid #bfd5e5;border-radius:8px"></label></div>
+<button type="button" id="cr26-consult" class="v11button">Consultar registros de 2026</button><button type="button" id="cr26-copy" class="v11button" disabled>Copiar texto histórico</button><div id="cr26-output" role="status" aria-live="polite" style="margin-top:12px">Faça login e consulte. O filtro não utiliza o bloqueio de início do próximo fechamento.</div>
+</section><div id="v12-close-period" class="panel" style="margin:14px 0;padding:17px;border:1px solid #d2e2ec;border-radius:13px;background:#f7fafc">
+<h3 style="font-size:15px;color:#143e5b;margin:0 0 7px">Provisionar Capital de Giro do período</h3>
 <p class="small muted">O valor do Capital de Giro vem do Acerto Vivo no Trello. Apenas a Diretoria confirma; nenhuma obra é fechada automaticamente e um período já existente não é recriado.</p>
 <div class="v11row" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
 <label>Início do período<input type="date" id="cg-close-start" style="width:100%;min-height:42px"></label>
@@ -576,13 +583,32 @@ body{background:var(--v12-bg)}
 <button type="button" id="cg-close-preview" class="v11button">Pré-visualizar encerramento</button>
 <button type="button" id="cg-close-confirm" class="v11button" style="background:#0e694f" disabled>Confirmar e gerar card no Trello</button></div>
 <div id="cg-test-status" role="status" aria-live="polite" class="v11msg" style="white-space:pre-wrap;margin-top:12px;border-left:3px solid #155b7d;padding-left:10px">Autoteste disponível: consulta somente leitura, sem encerrar acertos ou criar cards.</div>
-<div id="cg-close-status" class="v11msg" role="status" style="white-space:pre-wrap;margin-top:12px">Nenhum período encerrado. Use a prévia para conferir o rateio.</div>
+<div id="cg-close-status" class="v11msg" role="status" style="white-space:pre-wrap;margin-top:12px">Nenhum encerramento foi executado nesta tela. A mensagem não representa o histórico: consulte os períodos anteriores na fonte do Capital de Giro. Use a prévia para conferir o rateio sem gravar.</div>
+<div id="cr-period-send" style="margin:14px 0 5px;padding:13px;border:1px solid #b7d1df;border-radius:10px;background:#edf6fc">
+ <p style="font-weight:800;font-size:13px;margin:0 0 7px;color:#173e63">Resultados e Acertos · Envio financeiro por período</p>
+ <p style="font-size:12px;line-height:1.5;margin:0 0 10px">Selecione as datas e as obras abaixo. A prévia não grava; o envio exige autenticação e confirmação e não representa pagamento bancário. Não repita após falha parcial.</p><div class="crp-period-grid"><label>Início do período<input type="date" id="crp-start"></label><label>Fim do período<input type="date" id="crp-end"></label></div>
+ <div style="display:flex;flex-wrap:wrap;gap:8px">
+ <button class="v11button" type="button" onclick="crpPreview()">1. Pré-visualizar envio financeiro</button>
+ <button class="v11button" type="button" id="crp-send" style="background:#0e694f" onclick="crpSend()" disabled>2. Enviar para Gestão Financeira</button>
+ </div>
+ <div id="crp-result" class="v11msg" role="status" aria-live="polite" style="white-space:pre-wrap;margin-top:9px;font-size:12px">Nenhuma retirada transferida nesta sessão.</div>
+ </div>
 </div>
 </section>
+<div class="panel" id="cr-withdraw-history" style="margin:12px 0;padding:15px;border:1px solid #c4d7e7;border-radius:12px">
+ <h3>Retiradas financeiras conciliadas por corte</h3>
+ <p class="small muted">Somente saídas reais Cora vinculadas a períodos de acerto. Rateio calculado não é retirada paga.</p>
+ <div class="v11row" style="display:flex;gap:8px;flex-wrap:wrap">
+ <label>Ano<select id="cr-wdh-year"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option></select></label>
+ <label>Mês<select id="cr-wdh-month"><option value="">Todos</option><option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option><option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option><option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option><option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option></select></label>
+ <button id="cr-wdh-search" type="button" class="v11button">Consultar retiradas</button></div>
+ <div id="cr-wdh-status" role="status" aria-live="polite">Clique para consultar os registros reais.</div>
+ <div id="cr-wdh-rows"></div>
+</div>
 <div class="panel aclive" id="v12-live-acertos">
   <div class="aclivehead">
     <div><div class="r6eyebrow">ACERTO VIVO · FONTE OPERACIONAL TRELLO</div><h3>Acertos em aberto</h3><div class="small muted">Somente obras reais em AG. ACERTO. Se o desconto está registrado nos custos e a base bruta foi confirmada no cartão, use o bruto para evitar desconto duplo. Esta tela não lança dados no Trello.</div><div id="acstatus" class="acstatus" style="margin-top:8px"></div></div>
-    <div class="acactions"><button class="acbtn" onclick="refreshAcerto(true)">ATUALIZAR AGORA</button><button class="acbtn primary" onclick="copyAcerto()">COPIAR ACERTO COMPLETO</button><button class="acbtn" onclick="copyAcertoResumo()">COPIAR RESUMO</button><button class="acbtn" onclick="pdfAcerto()">GERAR PDF</button><button class="acbtn" onclick="excelAcerto()">EXPORTAR EXCEL</button><button class="acbtn" onclick="snapshotAcerto()">SALVAR SNAPSHOT</button></div><div id="ac-period-heading" class="small muted" role="status" aria-live="polite" style="padding:8px 1px 0;font-weight:650">Período do título: selecione início e fim em “Encerrar período de acertos”.</div>
+    <div class="acactions"><button class="acbtn" onclick="refreshAcerto(true)">ATUALIZAR AGORA</button><button class="acbtn primary" onclick="copyAcerto()">COPIAR ACERTO COMPLETO</button><button class="acbtn" onclick="copyAcertoResumo()">COPIAR RESUMO</button><button class="acbtn" onclick="pdfAcerto()">GERAR PDF</button><button class="acbtn" onclick="excelAcerto()">EXPORTAR EXCEL</button><button class="acbtn" onclick="snapshotAcerto()">SALVAR SNAPSHOT</button></div><div id="ac-period-heading" class="small muted" role="status" aria-live="polite" style="padding:8px 1px 0;font-weight:650">Período do título: selecione início e fim no painel Envio financeiro por período.</div>
   </div>
   <div id="ackpis" class="ackpis"></div>
   <div id="acrateio" class="acrateio"></div>
@@ -591,26 +617,46 @@ body{background:var(--v12-bg)}
   <div class="grid2" style="margin-top:12px"><div><h3>Histórico de snapshots</h3><div class="small muted">Fechamentos congelados ficam preservados sem alterar o Acerto Vivo.</div><div id="achistory" class="achistory" style="margin-top:8px"></div></div><div><h3>Referências históricas preservadas</h3><div class="rows"><div class="r"><span>Modelo / fechamento</span><b>06/08</b></div><div class="r"><span>Modelo / fechamento</span><b>18/09</b></div><div class="r"><span>Regra atual</span><b>20 / 28 / 28 / 14 / 10</b></div><div class="r"><span>Apoio / diárias</span><b>Separado do rateio</b></div></div></div></div>
 </div>
 <div id="finperiod" class="periodtitle"></div><div id="yc" class="grid3"></div><div class="panel"><h3>Acertos e rateios históricos</h3><div id="months" class="months"></div><div id="fk" class="kpis"></div><div class="grid2"><div><h3 id="rrtitle">Rateios auditados do ano</h3><div id="rr" class="rows"></div></div><div><h3>Linha do tempo dos modelos</h3><div id="tl" class="rows"></div></div></div></div></section>
-<section id="cora" class="section on"><p role="status" style="background:#fff7df;color:#785618;border:1px solid #e1c365;border-radius:10px;padding:12px;font-weight:700">CANDIDATA DE TESTE · Aprovisionamento protegido por validação do ID bancário no servidor e registro persistente V12. Trello só é alterado após login, prévia e confirmação explícita. A reconciliação de custos previamente lançados continua bloqueada até prova bilateral.</p><div id="cr-central-actions" role="group" aria-label="Operações financeiras da Central"><button type="button" id="cr-op-bank" aria-pressed="false">Extrato Cora / Aprovisionar</button><button type="button" id="cr-op-manual" aria-pressed="true">Lançar manualmente (obra)</button><button type="button" id="cr-op-capital" aria-pressed="false">Capital de Giro</button><button type="button" id="cr-op-close" aria-pressed="false">Fechar Obra</button></div><div id="cr-central-hint" role="status">Lançamentos manuais antecipados continuam disponíveis, mesmo sem transação no Cora. Capital de Giro reutiliza o componente V12.</div><div id="cr-central-bank-slot" hidden><div class="panel" id="cr-aprovisionamento" style="margin:12px 0">
+<section id="cora" class="section on"><p role="status" style="background:#fff7df;color:#785618;border:1px solid #e1c365;border-radius:10px;padding:12px;font-weight:700">V12 · OPERAÇÃO CONTROLADA — Anotações informativas de saídas e recebimentos no extrato Cora, sem criar custos, receitas ou alterar o Trello. Lançamentos e conciliações financeiras exigem login da Diretoria, prévia, confirmação explícita e validação do servidor.</p><div id="cr-central-actions" role="group" aria-label="Operações financeiras da Central"><button type="button" id="cr-op-bank" aria-pressed="false">Extrato Cora / Aprovisionar</button><button type="button" id="cr-op-manual" aria-pressed="true">Lançar manualmente (obra)</button><button type="button" id="cr-op-capital" aria-pressed="false">Capital de Giro</button><button type="button" id="cr-op-close" aria-pressed="false">Fechar Obra</button></div><div id="cr-central-hint" role="status">Lançamentos manuais antecipados continuam disponíveis, mesmo sem transação no Cora. Capital de Giro reutiliza o componente V12.</div><div id="cr-central-bank-slot" hidden><div class="panel" id="cr-aprovisionamento" style="margin:12px 0">
 <h2 style="margin:0 0 8px;color:#0b3967">Central de operações · Cora, Trello e Capital de Giro</h2>
 <p class="small">Selecione uma movimentação real e escolha a operação: custo, receita, distribuição por obras, capital de giro ou conciliação. O lançamento manual continua disponível. Todos os destinos exigem validação e confirmação.</p>
 <div class="manualgrid">
 <label>Início<input type="date" id="cr-ap-start"></label>
 <label>Fim<input type="date" id="cr-ap-end"></label>
 <label>Buscar descrição<input id="cr-ap-search" placeholder="PIX, favorecido, obra..." type="search"></label>
-<label>Tipo<select id="cr-ap-type"><option value="all">Todos</option><option value="DEBIT">Saídas</option><option value="CREDIT">Entradas</option></select></label><label>Situação<select id="cr-ap-state"><option value="all">Todos</option><option value="pending">Pendentes</option><option value="confirmed">Lançados no Dashboard</option><option value="existing">Custos antigos conciliados</option><option value="paid-existing">Recebimentos já conciliados</option><option value="multi">Distribuídos entre obras</option><option value="capital">Capital de Giro</option><option value="review">Exigem revisão</option></select></label>
+<label>Tipo<select id="cr-ap-type"><option value="all">Todos</option><option value="DEBIT">Saídas</option><option value="CREDIT">Entradas</option></select></label><label>Situação<select id="cr-ap-state"><option value="all">Todos</option><option value="pending">Pendentes</option><option value="annotated">Anotados sem custo</option><option value="confirmed">Lançados no Dashboard</option><option value="existing">Custos antigos conciliados</option><option value="paid-existing">Recebimentos já conciliados</option><option value="multi">Distribuídos entre obras</option><option value="capital">Capital de Giro</option><option value="review">Exigem revisão</option></select></label>
 </div><div class="manualactions"><button type="button" class="manualbtn primary" id="cr-ap-load">Consultar extrato Cora</button></div>
 <div id="cr-ap-status" role="status" class="manualnote">Aguardando consulta autenticada.</div><div id="cr-ap-results"></div><div id="cr-ap-editor" hidden style="border:2px solid #d7ad4c;border-radius:14px;padding:14px;margin:14px 0;background:#f6f9fc"><h3 style="margin:0 0 8px;color:#0a3967">Aprovisionar movimentação selecionada</h3><div id="cr-ap-selected" style="font-weight:650;margin-bottom:12px"></div><label style="display:block;margin:10px 0">Destino desta movimentação
 <select id="cr-ap-kind" style="display:block;width:100%;padding:12px;margin-top:5px;border:2px solid #adc6d8;border-radius:9px;font-weight:700">
-<option value="expense">Saída → lançar custo em uma obra</option>
+<option value="bank-note">ANOTAR informação no extrato Cora (sem custo ou receita no Trello)</option><option value="expense">Saída → lançar custo em uma obra</option>
 <option value="existing">Saída → custo já lançado no Trello (conciliar)</option>
 <option value="multi-expense">Saída → distribuir custo entre várias obras</option>
+<option value="multi-existing">Saída → conciliar despesas JÁ LANÇADAS em várias obras (inclusive acertadas)</option>
 <option value="capital">Saída → distribuir entre contas do Capital de Giro</option>
 <option value="receipt">Entrada → registrar recebimento de uma obra</option>
 <option value="multi-receipt">Entrada → distribuir recebimento entre várias obras</option>
-<option value="manual">Lançamento manual livre (informar obra)</option>
+<option value="withdrawal">Saída → retirada financeira (vincular ao acerto)</option><option value="manual">Lançamento manual livre (informar obra)</option>
 </select></label>
-<div id="cr-ap-single"><label style="display:block;margin-bottom:10px">Obra de destino <input id="cr-ap-case" inputmode="numeric" placeholder="Ex.: 818-26" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"></label><label id="cr-ap-existing-label" style="display:block;margin-bottom:10px">Este custo já está antecipado no Trello? <select id="cr-ap-existing" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"><option value="">Selecione para continuar</option><option value="yes">Sim — já foi lançado (não duplicar)</option><option value="no">Não — lançar custo realizado</option><option value="unsure">Não sei — preciso conferir</option></select></label></div><div id="cr-ap-split" hidden style="margin:12px 0;padding:14px;background:#fff;border:1px solid #c6dbe9;border-radius:12px"><div style="font-weight:800;margin-bottom:7px">Obras / contas disponíveis</div><p style="font-size:12px;color:#536d83;margin:3px 0 10px">Selecione e informe o valor de cada parcela. A soma deve corresponder exatamente à transação bancária.</p><div id="cr-ap-choices" style="max-height:330px;overflow:auto;display:grid;gap:7px"></div><div id="cr-ap-split-total" role="status" style="font-weight:800;margin:12px 0"></div><div id="cr-ap-preview-parts" style="margin:8px 0;display:grid;gap:5px" aria-live="polite"></div><div class="manualactions"><button class="manualbtn" id="cr-ap-split-preview" type="button">1. Conferir distribuição</button><button class="manualbtn primary" id="cr-ap-split-commit" type="button" disabled>2. Confirmar distribuição</button></div><div id="cr-ap-split-status" role="status"></div></div><div class="manualactions"><button type="button" class="manualbtn primary" id="cr-ap-prepare">Preparar lançamento V12</button><button type="button" class="manualbtn" id="cr-ap-cancel">Cancelar</button></div><div id="cr-ap-editor-status" role="status"></div><div id="cr-ap-existing-review" hidden style="margin-top:12px;background:#eef8ff;border:1px solid #b9d9ed;border-radius:10px;padding:13px">
+<div id="cr-ap-note-only" hidden style="margin:12px 0;padding:14px;background:#f1f8ff;border:2px solid #88bce0;border-radius:11px;color:#123e62">
+<strong id="cr-ap-note-heading">Anotação informativa no EXTRATO CORA</strong>
+<p>Sem custo real, sem Trello, sem rateio, sem alteração do saldo Cora ou Capital de Giro. Inclui obras encerradas e não exige despesas lançadas nos cartões.</p>
+<label style="display:block;margin:8px 0">Prestador / beneficiário<input id="cr-ap-note-person" maxlength="120" placeholder="Éder Cibin / Fabrício / João Victor Cibin" style="display:block;width:100%;padding:10px"></label>
+<label style="display:block;margin:8px 0">Finalidade / observação<input id="cr-ap-note-reason" maxlength="500" value="Apoios / diárias — identificação do extrato Cora" style="display:block;width:100%;padding:10px"></label>
+<p id="cr-ap-note-help">Uma linha por obra. Informe as diárias e respectivos valores. Para recebimento, informe 1 parcela por obra e o valor correspondente. Obras encerradas também são aceitas; nenhuma gravação será feita no Trello.</p>
+<div id="cr-ap-note-rows"></div>
+<button type="button" class="manualbtn" id="cr-ap-note-add">+ Adicionar obra</button>
+<div id="cr-ap-note-total" style="margin:12px 0;font-weight:800"></div>
+<div id="cr-ap-note-details" role="status"></div>
+<div class="manualactions"><button id="cr-ap-note-preview" class="manualbtn" type="button">1. Conferir anotação</button><button id="cr-ap-note-confirm" class="manualbtn primary" type="button" disabled>2. Confirmar anotação</button></div>
+<div id="cr-ap-note-status" role="status"></div></div>
+<div id="cr-ap-withdrawal" hidden style="border:1px solid #bdd3e3;border-radius:12px;background:#f3f8fc;padding:12px;margin:12px 0">
+ <h4>Retirada financeira Cora — vincular ao acerto</h4><p>Registra a classificação da saída bancária existente. Não faz pagamento, não lança custo na obra e não debita Capital de Giro.</p>
+ <label>Período de acerto<select id="cr-ap-withdraw-period" style="width:100%;padding:10px"></select></label>
+ <label>Beneficiário<select id="cr-ap-withdraw-beneficiary" style="width:100%;padding:10px"><option value="">Selecionar...</option><option value="FABRICIO">Fabrício</option><option value="EDER">Éder</option><option value="ROGERIO">Rogério</option><option value="GABRIELLY">Gabrielly</option></select></label>
+ <label>Identificação/justificativa<input id="cr-ap-withdraw-note" maxlength="300" placeholder="Referência ao acerto" style="width:100%;padding:10px"></label>
+ <div class="manualactions"><button type="button" id="cr-ap-withdraw-preview" class="manualbtn">1. Prévia de retirada</button><button type="button" id="cr-ap-withdraw-confirm" class="manualbtn primary" disabled>2. Confirmar vínculo</button></div>
+ <div id="cr-ap-withdraw-status" class="manualnote" role="status" aria-live="polite">Selecione o período, beneficiário e justificativa.</div>
+ </div><div id="cr-ap-single"><label style="display:block;margin-bottom:10px">Obra de destino <input id="cr-ap-case" inputmode="numeric" placeholder="Ex.: 818-26" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"></label><label id="cr-ap-existing-label" style="display:block;margin-bottom:10px">Este custo já está antecipado no Trello? <select id="cr-ap-existing" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"><option value="">Selecione para continuar</option><option value="yes">Sim — já foi lançado (não duplicar)</option><option value="no">Não — lançar custo realizado</option><option value="unsure">Não sei — preciso conferir</option></select></label><label id="cr-ap-cross-existing" hidden style="display:block;margin-bottom:10px">Se o custo já está em outra obra, informe o cartão que recebeu a despesa<input id="cr-ap-cost-case" inputmode="numeric" placeholder="Ex.: 809-26 (origem 791-26 acima)" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"><small>Concilia a linha já existente sem reabrir ou cobrar novamente a obra de origem.</small></label><label id="cr-ap-expense-origin" hidden style="display:block;margin-bottom:10px">Obra à qual a despesa se refere (opcional, se diferente do destino)<input id="cr-ap-origin-case" inputmode="numeric" placeholder="Ex.: 791-26" style="display:block;width:100%;padding:12px;border:1px solid #b5cad9;border-radius:9px;margin-top:5px"><small>O custo entra no destino indicado acima, mas a origem permanece identificada.</small></label></div><div id="cr-ap-split" hidden style="margin:12px 0;padding:14px;background:#fff;border:1px solid #c6dbe9;border-radius:12px"><div style="font-weight:800;margin-bottom:7px">Obras / contas disponíveis</div><p style="font-size:12px;color:#536d83;margin:3px 0 10px">Selecione e informe o valor de cada parcela. A soma deve corresponder exatamente à transação bancária.</p><input id="cr-ap-target-search" type="search" aria-label="Filtrar obras por número, nome ou situação" placeholder="Buscar obra: número, cliente ou situação" style="width:100%;padding:11px;border:1px solid #b7cada;border-radius:8px;margin:5px 0 11px"><div id="cr-ap-target-count" style="font-size:12px;color:#536d83;margin:0 0 8px"></div><div id="cr-ap-choices" style="max-height:330px;overflow:auto;display:grid;gap:7px"></div><div id="cr-ap-split-total" role="status" style="font-weight:800;margin:12px 0"></div><div id="cr-ap-preview-parts" style="margin:8px 0;display:grid;gap:5px" aria-live="polite"></div><div class="manualactions"><button class="manualbtn" id="cr-ap-split-preview" type="button">1. Conferir distribuição</button><button class="manualbtn primary" id="cr-ap-split-commit" type="button" disabled>2. Confirmar distribuição</button></div><div id="cr-ap-split-status" role="status"></div></div><div class="manualactions"><button type="button" class="manualbtn primary" id="cr-ap-prepare">Preparar lançamento V12</button><button type="button" class="manualbtn" id="cr-ap-cancel">Cancelar</button></div><div id="cr-ap-editor-status" role="status"></div><div id="cr-ap-existing-review" hidden style="margin-top:12px;background:#eef8ff;border:1px solid #b9d9ed;border-radius:10px;padding:13px">
  <strong style="display:block;margin-bottom:8px;color:#164d75">Custo localizado no Trello · revisar antes de conciliar</strong>
  <label style="display:block">Selecione a linha correspondente <select id="cr-ap-existing-line" style="display:block;width:100%;min-height:45px;margin:8px 0;padding:9px;border:1px solid #b8d0e1;border-radius:8px"></select></label>
  <p style="font-size:12px;color:#344c64">Confirmar apenas se for exatamente a mesma despesa. Esta ação não inclui outra despesa no cartão, nem altera os valores.</p>
@@ -652,8 +698,22 @@ const UI_BUILD="CR-V12-OPERACAO-HOMOLOGADA-ACERTOS-BRUTO-TAXA-20261023";
 const CR_API_BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007";
 const CG_API_BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-trello-capital-giro-v1";
 const S={session:sessionStorage.getItem("crv2")||"",years:{},current:null,capital:null,oy:"2026",fy:"2026",fm:0,status:"",opm:0,opYear:null,opAudit:null,monthlyAudit:null,cy:"2026",cm:0,costData:null,costCache:{},providerView:[],gcLast:null,gcLastAt:0,acertoHistory:[],acertoSelected:{},acertoHistoryLoaded:false};const brl=c=>c==null?"Não informado":new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(c/100),pct=v=>v==null?"Não calculável":Number(v).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%",esc=s=>String(s??"").replace(/[&<>]/g,"");
-async function api(q,opt={}){const r=await fetch(CR_API_BASE+"?"+q,{...opt,headers:{"x-cr-session":S.session,...(opt.headers||{})}}),j=await r.json().catch(()=>({}));if(r.status===401){logout();throw Error()}if(!r.ok)throw Error(j.error);return j}async function cgapi(){const r=await fetch(CG_API_BASE+"?action=summary",{headers:{"x-cr-session":S.session}}),j=await r.json().catch(()=>({}));if(!r.ok||!j.ok)throw Error(j.error||"CAPITAL_UNAVAILABLE");return j}async function login(){const r=await fetch(CR_API_BASE+"?api=login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:document.getElementById("key").value.trim()})}),j=await r.json();if(!r.ok||!j.ok){document.getElementById("err").textContent=j.error||"Acesso negado";return}S.session=j.session;sessionStorage.setItem("crv2",S.session);document.getElementById("login").classList.add("hide");refresh(true)}function logout(){sessionStorage.removeItem("crv2");location.reload()}
-async function refresh(gc){document.getElementById("live").textContent="atualizando";try{const nowTs=Date.now(),wantGc=!!gc||!S.gcLastAt||(nowTs-S.gcLastAt)>=300000;const [a,b,c,d,e]=await Promise.all([api("api=year&year=2024"),api("api=year&year=2025"),api("api=year&year=2026"),api("api=current&gc="+(wantGc?1:0)),cgapi().catch(()=>null)]);if(wantGc)S.gcLastAt=nowTs;if(d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick}else if(S.gcLast&&(d?.gestaoclick?.skipped||d?.gestaoclick?.ok===false)){d.gestaoclick={...S.gcLast,stale:d?.gestaoclick?.ok===false,last_error_status:d?.gestaoclick?.http_status??null}}S.years={2024:a,2025:b,2026:c};S.current=d;S.capital=e;const apiBuild=c?.build||d?.build||b?.build||a?.build||"não informado";const bf=document.getElementById("buildfoot");bf.textContent="CONSTRU-REI · V12 OPERAÇÃO HOMOLOGADA · CORA PRO V2 / TRELLO";bf.title="API "+apiBuild;render();if(!S.acertoHistoryLoaded)loadAcertoHistory();document.getElementById("live").textContent="online"}catch(e){const live=document.getElementById("live");live.textContent="degradado";live.title="Falha ao atualizar dados. A interface preserva o último estado carregado."}}
+async function api(q,opt={}){
+ const r=await fetch(CR_API_BASE+"?"+q,{...opt,headers:{"x-cr-session":S.session,...(opt.headers||{})}});
+ const raw=await r.json().catch(()=>null),j=raw&&typeof raw==="object"?raw:{ok:false,error:"RESPOSTA_SERVIDOR_NULA"};
+ if(r.status===401){logout();throw Error("SESSAO_EXPIRADA")}
+ if(!r.ok){
+  const kind=String(j.error||"ERRO_HTTP_"+r.status);
+  if(kind==="CUSTOS_REFERENCIAM_OUTRA_OBRA"){
+   const other=Array.isArray(j.other_cases)?j.other_cases.join(", "):"não identificada";
+   throw Error("Fechamento bloqueado: "+String(j.reference_count||"")+" despesa(s) citam outra obra ("+other+"). Confira a origem no Trello. Nenhuma gravação realizada.");
+  }
+  if(kind==="CASE_NOT_OPERATIONALLY_OPEN")throw Error("Fechamento bloqueado: obra no estado "+String(j.work_status||j.list||"não habilitado")+". Confira a lista no Trello.");
+  throw Error(kind);
+ }
+ return j;
+}async function cgapi(){const r=await fetch(CG_API_BASE+"?action=summary",{headers:{"x-cr-session":S.session}}),j=await r.json().catch(()=>({}));if(!r.ok||!j.ok)throw Error(j.error||"CAPITAL_UNAVAILABLE");return j}async function login(){const r=await fetch(CR_API_BASE+"?api=login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:document.getElementById("key").value.trim()})}),j=await r.json();if(!r.ok||!j.ok){document.getElementById("err").textContent=j.error||"Acesso negado";return}S.session=j.session;sessionStorage.setItem("crv2",S.session);document.getElementById("login").classList.add("hide");refresh(true)}function logout(){sessionStorage.removeItem("crv2");location.reload()}
+async function refresh(gc){document.getElementById("live").textContent="atualizando";try{const nowTs=Date.now(),wantGc=!!gc||!S.gcLastAt||(nowTs-S.gcLastAt)>=300000;if(wantGc&&typeof crGcPaymentRefresh==="function")void crGcPaymentRefresh();const [a,b,c,d,e]=await Promise.all([api("api=year&year=2024"),api("api=year&year=2025"),api("api=year&year=2026"),api("api=current&gc="+(wantGc?1:0)),cgapi().catch(()=>null)]);if(wantGc)S.gcLastAt=nowTs;if(d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick}else if(S.gcLast&&(d?.gestaoclick?.skipped||d?.gestaoclick?.ok===false)){d.gestaoclick={...S.gcLast,stale:d?.gestaoclick?.ok===false,last_error_status:d?.gestaoclick?.http_status??null}}S.years={2024:a,2025:b,2026:c};S.current=d;S.capital=e;const apiBuild=c?.build||d?.build||b?.build||a?.build||"não informado";const bf=document.getElementById("buildfoot");bf.textContent="CONSTRU-REI · V12 OPERAÇÃO HOMOLOGADA · CORA PRO V2 / TRELLO";bf.title="API "+apiBuild;render();if(!S.acertoHistoryLoaded)loadAcertoHistory();document.getElementById("live").textContent="online"}catch(e){const live=document.getElementById("live");live.textContent="degradado";live.title="Falha ao atualizar dados. A interface preserva o último estado carregado."}}
 function render(){now();fin();hist();qual();recon();costs();if(typeof window.v12ExecRender==="function")window.v12ExecRender()}function manualLocalDate(){const d=new Date(),z=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
 const CORA_BASE_BALANCE_CENTS=3256462,CORA_BASE_BALANCE_DATE="09/10/2026",CORA_PROJECTED_KEY="cr-cora-projected-balance-cents-preview-v12",CORA_VERIFIED_KEY="cr-cora-verified-balance-cents-preview-v12",CORA_VERIFIED_DATE_KEY="cr-cora-verified-balance-date-preview-v12";
 if(localStorage.getItem(CORA_PROJECTED_KEY)===null)localStorage.setItem(CORA_PROJECTED_KEY,String(CORA_BASE_BALANCE_CENTS));
@@ -699,6 +759,15 @@ async function manualCheckStatus(){
   manualMsg('<b>STATUS: '+esc(status)+'</b><br>'+esc(explanatory)+link,status==="COMMITTED"?"ok":"err");
  }catch(e){manualMsg("Consulta: "+esc(e?.message||"registro não encontrado")+". Não foi possível comprovar se houve gravação. Confira o Trello antes de qualquer repetição.", "err")}
 }
+function manualForeignCostRefs(items,work){
+ const found=[];
+ for(const entry of Array.isArray(items)?items:[]){
+  const desc=String(entry?.description_original||"");
+  const references=[...desc.matchAll(/\b(?:OBRA|ORÇAMENTO|ORCAMENTO)\s*(\d{1,5})\s*[-/]\s*(2[456])\b/gi)].map(m=>m[1]+"-"+m[2]);
+  if(references.some(ref=>ref!==work))found.push({description:desc,cents:entry?.value_cents||0,work:references.filter(ref=>ref!==work)});
+ }
+ return found;
+}
 async function manualCloseWork(){
  const b=document.getElementById("mc_close");
  if(b.disabled||S.manualCloseInFlight)return;
@@ -708,7 +777,18 @@ async function manualCloseWork(){
  const closurePost=payload=>api("api=manual-close-work",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)});
  try{
   manualMsg("Consultando Trello para calcular o fechamento. Nenhuma alteração realizada...");
+  const normalizedCase=caseNo.includes("-")?caseNo:caseNo.replace(/^(\d+)(2[456])$/,"$1-$2");
+  const audit=await api("api=case&case="+encodeURIComponent(normalizedCase));
+  if(!audit?.ok||!Array.isArray(audit?.trello?.cost_items))throw Error("Não foi possível auditar as linhas de custo antes do fechamento. Nenhuma escrita autorizada.");
+  const foreign=manualForeignCostRefs(audit.trello.cost_items,normalizedCase);
+  if(foreign.length){
+    const total=foreign.reduce((t,v)=>t+Number(v.cents||0),0);
+    manualMsg("<b>FECHAMENTO BLOQUEADO — REFERÊNCIAS DE OUTRA OBRA</b><br>"+foreign.length+" despesa(s), "+esc(brl(total))+" citam outra obra nos custos de "+esc(normalizedCase)+". Confirme no Trello a obra de origem antes de fechar. Nenhuma gravação efetuada.","err");
+    b.disabled=true;return;
+  }
+
   const pre=await closurePost({case:caseNo,dry_run:true});
+  if(!pre||pre.ok!==true)throw Error(String(pre?.error||"PRÉVIA DO FECHAMENTO INDISPONÍVEL"));
   const x=pre.close||{},rr=x.rateio||{},t=pre.target||{};
   if(!pre.preview||!pre.fingerprint||!t.card_id)throw Error("PRÉVIA INCOMPLETA: nenhuma gravação autorizada.");
   const labels=[["Base de acerto",x.base_cents],["Custos",x.cost_cents],["Lucro líquido",x.profit_cents],["Margem",pct(x.margin_pct)],["Fabrício (20%)",rr.fabricio_cents],["Éder (28%)",rr.eder_cents],["Rogério (28%)",rr.rogerio_cents],["Gabrielly (14%)",rr.gabi_cents],["Capital de Giro (10%)",rr.capital_giro_cents]];
@@ -869,7 +949,7 @@ function acertoPeriodFromSelection(start,end){
  return{head:'DE '+short,short,start:a.iso,end:b.iso};
 }
 function acertoPeriod(){return acertoPeriodFromSelection(document.getElementById('cg-close-start')?.value,document.getElementById('cg-close-end')?.value)}
-function acertoPeriodStatus(){const label=document.getElementById('ac-period-heading');if(!label)return;try{label.textContent='Título ao copiar: ACERTOS '+acertoPeriod().head+' · Período do encerramento selecionado';}catch{label.textContent='Período do título: selecione início e fim em “Encerrar período de acertos”.';}}
+function acertoPeriodStatus(){const label=document.getElementById('ac-period-heading');if(!label)return;try{label.textContent='Título ao copiar: ACERTOS '+acertoPeriod().head+' · Período do encerramento selecionado';}catch{label.textContent='Período do título: selecione início e fim no painel Envio financeiro por período.';}}
 function acertoPeriodError(e){alert(String(e?.message||e));document.getElementById('cg-close-start')?.scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('cg-close-start')?.focus();}
 for(const id of ['cg-close-start','cg-close-end']){const el=document.getElementById(id);if(el){el.addEventListener('input',acertoPeriodStatus);el.addEventListener('change',acertoPeriodStatus)}}
 acertoPeriodStatus();
@@ -1310,7 +1390,7 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 #v12-live-acertos,#finperiod{scroll-margin-top:16px}
 @media(max-width:650px){.v12fin-nav{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.v12fin-nav a{padding:9px 6px;text-align:center;font-size:10px}.v12fin-intro{margin:10px 0;gap:10px}}
 </style><script id="v12-capital-router-20261022">
-window.v12CapitalGo=function(){if(typeof r8Go==="function")r8Go("fin");requestAnimationFrame(()=>document.getElementById("v12-capital-workspace")?.scrollIntoView({behavior:"smooth",block:"start"}))};window.v12CapitalAuditGo=function(){if(typeof r8Go==="function")r8Go("conc");requestAnimationFrame(()=>document.getElementById("v12capitalaudit")?.scrollIntoView({behavior:"smooth",block:"start"}))};
+window.v12CapitalGo=function(){if(typeof r8Go==="function")r8Go("cora");if(typeof window.crShowCapital==="function")window.crShowCapital();requestAnimationFrame(()=>document.getElementById("v12-capital-workspace")?.scrollIntoView({behavior:"smooth",block:"start"}))};window.v12CapitalAuditGo=function(){if(typeof r8Go==="function")r8Go("conc");requestAnimationFrame(()=>document.getElementById("v12capitalaudit")?.scrollIntoView({behavior:"smooth",block:"start"}))};
 </script><style id="v12-capital-layout-20261022">
 /* A single operational home; dashboard and audit provide links rather than competing controls. */
 .v12cap-workspace{margin:18px 0 24px;padding:22px;border:1px solid #d5e2ee;border-radius:18px;background:#fff;box-shadow:0 8px 28px rgba(11,35,60,.055);scroll-margin-top:18px}
@@ -1454,7 +1534,7 @@ const money=c=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).
 let preview=null,busy=false,refreshing=false;
 const session=()=>sessionStorage.getItem("crv2")||"";
 function msg(s){by("cg-close-status").textContent=s}
-function invalidate(){preview=null;by("cg-close-confirm").disabled=true;const test=by("cg-test-status");if(test)test.textContent="AUTOTESTE DESATUALIZADO — confira as datas e execute novamente antes de encerrar. Nenhum lançamento foi realizado."}
+function invalidate(){preview=null;by("cg-close-confirm").disabled=true;const test=by("cg-test-status");if(test)test.textContent="AUTOTESTE PENDENTE OU DESATUALIZADO — confira as datas e execute novamente antes de encerrar. Este aviso não informa se já existem períodos encerrados."}
 async function request(action,data){
  const r=await fetch(URL+"?action="+action,{method:"POST",headers:{"content-type":"application/json","x-cr-session":session()},body:JSON.stringify(data),cache:"no-store"});
  const j=await r.json().catch(()=>({error:"Resposta inválida"}));if(!r.ok||j.ok!==true)throw Error(j.error||"Falha da operação");return j;
@@ -1468,6 +1548,7 @@ async function suggest(){
  const d=new Date(ends[ends.length-1]+"T12:00:00Z");d.setUTCDate(d.getUTCDate()+1);
  by("cg-close-start").value=d.toISOString().slice(0,10);
  by("cg-close-end").value=new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+ for(const id of ["cg-close-start","cg-close-end"])by(id).dispatchEvent(new Event("change",{bubbles:true}));
  if(typeof acertoPeriodStatus==="function")acertoPeriodStatus();
  msg("Datas sugeridas pelo último período registrado. Confira e pré-visualize; nenhum card foi criado.");
  }catch(e){msg("Datas: "+e.message)}
@@ -1555,18 +1636,29 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 function init(){
 const cap=document.getElementById("v12-capital-workspace"),bank=document.querySelector("#corapro>.panel"),slot=document.getElementById("cr-central-capital-slot"),bankSlot=document.getElementById("cr-central-bank-slot"),manual=document.getElementById("cr-central-manual-wrap"),a=document.getElementById("cr-op-manual"),b=document.getElementById("cr-op-capital"),c=document.getElementById("cr-op-bank"),d=document.getElementById("cr-op-close"),hint=document.getElementById("cr-central-hint");
 if(!cap||!bank||!slot||!bankSlot||!manual||!a||!b||!c||!d||!hint)return;
-const capAnchor=document.createComment("original-capital");cap.parentNode.insertBefore(capAnchor,cap);
+slot.appendChild(cap); // Único lar operacional de Capital de Giro.
 const bankAnchor=document.createComment("original-cora-pro");bank.parentNode.insertBefore(bankAnchor,bank);
 const buttons={manual:a,capital:b,bank:c,close:d};
 function select(mode){
 const cg=mode==="capital",bk=mode==="bank",cl=mode==="close";
-if(cg)slot.appendChild(cap);else if(capAnchor.parentNode)capAnchor.parentNode.insertBefore(cap,capAnchor.nextSibling);
+// Capital de Giro mantém o mesmo nó na Central de Operações.
 const fullSlot=document.getElementById("cr-ap-full-slot");if(bk&&fullSlot)fullSlot.appendChild(bank);else if(bankAnchor.parentNode)bankAnchor.parentNode.insertBefore(bank,bankAnchor.nextSibling);
 slot.hidden=!cg;bankSlot.hidden=!bk;manual.hidden=cg||bk;
 for(const [k,el] of Object.entries(buttons))el.setAttribute("aria-pressed",String(k===mode));
 if(cl){const caseInput=document.getElementById("mc_case");if(caseInput)caseInput.scrollIntoView({behavior:"smooth",block:"center"});const close=document.getElementById("mc_close");if(close)close.style.outline="3px solid #d6ad4e";}
 else {const close=document.getElementById("mc_close");if(close)close.style.outline="";}
 hint.textContent=bk?"Extrato Cora Pro V2 original (somente leitura). Para atribuir uma movimentação à obra, use o lançamento existente com referência bancária; conciliação automática de previsão ainda não está habilitada.":cg?"Capital de Giro V12 original: saldos, despesas, acertos e encerramento. Sem formulários ou motores paralelos.":cl?"Fechamento original V12: informe a obra, confira a prévia e confirme; nenhuma obra é fechada automaticamente.":"Lançamento manual original: antecipe custos mesmo antes do extrato Cora. Informe referência bancária apenas se já existir; confira o Trello antes de repetir.";
+}
+window.crShowCapital=()=>select("capital");
+const periodPanel=document.getElementById("cr-period-send"),acertoPanel=document.getElementById("v12-live-acertos");
+if(periodPanel&&acertoPanel&&acertoPanel.parentNode)acertoPanel.parentNode.insertBefore(periodPanel,acertoPanel);
+for(const [src,dest] of [["crp-start","cg-close-start"],["crp-end","cg-close-end"]]){
+ const a=document.getElementById(src),b=document.getElementById(dest);
+ if(a&&b)a.addEventListener("change",()=>{b.value=a.value;b.dispatchEvent(new Event("change",{bubbles:true}));});
+}
+for(const [src,dest] of [["cg-close-start","crp-start"],["cg-close-end","crp-end"]]){
+ const a=document.getElementById(src),b=document.getElementById(dest);
+ if(a&&b){b.value=a.value;a.addEventListener("change",()=>{b.value=a.value;});}
 }
 a.addEventListener("click",()=>{const last=S.manualLastPayload,ref=String(document.getElementById("mc_ref")?.value||"").trim();if(!S.manualBankMovement&&/^CORA_[0-9a-f]{64}$/.test(String(last?.operation_id||""))&&ref&&ref===last.reference)manualClear();select("manual")});b.addEventListener("click",()=>select("capital"));c.addEventListener("click",()=>{select("bank");if(movements.length)refreshBankStatus();else load.click()});d.addEventListener("click",()=>select("close"));
 document.querySelectorAll('[data-t="fin"]').forEach(btn=>btn.addEventListener("click",()=>select("manual")));
@@ -1603,7 +1695,7 @@ window.addEventListener("cr:ap:confirmed",async e=>{
  status.textContent="Consultando confirmação definitiva no Supabase...";
  try{
   await readLedger([id]);
-  if(!["TRELLO_CONFIRMED","TRELLO_EXISTING","RECEIPT_EXISTING","TRELLO_MULTI","CAPITAL_CONFIRMED"].includes(bankStatuses.get(id)?.state))throw Error("Sem confirmação persistente");
+  if(!["TRELLO_CONFIRMED","TRELLO_EXISTING","RECEIPT_EXISTING","TRELLO_MULTI","CAPITAL_CONFIRMED"].includes(bankStatuses.get(id)?.state)&&bankStatuses.get(id)?.annotated!==true)throw Error("Sem confirmação persistente");
   statusFailed=false;selected=null;editor.hidden=true;
   search.value="";type.value="all";stateFilter.value="all";
   select("bank");
@@ -1613,16 +1705,30 @@ window.addEventListener("cr:ap:confirmed",async e=>{
   [...results.children].find(row=>row.dataset.coraSourceId===id)?.scrollIntoView({behavior:"smooth",block:"center"});
  }catch{
   statusFailed=true;
-  status.textContent="Trello indicou sucesso, mas o registro persistente ainda não foi confirmado. Não repita o lançamento; confira o cartão.";
+  status.textContent="A confirmação persistente não foi verificada; confira a movimentação antes de repetir.";
  }finally{statusBusy=false;renderRows()}
 });const editor=document.getElementById("cr-ap-editor"),selectedLabel=document.getElementById("cr-ap-selected"),caseField=document.getElementById("cr-ap-case"),existing=document.getElementById("cr-ap-existing"),editorStatus=document.getElementById("cr-ap-editor-status");
 const more=document.getElementById("cr-ap-more");more.addEventListener("click",()=>{shown+=12;renderRows()});
 
-const kind=document.getElementById("cr-ap-kind"),single=document.getElementById("cr-ap-single"),split=document.getElementById("cr-ap-split");
+const kind=document.getElementById("cr-ap-kind"),single=document.getElementById("cr-ap-single"),split=document.getElementById("cr-ap-split"),notePanel=document.getElementById("cr-ap-note-only");
 const choices=document.getElementById("cr-ap-choices"),splitTotal=document.getElementById("cr-ap-split-total");
 const previewParts=document.getElementById("cr-ap-preview-parts");
 const splitStatus=document.getElementById("cr-ap-split-status"),splitPreviewButton=document.getElementById("cr-ap-split-preview"),splitCommitButton=document.getElementById("cr-ap-split-commit");
-let splitSelection=new Map(),splitPreview=null,splitBusy=false;
+let splitSelection=new Map(),splitPreview=null,splitBusy=false,splitCandidates=null;
+let splitLineKeys=new Map();
+const splitSearch=document.getElementById("cr-ap-target-search"),splitCount=document.getElementById("cr-ap-target-count");
+function filterSplitRows(){
+ const q=String(splitSearch.value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().trim();
+ let count=0,total=0;
+ for(const row of choices.children){
+  total++;
+  const label=String(row.dataset.search||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+  row.hidden=!!q&&!label.includes(q);if(!row.hidden)count++;
+ }
+ splitCount.textContent=count+" de "+total+" destinos exibidos. Seleções ocultas pelo filtro permanecem selecionadas.";
+}
+splitSearch.addEventListener("input",filterSplitRows);
+
 function bankDirection(m){return /OUT|SAIDA|DÉBITO|DEBIT/i.test(String(m?.direction||""))?"OUT":/IN|ENTRADA|CRÉDITO|CREDIT/i.test(String(m?.direction||""))?"IN":null}
 function displayBank(v){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v/100)}
 function moneyCentavos(v){
@@ -1649,9 +1755,85 @@ async function bankPayload(obra){
   amount:(m.amount_centavos/100).toFixed(2).replace(".",","),category:m.category,
   counterparty:m.description,description:m.description,reference:m.reference};
 }
+// Separate bank annotation, no dependent Trello calls or card requirements.
+const notePerson=document.getElementById("cr-ap-note-person"),noteReason=document.getElementById("cr-ap-note-reason"),
+ noteRows=document.getElementById("cr-ap-note-rows"),noteAdd=document.getElementById("cr-ap-note-add"),
+ noteTotal=document.getElementById("cr-ap-note-total"),notePreviewButton=document.getElementById("cr-ap-note-preview"),
+ noteConfirmButton=document.getElementById("cr-ap-note-confirm"),noteStatus=document.getElementById("cr-ap-note-status"),
+ noteDetails=document.getElementById("cr-ap-note-details");
+let notePreview=null,noteBusy=false;
+function noteInvalidate(){notePreview=null;noteConfirmButton.disabled=true;noteDetails.textContent=""}
+function noteSum(){
+ let cents=0,count=0;
+ for(const r of noteRows.children){
+  const n=Number(r.querySelector('[data-count]').value),value=moneyCentavos(r.querySelector('[data-unit]').value);
+  if(Number.isSafeInteger(n)&&n>0&&value){cents+=n*value;count+=n}
+ }
+ const bank=Number(selected?.amount_centavos||0);
+ noteTotal.textContent=count+(bankDirection(selected)==="IN"?" parcela(s)":" diária(s)")+" · "+displayBank(cents)+" informados / "+displayBank(bank)+" no Cora"+(cents===bank?" · ✓ Confere":" · Diferença "+displayBank(bank-cents));
+ noteTotal.style.color=cents===bank?"#13754c":"#ab3939";
+}
+function appendNoteRow(){
+ if(noteRows.children.length>=15)return;
+ const row=document.createElement("div");row.style.cssText="display:flex;flex-wrap:wrap;gap:8px;padding:9px;background:white;border:1px solid #c3d8e7;border-radius:8px;margin:7px 0";
+ function add(label,key,placeholder,value,size){
+  const wrap=document.createElement("label");wrap.style.cssText="display:grid;gap:5px;flex:1 1 "+size+"px;font-size:12px";
+  const el=document.createElement("input");el.type="text";el.value=value;el.placeholder=placeholder;el.dataset[key]="1";
+  el.style.cssText="min-width:75px;padding:9px;border:1px solid #b1c9da;border-radius:6px;width:100%";
+  el.addEventListener("input",()=>{noteInvalidate();noteSum()});wrap.append(label,el);row.append(wrap);return el;
+ }
+ const incoming=bankDirection(selected)==="IN";const cs=add("Obra de referência","case","799-26","",120),qty=add(incoming?"Parcelas":"Diárias","count","1","1",80),unit=add(incoming?"R$ por parcela":"R$ por diária","unit",incoming?"Valor R$":"150,00",incoming?"":"150,00",95);unit.inputMode="decimal";qty.inputMode="numeric";
+ const del=document.createElement("button");del.type="button";del.className="manualbtn";del.textContent="Remover";
+ del.addEventListener("click",()=>{row.remove();noteInvalidate();noteSum()});row.append(del);noteRows.append(row);noteSum();
+}
+function resetBankNote(){noteInvalidate();noteRows.replaceChildren();const income=bankDirection(selected)==="IN";notePerson.value="";noteReason.value=income?"Recebimento — identificação das obras no extrato Cora":"Apoios / diárias — identificação das obras no extrato Cora";document.getElementById("cr-ap-note-heading").textContent=income?"Anotar RECEBIMENTO e suas obras no extrato Cora":"Anotar DIÁRIAS e suas obras no extrato Cora";document.getElementById("cr-ap-note-help").textContent=income?"Informe uma linha por obra beneficiada, quantidade de parcelas (normalmente 1) e valor por parcela. Mesmo recebimentos de várias obras podem ser apenas anotados, sem registrar receita no Trello.":"Informe as obras referentes a cada diária, a quantidade e o valor por diária; obras já encerradas são permitidas.";noteStatus.textContent="Anotação somente informativa — sem custo, receita ou Trello.";appendNoteRow()}
+[notePerson,noteReason].forEach(x=>x.addEventListener("input",noteInvalidate));
+noteAdd.addEventListener("click",()=>{noteInvalidate();appendNoteRow()});
+async function annotationPayload(){
+ const p=await bankPayload("1-26");
+ if(!["IN","OUT"].includes(p.direction))throw Error("Movimento Cora inválido para anotação");
+ const allocations=[...noteRows.children].map(row=>{
+  const cs=String(row.querySelector('[data-case]').value||"").trim(),daily_count=Number(row.querySelector('[data-count]').value);
+  const unit=moneyCentavos(row.querySelector('[data-unit]').value);
+  if(!/^\d{1,5}-26$/.test(cs)||!Number.isSafeInteger(daily_count)||daily_count<1||daily_count>30||!unit)throw Error("Confira obra, quantidade e valor unitário");
+  return {case:cs,daily_count,cents:daily_count*unit};
+ });
+ if(!allocations.length||new Set(allocations.map(a=>a.case)).size!==allocations.length)throw Error("Agrupe as informações por obra, sem repetir o número da obra");
+ if(allocations.reduce((s,a)=>s+a.cents,0)!==Number(selected?.amount_centavos||0))throw Error("A soma deve ser idêntica ao valor Cora");
+ return {...p,beneficiary:notePerson.value.trim(),purpose:noteReason.value.trim(),allocations};
+}
+notePreviewButton.addEventListener("click",async()=>{
+ if(noteBusy||!selected||statusFailed||statusBusy)return;
+ noteBusy=true;noteInvalidate();noteStatus.textContent="Validando o banco e a distribuição declarada...";
+ try{
+  const p=await annotationPayload(),r=await existingRequest("bank-annotation-preview",p);
+  if(!r.preview||!r.fingerprint||r.annotation_only!==true||r.no_trello_write!==true||r.no_cost_write!==true)
+   throw Error("Prévia não autoriza registro sem custos");
+  notePreview={source_id:selected.source_id,payload:{...p,expected_fingerprint:r.fingerprint}};
+  noteDetails.textContent="PRÉVIA SEM ESCRITA: "+r.beneficiary+" · "+r.parts.map(a=>a.case+" ("+a.daily_count+" × "+displayBank(a.cents/a.daily_count)+")").join(" + ")+" = "+displayBank(r.total_cents);
+  noteConfirmButton.disabled=false;noteStatus.textContent="Conferido. Confirmar salva somente a anotação.";
+ }catch(e){noteStatus.textContent="Não foi possível conferir: "+String(e?.message||e)}
+ finally{noteBusy=false}
+});
+noteConfirmButton.addEventListener("click",async()=>{
+ if(noteBusy||!selected||!notePreview)return;
+ noteBusy=true;noteConfirmButton.disabled=true;
+ try{
+  const now=await annotationPayload(),{expected_fingerprint,...original}=notePreview.payload;
+  if(notePreview.source_id!==selected.source_id||JSON.stringify(now)!==JSON.stringify(original))throw Error("Dados alterados. Refazer prévia.");
+  if(!confirm("Salvar somente a ANOTAÇÃO no extrato Cora, sem alterar custos, receitas ou cartões do Trello?"))return;
+  noteStatus.textContent="Registrando anotação somente leitura contábil...";
+  const r=await existingRequest("bank-annotation-commit",notePreview.payload);
+  if((!r.committed&&!r.already_committed)||r.annotation_only!==true||r.no_trello_write!==true||r.no_cost_write!==true)
+   throw Error("Anotação não confirmada");
+  const id=selected.source_id;noteInvalidate();window.dispatchEvent(new CustomEvent("cr:ap:confirmed",{detail:{source_id:id,annotation_only:true}}));
+ }catch(e){noteStatus.textContent="Revisar: "+String(e?.message||e)+". Não repetir sem conferir a linha."}
+ finally{noteBusy=false}
+});
+
 function resetSplit(){
- splitSelection.clear();splitPreview=null;splitCommitButton.disabled=true;choices.replaceChildren();splitTotal.textContent="";previewParts.replaceChildren();
- splitStatus.textContent="";
+ splitSelection.clear();splitPreview=null;splitCandidates=null;splitLineKeys.clear();splitCommitButton.disabled=true;choices.replaceChildren();splitTotal.textContent="";previewParts.replaceChildren();
+ splitPreviewButton.textContent="1. Conferir distribuição";splitStatus.textContent="";
 }
 function splitSum(){
  let v=0;for(const [key,data] of splitSelection)v+=data.cents;
@@ -1662,10 +1844,10 @@ function splitSum(){
 }
 async function loadTargets(){
  resetSplit();if(!selected)return;
- const direction=bankDirection(selected),capital=kind.value==="capital";
- splitStatus.textContent=capital?"Consultando contas de capital de giro V11...":"Buscando obras abertas no Trello 2026...";
+ const direction=bankDirection(selected),capital=kind.value==="capital",recon=kind.value==="multi-existing";
+ splitStatus.textContent=capital?"Consultando contas de capital de giro V11...":recon?"Buscando obras em andamento e encerradas no Trello 2026...":"Buscando obras abertas no Trello 2026...";
  try{
-  const body=capital?await bankPayload("1-26"):{direction};
+  const body=capital?await bankPayload("1-26"):{direction,...(recon?{mode:"reconcile-existing"}:{})};
   const resp=await existingRequest(capital?"capital-periods":"eligible-cases",body);
   const list=capital?resp.periods:resp.cases;
   if(!Array.isArray(list))throw Error("Listagem de destinos indisponível.");
@@ -1673,13 +1855,14 @@ async function loadTargets(){
   for(const item of list){
    const key=capital?String(item.id):String(item.case);
    const line=document.createElement("label");line.style.cssText="display:flex;align-items:center;gap:8px;padding:9px;border:1px solid #d7e4ec;border-radius:8px;flex-wrap:wrap";
+   line.dataset.search=capital?(key+" "+String(item.period||"")):(key+" "+String(item.list||"")+" "+String(item.name||""));
    const cb=document.createElement("input");cb.type="checkbox";cb.style.width="20px";cb.style.height="20px";
    const name=document.createElement("span");name.style.flex="1";name.style.minWidth="160px";
    name.textContent=capital?(item.period+" · saldo "+displayBank(Number(item.balance_cents||0))):(key+" · "+item.list+" · "+item.name.slice(0,75));
    const val=document.createElement("input");val.type="text";val.inputMode="decimal";val.placeholder="Valor R$";val.disabled=true;
    val.style.cssText="padding:8px;width:128px;max-width:40%;border:1px solid #b7cada;border-radius:7px";
    const edit=()=>{
-    splitPreview=null;splitCommitButton.disabled=true;previewParts.replaceChildren();
+    splitPreview=null;splitCandidates=null;splitLineKeys.clear();splitPreviewButton.textContent="1. Conferir distribuição";splitCommitButton.disabled=true;previewParts.replaceChildren();
     const cents=moneyCentavos(val.value);
     if(cb.checked&&cents&&cents>0){splitSelection.set(key,{key,cents,source:item})}
     else splitSelection.delete(key);
@@ -1689,7 +1872,8 @@ async function loadTargets(){
    val.addEventListener("input",edit);
    line.append(cb,name,val);choices.append(line);
   }
-  splitStatus.textContent="Selecione os destinos e informe os valores. "+(capital?"Contas e saldos provenientes do V11.":"Obras em AG. ACERTO ficam excluídas dos recebimentos.");
+  filterSplitRows();
+  splitStatus.textContent="Selecione os destinos e informe os valores. "+(capital?"Contas e saldos provenientes do V11.":recon?"Conciliação sem alterar o Trello: cada parcela precisa corresponder a uma diária já registrada e escolhida explicitamente.":"Obras em AG. ACERTO ficam excluídas dos recebimentos.");
   splitSum();
  }catch(e){splitStatus.textContent="Falha na consulta: "+String(e?.message||e)+". Nenhuma distribuição autorizada."}
 }
@@ -1698,57 +1882,163 @@ function applyKind(){
  const dir=bankDirection(selected);
  const chosen=kind.value;
  if(chosen==="manual"){editor.hidden=true;selected=null;manualClear();select("manual");document.getElementById("mc_case")?.focus();return}
- const multi=["multi-expense","multi-receipt","capital"].includes(chosen);
- single.hidden=multi;split.hidden=!multi;
+ const multi=["multi-expense","multi-existing","multi-receipt","capital"].includes(chosen);
+ const withdrawal=chosen==="withdrawal",annotate=chosen==="bank-note";
+ document.getElementById("cr-ap-withdrawal").hidden=!withdrawal;
+ notePanel.hidden=!annotate;
+ single.hidden=multi||withdrawal||annotate;split.hidden=!multi;
+ if(annotate)resetBankNote();
+ if(withdrawal)loadWithdrawalPeriods();
  const incoming=chosen==="receipt"||chosen==="multi-receipt";
  const existingLabel=document.getElementById("cr-ap-existing-label");existingLabel.hidden=chosen!=="expense"&&chosen!=="existing";existingLabel.style.display=existingLabel.hidden?"none":"block";
  hideReceiptReview();
  if(chosen==="existing")existing.value="yes";
  else existing.value="no";
+ syncCrossFields();
  editorStatus.textContent="";
- if(incoming&&dir!=="IN"||!incoming&&dir!=="OUT")editorStatus.textContent="A operação selecionada não corresponde à direção do movimento bancário.";
- document.getElementById("cr-ap-prepare").hidden=multi;
+ if(chosen!=="bank-note"&&(incoming&&dir!=="IN"||!incoming&&dir!=="OUT"))editorStatus.textContent="A operação selecionada não corresponde à direção do movimento bancário.";
+ document.getElementById("cr-ap-prepare").hidden=multi||withdrawal||annotate;
  if(multi)loadTargets();
 }
 kind.addEventListener("change",applyKind);
+const wdPeriod=document.getElementById("cr-ap-withdraw-period"),
+ wdBeneficiary=document.getElementById("cr-ap-withdraw-beneficiary"),
+ wdNote=document.getElementById("cr-ap-withdraw-note"),
+ wdPreviewButton=document.getElementById("cr-ap-withdraw-preview"),
+ wdConfirmButton=document.getElementById("cr-ap-withdraw-confirm"),
+ wdStatus=document.getElementById("cr-ap-withdraw-status");
+let wdPreview=null,wdBusy=false;
+function clearWithdrawal(){wdPreview=null;wdConfirmButton.disabled=true}
+for(const el of [wdPeriod,wdBeneficiary,wdNote]){el.addEventListener("change",clearWithdrawal);el.addEventListener("input",clearWithdrawal)}
+async function loadWithdrawalPeriods(){
+ clearWithdrawal();wdPeriod.replaceChildren();wdStatus.textContent="Consultando cortes registrados no Capital de Giro...";
+ const source=selected?.source_id;
+ try{
+  const response=await existingRequest("capital-periods",await bankPayload("1-26"));
+  if(kind.value!=="withdrawal"||selected?.source_id!==source)return;
+  if(!Array.isArray(response.periods)||!response.periods.length)throw Error("Nenhum corte registrado");
+  const o=document.createElement("option");o.value="";o.textContent="Selecione o corte";wdPeriod.append(o);
+  for(const p of response.periods){const x=document.createElement("option");x.value=String(p.id||"");x.textContent=String(p.period||"Período");wdPeriod.append(x)}
+  wdStatus.textContent="Selecione o período do acerto. O saldo de Capital de Giro não será debitado.";
+ }catch(e){wdStatus.textContent="Consulta bloqueada: "+String(e?.message||e)}
+}
+async function withdrawalPayload(){
+ if(!selected||kind.value!=="withdrawal")throw Error("Selecione uma movimentação Cora");
+ const p=await bankPayload("1-26");
+ if(p.direction!=="OUT")throw Error("Retiradas exigem uma saída da Cora");
+ if(!wdPeriod.value||!wdBeneficiary.value||!wdNote.value.trim())throw Error("Preencha período, beneficiário e justificativa");
+ return {...p,period_id:wdPeriod.value,beneficiary:wdBeneficiary.value,justification:wdNote.value.trim()};
+}
+wdPreviewButton.addEventListener("click",async()=>{
+ if(wdBusy||!selected||statusFailed||statusBusy)return;
+ wdBusy=true;clearWithdrawal();wdStatus.textContent="Conferindo referência bancária e corte...";
+ try{
+  const p=await withdrawalPayload(),r=await existingRequest("withdrawal-preview",p);
+  if(r.preview!==true||!r.fingerprint)throw Error("Prévia não confirmada");
+  wdPreview={source_id:selected.source_id,payload:{...p,expected_fingerprint:r.fingerprint}};
+  wdConfirmButton.disabled=false;
+  wdStatus.textContent="PRÉVIA SEM ESCRITA · "+r.period.label+" · "+r.beneficiary+" · "+displayBank(r.amount_cents);
+ }catch(e){wdStatus.textContent="Prévia bloqueada: "+String(e?.message||e)}
+ finally{wdBusy=false}
+});
+wdConfirmButton.addEventListener("click",async()=>{
+ if(wdBusy||!wdPreview||!selected)return;
+ wdBusy=true;wdConfirmButton.disabled=true;
+ try{
+  const current=await withdrawalPayload(),{expected_fingerprint,...original}=wdPreview.payload;
+  if(wdPreview.source_id!==selected.source_id||JSON.stringify(current)!==JSON.stringify(original))throw Error("Dados alterados; refaça a prévia");
+  if(!confirm("Confirmar o vínculo da saída bancária já existente ao corte de acerto? Nenhum pagamento ou débito adicional será realizado."))return;
+  wdStatus.textContent="Registrando vínculo de retirada no ledger...";
+  const res=await existingRequest("withdrawal-commit",wdPreview.payload);
+  if(!res.committed&&!res.already_committed)throw Error("Confirmação não comprovada");
+  const id=selected.source_id;clearWithdrawal();
+  wdStatus.textContent="✓ Retirada vinculada ao corte, sem alteração bancária.";
+  window.dispatchEvent(new CustomEvent("cr:ap:confirmed",{detail:{source_id:id}}));
+ }catch(e){wdStatus.textContent="Revisão necessária: "+String(e?.message||e)+". Não reenvie sem conferir."}
+ finally{wdBusy=false}
+});
+
+function chosenExpenseLines(caseNumber){
+ const group=splitLineKeys.get(caseNumber),inputs=group?.querySelectorAll('input[data-match-key]:checked')||[];
+ return [...inputs].map(x=>({match_key:String(x.dataset.matchKey||""),cents:Number(x.dataset.cents||0)}));
+}
 splitPreviewButton.addEventListener("click",async()=>{
  if(splitBusy||!splitSum()||!selected)return;
- const capital=kind.value==="capital",items=[...splitSelection.values()],direction=bankDirection(selected);
- if(capital&&direction!=="OUT"||kind.value==="multi-receipt"&&direction!=="IN"||kind.value==="multi-expense"&&direction!=="OUT"){
+ const capital=kind.value==="capital",recon=kind.value==="multi-existing",items=[...splitSelection.values()],direction=bankDirection(selected);
+ if(capital&&direction!=="OUT"||kind.value==="multi-receipt"&&direction!=="IN"||["multi-expense","multi-existing"].includes(kind.value)&&direction!=="OUT"){
   splitStatus.textContent="Operação incompatível com a direção do extrato.";return;
  }
  if(!capital&&items.length<2){splitStatus.textContent="Distribuição entre obras exige ao menos duas obras.";return}
- splitBusy=true;splitCommitButton.disabled=true;splitStatus.textContent="Validando valores, obras e permissões no Trello...";
+ splitBusy=true;splitCommitButton.disabled=true;splitStatus.textContent=recon?"Conferindo despesas já registradas no Trello, sem modificar os cartões...":"Validando valores, obras e permissões no Trello...";
  try{
   const p=await bankPayload(capital?"1-26":items[0].key);
-  const alloc=items.map(x=>capital?{id:x.key,cents:x.cents}:{case:x.key,cents:x.cents});
-  const response=await existingRequest(capital?"capital-preview":"multi-preview",{...p,allocations:alloc});
+  const baseAlloc=items.map(x=>capital?{id:x.key,cents:x.cents}:{case:x.key,cents:x.cents});
+  if(recon&&!splitCandidates){
+   const result=await existingRequest("multi-candidates",{...p,mode:"reconcile-existing",allocations:baseAlloc});
+   if(result.read_only!==true||result.trello_write!==false||!Array.isArray(result.parts)||result.parts.length!==items.length)
+    throw Error("Consulta de despesas não confirmada como somente leitura");
+   splitCandidates={source_id:p.reference,allocations:baseAlloc};
+   splitLineKeys.clear();previewParts.replaceChildren();
+   for(const part of result.parts){
+    if(!Array.isArray(part.options)||!part.options.length)throw Error("Despesa sem correspondência na obra "+part.case);
+    const wrap=document.createElement("section");wrap.style.cssText="display:block;padding:10px;border:1px solid #bdd5e5;border-radius:9px";
+    const head=document.createElement("div");head.textContent=part.case+" · "+displayBank(Number(part.cents))+" — selecione TODAS as diárias/despesas correspondentes:";head.style.fontWeight="700";
+    const lines=document.createElement("div");lines.dataset.crMultiMatch=String(part.case);lines.style.cssText="margin-top:8px;display:grid;gap:6px";
+    for(const option of part.options){
+     const row=document.createElement("label");row.style.cssText="display:flex;align-items:flex-start;gap:8px;padding:7px;border:1px solid #dce7ef;border-radius:6px;font-size:13px";
+     const check=document.createElement("input");check.type="checkbox";check.dataset.matchKey=String(option.match_key);check.dataset.cents=String(option.cents);check.style.cssText="width:20px;height:20px;flex:none";
+     const name=document.createElement("span");name.textContent=displayBank(Number(option.cents))+" · "+String(option.line||"");row.append(check,name);lines.append(row);
+     check.addEventListener("change",()=>{splitPreview=null;splitCommitButton.disabled=true});
+    }
+    wrap.append(head,lines);previewParts.append(wrap);splitLineKeys.set(String(part.case),lines);
+   }
+   splitPreviewButton.textContent="2. Validar linhas escolhidas";
+   splitStatus.textContent="Marque uma ou mais linhas reais por obra. A soma das despesas marcadas em cada obra deve corresponder à parcela definida; nenhuma linha será regravada.";
+   return;
+  }
+  let alloc=baseAlloc;
+  if(recon){
+   if(!splitCandidates||splitCandidates.source_id!==p.reference||JSON.stringify(splitCandidates.allocations)!==JSON.stringify(baseAlloc))
+    throw Error("Seleção alterada; localize as despesas novamente");
+   alloc=baseAlloc.map(x=>({...x,match_keys:chosenExpenseLines(x.case).map(a=>a.match_key)}));
+   if(alloc.some(x=>!x.match_keys.length))throw Error("Selecione as linhas exatas de todas as obras antes da prévia");
+   for(const a of alloc){
+    const sum=chosenExpenseLines(a.case).reduce((s,x)=>s+x.cents,0);
+    if(sum!==a.cents)throw Error("As linhas selecionadas para "+a.case+" somam "+displayBank(sum)+" e não "+displayBank(a.cents));
+   }
+  }
+  const response=await existingRequest(capital?"capital-preview":"multi-preview",{...p,...(recon?{mode:"reconcile-existing"}:{}),allocations:alloc});
   if(!response.preview||!response.fingerprint)throw Error("Prévia não validada pelo servidor");
-  splitPreview={source_id:p.reference,kind:kind.value,payload:{...p,allocations:alloc,expected_fingerprint:response.fingerprint}};
-  previewParts.replaceChildren();
+  if(recon&&(response.trello_write!==false||response.reconciliation_kind!=="MULTI_EXISTING_TRELLO"))
+   throw Error("Proteção de histórico não confirmada");
+  splitPreview={source_id:p.reference,kind:kind.value,payload:{...p,...(recon?{mode:"reconcile-existing"}:{}),allocations:alloc,expected_fingerprint:response.fingerprint}};
+  if(!recon)previewParts.replaceChildren();
   const confirmedItems=capital?response.allocations:response.parts;
   if(!Array.isArray(confirmedItems)||confirmedItems.length!==items.length)throw Error("Resumo de distribuição incompleto");
   for(const part of confirmedItems){
    const n=document.createElement("div");n.style.cssText="padding:9px;border:1px solid #d3e1ed;border-radius:7px;background:#f5f9fc;font-size:13px";
-   n.textContent=(capital?part.period:part.case+" · "+part.card_name)+" — "+displayBank(Number(part.cents));
+   n.textContent=(capital?part.period:part.case+" · "+String(recon?(part.lines||[]).map(x=>x.line).join(" | "):part.card_name||""))+" — "+displayBank(Number(part.cents));
    previewParts.append(n);
   }
-  splitStatus.textContent="✓ PRÉVIA APROVADA · "+items.length+" destinos · "+displayBank(Number(selected.amount_centavos))+". Confira os valores e clique Confirmar distribuição.";
+  splitStatus.textContent="✓ PRÉVIA VALIDADA · "+items.length+" destinos · "+displayBank(Number(selected.amount_centavos))+(recon?" · SOMENTE CONCILIAÇÃO; nenhum valor da obra será alterado.":"")+". Confira e confirme.";
   splitCommitButton.disabled=false;
- }catch(e){splitPreview=null;splitStatus.textContent="Não foi possível validar: "+String(e?.message||e)}
+ }catch(e){splitPreview=null;const reason=String(e?.message||e);if(kind.value==="multi-existing"&&/MULTI_EXISTING_NO_UNMARKED_COST_LINE|MULTI_EXISTING_EXPLICIT_LINE_REQUIRED|EXISTING_LINE_NOT_VERIFIED/.test(reason)){kind.value="bank-note";applyKind();noteStatus.textContent="Modo corrigido: ANOTAR no extrato (SEM lançar custo). As diárias do João Victor são apenas informações bancárias; preencha beneficiário, finalidade e distribuição entre obras, depois valide a prévia. Nenhuma despesa foi gravada.";editorStatus.textContent="A conciliação exige custo já lançado no Trello. Para somente informar diárias, foi selecionado ANOTAR no extrato, sem criar custo.";notePanel.scrollIntoView({behavior:"smooth",block:"nearest"});}else splitStatus.textContent="Não foi possível validar: "+reason}
  finally{splitBusy=false}
 });
 splitCommitButton.addEventListener("click",async()=>{
  if(splitBusy||!splitPreview||!selected||splitPreview.source_id!==selected.source_id||splitPreview.kind!==kind.value){
   splitStatus.textContent="Seleção alterada; faça uma nova prévia.";splitCommitButton.disabled=true;return;
  }
- if(!splitSum()||JSON.stringify(splitPreview.payload.allocations)!==JSON.stringify([...splitSelection.values()].map(x=>kind.value==="capital"?{id:x.key,cents:x.cents}:{case:x.key,cents:x.cents}))){
+ const currentAlloc=[...splitSelection.values()].map(x=>kind.value==="capital"?{id:x.key,cents:x.cents}:kind.value==="multi-existing"?{case:x.key,cents:x.cents,match_keys:chosenExpenseLines(x.key).map(a=>a.match_key)}:{case:x.key,cents:x.cents});
+ if(!splitSum()||JSON.stringify(splitPreview.payload.allocations)!==JSON.stringify(currentAlloc)){
   splitStatus.textContent="Parcela alterada; confira novamente.";splitCommitButton.disabled=true;return;
  }
- splitBusy=true;splitCommitButton.disabled=true;splitStatus.textContent="Gravando com proteção de idempotência. Não repita se houver falha.";
+ if(kind.value==="multi-existing"&&!confirm("Conciliar estas parcelas já registradas com a saída Cora, SEM alterar custos das obras, inclusive as acertadas?"))return;
+ splitBusy=true;splitCommitButton.disabled=true;splitStatus.textContent=kind.value==="multi-existing"?"Registrando vínculo no ledger, sem gravar no Trello...":"Gravando com proteção de idempotência. Não repita se houver falha.";
  try{
   const response=await existingRequest(kind.value==="capital"?"capital-commit":"multi-commit",splitPreview.payload);
   if(response.committed!==true&&response.already_committed!==true)throw Error("Confirmação bancária não concluída");
+  if(kind.value==="multi-existing"&&(response.reconciliation_kind!=="MULTI_EXISTING_TRELLO"||response.trello_write!==false))throw Error("Confirmação sem garantia de histórico preservado");
   const id=selected.source_id;resetSplit();window.dispatchEvent(new CustomEvent("cr:ap:confirmed",{detail:{source_id:id}}));
  }catch(e){splitStatus.textContent="REVISÃO OBRIGATÓRIA: "+String(e?.message||e)+". Se houve escrita parcial, consulte os cartões e o registro; não repita automaticamente."}
  finally{splitBusy=false}
@@ -1759,16 +2049,23 @@ results.replaceChildren();const q=search.value.toLowerCase(),filter=type.value;
 const rows=movements.filter(m=>{
  const id=String(m.source_id??m.id??m.transaction_id??m.external_id??"");
  const entry=bankStatuses.get(id),state=entry?.state||"PENDENTE";
- const passesState=stateFilter.value==="all"||stateFilter.value==="confirmed"&&state==="TRELLO_CONFIRMED"||stateFilter.value==="existing"&&state==="TRELLO_EXISTING"||stateFilter.value==="paid-existing"&&state==="RECEIPT_EXISTING"||stateFilter.value==="multi"&&state==="TRELLO_MULTI"||stateFilter.value==="capital"&&state==="CAPITAL_CONFIRMED"||stateFilter.value==="review"&&state==="REVIEW_REQUIRED"||stateFilter.value==="pending"&&state==="PENDENTE";
+ const passesState=stateFilter.value==="all"||stateFilter.value==="confirmed"&&state==="TRELLO_CONFIRMED"||stateFilter.value==="existing"&&state==="TRELLO_EXISTING"||stateFilter.value==="paid-existing"&&state==="RECEIPT_EXISTING"||stateFilter.value==="multi"&&state==="TRELLO_MULTI"||stateFilter.value==="capital"&&state==="CAPITAL_CONFIRMED"||stateFilter.value==="review"&&state==="REVIEW_REQUIRED"||stateFilter.value==="pending"&&state==="PENDENTE"||stateFilter.value==="annotated"&&entry?.annotated===true;
  return passesState&&(filter==="all"||String(m.direction||"").toUpperCase().includes(filter)||filter==="DEBIT"&&/OUT|SAIDA|DÉBITO|DEBIT/i.test(m.direction)||filter==="CREDIT"&&/IN|ENTRADA|CRÉDITO|CREDIT/i.test(m.direction))&&(String(m.description||"")+" "+id).toLowerCase().includes(q);
 });
-if(!statusFailed)status.textContent=rows.length+" movimentos Cora · "+Math.min(shown,rows.length)+" exibidos · "+[...bankStatuses.values()].filter(x=>x.state==="TRELLO_CONFIRMED").length+" lançados aqui · "+[...bankStatuses.values()].filter(x=>x.state==="TRELLO_EXISTING").length+" custos conciliados · "+[...bankStatuses.values()].filter(x=>x.state==="RECEIPT_EXISTING").length+" recebimentos conciliados · "+(statusBusy?"conferindo registros...":"histórico consultado no Supabase.");more.hidden=rows.length<=shown;
+if(!statusFailed)status.textContent=rows.length+" movimentos Cora · "+Math.min(shown,rows.length)+" exibidos · "+[...bankStatuses.values()].filter(x=>x.state==="TRELLO_CONFIRMED").length+" lançados aqui · "+[...bankStatuses.values()].filter(x=>x.state==="TRELLO_EXISTING").length+" custos conciliados · "+[...bankStatuses.values()].filter(x=>x.state==="RECEIPT_EXISTING").length+" recebimentos conciliados · "+[...bankStatuses.values()].filter(x=>x.annotated===true).length+" anotações sem custo · "+(statusBusy?"conferindo registros...":"histórico consultado no Supabase.");more.hidden=rows.length<=shown;
 for(const m of rows.slice(0,shown)){
 const row=document.createElement("div");row.style.cssText="border:1px solid #d1e0ea;background:white;padding:12px;border-radius:10px;margin:8px 0;display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap";row.dataset.coraSourceId=String(m.source_id||"");
-const info=document.createElement("div");info.style.flex="1";const strong=document.createElement("strong");strong.textContent=(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100);const desc=document.createElement("div");desc.textContent=String(m.description||"Sem descrição");const source=document.createElement("small");const bid=String(m.source_id??m.id??m.transaction_id??m.external_id??"");const ledger=bankStatuses.get(bid),committed=ledger?.state==="TRELLO_CONFIRMED",existingLinked=ledger?.state==="TRELLO_EXISTING",existingReceipt=ledger?.state==="RECEIPT_EXISTING",multiLinked=ledger?.state==="TRELLO_MULTI",capitalLinked=ledger?.state==="CAPITAL_CONFIRMED",done=committed||existingLinked||existingReceipt||multiLinked||capitalLinked,review=ledger?.state==="REVIEW_REQUIRED";
+const info=document.createElement("div");info.style.flex="1";const strong=document.createElement("strong");strong.textContent=(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100);const desc=document.createElement("div");desc.textContent=String(m.description||"Sem descrição");const source=document.createElement("small");const bid=String(m.source_id??m.id??m.transaction_id??m.external_id??"");const ledger=bankStatuses.get(bid),notePresent=ledger?.annotated===true,committed=ledger?.state==="TRELLO_CONFIRMED",existingLinked=ledger?.state==="TRELLO_EXISTING",existingReceipt=ledger?.state==="RECEIPT_EXISTING",multiLinked=ledger?.state==="TRELLO_MULTI",capitalLinked=ledger?.state==="CAPITAL_CONFIRMED",done=committed||existingLinked||existingReceipt||multiLinked||capitalLinked,review=ledger?.state==="REVIEW_REQUIRED";
  source.textContent=existingReceipt?"✓ JÁ RECEBIDO · CONCILIADO · Obra "+(ledger.case||"vinculada"):capitalLinked?"✓ CAPITAL DE GIRO CONFIRMADO":multiLinked?"✓ DISTRIBUÍDO ENTRE OBRAS":existingLinked?"✓ JÁ LANÇADO · CONCILIADO · Obra "+(ledger.case||"vinculada"):committed?"✓ TRELLO CONFIRMADO · Obra "+(ledger.case||"vinculada"):review?"⚠ REVISÃO OBRIGATÓRIA":ledger?"○ PENDENTE — não lançado":"◌ Consultando registro...";
  source.title="Referência bancária: "+bid;
  source.style.display="block";source.style.fontWeight="800";source.style.color=existingReceipt?"#116e89":capitalLinked?"#805a21":multiLinked?"#6043a8":existingLinked?"#155d9a":committed?"#087a50":review?"#b03839":"#85621c";info.append(strong,desc,source);
+ if(notePresent){
+  const x=ledger.annotation||{},work=Array.isArray(x.allocations)?x.allocations:[],note=document.createElement("div");
+  note.style.cssText="padding:8px;margin-top:7px;background:#e6f2ff;border-left:3px solid #267bb4;font-size:12px;border-radius:7px;color:#164669";
+  note.textContent="✎ ANOTAÇÃO CORA · SEM CUSTOS · "+String(x.beneficiary||"")+" · "+
+   work.map(w=>w.case+" ("+w.daily_count+" diária(s), "+displayBank(Number(w.cents))+")").join("; ")+" · "+String(x.purpose||"");
+  info.append(note);
+ }
  if(done){
   row.style.border=existingReceipt?"2px solid #1d889a":capitalLinked?"2px solid #d4a949":multiLinked?"2px solid #7a65bf":existingLinked?"2px solid #2c70ae":"2px solid #168756";row.style.background=existingReceipt?"#eaf9fa":capitalLinked?"#fff9e8":multiLinked?"#f6f3ff":existingLinked?"#f0f7ff":"#effbf4";
   const link=String(ledger?.trello_url||"");
@@ -1780,10 +2077,12 @@ const info=document.createElement("div");info.style.flex="1";const strong=docume
    }
   }catch{}
  }
-const btn=document.createElement("button");btn.type="button";btn.className="manualbtn";btn.textContent=existingReceipt?"✓ Recebimento conciliado":capitalLinked?"✓ Capital confirmado":multiLinked?"✓ Distribuído entre obras":existingLinked?"✓ Já lançado · conciliado":committed?"✓ Trello confirmado":review?"Revisão necessária":!ledger?"Verificando registro...":"Aprovisionar →";
- btn.disabled=done||review||!ledger||statusFailed||statusBusy;btn.addEventListener("click",()=>{selected=m;editor.hidden=false;caseField.value="";existing.value="";editorStatus.textContent="";hideExistingReview();hideReceiptReview();kind.value=bankDirection(m)==="IN"?"receipt":"expense";applyKind();selectedLabel.textContent=String(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100)+" · "+String(m.description||"");editor.scrollIntoView({behavior:"smooth",block:"start"});});row.append(info,btn);results.append(row)}
+const btn=document.createElement("button");btn.type="button";btn.className="manualbtn";btn.textContent=notePresent?"✓ Anotado no extrato":bankDirection(m)==="OUT"?"✎ Anotar saída (sem custo)":existingReceipt?"✓ Recebimento conciliado":capitalLinked?"✓ Capital confirmado":multiLinked?"✓ Distribuído entre obras":existingLinked?"✓ Já lançado · conciliado":committed?"✓ Trello confirmado":review?"Revisão necessária":!ledger?"Verificando registro...":"Aprovisionar →";
+ if(!notePresent&&bankDirection(m)==="IN")btn.textContent="✎ Anotar entrada (sem Trello)";btn.disabled=notePresent||!ledger||statusFailed||statusBusy;btn.addEventListener("click",()=>{selected=m;editor.hidden=false;caseField.value="";existing.value="";editorStatus.textContent="";hideExistingReview();hideReceiptReview();kind.value="bank-note";applyKind();selectedLabel.textContent=String(m.occurred_at||"").slice(0,10)+" · "+new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Math.abs(Number(m.amount_centavos||0))/100)+" · "+String(m.description||"");editor.scrollIntoView({behavior:"smooth",block:"start"});});row.append(info,btn);results.append(row)}
 }
 
+const existingDestination=document.getElementById("cr-ap-cost-case"),expenseOrigin=document.getElementById("cr-ap-origin-case");
+function syncCrossFields(){const cross=existing.value==="yes";const el=document.getElementById("cr-ap-cross-existing"),ol=document.getElementById("cr-ap-expense-origin");el.hidden=!cross;el.style.display=cross?"block":"none";ol.hidden=cross||kind.value!=="expense";ol.style.display=ol.hidden?"none":"block";}
 const existingReview=document.getElementById("cr-ap-existing-review"),existingLine=document.getElementById("cr-ap-existing-line"),existingConfirm=document.getElementById("cr-ap-existing-confirm");
 
 const receiptReview=document.getElementById("cr-ap-receipt-review"),
@@ -1818,9 +2117,19 @@ caseField.addEventListener("input",hideReceiptReview);
 
 let existingCheck=null,existingBusy=false;
 function hideExistingReview(){existingCheck=null;existingReview.hidden=true;existingLine.replaceChildren();}
-existing.addEventListener("change",()=>{hideExistingReview();if(existing.value==="yes"&&selected&&/^\d{1,5}-\d{2}$/.test(caseField.value.trim()))document.getElementById("cr-ap-prepare").click()});
+existing.addEventListener("change",()=>{hideExistingReview();syncCrossFields();if(existing.value==="yes"&&selected&&/^\d{1,5}-\d{2}$/.test(caseField.value.trim()))document.getElementById("cr-ap-prepare").click()});
 caseField.addEventListener("input",()=>{hideExistingReview();hideReceiptReview()});
+existingDestination.addEventListener("input",hideExistingReview);
+expenseOrigin.addEventListener("input",hideExistingReview);
 caseField.addEventListener("change",()=>{if(existing.value==="yes"&&selected&&/^\d{1,5}-\d{2}$/.test(caseField.value.trim()))document.getElementById("cr-ap-prepare").click()});
+function crExistingError(raw,obra){
+ const code=String(raw||"");
+ if(code.includes("EXISTING_WORK_LIST_NOT_ELIGIBLE"))return "A obra selecionada está encerrada ou fora das listas para novos lançamentos. Se o custo já consta em outra obra, informe o cartão que absorveu a despesa e consulte novamente. Não duplique o custo.";
+ if(code.includes("EXISTING_CASE_NOT_FOUND"))return "Não foi encontrado um cartão único da obra "+obra+". Confira o código no Trello. Nenhuma conciliação realizada.";
+ if(code.includes("EXISTING_DUPLICATE_WORK_CARDS"))return "Há mais de um cartão com o código "+obra+". Identifique o cartão correto antes de conciliar; operação bloqueada para evitar duplicidade.";
+ if(code.includes("EXISTING_WORK_MOVED_OR_CHANGED"))return "O cartão da obra mudou desde a consulta. Atualize os dados e confira o Trello antes de tentar novamente.";
+ return "Não foi possível conferir o custo já lançado: "+code+". Movimento continua pendente, sem duplicar.";
+}
 async function existingRequest(action,payload){
  const token=sessionStorage.getItem("crv2")||"";
  if(!token)throw Error("Sessão financeira expirada. Faça login novamente.");
@@ -1831,7 +2140,7 @@ async function existingRequest(action,payload){
  return data;
 }
 existingConfirm.addEventListener("click",async()=>{
- if(!existingCheck||existing.value!=="yes"||!selected||existingCheck.id!==selected.source_id||caseField.value.trim()!==existingCheck.obra){
+ if(!existingCheck||existing.value!=="yes"||!selected||existingCheck.id!==selected.source_id||caseField.value.trim()!==existingCheck.obra||existingDestination.value.trim()!==existingCheck.costCase){
   editorStatus.textContent="A seleção mudou. Consulte novamente o cartão.";hideExistingReview();return;
  }
  const key=existingLine.value;
@@ -1903,7 +2212,9 @@ if(existing.value==="yes"){
  const raw=new TextEncoder().encode("CR-CORA-APROVISIONAMENTO-V1:"+ref);
  const hash=await crypto.subtle.digest("SHA-256",raw);
  const opId="CORA_"+Array.from(new Uint8Array(hash),x=>x.toString(16).padStart(2,"0")).join("");
- const payload={operation_id:opId,case:obra,direction:"OUT",date:dia,amount:(amount/100).toFixed(2).replace(".",","),
+ const destCost=existingDestination.value.trim()||obra;
+ if(!/^\d{1,5}-26$/.test(destCost)){existingBusy=false;editorStatus.textContent="Informe o cartão de destino no formato 809-26.";return}
+ const payload={operation_id:opId,case:obra,cost_case:destCost,direction:"OUT",date:dia,amount:(amount/100).toFixed(2).replace(".",","),
   category:"Outros",counterparty:String(m.description||"").slice(0,100),description:"Conciliação de custo já lançado",reference:ref};
  try{
   const result=await existingRequest("existing-preview",payload);
@@ -1911,21 +2222,24 @@ if(existing.value==="yes"){
   if(result.already_committed){editorStatus.textContent="Esta transação já estava conciliada. Atualizando o registro...";await readLedger([ref]);renderRows();return}
   if(!Array.isArray(result.candidates)||!result.candidates.length){editorStatus.textContent="Não localizei uma linha de custo com mesma obra, data e valor no cartão. O movimento continua pendente; confira o Trello. Nenhuma gravação feita.";return}
   hideExistingReview();
-  existingCheck={id:ref,obra,payload,candidates:result.candidates};
+  existingCheck={id:ref,obra,costCase:existingDestination.value.trim(),payload,candidates:result.candidates};
   for(const candidate of result.candidates){
    const option=document.createElement("option");option.value=candidate.match_key;option.textContent=candidate.line;existingLine.append(option);
   }
   if(result.candidates.length>1){const option=document.createElement("option");option.value="";option.textContent="Selecione a despesa correta";existingLine.prepend(option);existingLine.value=""}
   existingReview.hidden=false;
-  editorStatus.textContent="Encontradas "+result.candidates.length+" possível(is) despesa(s) na obra "+obra+". Confira a descrição exata antes de confirmar. Nenhum lançamento adicional será criado.";
- }catch(e){editorStatus.textContent="Não foi possível conferir o custo já lançado: "+String(e?.message||e)+". Continua pendente, sem duplicar.";hideExistingReview()}
+  editorStatus.textContent="Encontradas "+result.candidates.length+" possível(is) despesa(s) no cartão "+destCost+" (origem "+obra+"). Confira a descrição exata antes de confirmar. Nenhum lançamento adicional será criado.";
+ }catch(e){editorStatus.textContent=crExistingError(e?.message||e,obra);hideExistingReview()}
  finally{existingBusy=false}
  return
 }
 if(existing.value!=="no"){editorStatus.textContent="Confira se o custo já consta no Trello antes de lançar.";return}
 const m=selected,amount=Math.abs(Number(m.amount_centavos||0)),ref=String(m.source_id??m.id??m.transaction_id??m.external_id??"").trim();
 if(!Number.isSafeInteger(amount)||amount<=0||!ref){editorStatus.textContent="ID bancário ou valor inválido. Nenhuma gravação realizada.";return}
-const fields={mc_case:obra,mc_dir:/OUT|SAIDA|DÉBITO|DEBIT/i.test(m.direction)?"OUT":"IN",mc_date:String(m.occurred_at||"").slice(0,10),mc_amount:(amount/100).toFixed(2).replace(".",","),mc_party:String(m.description||"").slice(0,100),mc_desc:String(m.description||"").slice(0,180),mc_ref:ref};
+const original=expenseOrigin.value.trim();
+if(original&&!/^\d{1,5}-26$/.test(original)){editorStatus.textContent="Informe a obra de origem no formato 791-26.";return}
+const crossNote=original&&original!==obra?" | Obra de origem: "+original:"";
+const fields={mc_case:obra,mc_dir:/OUT|SAIDA|DÉBITO|DEBIT/i.test(m.direction)?"OUT":"IN",mc_date:String(m.occurred_at||"").slice(0,10),mc_amount:(amount/100).toFixed(2).replace(".",","),mc_party:String(m.description||"").slice(0,100),mc_desc:(String(m.description||"").slice(0,135)+crossNote).slice(0,180),mc_ref:ref};
 if(!/^20\d{2}-\d{2}-\d{2}$/.test(fields.mc_date)){editorStatus.textContent="Data bancária inválida; não é possível aprovisionar.";return}
 try{const bytes=new TextEncoder().encode("CR-CORA-APROVISIONAMENTO-V1:"+ref);const hash=await crypto.subtle.digest("SHA-256",bytes);const opId="CORA_"+Array.from(new Uint8Array(hash),v=>v.toString(16).padStart(2,"0")).join("");manualClear();S.manualOp=opId;S.manualBankMovement={id:ref,operationId:opId,amount,date:fields.mc_date,direction:fields.mc_dir}}catch(e){editorStatus.textContent="Não foi possível proteger o ID bancário. Nenhuma gravação realizada.";return}
 select("manual");
@@ -1953,4 +2267,145 @@ select("bank");
 if(sessionStorage.getItem("crv2"))load.click();
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
-})();</script></body></html>
+})();</script><script id="crp-period-send-v2">
+let CRP_LAST=null;
+function crpFmt(v){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(v||0)/100)}
+function crpData(){
+ const start=document.getElementById("crp-start").value,end=document.getElementById("crp-end").value;
+ acertoPeriodFromSelection(start,end);
+ const live=S.current?.acertos?.items;
+ if(!Array.isArray(live))throw Error("Acertos do Trello ainda não carregados. Use ATUALIZAR AGORA antes da prévia.");
+ if(live.length===0)throw Error("Lista AG. ACERTO do Trello está vazia. Consulte as obras nas listas mensais (ex.: OUTUBRO 26). Não reenvie obras já movimentadas.");
+ const rows=acertoSelectedRows();
+ if(!rows.length)throw Error("Nenhuma obra selecionada no Acerto Vivo. Confira os filtros e selecione as obras pendentes.");
+ return {start,end,cases:rows.map(x=>x.case)};
+}
+function crpShow(s){document.getElementById("crp-result").textContent=s}
+function crpFriendlyError(error){
+ const code=String(error||"");
+ if(code.includes("DIRECTOR_SESSION_REQUIRED"))return "Sessão de diretor ausente ou expirada. Entre novamente no Dashboard; nenhum envio realizado.";
+ if(code.includes("ACERTO_LIVE_SERVICE_AUTH_UNAVAILABLE"))return "Integração interna de acertos sem credencial de serviço. Solicitar correção técnica; nenhum envio realizado.";
+ if(code.includes("ACERTO_LIVE_SERVICE_AUTH_REJECTED")||code.includes("ACERTO_LIVE_HTTP_401"))return "Leitura financeira recusada pela autenticação interna. Não é erro de cálculo; nenhum envio realizado. Conferir credencial entre funções Edge.";
+ if(code.includes("ACERTO_LIVE_INVALID"))return "A consulta de acertos retornou dados inválidos. Nenhum envio realizado; conferir a fonte Trello.";
+ return code;
+}
+async function crpApi(action,body){const token=sessionStorage.getItem("crv2")||"";if(!token)throw Error("Faça login no Dashboard como diretor.");const r=await fetch("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-finance-v12-period-close-candidate-20261024?action="+action,{method:"POST",headers:{"content-type":"application/json","x-cr-session":token},body:JSON.stringify(body),cache:"no-store",signal:AbortSignal.timeout(65000)});const j=await r.json().catch(()=>({ok:false,error:"INVALID_RESPONSE"}));if(!r.ok||!j.ok)throw Error(String(j.error||"Erro no processamento")+(j.partial?" · Houve envio parcial; conferir Trello, não repetir automaticamente.":""));return j}
+async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").disabled=true;try{const input=crpData();crpShow("Conferindo seleção, rateio e duplicidades no Trello...");const v=await crpApi("preview",input);if(v.duplicate)throw Error("Já existe envio para este período. Não duplicar.");const cv=v.capital_validation||{},t=v.totals;if(!cv.ok&&!cv.accepted_exception){crpShow("PRÉVIA CONSULTIVA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+". ⚠️ CAPITAL NÃO CONCILIADO: esperado "+crpFmt(cv.expected_cents)+"; registrado "+(cv.credit_cents==null?"N/D":crpFmt(cv.credit_cents))+". ENVIO DESABILITADO. Confira o período antes de confirmar.");return}CRP_LAST={...input,fingerprint:v.fingerprint,monthName:v.period.monthName};const ressalva=cv.accepted_exception?" ⚠️ Ressalva autorizada: CG no cartão "+crpFmt(cv.credit_cents)+"; rateio do lote "+crpFmt(cv.expected_cents)+"; diferença "+crpFmt(cv.difference_cents)+" preservada, sem ajuste de saldo.":"";crpShow("PRÉVIA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+" | Fabrício "+crpFmt(t.fabricio_cents)+" | Éder "+crpFmt(t.eder_cents)+" | Rogério "+crpFmt(t.rogerio_cents)+" | Gabrielly "+crpFmt(t.gabi_cents)+" | Giro "+crpFmt(t.capital_cents)+". Destino "+v.period.monthName+" 2026. Aguarda confirmação."+ressalva);document.getElementById("crp-send").disabled=false}catch(e){const message=String(e?.message||e);
+ if(/OBRA_PRECISA_CONFERENCIA|PERIODO_NAO_FECHA|OBRA_FORA_DA_LISTA_AG_ACERTO/.test(message)){
+  try{
+   const diagnostic=await crpApi("preview-diagnostic",crpData());
+   const text=diagnostic.rows.map(x=>x.case+": "+(x.valid_for_arithmetic?
+     "Base "+crpFmt(x.base_cents)+", custos "+crpFmt(x.cost_cents)+", lucro "+crpFmt(x.profit_cents):
+     "INCOMPLETA / EM REVISÃO")+(x.issues.length?" | "+x.issues.join(", "):"")).join("\n");
+   crpShow("PRÉVIA DIAGNÓSTICA SOMENTE LEITURA — envio DESABILITADO.\n"+text+"\nMotivo: "+crpFriendlyError(message));
+  }catch(diagError){crpShow("PRÉVIA SEM LIBERAÇÃO: "+crpFriendlyError(message)+" | Consulta diagnóstica: "+crpFriendlyError(diagError.message))}
+ }else crpShow("PRÉVIA BLOQUEADA: "+crpFriendlyError(message))
+}}
+async function crpSend(){if(!CRP_LAST)return;try{const current=crpData();if(JSON.stringify(current)!==JSON.stringify({start:CRP_LAST.start,end:CRP_LAST.end,cases:CRP_LAST.cases}))throw Error("Obras ou datas mudaram; refaça a prévia.");if(!confirm("Confirma o registro no Trello dos acertos já realizados de "+current.cases.length+" obras no período "+current.start+" a "+current.end+" para "+CRP_LAST.monthName+" 2026? O envio não realiza pagamento bancário."))return;document.getElementById("crp-send").disabled=true;crpShow("Enviando acertos e verificando movimentação das obras...");const x=await crpApi("commit",CRP_LAST);CRP_LAST=null;crpShow("ENVIADO: "+x.month+" 2026 | "+x.moved.length+" obras movidas | Cartão: "+(x.month_url||"ver na Gestão Financeira")+".");await refreshAcerto(false)}catch(e){CRP_LAST=null;document.getElementById("crp-send").disabled=true;crpShow("NÃO CONCLUÍDO: "+crpFriendlyError(e.message)+" Confira os registros antes de qualquer nova tentativa.")}}
+for(const id of ["cg-close-start","cg-close-end"]){document.addEventListener("change",ev=>{if(ev.target?.id===id){CRP_LAST=null;const btn=document.getElementById("crp-send");if(btn)btn.disabled=true;}})}
+</script><script id="cr2026-history-runtime">(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const cash=c=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(c/100);
+const num=x=>x!==null&&x!==undefined&&x!==""&&Number.isSafeInteger(Number(x))?Number(x):null;
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const months=["","Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+let printable=null;
+function date(v){if(!/^2026-\d{2}-\d{2}$/.test(v))return false;const d=new Date(v+"T12:00:00Z");return !Number.isNaN(d.valueOf())&&d.toISOString().slice(0,10)===v}
+function calc(){
+const from=$("cr26-from").value,to=$("cr26-to").value;if(!date(from)||!date(to)||from>to)throw Error("Datas inválidas. Selecione um período dentro de 2026.");
+const items=window.CR_V12_MODEL?.()?.years?.["2026"]?.rows;if(!Array.isArray(items))throw Error("Base de 2026 ainda não carregada. Faça login e aguarde a leitura da fonte Trello.");
+const inMonths=items.filter(r=>Number(r.month)>=Number(from.slice(5,7))&&Number(r.month)<=Number(to.slice(5,7)));
+const used=new Set(),valid=[],excluded=[],ambiguous=[];
+for(const r of inMonths){const key=String(r.case||r.case_no||"").trim();if(!key||used.has(key)){excluded.push({key:key||"sem obra",reason:"chave ausente ou duplicada"});continue}used.add(key);
+const exact=String(r.settled_at||r.acerto_date||r.received_at||r.payment_date||"").slice(0,10);
+if(/^2026-\d\d-\d\d$/.test(exact)){if(exact<from||exact>to)continue}else ambiguous.push(key);
+const gross=num(r.gross_cents),cost=num(r.cost_cents),profit=num(r.profit_cents);
+if(gross===null||cost===null||profit===null||gross<=0||cost<0||gross-cost!==profit){excluded.push({key,reason:"bruto/custo/lucro incompleto ou incompatível"});continue}
+valid.push({key,gross,cost,profit,month:Number(r.month),url:String(r.short_url||"")});
+}
+const totals=valid.reduce((o,r)=>{o.gross+=r.gross;o.cost+=r.cost;o.profit+=r.profit;return o},{gross:0,cost:0,profit:0});
+return {from,to,valid,excluded,ambiguous,totals,sourceCount:inMonths.length,completeMonths:from.endsWith("-01")&&to.endsWith("-"+new Date(2026,Number(to.slice(5,7)),0).getDate())};
+}
+function standard(d){
+const sep="━━━━━━━━━━━━━━━━━━━━━━",t=d.totals,pct=t.gross?t.profit/t.gross*100:0;
+const lines=["CONSTRU-REI | CONSULTA HISTÓRICA 2026",sep,"PERÍODO: "+d.from+" a "+d.to,"ORIGEM: HISTÓRICO OPERACIONAL TRELLO, NÃO FECHAMENTO DE ACERTOS","OBRAS COM BASE COMPLETA: "+d.valid.length,sep];
+for(const r of d.valid)lines.push("OBRA "+r.key+" | "+months[r.month]+"/2026","Bruto: "+cash(r.gross),"Custos: "+cash(r.cost),"Lucro: "+cash(r.profit),"Margem: "+(r.profit/r.gross*100).toFixed(2).replace(".",",")+"%",r.url||"Sem link Trello","—");
+lines.push(sep,"RESUMO DO SUBCONJUNTO","Bruto: "+cash(t.gross),"Custos: "+cash(t.cost),"Lucro: "+cash(t.profit),"Margem: "+pct.toFixed(2).replace(".",",")+"%", "Rateios individuais, valores efetivamente recebidos e retirados: NÃO CONFIRMADOS POR ESTA FONTE.", "Obras com referência mensal mas sem data diária de acerto: "+d.ambiguous.length,"Registros excluídos/incompletos: "+d.excluded.length,"Consulta somente leitura. Nenhum acerto realizado ou confirmado.");
+return lines.join("\n")
+}
+function render(){printable=null;$("cr26-copy").disabled=true;const target=$("cr26-output");try{
+const d=calc(),t=d.totals;printable=standard(d);$("cr26-copy").disabled=false;
+const note="Consulta por competência de obra, não por data confirmada de acerto. "+d.ambiguous.length+" obra(s) sem data diária comprovada; "+d.excluded.length+" registro(s) incompleto(s) ou repetido(s). "+(!d.completeMonths?"O recorte inclui meses parciais sem poder atribuir dias precisos. ":"")+"Rateios, recebimentos e retiradas não são inferidos.";
+target.innerHTML='<div style="border:1px solid #cadde9;background:#f4f9fd;border-radius:10px;padding:12px"><b>'+d.from+' a '+d.to+'</b> · '+d.valid.length+' obra(s) com base financeira consistente de '+d.sourceCount+' registros.<p>'+esc(note)+'</p><div class="rows">'+[["Bruto",cash(t.gross)],["Custos",cash(t.cost)],["Lucro",cash(t.profit)],["Margem",t.gross?(t.profit/t.gross*100).toFixed(2).replace(".",",")+"%":"N/D"]].map(x=>'<div class="r"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("")+'</div></div><details style="margin-top:11px"><summary>Detalhar '+d.valid.length+' obras</summary><div class="tablewrap"><table class="table"><thead><tr><th>Obra</th><th>Competência</th><th>Bruto</th><th>Custos</th><th>Lucro</th><th>Origem</th></tr></thead><tbody>'+d.valid.map(x=>'<tr><td>'+esc(x.key)+'</td><td>'+months[x.month]+'</td><td>'+cash(x.gross)+'</td><td>'+cash(x.cost)+'</td><td>'+cash(x.profit)+'</td><td>'+(x.url.startsWith("https://trello.com/")?'<a target="_blank" rel="noopener noreferrer" href="'+esc(x.url)+'">Trello</a>':"—")+'</td></tr>').join("")+'</tbody></table></div></details>';
+}catch(e){target.textContent=String(e.message||e)}
+}
+$("cr26-consult")?.addEventListener("click",render);
+$("cr26-copy")?.addEventListener("click",async()=>{if(!printable)return;try{await navigator.clipboard.writeText(printable);$("cr26-copy").textContent="Texto copiado"}catch{prompt("Copie o histórico",printable)}});
+for(const id of ["cr26-from","cr26-to"])$(id)?.addEventListener("change",()=>{printable=null;$("cr26-copy").disabled=true;$("cr26-copy").textContent="Copiar texto histórico"});
+})();</script><script id="v12-gc-awaiting-payment">
+/* Gestão Click é a fonte dos orçamentos. Não é saldo Cora nem valor bancário recebido. */
+let crGcPaymentRequest=0;
+async function crGcPaymentRefresh(){
+ const element=document.getElementById("v12ex-receive"),note=document.getElementById("v12ex-receive-note");
+ if(!element||!note)return;
+ const token=sessionStorage.getItem("crv2")||"",rid=++crGcPaymentRequest;
+ if(token.length<12){element.textContent="N/D";note.textContent="Entre como diretor para consultar a Gestão Click";return}
+ note.textContent="Consultando orçamentos na Gestão Click...";
+ try{
+  const resp=await fetch("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-finance-v12-period-close-candidate-20261024?action=gc-awaiting-payment",{
+   method:"POST",headers:{"content-type":"application/json","x-cr-session":token},
+   body:"{}",cache:"no-store",signal:AbortSignal.timeout(65000)
+  });
+  const data=await resp.json().catch(()=>null);
+  if(rid!==crGcPaymentRequest)return;
+  if(!resp.ok||data?.ok!==true||data.complete!==true||data.source!=="GESTAOCLICK_ORCAMENTOS_2026"||
+     !Number.isSafeInteger(data.total_cents)||data.total_cents<0||!Number.isSafeInteger(data.count)||data.count<0)
+   throw Error(String(data?.error||"GC_RESULT_UNVERIFIED"));
+  element.textContent=new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(data.total_cents/100);
+  const stamp=new Date(data.read_at);
+  note.textContent=data.count+" orçamento(s) · Gestão Click · "+(Number.isFinite(stamp.getTime())?stamp.toLocaleString("pt-BR"):"data não informada");
+ }catch(err){
+  if(rid!==crGcPaymentRequest)return;
+  element.textContent="N/D";
+  note.textContent="Gestão Click indisponível: "+String(err?.message||"consulta falhou").slice(0,95)+". Sem estimativas.";
+ }
+}
+</script><script id="cr-v12-withdraw-history-runtime">(function(){
+"use strict";
+const get=id=>document.getElementById(id);
+const year=get("cr-wdh-year"),month=get("cr-wdh-month"),btn=get("cr-wdh-search"),
+ status=get("cr-wdh-status"),rows=get("cr-wdh-rows");
+if(!year||!month||!btn||!status||!rows)return;
+const brl=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(n/100);
+let busy=false;
+async function search(){
+ if(busy)return;busy=true;btn.disabled=true;rows.replaceChildren();status.textContent="Consultando retiradas conciliadas...";
+ try{
+  const token=sessionStorage.getItem("crv2")||"";
+  if(!token)throw Error("Faça login com perfil da Diretoria.");
+  const endpoint="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-cora-aprovisionamento-v12-candidate-20261023?action=withdrawal-history";
+  const r=await fetch(endpoint,{method:"POST",headers:{"content-type":"application/json","x-cr-session":token},
+   body:JSON.stringify({year:year.value,month:month.value}),cache:"no-store",signal:AbortSignal.timeout(25000)});
+  const json=await r.json().catch(()=>({}));
+  if(!r.ok||json.ok!==true||json.source!=="V12_SETTLED_WITHDRAWALS_CORA"||!Array.isArray(json.rows))
+   throw Error(json.error||"Histórico não confirmado");
+  const sum=json.rows.reduce((n,x)=>n+Number(x.amount_cents||0),0);
+  if(sum!==json.total_cents)throw Error("Total divergente da fonte");
+  status.textContent=json.count+" retirada(s) bancária(s) conciliada(s) · Total "+brl(sum)+" · Fonte: ledger V12/Cora";
+  for(const item of json.rows){
+   const d=document.createElement("div");d.style.cssText="border-bottom:1px solid #d6e0e8;padding:9px 0;font-size:13px";
+   const h=document.createElement("strong");
+   h.textContent=item.date+" · "+item.beneficiary+" · "+brl(Number(item.amount_cents||0));
+   const p=document.createElement("div");p.textContent="Acerto: "+(item.period||item.period_id)+" · ID Cora: "+item.bank_reference;
+   d.append(h,p);
+   try{const url=new URL(item.trello_url);if(url.hostname==="trello.com"&&url.protocol==="https:"&&url.pathname.startsWith("/c/")){const a=document.createElement("a");a.href=url.href;a.rel="noopener noreferrer";a.target="_blank";a.textContent="Ver corte no Trello";d.append(a)}}catch{}
+   rows.append(d);
+  }
+ }catch(e){status.textContent="Consulta indisponível: "+String(e?.message||e)+". Nenhum valor presumido."}
+ finally{busy=false;btn.disabled=false}
+}
+btn.addEventListener("click",search);
+window.addEventListener("cr:ap:confirmed",()=>{if(!busy)search()});
+})();</script>
+</body></html>
