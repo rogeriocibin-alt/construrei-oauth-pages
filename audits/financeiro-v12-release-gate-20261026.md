@@ -38,3 +38,24 @@ Referências: PR #174; commits 7ab0132, 33cc622, 770a094, cb27284; consulta Supa
 - Notebook `Rogerio-2022` ONLINE: bateria **156 testes / 156 PASS / 0 FAIL** a partir do HEAD `3f4927ee39116a2246d730c88850d0868b2a2379`, usando fontes candidatas obtidas por SHA; checagem `node --check` do backend passou. Esses são testes locais/contratos, **não E2E real**.
 
 **Gates ainda abertos:** revisão SQL em ambiente de teste/rollback, instalação controlada da tabela/RPC, deploy seguro da Edge candidata sem regredir V12 oficial, teste autenticado de prévia/commit/reenvio/concorrência com notas de teste verificáveis, leitura após recarga, Android e comprovação de que cada diária foi vinculada às obras corretas. Manter sem merge, sem promoção automática e sem alterar os registros contábeis oficiais.
+
+
+## Atualização de release gate — 27/10/2026 (18h42 BRT)
+
+**Status de aprovação: E2E PENDENTE / PR #174 PERMANECE DRAFT.**
+
+### Entregas reais verificadas
+- Supabase `yspuaamokjbrosytqjpg`: migração `cr_v12_bank_annotation_revisions_20261027` executada com sucesso, criando tabela `public.cr_cora_bank_annotation_revisions_v12`, RLS ativado e RPC `cr_cora_bank_annotation_revise_v12` com EXECUTE somente para `service_role`. Testes em SQL transacional incluíram reenvio idempotente e negativas para fingerprint, valores, obra repetida e parcela incompleta. **6 anotações originais intactas e 0 revisões reais.**
+- Backup do código Edge v23 preservado como arquivo independente na mesma PR; Edge candidata `cr-cora-aprovisionamento-v12-candidate-20261023` atualizada para **v24 ACTIVE**, código implantado corresponde exatamente ao arquivo da candidata. **Nenhuma transferência bancária foi executada**.
+- PR [#192](https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/192) alterou APENAS `preview/dashboard-financeiro-v12-envio-acertos-20261024/index.html`, após CI **Central Canonical Guard SUCCESS** e **CONSTRU-REI Change Trace SUCCESS**, mesclada em `main` (squash `2cd3814`).
+- Prova publicada no notebook `Rogerio-2022`: URL da prévia respondeu **HTTP 200**, `Content-Length: 337348`; HTML servido contém `bank-annotation-revise-commit` e `CANDIDATA DE TESTES`. O blob do HTML oficial `production/dashboard-financeiro-v12-operacoes-homologada-20261023/index.html` é idêntico ao anterior à PR #192.
+- Nova sincronização exata do HEAD candidato `8250bba6cea21bab3d9ecd91be705eb5e822779a` no notebook e execução `node --test audits/financeiro-v12-*.test.cjs`: **156/156 PASS, 0 FAIL, exit 0**.
+- Registro canônico atualizado em `public.cc_items` (`FIN-V12-CORA-TRELLO-AUDITORIA-20261022`) mantendo **P0 Em andamento**.
+- Leitura real da obra 666-26 no Trello: recebido e base R$ 4.188,88; cinco despesas somam R$ 3.571,59; lucro aritmético R$ 617,29, mas o texto declara R$ 547,29 (diferença R$ 70). Três anexos de mídia no cartão, nenhum comprovante adicional isolado por esta leitura. Não alterar custo ou lucro por suposição.
+
+### Não declarar como feito
+- **NENHUMA revisão material da distribuição das diárias** R$ 450 / R$ 450 / R$ 750: estão com uma única obra e faltam referências documentais seguras às demais obras. A prévia apenas disponibiliza o fluxo protegido.
+- **Sem teste E2E de sessão diretoria/Android:** Opera Browser Connector desconectado; chamada HTTP direta ao backend foi bloqueada pelo ambiente. CI, testes de contrato, migração, GET da prévia e leitura de Edge NÃO substituem gravação autenticada com reenvio e leitura posterior.
+- **Nenhum fechamento de período** foi registrado; integração do mês, CG, anual, ledger e recuperação real ainda requer aceite. PR #174 DRAFT, não integrar como release oficial.
+- 75 registros históricos incompletos, obra 666-26, fevereiro R$ 0,10 e parser live 2024–2026 permanecem gates independentes.
+- Manter Cofre Zero semanal, a V12 oficial e obras encerradas inalterados; não escrever correções financeiras sem documentação e controle idempotente.
