@@ -76,7 +76,7 @@ function setYear(y){year=y;for(const b of document.querySelectorAll("[data-year]
  if(session)load();else setStatus("Faça login para consultar");
 }
 async function getJSON(url,headers,options){const r=await fetch(url,Object.assign({method:"GET",headers:headers||{},cache:"no-store",signal:AbortSignal.timeout(16000)},options||{}));const j=await r.json().catch(()=>null);if(!r.ok||j?.ok!==true)throw Error((j&&j.error)||"FONTE_INDISPONIVEL_"+r.status);return j}
-async function doLogin(){if(waiting)return;const key=el("access-key").value.trim();if(key.length<6){setStatus("Informe a chave autorizada.");return}waiting=true;el("login").disabled=true;try{const j=await getJSON(LOGIN_API,{"content-type":"application/json"},{method:"POST",body:JSON.stringify({key})});if(typeof j.session!=="string"||j.session.length<12)throw Error("SESSAO_INVALIDA");session=j.session;sessionStorage.setItem("crv2",session);el("access-key").value="";setStatus("Autenticado");el("logout").classList.remove("hidden");await load();}catch(e){setStatus("Falha de login: "+e.message)}finally{waiting=false;el("login").disabled=false}}
+async function doLogin(){if(waiting)return;const key=el("access-key").value.trim();if(key.length<6){setStatus("Informe a chave autorizada.");return}waiting=true;el("login").disabled=true;try{const j=await getJSON(LOGIN_API,{"content-type":"application/json"},{method:"POST",body:JSON.stringify({key})});if(typeof j.session!=="string"||j.session.length<12)throw Error("SESSAO_INVALIDA");session=j.session;sessionStorage.setItem("crv2",session);el("access-key").value="";setStatus("Autenticado");el("logout").classList.remove("hidden");waiting=false;await load();}catch(e){setStatus("Falha de login: "+e.message)}finally{waiting=false;el("login").disabled=false}}
 function logout(){session="";sessionStorage.removeItem("crv2");annual=null;support=null;el("logout").classList.add("hidden");setYear(year)}
 async function load(){if(waiting||!session)return;waiting=true;el("refresh").disabled=true;setStatus("Consultando fontes autenticadas…");const queryYear=year;try{
  if(year===2023){annual={ok:true,year:2023,bank_only:true};support=null;}
@@ -85,7 +85,7 @@ async function load(){if(waiting||!session)return;waiting=true;el("refresh").dis
  if(queryYear!==year)return;
  render();setStatus("Atualizado • "+new Date().toLocaleTimeString("pt-BR"));
 }catch(e){if(queryYear!==year)return;annual=null;render();setStatus("Consulta parcial: "+e.message);addIssue("P0","Fonte autenticada não disponível","O painel não substitui o dado ausente por zero nem usa números fictícios. Refaça login ou confira o serviço.");}
- finally{waiting=false;el("refresh").disabled=false}}
+ finally{waiting=false;el("refresh").disabled=false;if(queryYear!==year&&session)void load();}}
 function sourceLinks(){const x=el("sources");clear(x);if(LINKS[year]){const a=mk("a","","Ver cartão anual original "+year);a.href=LINKS[year];a.target="_blank";a.rel="noopener noreferrer";x.append(a)}const r=mk("a","","Dashboard Financeiro oficial");r.href="../../production/dashboard-financeiro-v12-operacoes-homologada-20261023/index.html";x.append(r)}
 function render(){const k=el("kpis");clear(k);sourceLinks();
 if(!annual){k.append(mk("div","empty","Não foi possível consultar a origem com segurança."));renderGraph(null);renderExplain();renderPeople();return}
