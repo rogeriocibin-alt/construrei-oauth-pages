@@ -12,7 +12,7 @@ Não confundir testes unitários ou snapshots textuais com conciliação bancár
 - 145/145 testes Node aprovados no notebook conectado. CI observado no commit de teste cb27284: Central Canonical Guard e Change Trace passaram.
 
 ## Restrições objetivas para homologar
-1. **666-26, setembro:** bruto R$4.188,88 - custos declarados R$3.571,59 = lucro aritmético R$617,29, mas cartão declara lucro R$547,29. Diferença R$70,00; rateios do cartão se baseiam no lucro declarado. Conferir documento primário antes de corrigir.
+1. **666-26, setembro (cartão ativo conferido no Trello: https://trello.com/c/Q0mUjp16):** bruto R$4.188,88 - custos declarados R$3.571,59 = lucro aritmético R$617,29, mas cartão declara lucro R$547,29. Diferença R$70,00; rateios do cartão se baseiam no lucro declarado. Conferir documento primário antes de corrigir.
 2. Snapshots Jan–Set 2026 marcados `DECLARED_UNRECONCILED`; fevereiro tem diferença de R$0,10 entre lucro declarado e calculado no resumo mensal. Out–Dez ainda `OPEN_UNCONFIRMED`.
 3. Tabela de envio de períodos V12: **0 fechamentos reais** até a leitura de 26/10. Anotações somente-informativas Cora: **5**; não são despesas nem prova de envio Trello.
 4. **Status de tela intermitente:** a candidata exibiu inicialmente “Falha ao atualizar dados”. Após atualização explícita no Opera, o alerta desapareceu e o contador avançou de 110 para **112 movimentos Cora**, com **12 exibidos**. Recuperação visual observada; estabilidade, período/limite do filtro e saldo bancário ainda exigem validação E2E.
