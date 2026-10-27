@@ -73,7 +73,7 @@ test("bank status lists annotations independently from accounting status",()=>{
 });
 test("visible bank statement renders purpose, beneficiary, count and work names",()=>{
  for(const s of ['value="bank-note"','id="cr-ap-note-only"','id="cr-ap-note-person"','id="cr-ap-note-reason"','id="cr-ap-note-rows"','id="cr-ap-note-preview"','id="cr-ap-note-confirm"',"ANOTAÇÃO CORA · SEM CUSTOS","bank-annotation-preview","bank-annotation-commit"])assert.ok(html.includes(s),s);
- assert.match(html,/kind.value=bankDirection\(m\)==="IN"\?"receipt":"bank-note"/);
+ assert.match(html,/kind.value=notePresent\?"bank-note":bankDirection\(m\)==="IN"\?"receipt":"bank-note"/);
  assert.match(html,/ledger\?\.annotated===true/);
  assert.match(html,/no_cost_write!==true/);
 });
