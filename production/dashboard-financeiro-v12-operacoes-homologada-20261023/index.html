@@ -2636,20 +2636,22 @@ if((sessionStorage.getItem("crv2")||"").length>=12)window.crFinancialDeclaredRef
   tile("Éder","rateio 28%",shares.eder??null,value("Éder"),bankOf(bn,["eder","éder"]), "Rateio equivalente ao de Rogério; apoio não é comissão.");
   tile("Fabrício","rateio 20%",shares.fabricio??null,value("Fabrício"),bankOf(bn,["fabricio","fabrício"]), "Renda por execução registrada como custo da obra.");
   tile("Rogério","rateio 28%",shares.rogerio??null,value("Rogério"),bankOf(bn,["rogerio","rogério"]), "Diferença de R$ 0,01 no rateio histórico Trello é arredondamento, não alteração de percentual.");
+  tile("Gabrielly","rateio conforme acertos",shares.gabrielly??null,value("Gabrielly"),bankOf(bn,["gabrielly","gabi"]), "Participação histórica conforme Trello; não recalcular acertos antigos pela regra atual.");
+  tile("Ágata (histórico)","rateio legado",shares.agata_historical??null,value("Ágata"),bankOf(bn,["agata","ágata"]), "Atribuição histórica; não aplicar rateio de 2026 retroativamente.");
   const joao=(value("João (identificação a confirmar)")||0)+(value("João Victor")||0);
-  tile("João / João Victor","diárias (conferir identificação)",null,joao||null,bankOf(bn,["joão","joao"]), "A equivalência entre o apelido João e João Victor não está comprovada para todas as linhas.");
+  tile("João (não atribuído a João Victor)","diárias sem identificação completa",null,joao||null,bankOf(bn,["joão","joao"]), "Não contabilizar como renda de João Victor sem prova da identidade; custo operacional registrado.");
   others.replaceChildren();
   const head=document.createElement("strong");head.textContent="Outros prestadores (diárias e apoios — somente valores identificados no Trello):";
   others.append(head);
   for(const [person,r] of Object.entries(supp)){
-   if(["Éder","Fabrício","Rogério","João Victor","João (identificação a confirmar)"].includes(person))continue;
+   if(["Éder","Fabrício","Rogério","Gabrielly","Ágata","João Victor","João (identificação a confirmar)"].includes(person))continue;
    const p=document.createElement("div");p.textContent=person+" · "+money(r.total_cents)+" · "+r.lines+" linha(s)";others.append(p);
   }
   const status=document.createElement("div");
   status.style.cssText="margin-top:10px;color:#996921";
   status.textContent="Fonte operacional: "+s.totals.lines+" linhas de "+s.totals.distinct_works+" obras, importadas até "+(s.stage_snapshot_asof||"data não identificada")+"; "+s.totals.missing_amounts+" valor(es) ausente(s). Totais de rateio de JAN–SET/2026, apoios de estágio até a data indicada. Não somar Cora anotado novamente nem tratar tudo como saque comprovado.";
   others.append(status);
-  st.textContent="Fonte Supabase derivada do Trello · dados de origem preservados · consulta sem gravação.";
+  st.textContent="Fonte Trello (despesas operacionais importadas) · rateio e apoios separados · consulta sem gravação.";
  }
  window.addEventListener("cr-v12-annual-2026-data",render);
  window.crV12SupportRefresh=async function(force){
@@ -2674,7 +2676,8 @@ if((sessionStorage.getItem("crv2")||"").length>=12)window.crFinancialDeclaredRef
    for(const [k,label] of [["eder","Éder"],["rogerio","Rogério"],["fabricio","Fabrício"],["camila","Camila"]]){
      const line=document.createElement("div");line.textContent=label+": "+money(a.declared_by_person_cents[k]);e24.append(line);
    }
-   const foot=document.createElement("small");foot.textContent="54 obras a conferir; histórico de regras 50/50 e rateios nominais. Total não equivale a saques Cora.";e24.append(foot);
+   const summary24=document.createElement("div");summary24.style.cssText="margin-top:10px;font-weight:700";summary24.textContent="Bruto: "+money(a.gross_cents)+" · Custos: "+money(a.cost_cents)+" · Lucro histórico: "+money(a.declared_profit_cents);e24.append(summary24);
+  const foot=document.createElement("small");foot.textContent="54 obras a conferir; rateios históricos não são saques Cora. Diferenças entre bruto, custos e lucro permanecem sinalizadas, sem ajustar valores originais.";e24.append(foot);
    const gross=document.createElement("div");gross.textContent="Bruto: "+money(b.gross_cents)+" · "+b.cases+" obras";e25.append(gross);
    const txt=document.createElement("div");txt.textContent="Lucro e retiradas totais ainda não reconciliados. Projeto 213-24 com saldo parcial histórico.";e25.append(txt);
    hstatus.textContent="Fontes Trello verificadas agora; 2024 histórico parcial, 2025 faturamento reconciliado. Nenhum rateio foi recalculado.";
