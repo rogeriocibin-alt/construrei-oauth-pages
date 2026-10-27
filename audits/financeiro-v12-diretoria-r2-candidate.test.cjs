@@ -67,3 +67,14 @@ const seen=new Set(),dups=[];
 for(const id of ids){if(seen.has(id))dups.push(id);seen.add(id)}
 assert.deepEqual(dups,[]);
 });
+
+test("month filter cannot silently compare annual financial total with one operating month",()=>{
+assert.match(JS,/if\(month>0\)\{accepted=\{gross:m\.gross_cents/);
+assert.match(JS,/const difference=month>0\?null/);
+assert.match(JS,/shares=month>0\?\{\}/);
+assert.match(JS,/Filtro mensal mostra apenas rateios identificados nas obras/);
+});
+test("health status separates online/auth from accounting reconciliation",()=>{
+assert.match(JS,/Conexão autenticada — dado ≠ conciliado/);
+assert.match(JS,/Classificabilidade, conciliação Cora e fechamento financeiro são indicadores DIFERENTES/);
+});
