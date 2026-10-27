@@ -127,6 +127,18 @@ function privilegedKey(){
  if(role)return role;
  try{const keys=JSON.parse(sec("SUPABASE_SECRET_KEYS")||"{}");return String(keys.default||keys.service_role||Object.values(keys)[0]||"");}catch{return ""}
 }
+function supportBeneficiary(original:string,lineText:string){
+ if(original!=="Outro prestador (identificar)")return original;
+ const n=lineText.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+ if(/\bbia(?:\s+dietz)?\b/.test(n))return "Bia (conferir identidade)";
+ if(/\braf(?:a|aele|ael)\b/.test(n))return "Rafa / Rafaele (conferir identidade)";
+ if(/\bmarcelo\b/.test(n))return "Marcelo";
+ if(/\bgabriel\b/.test(n))return "Gabriel (conferir identidade)";
+ if(/\bmaicon\b/.test(n))return "Maicon";
+ if(/\bandre[y]?\b/.test(n))return "André / Andrey (conferir identidade)";
+ if(/\bjhow\b/.test(n))return "Jhow";
+ return original;
+}
 async function financeSupport2026(){
  const role=privilegedKey();
  if(!role)return output({ok:false,error:"DB_SERVICE_NOT_AVAILABLE"},503);
@@ -153,13 +165,13 @@ async function financeSupport2026(){
  let total=0,missing=0;
  const flagged:any[]=[];
  for(const r of rows){
-   const name=String(r.beneficiary||"Outro prestador (identificar)");
+   const name=supportBeneficiary(String(r.beneficiary||"Outro prestador (identificar)"),String(r.line_text||""));
    byPerson[name]??={total_cents:0,lines:0,works:new Set<string>(),missing:0};
    const p=byPerson[name],v=Number(r.amount_cents);
    p.lines++;if(r.work_code)p.works.add(String(r.work_code));
    if(!Number.isSafeInteger(v)||v<=0){missing++;p.missing++;flagged.push({case:r.work_code,line_number:r.line_number,reason:"MISSING_AMOUNT"});continue}
    p.total_cents+=v;total+=v;
-   if(String(r.evidence_state||"")!=="TRELLO_COST_LINE_UNRECONCILED" && flagged.length<30){
+   if((String(r.evidence_state||"")!=="TRELLO_COST_LINE_UNRECONCILED" || name.includes("conferir identidade")) && flagged.length<30){
      flagged.push({case:r.work_code,line_number:r.line_number,reason:String(r.evidence_state||"REVIEW")});
    }
  }
