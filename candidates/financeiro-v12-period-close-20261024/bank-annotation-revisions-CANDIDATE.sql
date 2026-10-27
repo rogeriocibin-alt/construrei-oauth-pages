@@ -66,66 +66,9 @@ begin
           or coalesce(jsonb_typeof(v->'case'),'null') <> 'string'
           or coalesce(jsonb_typeof(v->'daily_count'),'null') <> 'number'
           or coalesce(jsonb_typeof(v->'cents'),'null') <> 'number'
-          or coalesce(v->>'case','') !~ '^[0-9]{1,5}-26
-        count(distinct v->>'case')
- into total, invalid_rows, unique_works
- from jsonb_array_elements(p_allocations) v;
- if total <> original.amount_cents or invalid_rows <> 0 or unique_works <> jsonb_array_length(p_allocations) then
-  raise exception 'ANNOTATION_REVISION_BANK_TOTAL_OR_PARTS_INVALID';
- end if;
- next_revision := coalesce(last_revision.revision_number,0)+1;
- insert into public.cr_cora_bank_annotation_revisions_v12
-   (operation_id,revision_number,previous_fingerprint,fingerprint,beneficiary,purpose,allocations,correction_reason)
- values
-   (p_operation_id,next_revision,last_fp,p_new_fingerprint,p_beneficiary,p_purpose,p_allocations,p_reason)
- returning * into written;
- return jsonb_build_object('committed',true,'revision_number',written.revision_number,'fingerprint',written.fingerprint);
-end;
-$$;
-revoke all on function public.cr_cora_bank_annotation_revise_v12(text,text,text,text,text,jsonb,text) from public, anon, authenticated;
-grant execute on function public.cr_cora_bank_annotation_revise_v12(text,text,text,text,text,jsonb,text) to service_role;
--- Verificar grants, RLS, 2 envios iguais e concorrência antes da publicação.
-
-          or coalesce(v->>'daily_count','') !~ '^[0-9]{1,2}
-        count(distinct v->>'case')
- into total, invalid_rows, unique_works
- from jsonb_array_elements(p_allocations) v;
- if total <> original.amount_cents or invalid_rows <> 0 or unique_works <> jsonb_array_length(p_allocations) then
-  raise exception 'ANNOTATION_REVISION_BANK_TOTAL_OR_PARTS_INVALID';
- end if;
- next_revision := coalesce(last_revision.revision_number,0)+1;
- insert into public.cr_cora_bank_annotation_revisions_v12
-   (operation_id,revision_number,previous_fingerprint,fingerprint,beneficiary,purpose,allocations,correction_reason)
- values
-   (p_operation_id,next_revision,last_fp,p_new_fingerprint,p_beneficiary,p_purpose,p_allocations,p_reason)
- returning * into written;
- return jsonb_build_object('committed',true,'revision_number',written.revision_number,'fingerprint',written.fingerprint);
-end;
-$$;
-revoke all on function public.cr_cora_bank_annotation_revise_v12(text,text,text,text,text,jsonb,text) from public, anon, authenticated;
-grant execute on function public.cr_cora_bank_annotation_revise_v12(text,text,text,text,text,jsonb,text) to service_role;
--- Verificar grants, RLS, 2 envios iguais e concorrência antes da publicação.
-
-          or coalesce(v->>'cents','') !~ '^[0-9]{1,11}
-        count(distinct v->>'case')
- into total, invalid_rows, unique_works
- from jsonb_array_elements(p_allocations) v;
- if total <> original.amount_cents or invalid_rows <> 0 or unique_works <> jsonb_array_length(p_allocations) then
-  raise exception 'ANNOTATION_REVISION_BANK_TOTAL_OR_PARTS_INVALID';
- end if;
- next_revision := coalesce(last_revision.revision_number,0)+1;
- insert into public.cr_cora_bank_annotation_revisions_v12
-   (operation_id,revision_number,previous_fingerprint,fingerprint,beneficiary,purpose,allocations,correction_reason)
- values
-   (p_operation_id,next_revision,last_fp,p_new_fingerprint,p_beneficiary,p_purpose,p_allocations,p_reason)
- returning * into written;
- return jsonb_build_object('committed',true,'revision_number',written.revision_number,'fingerprint',written.fingerprint);
-end;
-$$;
-revoke all on function public.cr_cora_bank_annotation_revise_v12(text,text,text,text,text,jsonb,text) from public, anon, authenticated;
-grant execute on function public.cr_cora_bank_annotation_revise_v12(text,text,text,text,text,jsonb,text) to service_role;
--- Verificar grants, RLS, 2 envios iguais e concorrência antes da publicação.
-
+          or coalesce(v->>'case','') !~ '^[0-9]{1,5}-26$'
+          or coalesce(v->>'daily_count','') !~ '^[0-9]{1,2}$'
+          or coalesce(v->>'cents','') !~ '^[0-9]{1,11}$'
           or (v->>'daily_count')::integer not between 1 and 30
           or (v->>'cents')::bigint <= 0
           or (v->>'cents')::bigint % nullif((v->>'daily_count')::integer,0) is distinct from 0),
