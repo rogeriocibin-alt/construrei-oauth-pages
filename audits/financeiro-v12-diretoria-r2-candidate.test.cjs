@@ -78,3 +78,11 @@ test("health status separates online/auth from accounting reconciliation",()=>{
 assert.match(JS,/Conexão autenticada — dado ≠ conciliado/);
 assert.match(JS,/Classificabilidade, conciliação Cora e fechamento financeiro são indicadores DIFERENTES/);
 });
+
+test("monthly revenue trend is year-scoped and suppresses missing values",()=>{
+assert.match(HTML,/id="timeline"/);
+assert.match(JS,/function timelineRender\(\)/);
+assert.match(JS,/data\.oper\?\.metrics\?\.months/);
+assert.match(JS,/Série mensal operacional indisponível/);
+assert.match(JS,/timelineRender\(\)\}/);
+});
