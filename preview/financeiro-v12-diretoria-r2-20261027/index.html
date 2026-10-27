@@ -71,7 +71,8 @@ function renderedYear(){const f=data.fin,m=data.oper?.metrics||{};let accepted={
  if(f?.year===2026&&f?.status==="TRELLO_DECLARED_UNRECONCILED"){accepted={gross:f.gross_cents,cost:f.cost_cents,profit:f.declared_profit_cents,tag:"Trello Gestão Financeira • jan.–set., declarado",url:f.source_url}}
  if(f?.year===2024&&f?.status==="TRELLO_HISTORICAL_ALLOCATION_PARTIAL"){accepted={gross:f.gross_cents,cost:f.cost_cents,profit:f.declared_profit_cents,tag:"Gestão de Obras • anual histórico, 54 a conferir",url:f.source_url}}
  if(f?.year===2025&&f?.status==="TRELLO_GROSS_RECONCILED_PROFIT_PARTIAL"){accepted={gross:f.gross_cents,cost:null,profit:null,tag:"Gestão de Obras • bruto anual reconciliado, lucro parcial",url:f.source_url}}
- const difference=Number.isSafeInteger(accepted.gross)&&Number.isSafeInteger(m.gross_cents)?m.gross_cents-accepted.gross:null;
+ if(month>0){accepted={gross:m.gross_cents??null,cost:m.cost_cents??null,profit:m.profit_cents??null,tag:"Gestão de Obras · "+NAMES[month-1]+"/"+year+" · período operacional, NÃO acerto mensal financeiro",url:null}}
+ const difference=month>0?null:Number.isSafeInteger(accepted.gross)&&Number.isSafeInteger(m.gross_cents)?m.gross_cents-accepted.gross:null;
  const math=Number.isSafeInteger(accepted.gross)&&Number.isSafeInteger(accepted.cost)&&Number.isSafeInteger(accepted.profit)?accepted.gross-accepted.cost-accepted.profit:null;
  return {accepted,m,difference,math};
 }
@@ -98,25 +99,29 @@ function summaryRender(){
 function peopleRender(){
  const persons=el("persons"),workers=el("workers"),warn=el("peoplewarn");persons.replaceChildren();workers.replaceChildren();warn.textContent="";
  if(year==="2023"){notice(persons,"2023 é exclusivamente bancário. Nenhum rateio individual do Trello deve ser inventado.");return}
- const f=data.fin||{},s=data.support||{},shares=f.declared_by_person_cents||{},supports=s.by_person||{},bank=s.bank_annotations_out_by_beneficiary_cents||{};
- const descriptors=[["Éder","eder","Éder","28% em 2026"],["Rogério","rogerio","Rogério","28% em 2026"],["Fabrício","fabricio","Fabrício","20% em 2026"],["Gabrielly","gabrielly","Gabrielly","14% em 2026"],["Camila","camila","Camila","histórico"],["Ágata","agata_historical","Ágata","histórico"]];
+ const f=data.fin||{},s=data.support||{},shares=month>0?{}:(f.declared_by_person_cents||{}),supports=month>0?{}:(s.by_person||{}),bank=s.bank_annotations_out_by_beneficiary_cents||{};
+ if(month>0){
+  const op=data.oper?.rateio_breakdown?.people||{},keys={eder:"eder",rogerio:"rogerio",fabricio:"fabricio",gabrielly:"gabrielly",camila:"camila",agata_historical:"agata"};
+  for(const [k,v] of Object.entries(op)){const n=k.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim(),id=Object.keys(keys).find(x=>keys[x]===n);if(id)shares[id]=Number(v?.cents||0)}
+ }
+ const descriptors=[["Éder","eder","Éder",year==="2026"?"28% vigente":"modelo histórico"],["Rogério","rogerio","Rogério",year==="2026"?"28% vigente":"modelo histórico"],["Fabrício","fabricio","Fabrício",year==="2026"?"20% vigente":"modelo histórico"],["Gabrielly","gabrielly","Gabrielly",year==="2026"?"14% vigente":"modelo histórico"],["Camila","camila","Camila","histórico"],["Ágata","agata_historical","Ágata","histórico"]];
  for(const [name,key,supportKey,pct] of descriptors){
   const card=div("article","person");card.append(div("h3","",name+" · "+pct));
   const sh=shares[key],su=supports[supportKey]?.total_cents;
-  card.append(div("div","source","RATEIO DO TRELLO"),div("div","amt",mny(sh)));
+  card.append(div("div","source",month>0?"RATEIO PARCIAL DAS OBRAS · "+NAMES[month-1]:"RATEIO DO TRELLO · REFERÊNCIA ANUAL"),div("div","amt",mny(sh)));
   card.append(div("div","sep"),div("div","source","APOIO / DIÁRIA DE OBRA"),div("div","amt",mny(su)));
   card.append(div("div","sep"),div("div","source","SAQUE COMPROVADO NO CORA"),div("div","amt","Não conciliado"));
   card.append(div("div","small",year==="2026"?"Rateio jan.–set.; apoios na base importada até 25/10. Períodos distintos: não somar como renda paga.":"Regras históricas; sem novos percentuais aplicados retroativamente."));
   persons.append(card);
  }
- if(year==="2026"){
+ if(year==="2026"&&month===0){
   for(const [name,obj] of Object.entries(supports).filter(([n])=>!descriptors.some(p=>p[2]===n)).sort((a,b)=>(b[1]?.total_cents||0)-(a[1]?.total_cents||0))){
    workers.append(row(name,mny(obj.total_cents)+" · "+num(obj.lines)+" lançamento(s)"+(obj.missing_amounts?" · "+num(obj.missing_amounts)+" sem valor":"")));
   }
   if(!data.support)notice(workers,"Apoios indisponíveis ou aguardando login; nenhuma estimativa substitui a fonte.");
   warn.textContent="Trello declarados jan.–set. ≠ saques Cora. Apoios são custos por execução (base importada em "+(s.stage_snapshot_asof||"data desconhecida")+"), não uma segunda retirada; João/João Victor ainda exigem identificação. Éder e Rogério: 28% cada na regra vigente, diferenças históricas não devem ser corrigidas por aproximação.";
  }else{
-  warn.textContent=year==="2024"?"2024 manteve os modelos 50/50, transição e rateio nominal da época. 54 obras pendentes.": "2025: faturamento confirmado, mas lucro e retiradas individuais sem fonte anual reconciliada; não completar números por extrapolação.";
+  warn.textContent=month>0?"Filtro mensal mostra apenas rateios identificados nas obras daquele mês. O fechamento financeiro mensal completo precisa de conferência no Trello. Apoios não foram redistribuídos por data presumida.":year==="2024"?"2024 manteve os modelos 50/50, transição e rateio nominal da época. 54 obras pendentes.": "2025: faturamento confirmado, mas lucro e retiradas individuais sem fonte anual reconciliada; não completar números por extrapolação.";
  }
  if(f.source_url)addSourceLink(workers,f.source_url,"Ver resumo original do ano no Trello");
 }
