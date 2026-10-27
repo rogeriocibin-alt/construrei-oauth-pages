@@ -49,8 +49,8 @@ test('727: R$150 recap sob APOIO/DIÁRIAS não aumenta rateio',()=>{
 });
 test('727: resumo não repete apoio como segundo pagamento',()=>{
  const r=analyze(c727,true);
- assert.equal(r.rate['Éder']+r.sup['Éder'],339.46);
- assert.equal(r.rate['Fabrício']+r.sup['Fabrício'],285.33);
+ assert.equal(Math.round((r.rate['Éder']+r.sup['Éder'])*100),33946);
+ assert.equal(Math.round((r.rate['Fabrício']+r.sup['Fabrício'])*100),28533);
 });
 test('649: título CG em uma linha e 10% na seguinte preserva R$40,71',()=>{
  const r=analyze(c649,false);
