@@ -23,8 +23,8 @@ const TRE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-v12-financia
 const OFFICIAL="https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v12-operacoes-homologada-20261023/";
 const NAMES=["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
 const el=id=>document.getElementById(id);
-const mny=c=>Number.isSafeInteger(Number(c))?new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(c)/100):"Não confirmado";
-const num=c=>Number.isSafeInteger(Number(c))?Number(c).toLocaleString("pt-BR"):"—";
+const mny=c=>c!==null&&c!==undefined&&c!==""&&Number.isSafeInteger(Number(c))?new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(c)/100):"Não confirmado";
+const num=c=>c!==null&&c!==undefined&&c!==""&&Number.isSafeInteger(Number(c))?Number(c).toLocaleString("pt-BR"):"—";
 const pc=n=>n!==null&&n!==undefined&&Number.isFinite(Number(n))?Number(n).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})+"%":"Indisponível";
 const div=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=String(txt);return e};
 const clear=id=>el(id).replaceChildren();
