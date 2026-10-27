@@ -41,7 +41,7 @@ test("backend preview and commit require existing annotation and matching old fi
  assert.match(body,/saved\.fingerprint!==newFp/);
 });
 test("new revision endpoint is director-only with verified Cora movement",()=>{
- const director=edge.indexOf("if(!await director(req))"),origin=edge.indexOf("try{await verifiedBankOrigin(p,k)}"),route=edge.indexOf('if(action==="bank-annotation-revise-preview"');
+ const director=edge.indexOf("if(!await director(req))"),origin=edge.indexOf("try{await verifiedBankOrigin(p,k)}"),route=edge.indexOf('if(action==="bank-annotation-revise-preview"||action==="bank-annotation-revise-commit")',origin);
  assert.ok(director>0&&origin>director&&route>origin);
  assert.match(edge,/bank-annotation-revise-commit/);
 });
