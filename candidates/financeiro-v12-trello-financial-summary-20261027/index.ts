@@ -5,6 +5,8 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
  */
 const SB=(Deno.env.get("SUPABASE_URL")||"https://yspuaamokjbrosytqjpg.supabase.co").replace(/\/$/,"");
 const CARD="6add3128f02eef0b8a7d69b5"; // Trello GESTÃO FINANCEIRA / resumo financeiro anual 2026
+const CARD_2024="6ab1b9314159bc6227a4efea"; // GESTÃO DE OBRAS 2024 annual, original 50/50 legacy rules
+const CARD_2025="6ab1c5c887007ac7e2368b2f"; // GESTÃO DE OBRAS 2025 annual, revenue confirmed, profit partial
 const CORS={"access-control-allow-origin":"https://rogeriocibin-alt.github.io","access-control-allow-headers":"x-cr-session,content-type","access-control-allow-methods":"GET,OPTIONS","cache-control":"no-store","vary":"Origin","x-content-type-options":"nosniff"};
 const output=(b:unknown,s=200)=>new Response(JSON.stringify(b),{status:s,headers:{...CORS,"content-type":"application/json; charset=utf-8"}});
 function sec(k:string){return (Deno.env.get(k)||"").trim()}
@@ -70,6 +72,55 @@ function annualSummary(card:any){
   notes:["2023 só movimentação bancária Cora","Resumo 2026 declarado, não prova transferência bancária","Rateio histórico abril apresenta inconsistência conhecida; não ajustar lançamentos antigos"]
  };
 }
+
+function annual2024(card:any){
+ const desc=String(card?.desc||"");
+ if(!/RESUMO ANUAL 2024/.test(String(card?.name||""))||!desc.includes("CR-TRELLO-ANNUAL-SUMMARY-V3"))throw Error("FINANCIAL_2024_SOURCE_NOT_CANONICAL");
+ const start=desc.indexOf("RATEIO HISTÓRICO CONFIRMADO"),end=desc.indexOf("Total de destinações confirmadas",start);
+ if(start<0||end<start)throw Error("FINANCIAL_2024_SHARE_SECTION_MISSING");
+ const section=desc.slice(start,end);
+ const people={
+  fabricio:sourceLine(section,/^[^\r\n]*Fabrício\s*:\s*R\$\s*([\d.,]+)/mi),
+  eder:sourceLine(section,/^[^\r\n]*Éder\s*:\s*R\$\s*([\d.,]+)/mi),
+  rogerio:sourceLine(section,/^[^\r\n]*Rogério\s*:\s*R\$\s*([\d.,]+)/mi),
+  camila:sourceLine(section,/^[^\r\n]*Camila\s*:\s*R\$\s*([\d.,]+)/mi)
+ };
+ const capital=sourceLine(section,/^[^\r\n]*Capital de Giro explícito\s*:\s*R\$\s*([\d.,]+)/mi);
+ const unidentified=sourceLine(section,/^[^\r\n]*13%\s*legado sem atribuição nominal\s*:\s*R\$\s*([\d.,]+)/mi);
+ const stated=sourceLine(desc,/Total de destinações confirmadas\s*:\s*R\$\s*([\d.,]+)/mi);
+ const gross=sourceLine(desc,/^[^\r\n]*Bruto\s*:\s*R\$\s*([\d.,]+)/mi);
+ const cost=sourceLine(desc,/^[^\r\n]*Custos\s*:\s*R\$\s*([\d.,]+)/mi);
+ const profit=sourceLine(desc,/^[^\r\n]*Lucro\/Saldo consolidado\s*:\s*R\$\s*([\d.,]+)/mi);
+ if([...Object.values(people),capital,unidentified,stated,gross,cost,profit].some(x=>x===null||x<0))throw Error("FINANCIAL_2024_VALUE_MISSING");
+ const computed=Object.values(people).reduce((a,b)=>a+(b||0),0)+(capital||0)+(unidentified||0);
+ if(computed!==stated)throw Error("FINANCIAL_2024_TOTAL_NOT_EQUAL_ITEMS");
+ return {ok:true,year:2024,status:"TRELLO_HISTORICAL_ALLOCATION_PARTIAL",
+  kind:"ALLOCATIONS_DECLARED_NOT_CONFIRMED_BANK_WITHDRAWALS",
+  source:"TRELLO_OBRAS_ANNUAL_2024",source_url:"https://trello.com/c/cGFAsZTN",
+  source_card_id:CARD_2024,asof_trello:card.dateLastActivity||null,
+  gross_cents:gross,cost_cents:cost,declared_profit_cents:profit,
+  declared_by_person_cents:people,capital_declared_cents:capital,
+  legacy_unattributed_cents:unidentified,sum_declared_shares_cents:computed,
+  declared_minus_profit_cents:computed-(profit||0),
+  profit_arithmetic_difference_cents:(gross||0)-(cost||0)-(profit||0),
+  issues_count:54,bank_withdrawal_proof:false,trello_updated_live:true,
+  notes:["Regra histórica 50/50 até julho; transição em agosto; nominal depois","54 obras a conferir","Lucro histórico não deve ser alterado para forçar fechamento"]};
+}
+function annual2025(card:any){
+ const desc=String(card?.desc||"");
+ if(!/RESUMO ANUAL 2025/.test(String(card?.name||""))||!desc.includes("CR-TRELLO-ANNUAL-SUMMARY-2025-RECON-V2"))throw Error("FINANCIAL_2025_SOURCE_NOT_CANONICAL");
+ const gross=sourceLine(desc,/Faturamento anual reconciliado\s*:\s*R\$\s*([\d.,]+)/mi);
+ const works=Number(desc.match(/Obras finalizadas\s*:\s*(\d+)/i)?.[1]||0);
+ if(gross===null||gross<=0||works<=0)throw Error("FINANCIAL_2025_REVENUE_UNVERIFIED");
+ return {ok:true,year:2025,status:"TRELLO_GROSS_RECONCILED_PROFIT_PARTIAL",
+  kind:"ANNUAL_GROSS_ONLY_NO_CONFIRMED_WITHDRAWALS",
+  source:"TRELLO_OBRAS_ANNUAL_2025",source_url:"https://trello.com/c/VmkhcR7e",
+  source_card_id:CARD_2025,asof_trello:card.dateLastActivity||null,
+  gross_cents:gross,cases:works,declared_profit_cents:null,
+  declared_by_person_cents:null,bank_withdrawal_proof:false,trello_updated_live:true,
+  notes:["Faturamento anual reconciliado em 12 meses","Lucro parcial devido à obra 213-24 sem fechamento final","Não atribuir retiradas a sócios sem fonte financeira confirmada"]};
+}
+
 Deno.serve(async(req:Request)=>{
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:CORS});
  if(req.method!=="GET")return output({ok:false,error:"READ_ONLY"},405);
@@ -77,17 +128,17 @@ Deno.serve(async(req:Request)=>{
  if(!["2023","2024","2025","2026"].includes(year))return output({ok:false,error:"INVALID_YEAR"},400);
  if(!await sessionValid(req))return output({ok:false,error:"DIRECTOR_OR_USER_SESSION_REQUIRED"},401);
  if(year==="2023")return output({ok:true,year:2023,bank_only:true,trello_financial_summary:null,source:"CORA_ONLY_2023"});
- if(year!=="2026")return output({ok:true,year:Number(year),trello_operational_source:true,trello_financial_summary:null,source:"TRELLO_OPERATIONS",status:"ANNUAL_FINANCIAL_CLOSURE_NOT_VERIFIED",source_fallback_forbidden:true});
+ const cardId=year==="2024"?CARD_2024:year==="2025"?CARD_2025:CARD;
  const key=sec("TRELLO_API_KEY"),token=sec("TRELLO_API_TOKEN");
  if(!key||!token)return output({ok:false,error:"TRELLO_BACKEND_CREDENTIALS_UNAVAILABLE"},503);
- const url=new URL("https://api.trello.com/1/cards/"+CARD);
+ const url=new URL("https://api.trello.com/1/cards/"+cardId);
  for(const [k,v]of Object.entries({key,token,fields:"id,name,desc,dateLastActivity,closed"}))url.searchParams.set(k,v);
  try{
   const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),13000);
   let r:Response;try{r=await fetch(url,{headers:{accept:"application/json"},signal:ctl.signal})}finally{clearTimeout(t)}
   if(!r.ok)return output({ok:false,error:"TRELLO_FINANCIAL_SOURCE_READ_FAILED"},502);
   const card=await r.json();
-  if(card.id!==CARD||card.closed===true)return output({ok:false,error:"FINANCIAL_SOURCE_ID_INVALID"},409);
-  return output(annualSummary(card));
+  if(card.id!==cardId||card.closed===true)return output({ok:false,error:"FINANCIAL_SOURCE_ID_INVALID"},409);
+  return output(year==="2024"?annual2024(card):year==="2025"?annual2025(card):annualSummary(card));
  }catch(e){return output({ok:false,error:String((e as Error)?.message||e).slice(0,110)},409)}
 });
