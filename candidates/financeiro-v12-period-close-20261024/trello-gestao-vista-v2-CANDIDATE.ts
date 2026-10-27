@@ -78,7 +78,25 @@ async function upd(id,b){return req("/cards/"+id,"PUT",b)}
 async function attach(card,label){return req("/cards/"+card+"/idLabels","POST",{value:label})}
 async function detach(card,label){return req("/cards/"+card+"/idLabels/"+label,"DELETE")}
 async function create(list,name,desc){return req("/cards","POST",{idList:list,name,desc,pos:"top"})}
+function analyzeLegacy(c,allowSupport=false){
+ let ls=String(c.desc||"").split(/\r?\n/),dg=null,tg=null,k=null,p=null,cap=0;
+ for(let l of ls)if(/valor\s+fechado/i.test(l)){dg=lm(l)??cm(l);if(dg!=null)break}
+ let mt=String(c.name||"").match(/R\s*\$+\s*:?\s*([\d.,]+)/i)||String(c.name||"").match(/\bRS\s*:?\s*([\d.,]+)/i);if(mt)tg=money(mt[1]);
+ let conflict=false,g=dg??tg;if(dg!=null&&tg!=null&&Math.max(dg,tg)/Math.max(1,Math.min(dg,tg))>5){conflict=true;g=null}
+ for(let l of ls)if(/total\s+(de\s+)?custos/i.test(l)){k=lm(l)??cm(l);if(k!=null)break}
+ if(k==null){let st=ls.findIndex(l=>/^\s*Custos?\s*:?\s*$/i.test(l));if(st>=0){let s=0,f=false;for(let i=st+1;i<ls.length;i++){if(/^\s*(Total\s+Custos|Saldo|Lucro|Rateio\b|Resumo dos C[aá]lculos)/i.test(ls[i]))break;let n=lm(ls[i]);if(n!=null){s+=n;f=true}}if(f)k=Math.round(s*100)/100}}
+ for(let re of [/saldo\s*\/\s*lucro\s*l[ií]quido/i,/saldo\s*\/\s*lucro/i,/^\s*saldo\s*:/i,/^\s*lucro\s*l[ií]quido\s*:/i])for(let l of ls)if(re.test(l)){p=lm(l)??cm(l);if(p!=null)break}
+ if(p==null&&g!=null&&k!=null)p=Math.round((g-k)*100)/100;
+ let rate={"Fabrício":0,"Éder":0,"Rogério":0,"Gabi":0,"Outros":0},sup={"Fabrício":0,"Éder":0};
+ for(let l of ls){let n=norm(l);
+  if(/capital.*giro|giro.*capital/.test(n)){let v=lm(l)??cm(l);if(v!=null)cap+=v}
+  if(!/capital|margem|lucro\s*:/.test(n)&&!/\bapoio\b|\bdiaria\b/.test(n)&&/(fabricio|\beder\b|rogerio|\bgabi\b|gabrielly|agata|camila).*:/.test(n)){let v=lm(l)??cm(l);if(v!=null){if(/fabricio/.test(n))rate["Fabrício"]+=v;else if(/\beder\b/.test(n))rate["Éder"]+=v;else if(/rogerio/.test(n))rate["Rogério"]+=v;else if(/\bgabi\b|gabrielly/.test(n))rate["Gabi"]+=v;else if(/agata|camila/.test(n))rate["Outros"]+=v}}
+  if(allowSupport&&(/\bapoio\b|\bdiaria\b/.test(n))){let v=lm(l);if(v!=null){if(/fabricio/.test(n))sup["Fabrício"]+=v;if(/\beder\b/.test(n))sup["Éder"]+=v}}
+ }
+ return {case:cno(c.name,c.desc),g,k,p,rate,sup,cap,inc:conflict||g==null||k==null||p==null}
+}
 function analyze(c,allowSupport=false){
+ if(!String(cno(c.name,c.desc)||"").endsWith("-26"))return analyzeLegacy(c,allowSupport);
  let ls=String(c.desc||"").split(/\r?\n/),dg=null,tg=null,k=null,p=null,cap=0;
  for(let l of ls)if(/valor\s+fechado/i.test(l)){dg=lm(l)??cm(l);if(dg!=null)break}
  let mt=String(c.name||"").match(/R\s*\$+\s*:?\s*([\d.,]+)/i)||String(c.name||"").match(/\bRS\s*:?\s*([\d.,]+)/i);if(mt)tg=money(mt[1]);
