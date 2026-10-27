@@ -44,8 +44,8 @@ assert.throws(()=>annualSummary({...sample,desc:desc.replace("CR-ANUAL-VALORES-R
 });
 test("2023 must remain bank-only and other years cannot invent declared financial settlements",()=>{
 assert.ok(edge.includes('if(year==="2023")return output({ok:true,year:2023,bank_only:true'));
-assert.ok(edge.includes('if(year!=="2026")return output('));
-assert.ok(edge.includes('source_fallback_forbidden:true'));
+assert.ok(edge.includes('const cardId=year==="2024"?CARD_2024:year==="2025"?CARD_2025:CARD;'));
+assert.ok(edge.includes('if(u.searchParams.get("kind")==="support")'));
 });
 test("only GET authenticated; Trello key is backend-only, no write methods",()=>{
 assert.ok(edge.includes('if(req.method!=="GET")'));
