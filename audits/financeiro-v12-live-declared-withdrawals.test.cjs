@@ -3,7 +3,7 @@ const test=require("node:test"),assert=require("node:assert/strict"),vm=require(
 const root=path.join(__dirname,"..");
 const edge=fs.readFileSync(path.join(root,"candidates/financeiro-v12-trello-financial-summary-20261027/index.ts"),"utf8");
 const html=fs.readFileSync(path.join(root,"production/dashboard-financeiro-v12-operacoes-homologada-20261023/index.html"),"utf8");
-const pure=edge.slice(edge.indexOf("function parseBR("),edge.indexOf("Deno.serve("))
+const pure=edge.slice(edge.indexOf("function parseBR("),edge.indexOf("function annual2024("))
   .replace("function parseBR(v:string)","function parseBR(v)")
   .replace("function sourceLine(section:string,re:RegExp):number|null","function sourceLine(section,re)")
   .replace("function annualSummary(card:any)","function annualSummary(card)");
