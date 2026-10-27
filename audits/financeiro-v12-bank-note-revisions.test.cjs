@@ -41,8 +41,7 @@ test("backend preview and commit require existing annotation and matching old fi
  assert.match(body,/saved\.fingerprint!==newFp/);
 });
 test("new revision endpoint is director-only with verified Cora movement",()=>{
- const director=edge.indexOf("if(!await director(req))"),origin=edge.indexOf("try{await verifiedBankOrigin(p,k)}"),route=edge.indexOf('if(action==="bank-annotation-revise-preview"||action==="bank-annotation-revise-commit")',origin);
- assert.ok(director>0&&origin>director&&route>origin);
+ assert.match(edge,/if\(!await director\(req\)\)[\s\S]*?await verifiedBankOrigin\(p,k\)[\s\S]*?bankAnnotationRevisionFlow\(action,p,raw,k\)/);
  assert.match(edge,/bank-annotation-revise-commit/);
 });
 test("new revision flow cannot execute financial / Trello writers",()=>{
