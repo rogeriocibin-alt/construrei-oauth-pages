@@ -2,7 +2,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const s=fs.readFileSync(path.resolve(__dirname,'../candidates/financeiro-v12-period-close-20261024/trello-gestao-vista-v2-CANDIDATE.ts'),'utf8');
 const h=s.slice(s.indexOf('function norm('),s.indexOf('function cnum('));
-const a=s.slice(s.indexOf('function analyze(c,allowSupport=false){'),s.indexOf('function agg('));
+const a=s.slice(s.indexOf('function analyzeLegacy(c,allowSupport=false){'),s.indexOf('function agg('));
 const aggBlock=s.slice(s.indexOf('function agg('),s.indexOf('function desc('));
 assert.ok(h.includes('function lm(')&&a.includes('let section="OTHER"'));
 const sandbox={derived:()=>false};
@@ -96,4 +96,12 @@ test('711 e 649: R$0,02 de arredondamento são evidenciados, não corrigidos ret
  const sum=sandbox.aggregate([c649,c711],false);
  assert.equal(sum.rateio_gap_cents,-2);
  assert.match(s,/Diferença lucro versus rateio \+ CG \(sem ajuste automático\)/);
+});
+
+test('cartões 2024 e 2025 seguem exatamente o classificador legado',()=>{
+ const oldCase={...c727,name:'✅ (727-25) R$ 1.902,40'};
+ const old=sandbox.analyze(oldCase,true);
+ assert.equal(Math.round(old.rate['Éder']*100),33946);
+ assert.equal(Math.round(old.cap*100),6766);
+ assert.match(s,/endsWith\("-26"\)\)return analyzeLegacy\(c,allowSupport\)/);
 });
