@@ -30,3 +30,8 @@
 - PR desta branch deverá permanecer **draft** até ambiente de preview correto, QA visual/auth e CI `Central Canonical Guard` + `Change Trace` sem regressões.
 - Para interromper: fechar a PR, sem merge. A candidata é aditiva e não altera tabelas, Edge Functions nem HTML homologado.
 - Fonte bancária única: Cora; espelho operacional: Trello; GestãoClick fora como autoridade financeira.
+
+## CI da PR #199 — verificado em 27/10/2026
+- GitHub Actions **CONSTRU-REI Change Trace**: `completed / success` (run 40605711852).
+- GitHub Actions **Central Canonical Guard**: `completed / success` (run 40605711900).
+- Ambos vinculados ao commit `3d46fd2d6cb2d3f9a7041c5f974afa68d28aa22f` da candidata. Aprovação técnica **não equivale** à homologação funcional de login, backend vivo e QA visual.
