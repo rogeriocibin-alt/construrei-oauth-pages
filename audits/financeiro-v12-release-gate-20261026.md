@@ -24,3 +24,17 @@ Não confundir testes unitários ou snapshots textuais com conciliação bancár
 Resolver divergências com fonte documental, rodar conciliação cruzada e prova E2E (incluindo falha/retomada sem duplicação), validar Cora e Trello contra documentos primários, depois publicar mediante auditoria com checkpoint/rollback. **Não dar aceite 100% nem fazer merge automático da PR #174** antes disso.
 
 Referências: PR #174; commits 7ab0132, 33cc622, 770a094, cb27284; consulta Supabase apenas leitura de 26/10/2026.
+
+
+## Continuação técnica de 27/10/2026 — revisão de anotações Cora existentes
+
+**Escopo corrigido:** as cinco anotações em `cr_cora_bank_annotations_v12` permanecem originais e intactas; três são saídas (R$ 450 Éder, R$ 450 Fabrício e R$ 750 João Victor) e duas são entradas. Na consulta read-only de 27/10, as cinco tinham uma única obra declarada por anotação. A distribuição correta entre as obras **NÃO foi inferida, nem alterada**.
+
+**Implementação isolada na PR #174 (DRAFT):**
+- SQL `bank-annotation-revisions-CANDIDATE.sql`: nova tabela de revisões append-only, RLS ligado, sem permissão anon/authenticated; uma RPC `SECURITY INVOKER` disponível apenas para service_role usa trava por `operation_id`, comparação de fingerprint anterior (CAS), soma exata do valor bancário e controle de idempotência. **SQL apenas versionado; não aplicado no Supabase.**
+- Fonte Edge candidata `cora-aprovisionamento-backend/index.ts`: novas rotas `bank-annotation-revise-preview` e `bank-annotation-revise-commit`, exigem sessão da Diretoria e revalidação da movimentação Cora. Preservam anotação original, não escrevem Trello, Cora, custos, rateios ou Capital de Giro. **Edge não publicada nesta execução.**
+- Interface candidata: anotações existentes ficam selecionáveis; pré-preenche o registro atual e exige motivo para revisão; mostra confirmação explícita. Recebimentos informativos também podem ser revisados.
+- Regressões: teste novo `financeiro-v12-bank-note-revisions.test.cjs`; teste antigo `financeiro-v12-cora-note-only.test.cjs` adaptado à nova interface.
+- Notebook `Rogerio-2022` ONLINE: bateria **156 testes / 156 PASS / 0 FAIL** a partir do HEAD `3f4927ee39116a2246d730c88850d0868b2a2379`, usando fontes candidatas obtidas por SHA; checagem `node --check` do backend passou. Esses são testes locais/contratos, **não E2E real**.
+
+**Gates ainda abertos:** revisão SQL em ambiente de teste/rollback, instalação controlada da tabela/RPC, deploy seguro da Edge candidata sem regredir V12 oficial, teste autenticado de prévia/commit/reenvio/concorrência com notas de teste verificáveis, leitura após recarga, Android e comprovação de que cada diária foi vinculada às obras corretas. Manter sem merge, sem promoção automática e sem alterar os registros contábeis oficiais.
