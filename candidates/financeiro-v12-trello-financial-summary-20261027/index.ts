@@ -121,6 +121,69 @@ function annual2025(card:any){
   notes:["Faturamento anual reconciliado em 12 meses","Lucro parcial devido à obra 213-24 sem fechamento final","Não atribuir retiradas a sócios sem fonte financeira confirmada"]};
 }
 
+
+function privilegedKey(){
+ let role=sec("SUPABASE_SERVICE_ROLE_KEY");
+ if(role)return role;
+ try{const keys=JSON.parse(sec("SUPABASE_SECRET_KEYS")||"{}");return String(keys.default||keys.service_role||Object.values(keys)[0]||"");}catch{return ""}
+}
+async function financeSupport2026(){
+ const role=privilegedKey();
+ if(!role)return output({ok:false,error:"DB_SERVICE_NOT_AVAILABLE"},503);
+ const headers={authorization:"Bearer "+role,apikey:role,accept:"application/json"};
+ const base=SB+"/rest/v1/";
+ const endpoints=[
+   "cr_finance_v12_support_2026_source?select=work_code,source_card_id,source_url,line_number,line_text,payment_kind,beneficiary,amount_cents,evidence_state,last_synced_at&order=work_code.asc,line_number.asc&limit=1000",
+   "cr_cora_bank_annotations_v12?select=beneficiary,direction,amount_cents,created_at&direction=eq.OUT&limit=1000"
+ ];
+ try{
+ const all=await Promise.all(endpoints.map(async url=>{
+  const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),15000);
+  try{
+    const res=await fetch(base+url,{headers,signal:ctl.signal});
+    if(!res.ok)throw Error("DB_SUPPORT_READ_FAILED_"+res.status);
+    const data=await res.json();
+    if(!Array.isArray(data))throw Error("DB_SUPPORT_INVALID_RESPONSE");
+    return data;
+  }finally{clearTimeout(t)}
+ }));
+ const rows=all[0],bankNotes=all[1];
+ if(rows.length>=1000||bankNotes.length>=1000)throw Error("SUPPORT_SOURCE_PAGINATION_REQUIRED");
+ const byPerson:Record<string,{total_cents:number,lines:number,works:Set<string>,missing:number}>={};
+ let total=0,missing=0;
+ const flagged:any[]=[];
+ for(const r of rows){
+   const name=String(r.beneficiary||"Outro prestador (identificar)");
+   byPerson[name]??={total_cents:0,lines:0,works:new Set<string>(),missing:0};
+   const p=byPerson[name],v=Number(r.amount_cents);
+   p.lines++;if(r.work_code)p.works.add(String(r.work_code));
+   if(!Number.isSafeInteger(v)||v<=0){missing++;p.missing++;flagged.push({case:r.work_code,line_number:r.line_number,reason:"MISSING_AMOUNT"});continue}
+   p.total_cents+=v;total+=v;
+   if(String(r.evidence_state||"")!=="TRELLO_COST_LINE_UNRECONCILED" && flagged.length<30){
+     flagged.push({case:r.work_code,line_number:r.line_number,reason:String(r.evidence_state||"REVIEW")});
+   }
+ }
+ const support=Object.fromEntries(Object.entries(byPerson).map(([name,v])=>[name,{total_cents:v.total_cents,lines:v.lines,works:v.works.size,missing_amounts:v.missing}]));
+ const bank=Object.fromEntries(bankNotes.filter(r=>r.direction==="OUT").map(r=>[String(r.beneficiary||"").trim(),0]));
+ for(const r of bankNotes){
+   if(r.direction!=="OUT")continue;
+   const key=String(r.beneficiary||"").trim(),v=Number(r.amount_cents);
+   if(Number.isSafeInteger(v)&&v>0)bank[key]=(bank[key]||0)+v;
+ }
+ const asof=rows.reduce((mx,r)=>String(r.last_synced_at||"")>mx?String(r.last_synced_at):mx,"");
+ return output({ok:true,year:2026,kind:"TRELLO_SUPPORT_DAILY_COST_LINES",
+  source:"SUPABASE_DERIVED_FROM_TRELLO_2026_SNAPSHOT",stage_snapshot_asof:asof,
+  totals:{amount_cents:total,lines:rows.length,missing_amounts:missing,distinct_works:new Set(rows.map(r=>String(r.work_code||""))).size},
+  by_person:support,needs_review:flagged.slice(0,30),
+  bank_annotations_out_by_beneficiary_cents:bank,
+  bank_annotations_count:bankNotes.length,
+  bank_annotations_are_separate_from_costs:true,
+  sums_must_not_be_added_to_bank_notes:true,
+  bank_withdrawal_proof:false,
+  limitations:["Linha de custo Trello, não prova de pagamento bancário","Base operacional importada: atualização registrada em stage_snapshot_asof","João não equivale automaticamente a João Victor","Não aplicar rateios de 2026 retroativamente aos anos 2024/25","Valores de apoio/diárias não devem integrar percentual do rateio"]});
+ }catch(e){return output({ok:false,error:String((e as Error)?.message||e).slice(0,110)},502)}
+}
+
 Deno.serve(async(req:Request)=>{
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:CORS});
  if(req.method!=="GET")return output({ok:false,error:"READ_ONLY"},405);
@@ -128,6 +191,10 @@ Deno.serve(async(req:Request)=>{
  if(!["2023","2024","2025","2026"].includes(year))return output({ok:false,error:"INVALID_YEAR"},400);
  if(!await sessionValid(req))return output({ok:false,error:"DIRECTOR_OR_USER_SESSION_REQUIRED"},401);
  if(year==="2023")return output({ok:true,year:2023,bank_only:true,trello_financial_summary:null,source:"CORA_ONLY_2023"});
+ if(u.searchParams.get("kind")==="support"){
+  if(year!=="2026")return output({ok:true,year:Number(year),source:"TRELLO_SOURCE_PENDING_HISTORICAL_RECONCILIATION",support_rows:null,financial_amounts_not_assumed:true});
+  return financeSupport2026();
+ }
  const cardId=year==="2024"?CARD_2024:year==="2025"?CARD_2025:CARD;
  const key=sec("TRELLO_API_KEY"),token=sec("TRELLO_API_TOKEN");
  if(!key||!token)return output({ok:false,error:"TRELLO_BACKEND_CREDENTIALS_UNAVAILABLE"},503);
