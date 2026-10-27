@@ -828,7 +828,17 @@ async function existingAnnotation(operationId:string,k:string){
  const r=await fetch(url,{headers:headers(k),signal:AbortSignal.timeout(12000)});
  if(!r.ok)throw Error("BANK_ANNOTATION_READ_"+r.status);
  const j=await r.json();if(!Array.isArray(j)||j.length>1)throw Error("BANK_ANNOTATION_INTEGRITY");
- return j[0]||null;
+ const original=j[0]||null;
+ if(!original)return null;
+ const urlRevisions=new URL(SB+"/rest/v1/cr_cora_bank_annotation_revisions_v12");
+ urlRevisions.searchParams.set("operation_id","eq."+operationId);
+ urlRevisions.searchParams.set("select","revision_number,fingerprint,beneficiary,purpose,allocations,correction_reason,created_at");
+ urlRevisions.searchParams.set("order","revision_number.desc");
+ urlRevisions.searchParams.set("limit","1");
+ const rr=await fetch(urlRevisions,{headers:headers(k),signal:AbortSignal.timeout(12000)});
+ if(!rr.ok)throw Error("BANK_ANNOTATION_REVISION_READ_"+rr.status);
+ const revisions=await rr.json();if(!Array.isArray(revisions)||revisions.length>1)throw Error("BANK_ANNOTATION_REVISION_INTEGRITY");
+ return revisions[0]?{...original,...revisions[0],root_fingerprint:original.fingerprint}:original;
 }
 async function bankAnnotationFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
  const note=bankAnnotationData(p,raw),fingerprintValue=await sha256(JSON.stringify(note));
@@ -857,6 +867,41 @@ async function bankAnnotationFlow(action:string,p:ReturnType<typeof clean>,raw:a
   throw Error("BANK_ANNOTATION_UNVERIFIED_DO_NOT_REPEAT");
  return reply({ok:true,committed:true,annotation_only:true,no_cost_write:true,no_trello_write:true,
   no_cora_write:true,no_capital_write:true,annotation:saved});
+}
+// Revisão SOMENTE informativa e append-only. O registro original permanece intacto.
+async function bankAnnotationRevisionFlow(action:string,p:ReturnType<typeof clean>,raw:any,k:string){
+ const note=bankAnnotationData(p,raw),newFp=await sha256(JSON.stringify(note));
+ const prev=await existingAnnotation(p.operation_id,k);
+ if(!prev)throw Error("ANNOTATION_TO_REVISE_NOT_FOUND");
+ if(prev.bank_reference!==p.reference||prev.bank_date!==p.date||Number(prev.amount_cents)!==p.amount_cents)
+  throw Error("ANNOTATION_BANK_ORIGINAL_MISMATCH");
+ const previousFp=String(raw?.expected_previous_fingerprint||"");
+ if(!/^[0-9a-f]{64}$/.test(previousFp))throw Error("ANNOTATION_PREVIOUS_FINGERPRINT_REQUIRED");
+ // Retry of the same confirmed correction is read-only.
+ if(prev.fingerprint===newFp)return reply({ok:true,already_committed:true,annotation_only:true,
+  no_cost_write:true,no_trello_write:true,no_cora_write:true,no_capital_write:true,annotation:prev});
+ if(prev.fingerprint!==previousFp)throw Error("ANNOTATION_REVISION_STALE_RELOAD");
+ const reason=String(raw?.correction_reason||"").trim().slice(0,500);
+ if(reason.length<10)throw Error("ANNOTATION_REVISION_REASON_REQUIRED");
+ if(action==="bank-annotation-revise-preview")return reply({ok:true,preview:true,
+  annotation_only:true,no_cost_write:true,no_trello_write:true,no_cora_write:true,no_capital_write:true,
+  fingerprint:newFp,previous_fingerprint:prev.fingerprint,revision_number:Number(prev.revision_number||0)+1,
+  beneficiary:note.beneficiary,purpose:note.purpose,parts:note.allocations,total_cents:note.amount_cents});
+ if(String(raw?.expected_fingerprint||"")!==newFp)throw Error("ANNOTATION_REVISION_PREVIEW_CHANGED");
+ const rr=await fetch(SB+"/rest/v1/rpc/cr_cora_bank_annotation_revise_v12",{method:"POST",
+  headers:{...headers(k),"prefer":"return=representation"},body:JSON.stringify({
+   p_operation_id:p.operation_id,p_expected_previous_fp:previousFp,p_new_fingerprint:newFp,
+   p_beneficiary:note.beneficiary,p_purpose:note.purpose,p_allocations:note.allocations,p_reason:reason
+  }),signal:AbortSignal.timeout(16000)});
+ if(!rr.ok)throw Error("ANNOTATION_REVISION_SAVE_"+rr.status);
+ const rpcSaved=await rr.json();
+ if(!rpcSaved?.committed&&!rpcSaved?.already_committed)throw Error("ANNOTATION_REVISION_UNCONFIRMED");
+ const saved=await existingAnnotation(p.operation_id,k);
+ if(!saved||saved.fingerprint!==newFp||saved.bank_reference!==p.reference)
+  throw Error("ANNOTATION_REVISION_VERIFY_READ_REQUIRED");
+ return reply({ok:true,committed:!!rpcSaved.committed,already_committed:!!rpcSaved.already_committed,
+  annotation_only:true,no_cost_write:true,no_trello_write:true,no_cora_write:true,no_capital_write:true,
+  revision_number:saved.revision_number,annotation:saved});
 }
 async function batchBankStatus(raw:any,k:string){
  const given=raw?.ids;
@@ -894,17 +939,27 @@ async function batchBankStatus(raw:any,k:string){
  for(let i=0;i<names.length;i+=25){
   const url=new URL(SB+"/rest/v1/"+ANNOTATIONS);
   url.searchParams.set("operation_id","in.("+names.slice(i,i+25).join(",")+")");
-  url.searchParams.set("select","operation_id,bank_reference,beneficiary,purpose,allocations,amount_cents,bank_date,created_at");
+  url.searchParams.set("select","operation_id,bank_reference,beneficiary,purpose,allocations,amount_cents,bank_date,fingerprint,created_at");
   const response=await fetch(url,{headers:headers(k),signal:AbortSignal.timeout(12000)});
   if(!response.ok)throw Error("BANK_ANNOTATION_LIST_"+response.status);
   const notes=await response.json();if(!Array.isArray(notes))throw Error("BANK_ANNOTATION_LIST_INVALID");
-  for(const note of notes){
+  const revUrl=new URL(SB+"/rest/v1/cr_cora_bank_annotation_revisions_v12");
+  revUrl.searchParams.set("operation_id","in.("+names.slice(i,i+25).join(",")+")");
+  revUrl.searchParams.set("select","operation_id,revision_number,fingerprint,beneficiary,purpose,allocations,correction_reason,created_at");
+  revUrl.searchParams.set("order","revision_number.desc");
+  const revResponse=await fetch(revUrl,{headers:headers(k),signal:AbortSignal.timeout(12000)});
+  if(!revResponse.ok)throw Error("BANK_ANNOTATION_REVISION_LIST_"+revResponse.status);
+  const revList=await revResponse.json();if(!Array.isArray(revList))throw Error("BANK_ANNOTATION_REVISION_LIST_INVALID");
+  const latest=new Map();
+  for(const rev of revList)if(!latest.has(rev.operation_id))latest.set(rev.operation_id,rev);
+  for(const initial of notes){
+   const note=latest.has(initial.operation_id)?{...initial,...latest.get(initial.operation_id)}:initial;
    const id=reverse.get(String(note.operation_id));
    if(!id||String(note.bank_reference)!==id)throw Error("BANK_ANNOTATION_BANK_ID_MISMATCH");
    const existing=(statuses[id]||{state:"PENDENTE",ledger_status:"NO_COST_ENTRY",verified_reference:true}) as any;
    existing.annotated=true;
    existing.annotation={beneficiary:String(note.beneficiary||""),purpose:String(note.purpose||""),
-    allocations:note.allocations,amount_cents:note.amount_cents,bank_date:note.bank_date,created_at:note.created_at};
+    allocations:note.allocations,amount_cents:note.amount_cents,bank_date:note.bank_date,created_at:note.created_at,fingerprint:note.fingerprint,revision_number:note.revision_number||0,correction_reason:note.correction_reason||null};
    statuses[id]=existing;
   }
  }
@@ -916,7 +971,7 @@ Deno.serve(async(req:Request)=>{
  if(req.headers.get("origin")&&req.headers.get("origin")!==ORIGIN)return reply({ok:false,error:"ORIGIN_DENIED"},403);
  const u=new URL(req.url),action=u.searchParams.get("action")||"health";
  if(action==="health"&&req.method==="GET")return reply({ok:true,candidate:true,build:NAME,trello_writes:"DIRECTOR_ONLY",bank_verification:"SERVER_SIDE_CACHE",status:"LEDGER_PERSISTENT"});
- if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","bank-annotation-preview","bank-annotation-commit","multi-candidates","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","withdrawal-history","withdrawal-preview","withdrawal-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
+ if(req.method!=="POST"||!["preview","commit","status","bank-status","existing-preview","existing-confirm","eligible-cases","bank-annotation-preview","bank-annotation-commit","bank-annotation-revise-preview","bank-annotation-revise-commit","multi-candidates","multi-preview","multi-commit","capital-periods","capital-preview","capital-commit","withdrawal-history","withdrawal-preview","withdrawal-commit","receipt-existing-preview","receipt-existing-confirm"].includes(action))return reply({ok:false,error:"METHOD_NOT_ALLOWED"},405);
  if(!await director(req))return reply({ok:false,error:"DIRECTOR_SESSION_REQUIRED"},401);
  const k=key();if(!k)return reply({ok:false,error:"SERVICE_AUTH_UNAVAILABLE"},503);
  let raw:any=null;
@@ -940,6 +995,11 @@ Deno.serve(async(req:Request)=>{
  if(action==="receipt-existing-preview"||action==="receipt-existing-confirm"){
   try{return await existingReceiptFlow(action,p,raw,k)}
   catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,135),possible_trello_write:false},409)}
+ }
+ if(action==="bank-annotation-revise-preview"||action==="bank-annotation-revise-commit"){
+  try{return await bankAnnotationRevisionFlow(action,p,raw,k)}
+  catch(e){return reply({ok:false,error:String((e as Error)?.message||e).slice(0,130),
+   possible_trello_write:false,possible_cora_write:false,possible_cost_write:false},409)}
  }
  if(action==="bank-annotation-preview"||action==="bank-annotation-commit"){
   try{return await bankAnnotationFlow(action,p,raw,k)}
