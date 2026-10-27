@@ -105,3 +105,30 @@ test('cartões 2024 e 2025 seguem exatamente o classificador legado',()=>{
  assert.equal(Math.round(old.cap*100),6766);
  assert.match(s,/endsWith\("-26"\)\)return analyzeLegacy\(c,allowSupport\)/);
 });
+
+test('627-26 setembro: CG R$32,58 separado em três linhas é recuperado sem alterar lucro',()=>{
+ const c={name:'✅ (627-26) R$ 1.320,00',desc:[
+  'Valor Fechado: R$ 1.320,00','Custos:','Total Custos: R$ 994,20','Saldo: R$ 325,80',
+  'Rateio do Lucro:','Fabrício 20%: R$ 65,16','Éder 28%: R$ 91,22',
+  'Rogério 28%: R$ 91,22','Gabi 14%: R$ 45,61',
+  'CAPITAL DE GIRO','✅ Capital de Giro','10% sobre o lucro: R$ 32,58'
+ ].join('\n')};
+ const r=analyze(c,false);
+ assert.equal(Math.round(r.cap*100),3258);
+ assert.equal(Math.round(r.p*100),32580);
+ assert.equal(Math.round(r.rate['Éder']*100),9122);
+});
+test('655-26 setembro: linha 10% sob cabeçalho capital restitui R$71,57 sem alterar custos',()=>{
+ const c={name:'✅ (655-26) R$ 1.765,90',desc:[
+  'Valor Fechado: R$ 1.765,90','Custos:','17/09 - R$150,00 Apoio Éder',
+  'Total Custos: R$ 1.050,23','💰 LUCRO LÍQUIDO: R$ 715,67',
+  'RATEIO DO LUCRO:','Fabrício 20%: R$ 143,13',
+  'Éder 28%: R$ 200,39','Rogério 28%: R$ 200,39','Gabi 14%: R$ 100,19',
+  '🏦 CAPITAL DE GIRO','✅ 10% sobre o lucro líquido: R$ 71,57'
+ ].join('\n')};
+ const r=analyze(c,true);
+ assert.equal(Math.round(r.cap*100),7157);
+ assert.equal(Math.round(r.p*100),71567);
+ assert.equal(Math.round(r.k*100),105023);
+ assert.equal(Math.round(r.rate['Éder']*100),20039);
+});
