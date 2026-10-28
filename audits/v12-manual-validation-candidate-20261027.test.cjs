@@ -5,10 +5,11 @@ const official=fs.readFileSync(path.join(__dirname,"official.html"),"utf8");
 const scripts=s=>[...s.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].map(x=>({id:x[1].match(/id="([^"]+)"/)?.[1]||null,js:x[2]}));
 const C=scripts(candidate),O=scripts(official);
 test("candidate retains exactly all existing official scripts in identical order",()=>{
- assert.equal(C.length,O.length+1);
+ assert.equal(C.length,O.length);
  for(let i=0;i<O.length;i++)assert.equal(C[i].id,O[i].id);
- const changed=C.map((x,i)=>i<O.length&&x.js!==O[i].js?x.id:null).filter(Boolean);
- assert.deepEqual(changed,[null].filter(Boolean).concat(["(candidate original main script)"]).filter(Boolean).map(x=>x)); // replaced by explicit expected below
+ const changed=C.filter((x,i)=>x.js!==O[i].js);
+ assert.equal(changed.length,1,"only manual central script may change");
+ assert.match(changed[0].js,/manualValidateFields/);
 });
 test("all JS parses",()=>{for(const x of C)assert.doesNotThrow(()=>new vm.Script(x.js),x.id||"inline")});
 test("client checks exact backend required fields before request",()=>{
