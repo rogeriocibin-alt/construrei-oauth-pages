@@ -36,7 +36,7 @@ test("previa nao registra e commit so habilita apos retorno autenticado",()=>{
  assert.match(candidate,/v12ProtectedWrite\("commit",p\)/);
 });
 test("consulta de registro captura erro mesmo se manualPayload falhar",()=>{
- assert.match(candidate,/async function manualCheckStatus\(\)\{\s*try\{\s*const payload=S\.manualLastPayload\|\|manualPayload\(\)/);
+ assert.match(candidate,/async function manualCheckStatus\(\)\{\s*try\{\s*if\(!S\.manualLastPayload\)/);
 });
 test("Nf, fechamento de obra e anotacao Cora preservados",()=>{
  for(const str of ["manualNfUpdate()","manualCloseWork()","manualClear()","manualCheckStatus()","cr-ap-note-only","cr-ap-note-preview","cr-ap-note-confirm","crp-period-send-v2"])assert.ok(candidate.includes(str),str);
@@ -47,3 +47,6 @@ test("rotas limitadas por netguard e somente a candidata modificada",()=>{
 });
 test("não duplica IDs de elementos",()=>{const ids=[...candidate.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);assert.equal(new Set(ids).size,ids.length)});
 test("origem de auditoria permanece read-only",()=>{assert.match(candidate,/cr-v12-audit-imported-readonly-runtime/);assert.match(candidate,/cr-v12-r3-risk-readonly-20261027/);});
+
+test("status sem tentativa de escrita nao chama API e evita erro",()=>{assert.match(candidate,/Nenhum lançamento foi enviado nesta sessão para consultar/);assert.match(candidate,/const payload=S\.manualLastPayload/);});
+test("reenvio preserva o payload da operacao apenas apos conferir a previa",()=>{assert.match(candidate,/if\(JSON\.stringify\(p\)!==S\.manualPreviewPayload\)throw Error\([^;]+;S\.manualLastPayload=p;const r=await v12ProtectedWrite\("commit",p\)/)});
