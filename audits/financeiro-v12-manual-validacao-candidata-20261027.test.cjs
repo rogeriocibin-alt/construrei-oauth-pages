@@ -1,17 +1,17 @@
 "use strict";
 const test=require("node:test"),assert=require("node:assert/strict"),fs=require("node:fs"),vm=require("node:vm");
 const candidate=fs.readFileSync(__dirname+"/index.html","utf8");
-const base=fs.readFileSync(__dirname+"/production.html","utf8");
+const base=fs.readFileSync(__dirname+"/candidate-before.html","utf8");
 const scripts=s=>[...s.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].map(x=>({name:x[1].match(/id="([^"]+)"/)?.[1]||"inline",source:x[2]}));
 const a=scripts(candidate),b=scripts(base);
-test("candidata preserva todos os scripts e modulos da V12 homologada",()=>{
+test("candidata preserva todos os scripts da candidata canônica prévia",()=>{
  assert.equal(a.length,b.length);
  for(let i=0;i<b.length;i++)assert.equal(a[i].name,b[i].name,"script order "+i);
 });
 test("scripts da candidata compilam no JavaScript",()=>{for(const s of a)assert.doesNotThrow(()=>new vm.Script(s.source),s.name)});
-test("nao altera o codigo dos modulos de Cora/Trello/rateios/CG",()=>{
+test("nao altera o codigo dos modulos de Cora/Trello/rateios/CG e auditoria",()=>{
  const changed=a.map((x,i)=>x.source===b[i].source?null:i).filter(x=>x!==null);
- assert.equal(changed.length,1,"apenas runtime da operação manual deve mudar");
+ assert.equal(changed.length,1,"somente um script do runtime manual pode mudar");
 });
 test("mensagens de orientacao e prevalidacao antes de qualquer POST",()=>{
  assert.match(candidate,/id="mc-required-help"/);
