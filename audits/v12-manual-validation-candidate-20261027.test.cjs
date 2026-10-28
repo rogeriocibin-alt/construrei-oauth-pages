@@ -5,9 +5,10 @@ const official=fs.readFileSync(path.join(__dirname,"official.html"),"utf8");
 const scripts=s=>[...s.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].map(x=>({id:x[1].match(/id="([^"]+)"/)?.[1]||null,js:x[2]}));
 const C=scripts(candidate),O=scripts(official);
 test("candidate retains exactly all existing official scripts in identical order",()=>{
- assert.equal(C.length,O.length);
+ assert.equal(C.length,O.length+1);
  for(let i=0;i<O.length;i++)assert.equal(C[i].id,O[i].id);
- const changed=C.filter((x,i)=>x.js!==O[i].js);
+ assert.equal(C.at(-1).id,'cr-v12-audit-imported-readonly-runtime');
+ const changed=C.slice(0,O.length).filter((x,i)=>x.js!==O[i].js);
  assert.equal(changed.length,1,"only manual central script may change");
  assert.match(changed[0].js,/manualValidateFields/);
 });
