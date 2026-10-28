@@ -41,13 +41,14 @@ Deno.serve(async req=>{
   if(result[0].status!=="fulfilled")throw Error("WORK_SOURCE_READ_FAILED");
   const items=result[0].value;
   const breakdown={},review=[],codes=new Set();
-  let fullyComputable=0,aggregateAbsGap=0;
+  let fullyComputable=0,aggregateAbsGap=0,duplicateCardEntries=0;const duplicateExamples=[];
   for(const r of items){
    const status=String(r.validation_state||"UNKNOWN").slice(0,60);
    breakdown[status]=(breakdown[status]||0)+1;
    const id=String(r.work_code||"").trim();
-   if(!/^\d{1,5}-26$/.test(id)||codes.has(id))throw Error("WORK_IDENTITY_DUPLICATE_OR_INVALID");
-   codes.add(id);
+   if(!/^\d{1,5}-26$/.test(id))throw Error("WORK_IDENTITY_INVALID");
+   if(codes.has(id)){duplicateCardEntries++;if(duplicateExamples.length<30)duplicateExamples.push(id)}
+   else codes.add(id);
    const gross=cents(r.closed_cents),cost=cents(r.cost_cents),profit=cents(r.declared_profit_cents);
    let gap=null;if(gross!==null&&cost!==null&&profit!==null){gap=gross-cost-profit;fullyComputable++;aggregateAbsGap+=Math.abs(gap)}
    if(status!=="BALANCED"&&review.length<100)review.push({work_code:id,status,gap_cents:gap});
@@ -69,7 +70,7 @@ Deno.serve(async req=>{
   const cutoff=(stage||[]).map(x=>String(x.import_cutoff||"")).sort().at(-1)||null;
   return out({ok:true,year:2026,source:"SUPABASE_TRELLO_2026_IMPORT_NOT_LIVE_TRELLO",
    retrieved_at:new Date().toISOString(),source_last_synced_at:asof,source_import_cutoff:cutoff,
-   works:{count:items.length,states:breakdown,complete_arithmetic:fullyComputable,abs_gap_cents:aggregateAbsGap,needs_review:review},
+   works:{count:items.length,unique_codes:codes.size,duplicate_card_entries:duplicateCardEntries,duplicate_examples:duplicateExamples,states:breakdown,complete_arithmetic:fullyComputable,abs_gap_cents:aggregateAbsGap,needs_review:review},
    annotations:annotations?{...annotationCoverage,by_beneficiary_out_cents:byPerson,proof_of_bank_payment:false,bank_statement:false}:null,
    period_registry:registry?{count:registry.length,status:periods}:null,
    source_availability:{works:true,annotations:!!annotations,period_registry:!!registry,source_stage:!!stage},
