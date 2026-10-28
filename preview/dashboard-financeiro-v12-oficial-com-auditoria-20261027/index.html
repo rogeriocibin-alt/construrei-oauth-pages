@@ -2750,7 +2750,7 @@ function present(data){
   if(!/^\d{1,5}-26$/.test(code))continue;
   const div=document.createElement("div");div.style.cssText="padding:9px;border:1px solid #d2e0eb;border-radius:9px;background:#f9fbfe;line-height:1.5";
   const line=document.createElement("strong");line.textContent=code;
-  const detail=document.createElement("div");detail.textContent=state==="DIVERGENT"?"Diferença "+(valid(Math.abs(row.gap_cents))?money(Math.abs(row.gap_cents)):"a conferir"):state==="INCOMPLETE"?"Dados financeiros incompletos":"Verificar registro";
+  const detail=document.createElement("div");detail.textContent=state==="DIVERGENT"?"Diferença "+(Number.isSafeInteger(row.gap_cents)?money(Math.abs(row.gap_cents)):"a conferir"):state==="INCOMPLETE"?"Dados financeiros incompletos":"Verificar registro";
   div.append(line,detail);cases.append(div);
  }
  if(!items.length){const p=document.createElement("p");p.textContent="Não há detalhe disponível na origem para esta consulta.";cases.append(p)}
