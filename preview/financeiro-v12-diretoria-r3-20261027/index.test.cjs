@@ -20,3 +20,11 @@ test("2023 bank-only guard no fictitious Trello operational financials",()=>{ass
 test("client has no secrets",()=>assert.doesNotMatch(h,/SUPABASE_SERVICE_ROLE_KEY|TRELLO_API_KEY|TRELLO_API_TOKEN|sb_secret_/));
 test("R3 closes no financial writes",()=>{assert.doesNotMatch(r3,/updateCard|\/cards\/.*PUT|action=close-commit|action=commit/);assert.match(h,/gravação protegida|GRAVAÇÃO PROTEGIDA/);});
 test("no duplicate HTML IDs",()=>{const ids=[...h.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);assert.equal(new Set(ids).size,ids.length);});
+
+test("operational evidence from read-only edge shows unique works separately from card rows",()=>{
+  assert.match(h,/cr-v12-r3-risk-readonly-20261027/);
+  assert.match(h,/duplicate_card_entries/);
+  assert.match(h,/unique_codes/);
+  assert.match(h,/source_import_cutoff/);
+  assert.match(old,/tasks\.risk=read\(RISK\)/);
+});
