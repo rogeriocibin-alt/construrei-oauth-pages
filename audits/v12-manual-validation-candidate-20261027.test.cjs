@@ -23,3 +23,11 @@ test("preview never commits automatically",()=>{const j=C.map(x=>x.js).join("\n"
 test("manual form explains required information in Portuguese",()=>{assert.match(candidate,/id="mc-required-help"/);assert.match(candidate,/favorecido/);assert.match(candidate,/descrição/);assert.match(candidate,/referência/);assert.match(candidate,/aria-invalid/);});
 test("critical financial modules preserved",()=>{for(const id of ["cr-v12-audit-imported-readonly-runtime","cr-v12-earnings-support-and-history","cr-v12-trello-financial-withdrawals-live","crp-period-send-v2","cr-v12-withdraw-history-runtime","v12-finance-safe-call"])assert.ok(candidate.includes(id))});
 test("production unchanged in this workstream",()=>{assert.ok(official.includes("V12 OPERAÇÃO HOMOLOGADA"));assert.ok(!official.includes("v12-manual-validation-candidate-css"))});
+
+test("manual Trello form warns against duplicate Cora-only annotation",()=>{
+ assert.match(candidate,/Anotação informativa no Extrato Cora/);
+ assert.match(candidate,/para não duplicar despesas/);
+});
+test("status query catches errors even when deriving payload fails",()=>{
+ assert.match(C.map(x=>x.js).join("\n"),/async function manualCheckStatus\(\)\{\s*manualMsg\([\s\S]*?try\{\s*const payload=S\.manualLastPayload\|\|manualPayload\(\)/);
+});
