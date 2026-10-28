@@ -247,7 +247,7 @@ function r3Executive(){
  const area=el("r3-exec"),trend=el("r3-trend");area.replaceChildren();trend.replaceChildren();
  if(year==="2023"){r3Stat(area,"2023","Somente Cora","Não há obra/Trello para esta competência");return}
  const x=renderedYear(),a=x.accepted,metrics=data.oper?.metrics||{};
- const count=month>0?metrics.cases_total:year==="2025"?data.fin?.cases:metrics.cases_total;
+ const count=month>0?metrics.cases_total:year==="2025"?data.fin?.cases:null;
  const usable=a.gross>0&&r3Valid(a.cost)&&r3Valid(a.profit)&&x.math===0;
  r3Stat(area,"Ticket operacional",r3Valid(a.gross)&&r3Valid(count)&&Number(count)>0?mny(Math.round(a.gross/count)):"Não conciliado","Apenas com quantidade de obras do mesmo escopo");
  r3Stat(area,"Custo sobre bruto",usable?pc(a.cost/a.gross*100):"Não certificado","Mesma origem, período e soma aritmética");
