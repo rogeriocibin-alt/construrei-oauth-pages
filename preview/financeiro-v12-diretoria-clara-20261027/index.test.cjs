@@ -12,4 +12,7 @@ test("UX móvel conserva quatro métricas visíveis e menu acessível",()=>{asse
 test("sem escrita financeira na candidata R4",()=>{assert.doesNotMatch(r4,/fetch\(|action=commit|method:"PUT"|method:"DELETE"/);assert.match(r3,/preview-diagnostic/);assert.doesNotMatch(r3,/action=commit|recovery-commit/)});
 test("custo equipe e risco continuam baseados nas mesmas fontes",()=>{assert.match(base,/cr-v12-financial-settlements-trello-20261027/);assert.match(base,/cr-v12-r3-risk-readonly-20261027/);assert.match(r3,/duplicate_card_entries/);assert.match(base,/crv2/)});
 test("não há ids duplicados",()=>{const ids=[...h.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);assert.equal(ids.length,new Set(ids).size)});
-test("sistema oficial da produção não é modificado",()=>{assert.match(base,/dashboard-financeiro-v12-operacoes-homologada-20261023/);assert.match(h,/VERSÃO DE AVALIAÇÃO/)});
+test("sistema oficial da produção não é modificado",()=>{assert.match(base,/dashboard-financeiro-v12-operacoes-homologada-20261023/);assert.match(h,/PRÉVIA · SEM LANÇAMENTOS/)});
+
+test("five tabs are visible in mobile 3-column wrapping layout",()=>{assert.match(h,/\.tabs\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);});
+test("margin remains explicitly provisional only for centavo-scale math mismatch",()=>{assert.match(r4,/Math\.abs\(scope\.math\)<=10/);assert.match(r4,/Indicativa\. Diferença de/);});
