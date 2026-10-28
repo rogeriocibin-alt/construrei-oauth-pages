@@ -1,0 +1,15 @@
+"use strict";
+const fs=require("node:fs"),vm=require("node:vm"),path=require("node:path"),test=require("node:test"),assert=require("node:assert/strict");
+const h=fs.readFileSync(path.join(__dirname,"index.html"),"utf8");const js=[...h.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(x=>x[1]);const [base,r3,r4]=js;
+test("três scripts da candidata são JavaScript válido",()=>{assert.equal(js.length,3);for(const s of js)assert.doesNotThrow(()=>new vm.Script(s))});
+test("cinco abas expressam ações compreensíveis",()=>{for(const label of ["Visão geral","Equipe","Custos","O que corrigir","Acertos"])assert.ok(h.includes(">"+label+"</button>"))});
+test("módulos originais e operações de conferência preservados",()=>{for(const id of ["summary","people","costs","issues","close","summarycards","persons","costcards","r3-cost-filtered","r3-issues-filtered","r3-close-preview"])assert.ok(h.includes('id="'+id+'"'),id)});
+test("KPI não confunde faturamento com recebimento bancário",()=>{for(const label of ["Faturamento registrado","Custos informados","Lucro informado","Margem calculada"])assert.match(h,new RegExp(label));assert.match(h,/Recebimentos comprovados no Cora são outra informação/)});
+test("aviso visível de período janeiro a setembro não é total do ano",()=>{assert.match(r4,/janeiro a setembro/);assert.match(r4,/Outubro e períodos posteriores ainda não entram/);});
+test("gráficos auditoria e fontes recolhidos mas ainda acessíveis",()=>{assert.match(h,/id="r4-summary-details"/);assert.match(r4,/#summary > \.panels, #summary > \.panel/);assert.match(h,/r4-cost-details/);});
+test("garante boot sem sessão e não interrompe a inicialização",()=>{assert.match(base,/typeof r4Render==='function'/);assert.match(r4,/r4Setup\(\)/);assert.doesNotMatch(r4,/sourceHeading\.parentElement\?\.append\(det\)/)});
+test("UX móvel conserva quatro métricas visíveis e menu acessível",()=>{assert.match(h,/@media\(max-width:700px\)/);assert.match(h,/aria-label="Seções da diretoria"/);assert.match(h,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/)});
+test("sem escrita financeira na candidata R4",()=>{assert.doesNotMatch(r4,/fetch\(|action=commit|method:"PUT"|method:"DELETE"/);assert.match(r3,/preview-diagnostic/);assert.doesNotMatch(r3,/action=commit|recovery-commit/)});
+test("custo equipe e risco continuam baseados nas mesmas fontes",()=>{assert.match(base,/cr-v12-financial-settlements-trello-20261027/);assert.match(base,/cr-v12-r3-risk-readonly-20261027/);assert.match(r3,/duplicate_card_entries/);assert.match(base,/crv2/)});
+test("não há ids duplicados",()=>{const ids=[...h.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);assert.equal(ids.length,new Set(ids).size)});
+test("sistema oficial da produção não é modificado",()=>{assert.match(base,/dashboard-financeiro-v12-operacoes-homologada-20261023/);assert.match(h,/VERSÃO DE AVALIAÇÃO/)});
