@@ -1,0 +1,30 @@
+"use strict";
+const {test}=require("node:test"), assert=require("node:assert/strict"),fs=require("node:fs"),vm=require("node:vm"),path=require("node:path");
+const h=fs.readFileSync(path.join(__dirname,"index.html"),"utf8"),js=[...h.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(x=>x[1]);
+const old=js[0],r3=js[1];
+test("R3 has base and extension scripts that both compile",()=>{assert.equal(js.length,2);for(const code of js)assert.doesNotThrow(()=>new vm.Script(code))});
+test("9 improvements: structure integrated with R2 not replacement",()=>{for(const id of ["summary","people","costs","issues","close","r3-health","r3-exec","r3-trend","r3-income","r3-cost-filtered","r3-risk-matrix","r3-close-preview"])assert.match(h,new RegExp('id="'+id+'"'))});
+test("R2 base renderer executes R3 enhancement",()=>assert.match(old,/issuesRender\(\);timelineRender\(\);r3Render\(\)/));
+test("1 KPI source and unit guards",()=>{assert.match(old,/TRELLO_DECLARED_UNRECONCILED/);assert.match(r3,/const usable=a\.gross>0/);assert.match(r3,/x\.math===0/);assert.match(r3,/const count=month>0\?metrics.cases_total:year==="2025"\?data\.fin\?\.cases:null/);});
+test("2 cost classification, search, category and filter",()=>{for(const x of ["r3-cost-search","r3-cost-cat","cost_intelligence","by_category","NÃO CLASSIFICADO","r3CostFiltered"])assert.match(h,new RegExp(x));});
+test("2 cost CSV protects against formula injection",()=>{assert.match(r3,/^\s*function r3CSV/m);assert.match(r3,/=\+\\-@/);assert.match(r3,/text\/csv/);});
+test("3 individual income shares independent from costs/bank",()=>{for(const x of ["declared_by_person_cents","by_person","bank_annotations_out_by_beneficiary_cents","Éder","Fabrício","Gabrielly","Rogério"])assert.ok(h.includes(x));assert.match(r3,/Anotação, não baixa/);});
+test("4 Cora vs Trello explicitly disjoint",()=>{assert.match(h,/Rateio do lucro ≠ custo de apoio\/diária ≠ saque confirmado/);assert.match(r3,/Nenhum total de renda paga é inferido/);});
+test("5 backend preview is authenticated and never commits",()=>{assert.match(r3,/const action=diagnostic\?"preview-diagnostic":"preview"/);assert.match(r3,/preview-diagnostic/);assert.match(r3,/x-cr-session/);assert.doesNotMatch(r3,/action=commit|recovery-commit/);assert.match(r3,/nenhum cartão será enviado/i);});
+test("5 date range, duplicates, case syntax, year control",()=>{for(const x of ["r3CaseCodes","r3PeriodPreview","Set(raw).size!==raw.length","days>46","start>end"])assert.ok(r3.includes(x));});
+test("6 responsive and keyboard-screenreader",()=>{assert.match(h,/@media\(max-width:620px\)/);assert.match(h,/aria-label="Seções da diretoria"/);assert.match(h,/role="status"/);});
+test("7 dynamic issues, sorting and export",()=>{assert.match(old,/sort\(\(a,b\)=>Math\.abs\(b\.gap/);assert.match(r3,/r3Issues\(\)/);assert.match(r3,/r3IssueCSV/);});
+test("8 health separates auth and accounting",()=>{assert.match(old,/Conexão autenticada — dado ≠ conciliado/);assert.match(r3,/Saúde de conexão, qualidade dos cartões e conciliação bancária/);assert.match(r3,/stage_snapshot_asof/);});
+test("9 trend and cost/profit ticket intelligence",()=>{assert.match(r3,/r3Executive/);assert.match(r3,/Ticket operacional/);assert.match(r3,/Custo sobre bruto/);assert.match(r3,/Margem líquida/);assert.match(r3,/30–40%/);});
+test("2023 bank-only guard no fictitious Trello operational financials",()=>{assert.match(old,/if\(selectedYear==="2023"\)/);assert.match(r3,/year==="2023"/);});
+test("client has no secrets",()=>assert.doesNotMatch(h,/SUPABASE_SERVICE_ROLE_KEY|TRELLO_API_KEY|TRELLO_API_TOKEN|sb_secret_/));
+test("R3 closes no financial writes",()=>{assert.doesNotMatch(r3,/updateCard|\/cards\/.*PUT|action=close-commit|action=commit/);assert.match(h,/gravação protegida|GRAVAÇÃO PROTEGIDA/);});
+test("no duplicate HTML IDs",()=>{const ids=[...h.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);assert.equal(new Set(ids).size,ids.length);});
+
+test("operational evidence from read-only edge shows unique works separately from card rows",()=>{
+  assert.match(h,/cr-v12-r3-risk-readonly-20261027/);
+  assert.match(h,/duplicate_card_entries/);
+  assert.match(h,/unique_codes/);
+  assert.match(h,/source_import_cutoff/);
+  assert.match(old,/tasks\.risk=readRisk\(\)/);
+});
