@@ -55,13 +55,13 @@ body{background:#f0f4f8;color:#19334a}
 #summary .panel{box-shadow:none}
 .footer{font-size:11px}
 @media(max-width:700px){.wrap{padding:13px}.topin{padding:12px}.headline h1{font-size:26px}.headline .hint{font-size:12px}.tabs{position:sticky;top:0;z-index:15;background:#f0f4f8;padding:8px 0 10px;overflow-x:auto}.tabs button{min-height:42px;font-size:12px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}#summarycards .card{min-height:130px;padding:13px}#summarycards .number{font-size:clamp(20px,5.6vw,26px)}#summarycards .card h3{font-size:11px}.r4-next .btn{flex:1}.r4-section-top h2{font-size:22px}#people .people{grid-template-columns:1fr}.r4-deep>summary{padding:15px}}
-@media(max-width:365px){#summarycards .cards,.cards{grid-template-columns:1fr}#summarycards .number{font-size:28px}}
+@media(max-width:700px){.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));position:static;overflow:visible;gap:6px}.tabs button{white-space:normal;min-height:48px;padding:8px 7px;font-size:11px;line-height:1.25}.topright .badge{font-size:10px;max-width:132px;text-align:center}}@media(max-width:365px){#summarycards .cards,.cards{grid-template-columns:1fr}#summarycards .number{font-size:28px}}
 </style></head>
 <body>
-<header class="top"><div class="topin"><div class="brand">CONSTRU<span class="rei">-REI</span><small>CONSTRUTORA, REPAROS E REFORMAS</small></div><div class="topright"><span class="badge">VERSÃO DE AVALIAÇÃO · SEM ALTERAR FINANÇAS</span><button class="btn" id="signout" type="button">Sair</button></div></div></header>
+<header class="top"><div class="topin"><div class="brand">CONSTRU<span class="rei">-REI</span><small>CONSTRUTORA, REPAROS E REFORMAS</small></div><div class="topright"><span class="badge">PRÉVIA · SEM LANÇAMENTOS</span><button class="btn" id="signout" type="button">Sair</button></div></div></header>
 <div class="wrap">
 <div class="headline"><div><div class="eyebrow">CONSTRU-REI · Diretoria financeira</div><h1>Seu financeiro, de forma simples</h1><p class="hint">Primeiro veja os resultados. Depois confira a equipe, os custos e o que precisa de atenção. Sem confundir obras com movimentações do banco.</p></div><div style="display:grid;gap:6px;text-align:right"><span class="pill" id="connect">Aguardando autenticação</span><span class="pill" id="sync">Última leitura: —</span></div></div>
-<div class="filters"><label>Ano<select id="year"><option value="2026" selected>2026 · Trello</option><option value="2025">2025 · Trello</option><option value="2024">2024 · Trello</option><option value="2023">2023 · Cora apenas</option></select></label><label>Mês<select id="month"><option value="0">Ano todo / referência anual</option></select></label><button class="btn primary" type="button" id="reload">Atualizar fontes</button><div class="hint" id="scope" style="flex:1;min-width:220px">Aguardando consulta autenticada às fontes reais.</div></div>
+<div class="filters"><label>Ano<select id="year"><option value="2026" selected>2026 · Trello</option><option value="2025">2025 · Trello</option><option value="2024">2024 · Trello</option><option value="2023">2023 · Cora apenas</option></select></label><label>Mês<select id="month"><option value="0">Acumulado disponível</option></select></label><button class="btn primary" type="button" id="reload">Atualizar fontes</button><div class="hint" id="scope" style="flex:1;min-width:220px">Aguardando consulta autenticada às fontes reais.</div></div>
 <nav class="tabs" aria-label="Seções da diretoria"><button class="on" data-pane="summary">Visão geral</button><button data-pane="people">Equipe</button><button data-pane="costs">Custos</button><button data-pane="issues">O que corrigir</button><button data-pane="close">Acertos</button></nav>
 <section id="summary" class="pane on">
 <div class="r4-where" id="r4-period-state">O período e a origem dos valores aparecem aqui após autenticação.</div>
@@ -438,16 +438,17 @@ function r4Render(){
  else if(year==="2026")banner.textContent="2026 · Faturamento, custos, lucro e rateios DECLARADOS no Trello de janeiro a setembro. Outubro e períodos posteriores ainda não entram nesse total.";
  else banner.textContent=year+" · Dados históricos do Trello. Alguns custos, lucros e retiradas ainda exigem conferência.";
  const insights=document.getElementById("r4-insights");insights.replaceChildren();
+ const scope=renderedYear();if(year==="2026"&&month===0&&r3Valid(scope.accepted?.gross)&&scope.accepted.gross>0&&r3Valid(scope.accepted?.profit)&&r3Valid(scope.math)&&scope.math!==0&&Math.abs(scope.math)<=10){const margin=document.querySelector("#summarycards .card:nth-child(4)");if(margin){margin.querySelector(".number").textContent="≈ "+pc(scope.accepted.profit/scope.accepted.gross*100);margin.querySelector(".small").textContent="Indicativa. Diferença de "+mny(Math.abs(scope.math))+" ainda não conciliada.";}}
  if(year==="2023"){r4Insight("Use o sistema oficial para consultar as entradas e saídas do Cora neste ano.", "good");return}
  const fin=data.fin,metrics=data.oper?.metrics,risk=data.risk?.works;
  if(risk&&year==="2026"&&month===0){
    r4Insight("Ainda precisam de conferência: "+(risk.states?.INCOMPLETE??"?")+" registros incompletos e "+(risk.states?.DIVERGENT??"?")+" divergente(s) no espelho importado. São cartões, não necessariamente obras únicas.","critical");
    if(Number(risk.duplicate_card_entries)>0)r4Insight("A base tem "+num(risk.count)+" cartões para "+num(risk.unique_codes)+" códigos de obra. Esses registros repetidos não serão somados automaticamente.");
- }else if(metrics?.issues&&Object.keys(metrics.issues).length){r4Insight("Existem pendências operacionais a conferir antes de considerar estes números definitivos.");}
+ }
  if(month===0&&year==="2026"&&r3Valid(fin?.declared_minus_profit_cents)&&fin.declared_minus_profit_cents!==0)
   r4Insight("Os rateios declarados no Trello não fecham com o lucro informado. Diferença histórica: "+mny(Math.abs(fin.declared_minus_profit_cents))+". Não corrigir sem localizar a origem.");
  if(data.errors.length)r4Insight("Uma ou mais fontes não responderam. Os valores ausentes aparecem como não confirmados; não são tratados como zero.","critical");
- if(!data.errors.length&&!risk&&year==="2026")r4Insight("Os dados detalhados do snapshot podem estar indisponíveis. Consulte a aba 'O que corrigir' antes de fechar um acerto.");
+
 }
 function r4Setup(){
  const deep=document.getElementById("r4-summary-detail-body");
