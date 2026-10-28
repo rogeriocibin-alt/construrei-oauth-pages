@@ -262,7 +262,7 @@ function timelineRender(){
   track.append(fill);d.append(track,div("b","",mny(m.gross_cents)));area.append(d);
  }
 }
-function render(){sourceStatus();summaryRender();peopleRender();costRender();issuesRender();timelineRender();r3Render();r4Render()}
+function render(){sourceStatus();summaryRender();peopleRender();costRender();issuesRender();timelineRender();r3Render();if(typeof r4Render==='function')r4Render()}
 document.querySelectorAll("#year,#month").forEach(n=>n.addEventListener("change",()=>{
  year=el("year").value;month=Number(el("month").value||0);
  if(n.id==="year"){el("month").replaceChildren();el("month").append(new Option("Ano todo / referência anual","0"));if(year!=="2023")for(let i=1;i<=12;i++)el("month").append(new Option(NAMES[i-1],String(i)));month=0}
@@ -454,14 +454,14 @@ function r4Setup(){
  document.querySelectorAll("#summary > .panels, #summary > .panel").forEach(node=>deep.append(node));
  const cats=document.querySelector("#costs > .twocol");
  if(cats)document.getElementById("r4-cost-detail-body").append(cats);
- const second=document.querySelector("#people > .panel:nth-of-type(2)");
+ const second=document.querySelectorAll("#people > .panel")[1];
  if(second){const det=document.createElement("details");det.className="r4-deep";const summary=document.createElement("summary");summary.textContent="Ver outros profissionais e detalhes por origem";const body=document.createElement("div");body.append(second);det.append(summary,body);document.getElementById("people").append(det)}
  const technical=document.querySelector("#people #r3-income");
  if(technical){const panel=technical.closest(".panel");if(panel){const det=document.createElement("details");det.className="r4-deep";const sm=document.createElement("summary");sm.textContent="Comparar rateio, apoio e anotações Cora, coluna a coluna";const b=document.createElement("div");b.append(panel);det.append(sm,b);document.querySelector("#people > .panel").append(det)}}
  const close=document.getElementById("close");
  const sourceHeading=[...close.querySelectorAll("h3")].find(x=>x.textContent.includes("Um único caminho"));
  if(sourceHeading){const steps=[];let n=sourceHeading.nextElementSibling;while(n&&n.classList?.contains("step")){steps.push(n);n=n.nextElementSibling}
- const det=document.createElement("details");det.className="r4-deep";const s=document.createElement("summary");s.textContent="Entender as etapas detalhadas do fechamento";const b=document.createElement("div");b.append(sourceHeading,...steps);det.append(s,b);sourceHeading.parentElement?.append(det);close.querySelector(".panel")?.append(det)}
+ const det=document.createElement("details");det.className="r4-deep";const s=document.createElement("summary");s.textContent="Entender as etapas detalhadas do fechamento";const b=document.createElement("div");b.append(sourceHeading,...steps);det.append(s,b);close.querySelector(".panel")?.append(det)}
  // Two different preview flows can confuse users; keep only the server preflight visible.
  const check=document.getElementById("checkPeriod");if(check)check.hidden=true;
  const official=document.getElementById("openOfficial");if(official)official.hidden=true;
