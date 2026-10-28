@@ -42,6 +42,7 @@ async function read(url,options={}){
  if(!r.ok||json?.ok!==true)throw Error(String(json?.error||"FONTE_INDISPONÍVEL"));
  return json;
 }
+async function readRisk(){const res=await fetch(RISK,{method:"GET",headers:{"x-cr-session":session},cache:"no-store"});const body=await res.json().catch(()=>null);if(!res.ok||body?.ok!==true)throw Error(String(body?.error||"AUDITORIA_RESTRITA_A_DIRETOR"));return body}
 function paneSet(id){if(!["summary","people","costs","issues","close"].includes(id))return;pane=id;document.querySelectorAll("[data-pane]").forEach(b=>{b.classList.toggle("on",b.dataset.pane===id);b.setAttribute("aria-current",b.dataset.pane===id?"page":"false")});document.querySelectorAll(".pane").forEach(s=>s.classList.toggle("on",s.id===id));if(id==="close"&&year!=="2026")el("periodResult").textContent="O fechamento por período desta candidata é exclusivo de 2026.";window.scrollTo({top:0,behavior:"smooth"})}
 document.querySelectorAll("[data-pane]").forEach(b=>b.addEventListener("click",()=>paneSet(b.dataset.pane)));
 document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>paneSet(b.dataset.jump)));
@@ -62,7 +63,7 @@ async function load(force=false){
  cost:read(API+"?api=costs&year="+selectedYear+(selectedMonth?"&month="+selectedMonth:"")),
  audit:read(API+"?api=audit&year="+selectedYear+(selectedMonth?"&month="+selectedMonth:""))
  };
- if(selectedYear==="2026"){tasks.support=read(TRE+"?year=2026&kind=support");tasks.risk=read(RISK)}
+ if(selectedYear==="2026"){tasks.support=read(TRE+"?year=2026&kind=support");tasks.risk=readRisk()}
  const entries=Object.entries(tasks);
  const results=await Promise.allSettled(entries.map(([,p])=>p));
  if(mine!==run)return;
