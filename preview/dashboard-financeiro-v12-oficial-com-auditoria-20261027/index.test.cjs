@@ -5,7 +5,7 @@ const open="<!-- CR V12 AUDITORIA IMPORTADA / CANDIDATA:",close="<!-- FIM CR V12
 const jsOpen="<!-- CR V12 AUDIT RUNTIME BEGIN",jsClose="<!-- CR V12 AUDIT RUNTIME END -->";
 const extract=(start,end)=>{const i=html.indexOf(start),j=html.indexOf(end,i);assert.ok(i>=0&&j>i);return html.slice(i,j+end.length)};
 const addon=extract(open,close),runtime=extract(jsOpen,jsClose);
-const baseline=html.replace(addon,"").replace(runtime,"");
+const baseline=html.replace("\n"+addon+"\n","").replace("\n"+runtime+"\n","");
 const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(x=>x[1]);
 test("Réplica exata da homologada fora dos DOIS novos trechos",()=>{
  const pathBase=process.env.CR_OFFICIAL_HTML;
