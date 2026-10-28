@@ -26,5 +26,5 @@ test("operational evidence from read-only edge shows unique works separately fro
   assert.match(h,/duplicate_card_entries/);
   assert.match(h,/unique_codes/);
   assert.match(h,/source_import_cutoff/);
-  assert.match(old,/tasks\.risk=read\(RISK\)/);
+  assert.match(old,/tasks\.risk=readRisk\(\)/);
 });
