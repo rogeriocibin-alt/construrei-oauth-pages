@@ -22,6 +22,7 @@
 "use strict";
 const API="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007";
 const TRE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-v12-financial-settlements-trello-20261027";
+const RISK="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-v12-r3-risk-readonly-20261027?year=2026";
 const OFFICIAL="https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v12-operacoes-homologada-20261023/";
 const NAMES=["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
 const el=id=>document.getElementById(id);
@@ -31,7 +32,7 @@ const pc=n=>n!==null&&n!==undefined&&Number.isFinite(Number(n))?Number(n).toLoca
 const div=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=String(txt);return e};
 const clear=id=>el(id).replaceChildren();
 let session=sessionStorage.getItem("crv2")||"",year="2026",month=0,pane="summary",run=0;
-let data={oper:null,fin:null,support:null,cost:null,audit:null,errors:[],loadedAt:0};
+let data={oper:null,fin:null,support:null,cost:null,audit:null,risk:null,errors:[],loadedAt:0};
 let cache=new Map();
 const paces={2023:"2023 · histórico bancário Cora apenas",2024:"2024 · Gestão de Obras Trello (regras históricas)",2025:"2025 · Gestão de Obras Trello (lucro parcial)",2026:"2026 · Gestão Financeira para acertos + Obras para custos"};
 async function read(url,options={}){
@@ -61,11 +62,11 @@ async function load(force=false){
  cost:read(API+"?api=costs&year="+selectedYear+(selectedMonth?"&month="+selectedMonth:"")),
  audit:read(API+"?api=audit&year="+selectedYear+(selectedMonth?"&month="+selectedMonth:""))
  };
- if(selectedYear==="2026")tasks.support=read(TRE+"?year=2026&kind=support");
+ if(selectedYear==="2026"){tasks.support=read(TRE+"?year=2026&kind=support");tasks.risk=read(RISK)}
  const entries=Object.entries(tasks);
  const results=await Promise.allSettled(entries.map(([,p])=>p));
  if(mine!==run)return;
- const next={oper:null,fin:null,cost:null,audit:null,support:null,errors:[],loadedAt:Date.now()};
+ const next={oper:null,fin:null,cost:null,audit:null,support:null,risk:null,errors:[],loadedAt:Date.now()};
  for(let i=0;i<entries.length;i++){const key=entries[i][0],res=results[i];if(res.status==="fulfilled")next[key]=res.value;else next.errors.push({source:key,message:String(res.reason?.message||res.reason)})}
  data=next;if(!data.errors.length)cache.set(selectedYear+"-"+selectedMonth,next);el("reload").disabled=false;render();
 }
@@ -208,7 +209,7 @@ el("issueRefresh").onclick=()=>load(true);
 el("issuefilter").onchange=issuesRender;
 el("checkPeriod").onclick=closeCheck;
 el("openOfficial").onclick=()=>{if(!el("openOfficial").disabled)window.open(OFFICIAL,"_blank","noopener,noreferrer")};
-el("signout").onclick=()=>{session="";sessionStorage.removeItem("crv2");el("auth").hidden=false;el("auth").style.display="flex";data={oper:null,fin:null,cost:null,audit:null,support:null,errors:[],loadedAt:0};render()};
+el("signout").onclick=()=>{session="";sessionStorage.removeItem("crv2");el("auth").hidden=false;el("auth").style.display="flex";data={oper:null,fin:null,cost:null,audit:null,support:null,risk:null,errors:[],loadedAt:0};render()};
 el("loginForm").onsubmit=async e=>{e.preventDefault();const btn=el("loginButton");btn.disabled=true;el("autherror").textContent="Verificando acesso…";try{
  const k=el("key").value.trim();if(!k)throw Error("Chave obrigatória");
  const r=await fetch(API+"?api=login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:k})});
@@ -236,6 +237,7 @@ function r3Health(){
   const val=data[key],err=data.errors.find(e=>e.source===key);
   a.append(row(label,err?"FALHA · "+String(err.message).slice(0,85):val?"Resposta autenticada (não significa conciliada)":"Indisponível"));
  }
+ const snap=data.risk?.works; if(snap){a.append(row("Snapshot de obras 2026",num(snap.count)+" registros: "+num(snap.states?.BALANCED)+" balanceados, "+num(snap.states?.INCOMPLETE)+" incompletos, "+num(snap.states?.DIVERGENT)+" divergentes"));a.append(row("Desvios aritméticos absolutos",mny(snap.abs_gap_cents)+" • não representam pagamento"));a.append(row("Corte importado do Trello",data.risk.source_import_cutoff||"Não informado"));const pr=data.risk.period_registry;a.append(row("Cortes registrados no livro idempotente",pr?num(pr.count)+" registros":"Fonte indisponível"));}
  const stamp=data.support?.stage_snapshot_asof;
  if(stamp){const age=Date.now()-Date.parse(stamp);a.append(row("Importação de apoios e diárias",r3Date(stamp)+(Number.isFinite(age)&&age>86400000?" · base defasada":" · conferir origem"))); }
  const mt=data.oper?.metrics||{},total=mt.cases_total,usable=mt.cases_classifiable;
@@ -253,6 +255,7 @@ function r3Executive(){
  r3Stat(area,"Custo sobre bruto",usable?pc(a.cost/a.gross*100):"Não certificado","Mesma origem, período e soma aritmética");
  r3Stat(area,"Margem líquida",usable?pc(a.profit/a.gross*100):"Não certificado","Meta de referência: 30–40%");
  if(usable&&a.profit>=0&&a.gross>0){const margin=a.profit/a.gross*100;notice(trend,margin<30?"Margem abaixo da referência de 30%. Avaliar custos, BDI e terceirização.":margin>40?"Margem acima de 40%. Verifique comparabilidade das fontes antes de interpretar.":"Margem dentro da faixa de referência, sem substituir conciliação Cora.",margin<30)}
+ if(year==="2026"&&data.risk?.works){r3Stat(area,"Obras incompletas (snapshot)",num(data.risk.works.states?.INCOMPLETE),"Trello importado, não atualização ao vivo");r3Stat(area,"Obras divergentes (snapshot)",num(data.risk.works.states?.DIVERGENT),"Requer conferir origem e centavos");}
  if(!usable)notice(trend,"A margem e o custo relativo não são certificados enquanto receita, custo e lucro não fecharem dentro da mesma competência. Não usar lucro parcial para decisões de distribuição.");
  const series=(data.oper?.metrics?.months||[]).filter(x=>r3Valid(x.gross_cents)&&Number(x.month)>=1&&Number(x.month)<=12).sort((a,b)=>a.month-b.month);
  if(series.length>1){let previous=null;for(const m of series){const gross=Number(m.gross_cents),diff=previous!==null&&previous>0?(gross/previous-1)*100:null;const d=div("div","metricrow");d.append(div("span","",NAMES[Number(m.month)-1]+" / "+year),div("b","",mny(gross)+(diff===null?"":" · "+(diff>=0?"+":"")+pc(diff))));trend.append(d);previous=gross}}
@@ -306,6 +309,7 @@ function r3Issues(){
  const measurable=rows.filter(x=>r3Valid(x.gap)&&x.gap!==0);
  const amounts=measurable.reduce((sum,x)=>sum+Math.abs(x.gap),0);
  const duplicate=data.audit?.quality?.duplicates?.length;
+ const extract=data.risk?.works;if(year==="2026"&&extract){r3Stat(a,"Snapshot · pendências",num((extract.states?.INCOMPLETE||0)+(extract.states?.DIVERGENT||0)),"Base importada: "+(data.risk?.source_import_cutoff||"data desconhecida"));}
  r3Stat(a,"Obras com alerta",num(rows.length),"Na fonte operacional deste filtro");
  r3Stat(a,"Diferenças aritméticas",num(measurable.length)+" · "+mny(amounts),"Soma de módulos, não débito bancário");
  r3Stat(a,"Duplicidades sinalizadas",r3Valid(duplicate)?num(duplicate):"Não verificado","Exigem checagem no Trello");
