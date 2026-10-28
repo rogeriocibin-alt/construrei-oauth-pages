@@ -16,3 +16,5 @@ test("sistema oficial da produção não é modificado",()=>{assert.match(base,/
 
 test("five tabs are visible in mobile 3-column wrapping layout",()=>{assert.match(h,/\.tabs\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);});
 test("margin remains explicitly provisional only for centavo-scale math mismatch",()=>{assert.match(r4,/Math\.abs\(scope\.math\)<=10/);assert.match(r4,/Indicativa\. Diferença de/);});
+
+test("no-session boot cannot invoke R3 before second script loads",()=>{assert.match(base,/typeof r3Render==='function'/);assert.match(base,/typeof r4Render==='function'/)});
