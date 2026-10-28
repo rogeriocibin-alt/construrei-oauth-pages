@@ -7,12 +7,12 @@ const scripts=s=>[...s.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].map(
 const original=scripts(prod),candidate=scripts(p);
 test("Candidata usa a EXATA base homologada, salvo banner, painel e leitura de auditoria",()=>{
  const withoutBanner=p.replace(/<div id="cr-period-candidate-banner"[\s\S]*?<\/div>/,"");
- const withoutPanel=withoutBanner.replace(/<section class="panel" id="cr-v12-auditoria-importada-2026"[\s\S]*?<\/section>/,"");
- const restored=withoutPanel.replace(/<script id="cr-v12-auditoria-importada-runtime">[\s\S]*?<\/script>\s*/,"");
+ const withoutPanel=withoutBanner.replace(/<section class="panel" id="cr-v12-auditoria-importada-2026"[\s\S]*?<\/section>\n/,"");
+ const restored=withoutPanel.replace(/\n<script id="cr-v12-auditoria-importada-runtime">[\s\S]*?<\/script>\n/,"");
  assert.equal(restored.replace(/\n{3,}/g,"\n\n").trim(),prod.replace(/\n{3,}/g,"\n\n").trim());
 });
 test("Todos os scripts originais homologados persistem sem mutação",()=>{
- for(const a of original){const current=candidate.find(x=>x.id===a.id);assert.ok(current,"missing script "+a.id);assert.equal(current.source,a.source,a.id)}
+ for(let i=0;i<original.length;i++){const a=original[i],current=candidate[i];assert.ok(current,"missing script "+a.id);assert.equal(current.id,a.id);assert.equal(current.source,a.source,a.id+" @ "+i)}
 });
 test("Scripts compilam e nenhum ID HTML duplica",()=>{
  for(const x of candidate)assert.doesNotThrow(()=>new vm.Script(x.source),x.id);
