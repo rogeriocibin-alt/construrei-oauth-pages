@@ -1540,6 +1540,7 @@ const field=id=>String($(id)?.value||"").trim();
 const SUPA="https://yspuaamokjbrosytqjpg.supabase.co";
 const ANON="sb_publishable_CKRScNxEWURNGv4Mz269hg_zdQEmwzS";
 const FN=SUPA+"/functions/v1/cr-orca-rei-gemini-r5-restricted-20261013";
+const FN_PUBLIC=SUPA+"/functions/v1/cr-orca-rei-gemini-candidate-20261013"; // backend candidato existente, orçamento atômico + Free Tier
 const sdkUrl="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4";
 const keys=["services","materials","notes","report"];
 // Candidata: autenticação preservada como base, mas não oferecida durante o desenvolvimento.
@@ -1613,16 +1614,19 @@ function init(){
  const css=document.createElement("style");
  css.textContent="#orcaPanelR9{margin:12px 0;padding:14px;background:#f7fbff;color:#0b2c4d;border:1px solid #8dbde9;border-radius:12px}#orcaPanelR9[hidden],#orcaAuthR9[hidden],#orcaReiGeminiRestricted[hidden]{display:none!important}#orcaPanelR9 label{display:block;font-weight:750;margin:10px 0 3px}#orcaPanelR9 textarea{width:100%;background:#fff!important;color:#132d4c!important;border:1px solid #8eb5d7;border-radius:9px;padding:9px;font:14px/1.45 inherit;min-height:95px;box-sizing:border-box}#orcaAuthR9{padding:13px;margin:10px 0;border:1px solid #8dbde9;border-radius:10px;background:#f7fbff;color:#132d4c}#orcaR9Status{font-size:13px;color:#164b7b;margin:6px 0;white-space:pre-wrap}#orcaPanelR9 .btn,#orcaAuthR9 .btn{margin:6px 8px 0 0}";
  document.head.appendChild(css);
- const b=make(host,"button","Revisar orçamento e parecer • acesso direto");
+ const b=make(host,"button","Melhorar com IA • ORÇA-REI");
  b.id="orcaReiAdjust";b.type="button";b.className="btn gold";
  const budget=$("v20Budget");if(budget)host.insertBefore(b,budget);
+ const localBtn=make(host,"button","Revisão local sem IA");
+ localBtn.id="orcaReiLocalOnly";localBtn.type="button";localBtn.className="btn ghost";
+ if(budget)host.insertBefore(localBtn,budget);
  const modelBtn=make(host,"button","Usar Gemini • acesso protegido");
  modelBtn.id="orcaReiGeminiRestricted";modelBtn.type="button";modelBtn.className="btn ghost";
  modelBtn.hidden=DEV_MODE_NO_LOGIN;modelBtn.disabled=DEV_MODE_NO_LOGIN;
  modelBtn.setAttribute("aria-hidden",String(DEV_MODE_NO_LOGIN));modelBtn.tabIndex=DEV_MODE_NO_LOGIN?-1:0;
  if(budget)host.insertBefore(modelBtn,budget);
  document.title="CONSTRU-REI • ORÇA-REI R5 • desenvolvimento sem login";
- const status=make(host,"p","Modo de desenvolvimento: revisão disponível sem login. A integração de IA permanece reservada e protegida.");
+ const status=make(host,"p","O ORÇA-REI com IA utiliza Gemini somente quando o servidor confirmar custo zero e limites. Revisão local e PDFs seguem disponíveis.");
  status.id="orcaR9Status";status.setAttribute("role","status");
  const auth=make(host,"section");auth.id="orcaAuthR9";auth.hidden=true;
  auth.setAttribute("aria-hidden",String(DEV_MODE_NO_LOGIN));
@@ -1689,6 +1693,33 @@ async function startOAuth(){
   status.textContent="Revisão local pronta. Você pode editar o parecer e aplicar os textos ao rascunho.";
   panel.scrollIntoView({block:"nearest",behavior:"smooth"});
  }
+ async function publicGenerate(){
+  if(busy)return;
+  const input={services:field("qaF02Services"),materials:field("qaF02Materials"),notes:field("qaF02Notes"),case_number:$("qaF02Case")?.textContent||""};
+  if(!(input.services||input.materials||input.notes)){status.textContent="Preencha o pré-orçamento antes de solicitar à IA.";return}
+  busy=true;b.disabled=true;localBtn.disabled=true;generated=null;panel.hidden=true;
+  try{
+    status.textContent="Verificando disponibilidade e proteção de custo da IA...";
+    const healthResponse=await fetch(FN_PUBLIC,{method:"GET",cache:"no-store"});
+    const health=await healthResponse.json().catch(()=>({}));
+    if(!healthResponse.ok||health?.public_dev_ai_ready!==true)throw Error("IA real ainda não ativada: aguardando confirmação do nível gratuito no servidor. Nenhuma chamada ao modelo foi realizada.");
+    status.textContent="Gerando melhoria real de textos pelo Gemini...";
+    const response=await fetch(FN_PUBLIC,{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json","apikey":ANON},body:JSON.stringify({input})});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw Error(data.error||"Falha HTTP "+response.status);
+    if(data?.ok!==true||data.provider!=="gemini"||data.provider_called!==true||!data.usage||!data.result)throw Error("Servidor não comprovou geração real pelo Gemini.");
+    if(!reportSafe(String(data.result.report||"")))throw Error("Parecer bloqueado por incluir valores financeiros ou estar vazio.");
+    for(const key of keys)out[key].value=String(data.result[key]||"");
+    generated={snapshot:input,model:data.model,source:"gemini",at:Date.now()};
+    previewTitle.textContent="Melhoria real por IA — revisar antes de aplicar";
+    alert.textContent=[...(data.warnings||[]),data.research_status||"Não foi realizada pesquisa web."].join(" • ");
+    panel.hidden=false;
+    status.textContent="Gemini executou e devolveu texto real ("+data.model+"). Revise o conteúdo antes de aplicar.";
+    panel.scrollIntoView({block:"nearest",behavior:"smooth"});
+  }catch(e){
+    status.textContent="IA NÃO EXECUTADA: "+(e.message||"indisponível")+". Rascunho e PDFs preservados. A revisão local pode ser utilizada sem custos.";
+  }finally{busy=false;b.disabled=false;localBtn.disabled=false}
+ }
  async function generate(){
   if(DEV_MODE_NO_LOGIN)return; // IA não pode ser acionada nem por evento de UI durante esta fase.
   if(busy)return;
@@ -1719,7 +1750,8 @@ async function startOAuth(){
   }catch(e){status.textContent="ORÇA-REI não executado: "+(e.message||"falha")+". O rascunho e os PDFs foram preservados."}
   finally{busy=false;b.disabled=false}
  }
- b.onclick=()=>{try{localPreview()}catch(e){status.textContent="Falha na prévia local: "+e.message}};
+ b.onclick=async()=>{try{await publicGenerate()}catch(e){status.textContent="Falha de integração com IA: "+e.message}};
+ localBtn.onclick=()=>{try{localPreview()}catch(e){status.textContent="Falha na revisão local: "+e.message}};
  modelBtn.onclick=async()=>{if(DEV_MODE_NO_LOGIN)return;try{await generate()}catch(e){status.textContent="Falha na autenticação do Gemini: "+e.message;auth.hidden=false}};
  apply.onclick=()=>{
   if(!generated){status.textContent="Não existe prévia para aplicar.";return}
