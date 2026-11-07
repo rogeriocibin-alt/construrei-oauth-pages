@@ -3273,7 +3273,8 @@ window.crV12CopyHistoricalCut=async function(){
  }
  const doc=monthlyPeriodDocuments().get(key);
  if(doc?.original){
-  const historical="━━━━━━━━━━━━━━━━━━━━━━\n💰 ACERTOS DE "+shortPeriod(cut)+"\n━━━━━━━━━━━━━━━━━━━━━━\n\n"+doc.original+
+  const clean=doc.original.replace(/^[ \t*]*(?:💰[ \t]*)?ACERTOS?(?:[ \t]+DE)?[ \t]+\d{1,2}\/\d{1,2}[ \t]+(?:A|ATÉ|ATE)[ \t]+\d{1,2}\/\d{1,2}[^\n]*(?:\n|$)/i,"").trim();
+  const historical="━━━━━━━━━━━━━━━━━━━━━━\n💰 ACERTOS DE "+shortPeriod(cut)+"\n━━━━━━━━━━━━━━━━━━━━━━\n\n"+clean+
    "\n\nFONTE: demonstrativo original do Trello. Valores históricos mantidos sem recalcular ou presumir saques.";
   return copyTextForCut(historical,"Texto do corte original copiado. Confira o rateio histórico do período.");
  }
