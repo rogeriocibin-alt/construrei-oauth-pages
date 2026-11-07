@@ -648,7 +648,7 @@ body{background:var(--v12-bg)}
  <div id="crp-historic-shortcut" style="border:1px solid #b9d4e9;border-radius:9px;background:#fff;padding:11px;margin:0 0 13px;font-size:12px">
   <strong id="crp-historic-summary" style="display:block;color:#123e65;margin-bottom:5px">Consultar cortes já encerrados — histórico 2026</strong>
   <span style="display:block;margin-bottom:8px">Para recuperar um acerto já enviado, use a consulta histórica. A lista AG. ACERTO mostra apenas obras ainda abertas; ela não é o histórico financeiro.</span>
-  <button class="v11button" type="button" onclick="document.getElementById('cr-v12-historic-acertos')?.scrollIntoView({behavior:'smooth',block:'start'})">CONSULTAR HISTÓRICO DE ACERTOS</button>
+  <button class="v11button" type="button" aria-controls="cr-v12-historic-acertos" onclick="document.getElementById('cr-v12-historic-acertos')?.scrollIntoView({behavior:'smooth',block:'start'})">CONSULTAR HISTÓRICO DE ACERTOS</button>
  </div><div class="crp-period-grid"><label>Início do período<input type="date" id="crp-start"></label><label>Fim do período<input type="date" id="crp-end"></label></div>
  <div style="display:flex;flex-wrap:wrap;gap:8px">
  <button class="v11button" type="button" onclick="crpPreview()">1. Pré-visualizar envio financeiro</button>
@@ -670,7 +670,7 @@ body{background:var(--v12-bg)}
  </div>
 </div>
 </section>
-<section class="panel" id="cr-v12-historic-acertos" style="scroll-margin-top:95px;margin:12px 0;padding:15px;border:1px solid #8eb8d5;border-radius:12px;background:#fff">
+<section class="panel" id="cr-v12-historic-acertos" role="region" aria-label="Histórico de acertos de janeiro a novembro de 2026" tabindex="-1" style="scroll-margin-top:95px;margin:12px 0;padding:15px;border:1px solid #8eb8d5;border-radius:12px;background:#fff">
  <h3>Histórico de acertos 2026 — Janeiro a Novembro</h3>
  <p class="small muted">Acertos e rateios declarados nos cartões financeiros do Trello. <strong>Retiradas bancárias conciliadas na Cora são consultadas separadamente, no quadro abaixo.</strong> Não somar novamente cortes ao total mensal.</p>
  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="v11button" id="cr-v12-historic-refresh">Atualizar histórico</button><span id="cr-v12-historic-status" role="status" aria-live="polite" style="font-size:12px">Aguardando consulta autenticada.</span></div>
