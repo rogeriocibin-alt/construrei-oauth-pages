@@ -2876,9 +2876,11 @@ function render(){
  const newest=cuts.find(x=>x.period_key==="2026-10-24_2026-11-06")||cuts[0]||null;
  if(newest){
   const haveSnapshot=!!newest.snapshot_id;
-  last.innerHTML='<div style="padding:14px;border-radius:12px;border:1px solid #9fc6b8;background:#eef9f3"><div style="font-weight:850;color:#174b37">ÚLTIMO CORTE REGISTRADO · '+esc(newest.from)+' a '+esc(newest.to)+'</div>'+
+  const historicalTest=newest.period_key==="2026-10-24_2026-11-06";
+  last.innerHTML='<div style="padding:14px;border-radius:12px;border:1px solid #9fc6b8;background:#eef9f3"><div style="font-weight:850;color:#174b37">'+(historicalTest?"HISTÓRICO DO TESTE ANTERIOR · ":"ÚLTIMO CORTE REGISTRADO · ")+esc(newest.from)+' a '+esc(newest.to)+'</div>'+
    '<div style="font-size:13px;line-height:1.75"><b>'+esc(newest.works_count??"—")+' obras</b> · Base '+brl(newest.base_cents)+' · Custos '+brl(newest.costs_cents)+' · Lucro <b>'+brl(newest.profit_cents)+'</b> · Capital de Giro '+brl(newest.capital_cents)+'</div>'+
    '<div class="small muted">Estado no registro V12: '+esc(newest.status)+' · rateio apurado, sem presumir retirada bancária.</div>'+
+   (historicalTest?'<div role="note" style="margin-top:8px;padding:9px;border-radius:8px;border:1px solid #e6c680;background:#fff8e9;color:#805514;font-size:12px"><b>Registro preservado do teste anterior.</b> Os números congelados desta tela não são a prévia revisada para aprovação. Utilize os 12 cards de AG. ACERTO e o cartão NOVEMBRO 2026 (prévia pendente). Não reenviar nem gerar outro Capital de Giro.</div>':'')+
    (haveSnapshot?'<button type="button" id="cr-v12-historic-open" class="v11button" style="margin-top:9px">Ver todas as '+esc(newest.works_count??"")+" obras</button>":"<div>Detalhamento ainda não disponível.</div>")+'</div>';
   const open=pick("cr-v12-historic-open");if(open)open.addEventListener("click",()=>openCut(newest));
  }else{last.innerHTML='<div class="state warn">Nenhum corte registrado encontrado na fonte V12; não considerar zero como comprovação.</div>'}
@@ -2918,7 +2920,7 @@ function render(){
  months.innerHTML=html;
  const statusSource=catalog.source_health?.trello_capital;
  status.textContent="11 competências · "+cuts.length+" corte(s) V12 · "+archives.length+" referências anteriores · "+monthsReady+" demonstrativos mensais disponíveis"+(statusSource===false?" · ALERTA: consulta dos cartões Trello falhou":"")+" · "+new Date().toLocaleString("pt-BR");
- const shortcut=pick("crp-historic-summary");if(shortcut&&newest)shortcut.textContent="ÚLTIMO CORTE · "+newest.from+" a "+newest.to+" · "+(newest.works_count??"—")+" obras · lucro "+brl(newest.profit_cents)+" — JÁ REGISTRADO";
+ const shortcut=pick("crp-historic-summary");if(shortcut&&newest)shortcut.textContent=newest.period_key==="2026-10-24_2026-11-06"?"HISTÓRICO DO TESTE 24/10 a 06/11 · conferir valores revisados em AG. ACERTO e NOVEMBRO":"ÚLTIMO CORTE · "+newest.from+" a "+newest.to+" · "+(newest.works_count??"—")+" obras · lucro "+brl(newest.profit_cents)+" — JÁ REGISTRADO";
 }
 // Corrige apenas a APRESENTAÇÃO de acertos antigos; o registro de origem no Trello não é alterado.
 function crV12RemoveApoioResumo(value){
@@ -3000,10 +3002,12 @@ async function openCut(cut){
   if(arr.some(x=>!Number.isSafeInteger(x.base_cents)||!Number.isSafeInteger(x.cost_cents)||!Number.isSafeInteger(x.profit_cents)||x.base_cents-x.cost_cents!==x.profit_cents))throw Error("Uma obra apresenta cálculo incompleto");
   if(arr.reduce((a,x)=>a+x.base_cents,0)!==totals.base_cents||arr.reduce((a,x)=>a+x.cost_cents,0)!==totals.cost_cents||arr.reduce((a,x)=>a+x.profit_cents,0)!==totals.profit_cents)throw Error("Conferência dos totais não fechou");
   detailRows=arr;
+  const historicalTest=cut.period_key==="2026-10-24_2026-11-06";
   let rows=arr.map(x=>{const href=link(x.trello_url);
     return '<tr><td><b>'+esc(x.case)+'</b></td><td>'+esc(x.customer||"Não identificado")+'</td><td>'+brl(x.base_cents)+'</td><td>'+brl(x.cost_cents)+'</td><td>'+brl(x.profit_cents)+'</td><td>'+(href?'<a href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">Trello</a>':'—')+'</td></tr>'}).join("");
   detail.innerHTML='<div style="padding:12px;border:1px solid #abc4da;border-radius:10px"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong>Detalhamento das '+arr.length+' obras · 24/10 a 06/11</strong><button type="button" id="cr-v12-historic-copy" class="v11button">Copiar 12 obras</button></div><div class="tablewrap" style="margin-top:8px"><table class="table" style="min-width:690px"><thead><tr><th>Orçamento</th><th>Cliente</th><th>Base</th><th>Custos</th><th>Lucro</th><th>Origem</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
-  pick("cr-v12-historic-copy").addEventListener("click",async()=>{const lines=["CONSTRU-REI | HISTÓRICO DO ACERTO 24/10 A 06/11/2026","12 obras · Base "+brl(totals.base_cents)+" · Custos "+brl(totals.cost_cents)+" · Lucro "+brl(totals.profit_cents),"","RATEIO APURADO (NÃO COMPROVA SAQUES)","Fabrício: "+brl(totals.fabricio_cents),"Éder: "+brl(totals.eder_cents),"Rogério: "+brl(totals.rogerio_cents),"Gabrielly: "+brl(totals.gabi_cents),"Capital de Giro: "+brl(totals.capital_giro_cents),""];
+  if(historicalTest)detail.insertAdjacentHTML("afterbegin",'<div role="note" style="padding:11px;margin-bottom:8px;border:1px solid #e4c273;background:#fff6e4;border-radius:9px;color:#805514"><b>ATENÇÃO — HISTÓRICO CONGELADO DO TESTE.</b> Para aprovação, consultar os valores revisados de AG. ACERTO / NOVEMBRO 2026. Este demonstrativo histórico não é a apuração atual.</div>');
+  pick("cr-v12-historic-copy").addEventListener("click",async()=>{const lines=[historicalTest?"CONSTRU-REI | HISTÓRICO CONGELADO DO TESTE 24/10 A 06/11/2026 — NÃO UTILIZAR PARA APROVAÇÃO": "CONSTRU-REI | HISTÓRICO DO ACERTO 24/10 A 06/11/2026","12 obras · Base "+brl(totals.base_cents)+" · Custos "+brl(totals.cost_cents)+" · Lucro "+brl(totals.profit_cents),"","RATEIO APURADO (NÃO COMPROVA SAQUES)","Fabrício: "+brl(totals.fabricio_cents),"Éder: "+brl(totals.eder_cents),"Rogério: "+brl(totals.rogerio_cents),"Gabrielly: "+brl(totals.gabi_cents),"Capital de Giro: "+brl(totals.capital_giro_cents),""];
     for(const x of arr)lines.push(x.case+" | "+String(x.customer||"")+" | Base "+brl(x.base_cents)+" | Custos "+brl(x.cost_cents)+" | Lucro "+brl(x.profit_cents)+" | "+String(link(x.trello_url)||""));
     const txt=lines.join("\n");
     try{await navigator.clipboard.writeText(txt);alert("12 de 12 obras copiadas sem cortes.")}catch{const blob=new Blob([txt],{type:"text/plain;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="CONSTRU_REI_Acerto_24-10_a_06-11_2026.txt";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);alert("Texto completo disponibilizado em arquivo TXT.")}});
