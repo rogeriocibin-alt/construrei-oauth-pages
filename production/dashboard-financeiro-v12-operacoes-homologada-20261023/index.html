@@ -691,18 +691,19 @@ body{background:var(--v12-bg)}
 <div class="panel aclive" id="v12-live-acertos">
   <div class="aclivehead">
     <div><div class="r6eyebrow">ACERTO VIVO · FONTE OPERACIONAL TRELLO</div><h3>Acertos em aberto</h3><div class="small muted">Somente obras reais em AG. ACERTO. Se o desconto está registrado nos custos e a base bruta foi confirmada no cartão, use o bruto para evitar desconto duplo. Esta tela não lança dados no Trello.</div><div id="acstatus" class="acstatus" style="margin-top:8px"></div></div>
-    <div id="cr-acerto-copy-controls" style="display:flex;flex-wrap:wrap;gap:9px;align-items:end;margin:10px 0;padding:11px;border:1px solid #c5d8e8;border-radius:10px;background:#f7fafc">
+    <div class="acactions"><button class="acbtn" onclick="refreshAcerto(true)">ATUALIZAR AGORA</button><button class="acbtn primary" onclick="copyAcerto()">COPIAR ACERTO COMPLETO</button><button class="acbtn" id="cr-acerto-copy-summary" onclick="copyAcertoResumo()">COPIAR RESUMO</button><button class="acbtn" id="cr-acerto-copy-pdf" onclick="pdfAcerto()">GERAR PDF</button><button class="acbtn" id="cr-acerto-copy-excel" onclick="excelAcerto()">EXPORTAR EXCEL</button><button class="acbtn" id="cr-acerto-copy-snapshot" onclick="snapshotAcerto()">SALVAR SNAPSHOT</button></div><div id="ac-period-heading" class="small muted" role="status" aria-live="polite" style="padding:8px 1px 0;font-weight:650">Informe as datas de início e fim acima para copiar a lista atual ou escolha um corte histórico.</div>
+  </div>
+  <div id="cr-acerto-copy-controls" style="display:flex;flex-wrap:wrap;gap:9px;align-items:end;margin:10px 0;padding:11px;border:1px solid #c5d8e8;border-radius:10px;background:#f7fafc;color:#18334d">
   <label style="font-size:12px;font-weight:700;flex:1 1 210px">Origem para COPIAR ACERTOS
-    <select id="cr-acerto-copy-source" style="display:block;width:100%;min-height:40px;margin-top:5px"><option value="live">Lista AG. ACERTO — obras selecionadas</option><option value="history">Corte anterior — Gestão Financeira / Trello</option></select>
+    <select id="cr-acerto-copy-source" style="display:block;width:100%;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px"><option value="live">Lista AG. ACERTO — obras selecionadas</option><option value="history">Corte anterior — Gestão Financeira / Trello</option></select>
   </label>
   <label style="font-size:12px;flex:1 1 195px">Corte disponível
-    <select id="cr-acerto-period-picker" style="display:block;width:100%;min-height:40px;margin-top:5px" disabled><option value="">Entre para carregar os cortes do Trello</option></select>
+    <select id="cr-acerto-period-picker" style="display:block;width:100%;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px" disabled><option value="">Entre para carregar os cortes do Trello</option></select>
   </label>
-  <label style="font-size:12px">Início da lista atual<input type="date" id="cr-acerto-copy-start" style="display:block;min-height:40px;margin-top:5px"></label>
-  <label style="font-size:12px">Fim da lista atual<input type="date" id="cr-acerto-copy-end" style="display:block;min-height:40px;margin-top:5px"></label>
+  <label style="font-size:12px">Início da lista atual<input type="date" id="cr-acerto-copy-start" style="display:block;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px"></label>
+  <label style="font-size:12px">Fim da lista atual<input type="date" id="cr-acerto-copy-end" style="display:block;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px"></label>
   <div id="cr-acerto-copy-help" class="small muted" role="status" style="flex:1 1 100%">Na lista atual, marque as obras e informe as datas do título. Para acerto antigo, escolha o corte; não será feito novo fechamento.</div>
-</div><div class="acactions"><button class="acbtn" onclick="refreshAcerto(true)">ATUALIZAR AGORA</button><button class="acbtn primary" onclick="copyAcerto()">COPIAR ACERTO COMPLETO</button><button class="acbtn" id="cr-acerto-copy-summary" onclick="copyAcertoResumo()">COPIAR RESUMO</button><button class="acbtn" id="cr-acerto-copy-pdf" onclick="pdfAcerto()">GERAR PDF</button><button class="acbtn" id="cr-acerto-copy-excel" onclick="excelAcerto()">EXPORTAR EXCEL</button><button class="acbtn" id="cr-acerto-copy-snapshot" onclick="snapshotAcerto()">SALVAR SNAPSHOT</button></div><div id="ac-period-heading" class="small muted" role="status" aria-live="polite" style="padding:8px 1px 0;font-weight:650">Período do título: selecione início e fim no painel Envio financeiro por período.</div>
-  </div>
+</div>
   <div id="ackpis" class="ackpis"></div>
   <div id="acrateio" class="acrateio"></div>
   <div class="acfilters"><input id="aq" placeholder="Buscar orçamento ou cliente..." oninput="renderAcerto()"><select id="aclient" onchange="renderAcerto()"><option value="">Todos os clientes</option></select><select id="asort" onchange="renderAcerto()"><option value="case">Orçamento</option><option value="base">Maior base</option><option value="profit">Maior lucro</option><option value="margin">Maior margem</option><option value="div">Divergências primeiro</option></select></div>
@@ -1114,7 +1115,7 @@ function acertoPeriod(){
  return acertoPeriodFromSelection(start,end);
 }
 for(const id of ['cr-acerto-copy-start','cr-acerto-copy-end']){const el=document.getElementById(id);if(el){el.addEventListener('input',acertoPeriodStatus);el.addEventListener('change',acertoPeriodStatus)}}
-function acertoPeriodStatus(){const label=document.getElementById('ac-period-heading');if(!label)return;try{label.textContent='Título ao copiar: ACERTOS '+acertoPeriod().head+' · Período do encerramento selecionado';}catch{label.textContent='Período do título: selecione início e fim no painel Envio financeiro por período.';}}
+function acertoPeriodStatus(){const label=document.getElementById('ac-period-heading');if(!label)return;try{label.textContent='Título ao copiar: ACERTOS '+acertoPeriod().head+' · Período do encerramento selecionado';}catch{label.textContent='Informe as datas de início e fim acima para copiar a lista atual ou escolha um corte histórico.';}}
 function acertoPeriodError(e){alert(String(e?.message||e));const input=document.getElementById('cr-acerto-copy-start')||document.getElementById('cg-close-start');input?.scrollIntoView({behavior:'smooth',block:'center'});input?.focus();}
 for(const id of ['cg-close-start','cg-close-end']){const el=document.getElementById(id);if(el){el.addEventListener('input',acertoPeriodStatus);el.addEventListener('change',acertoPeriodStatus)}}
 acertoPeriodStatus();
