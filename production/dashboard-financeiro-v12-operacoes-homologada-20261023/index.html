@@ -3081,6 +3081,7 @@ const b=document.createElement("button");b.type="button";b.textContent=name;
 b.setAttribute("aria-pressed",target===id?"true":"false");
 b.onclick=()=>{
 if(target==="capital"){if(typeof window.v12CapitalGo==="function")window.v12CapitalGo();else window.r8Go("cora");return}
+if(target==="cora"){window.r8Go("cora");document.getElementById("cr-op-manual")?.click();return}
 if(target==="open-acertos"||target==="history-acertos"){
 window.r8Go("fin");
 const el=document.getElementById(target==="open-acertos"?"v12-live-acertos":"cr-v12-historic-acertos");
