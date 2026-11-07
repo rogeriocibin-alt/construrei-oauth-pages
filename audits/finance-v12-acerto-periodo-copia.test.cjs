@@ -22,6 +22,7 @@ assert.match(ctx.acertoSummaryText([]),/CONSTRU-REI \| ACERTOS DE 10\/10 a 23\/1
 
 assert.match(html,/id="cr-acerto-copy-source"/);
 assert.match(html,/id="cr-acerto-period-picker"/);
+assert.match(html,/id="cr-acerto-copy-fallback"/,'Mobile clipboard failure must expose selectable text');
 const historyMatch=html.match(/<script id="cr-v12-history-jan-nov-20261106">([\s\S]*?)<\/script>/);
 assert.ok(historyMatch,'Read-only history script must remain in the existing V12');
 new vm.Script(historyMatch[1],{filename:'cr-v12-history-jan-nov-20261106.js'});
@@ -58,6 +59,9 @@ assert.throws(()=>ctx.acertoPeriodFromSelection('2026-10-10',''),/(?:duas datas|
  start.value='2026-10-10';
  ctx.api=async()=>({ok:true,periods:[{period_key:'2026-10-10_2026-10-23',status:'COMMITTED'}]});
  assert.equal(await ctx.copyAcerto(),undefined,'Closed period cannot copy live AG. ACERTO');
+ assert.match(errs[errs.length-1],/já tem fechamento registrado/);
+ ctx.api=async()=>({ok:true,periods:[],archived_periods:[{period_key:'2026-10-10_2026-10-23',from:'2026-10-10',to:'2026-10-23',status:'HISTORICAL_TRELLO_REFERENCE'}]});
+ assert.equal(await ctx.copyAcerto(),undefined,'Archived Trello reference cannot be relabeled with live AG. ACERTO values');
  assert.match(errs[errs.length-1],/já tem fechamento registrado/);
  console.log('PASS: title dates retained; live text copied for open periods; invalid dates rejected; closed cuts cannot be mixed with live AG. ACERTO');
 })().catch(x=>{console.error(x);process.exitCode=1});
