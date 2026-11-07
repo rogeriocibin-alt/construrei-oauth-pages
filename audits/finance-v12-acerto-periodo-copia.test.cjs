@@ -12,6 +12,7 @@ for(const v of Object.values(elements))v.addEventListener=()=>{};
 const ctx=vm.createContext({Date,console,document:{getElementById:id=>elements[id]||null},alert:t=>errs.push(String(t)),navigator:{clipboard:{writeText:()=>{throw Error('no clipboard in test')}}},ACSEP:'==',brl:()=> 'R$ 0,00',pct:()=> '0%',acertoTotals:()=>({cases:0,profit_cents:0,base_cents:0,cost_cents:0,difference_cents:0,distributed_cents:0}),acertoAuditPass:()=>false,acertoMetaLines:()=>[],acertoCustomerName:()=>'',acertoKeycap:x=>String(x),acertoOutputRows:()=>[{case:'999-26',cost_cents:0,base_cents:0,profit_cents:0,rateio:{capital_giro_cents:0},cost_items:[]}],acertoCopyText:async x=>x,S:{acertoHistory:[]},api:async()=>({ok:true,periods:[]})});
 vm.runInContext(between('function acertoPeriodDate','function acertoMetaLines'),ctx);
 vm.runInContext(between('function acertoSummaryText','async function acertoCopyText'),ctx);
+vm.runInContext(between('async function acertoPeriodAlreadyClosed','async function copyAcerto(){'),ctx);
 vm.runInContext(between('async function copyAcerto(){','async function pdfAcerto'),ctx);
 assert.equal(ctx.acertoPeriod().head,'DE 10/10 a 23/10');
 assert.match(label.textContent,/ACERTOS DE 10\/10 a 23\/10/);
