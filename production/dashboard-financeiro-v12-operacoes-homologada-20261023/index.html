@@ -702,7 +702,7 @@ body{background:var(--v12-bg)}
   </label>
   <label style="font-size:12px">Início da lista atual<input type="date" id="cr-acerto-copy-start" style="display:block;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px"></label>
   <label style="font-size:12px">Fim da lista atual<input type="date" id="cr-acerto-copy-end" style="display:block;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px"></label>
-  <div id="cr-acerto-copy-help" class="small muted" role="status" style="flex:1 1 100%">Na lista atual, marque as obras e informe as datas do título. Para acerto antigo, escolha o corte; não será feito novo fechamento.</div>
+  <div id="cr-acerto-copy-help" class="small muted" role="status" style="flex:1 1 100%">Na lista atual, marque as obras e informe as datas apenas para o título; essas datas não filtram as obras. Para acerto antigo, selecione o corte congelado no Trello.</div>
 </div>
   <div id="ackpis" class="ackpis"></div>
   <div id="acrateio" class="acrateio"></div>
@@ -1115,7 +1115,7 @@ function acertoPeriod(){
  return acertoPeriodFromSelection(start,end);
 }
 for(const id of ['cr-acerto-copy-start','cr-acerto-copy-end']){const el=document.getElementById(id);if(el){el.addEventListener('input',acertoPeriodStatus);el.addEventListener('change',acertoPeriodStatus)}}
-function acertoPeriodStatus(){const label=document.getElementById('ac-period-heading');if(!label)return;try{label.textContent='Título ao copiar: ACERTOS '+acertoPeriod().head+' · Período do encerramento selecionado';}catch{label.textContent='Informe as datas de início e fim acima para copiar a lista atual ou escolha um corte histórico.';}}
+function acertoPeriodStatus(){const label=document.getElementById('ac-period-heading');if(!label)return;try{label.textContent='Título ao copiar: ACERTOS '+acertoPeriod().head+' · Datas são título; as obras são escolhidas pelas caixas de seleção';}catch{label.textContent='Informe as datas de início e fim acima para copiar a lista atual ou escolha um corte histórico.';}}
 function acertoPeriodError(e){alert(String(e?.message||e));const input=document.getElementById('cr-acerto-copy-start')||document.getElementById('cg-close-start');input?.scrollIntoView({behavior:'smooth',block:'center'});input?.focus();}
 for(const id of ['cg-close-start','cg-close-end']){const el=document.getElementById(id);if(el){el.addEventListener('input',acertoPeriodStatus);el.addEventListener('change',acertoPeriodStatus)}}
 acertoPeriodStatus();
@@ -1197,14 +1197,45 @@ L.push("","📑 CONFERÊNCIA DOS LANÇAMENTOS: "+audited+" de "+auditItems.lengt
 if(audited<auditItems.length)L.push("⚠️ Detalhamento pendente ou divergente: "+auditItems.filter(x=>!x.match).map(x=>x.id).join(", ")+". Não considerar o texto integralmente auditado até a conferência.");
 const pass=acertoAuditPass(rows,t);if(pass)L.push(ACSEP,"✅ ACERTO ARITMETICAMENTE CONFERIDO",ACSEP,"","LUCRO A DISTRIBUIR: "+brl(t.profit_cents),"⚠️ Rateio não comprova saques ou transferências bancárias.","","Fabrício: "+brl(t.fabricio_cents),"Éder: "+brl(t.eder_cents),"Rogério: "+brl(t.rogerio_cents),"Gabi: "+brl(t.gabi_cents),"Capital de Giro: "+brl(t.capital_giro_cents),"","TOTAL: "+brl(t.distributed_cents),"DIFERENÇA: "+brl(t.difference_cents),ACSEP);else{const bad=rows.filter(x=>{const its=Array.isArray(x.cost_items)?x.cost_items:[];return Number(x.cost_cents||0)!==its.reduce((sum,it)=>sum+Number(it.value_cents||0),0)||(Number(x.cost_cents||0)!==0&&!its.length)||(x.issues||[]).length||x.base_cents==null||x.profit_cents==null||Number(x.rateio?.difference_cents||0)!==0;});L.push(ACSEP,"⚠️ ACERTO COM PENDÊNCIAS",ACSEP,"","Não declarar conferido até sanar as divergências.","",...bad.map(x=>"• "+x.case+" — "+((x.issues||[]).join(", ")||"dados financeiros incompletos")),ACSEP)}return L.join("\n")}
 
-async function acertoCopyText(txt,msg){try{await navigator.clipboard.writeText(txt);alert(msg)}catch{prompt("Copie o acerto:",txt)}}
+async function acertoCopyText(txt,msg){
+ const value=String(txt||"");
+ try{
+  if(!navigator.clipboard?.writeText)throw Error("Área de transferência indisponível");
+  await navigator.clipboard.writeText(value);
+  alert(msg);
+ }catch{
+  let modal=document.getElementById("cr-acerto-copy-fallback");
+  if(!modal){
+   modal=document.createElement("div");
+   modal.id="cr-acerto-copy-fallback";
+   modal.setAttribute("role","dialog");
+   modal.setAttribute("aria-modal","true");
+   modal.setAttribute("aria-label","Selecionar e copiar acerto");
+   modal.style.cssText="position:fixed;inset:0;z-index:999999;background:rgba(12,25,40,.82);display:flex;align-items:center;justify-content:center;padding:14px";
+   modal.innerHTML='<div style="background:#fff;color:#17314b;border-radius:12px;padding:16px;width:min(100%,860px);max-height:92vh;overflow:auto"><h3 style="margin:0 0 8px">Copiar acerto completo</h3><p style="font-size:13px;margin:0 0 10px">O celular bloqueou a cópia automática. O texto abaixo está selecionável e pode ser copiado manualmente, sem perder nenhum lançamento.</p><textarea id="cr-acerto-copy-manual-text" readonly style="box-sizing:border-box;width:100%;height:52vh;min-height:200px;resize:vertical;font-size:14px;white-space:pre;overflow:auto"></textarea><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button type="button" id="cr-acerto-copy-retry" style="padding:10px;border-radius:7px">COPIAR TEXTO</button><button type="button" id="cr-acerto-copy-select" style="padding:10px;border-radius:7px">SELECIONAR TUDO</button><button type="button" id="cr-acerto-copy-close" style="padding:10px;border-radius:7px">FECHAR</button></div></div>';
+   document.body.appendChild(modal);
+   modal.querySelector("#cr-acerto-copy-close").addEventListener("click",()=>modal.remove());
+   modal.querySelector("#cr-acerto-copy-select").addEventListener("click",()=>{const a=modal.querySelector("textarea");a.focus();a.select();a.setSelectionRange(0,a.value.length)});
+   modal.querySelector("#cr-acerto-copy-retry").addEventListener("click",async()=>{
+    const a=modal.querySelector("textarea");a.focus();a.select();a.setSelectionRange(0,a.value.length);
+    try{
+     if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(a.value);
+     else if(!document.execCommand?.("copy"))throw Error("Seleção manual necessária");
+     modal.remove();alert("Acerto copiado.");
+    }catch{a.focus();a.select();a.setSelectionRange(0,a.value.length)}
+   });
+  }
+  const field=modal.querySelector("textarea");field.value=value;field.focus();field.select();field.setSelectionRange(0,field.value.length);
+ }
+ return value;
+}
 async function acertoPeriodAlreadyClosed(period){
  const key=String(period.start||"")+"_"+String(period.end||"");
  const local=(S.acertoHistory||[]).some(x=>x.payload?.historical_period?.from===period.start&&x.payload?.historical_period?.to===period.end);
  if(local)return true;
  const cat=await api("api=acerto-catalog");
  if(!cat?.ok||!Array.isArray(cat.periods))throw Error("Registro de períodos indisponível");
- return cat.periods.some(x=>x.period_key===key&&x.status==="COMMITTED");
+ return cat.periods.some(x=>x.period_key===key&&x.status==="COMMITTED")||(cat.archived_periods||[]).some(x=>x.period_key===key&&x.from===period.start&&x.to===period.end);
 }
 function acertoOpenHistoricalSection(){
  document.getElementById("cr-v12-historic-last")?.scrollIntoView({behavior:"smooth",block:"start"});
@@ -3281,7 +3312,7 @@ window.crV12CopyHistoricalCut=async function(){
  if(cut.source==="TRELLO_CAPITAL_CARD_TITLE")openArchivedPeriod(key);
  throw Error("Este período tem somente referência de Capital de Giro. Não há lista de obras nem custos suficientes no catálogo para somar com segurança; abra o cartão mensal original.");
 };
-if(copySource)copySource.addEventListener("change",updateCopySource);
+if(copySource)copySource.addEventListener("change",()=>{updateCopySource();if(copySource.value==="history"&&!catalog?.ok)void load(true);});
 if(periodPicker)periodPicker.addEventListener("change",()=>{if(copyHelp&&copySource?.value==="history")copyHelp.textContent="Corte selecionado: "+(periodsAvailable().find(x=>x.period_key===periodPicker.value)?.status==="COMMITTED"?"snapshot original; não serão usados lançamentos posteriores":"consultar demonstrativo original do Trello");});
 
 refresh.addEventListener("click",()=>load(true));window.crV12HistoryRefresh=load;
