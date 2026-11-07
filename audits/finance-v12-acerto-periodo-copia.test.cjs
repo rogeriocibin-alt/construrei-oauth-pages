@@ -13,7 +13,7 @@ const ctx=vm.createContext({Date,console,document:{getElementById:id=>elements[i
 vm.runInContext(between('function acertoPeriodDate','function acertoMetaLines'),ctx);
 vm.runInContext(between('function acertoSummaryText','async function acertoCopyText'),ctx);
 vm.runInContext(between('async function acertoPeriodAlreadyClosed','async function copyAcerto(){'),ctx);
-vm.runInContext(between('async function copyAcerto(){','async function pdfAcerto'),ctx);
+vm.runInContext(between('async function acertoPeriodAlreadyClosed','async function pdfAcerto'),ctx);
 assert.equal(ctx.acertoPeriod().head,'DE 10/10 a 23/10');
 assert.match(label.textContent,/ACERTOS DE 10\/10 a 23\/10/);
 assert.match(ctx.acertoCompleteText([]),/💰 ACERTOS DE 10\/10 a 23\/10/);
