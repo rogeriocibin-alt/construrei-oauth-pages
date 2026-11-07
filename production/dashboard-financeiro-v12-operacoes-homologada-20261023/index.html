@@ -1193,7 +1193,7 @@ function acertoOpenHistoricalSection(){
 }
 async function copyAcerto(){try{
  const p=acertoPeriod();
- if(await acertoPeriodAlreadyClosed(p)){acertoOpenHistoricalSection();return alert("Este período já tem fechamento registrado. Consulte a versão congelada no HISTÓRICO DE ACERTOS. Não é permitido copiar os cartões atuais com o título de um corte encerrado.");}
+ if(await acertoPeriodAlreadyClosed(p)){acertoOpenHistoricalSection();alert("Este período já tem fechamento registrado. Consulte a versão congelada no HISTÓRICO DE ACERTOS. Não é permitido copiar os cartões atuais com o título de um corte encerrado.");return;}
  const rows=acertoOutputRows();
  if(!rows.length)return alert("Nenhuma obra em AG. ACERTO para o período informado.");
  return acertoCopyText(acertoCompleteText(rows,p),"Demonstrativo de custos e rateios copiado. Verifique as pendências indicadas.");
