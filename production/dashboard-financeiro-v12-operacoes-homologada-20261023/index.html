@@ -665,6 +665,14 @@ body{background:var(--v12-bg)}
  </div>
 </div>
 </section>
+<section class="panel" id="cr-v12-historic-acertos" style="margin:12px 0;padding:15px;border:1px solid #8eb8d5;border-radius:12px;background:#fff">
+ <h3>Histórico de acertos 2026 — Janeiro a Novembro</h3>
+ <p class="small muted">Acertos e rateios declarados nos cartões financeiros do Trello. <strong>Retiradas bancárias conciliadas na Cora são consultadas separadamente, no quadro abaixo.</strong> Não somar novamente cortes ao total mensal.</p>
+ <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="v11button" id="cr-v12-historic-refresh">Atualizar histórico</button><span id="cr-v12-historic-status" role="status" aria-live="polite" style="font-size:12px">Aguardando consulta autenticada.</span></div>
+ <div id="cr-v12-historic-last" style="margin:12px 0"></div>
+ <div id="cr-v12-historic-detail" style="margin:10px 0"></div>
+ <div id="cr-v12-historic-months" class="tablewrap" style="margin-top:12px"></div>
+</section>
 <div class="panel" id="cr-withdraw-history" style="margin:12px 0;padding:15px;border:1px solid #c4d7e7;border-radius:12px">
  <h3>Retiradas financeiras conciliadas por corte</h3>
  <p class="small muted">Somente saídas reais Cora vinculadas a períodos de acerto. Rateio calculado não é retirada paga.</p>
@@ -785,7 +793,7 @@ async function api(q,opt={}){
  }
  return j;
 }async function cgapi(){const r=await fetch(CG_API_BASE+"?action=summary",{headers:{"x-cr-session":S.session}}),j=await r.json().catch(()=>({}));if(!r.ok||!j.ok)throw Error(j.error||"CAPITAL_UNAVAILABLE");return j}async function login(){const r=await fetch(CR_API_BASE+"?api=login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:document.getElementById("key").value.trim()})}),j=await r.json();if(!r.ok||!j.ok){document.getElementById("err").textContent=j.error||"Acesso negado";return}S.session=j.session;sessionStorage.setItem("crv2",S.session);document.getElementById("login").classList.add("hide");refresh(true)}function logout(){sessionStorage.removeItem("crv2");location.reload()}
-async function refresh(gc){document.getElementById("live").textContent="atualizando";try{const nowTs=Date.now(),wantGc=!!gc||!S.gcLastAt||(nowTs-S.gcLastAt)>=300000;if(wantGc&&typeof crGcPaymentRefresh==="function")void crGcPaymentRefresh();const [a,b,c,d,e]=await Promise.all([api("api=year&year=2024"),api("api=year&year=2025"),api("api=year&year=2026"),api("api=current&gc="+(wantGc?1:0)),cgapi().catch(()=>null)]);if(wantGc)S.gcLastAt=nowTs;if(d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick}else if(S.gcLast&&(d?.gestaoclick?.skipped||d?.gestaoclick?.ok===false)){d.gestaoclick={...S.gcLast,stale:d?.gestaoclick?.ok===false,last_error_status:d?.gestaoclick?.http_status??null}}S.years={2024:a,2025:b,2026:c};S.current=d;S.capital=e;const apiBuild=c?.build||d?.build||b?.build||a?.build||"não informado";const bf=document.getElementById("buildfoot");bf.textContent="CONSTRU-REI · V12 OPERAÇÃO HOMOLOGADA · CORA PRO V2 / TRELLO";bf.title="API "+apiBuild;render();if(typeof window.crFinancialDeclaredRefresh==="function")void window.crFinancialDeclaredRefresh(false);if(!S.acertoHistoryLoaded)loadAcertoHistory();document.getElementById("live").textContent="online"}catch(e){const live=document.getElementById("live");live.textContent="degradado";live.title="Falha ao atualizar dados. A interface preserva o último estado carregado."}}
+async function refresh(gc){document.getElementById("live").textContent="atualizando";try{const nowTs=Date.now(),wantGc=!!gc||!S.gcLastAt||(nowTs-S.gcLastAt)>=300000;if(wantGc&&typeof crGcPaymentRefresh==="function")void crGcPaymentRefresh();const [a,b,c,d,e]=await Promise.all([api("api=year&year=2024"),api("api=year&year=2025"),api("api=year&year=2026"),api("api=current&gc="+(wantGc?1:0)),cgapi().catch(()=>null)]);if(wantGc)S.gcLastAt=nowTs;if(d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick}else if(S.gcLast&&(d?.gestaoclick?.skipped||d?.gestaoclick?.ok===false)){d.gestaoclick={...S.gcLast,stale:d?.gestaoclick?.ok===false,last_error_status:d?.gestaoclick?.http_status??null}}S.years={2024:a,2025:b,2026:c};S.current=d;S.capital=e;const apiBuild=c?.build||d?.build||b?.build||a?.build||"não informado";const bf=document.getElementById("buildfoot");bf.textContent="CONSTRU-REI · V12 OPERAÇÃO HOMOLOGADA · CORA PRO V2 / TRELLO";bf.title="API "+apiBuild;render();if(typeof window.crFinancialDeclaredRefresh==="function")void window.crFinancialDeclaredRefresh(false);if(!S.acertoHistoryLoaded)loadAcertoHistory();if(typeof window.crV12HistoryRefresh==="function")void window.crV12HistoryRefresh(false);document.getElementById("live").textContent="online"}catch(e){const live=document.getElementById("live");live.textContent="degradado";live.title="Falha ao atualizar dados. A interface preserva o último estado carregado."}}
 function render(){now();fin();hist();qual();recon();costs();if(typeof window.v12ExecRender==="function")window.v12ExecRender()}function manualLocalDate(){const d=new Date(),z=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
 const CORA_BASE_BALANCE_CENTS=3256462,CORA_BASE_BALANCE_DATE="09/10/2026",CORA_PROJECTED_KEY="cr-cora-projected-balance-cents-preview-v12",CORA_VERIFIED_KEY="cr-cora-verified-balance-cents-preview-v12",CORA_VERIFIED_DATE_KEY="cr-cora-verified-balance-date-preview-v12";
 if(localStorage.getItem(CORA_PROJECTED_KEY)===null)localStorage.setItem(CORA_PROJECTED_KEY,String(CORA_BASE_BALANCE_CENTS));
@@ -2827,4 +2835,79 @@ if((sessionStorage.getItem("crv2")||"").length>=12)void window.crV12ImportedAudi
 })();
 </script>
 <!-- CR V12 AUDIT RUNTIME END -->
+
+<script id="cr-v12-history-jan-nov-20261106">(function(){
+"use strict";
+const BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate";
+const pick=id=>document.getElementById(id), refresh=pick("cr-v12-historic-refresh"),status=pick("cr-v12-historic-status"),
+ last=pick("cr-v12-historic-last"),detail=pick("cr-v12-historic-detail"),months=pick("cr-v12-historic-months");
+if(!refresh||!status||!last||!detail||!months)return;
+const names=["JANEIRO","FEVEREIRO","MARÇO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO","SETEMBRO","OUTUBRO","NOVEMBRO"];
+const brl=n=>Number.isSafeInteger(n)?new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(n/100):"A confirmar";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function link(h){try{const u=new URL(h);return u.protocol==="https:"&&u.hostname==="trello.com"&&/^\/c\/[A-Za-z0-9]+/.test(u.pathname)?u.href:null}catch{return null}}
+let busy=false,catalog=null,snapshots=null,detailRows=null,lastDone=0;
+async function get(kind){const token=sessionStorage.getItem("crv2")||"";
+ if(token.length<12)throw Error("Faça login no Dashboard para consultar os acertos.");
+ const r=await fetch(BASE+"?api="+kind,{method:"GET",headers:{"x-cr-session":token},cache:"no-store",signal:AbortSignal.timeout(18000)});
+ const d=await r.json().catch(()=>null);
+ if(!r.ok||!d||d.ok===false)throw Error(String(d?.error||"Fonte histórica indisponível"));
+ return d;
+}
+function render(){
+ if(!catalog?.ok){status.textContent="Fontes indisponíveis. Nenhum valor presumido.";return}
+ const monthly=new Map((catalog.months||[]).map(m=>[m.year_month,m]));
+ const cuts=(catalog.periods||[]).filter(x=>x.status==="COMMITTED");
+ const newest=cuts.find(x=>x.period_key==="2026-10-24_2026-11-06")||cuts[0]||null;
+ if(newest){
+  const haveSnapshot=!!newest.snapshot_id;
+  last.innerHTML='<div style="padding:14px;border-radius:12px;border:1px solid #9fc6b8;background:#eef9f3"><div style="font-weight:850;color:#174b37">ÚLTIMO CORTE REGISTRADO · '+esc(newest.from)+' a '+esc(newest.to)+'</div>'+
+   '<div style="font-size:13px;line-height:1.75"><b>'+esc(newest.works_count??"—")+' obras</b> · Base '+brl(newest.base_cents)+' · Custos '+brl(newest.costs_cents)+' · Lucro <b>'+brl(newest.profit_cents)+'</b> · Capital de Giro '+brl(newest.capital_cents)+'</div>'+
+   '<div class="small muted">Estado no registro V12: '+esc(newest.status)+' · rateio apurado, sem presumir retirada bancária.</div>'+
+   (haveSnapshot?'<button type="button" id="cr-v12-historic-open" class="v11button" style="margin-top:9px">Ver todas as '+esc(newest.works_count??"")+" obras</button>":"<div>Detalhamento ainda não disponível.</div>")+'</div>';
+  const open=pick("cr-v12-historic-open");if(open)open.addEventListener("click",()=>openCut(newest));
+ }else{last.innerHTML='<div class="state warn">Nenhum corte registrado encontrado na fonte V12; não considerar zero como comprovação.</div>'}
+ let html='<table class="table" style="min-width:840px"><thead><tr><th>Competência</th><th>Base declarada</th><th>Custos</th><th>Lucro</th><th>Estado / cobertura</th><th>Origem</th></tr></thead><tbody>';
+ for(let i=0;i<11;i++){
+   const month="2026-"+String(i+1).padStart(2,"0"),m=monthly.get(month),nov=i===10;
+   const caption=m?.source_status==="DECLARED_UNRECONCILED"?"Trello declarado · banco pendente":"Sem consolidação mensal confirmada";
+   const diff=Number.isSafeInteger(m?.gross_cents)&&Number.isSafeInteger(m?.costs_cents)&&Number.isSafeInteger(m?.declared_profit_cents)?m.gross_cents-m.costs_cents-m.declared_profit_cents:null;
+   const note=(diff!==null&&diff!==0?" · Diferença "+brl(Math.abs(diff)):"")+(nov&&newest?" · Corte de 24/10 a 06/11 disponível acima":"");
+   const href=link(m?.source_card_url);
+   html+='<tr><td><b>'+names[i]+' 2026</b></td><td>'+brl(m?.gross_cents)+'</td><td>'+brl(m?.costs_cents)+'</td><td>'+brl(m?.declared_profit_cents)+'</td><td>'+esc(caption+note)+'</td><td>'+(href?'<a href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">Abrir Trello</a>':'—')+'</td></tr>';
+ }
+ months.innerHTML=html+'</tbody></table><div style="padding:10px;font-size:11px;color:#576e7c">Janeiro–setembro: registros declarados, ainda não homologados pela Cora. Outubro: acerto mensal não consolidado; novembro: corte registrado sem equivaler ao total bancário do mês. Não somar registros duas vezes.</div>';
+ status.textContent="11 competências disponíveis (janeiro a novembro) · "+cuts.length+" corte(s) registrado(s) · atualizado "+new Date().toLocaleString("pt-BR");
+}
+async function openCut(cut){
+ detail.innerHTML='<div class="state">Carregando obras do corte...</div>';
+ try{
+  if(!snapshots){const d=await get("acerto-history");snapshots=d.snapshots||[]}
+  const s=snapshots.find(x=>String(x.id)===String(cut.snapshot_id));
+  const arr=s?.payload?.acerto?.items;
+  if(!Array.isArray(arr)||arr.length!==cut.works_count||!arr.length)throw Error("Número de obras não confere com o registro V12");
+  const totals=s.payload.acerto.totals;
+  if(arr.some(x=>!Number.isSafeInteger(x.base_cents)||!Number.isSafeInteger(x.cost_cents)||!Number.isSafeInteger(x.profit_cents)||x.base_cents-x.cost_cents!==x.profit_cents))throw Error("Uma obra apresenta cálculo incompleto");
+  if(arr.reduce((a,x)=>a+x.base_cents,0)!==totals.base_cents||arr.reduce((a,x)=>a+x.cost_cents,0)!==totals.cost_cents||arr.reduce((a,x)=>a+x.profit_cents,0)!==totals.profit_cents)throw Error("Conferência dos totais não fechou");
+  detailRows=arr;
+  let rows=arr.map(x=>{const href=link(x.trello_url);
+    return '<tr><td><b>'+esc(x.case)+'</b></td><td>'+esc(x.customer||"Não identificado")+'</td><td>'+brl(x.base_cents)+'</td><td>'+brl(x.cost_cents)+'</td><td>'+brl(x.profit_cents)+'</td><td>'+(href?'<a href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">Trello</a>':'—')+'</td></tr>'}).join("");
+  detail.innerHTML='<div style="padding:12px;border:1px solid #abc4da;border-radius:10px"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong>Detalhamento das '+arr.length+' obras · 24/10 a 06/11</strong><button type="button" id="cr-v12-historic-copy" class="v11button">Copiar 12 obras</button></div><div class="tablewrap" style="margin-top:8px"><table class="table" style="min-width:690px"><thead><tr><th>Orçamento</th><th>Cliente</th><th>Base</th><th>Custos</th><th>Lucro</th><th>Origem</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+  pick("cr-v12-historic-copy").addEventListener("click",async()=>{const lines=["CONSTRU-REI | HISTÓRICO DO ACERTO 24/10 A 06/11/2026","12 obras · Base "+brl(totals.base_cents)+" · Custos "+brl(totals.cost_cents)+" · Lucro "+brl(totals.profit_cents),"","RATEIO APURADO (NÃO COMPROVA SAQUES)","Fabrício: "+brl(totals.fabricio_cents),"Éder: "+brl(totals.eder_cents),"Rogério: "+brl(totals.rogerio_cents),"Gabrielly: "+brl(totals.gabi_cents),"Capital de Giro: "+brl(totals.capital_giro_cents),""];
+    for(const x of arr)lines.push(x.case+" | "+String(x.customer||"")+" | Base "+brl(x.base_cents)+" | Custos "+brl(x.cost_cents)+" | Lucro "+brl(x.profit_cents)+" | "+String(link(x.trello_url)||""));
+    const txt=lines.join("\n");
+    try{await navigator.clipboard.writeText(txt);alert("12 de 12 obras copiadas sem cortes.")}catch{const blob=new Blob([txt],{type:"text/plain;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="CONSTRU_REI_Acerto_24-10_a_06-11_2026.txt";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);alert("Texto completo disponibilizado em arquivo TXT.")}});
+ }catch(e){detail.textContent="Detalhamento indisponível: "+String(e?.message||e)+". Sem valores presumidos."}
+}
+async function load(force){
+ if(busy||(!force&&Date.now()-lastDone<180000&&catalog?.ok))return;
+ busy=true;refresh.disabled=true;status.textContent="Consultando acertos históricos autenticados...";
+ try{const data=await get("acerto-catalog");if(data.ok!==true||!Array.isArray(data.months)||!Array.isArray(data.periods))throw Error("Cobertura histórica incompleta");
+  catalog=data;render();lastDone=Date.now();
+ }catch(e){status.textContent="Consulta indisponível: "+String(e?.message||e);if(!catalog){last.textContent="Os valores não foram zerados; fonte indisponível.";months.textContent="Consulta histórica indisponível."}}
+ finally{busy=false;refresh.disabled=false}
+}
+refresh.addEventListener("click",()=>load(true));window.crV12HistoryRefresh=load;
+if((sessionStorage.getItem("crv2")||"").length>=12)void load(false);
+})();</script>
 </body></html>
