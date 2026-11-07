@@ -701,7 +701,7 @@ body{background:var(--v12-bg)}
   <label style="font-size:12px">Início da lista atual<input type="date" id="cr-acerto-copy-start" style="display:block;min-height:40px;margin-top:5px"></label>
   <label style="font-size:12px">Fim da lista atual<input type="date" id="cr-acerto-copy-end" style="display:block;min-height:40px;margin-top:5px"></label>
   <div id="cr-acerto-copy-help" class="small muted" role="status" style="flex:1 1 100%">Na lista atual, marque as obras e informe as datas do título. Para acerto antigo, escolha o corte; não será feito novo fechamento.</div>
-</div><div class="acactions"><button class="acbtn" onclick="refreshAcerto(true)">ATUALIZAR AGORA</button><button class="acbtn primary" onclick="copyAcerto()">COPIAR ACERTO COMPLETO</button><button class="acbtn" onclick="copyAcertoResumo()">COPIAR RESUMO</button><button class="acbtn" onclick="pdfAcerto()">GERAR PDF</button><button class="acbtn" onclick="excelAcerto()">EXPORTAR EXCEL</button><button class="acbtn" onclick="snapshotAcerto()">SALVAR SNAPSHOT</button></div><div id="ac-period-heading" class="small muted" role="status" aria-live="polite" style="padding:8px 1px 0;font-weight:650">Período do título: selecione início e fim no painel Envio financeiro por período.</div>
+</div><div class="acactions"><button class="acbtn" onclick="refreshAcerto(true)">ATUALIZAR AGORA</button><button class="acbtn primary" onclick="copyAcerto()">COPIAR ACERTO COMPLETO</button><button class="acbtn" id="cr-acerto-copy-summary" onclick="copyAcertoResumo()">COPIAR RESUMO</button><button class="acbtn" id="cr-acerto-copy-pdf" onclick="pdfAcerto()">GERAR PDF</button><button class="acbtn" id="cr-acerto-copy-excel" onclick="excelAcerto()">EXPORTAR EXCEL</button><button class="acbtn" id="cr-acerto-copy-snapshot" onclick="snapshotAcerto()">SALVAR SNAPSHOT</button></div><div id="ac-period-heading" class="small muted" role="status" aria-live="polite" style="padding:8px 1px 0;font-weight:650">Período do título: selecione início e fim no painel Envio financeiro por período.</div>
   </div>
   <div id="ackpis" class="ackpis"></div>
   <div id="acrateio" class="acrateio"></div>
@@ -3181,6 +3181,9 @@ function updateCopySource(){
  const history=copySource.value==="history";
  periodPicker.disabled=!history||!catalog?.ok;
  for(const id of ["cr-acerto-copy-start","cr-acerto-copy-end"]){const el=pick(id);if(el)el.disabled=history;}
+ for(const id of ["cr-acerto-copy-summary","cr-acerto-copy-pdf","cr-acerto-copy-excel","cr-acerto-copy-snapshot"]){
+  const action=pick(id);if(action){action.disabled=history;action.title=history?"Para um corte anterior use COPIAR ACERTO COMPLETO. Outras saídas são da lista atual.":"";}
+ }
  if(copyHelp)copyHelp.textContent=history
   ?"Escolha um corte do Trello. O sistema copiará o fechamento congelado ou o texto original do período; referências só de capital não serão usadas como acerto."
   :"Marque as obras da lista AG. ACERTO. Informe datas para o título; valores são os custos reais informados no Trello, sem bloco de Apoio/Diárias duplicado.";
