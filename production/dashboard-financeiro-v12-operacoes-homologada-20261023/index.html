@@ -691,13 +691,24 @@ body{background:var(--v12-bg)}
 <div class="panel aclive" id="v12-live-acertos">
   <div class="aclivehead">
     <div><div class="r6eyebrow">ACERTO VIVO · FONTE OPERACIONAL TRELLO</div><h3>Acertos em aberto</h3><div class="small muted">Somente obras reais em AG. ACERTO. Se o desconto está registrado nos custos e a base bruta foi confirmada no cartão, use o bruto para evitar desconto duplo. Esta tela não lança dados no Trello.</div><div id="acstatus" class="acstatus" style="margin-top:8px"></div></div>
-    <div class="acactions"><button class="acbtn" onclick="refreshAcerto(true)">ATUALIZAR AGORA</button><button class="acbtn primary" onclick="copyAcerto()">COPIAR ACERTO COMPLETO</button><button class="acbtn" onclick="copyAcertoResumo()">COPIAR RESUMO</button><button class="acbtn" onclick="pdfAcerto()">GERAR PDF</button><button class="acbtn" onclick="excelAcerto()">EXPORTAR EXCEL</button><button class="acbtn" onclick="snapshotAcerto()">SALVAR SNAPSHOT</button></div><div id="ac-period-heading" class="small muted" role="status" aria-live="polite" style="padding:8px 1px 0;font-weight:650">Período do título: selecione início e fim no painel Envio financeiro por período.</div>
+    <div class="acactions"><button class="acbtn" onclick="refreshAcerto(true)">ATUALIZAR AGORA</button><button class="acbtn primary" onclick="copyAcerto()">COPIAR ACERTO COMPLETO</button><button class="acbtn" id="cr-acerto-copy-summary" onclick="copyAcertoResumo()">COPIAR RESUMO</button><button class="acbtn" id="cr-acerto-copy-pdf" onclick="pdfAcerto()">GERAR PDF</button><button class="acbtn" id="cr-acerto-copy-excel" onclick="excelAcerto()">EXPORTAR EXCEL</button><button class="acbtn" id="cr-acerto-copy-snapshot" onclick="snapshotAcerto()">SALVAR SNAPSHOT</button></div><div id="ac-period-heading" class="small muted" role="status" aria-live="polite" style="padding:8px 1px 0;font-weight:650">Informe as datas de início e fim acima para copiar a lista atual ou escolha um corte histórico.</div>
   </div>
+  <div id="cr-acerto-copy-controls" style="display:flex;flex-wrap:wrap;gap:9px;align-items:end;margin:10px 0;padding:11px;border:1px solid #c5d8e8;border-radius:10px;background:#f7fafc;color:#18334d">
+  <label style="font-size:12px;font-weight:700;flex:1 1 210px">Origem para COPIAR ACERTOS
+    <select id="cr-acerto-copy-source" style="display:block;width:100%;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px"><option value="live">Lista AG. ACERTO — obras selecionadas</option><option value="history">Corte anterior — Gestão Financeira / Trello</option></select>
+  </label>
+  <label style="font-size:12px;flex:1 1 195px">Corte disponível
+    <select id="cr-acerto-period-picker" style="display:block;width:100%;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px" disabled><option value="">Entre para carregar os cortes do Trello</option></select>
+  </label>
+  <label style="font-size:12px">Início da lista atual<input type="date" id="cr-acerto-copy-start" style="display:block;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px"></label>
+  <label style="font-size:12px">Fim da lista atual<input type="date" id="cr-acerto-copy-end" style="display:block;min-height:40px;margin-top:5px;background:#fff;color:#18334d;border:1px solid #aac3d7;border-radius:7px"></label>
+  <div id="cr-acerto-copy-help" class="small muted" role="status" style="flex:1 1 100%">Na lista atual, marque as obras e informe as datas apenas para o título; essas datas não filtram as obras. Para acerto antigo, selecione o corte congelado no Trello.</div>
+</div>
   <div id="ackpis" class="ackpis"></div>
   <div id="acrateio" class="acrateio"></div>
   <div class="acfilters"><input id="aq" placeholder="Buscar orçamento ou cliente..." oninput="renderAcerto()"><select id="aclient" onchange="renderAcerto()"><option value="">Todos os clientes</option></select><select id="asort" onchange="renderAcerto()"><option value="case">Orçamento</option><option value="base">Maior base</option><option value="profit">Maior lucro</option><option value="margin">Maior margem</option><option value="div">Divergências primeiro</option></select></div>
   <div id="actable"></div>
-  <div class="grid2" style="margin-top:12px"><div><h3>Histórico de snapshots</h3><div class="small muted">Fechamentos congelados ficam preservados sem alterar o Acerto Vivo.</div><div id="achistory" class="achistory" style="margin-top:8px"></div></div><div><h3>Referências históricas preservadas</h3><div class="rows"><div class="r"><span>Modelo / fechamento</span><b>06/08</b></div><div class="r"><span>Modelo / fechamento</span><b>18/09</b></div><div class="r"><span>Regra atual</span><b>20 / 28 / 28 / 14 / 10</b></div><div class="r"><span>Apoio / diárias</span><b>Separado do rateio</b></div></div></div></div>
+  <div class="grid2" style="margin-top:12px"><div><h3>Histórico de snapshots</h3><div class="small muted">Fechamentos congelados ficam preservados sem alterar o Acerto Vivo.</div><div id="achistory" class="achistory" style="margin-top:8px"></div></div><div><h3>Referências históricas preservadas</h3><div class="rows"><div class="r"><span>Modelo / fechamento</span><b>06/08</b></div><div class="r"><span>Modelo / fechamento</span><b>18/09</b></div><div class="r"><span>Regra atual</span><b>20 / 28 / 28 / 14 / 10</b></div></div></div></div>
 </div>
 <div id="finperiod" class="periodtitle"></div><div id="yc" class="grid3"></div><div class="panel"><h3>Acertos e rateios históricos</h3><div id="months" class="months"></div><div id="fk" class="kpis"></div><div class="grid2"><div><h3 id="rrtitle">Rateios auditados do ano</h3><p class="small muted">Este subtotal vem das obras classificadas na Gestão de Obras; pode ser menor que os <strong>rateios declarados nos acertos financeiros</strong> do painel acima. Não é o total de saques Cora nem deve substituir o fechamento da Gestão Financeira.</p><div id="rr" class="rows"></div></div><div><h3>Linha do tempo dos modelos</h3><div id="tl" class="rows"></div></div></div></div></section>
 <section id="cora" class="section on"><p role="status" style="background:#fff7df;color:#785618;border:1px solid #e1c365;border-radius:10px;padding:12px;font-weight:700">V12 · OPERAÇÃO CONTROLADA — Anotações informativas de saídas e recebimentos no extrato Cora, sem criar custos, receitas ou alterar o Trello. Lançamentos e conciliações financeiras exigem login da Diretoria, prévia, confirmação explícita e validação do servidor.</p><div id="cr-central-actions" role="group" aria-label="Operações financeiras da Central"><button type="button" id="cr-op-bank" aria-pressed="false">Extrato Cora / Aprovisionar</button><button type="button" id="cr-op-manual" aria-pressed="true">Lançar manualmente (obra)</button><button type="button" id="cr-op-capital" aria-pressed="false">Capital de Giro</button><button type="button" id="cr-op-close" aria-pressed="false">Fechar Obra</button></div><div id="cr-central-hint" role="status">Lançamentos manuais antecipados continuam disponíveis, mesmo sem transação no Cora. Capital de Giro reutiliza o componente V12.</div><div id="cr-central-bank-slot" hidden><div class="panel" id="cr-aprovisionamento" style="margin:12px 0">
@@ -1065,13 +1076,23 @@ function acertoFiltered(){let a=[...acertoRows()],q=acNorm(document.getElementBy
 function acertoCheck(k,v){S.acertoSelected[k]=!!v;renderAcerto()}
 function acertoCheckAll(v){for(const x of acertoFiltered())S.acertoSelected[x.case]=!!v;renderAcerto()}
 function acertoHistoryHtml(){const h=S.acertoHistory||[];if(!h.length)return '<div class="state">Nenhum snapshot novo salvo ainda. As referências históricas anteriores permanecem preservadas.</div>';return h.slice(0,12).map(x=>{const t=x.payload?.acerto?.totals||{};return '<div class="achsnap"><span><b>'+esc(x.label)+'</b><br><small>'+esc(new Date(x.created_at).toLocaleString("pt-BR"))+' · '+(t.cases??"—")+' obra(s)</small></span><b>'+brl(t.profit_cents)+'</b></div>'}).join("")}
-function renderAcerto(){const root=document.getElementById("ackpis");if(!root)return;const a=S.current?.acertos;if(!a?.ok){root.innerHTML='<div class="state warn">Acerto Vivo aguardando leitura do Trello.</div>';document.getElementById("acrateio").innerHTML="";document.getElementById("actable").innerHTML="";return}const t=a.totals||{},read=S.current?.trello?.read_at||a.generated_at,sel=Object.keys(S.acertoSelected).filter(k=>S.acertoSelected[k]).length;document.getElementById("acstatus").innerHTML='<span class="acdot"></span><b>VIVO</b><span>Atualizado '+esc(read?new Date(read).toLocaleString("pt-BR"):"agora")+'</span><span class="acsel">'+(sel?sel+" selecionada(s) para saída":"saídas usam o conjunto completo")+'</span>';root.innerHTML=[["Obras no acerto",t.cases??0],["Base considerada",brl(t.base_cents)],["Custos",brl(t.cost_cents)],["Lucro líquido",brl(t.profit_cents)],["Margem",pct(t.margin_pct)],["Apoio Fabrício",brl(t.support_fabricio_cents)],["Apoio Éder",brl(t.support_eder_cents)],["Diferença",brl(t.difference_cents)]].map((x,i)=>'<div class="ackpi '+(i===3?"gold":"")+'"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("");document.getElementById("acrateio").innerHTML=[["Fabrício · 20%",t.fabricio_cents],["Éder · 28%",t.eder_cents],["Rogério · 28%",t.rogerio_cents],["Gabi · 14%",t.gabi_cents],["Capital de Giro · 10%",t.capital_giro_cents]].map(x=>'<div class="acshare"><span>'+x[0]+'</span><b>'+brl(x[1])+'</b></div>').join("");const cs=document.getElementById("aclient"),keep=cs?.value||"",clients=[...new Set(acertoRows().map(x=>x.customer).filter(Boolean))].sort();if(cs){cs.innerHTML='<option value="">Todos os clientes</option>'+clients.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");if(clients.includes(keep))cs.value=keep}const rows=acertoFiltered(),recClass=r=>r==="DIVERGENTE"?"acbad":r==="CONCILIADO"?"acok":"acwarn";const tr=rows.map(x=>{const r=acertoRecon(x),checked=S.acertoSelected[x.case]?"checked":"";return '<tr><td><input type="checkbox" '+checked+' onchange="acertoCheck(\''+x.case+'\',this.checked)"></td><td><b>'+esc(x.case)+'</b><br><small>'+esc(x.customer)+'</small></td><td>'+brl(x.closed_cents)+'</td><td>'+(x.received_cents==null?"—":brl(x.received_cents))+'</td><td><b>'+brl(x.base_cents)+'</b><br><small>'+esc(x.base_source==="VALOR_FECHADO_TAXA_JA_NOS_CUSTOS"?"Bruto (taxa já nos custos)":x.base_source==="VALOR_RECEBIDO"?"Recebido":"Fechado")+'</small></td><td>'+brl(x.cost_cents)+'</td><td><b>'+brl(x.profit_cents)+'</b></td><td>'+pct(x.margin_pct)+'</td><td>'+brl(x.rateio?.fabricio_cents)+'</td><td>'+brl(x.rateio?.eder_cents)+'</td><td>'+brl(x.rateio?.rogerio_cents)+'</td><td>'+brl(x.rateio?.gabi_cents)+'</td><td>'+brl(x.rateio?.capital_giro_cents)+'</td><td class="'+recClass(r.result)+'"><b>'+esc(r.result||"N/D")+'</b></td><td><a href="'+esc(x.trello_url||"#")+'" target="_blank">Trello ↗</a></td></tr>'}).join("");const mc=rows.map(x=>{const r=acertoRecon(x),checked=S.acertoSelected[x.case]?"checked":"";return '<div class="op"><div class="ophead"><span><input type="checkbox" '+checked+' onchange="acertoCheck(\''+x.case+'\',this.checked)"> <b>'+esc(x.case)+'</b></span><b>'+brl(x.profit_cents)+'</b></div><div class="small muted">'+esc(x.customer)+'</div><div class="opvals"><div><small>Base</small><b>'+brl(x.base_cents)+'</b></div><div><small>Custos</small><b>'+brl(x.cost_cents)+'</b></div><div><small>Margem</small><b>'+pct(x.margin_pct)+'</b></div></div><details class="opdetail"><summary>Rateio e conferência</summary><div class="rows"><div class="r"><span>Fabrício</span><b>'+brl(x.rateio?.fabricio_cents)+'</b></div><div class="r"><span>Éder</span><b>'+brl(x.rateio?.eder_cents)+'</b></div><div class="r"><span>Rogério</span><b>'+brl(x.rateio?.rogerio_cents)+'</b></div><div class="r"><span>Gabi</span><b>'+brl(x.rateio?.gabi_cents)+'</b></div><div class="r"><span>Capital</span><b>'+brl(x.rateio?.capital_giro_cents)+'</b></div><div class="r"><span>GestãoClick</span><b class="'+recClass(r.result)+'">'+esc(r.result||"N/D")+'</b></div></div></details><a class="trellobtn" href="'+esc(x.trello_url||"#")+'" target="_blank">ABRIR TRELLO ↗</a></div>'}).join("");document.getElementById("actable").innerHTML='<div class="acstatus"><label><input type="checkbox" onchange="acertoCheckAll(this.checked)"> selecionar filtradas</label><span>'+rows.length+' de '+a.items.length+' obra(s)</span></div><div class="tablewrap aclivedesktop" style="margin-top:7px"><table class="table" style="min-width:1450px"><thead><tr><th></th><th>Orçamento / Cliente</th><th>Fechado</th><th>Recebido</th><th>Base</th><th>Custos</th><th>Lucro</th><th>Margem</th><th>Fabrício</th><th>Éder</th><th>Rogério</th><th>Gabi</th><th>Capital</th><th>GestãoClick</th><th></th></tr></thead><tbody>'+tr+'</tbody></table></div><div class="acmobile">'+mc+'</div>';document.getElementById("achistory").innerHTML=acertoHistoryHtml()}
+function renderAcerto(){const root=document.getElementById("ackpis");if(!root)return;const a=S.current?.acertos;if(!a?.ok){root.innerHTML='<div class="state warn">Acerto Vivo aguardando leitura do Trello.</div>';document.getElementById("acrateio").innerHTML="";document.getElementById("actable").innerHTML="";return}const t=a.totals||{},read=S.current?.trello?.read_at||a.generated_at,sel=Object.keys(S.acertoSelected).filter(k=>S.acertoSelected[k]).length;document.getElementById("acstatus").innerHTML='<span class="acdot"></span><b>VIVO</b><span>Atualizado '+esc(read?new Date(read).toLocaleString("pt-BR"):"agora")+'</span><span class="acsel">'+(sel?sel+" selecionada(s) para saída":"saídas usam o conjunto completo")+'</span>';root.innerHTML=[["Obras no acerto",t.cases??0],["Base considerada",brl(t.base_cents)],["Custos",brl(t.cost_cents)],["Lucro líquido",brl(t.profit_cents)],["Margem",pct(t.margin_pct)],["Diferença",brl(t.difference_cents)]].map((x,i)=>'<div class="ackpi '+(i===3?"gold":"")+'"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("");document.getElementById("acrateio").innerHTML=[["Fabrício · 20%",t.fabricio_cents],["Éder · 28%",t.eder_cents],["Rogério · 28%",t.rogerio_cents],["Gabi · 14%",t.gabi_cents],["Capital de Giro · 10%",t.capital_giro_cents]].map(x=>'<div class="acshare"><span>'+x[0]+'</span><b>'+brl(x[1])+'</b></div>').join("");const cs=document.getElementById("aclient"),keep=cs?.value||"",clients=[...new Set(acertoRows().map(x=>x.customer).filter(Boolean))].sort();if(cs){cs.innerHTML='<option value="">Todos os clientes</option>'+clients.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");if(clients.includes(keep))cs.value=keep}const rows=acertoFiltered(),recClass=r=>r==="DIVERGENTE"?"acbad":r==="CONCILIADO"?"acok":"acwarn";const tr=rows.map(x=>{const r=acertoRecon(x),checked=S.acertoSelected[x.case]?"checked":"";return '<tr><td><input type="checkbox" '+checked+' onchange="acertoCheck(\''+x.case+'\',this.checked)"></td><td><b>'+esc(x.case)+'</b><br><small>'+esc(x.customer)+'</small></td><td>'+brl(x.closed_cents)+'</td><td>'+(x.received_cents==null?"—":brl(x.received_cents))+'</td><td><b>'+brl(x.base_cents)+'</b><br><small>'+esc(x.base_source==="VALOR_FECHADO_TAXA_JA_NOS_CUSTOS"?"Bruto (taxa já nos custos)":x.base_source==="VALOR_RECEBIDO"?"Recebido":"Fechado")+'</small></td><td>'+brl(x.cost_cents)+'</td><td><b>'+brl(x.profit_cents)+'</b></td><td>'+pct(x.margin_pct)+'</td><td>'+brl(x.rateio?.fabricio_cents)+'</td><td>'+brl(x.rateio?.eder_cents)+'</td><td>'+brl(x.rateio?.rogerio_cents)+'</td><td>'+brl(x.rateio?.gabi_cents)+'</td><td>'+brl(x.rateio?.capital_giro_cents)+'</td><td class="'+recClass(r.result)+'"><b>'+esc(r.result||"N/D")+'</b></td><td><a href="'+esc(x.trello_url||"#")+'" target="_blank">Trello ↗</a></td></tr>'}).join("");const mc=rows.map(x=>{const r=acertoRecon(x),checked=S.acertoSelected[x.case]?"checked":"";return '<div class="op"><div class="ophead"><span><input type="checkbox" '+checked+' onchange="acertoCheck(\''+x.case+'\',this.checked)"> <b>'+esc(x.case)+'</b></span><b>'+brl(x.profit_cents)+'</b></div><div class="small muted">'+esc(x.customer)+'</div><div class="opvals"><div><small>Base</small><b>'+brl(x.base_cents)+'</b></div><div><small>Custos</small><b>'+brl(x.cost_cents)+'</b></div><div><small>Margem</small><b>'+pct(x.margin_pct)+'</b></div></div><details class="opdetail"><summary>Rateio e conferência</summary><div class="rows"><div class="r"><span>Fabrício</span><b>'+brl(x.rateio?.fabricio_cents)+'</b></div><div class="r"><span>Éder</span><b>'+brl(x.rateio?.eder_cents)+'</b></div><div class="r"><span>Rogério</span><b>'+brl(x.rateio?.rogerio_cents)+'</b></div><div class="r"><span>Gabi</span><b>'+brl(x.rateio?.gabi_cents)+'</b></div><div class="r"><span>Capital</span><b>'+brl(x.rateio?.capital_giro_cents)+'</b></div><div class="r"><span>GestãoClick</span><b class="'+recClass(r.result)+'">'+esc(r.result||"N/D")+'</b></div></div></details><a class="trellobtn" href="'+esc(x.trello_url||"#")+'" target="_blank">ABRIR TRELLO ↗</a></div>'}).join("");document.getElementById("actable").innerHTML='<div class="acstatus"><label><input type="checkbox" onchange="acertoCheckAll(this.checked)"> selecionar filtradas</label><span>'+rows.length+' de '+a.items.length+' obra(s)</span></div><div class="tablewrap aclivedesktop" style="margin-top:7px"><table class="table" style="min-width:1450px"><thead><tr><th></th><th>Orçamento / Cliente</th><th>Fechado</th><th>Recebido</th><th>Base</th><th>Custos</th><th>Lucro</th><th>Margem</th><th>Fabrício</th><th>Éder</th><th>Rogério</th><th>Gabi</th><th>Capital</th><th>GestãoClick</th><th></th></tr></thead><tbody>'+tr+'</tbody></table></div><div class="acmobile">'+mc+'</div>';document.getElementById("achistory").innerHTML=acertoHistoryHtml()}
 async function refreshAcerto(forceGc=false){const live=document.getElementById("live");if(live)live.textContent="atualizando acerto";try{const want=!!forceGc||!S.gcLastAt||(Date.now()-S.gcLastAt)>=300000,d=await api("api=current&gc="+(want?1:0));if(want&&d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick;S.gcLastAt=Date.now()}S.current=d;renderAcerto();recon();now();if(live)live.textContent="online"}catch(e){if(live)live.textContent="degradado"}}
 async function loadAcertoHistory(){try{const h=await api("api=acerto-history");S.acertoHistory=h?.snapshots||[];S.acertoHistoryLoaded=true;renderAcerto()}catch{}}
 function acertoOutputRows(){return acertoSelectedRows()}
 const ACSEP="━━━━━━━━━━━━━━━━━━━━━━";
 function acertoKeycap(n){const m={"0":"0️⃣","1":"1️⃣","2":"2️⃣","3":"3️⃣","4":"4️⃣","5":"5️⃣","6":"6️⃣","7":"7️⃣","8":"8️⃣","9":"9️⃣"};return String(n).split("").map(x=>m[x]||x).join("")}
-function acertoCustomerName(x){return String(x?.customer||"").replace(/[,\s]+$/,"").trim()||"Não identificado"}
+function acertoCustomerName(x){
+ const raw=String(x?.customer||"").trim();
+ const k=raw.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+ if(k.includes("PRESIDENTE"))return "Imobiliária Presidente";
+ if(k.includes("ARAHOME"))return "Arahome";
+ if(k.includes("GALVAO"))return /CACA\s*VAZAMENTOS/.test(k)?"Galvão — Caça Vazamentos":"Galvão";
+ if(k.includes("VIZIA"))return "Vizia Imóveis";
+ if(k.includes("PARTICULAR"))return "Particular";
+ return raw.replace(/\s*[-–]+\s*$/,"").replace(/\s+\d[\d.\-]*$/,"").trim()||"Cliente não identificado";
+}
+
 function acertoPeriodDate(value){
  const v=String(value||'');if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return null;
  const [year,month,day]=v.split('-').map(Number),d=new Date(Date.UTC(year,month-1,day));
@@ -1079,28 +1100,174 @@ function acertoPeriodDate(value){
 }
 function acertoPeriodFromSelection(start,end){
  const a=acertoPeriodDate(start),b=acertoPeriodDate(end);
- if(!a||!b)throw Error('Informe as duas datas do período em “Encerrar período de acertos” antes de copiar.');
+ if(!a||!b)throw Error('Informe as datas de início e fim da lista atual no painel Copiar Acertos.');
  if(a.iso>b.iso)throw Error('O fim do período deve ser igual ou posterior ao início. Confira as datas selecionadas.');
  const sameYear=a.year===b.year;
  const fmt=x=>String(x.day).padStart(2,'0')+'/'+String(x.month).padStart(2,'0')+(sameYear?'':'/'+x.year);
  const short=fmt(a)+' a '+fmt(b);
  return{head:'DE '+short,short,start:a.iso,end:b.iso};
 }
-function acertoPeriod(){return acertoPeriodFromSelection(document.getElementById('cg-close-start')?.value,document.getElementById('cg-close-end')?.value)}
-function acertoPeriodStatus(){const label=document.getElementById('ac-period-heading');if(!label)return;try{label.textContent='Título ao copiar: ACERTOS '+acertoPeriod().head+' · Período do encerramento selecionado';}catch{label.textContent='Período do título: selecione início e fim no painel Envio financeiro por período.';}}
-function acertoPeriodError(e){alert(String(e?.message||e));document.getElementById('cg-close-start')?.scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('cg-close-start')?.focus();}
+function acertoPeriod(){
+ const visibleStart=document.getElementById('cr-acerto-copy-start');
+ const visibleEnd=document.getElementById('cr-acerto-copy-end');
+ const start=visibleStart&&visibleEnd?visibleStart.value:document.getElementById('cg-close-start')?.value;
+ const end=visibleStart&&visibleEnd?visibleEnd.value:document.getElementById('cg-close-end')?.value;
+ return acertoPeriodFromSelection(start,end);
+}
+for(const id of ['cr-acerto-copy-start','cr-acerto-copy-end']){const el=document.getElementById(id);if(el){el.addEventListener('input',acertoPeriodStatus);el.addEventListener('change',acertoPeriodStatus)}}
+function acertoPeriodStatus(){const label=document.getElementById('ac-period-heading');if(!label)return;try{label.textContent='Título ao copiar: ACERTOS '+acertoPeriod().head+' · Datas são título; as obras são escolhidas pelas caixas de seleção';}catch{label.textContent='Informe as datas de início e fim acima para copiar a lista atual ou escolha um corte histórico.';}}
+function acertoPeriodError(e){alert(String(e?.message||e));const input=document.getElementById('cr-acerto-copy-start')||document.getElementById('cg-close-start');input?.scrollIntoView({behavior:'smooth',block:'center'});input?.focus();}
 for(const id of ['cg-close-start','cg-close-end']){const el=document.getElementById(id);if(el){el.addEventListener('input',acertoPeriodStatus);el.addEventListener('change',acertoPeriodStatus)}}
 acertoPeriodStatus();
-function acertoMetaLines(x){const m=x?.meta||{},L=["Cliente: "+acertoCustomerName(x)],add=(lab,v)=>{if(v!=null&&String(v).trim())L.push(lab+": "+String(v).trim())};add("Endereço",m.address);add("Referência",m.reference);add("Contrato",m.contract);add("Imóvel",m.property);add("Vista CRM",m.vista_crm);add("Serviço",m.service);add("Prestador",m.provider);add("Recebimento",m.receipt);add("Pagamento",m.payment);add("Situação",m.situation);return L}
-function acertoAuditPass(rows,t){return rows.length>0&&Number(t.difference_cents||0)===0&&rows.every(x=>x.base_cents!=null&&x.cost_cents!=null&&x.profit_cents!=null&&x.rateio&&Number(x.rateio.difference_cents||0)===0&&!((x.issues||[]).some(i=>/^SEM_/.test(String(i)))))}
-function acertoSummaryText(rows,period){const t=acertoTotals(rows),p=period||acertoPeriod(),L=[];L.push("💰 CONSTRU-REI | ACERTOS "+p.head,"📋 Obras: "+t.cases,"","💵 Base considerada: "+brl(t.base_cents),"💸 Custos: "+brl(t.cost_cents),"✅ Lucro líquido: "+brl(t.profit_cents),"📈 Margem: "+pct(t.margin_pct),"","👥 RATEIO","Fabrício 20%: "+brl(t.fabricio_cents),"Éder 28%: "+brl(t.eder_cents),"Rogério 28%: "+brl(t.rogerio_cents),"Gabi 14%: "+brl(t.gabi_cents),"🏦 Capital de Giro 10%: "+brl(t.capital_giro_cents),"","🛠️ APOIO / DIÁRIAS","Fabrício: "+brl(t.support_fabricio_cents),"Éder: "+brl(t.support_eder_cents),"","✅ Distribuído: "+brl(t.distributed_cents),"Diferença: "+brl(t.difference_cents),"");for(const x of rows)L.push("• "+x.case+" | "+acertoCustomerName(x)+" | Base "+brl(x.base_cents)+" | Lucro "+brl(x.profit_cents));return L.join("\n")}
+function acertoMetaLines(x){
+ const m=x?.meta||{},L=["Cliente: "+acertoCustomerName(x)];
+ const add=(lab,v)=>{if(v!=null&&String(v).trim())L.push(lab+": "+String(v).trim())};
+ const addr=String(m.address||"").trim()
+  .replace(/\s+-\s+(?:enviado\s+link|aguardando\b|Execu[çc][ãa]o\b|Imobili[aá]ria\b|Eder\s+e\s+Fabricio\b|Andr[eé]\s+\d|PGTO\b|Finalizad[oa]\b|Agendad[oa]\b|Link\s+Ok\b).*$/i,"")
+  .replace(/\s+Vazamento\s+no\s+(?:vaso|vazo)\s+sanit[aá]rio.*$/i,"")
+  .replace(/\s+\(\s*NF\s*OK\b.*$/i,"")
+  .replace(/\s+Parcelado\s+\d+\s*[xX].*$/i,"")
+  .replace(/\s+-\s*\d+\s*[xX]\s+Aluguel\b.*$/i,"")
+  .trim();
+ add("Endereço",addr);add("Referência",m.reference);add("Contrato",m.contract);add("Imóvel",m.property);
+ add("Vista CRM",m.vista_crm);add("Serviço",m.service);add("Prestador",m.provider);
+ const rec=String(m.receipt||"").trim();
+ if(rec&&!/^(?:e\s+imobili[aá]ria|aguardando|nas\s+datas)/i.test(rec))add("Recebimento informado no Trello (não conciliado)",rec);
+ const pay=String(m.payment||"").trim();
+ if(/^(?:PARC\b|\d{1,2}\/\d{1,2}\b)/i.test(pay))add("Referência de pagamento informada no cartão",pay);
+ add("Situação",m.situation);
+ return L;
+}
+function acertoAuditPass(rows,t){
+ return rows.length>0 && Number(t.difference_cents)===0 && rows.every(x=>{
+  const base=Number(x.base_cents),costs=Number(x.cost_cents),profit=Number(x.profit_cents);
+  const numeric=[base,costs,profit];
+  const valid=numeric.every(Number.isFinite)&&base-costs===profit&&x.rateio&&Number(x.rateio.difference_cents||0)===0&&!((x.issues||[]).some(i=>/^SEM_/.test(String(i))));
+  const items=Array.isArray(x.cost_items)?x.cost_items:[];
+  const detail=(costs===0&&!items.length)||(items.length>0&&items.every(y=>Number.isFinite(Number(y.value_cents)))&&items.reduce((sum,y)=>sum+Number(y.value_cents),0)===costs);
+  return valid&&detail;
+ });
+}
+
+function acertoSummaryText(rows,period){
+ const t=acertoTotals(rows),p=period||acertoPeriod(),L=[
+  "💰 CONSTRU-REI | ACERTOS "+p.head,"📋 Obras: "+t.cases,"",
+  "💵 Base financeira (não comprova recebimento): "+brl(t.base_cents),"💸 Custos: "+brl(t.cost_cents),
+  "✅ Lucro líquido: "+brl(t.profit_cents),"📈 Margem: "+pct(t.margin_pct),"",
+  "👥 RATEIO APURADO — NÃO REPRESENTA SAQUES",
+  "Fabrício 20%: "+brl(t.fabricio_cents),"Éder 28%: "+brl(t.eder_cents),
+  "Rogério 28%: "+brl(t.rogerio_cents),"Gabrielly 14%: "+brl(t.gabi_cents),
+  "🏦 Capital de Giro 10% (centavos ajustados): "+brl(t.capital_giro_cents),"",
+  "✅ Total rateado: "+brl(t.distributed_cents),"Diferença do rateio: "+brl(t.difference_cents),"",
+  "📋 OBRAS DO PERÍODO"
+ ];
+ for(const x of rows)L.push("• "+x.case+" | "+acertoCustomerName(x)+" | Base "+brl(x.base_cents)+" | Custos "+brl(x.cost_cents)+" | Lucro "+brl(x.profit_cents));
+ L.push("","ℹ️ Rateio calculado; pagamentos e saques dependem da conciliação com a Cora.");
+ return L.join("\n");
+}
+
 function acertoWhatsApp(rows){return acertoSummaryText(rows)}
-function acertoCompleteText(rows,period){const t=acertoTotals(rows),p=period||acertoPeriod(),L=[];L.push(ACSEP,"💰 ACERTOS "+p.head,ACSEP,"","TOTAL DE OBRAS: "+t.cases,"");rows.forEach((x,i)=>{L.push(ACSEP,acertoKeycap(i+1)+" OBRA "+x.case,ACSEP,"",...acertoMetaLines(x),"","MOVIMENTAÇÃO FINANCEIRA","","💰 Valor fechado: "+brl(x.closed_cents));if(x.received_cents!=null&&Number(x.received_cents)!==Number(x.closed_cents))L.push("💵 Valor recebido / Base do acerto: "+brl(x.received_cents));L.push("💸 Total dos custos: "+brl(x.cost_cents),"✅ Saldo/Lucro: "+brl(x.profit_cents),"📊 Margem de lucro: "+pct(x.margin_pct),"","RATEIO DO LUCRO","","✅ Fabrício — 20%: "+brl(x.rateio?.fabricio_cents),"✅ Éder — 28%: "+brl(x.rateio?.eder_cents),"✅ Rogério — 28%: "+brl(x.rateio?.rogerio_cents),"✅ Gabi — 14%: "+brl(x.rateio?.gabi_cents));const capExpected=x.profit_cents==null?null:Math.round(Number(x.profit_cents)*.10),capAdj=capExpected!=null&&Number(x.rateio?.capital_giro_cents)!==capExpected;L.push("✅ Capital de Giro — "+(capAdj?"ajuste de arredondamento":"10%")+": "+brl(x.rateio?.capital_giro_cents));const sf=Number(x.support_cents?.["Fabrício"]||0),se=Number(x.support_cents?.["Éder"]||0);if(sf||se){L.push("","🛠️ APOIO / DIÁRIAS","");if(sf)L.push("Fabrício: "+brl(sf));if(se)L.push("Éder: "+brl(se))}L.push("")});L.push(ACSEP,"📋 RESUMO GERAL – ACERTOS "+p.head,ACSEP,"","🏗️ Total de obras: "+t.cases,"","💰 Total fechado/recebido: "+brl(t.base_cents),"","💸 Total dos custos: "+brl(t.cost_cents),"","✅ Lucro total apurado: "+brl(t.profit_cents),"","📊 Margem geral de lucro: "+pct(t.margin_pct),"",ACSEP,"💸 RETIRADAS POR COLABORADOR",ACSEP,"","✅ Fabrício: "+brl(t.fabricio_cents),"","✅ Éder: "+brl(t.eder_cents),"","✅ Rogério: "+brl(t.rogerio_cents),"","✅ Gabi: "+brl(t.gabi_cents),"","✅ Capital de Giro: "+brl(t.capital_giro_cents),"");if(t.support_fabricio_cents||t.support_eder_cents){L.push(ACSEP,"🛠️ APOIO / DIÁRIAS",ACSEP,"");if(t.support_fabricio_cents)L.push("Fabrício: "+brl(t.support_fabricio_cents),"");if(t.support_eder_cents)L.push("Éder: "+brl(t.support_eder_cents),"")}L.push(ACSEP,"✅ TOTAL DISTRIBUÍDO",ACSEP,"","💰 "+brl(t.distributed_cents),"",ACSEP,"📊 CONFERÊNCIA FINAL",ACSEP,"","✅ Total fechado/recebido: "+brl(t.base_cents),"","✅ Total dos custos: "+brl(t.cost_cents),"","✅ Lucro total apurado: "+brl(t.profit_cents),"","✅ Total dos rateios: "+brl(t.distributed_cents),"","✅ Diferença: "+brl(t.difference_cents),"","✅ Rateio geral: 100% do lucro distribuído","",ACSEP,"🔎 AUDITORIA DOS CÁLCULOS",ACSEP,"","✅ "+t.cases+" obras financeiras consideradas.","","✅ Todos os custos disponíveis nas fontes válidas foram considerados.","","✅ Todos os saldos foram recalculados pela fórmula:","Base Financeira – Custos = Lucro.","","✅ Margem geral recalculada sobre o faturamento/base total.","","✅ Rateio padrão aplicado:","Fabrício 20%","Éder 28%","Rogério 28%","Gabi 14%","Capital de Giro 10%","","✅ Centavos de arredondamento foram ajustados exclusivamente no Capital de Giro para garantir que cada obra distribua exatamente 100% do lucro.","");const pass=acertoAuditPass(rows,t);if(pass)L.push(ACSEP,"✅ ACERTO CONFERIDO",ACSEP,"","LUCRO A DISTRIBUIR: "+brl(t.profit_cents),"","Fabrício: "+brl(t.fabricio_cents),"Éder: "+brl(t.eder_cents),"Rogério: "+brl(t.rogerio_cents),"Gabi: "+brl(t.gabi_cents),"Capital de Giro: "+brl(t.capital_giro_cents),"","TOTAL: "+brl(t.distributed_cents),"DIFERENÇA: "+brl(t.difference_cents),ACSEP);else{const bad=rows.filter(x=>(x.issues||[]).length||x.base_cents==null||x.cost_cents==null||x.profit_cents==null||Number(x.rateio?.difference_cents||0)!==0);L.push(ACSEP,"⚠️ ACERTO COM PENDÊNCIAS",ACSEP,"","Não declarar conferido até sanar as divergências.","",...bad.map(x=>"• "+x.case+" — "+((x.issues||[]).join(", ")||"dados financeiros incompletos")),ACSEP)}return L.join("\n")}
-async function acertoCopyText(txt,msg){try{await navigator.clipboard.writeText(txt);alert(msg)}catch{prompt("Copie o acerto:",txt)}}
-async function copyAcerto(){try{const p=acertoPeriod();return acertoCopyText(acertoCompleteText(acertoOutputRows(),p),"Acerto completo copiado para o WhatsApp.")}catch(e){acertoPeriodError(e)}}
-async function copyAcertoResumo(){try{const p=acertoPeriod();return acertoCopyText(acertoSummaryText(acertoOutputRows(),p),"Resumo do acerto copiado para o WhatsApp.")}catch(e){acertoPeriodError(e)}}
-function pdfAcerto(){let period;try{period=acertoPeriod()}catch(e){return acertoPeriodError(e)}const rows=acertoOutputRows(),w=window.open("","_blank");if(!w)return alert("Permita pop-ups para gerar o PDF.");const txt=acertoCompleteText(rows,period);w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Acerto CONSTRU-REI</title><style>body{font-family:Arial,sans-serif;padding:30px;color:#142235}pre{font-family:Arial,sans-serif;white-space:pre-wrap;line-height:1.45;font-size:12px;margin:0}@media print{body{padding:0}}</style></head><body><pre>'+esc(txt)+'</pre></bo'+'dy></html>');w.document.close();setTimeout(()=>w.print(),250)}
-function excelAcerto(){const rows=acertoOutputRows(),t=acertoTotals(rows),head=["Orçamento","Cliente","Endereço","Referência","Contrato","Imóvel","Vista CRM","Serviço","Prestador","Recebimento","Pagamento","Situação","Valor Fechado","Valor Recebido","Base","Fonte Base","Custos","Lucro","Margem %","Fabrício","Éder","Rogério","Gabi","Capital de Giro","Apoio Fabrício","Apoio Éder","Conciliação","Trello"],val=n=>n==null?"":(Number(n)/100).toFixed(2).replace(".",","),q=v=>'"'+String(v??"").replaceAll('"','""')+'"',line=x=>{const m=x.meta||{};return[x.case,acertoCustomerName(x),m.address,m.reference,m.contract,m.property,m.vista_crm,m.service,m.provider,m.receipt,m.payment,m.situation,val(x.closed_cents),val(x.received_cents),val(x.base_cents),x.base_source,val(x.cost_cents),val(x.profit_cents),String(x.margin_pct??"").replace(".",","),val(x.rateio?.fabricio_cents),val(x.rateio?.eder_cents),val(x.rateio?.rogerio_cents),val(x.rateio?.gabi_cents),val(x.rateio?.capital_giro_cents),val(x.support_cents?.["Fabrício"]),val(x.support_cents?.["Éder"]),acertoRecon(x).result,x.trello_url].map(q).join(";")},total=["TOTAL","","","","","","","","","","","", "", "",val(t.base_cents),"",val(t.cost_cents),val(t.profit_cents),String(t.margin_pct??"").replace(".",","),val(t.fabricio_cents),val(t.eder_cents),val(t.rogerio_cents),val(t.gabi_cents),val(t.capital_giro_cents),val(t.support_fabricio_cents),val(t.support_eder_cents),"",""].map(q).join(";"),csv="\ufeff"+head.join(";")+"\n"+rows.map(line).join("\n")+"\n"+total,blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="CONSTRU-REI_Acerto_"+new Date().toISOString().slice(0,10)+".csv";a.click();URL.revokeObjectURL(u)}
+function acertoCompleteText(rows,period){const t=acertoTotals(rows),p=period||acertoPeriod(),L=[];L.push(ACSEP,"💰 ACERTOS "+p.head,ACSEP,"","TOTAL DE OBRAS: "+t.cases,"");rows.forEach((x,i)=>{L.push(ACSEP,acertoKeycap(i+1)+" OBRA "+x.case,ACSEP,"",...acertoMetaLines(x),"","MOVIMENTAÇÃO FINANCEIRA","","💰 Valor fechado: "+brl(x.closed_cents));if(x.received_cents!=null&&Number(x.received_cents)!==Number(x.closed_cents))L.push("💵 Valor recebido / Base do acerto: "+brl(x.received_cents));
+const costLines=Array.isArray(x.cost_items)?x.cost_items:[];
+L.push("📑 LANÇAMENTOS DE CUSTO","");
+if(costLines.length){
+ let subtotal=0;
+ costLines.forEach((it,j)=>{
+  const amount=Number(it.value_cents);
+  if(Number.isFinite(amount))subtotal+=amount;
+  const date=String(it.date_raw||"sem data");
+  const note=String(it.description_original||"Lançamento sem descrição").trim();
+  L.push("• "+String(j+1)+". "+date+" — "+note+" — "+(Number.isFinite(amount)?brl(amount):"valor não informado"));
+ });
+ L.push("Subtotal detalhado: "+brl(subtotal));
+ if(x.cost_cents!=null && subtotal!==Number(x.cost_cents)){
+  L.push("⚠️ Diferença entre itens detalhados e custo total informado no cartão: "+brl(Number(x.cost_cents)-subtotal)+" (conferir Trello).");
+ }
+}else if(Number(x.cost_cents||0)!==0){
+ L.push("⚠️ Os lançamentos individuais não vieram detalhados da fonte; consultar o cartão do Trello.");
+}
+L.push("");
+L.push("💸 Total dos custos: "+brl(x.cost_cents),"✅ Saldo/Lucro: "+brl(x.profit_cents),"📊 Margem de lucro: "+pct(x.margin_pct),"","RATEIO DO LUCRO","","✅ Fabrício — 20%: "+brl(x.rateio?.fabricio_cents),"✅ Éder — 28%: "+brl(x.rateio?.eder_cents),"✅ Rogério — 28%: "+brl(x.rateio?.rogerio_cents),"✅ Gabi — 14%: "+brl(x.rateio?.gabi_cents));L.push("✅ Capital de Giro — 10% (centavos ajustados): "+brl(x.rateio?.capital_giro_cents));L.push("")});L.push(ACSEP,"📋 RESUMO GERAL – ACERTOS "+p.head,ACSEP,"","🏗️ Total de obras: "+t.cases,"","💰 Base financeira (não comprova recebimento): "+brl(t.base_cents),"","💸 Total dos custos: "+brl(t.cost_cents),"","✅ Lucro total apurado: "+brl(t.profit_cents),"","📊 Margem geral de lucro: "+pct(t.margin_pct),"",ACSEP,"👥 RATEIO APURADO — NÃO CONFIRMA SAQUES",ACSEP,"","✅ Fabrício: "+brl(t.fabricio_cents),"","✅ Éder: "+brl(t.eder_cents),"","✅ Rogério: "+brl(t.rogerio_cents),"","✅ Gabi: "+brl(t.gabi_cents),"","✅ Capital de Giro: "+brl(t.capital_giro_cents),"");L.push(ACSEP,"✅ TOTAL RATEADO",ACSEP,"","💰 "+brl(t.distributed_cents),"",ACSEP,"📊 CONFERÊNCIA FINAL",ACSEP,"","✅ Base financeira (não comprova recebimento): "+brl(t.base_cents),"","✅ Total dos custos: "+brl(t.cost_cents),"","✅ Lucro total apurado: "+brl(t.profit_cents),"","✅ Total dos rateios: "+brl(t.distributed_cents),"","✅ Diferença: "+brl(t.difference_cents),"","✅ Rateio geral: 100% do lucro rateado; saques não confirmados","",ACSEP,"🔎 AUDITORIA DOS CÁLCULOS",ACSEP,"","✅ "+t.cases+" obras financeiras consideradas.","","✅ Totais de custos oriundos dos cartões Trello; comprovação documental e bancária pendente.","","✅ Todos os saldos foram recalculados pela fórmula:","Base Financeira – Custos = Lucro.","","✅ Margem geral recalculada sobre o faturamento/base total.","","✅ Rateio padrão aplicado:","Fabrício 20%","Éder 28%","Rogério 28%","Gabi 14%","Capital de Giro 10%","","✅ Centavos de arredondamento foram ajustados exclusivamente no Capital de Giro para garantir que cada obra distribua exatamente 100% do lucro.","");const auditItems=rows.map(x=>{
+ const lines=Array.isArray(x.cost_items)?x.cost_items:[];
+ const sum=lines.reduce((a,i)=>a+Number(i.value_cents||0),0);
+ return {id:x.case,hasItems:lines.length>0,match:(Number(x.cost_cents||0)===0&&lines.length===0)||(lines.length>0&&sum===Number(x.cost_cents))};
+});
+const audited=auditItems.filter(x=>x.match).length;
+L.push("","📑 CONFERÊNCIA DOS LANÇAMENTOS: "+audited+" de "+auditItems.length+" obras com custos detalhados conciliados.");
+if(audited<auditItems.length)L.push("⚠️ Detalhamento pendente ou divergente: "+auditItems.filter(x=>!x.match).map(x=>x.id).join(", ")+". Não considerar o texto integralmente auditado até a conferência.");
+const pass=acertoAuditPass(rows,t);if(pass)L.push(ACSEP,"✅ ACERTO ARITMETICAMENTE CONFERIDO",ACSEP,"","LUCRO A DISTRIBUIR: "+brl(t.profit_cents),"⚠️ Rateio não comprova saques ou transferências bancárias.","","Fabrício: "+brl(t.fabricio_cents),"Éder: "+brl(t.eder_cents),"Rogério: "+brl(t.rogerio_cents),"Gabi: "+brl(t.gabi_cents),"Capital de Giro: "+brl(t.capital_giro_cents),"","TOTAL: "+brl(t.distributed_cents),"DIFERENÇA: "+brl(t.difference_cents),ACSEP);else{const bad=rows.filter(x=>{const its=Array.isArray(x.cost_items)?x.cost_items:[];return Number(x.cost_cents||0)!==its.reduce((sum,it)=>sum+Number(it.value_cents||0),0)||(Number(x.cost_cents||0)!==0&&!its.length)||(x.issues||[]).length||x.base_cents==null||x.profit_cents==null||Number(x.rateio?.difference_cents||0)!==0;});L.push(ACSEP,"⚠️ ACERTO COM PENDÊNCIAS",ACSEP,"","Não declarar conferido até sanar as divergências.","",...bad.map(x=>"• "+x.case+" — "+((x.issues||[]).join(", ")||"dados financeiros incompletos")),ACSEP)}return L.join("\n")}
+
+async function acertoCopyText(txt,msg){
+ const value=String(txt||"");
+ try{
+  if(!navigator.clipboard?.writeText)throw Error("Área de transferência indisponível");
+  await navigator.clipboard.writeText(value);
+  alert(msg);
+ }catch{
+  let modal=document.getElementById("cr-acerto-copy-fallback");
+  if(!modal){
+   modal=document.createElement("div");
+   modal.id="cr-acerto-copy-fallback";
+   modal.setAttribute("role","dialog");
+   modal.setAttribute("aria-modal","true");
+   modal.setAttribute("aria-label","Selecionar e copiar acerto");
+   modal.style.cssText="position:fixed;inset:0;z-index:999999;background:rgba(12,25,40,.82);display:flex;align-items:center;justify-content:center;padding:14px";
+   modal.innerHTML='<div style="background:#fff;color:#17314b;border-radius:12px;padding:16px;width:min(100%,860px);max-height:92vh;overflow:auto"><h3 style="margin:0 0 8px">Copiar acerto completo</h3><p style="font-size:13px;margin:0 0 10px">O celular bloqueou a cópia automática. O texto abaixo está selecionável e pode ser copiado manualmente, sem perder nenhum lançamento.</p><textarea id="cr-acerto-copy-manual-text" readonly style="box-sizing:border-box;width:100%;height:52vh;min-height:200px;resize:vertical;font-size:14px;white-space:pre;overflow:auto"></textarea><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><button type="button" id="cr-acerto-copy-retry" style="padding:10px;border-radius:7px">COPIAR TEXTO</button><button type="button" id="cr-acerto-copy-select" style="padding:10px;border-radius:7px">SELECIONAR TUDO</button><button type="button" id="cr-acerto-copy-close" style="padding:10px;border-radius:7px">FECHAR</button></div></div>';
+   document.body.appendChild(modal);
+   modal.querySelector("#cr-acerto-copy-close").addEventListener("click",()=>modal.remove());
+   modal.querySelector("#cr-acerto-copy-select").addEventListener("click",()=>{const a=modal.querySelector("textarea");a.focus();a.select();a.setSelectionRange(0,a.value.length)});
+   modal.querySelector("#cr-acerto-copy-retry").addEventListener("click",async()=>{
+    const a=modal.querySelector("textarea");a.focus();a.select();a.setSelectionRange(0,a.value.length);
+    try{
+     if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(a.value);
+     else if(!document.execCommand?.("copy"))throw Error("Seleção manual necessária");
+     modal.remove();alert("Acerto copiado.");
+    }catch{a.focus();a.select();a.setSelectionRange(0,a.value.length)}
+   });
+  }
+  const field=modal.querySelector("textarea");field.value=value;field.focus();field.select();field.setSelectionRange(0,field.value.length);
+ }
+ return value;
+}
+async function acertoPeriodAlreadyClosed(period){
+ const key=String(period.start||"")+"_"+String(period.end||"");
+ const local=(S.acertoHistory||[]).some(x=>x.payload?.historical_period?.from===period.start&&x.payload?.historical_period?.to===period.end);
+ if(local)return true;
+ const cat=await api("api=acerto-catalog");
+ if(!cat?.ok||!Array.isArray(cat.periods))throw Error("Registro de períodos indisponível");
+ return cat.periods.some(x=>x.period_key===key&&x.status==="COMMITTED")||(cat.archived_periods||[]).some(x=>x.period_key===key&&x.from===period.start&&x.to===period.end);
+}
+function acertoOpenHistoricalSection(){
+ document.getElementById("cr-v12-historic-last")?.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function copyAcerto(){try{
+ if(document.getElementById("cr-acerto-copy-source")?.value==="history"){
+  if(typeof window.crV12CopyHistoricalCut!=="function")throw Error("Consulta de cortes ainda não carregada.");
+  return await window.crV12CopyHistoricalCut();
+ }
+ const p=acertoPeriod();
+ if(await acertoPeriodAlreadyClosed(p)){acertoOpenHistoricalSection();alert("Este período já tem fechamento registrado. Consulte a versão congelada no HISTÓRICO DE ACERTOS. Não é permitido copiar os cartões atuais com o título de um corte encerrado.");return;}
+ const rows=acertoOutputRows();
+ if(!rows.length)return alert("Nenhuma obra em AG. ACERTO para o período informado.");
+ return acertoCopyText(acertoCompleteText(rows,p),"Demonstrativo de custos e rateios copiado. Verifique as pendências indicadas.");
+}catch(e){if(String(e?.message||e).includes("datas do período")||String(e?.message||e).includes("fim do período"))return acertoPeriodError(e);alert("Cópia suspensa: não foi possível validar o histórico do período. "+String(e?.message||e));}}
+
+async function copyAcertoResumo(){try{
+ if(document.getElementById("cr-acerto-copy-source")?.value==="history"){
+  if(typeof window.crV12CopyHistoricalCut!=="function")throw Error("Consulta de cortes ainda não carregada.");
+  return await window.crV12CopyHistoricalCut();
+ }
+ const p=acertoPeriod();
+ if(await acertoPeriodAlreadyClosed(p)){acertoOpenHistoricalSection();return alert("Corte já registrado. Abra o histórico congelado para consultar o resumo original, sem misturar despesas posteriores.");}
+ const rows=acertoOutputRows();
+ if(!rows.length)return alert("Nenhuma obra em AG. ACERTO.");
+ return acertoCopyText(acertoSummaryText(rows,p),"Resumo de rateios copiado. Saques não comprovados.");
+}catch(e){alert("Resumo suspenso: "+String(e?.message||e));}}
+
+async function pdfAcerto(){let period;try{period=acertoPeriod()}catch(e){return acertoPeriodError(e)}try{if(await acertoPeriodAlreadyClosed(period)){acertoOpenHistoricalSection();return alert('Período já registrado: consulte o histórico congelado.')}}catch(e){return alert('PDF suspenso: não foi possível validar o histórico do período.')}const rows=acertoOutputRows(),w=window.open("","_blank");if(!w)return alert("Permita pop-ups para gerar o PDF.");const txt=acertoCompleteText(rows,period);w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Acerto CONSTRU-REI</title><style>body{font-family:Arial,sans-serif;padding:30px;color:#142235}pre{font-family:Arial,sans-serif;white-space:pre-wrap;line-height:1.45;font-size:12px;margin:0}@media print{body{padding:0}}</style></head><body><pre>'+esc(txt)+'</pre></bo'+'dy></html>');w.document.close();setTimeout(()=>w.print(),250)}
+
+function excelAcerto(){const rows=acertoOutputRows(),t=acertoTotals(rows),head=["Orçamento","Cliente","Endereço","Referência","Contrato","Imóvel","Vista CRM","Serviço","Prestador","Recebimento","Pagamento","Situação","Valor Fechado","Valor Recebido","Base","Fonte Base","Custos","Lucro","Margem %","Fabrício","Éder","Rogério","Gabi","Capital de Giro","Conciliação","Trello"],val=n=>n==null?"":(Number(n)/100).toFixed(2).replace(".",","),q=v=>'"'+String(v??"").replaceAll('"','""')+'"',line=x=>{const m=x.meta||{};return[x.case,acertoCustomerName(x),m.address,m.reference,m.contract,m.property,m.vista_crm,m.service,m.provider,m.receipt,m.payment,m.situation,val(x.closed_cents),val(x.received_cents),val(x.base_cents),x.base_source,val(x.cost_cents),val(x.profit_cents),String(x.margin_pct??"").replace(".",","),val(x.rateio?.fabricio_cents),val(x.rateio?.eder_cents),val(x.rateio?.rogerio_cents),val(x.rateio?.gabi_cents),val(x.rateio?.capital_giro_cents),acertoRecon(x).result,x.trello_url].map(q).join(";")},total=["TOTAL","","","","","","","","","","","", "", "",val(t.base_cents),"",val(t.cost_cents),val(t.profit_cents),String(t.margin_pct??"").replace(".",","),val(t.fabricio_cents),val(t.eder_cents),val(t.rogerio_cents),val(t.gabi_cents),val(t.capital_giro_cents),"",""].map(q).join(";"),csv="\ufeff"+head.join(";")+"\n"+rows.map(line).join("\n")+"\n"+total,blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="CONSTRU-REI_Acerto_"+new Date().toISOString().slice(0,10)+".csv";a.click();URL.revokeObjectURL(u)}
+
 async function snapshotAcerto(){const rows=acertoOutputRows();if(!rows.length)return alert("Não há obras para salvar.");try{const j=await api("api=acerto-snapshot",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({cases:rows.map(x=>x.case),label:"FECHAMENTO"})});if(!j?.ok)throw Error(j?.error||"Falha");await loadAcertoHistory();alert("Snapshot do acerto salvo.")}catch(e){alert("Não foi possível salvar o snapshot: "+(e?.message||e))}}
 
 function fy(y){S.fy=y;S.fm=0;S.monthlyAudit=null;fin()}async function fm(m){S.fm=m;S.monthlyAudit=null;if(m){try{S.monthlyAudit=await api("api=audit&year="+S.fy+"&month="+m)}catch{}}fin()}function fin(){renderAcerto();document.getElementById("finperiod").textContent=(S.fm?["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"][S.fm-1]:"ANO")+" / "+S.fy;document.getElementById("yc").innerHTML=["2024","2025","2026"].map(y=>{const m=S.years[y]?.metrics||{};return '<div class="panel" onclick="fy(\''+y+'\')" style="cursor:pointer;outline:'+(S.fy===y?"2px solid #c9a44a":"none")+'"><b>'+y+'</b><div class="money">'+brl(m.gross_cents)+'</div><div class="rows"><div class="r"><span>Lucro</span><b>'+brl(m.profit_cents)+'</b></div><div class="r"><span>Margem</span><b>'+v12Margin(m,{year:y,month:0})+'</b></div><div class="r"><span>Ticket</span><b>'+brl(m.ticket_cents)+'</b></div><div class="r"><span title="Percentual de registros classificáveis no período">Cobertura dos dados</span><b>'+v12Coverage(m,r7IssueInfo(m),{year:y,month:0})+'</b></div></div></div>'}).join("");document.getElementById("months").innerHTML='<button class="month '+(!S.fm?"on":"")+'" onclick="fm(0)">ANO</button>'+Array.from({length:12},(_,i)=>'<button class="month '+(S.fm===i+1?"on":"")+'" onclick="fm('+(i+1)+')">'+["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"][i]+'</button>').join("");const all=S.years[S.fy]?.metrics||{},m=S.fm?(all.months||[]).find(x=>x.month===S.fm)||{}:all;document.getElementById("fk").innerHTML=[["Bruto",brl(m.gross_cents)],["Custos",brl(m.cost_cents)],["Lucro",brl(m.profit_cents)],["Margem",v12Margin(m,{year:S.fy,month:S.fm})],["Serviços",m.cases_classifiable??m.cases??"—"],["Ticket",brl(m.ticket_cents)]].map(x=>'<div class="kpi"><div class="lab">'+x[0]+'</div><div class="v">'+x[1]+'</div></div>').join("")+v12SubtotalCard(S.fy,S.fm);const ad=S.fm?S.monthlyAudit:S.years[S.fy],rr=ad?.rateio_breakdown?.people||{};document.getElementById("rrtitle").textContent=S.fm?"Rateios auditados — "+["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"][S.fm-1]+"/"+S.fy:"Rateios auditados do ano";document.getElementById("rr").innerHTML=Object.entries(rr).sort((a,b)=>(b[1].cents||0)-(a[1].cents||0)).map(([k,v])=>'<div class="person" onclick="this.classList.toggle(\'open\')"><div class="r"><span><b>'+k+'</b><br><small>'+v.cards+' serviço(s) · ver composição</small></span><b>'+brl(v.cents)+'</b></div><div class="detail">'+(v.items||[]).map(i=>'<div class="r"><span>'+i.case+'</span><span>'+brl(i.cents)+' '+(i.trello_url?'<a href="'+i.trello_url+'" target="_blank" onclick="event.stopPropagation()">Trello ↗</a>':'')+'</span></div>').join('')+'</div></div>').join("")||'<span class="muted">Sem rateio auditável</span>';const bd=ad?.rateio_breakdown||{};document.getElementById("cap").innerHTML=(()=>{
@@ -2919,6 +3086,7 @@ function render(){
  const statusSource=catalog.source_health?.trello_capital;
  status.textContent="11 competências · "+cuts.length+" corte(s) V12 · "+archives.length+" referências anteriores · "+monthsReady+" demonstrativos mensais disponíveis"+(statusSource===false?" · ALERTA: consulta dos cartões Trello falhou":"")+" · "+new Date().toLocaleString("pt-BR");
  const shortcut=pick("crp-historic-summary");if(shortcut&&newest)shortcut.textContent="ÚLTIMO CORTE · "+newest.from+" a "+newest.to+" · "+(newest.works_count??"—")+" obras · lucro "+brl(newest.profit_cents)+" — JÁ REGISTRADO";
+ renderCutPicker();
 }
 function showHistoryText(title,contents,sourceUrl,note){
  detail.replaceChildren();
@@ -2979,10 +3147,15 @@ async function openCut(cut){
   let rows=arr.map(x=>{const href=link(x.trello_url);
     return '<tr><td><b>'+esc(x.case)+'</b></td><td>'+esc(x.customer||"Não identificado")+'</td><td>'+brl(x.base_cents)+'</td><td>'+brl(x.cost_cents)+'</td><td>'+brl(x.profit_cents)+'</td><td>'+(href?'<a href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">Trello</a>':'—')+'</td></tr>'}).join("");
   detail.innerHTML='<div style="padding:12px;border:1px solid #abc4da;border-radius:10px"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong>Detalhamento das '+arr.length+' obras · 24/10 a 06/11</strong><button type="button" id="cr-v12-historic-copy" class="v11button">Copiar 12 obras</button></div><div class="tablewrap" style="margin-top:8px"><table class="table" style="min-width:690px"><thead><tr><th>Orçamento</th><th>Cliente</th><th>Base</th><th>Custos</th><th>Lucro</th><th>Origem</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
-  pick("cr-v12-historic-copy").addEventListener("click",async()=>{const lines=["CONSTRU-REI | HISTÓRICO DO ACERTO 24/10 A 06/11/2026","12 obras · Base "+brl(totals.base_cents)+" · Custos "+brl(totals.cost_cents)+" · Lucro "+brl(totals.profit_cents),"","RATEIO APURADO (NÃO COMPROVA SAQUES)","Fabrício: "+brl(totals.fabricio_cents),"Éder: "+brl(totals.eder_cents),"Rogério: "+brl(totals.rogerio_cents),"Gabrielly: "+brl(totals.gabi_cents),"Capital de Giro: "+brl(totals.capital_giro_cents),""];
-    for(const x of arr)lines.push(x.case+" | "+String(x.customer||"")+" | Base "+brl(x.base_cents)+" | Custos "+brl(x.cost_cents)+" | Lucro "+brl(x.profit_cents)+" | "+String(link(x.trello_url)||""));
-    const txt=lines.join("\n");
-    try{await navigator.clipboard.writeText(txt);alert("12 de 12 obras copiadas sem cortes.")}catch{const blob=new Blob([txt],{type:"text/plain;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="CONSTRU_REI_Acerto_24-10_a_06-11_2026.txt";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);alert("Texto completo disponibilizado em arquivo TXT.")}});
+  pick("cr-v12-historic-copy").addEventListener("click",async()=>{
+   try{
+    const picker=pick("cr-acerto-period-picker"),source=pick("cr-acerto-copy-source");
+    if(picker)picker.value=cut.period_key;
+    if(source)source.value="history";
+    updateCopySource();
+    await window.crV12CopyHistoricalCut();
+   }catch(e){alert("Não foi possível copiar: "+String(e?.message||e));}
+  });
  }catch(e){detail.textContent="Detalhamento indisponível: "+String(e?.message||e)+". Sem valores presumidos."}
 }
 async function load(force){
@@ -2998,6 +3171,150 @@ window.crV12RegisteredCut=async(start,end)=>{
  if(!catalog?.ok)await load(false);
  return [...(catalog?.periods||[]),...(catalog?.archived_periods||[])].find(x=>x.from===start&&x.to===end&&(x.status==="COMMITTED"||x.status==="HISTORICAL_TRELLO_REFERENCE"))||null;
 };
+
+/* Seletor dos cortes reais: consulta autenticada, sem escrever em Cora/Trello/fechamentos. */
+const copySource=pick("cr-acerto-copy-source"),periodPicker=pick("cr-acerto-period-picker"),copyHelp=pick("cr-acerto-copy-help");
+function shortPeriod(x){return String(x?.from||"").slice(8,10)+"/"+String(x?.from||"").slice(5,7)+" a "+String(x?.to||"").slice(8,10)+"/"+String(x?.to||"").slice(5,7)+"/"+String(x?.to||"").slice(0,4);}
+function isoFromParts(year,month,day){
+ const d=new Date(Date.UTC(year,month-1,day));
+ if(d.getUTCFullYear()!==year||d.getUTCMonth()!==month-1||d.getUTCDate()!==day)return null;
+ return year+"-"+String(month).padStart(2,"0")+"-"+String(day).padStart(2,"0");
+}
+function monthlyPeriodDocuments(){
+ const found=new Map();
+ for(const doc of catalog?.monthly_documents||[]){
+  const content=String(doc.content||"");
+  const re=/^[ \t*]*(?:💰[ \t]*)?ACERTOS?(?:[ \t]+DE)?[ \t]+(\d{1,2})\/(\d{1,2})[ \t]+(?:A|ATÉ|ATE)[ \t]+(\d{1,2})\/(\d{1,2})/gim;
+  const matches=[...content.matchAll(re)];
+  for(let i=0;i<matches.length;i++){
+   const m=matches[i],monthFrom=Number(m[2]),monthTo=Number(m[4]),yearTo=Number(String(doc.year_month||"").slice(0,4)),yearFrom=monthFrom>monthTo?yearTo-1:yearTo;
+   const from=isoFromParts(yearFrom,monthFrom,Number(m[1])),to=isoFromParts(yearTo,monthTo,Number(m[3]));
+   if(!from||!to||from>to)continue;
+   const period_key=from+"_"+to,original=content.slice(m.index,i+1<matches.length?matches[i+1].index:content.length).trim();
+   if(original&&!found.has(period_key))found.set(period_key,{period_key,from,to,original,source_url:doc.trello_url,source:"MONTH_CARD_TEXT"});
+  }
+ }
+ return found;
+}
+function periodsAvailable(){
+ const m=new Map();
+ for(const p of [...(catalog?.archived_periods||[]),...(catalog?.periods||[])]){
+  if(!p?.period_key||!p.from||!p.to)continue;
+  const prev=m.get(p.period_key);
+  if(!prev||p.status==="COMMITTED")m.set(p.period_key,p);
+ }
+ for(const [key,doc] of monthlyPeriodDocuments()){
+  if(!m.has(key))m.set(key,doc);
+ }
+ return [...m.values()].sort((a,b)=>String(b.to).localeCompare(String(a.to))||String(b.from).localeCompare(String(a.from)));
+}
+function updateCopySource(){
+ if(!copySource||!periodPicker)return;
+ const history=copySource.value==="history";
+ periodPicker.disabled=!history||!catalog?.ok;
+ for(const id of ["cr-acerto-copy-start","cr-acerto-copy-end"]){const el=pick(id);if(el)el.disabled=history;}
+ for(const id of ["cr-acerto-copy-summary","cr-acerto-copy-pdf","cr-acerto-copy-excel","cr-acerto-copy-snapshot"]){
+  const action=pick(id);if(action){action.disabled=history;action.title=history?"Para um corte anterior use COPIAR ACERTO COMPLETO. Outras saídas são da lista atual.":"";}
+ }
+ if(copyHelp)copyHelp.textContent=history
+  ?"Escolha um corte do Trello. O sistema copiará o fechamento congelado ou o texto original do período; referências só de capital não serão usadas como acerto."
+  :"Marque as obras da lista AG. ACERTO. Informe datas para o título; valores são os custos reais informados no Trello, sem bloco de Apoio/Diárias duplicado.";
+}
+function renderCutPicker(){
+ if(!periodPicker)return;
+ const selected=periodPicker.value,entries=periodsAvailable();
+ periodPicker.replaceChildren();
+ const empty=document.createElement("option");empty.value="";empty.textContent=entries.length?"Selecione o corte para copiar":"Não há cortes consultáveis";periodPicker.append(empty);
+ for(const p of entries){
+  const opt=document.createElement("option");opt.value=p.period_key;
+  const hasDoc=monthlyPeriodDocuments().has(p.period_key),snap=p.status==="COMMITTED"&&!!p.snapshot_id;
+  opt.textContent=shortPeriod(p)+(snap?" · fechamento congelado":hasDoc?" · documento no Trello":" · referência de capital");
+  periodPicker.append(opt);
+ }
+ if(entries.some(p=>p.period_key===selected))periodPicker.value=selected;
+ else if(entries.length)periodPicker.value=entries[0].period_key;
+ updateCopySource();
+}
+function snapshotToTraditionalText(cut,arr,totals){
+ const safe=n=>Number.isSafeInteger(n);
+ if(!Array.isArray(arr)||!arr.length||arr.length!==Number(cut.works_count))throw Error("Quantidade de obras diferente do fechamento congelado.");
+ const sum=key=>arr.reduce((a,x)=>a+Number(x[key]),0);
+ if(arr.some(x=>!safe(x.base_cents)||!safe(x.cost_cents)||!safe(x.profit_cents)||x.base_cents-x.cost_cents!==x.profit_cents)
+   ||!["base_cents","cost_cents","profit_cents"].every(k=>sum(k)===Number(totals[k])))
+  throw Error("O snapshot congelado não passou na conferência dos totais. Cópia suspensa.");
+ const rateioKeys=["fabricio_cents","eder_cents","rogerio_cents","gabi_cents","capital_giro_cents"];
+ if(arr.some(x=>!rateioKeys.every(k=>safe(x.rateio?.[k]))||rateioKeys.reduce((a,k)=>a+x.rateio[k],0)!==x.profit_cents))
+  throw Error("Há diferença no rateio original por obra. Cópia suspensa.");
+ const sumShare=k=>arr.reduce((a,x)=>a+x.rateio[k],0);
+ if(rateioKeys.some(k=>sumShare(k)!==Number(totals[k])))throw Error("Os rateios não conferem com o snapshot do corte.");
+ const date=shortPeriod(cut),sep="━━━━━━━━━━━━━━━━━━━━━━",L=[sep,"💰 ACERTOS DE "+date,sep,"","TOTAL DE OBRAS: "+arr.length,""];
+ const keycap=n=>String(n).split("").map(d=>({"0":"0️⃣","1":"1️⃣","2":"2️⃣","3":"3️⃣","4":"4️⃣","5":"5️⃣","6":"6️⃣","7":"7️⃣","8":"8️⃣","9":"9️⃣"}[d]||d)).join("");
+ for(const [i,x] of arr.entries()){
+  const m=x.meta||{},base=x.base_cents,cost=x.cost_cents,profit=x.profit_cents,margin=base?(profit/base*100).toFixed(2).replace(".",",")+"%":"A confirmar";
+  const cust=String(x.customer||"Não identificado").trim();
+  L.push(sep,keycap(i+1)+" OBRA "+x.case,sep,"","Cliente: "+cust);
+  if(m.address)L.push("Endereço: "+String(m.address).trim());
+  if(m.provider)L.push("Prestador: "+String(m.provider).trim());
+  if(m.payment)L.push("Pagamento informado no cartão: "+String(m.payment).trim());
+  L.push("","MOVIMENTAÇÃO FINANCEIRA","","💰 Valor fechado: "+brl(x.closed_cents),
+   "💵 Base do acerto: "+brl(base),"💸 Total dos custos: "+brl(cost),
+   "✅ Saldo/Lucro: "+brl(profit),"📊 Margem de lucro: "+margin,"","RATEIO DO LUCRO","",
+   "✅ Fabrício — 20%: "+brl(x.rateio.fabricio_cents),"✅ Éder — 28%: "+brl(x.rateio.eder_cents),
+   "✅ Rogério — 28%: "+brl(x.rateio.rogerio_cents),"✅ Gabi — 14%: "+brl(x.rateio.gabi_cents),
+   "✅ Capital de Giro — 10% (ajuste de centavos): "+brl(x.rateio.capital_giro_cents),"");
+ }
+ const totalShares=rateioKeys.reduce((a,k)=>a+sumShare(k),0);
+ const margin=totals.base_cents?(totals.profit_cents/totals.base_cents*100).toFixed(2).replace(".",",")+"%":"A confirmar";
+ L.push(sep,"📋 RESUMO GERAL – ACERTOS DE "+date,sep,"",
+  "🏗️ Total de obras: "+arr.length,"💰 Base financeira: "+brl(totals.base_cents),
+  "💸 Total dos custos: "+brl(totals.cost_cents),"✅ Lucro total apurado: "+brl(totals.profit_cents),
+  "📊 Margem geral: "+margin,"",
+  sep,"💸 RETIRADAS POR COLABORADOR — RATEIOS APURADOS",sep,"",
+  "✅ Fabrício: "+brl(sumShare("fabricio_cents")),"✅ Éder: "+brl(sumShare("eder_cents")),
+  "✅ Rogério: "+brl(sumShare("rogerio_cents")),"✅ Gabi: "+brl(sumShare("gabi_cents")),
+  "✅ Capital de Giro: "+brl(sumShare("capital_giro_cents")),"",
+  sep,"✅ TOTAL DISTRIBUÍDO",sep,"",brl(totalShares),"",
+  sep,"📊 CONFERÊNCIA FINAL",sep,"",
+  "✅ Base – custos = lucro: "+brl(totals.base_cents)+" – "+brl(totals.cost_cents)+" = "+brl(totals.profit_cents),
+  "✅ Total rateado: "+brl(totalShares),"✅ Diferença de rateio: "+brl(totals.profit_cents-totalShares),"",
+  sep,"🔎 AUDITORIA DOS CÁLCULOS",sep,"",
+  "✅ Conferidas as somas das "+arr.length+" obras com o registro congelado.",
+  "⚠️ Os lançamentos individuais de custo não constam no snapshot; consulte os cartões originais no Trello.",
+  "ℹ️ Este demonstrativo preserva o corte encerrado; rateios não comprovam saques na Cora.","");
+ return L.join("\n");
+}
+async function copyTextForCut(text,notice){
+ if(typeof window.acertoCopyText==="function")return window.acertoCopyText(text,notice);
+ try{await navigator.clipboard.writeText(text);alert(notice)}catch{prompt("Selecione e copie o texto do acerto:",text)}
+}
+window.crV12CopyHistoricalCut=async function(){
+ if(!catalog?.ok)await load(true);
+ if(!catalog?.ok)throw Error("Catálogo do Trello indisponível. Entre e atualize o histórico.");
+ const key=periodPicker?.value;
+ if(!key)throw Error("Selecione o período de acerto.");
+ const cut=periodsAvailable().find(p=>p.period_key===key);
+ if(!cut)throw Error("Corte não localizado no histórico.");
+ if(cut.status==="COMMITTED"&&cut.snapshot_id){
+  if(!snapshots){const h=await get("acerto-history");snapshots=h.snapshots||[];}
+  const snap=snapshots.find(x=>String(x.id)===String(cut.snapshot_id));
+  const arr=snap?.payload?.acerto?.items,totals=snap?.payload?.acerto?.totals;
+  if(!arr||!totals)throw Error("Snapshot original do período indisponível; não usar obras atuais.");
+  const text=snapshotToTraditionalText(cut,arr,totals);
+  return copyTextForCut(text,"Corte "+shortPeriod(cut)+" copiado no padrão tradicional, sem apoios duplicados.");
+ }
+ const doc=monthlyPeriodDocuments().get(key);
+ if(doc?.original){
+  const clean=doc.original.replace(/^[ \t*]*(?:💰[ \t]*)?ACERTOS?(?:[ \t]+DE)?[ \t]+\d{1,2}\/\d{1,2}[ \t]+(?:A|ATÉ|ATE)[ \t]+\d{1,2}\/\d{1,2}[^\n]*(?:\n|$)/i,"").trim();
+  const historical="━━━━━━━━━━━━━━━━━━━━━━\n💰 ACERTOS DE "+shortPeriod(cut)+"\n━━━━━━━━━━━━━━━━━━━━━━\n\n"+clean+
+   "\n\nFONTE: demonstrativo original do Trello. Valores históricos mantidos sem recalcular ou presumir saques.";
+  return copyTextForCut(historical,"Texto do corte original copiado. Confira o rateio histórico do período.");
+ }
+ if(cut.source==="TRELLO_CAPITAL_CARD_TITLE")openArchivedPeriod(key);
+ throw Error("Este período tem somente referência de Capital de Giro. Não há lista de obras nem custos suficientes no catálogo para somar com segurança; abra o cartão mensal original.");
+};
+if(copySource)copySource.addEventListener("change",()=>{updateCopySource();if(copySource.value==="history"&&!catalog?.ok)void load(true);});
+if(periodPicker)periodPicker.addEventListener("change",()=>{if(copyHelp&&copySource?.value==="history")copyHelp.textContent="Corte selecionado: "+(periodsAvailable().find(x=>x.period_key===periodPicker.value)?.status==="COMMITTED"?"snapshot original; não serão usados lançamentos posteriores":"consultar demonstrativo original do Trello");});
+
 refresh.addEventListener("click",()=>load(true));window.crV12HistoryRefresh=load;
 if((sessionStorage.getItem("crv2")||"").length>=12)void load(false);
 })();</script>
