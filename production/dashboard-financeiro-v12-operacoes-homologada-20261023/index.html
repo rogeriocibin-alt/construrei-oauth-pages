@@ -2920,15 +2920,39 @@ function render(){
  status.textContent="11 competências · "+cuts.length+" corte(s) V12 · "+archives.length+" referências anteriores · "+monthsReady+" demonstrativos mensais disponíveis"+(statusSource===false?" · ALERTA: consulta dos cartões Trello falhou":"")+" · "+new Date().toLocaleString("pt-BR");
  const shortcut=pick("crp-historic-summary");if(shortcut&&newest)shortcut.textContent="ÚLTIMO CORTE · "+newest.from+" a "+newest.to+" · "+(newest.works_count??"—")+" obras · lucro "+brl(newest.profit_cents)+" — JÁ REGISTRADO";
 }
+// Corrige apenas a APRESENTAÇÃO de acertos antigos; o registro de origem no Trello não é alterado.
+function crV12RemoveApoioResumo(value){
+ const lines=String(value||"").replace(/\r\n?/g,"\n").split("\n"),out=[];
+ const heading=/^(?:🛠️\s*)?APOIO\s*\/\s*DI[ÁA]RIAS$/iu;
+ const separator=/^━{6,}$/u;
+ const amount=/^[\p{L}][\p{L}\s.-]{1,40}:\s*R\$\s*[\d.,]+\s*$/u;
+ for(let i=0;i<lines.length;){
+  if(!heading.test(lines[i].trim())){out.push(lines[i++]);continue;}
+  let j=i+1;
+  while(j<lines.length&&!lines[j].trim())j++;
+  if(j<lines.length&&separator.test(lines[j].trim()))j++;
+  while(j<lines.length&&!lines[j].trim())j++;
+  let count=0;
+  while(j<lines.length&&amount.test(lines[j].trim())&&count<20){
+   count++;j++;while(j<lines.length&&!lines[j].trim())j++;
+  }
+  if(!count){out.push(lines[i++]);continue;}
+  while(out.length&&!out[out.length-1].trim())out.pop();
+  if(out.length&&separator.test(out[out.length-1].trim()))out.pop();
+  if(out.length&&out[out.length-1].trim())out.push("");
+  i=j;
+ }
+ return out.join("\n").replace(/\n{3,}/g,"\n\n").trim();
+}
 function showHistoryText(title,contents,sourceUrl,note){
  detail.replaceChildren();
  const box=document.createElement("div");box.style.cssText="border:1px solid #bad0e1;border-radius:11px;padding:14px;margin:10px 0;background:#fff";
  const heading=document.createElement("h4");heading.textContent=title;box.append(heading);
  const warn=document.createElement("p");warn.textContent=note;warn.style.cssText="font-size:12px;color:#8b6319";box.append(warn);
  if(sourceUrl){const verified=link(sourceUrl);if(verified){const a=document.createElement("a");a.href=verified;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Abrir cartão original no Trello";box.append(a)}}
- const text=String(contents||"").trim();
+ const text=crV12RemoveApoioResumo(String(contents||"").trim());
  if(text){
-   const copy=document.createElement("button");copy.type="button";copy.className="v11button";copy.style.marginLeft="10px";copy.textContent="COPIAR TEXTO INTEGRAL";
+   const copy=document.createElement("button");copy.type="button";copy.className="v11button";copy.style.marginLeft="10px";copy.textContent="COPIAR TEXTO";
    copy.addEventListener("click",async()=>{
      try{await navigator.clipboard.writeText(text);alert("Demonstrativo completo copiado.")}catch{
        const blob=new Blob([text],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
@@ -2957,7 +2981,7 @@ function openMonthlyDocument(yearMonth){
  const doc=(catalog?.monthly_documents||[]).find(x=>x.year_month===yearMonth);
  if(!doc){detail.textContent="Demonstrativo mensal ainda indisponível no retorno do Trello; consulte o cartão financeiro original.";return}
  showHistoryText("GESTÃO FINANCEIRA · "+doc.title,doc.content,doc.trello_url,
- "Documento histórico integral do Trello, apresentado sem recalcular, liquidar ou homologar recebimentos. Eventuais inconsistências das descrições originais foram preservadas.");
+ "Documento histórico do Trello, apresentado sem recalcular, liquidar ou homologar recebimentos. Registros originais preservados no Trello.");
 }
 months.addEventListener("click",e=>{
  const button=e.target?.closest?.("button");
