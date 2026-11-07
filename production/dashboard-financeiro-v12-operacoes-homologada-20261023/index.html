@@ -3025,4 +3025,115 @@ window.crV12RegisteredCut=async(start,end)=>{
 refresh.addEventListener("click",()=>load(true));window.crV12HistoryRefresh=load;
 if((sessionStorage.getItem("crv2")||"").length>=12)void load(false);
 })();</script>
+
+<style id="cr-v12-five-nav-20261107">
+.v12tabs{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding-bottom:8px}
+.v12tabs>.tab{min-width:0!important;min-height:44px!important;white-space:normal!important;line-height:1.25;text-align:center;font-size:12px!important;padding:11px 8px!important}
+.v12tabs>.tab[hidden],.v12sub.cr-v12-old-sub{display:none!important}
+.cr-v12-shortcuts{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:6px 0 14px;padding:10px 12px;background:#edf5fa;border:1px solid #d1e1ec;border-radius:11px}
+.cr-v12-shortcuts[hidden]{display:none!important}
+.cr-v12-shortcuts>span{color:#28506a;font-weight:800;font-size:12px}
+.cr-v12-shortcuts>button{min-height:41px;border:1px solid #afc8dc;background:#fff;color:#154f78;border-radius:9px;padding:9px 12px;font-weight:750;font-size:12px;cursor:pointer}
+.cr-v12-shortcuts>button[aria-pressed="true"]{background:#145a96;color:white;border-color:#145a96}
+.cr-v12-help{border:1px solid #d3e1ec;border-radius:9px;margin:8px 0;padding:9px 11px;background:#f7fafc;font-size:12px;color:#315471}
+.cr-v12-help>summary{cursor:pointer;font-weight:800;color:#1d577b}
+.cr-v12-help[open]{background:#fff}
+.cr-v12-help>p{margin:9px 0 3px!important;line-height:1.55}
+#cora>.panel:before{display:none!important}
+.cr-v12-safety{padding:10px 12px!important;margin:8px 0!important;border:1px solid #dfc181!important;border-radius:9px!important;background:#fff7e4!important;color:#72511c!important;font-weight:800;font-size:12px}
+@media(max-width:720px){
+.v12tabs{display:flex!important;overflow-x:auto;gap:7px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.v12tabs>.tab{flex:0 0 auto!important;min-width:104px!important;max-width:155px!important;font-size:11px!important}
+.cr-v12-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:9px}
+.cr-v12-shortcuts[hidden]{display:none!important}
+.cr-v12-shortcuts>span{grid-column:1/-1}
+.cr-v12-shortcuts>button{width:100%;padding:10px 7px}
+}
+</style>
+<script id="cr-v12-five-nav-20261107-js">(function(){
+"use strict";
+const tabs=document.querySelector(".tabs.v12tabs"),go=window.r8Go;
+if(!tabs||typeof go!=="function")return;
+const entries=[["agora","Visão Geral"],["corapro","Banco Cora"],["cora","Gestão Financeira"],["fin","Acertos"],["hist","Histórico / Auditoria"]];
+if(!entries.every(([id])=>tabs.querySelector('.tab[data-t="'+id+'"]')))return;
+const oldAuditTab=tabs.querySelector('.tab[data-t="conc"]');
+if(oldAuditTab){oldAuditTab.hidden=true;oldAuditTab.tabIndex=-1;oldAuditTab.setAttribute("aria-hidden","true")}
+document.querySelector(".v12sub")?.classList.add("cr-v12-old-sub");
+const shortcut=document.createElement("nav");
+shortcut.id="cr-v12-shortcuts";shortcut.className="cr-v12-shortcuts";shortcut.setAttribute("aria-label","Atalhos da área");shortcut.hidden=true;
+tabs.insertAdjacentElement("afterend",shortcut);
+const options={
+cora:[["Lançamentos","cora"],["Capital de Giro","capital"],["Custos / Prestadores","cost"]],
+fin:[["Acertos em aberto","open-acertos"],["Histórico dos acertos","history-acertos"]],
+hist:[["Histórico","hist"],["Auditoria Cora","conc"],["Saúde dos dados","qual"]]
+};
+const group=id=>id==="conc"||id==="qual"?"hist":id==="cost"?"cora":id;
+function update(id){
+const parent=group(id);
+tabs.querySelectorAll(".tab").forEach(b=>{const yes=b.dataset.t===parent;b.classList.toggle("on",yes);if(!b.hidden)b.setAttribute("aria-current",yes?"page":"false")});
+shortcut.replaceChildren();
+const arr=options[parent]||[];
+shortcut.hidden=!arr.length;
+if(!arr.length)return;
+const label=document.createElement("span");label.textContent="Acesso rápido:";shortcut.append(label);
+for(const [name,target] of arr){
+const b=document.createElement("button");b.type="button";b.textContent=name;
+b.setAttribute("aria-pressed",target===id?"true":"false");
+b.onclick=()=>{
+if(target==="capital"){if(typeof window.v12CapitalGo==="function")window.v12CapitalGo();else window.r8Go("cora");return}
+if(target==="open-acertos"||target==="history-acertos"){
+window.r8Go("fin");
+const el=document.getElementById(target==="open-acertos"?"v12-live-acertos":"cr-v12-historic-acertos");
+if(el)requestAnimationFrame(()=>el.scrollIntoView({behavior:"smooth",block:"start"}));
+return}
+window.r8Go(target);
+};
+shortcut.append(b);
+}
+}
+window.r8Go=function(id){go(id);update(id)};
+entries.forEach(([id,label])=>{
+const b=tabs.querySelector('.tab[data-t="'+id+'"]');
+b.textContent=label;b.setAttribute("aria-label","Abrir "+label);
+b.onclick=()=>{
+window.r8Go(id);
+if(id==="fin"){const el=document.getElementById("v12-live-acertos");if(el)requestAnimationFrame(()=>el.scrollIntoView({behavior:"smooth",block:"start"}))}
+};
+});
+update(tabs.querySelector(".tab.on")?.dataset.t||"cora");
+// Apenas explicações estáticas são recolhidas. Status de alerta, saldos, erros e confirmações continuam visíveis.
+const help=[
+["#cr-financial-trello-declared-2026 p.small.muted","Fontes e limitações"],
+["#cr-v12-earnings-composition p.small.muted","Como interpretar os ganhos"],
+["#cr-v12-audit-imported-2026 p.small.muted","Orientações da auditoria"],
+["#cr-v12-historical-rateio-2425 p.small.muted","Regras históricas"],
+["#cr-v12-historic-acertos p.small.muted","Sobre este histórico"],
+["#v12-live-acertos .aclivehead .small.muted","Como funciona o acerto"],
+["#corapro>.panel>p.small","Como funciona o Banco Cora"],
+["#conc>.panel>p.small.muted","Sobre a auditoria bancária"]
+];
+for(const [selector,label] of help)document.querySelectorAll(selector).forEach((p,i)=>{
+if(p.closest("details")||p.closest('[role="status"]')||p.closest('[role="alert"]'))return;
+const d=document.createElement("details"),s=document.createElement("summary");
+d.className="cr-v12-help";s.textContent=label+(i?" · informações adicionais":"");
+p.parentNode.insertBefore(d,p);d.append(s,p);
+});
+const notice=document.querySelector('#cora>p[role="status"]');
+if(notice){
+const original=notice.textContent.trim();
+notice.textContent="Operações protegidas: lançamentos exigem confirmação e validação no servidor.";
+notice.classList.add("cr-v12-safety");
+const d=document.createElement("details"),s=document.createElement("summary"),p=document.createElement("p");
+d.className="cr-v12-help";s.textContent="Orientações de segurança";p.textContent=original;
+d.append(s,p);notice.insertAdjacentElement("afterend",d);
+}
+const panel=document.querySelector("#cora>.panel");
+if(panel){
+const d=document.createElement("details"),s=document.createElement("summary"),p=document.createElement("p");
+d.className="cr-v12-help";s.textContent="Informações técnicas da operação";
+p.textContent="Prévia e lançamento Trello protegidos por autenticação, registro persistente, controle de concorrência e verificação do cartão. Esta operação não altera o saldo Cora; conciliação bancária e acerto por obra são processos distintos.";
+d.append(s,p);panel.insertAdjacentElement("beforebegin",d);
+}
+})();</script>
+
 </body></html>
