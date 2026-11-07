@@ -1107,8 +1107,10 @@ function acertoPeriodFromSelection(start,end){
  return{head:'DE '+short,short,start:a.iso,end:b.iso};
 }
 function acertoPeriod(){
- const start=document.getElementById('cr-acerto-copy-start')?.value||document.getElementById('cg-close-start')?.value;
- const end=document.getElementById('cr-acerto-copy-end')?.value||document.getElementById('cg-close-end')?.value;
+ const visibleStart=document.getElementById('cr-acerto-copy-start');
+ const visibleEnd=document.getElementById('cr-acerto-copy-end');
+ const start=visibleStart&&visibleEnd?visibleStart.value:document.getElementById('cg-close-start')?.value;
+ const end=visibleStart&&visibleEnd?visibleEnd.value:document.getElementById('cg-close-end')?.value;
  return acertoPeriodFromSelection(start,end);
 }
 for(const id of ['cr-acerto-copy-start','cr-acerto-copy-end']){const el=document.getElementById(id);if(el){el.addEventListener('input',acertoPeriodStatus);el.addEventListener('change',acertoPeriodStatus)}}
