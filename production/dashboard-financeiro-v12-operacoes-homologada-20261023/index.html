@@ -1071,7 +1071,17 @@ async function loadAcertoHistory(){try{const h=await api("api=acerto-history");S
 function acertoOutputRows(){return acertoSelectedRows()}
 const ACSEP="━━━━━━━━━━━━━━━━━━━━━━";
 function acertoKeycap(n){const m={"0":"0️⃣","1":"1️⃣","2":"2️⃣","3":"3️⃣","4":"4️⃣","5":"5️⃣","6":"6️⃣","7":"7️⃣","8":"8️⃣","9":"9️⃣"};return String(n).split("").map(x=>m[x]||x).join("")}
-function acertoCustomerName(x){return String(x?.customer||"").replace(/[,\s]+$/,"").trim()||"Não identificado"}
+function acertoCustomerName(x){
+ const raw=String(x?.customer||"").trim();
+ const k=raw.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase();
+ if(k.includes("PRESIDENTE"))return "Imobiliária Presidente";
+ if(k.includes("ARAHOME"))return "Arahome";
+ if(k.includes("GALVAO"))return /CACA\s*VAZAMENTOS/.test(k)?"Galvão — Caça Vazamentos":"Galvão";
+ if(k.includes("VIZIA"))return "Vizia Imóveis";
+ if(k.includes("PARTICULAR"))return "Particular";
+ return raw.replace(/\s*[-–]+\s*$/,"").replace(/\s+\d[\d.\-]*$/,"").trim()||"Cliente não identificado";
+}
+
 function acertoPeriodDate(value){
  const v=String(value||'');if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return null;
  const [year,month,day]=v.split('-').map(Number),d=new Date(Date.UTC(year,month-1,day));
@@ -1091,16 +1101,116 @@ function acertoPeriodStatus(){const label=document.getElementById('ac-period-hea
 function acertoPeriodError(e){alert(String(e?.message||e));document.getElementById('cg-close-start')?.scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('cg-close-start')?.focus();}
 for(const id of ['cg-close-start','cg-close-end']){const el=document.getElementById(id);if(el){el.addEventListener('input',acertoPeriodStatus);el.addEventListener('change',acertoPeriodStatus)}}
 acertoPeriodStatus();
-function acertoMetaLines(x){const m=x?.meta||{},L=["Cliente: "+acertoCustomerName(x)],add=(lab,v)=>{if(v!=null&&String(v).trim())L.push(lab+": "+String(v).trim())};add("Endereço",m.address);add("Referência",m.reference);add("Contrato",m.contract);add("Imóvel",m.property);add("Vista CRM",m.vista_crm);add("Serviço",m.service);add("Prestador",m.provider);add("Recebimento",m.receipt);add("Pagamento",m.payment);add("Situação",m.situation);return L}
-function acertoAuditPass(rows,t){return rows.length>0&&Number(t.difference_cents||0)===0&&rows.every(x=>x.base_cents!=null&&x.cost_cents!=null&&x.profit_cents!=null&&x.rateio&&Number(x.rateio.difference_cents||0)===0&&!((x.issues||[]).some(i=>/^SEM_/.test(String(i)))))}
-function acertoSummaryText(rows,period){const t=acertoTotals(rows),p=period||acertoPeriod(),L=[];L.push("💰 CONSTRU-REI | ACERTOS "+p.head,"📋 Obras: "+t.cases,"","💵 Base considerada: "+brl(t.base_cents),"💸 Custos: "+brl(t.cost_cents),"✅ Lucro líquido: "+brl(t.profit_cents),"📈 Margem: "+pct(t.margin_pct),"","👥 RATEIO","Fabrício 20%: "+brl(t.fabricio_cents),"Éder 28%: "+brl(t.eder_cents),"Rogério 28%: "+brl(t.rogerio_cents),"Gabi 14%: "+brl(t.gabi_cents),"🏦 Capital de Giro 10%: "+brl(t.capital_giro_cents),"","🛠️ APOIO / DIÁRIAS","Fabrício: "+brl(t.support_fabricio_cents),"Éder: "+brl(t.support_eder_cents),"","✅ Distribuído: "+brl(t.distributed_cents),"Diferença: "+brl(t.difference_cents),"");for(const x of rows)L.push("• "+x.case+" | "+acertoCustomerName(x)+" | Base "+brl(x.base_cents)+" | Lucro "+brl(x.profit_cents));return L.join("\n")}
+function acertoMetaLines(x){
+ const m=x?.meta||{},L=["Cliente: "+acertoCustomerName(x)];
+ const add=(lab,v)=>{if(v!=null&&String(v).trim())L.push(lab+": "+String(v).trim())};
+ const addr=String(m.address||"").trim()
+  .replace(/\s+-\s+(?:enviado\s+link|aguardando\b|Execu[çc][ãa]o\b|Imobili[aá]ria\b|Eder\s+e\s+Fabricio\b|Andr[eé]\s+\d|PGTO\b|Finalizad[oa]\b|Agendad[oa]\b|Link\s+Ok\b).*$/i,"")
+  .replace(/\s+Vazamento\s+no\s+(?:vaso|vazo)\s+sanit[aá]rio.*$/i,"")
+  .replace(/\s+\(\s*NF\s*OK\b.*$/i,"")
+  .replace(/\s+Parcelado\s+\d+\s*[xX].*$/i,"")
+  .replace(/\s+-\s*\d+\s*[xX]\s+Aluguel\b.*$/i,"")
+  .trim();
+ add("Endereço",addr);add("Referência",m.reference);add("Contrato",m.contract);add("Imóvel",m.property);
+ add("Vista CRM",m.vista_crm);add("Serviço",m.service);add("Prestador",m.provider);
+ const rec=String(m.receipt||"").trim();
+ if(rec&&!/^(?:e\s+imobili[aá]ria|aguardando|nas\s+datas)/i.test(rec))add("Recebimento informado no Trello (não conciliado)",rec);
+ const pay=String(m.payment||"").trim();
+ if(/^(?:PARC\b|\d{1,2}\/\d{1,2}\b)/i.test(pay))add("Referência de pagamento informada no cartão",pay);
+ add("Situação",m.situation);
+ return L;
+}
+function acertoAuditPass(rows,t){
+ return rows.length>0 && Number(t.difference_cents)===0 && rows.every(x=>{
+  const base=Number(x.base_cents),costs=Number(x.cost_cents),profit=Number(x.profit_cents);
+  const numeric=[base,costs,profit];
+  const valid=numeric.every(Number.isFinite)&&base-costs===profit&&x.rateio&&Number(x.rateio.difference_cents||0)===0&&!((x.issues||[]).some(i=>/^SEM_/.test(String(i))));
+  const items=Array.isArray(x.cost_items)?x.cost_items:[];
+  const detail=(costs===0&&!items.length)||(items.length>0&&items.every(y=>Number.isFinite(Number(y.value_cents)))&&items.reduce((sum,y)=>sum+Number(y.value_cents),0)===costs);
+  return valid&&detail;
+ });
+}
+
+function acertoSummaryText(rows,period){
+ const t=acertoTotals(rows),p=period||acertoPeriod(),L=[
+  "💰 CONSTRU-REI | ACERTOS "+p.head,"📋 Obras: "+t.cases,"",
+  "💵 Base financeira (não comprova recebimento): "+brl(t.base_cents),"💸 Custos: "+brl(t.cost_cents),
+  "✅ Lucro líquido: "+brl(t.profit_cents),"📈 Margem: "+pct(t.margin_pct),"",
+  "👥 RATEIO APURADO — NÃO REPRESENTA SAQUES",
+  "Fabrício 20%: "+brl(t.fabricio_cents),"Éder 28%: "+brl(t.eder_cents),
+  "Rogério 28%: "+brl(t.rogerio_cents),"Gabrielly 14%: "+brl(t.gabi_cents),
+  "🏦 Capital de Giro 10% (centavos ajustados): "+brl(t.capital_giro_cents),"",
+  "✅ Total rateado: "+brl(t.distributed_cents),"Diferença do rateio: "+brl(t.difference_cents),"",
+  "📋 OBRAS DO PERÍODO"
+ ];
+ for(const x of rows)L.push("• "+x.case+" | "+acertoCustomerName(x)+" | Base "+brl(x.base_cents)+" | Custos "+brl(x.cost_cents)+" | Lucro "+brl(x.profit_cents));
+ L.push("","ℹ️ Rateio calculado; pagamentos e saques dependem da conciliação com a Cora.");
+ return L.join("\n");
+}
+
 function acertoWhatsApp(rows){return acertoSummaryText(rows)}
-function acertoCompleteText(rows,period){const t=acertoTotals(rows),p=period||acertoPeriod(),L=[];L.push(ACSEP,"💰 ACERTOS "+p.head,ACSEP,"","TOTAL DE OBRAS: "+t.cases,"");rows.forEach((x,i)=>{L.push(ACSEP,acertoKeycap(i+1)+" OBRA "+x.case,ACSEP,"",...acertoMetaLines(x),"","MOVIMENTAÇÃO FINANCEIRA","","💰 Valor fechado: "+brl(x.closed_cents));if(x.received_cents!=null&&Number(x.received_cents)!==Number(x.closed_cents))L.push("💵 Valor recebido / Base do acerto: "+brl(x.received_cents));L.push("💸 Total dos custos: "+brl(x.cost_cents),"✅ Saldo/Lucro: "+brl(x.profit_cents),"📊 Margem de lucro: "+pct(x.margin_pct),"","RATEIO DO LUCRO","","✅ Fabrício — 20%: "+brl(x.rateio?.fabricio_cents),"✅ Éder — 28%: "+brl(x.rateio?.eder_cents),"✅ Rogério — 28%: "+brl(x.rateio?.rogerio_cents),"✅ Gabi — 14%: "+brl(x.rateio?.gabi_cents));const capExpected=x.profit_cents==null?null:Math.round(Number(x.profit_cents)*.10),capAdj=capExpected!=null&&Number(x.rateio?.capital_giro_cents)!==capExpected;L.push("✅ Capital de Giro — "+(capAdj?"ajuste de arredondamento":"10%")+": "+brl(x.rateio?.capital_giro_cents));const sf=Number(x.support_cents?.["Fabrício"]||0),se=Number(x.support_cents?.["Éder"]||0);if(sf||se){L.push("","🛠️ APOIO / DIÁRIAS","");if(sf)L.push("Fabrício: "+brl(sf));if(se)L.push("Éder: "+brl(se))}L.push("")});L.push(ACSEP,"📋 RESUMO GERAL – ACERTOS "+p.head,ACSEP,"","🏗️ Total de obras: "+t.cases,"","💰 Total fechado/recebido: "+brl(t.base_cents),"","💸 Total dos custos: "+brl(t.cost_cents),"","✅ Lucro total apurado: "+brl(t.profit_cents),"","📊 Margem geral de lucro: "+pct(t.margin_pct),"",ACSEP,"💸 RETIRADAS POR COLABORADOR",ACSEP,"","✅ Fabrício: "+brl(t.fabricio_cents),"","✅ Éder: "+brl(t.eder_cents),"","✅ Rogério: "+brl(t.rogerio_cents),"","✅ Gabi: "+brl(t.gabi_cents),"","✅ Capital de Giro: "+brl(t.capital_giro_cents),"");if(t.support_fabricio_cents||t.support_eder_cents){L.push(ACSEP,"🛠️ APOIO / DIÁRIAS",ACSEP,"");if(t.support_fabricio_cents)L.push("Fabrício: "+brl(t.support_fabricio_cents),"");if(t.support_eder_cents)L.push("Éder: "+brl(t.support_eder_cents),"")}L.push(ACSEP,"✅ TOTAL DISTRIBUÍDO",ACSEP,"","💰 "+brl(t.distributed_cents),"",ACSEP,"📊 CONFERÊNCIA FINAL",ACSEP,"","✅ Total fechado/recebido: "+brl(t.base_cents),"","✅ Total dos custos: "+brl(t.cost_cents),"","✅ Lucro total apurado: "+brl(t.profit_cents),"","✅ Total dos rateios: "+brl(t.distributed_cents),"","✅ Diferença: "+brl(t.difference_cents),"","✅ Rateio geral: 100% do lucro distribuído","",ACSEP,"🔎 AUDITORIA DOS CÁLCULOS",ACSEP,"","✅ "+t.cases+" obras financeiras consideradas.","","✅ Todos os custos disponíveis nas fontes válidas foram considerados.","","✅ Todos os saldos foram recalculados pela fórmula:","Base Financeira – Custos = Lucro.","","✅ Margem geral recalculada sobre o faturamento/base total.","","✅ Rateio padrão aplicado:","Fabrício 20%","Éder 28%","Rogério 28%","Gabi 14%","Capital de Giro 10%","","✅ Centavos de arredondamento foram ajustados exclusivamente no Capital de Giro para garantir que cada obra distribua exatamente 100% do lucro.","");const pass=acertoAuditPass(rows,t);if(pass)L.push(ACSEP,"✅ ACERTO CONFERIDO",ACSEP,"","LUCRO A DISTRIBUIR: "+brl(t.profit_cents),"","Fabrício: "+brl(t.fabricio_cents),"Éder: "+brl(t.eder_cents),"Rogério: "+brl(t.rogerio_cents),"Gabi: "+brl(t.gabi_cents),"Capital de Giro: "+brl(t.capital_giro_cents),"","TOTAL: "+brl(t.distributed_cents),"DIFERENÇA: "+brl(t.difference_cents),ACSEP);else{const bad=rows.filter(x=>(x.issues||[]).length||x.base_cents==null||x.cost_cents==null||x.profit_cents==null||Number(x.rateio?.difference_cents||0)!==0);L.push(ACSEP,"⚠️ ACERTO COM PENDÊNCIAS",ACSEP,"","Não declarar conferido até sanar as divergências.","",...bad.map(x=>"• "+x.case+" — "+((x.issues||[]).join(", ")||"dados financeiros incompletos")),ACSEP)}return L.join("\n")}
+function acertoCompleteText(rows,period){const t=acertoTotals(rows),p=period||acertoPeriod(),L=[];L.push(ACSEP,"💰 ACERTOS "+p.head,ACSEP,"","TOTAL DE OBRAS: "+t.cases,"");rows.forEach((x,i)=>{L.push(ACSEP,acertoKeycap(i+1)+" OBRA "+x.case,ACSEP,"",...acertoMetaLines(x),"","MOVIMENTAÇÃO FINANCEIRA","","💰 Valor fechado: "+brl(x.closed_cents));if(x.received_cents!=null&&Number(x.received_cents)!==Number(x.closed_cents))L.push("💵 Valor recebido / Base do acerto: "+brl(x.received_cents));
+const costLines=Array.isArray(x.cost_items)?x.cost_items:[];
+L.push("📑 LANÇAMENTOS DE CUSTO","");
+if(costLines.length){
+ let subtotal=0;
+ costLines.forEach((it,j)=>{
+  const amount=Number(it.value_cents);
+  if(Number.isFinite(amount))subtotal+=amount;
+  const date=String(it.date_raw||"sem data");
+  const note=String(it.description_original||"Lançamento sem descrição").trim();
+  L.push("• "+String(j+1)+". "+date+" — "+note+" — "+(Number.isFinite(amount)?brl(amount):"valor não informado"));
+ });
+ L.push("Subtotal detalhado: "+brl(subtotal));
+ if(x.cost_cents!=null && subtotal!==Number(x.cost_cents)){
+  L.push("⚠️ Diferença entre itens detalhados e custo total informado no cartão: "+brl(Number(x.cost_cents)-subtotal)+" (conferir Trello).");
+ }
+}else if(Number(x.cost_cents||0)!==0){
+ L.push("⚠️ Os lançamentos individuais não vieram detalhados da fonte; consultar o cartão do Trello.");
+}
+L.push("");
+L.push("💸 Total dos custos: "+brl(x.cost_cents),"✅ Saldo/Lucro: "+brl(x.profit_cents),"📊 Margem de lucro: "+pct(x.margin_pct),"","RATEIO DO LUCRO","","✅ Fabrício — 20%: "+brl(x.rateio?.fabricio_cents),"✅ Éder — 28%: "+brl(x.rateio?.eder_cents),"✅ Rogério — 28%: "+brl(x.rateio?.rogerio_cents),"✅ Gabi — 14%: "+brl(x.rateio?.gabi_cents));L.push("✅ Capital de Giro — 10% (centavos ajustados): "+brl(x.rateio?.capital_giro_cents));L.push("")});L.push(ACSEP,"📋 RESUMO GERAL – ACERTOS "+p.head,ACSEP,"","🏗️ Total de obras: "+t.cases,"","💰 Base financeira (não comprova recebimento): "+brl(t.base_cents),"","💸 Total dos custos: "+brl(t.cost_cents),"","✅ Lucro total apurado: "+brl(t.profit_cents),"","📊 Margem geral de lucro: "+pct(t.margin_pct),"",ACSEP,"👥 RATEIO APURADO — NÃO CONFIRMA SAQUES",ACSEP,"","✅ Fabrício: "+brl(t.fabricio_cents),"","✅ Éder: "+brl(t.eder_cents),"","✅ Rogério: "+brl(t.rogerio_cents),"","✅ Gabi: "+brl(t.gabi_cents),"","✅ Capital de Giro: "+brl(t.capital_giro_cents),"");L.push(ACSEP,"✅ TOTAL RATEADO",ACSEP,"","💰 "+brl(t.distributed_cents),"",ACSEP,"📊 CONFERÊNCIA FINAL",ACSEP,"","✅ Base financeira (não comprova recebimento): "+brl(t.base_cents),"","✅ Total dos custos: "+brl(t.cost_cents),"","✅ Lucro total apurado: "+brl(t.profit_cents),"","✅ Total dos rateios: "+brl(t.distributed_cents),"","✅ Diferença: "+brl(t.difference_cents),"","✅ Rateio geral: 100% do lucro rateado; saques não confirmados","",ACSEP,"🔎 AUDITORIA DOS CÁLCULOS",ACSEP,"","✅ "+t.cases+" obras financeiras consideradas.","","✅ Totais de custos oriundos dos cartões Trello; comprovação documental e bancária pendente.","","✅ Todos os saldos foram recalculados pela fórmula:","Base Financeira – Custos = Lucro.","","✅ Margem geral recalculada sobre o faturamento/base total.","","✅ Rateio padrão aplicado:","Fabrício 20%","Éder 28%","Rogério 28%","Gabi 14%","Capital de Giro 10%","","✅ Centavos de arredondamento foram ajustados exclusivamente no Capital de Giro para garantir que cada obra distribua exatamente 100% do lucro.","");const auditItems=rows.map(x=>{
+ const lines=Array.isArray(x.cost_items)?x.cost_items:[];
+ const sum=lines.reduce((a,i)=>a+Number(i.value_cents||0),0);
+ return {id:x.case,hasItems:lines.length>0,match:(Number(x.cost_cents||0)===0&&lines.length===0)||(lines.length>0&&sum===Number(x.cost_cents))};
+});
+const audited=auditItems.filter(x=>x.match).length;
+L.push("","📑 CONFERÊNCIA DOS LANÇAMENTOS: "+audited+" de "+auditItems.length+" obras com custos detalhados conciliados.");
+if(audited<auditItems.length)L.push("⚠️ Detalhamento pendente ou divergente: "+auditItems.filter(x=>!x.match).map(x=>x.id).join(", ")+". Não considerar o texto integralmente auditado até a conferência.");
+const pass=acertoAuditPass(rows,t);if(pass)L.push(ACSEP,"✅ ACERTO ARITMETICAMENTE CONFERIDO",ACSEP,"","LUCRO A DISTRIBUIR: "+brl(t.profit_cents),"⚠️ Rateio não comprova saques ou transferências bancárias.","","Fabrício: "+brl(t.fabricio_cents),"Éder: "+brl(t.eder_cents),"Rogério: "+brl(t.rogerio_cents),"Gabi: "+brl(t.gabi_cents),"Capital de Giro: "+brl(t.capital_giro_cents),"","TOTAL: "+brl(t.distributed_cents),"DIFERENÇA: "+brl(t.difference_cents),ACSEP);else{const bad=rows.filter(x=>{const its=Array.isArray(x.cost_items)?x.cost_items:[];return Number(x.cost_cents||0)!==its.reduce((sum,it)=>sum+Number(it.value_cents||0),0)||(Number(x.cost_cents||0)!==0&&!its.length)||(x.issues||[]).length||x.base_cents==null||x.profit_cents==null||Number(x.rateio?.difference_cents||0)!==0;});L.push(ACSEP,"⚠️ ACERTO COM PENDÊNCIAS",ACSEP,"","Não declarar conferido até sanar as divergências.","",...bad.map(x=>"• "+x.case+" — "+((x.issues||[]).join(", ")||"dados financeiros incompletos")),ACSEP)}return L.join("\n")}
+
 async function acertoCopyText(txt,msg){try{await navigator.clipboard.writeText(txt);alert(msg)}catch{prompt("Copie o acerto:",txt)}}
-async function copyAcerto(){try{const p=acertoPeriod();return acertoCopyText(acertoCompleteText(acertoOutputRows(),p),"Acerto completo copiado para o WhatsApp.")}catch(e){acertoPeriodError(e)}}
-async function copyAcertoResumo(){try{const p=acertoPeriod();return acertoCopyText(acertoSummaryText(acertoOutputRows(),p),"Resumo do acerto copiado para o WhatsApp.")}catch(e){acertoPeriodError(e)}}
-function pdfAcerto(){let period;try{period=acertoPeriod()}catch(e){return acertoPeriodError(e)}const rows=acertoOutputRows(),w=window.open("","_blank");if(!w)return alert("Permita pop-ups para gerar o PDF.");const txt=acertoCompleteText(rows,period);w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Acerto CONSTRU-REI</title><style>body{font-family:Arial,sans-serif;padding:30px;color:#142235}pre{font-family:Arial,sans-serif;white-space:pre-wrap;line-height:1.45;font-size:12px;margin:0}@media print{body{padding:0}}</style></head><body><pre>'+esc(txt)+'</pre></bo'+'dy></html>');w.document.close();setTimeout(()=>w.print(),250)}
-function excelAcerto(){const rows=acertoOutputRows(),t=acertoTotals(rows),head=["Orçamento","Cliente","Endereço","Referência","Contrato","Imóvel","Vista CRM","Serviço","Prestador","Recebimento","Pagamento","Situação","Valor Fechado","Valor Recebido","Base","Fonte Base","Custos","Lucro","Margem %","Fabrício","Éder","Rogério","Gabi","Capital de Giro","Apoio Fabrício","Apoio Éder","Conciliação","Trello"],val=n=>n==null?"":(Number(n)/100).toFixed(2).replace(".",","),q=v=>'"'+String(v??"").replaceAll('"','""')+'"',line=x=>{const m=x.meta||{};return[x.case,acertoCustomerName(x),m.address,m.reference,m.contract,m.property,m.vista_crm,m.service,m.provider,m.receipt,m.payment,m.situation,val(x.closed_cents),val(x.received_cents),val(x.base_cents),x.base_source,val(x.cost_cents),val(x.profit_cents),String(x.margin_pct??"").replace(".",","),val(x.rateio?.fabricio_cents),val(x.rateio?.eder_cents),val(x.rateio?.rogerio_cents),val(x.rateio?.gabi_cents),val(x.rateio?.capital_giro_cents),val(x.support_cents?.["Fabrício"]),val(x.support_cents?.["Éder"]),acertoRecon(x).result,x.trello_url].map(q).join(";")},total=["TOTAL","","","","","","","","","","","", "", "",val(t.base_cents),"",val(t.cost_cents),val(t.profit_cents),String(t.margin_pct??"").replace(".",","),val(t.fabricio_cents),val(t.eder_cents),val(t.rogerio_cents),val(t.gabi_cents),val(t.capital_giro_cents),val(t.support_fabricio_cents),val(t.support_eder_cents),"",""].map(q).join(";"),csv="\ufeff"+head.join(";")+"\n"+rows.map(line).join("\n")+"\n"+total,blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="CONSTRU-REI_Acerto_"+new Date().toISOString().slice(0,10)+".csv";a.click();URL.revokeObjectURL(u)}
+async function acertoPeriodAlreadyClosed(period){
+ const key=String(period.start||"")+"_"+String(period.end||"");
+ const local=(S.acertoHistory||[]).some(x=>x.payload?.historical_period?.from===period.start&&x.payload?.historical_period?.to===period.end);
+ if(local)return true;
+ const cat=await api("api=acerto-catalog");
+ if(!cat?.ok||!Array.isArray(cat.periods))throw Error("Registro de períodos indisponível");
+ return cat.periods.some(x=>x.period_key===key&&x.status==="COMMITTED");
+}
+function acertoOpenHistoricalSection(){
+ document.getElementById("cr-v12-historic-last")?.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function copyAcerto(){try{
+ const p=acertoPeriod();
+ if(await acertoPeriodAlreadyClosed(p)){acertoOpenHistoricalSection();return alert("Este período já tem fechamento registrado. Consulte a versão congelada no HISTÓRICO DE ACERTOS. Não é permitido copiar os cartões atuais com o título de um corte encerrado.");}
+ const rows=acertoOutputRows();
+ if(!rows.length)return alert("Nenhuma obra em AG. ACERTO para o período informado.");
+ return acertoCopyText(acertoCompleteText(rows,p),"Demonstrativo de custos e rateios copiado. Verifique as pendências indicadas.");
+}catch(e){if(String(e?.message||e).includes("datas do período")||String(e?.message||e).includes("fim do período"))return acertoPeriodError(e);alert("Cópia suspensa: não foi possível validar o histórico do período. "+String(e?.message||e));}}
+
+async function copyAcertoResumo(){try{
+ const p=acertoPeriod();
+ if(await acertoPeriodAlreadyClosed(p)){acertoOpenHistoricalSection();return alert("Corte já registrado. Abra o histórico congelado para consultar o resumo original, sem misturar despesas posteriores.");}
+ const rows=acertoOutputRows();
+ if(!rows.length)return alert("Nenhuma obra em AG. ACERTO.");
+ return acertoCopyText(acertoSummaryText(rows,p),"Resumo de rateios copiado. Saques não comprovados.");
+}catch(e){alert("Resumo suspenso: "+String(e?.message||e));}}
+
+async function pdfAcerto(){let period;try{period=acertoPeriod()}catch(e){return acertoPeriodError(e)}try{if(await acertoPeriodAlreadyClosed(period)){acertoOpenHistoricalSection();return alert('Período já registrado: consulte o histórico congelado.')}}catch(e){return alert('PDF suspenso: não foi possível validar o histórico do período.')}const rows=acertoOutputRows(),w=window.open("","_blank");if(!w)return alert("Permita pop-ups para gerar o PDF.");const txt=acertoCompleteText(rows,period);w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Acerto CONSTRU-REI</title><style>body{font-family:Arial,sans-serif;padding:30px;color:#142235}pre{font-family:Arial,sans-serif;white-space:pre-wrap;line-height:1.45;font-size:12px;margin:0}@media print{body{padding:0}}</style></head><body><pre>'+esc(txt)+'</pre></bo'+'dy></html>');w.document.close();setTimeout(()=>w.print(),250)}
+
+function excelAcerto(){const rows=acertoOutputRows(),t=acertoTotals(rows),head=["Orçamento","Cliente","Endereço","Referência","Contrato","Imóvel","Vista CRM","Serviço","Prestador","Recebimento","Pagamento","Situação","Valor Fechado","Valor Recebido","Base","Fonte Base","Custos","Lucro","Margem %","Fabrício","Éder","Rogério","Gabi","Capital de Giro","Conciliação","Trello"],val=n=>n==null?"":(Number(n)/100).toFixed(2).replace(".",","),q=v=>'"'+String(v??"").replaceAll('"','""')+'"',line=x=>{const m=x.meta||{};return[x.case,acertoCustomerName(x),m.address,m.reference,m.contract,m.property,m.vista_crm,m.service,m.provider,m.receipt,m.payment,m.situation,val(x.closed_cents),val(x.received_cents),val(x.base_cents),x.base_source,val(x.cost_cents),val(x.profit_cents),String(x.margin_pct??"").replace(".",","),val(x.rateio?.fabricio_cents),val(x.rateio?.eder_cents),val(x.rateio?.rogerio_cents),val(x.rateio?.gabi_cents),val(x.rateio?.capital_giro_cents),acertoRecon(x).result,x.trello_url].map(q).join(";")},total=["TOTAL","","","","","","","","","","","", "", "",val(t.base_cents),"",val(t.cost_cents),val(t.profit_cents),String(t.margin_pct??"").replace(".",","),val(t.fabricio_cents),val(t.eder_cents),val(t.rogerio_cents),val(t.gabi_cents),val(t.capital_giro_cents),"",""].map(q).join(";"),csv="\ufeff"+head.join(";")+"\n"+rows.map(line).join("\n")+"\n"+total,blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="CONSTRU-REI_Acerto_"+new Date().toISOString().slice(0,10)+".csv";a.click();URL.revokeObjectURL(u)}
+
 async function snapshotAcerto(){const rows=acertoOutputRows();if(!rows.length)return alert("Não há obras para salvar.");try{const j=await api("api=acerto-snapshot",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({cases:rows.map(x=>x.case),label:"FECHAMENTO"})});if(!j?.ok)throw Error(j?.error||"Falha");await loadAcertoHistory();alert("Snapshot do acerto salvo.")}catch(e){alert("Não foi possível salvar o snapshot: "+(e?.message||e))}}
 
 function fy(y){S.fy=y;S.fm=0;S.monthlyAudit=null;fin()}async function fm(m){S.fm=m;S.monthlyAudit=null;if(m){try{S.monthlyAudit=await api("api=audit&year="+S.fy+"&month="+m)}catch{}}fin()}function fin(){renderAcerto();document.getElementById("finperiod").textContent=(S.fm?["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"][S.fm-1]:"ANO")+" / "+S.fy;document.getElementById("yc").innerHTML=["2024","2025","2026"].map(y=>{const m=S.years[y]?.metrics||{};return '<div class="panel" onclick="fy(\''+y+'\')" style="cursor:pointer;outline:'+(S.fy===y?"2px solid #c9a44a":"none")+'"><b>'+y+'</b><div class="money">'+brl(m.gross_cents)+'</div><div class="rows"><div class="r"><span>Lucro</span><b>'+brl(m.profit_cents)+'</b></div><div class="r"><span>Margem</span><b>'+v12Margin(m,{year:y,month:0})+'</b></div><div class="r"><span>Ticket</span><b>'+brl(m.ticket_cents)+'</b></div><div class="r"><span title="Percentual de registros classificáveis no período">Cobertura dos dados</span><b>'+v12Coverage(m,r7IssueInfo(m),{year:y,month:0})+'</b></div></div></div>'}).join("");document.getElementById("months").innerHTML='<button class="month '+(!S.fm?"on":"")+'" onclick="fm(0)">ANO</button>'+Array.from({length:12},(_,i)=>'<button class="month '+(S.fm===i+1?"on":"")+'" onclick="fm('+(i+1)+')">'+["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"][i]+'</button>').join("");const all=S.years[S.fy]?.metrics||{},m=S.fm?(all.months||[]).find(x=>x.month===S.fm)||{}:all;document.getElementById("fk").innerHTML=[["Bruto",brl(m.gross_cents)],["Custos",brl(m.cost_cents)],["Lucro",brl(m.profit_cents)],["Margem",v12Margin(m,{year:S.fy,month:S.fm})],["Serviços",m.cases_classifiable??m.cases??"—"],["Ticket",brl(m.ticket_cents)]].map(x=>'<div class="kpi"><div class="lab">'+x[0]+'</div><div class="v">'+x[1]+'</div></div>').join("")+v12SubtotalCard(S.fy,S.fm);const ad=S.fm?S.monthlyAudit:S.years[S.fy],rr=ad?.rateio_breakdown?.people||{};document.getElementById("rrtitle").textContent=S.fm?"Rateios auditados — "+["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"][S.fm-1]+"/"+S.fy:"Rateios auditados do ano";document.getElementById("rr").innerHTML=Object.entries(rr).sort((a,b)=>(b[1].cents||0)-(a[1].cents||0)).map(([k,v])=>'<div class="person" onclick="this.classList.toggle(\'open\')"><div class="r"><span><b>'+k+'</b><br><small>'+v.cards+' serviço(s) · ver composição</small></span><b>'+brl(v.cents)+'</b></div><div class="detail">'+(v.items||[]).map(i=>'<div class="r"><span>'+i.case+'</span><span>'+brl(i.cents)+' '+(i.trello_url?'<a href="'+i.trello_url+'" target="_blank" onclick="event.stopPropagation()">Trello ↗</a>':'')+'</span></div>').join('')+'</div></div>').join("")||'<span class="muted">Sem rateio auditável</span>';const bd=ad?.rateio_breakdown||{};document.getElementById("cap").innerHTML=(()=>{
