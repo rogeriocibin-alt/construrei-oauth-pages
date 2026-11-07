@@ -3052,6 +3052,7 @@ function render(){
  const statusSource=catalog.source_health?.trello_capital;
  status.textContent="11 competências · "+cuts.length+" corte(s) V12 · "+archives.length+" referências anteriores · "+monthsReady+" demonstrativos mensais disponíveis"+(statusSource===false?" · ALERTA: consulta dos cartões Trello falhou":"")+" · "+new Date().toLocaleString("pt-BR");
  const shortcut=pick("crp-historic-summary");if(shortcut&&newest)shortcut.textContent="ÚLTIMO CORTE · "+newest.from+" a "+newest.to+" · "+(newest.works_count??"—")+" obras · lucro "+brl(newest.profit_cents)+" — JÁ REGISTRADO";
+ renderCutPicker();
 }
 function showHistoryText(title,contents,sourceUrl,note){
  detail.replaceChildren();
@@ -3112,10 +3113,15 @@ async function openCut(cut){
   let rows=arr.map(x=>{const href=link(x.trello_url);
     return '<tr><td><b>'+esc(x.case)+'</b></td><td>'+esc(x.customer||"Não identificado")+'</td><td>'+brl(x.base_cents)+'</td><td>'+brl(x.cost_cents)+'</td><td>'+brl(x.profit_cents)+'</td><td>'+(href?'<a href="'+esc(href)+'" target="_blank" rel="noopener noreferrer">Trello</a>':'—')+'</td></tr>'}).join("");
   detail.innerHTML='<div style="padding:12px;border:1px solid #abc4da;border-radius:10px"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><strong>Detalhamento das '+arr.length+' obras · 24/10 a 06/11</strong><button type="button" id="cr-v12-historic-copy" class="v11button">Copiar 12 obras</button></div><div class="tablewrap" style="margin-top:8px"><table class="table" style="min-width:690px"><thead><tr><th>Orçamento</th><th>Cliente</th><th>Base</th><th>Custos</th><th>Lucro</th><th>Origem</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
-  pick("cr-v12-historic-copy").addEventListener("click",async()=>{const lines=["CONSTRU-REI | HISTÓRICO DO ACERTO 24/10 A 06/11/2026","12 obras · Base "+brl(totals.base_cents)+" · Custos "+brl(totals.cost_cents)+" · Lucro "+brl(totals.profit_cents),"","RATEIO APURADO (NÃO COMPROVA SAQUES)","Fabrício: "+brl(totals.fabricio_cents),"Éder: "+brl(totals.eder_cents),"Rogério: "+brl(totals.rogerio_cents),"Gabrielly: "+brl(totals.gabi_cents),"Capital de Giro: "+brl(totals.capital_giro_cents),""];
-    for(const x of arr)lines.push(x.case+" | "+String(x.customer||"")+" | Base "+brl(x.base_cents)+" | Custos "+brl(x.cost_cents)+" | Lucro "+brl(x.profit_cents)+" | "+String(link(x.trello_url)||""));
-    const txt=lines.join("\n");
-    try{await navigator.clipboard.writeText(txt);alert("12 de 12 obras copiadas sem cortes.")}catch{const blob=new Blob([txt],{type:"text/plain;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="CONSTRU_REI_Acerto_24-10_a_06-11_2026.txt";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);alert("Texto completo disponibilizado em arquivo TXT.")}});
+  pick("cr-v12-historic-copy").addEventListener("click",async()=>{
+   try{
+    const picker=pick("cr-acerto-period-picker"),source=pick("cr-acerto-copy-source");
+    if(picker)picker.value=cut.period_key;
+    if(source)source.value="history";
+    updateCopySource();
+    await window.crV12CopyHistoricalCut();
+   }catch(e){alert("Não foi possível copiar: "+String(e?.message||e));}
+  });
  }catch(e){detail.textContent="Detalhamento indisponível: "+String(e?.message||e)+". Sem valores presumidos."}
 }
 async function load(force){
@@ -3131,6 +3137,146 @@ window.crV12RegisteredCut=async(start,end)=>{
  if(!catalog?.ok)await load(false);
  return [...(catalog?.periods||[]),...(catalog?.archived_periods||[])].find(x=>x.from===start&&x.to===end&&(x.status==="COMMITTED"||x.status==="HISTORICAL_TRELLO_REFERENCE"))||null;
 };
+
+/* Seletor dos cortes reais: consulta autenticada, sem escrever em Cora/Trello/fechamentos. */
+const copySource=pick("cr-acerto-copy-source"),periodPicker=pick("cr-acerto-period-picker"),copyHelp=pick("cr-acerto-copy-help");
+function shortPeriod(x){return String(x?.from||"").slice(8,10)+"/"+String(x?.from||"").slice(5,7)+" a "+String(x?.to||"").slice(8,10)+"/"+String(x?.to||"").slice(5,7)+"/"+String(x?.to||"").slice(0,4);}
+function isoFromParts(year,month,day){
+ const d=new Date(Date.UTC(year,month-1,day));
+ if(d.getUTCFullYear()!==year||d.getUTCMonth()!==month-1||d.getUTCDate()!==day)return null;
+ return year+"-"+String(month).padStart(2,"0")+"-"+String(day).padStart(2,"0");
+}
+function monthlyPeriodDocuments(){
+ const found=new Map();
+ for(const doc of catalog?.monthly_documents||[]){
+  const content=String(doc.content||"");
+  const re=/^[ \t*]*(?:💰[ \t]*)?ACERTOS?(?:[ \t]+DE)?[ \t]+(\d{1,2})\/(\d{1,2})[ \t]+(?:A|ATÉ|ATE)[ \t]+(\d{1,2})\/(\d{1,2})/gim;
+  const matches=[...content.matchAll(re)];
+  for(let i=0;i<matches.length;i++){
+   const m=matches[i],monthFrom=Number(m[2]),monthTo=Number(m[4]),yearTo=Number(String(doc.year_month||"").slice(0,4)),yearFrom=monthFrom>monthTo?yearTo-1:yearTo;
+   const from=isoFromParts(yearFrom,monthFrom,Number(m[1])),to=isoFromParts(yearTo,monthTo,Number(m[3]));
+   if(!from||!to||from>to)continue;
+   const period_key=from+"_"+to,original=content.slice(m.index,i+1<matches.length?matches[i+1].index:content.length).trim();
+   if(original&&!found.has(period_key))found.set(period_key,{period_key,from,to,original,source_url:doc.trello_url,source:"MONTH_CARD_TEXT"});
+  }
+ }
+ return found;
+}
+function periodsAvailable(){
+ const m=new Map();
+ for(const p of [...(catalog?.archived_periods||[]),...(catalog?.periods||[])]){
+  if(!p?.period_key||!p.from||!p.to)continue;
+  const prev=m.get(p.period_key);
+  if(!prev||p.status==="COMMITTED")m.set(p.period_key,p);
+ }
+ for(const [key,doc] of monthlyPeriodDocuments()){
+  if(!m.has(key))m.set(key,doc);
+ }
+ return [...m.values()].sort((a,b)=>String(b.to).localeCompare(String(a.to))||String(b.from).localeCompare(String(a.from)));
+}
+function updateCopySource(){
+ if(!copySource||!periodPicker)return;
+ const history=copySource.value==="history";
+ periodPicker.disabled=!history||!catalog?.ok;
+ for(const id of ["cr-acerto-copy-start","cr-acerto-copy-end"]){const el=pick(id);if(el)el.disabled=history;}
+ if(copyHelp)copyHelp.textContent=history
+  ?"Escolha um corte do Trello. O sistema copiará o fechamento congelado ou o texto original do período; referências só de capital não serão usadas como acerto."
+  :"Marque as obras da lista AG. ACERTO. Informe datas para o título; valores são os custos reais informados no Trello, sem bloco de Apoio/Diárias duplicado.";
+}
+function renderCutPicker(){
+ if(!periodPicker)return;
+ const selected=periodPicker.value,entries=periodsAvailable();
+ periodPicker.replaceChildren();
+ const empty=document.createElement("option");empty.value="";empty.textContent=entries.length?"Selecione o corte para copiar":"Não há cortes consultáveis";periodPicker.append(empty);
+ for(const p of entries){
+  const opt=document.createElement("option");opt.value=p.period_key;
+  const hasDoc=monthlyPeriodDocuments().has(p.period_key),snap=p.status==="COMMITTED"&&!!p.snapshot_id;
+  opt.textContent=shortPeriod(p)+(snap?" · fechamento congelado":hasDoc?" · documento no Trello":" · referência de capital");
+  periodPicker.append(opt);
+ }
+ if(entries.some(p=>p.period_key===selected))periodPicker.value=selected;
+ else if(entries.length)periodPicker.value=entries[0].period_key;
+ updateCopySource();
+}
+function snapshotToTraditionalText(cut,arr,totals){
+ const safe=n=>Number.isSafeInteger(n);
+ if(!Array.isArray(arr)||!arr.length||arr.length!==Number(cut.works_count))throw Error("Quantidade de obras diferente do fechamento congelado.");
+ const sum=key=>arr.reduce((a,x)=>a+Number(x[key]),0);
+ if(arr.some(x=>!safe(x.base_cents)||!safe(x.cost_cents)||!safe(x.profit_cents)||x.base_cents-x.cost_cents!==x.profit_cents)
+   ||!["base_cents","cost_cents","profit_cents"].every(k=>sum(k)===Number(totals[k])))
+  throw Error("O snapshot congelado não passou na conferência dos totais. Cópia suspensa.");
+ const rateioKeys=["fabricio_cents","eder_cents","rogerio_cents","gabi_cents","capital_giro_cents"];
+ if(arr.some(x=>!rateioKeys.every(k=>safe(x.rateio?.[k]))||rateioKeys.reduce((a,k)=>a+x.rateio[k],0)!==x.profit_cents))
+  throw Error("Há diferença no rateio original por obra. Cópia suspensa.");
+ const sumShare=k=>arr.reduce((a,x)=>a+x.rateio[k],0);
+ if(rateioKeys.some(k=>sumShare(k)!==Number(totals[k])))throw Error("Os rateios não conferem com o snapshot do corte.");
+ const date=shortPeriod(cut),sep="━━━━━━━━━━━━━━━━━━━━━━",L=[sep,"💰 ACERTOS DE "+date,sep,"","TOTAL DE OBRAS: "+arr.length,""];
+ const keycap=n=>String(n).split("").map(d=>({"0":"0️⃣","1":"1️⃣","2":"2️⃣","3":"3️⃣","4":"4️⃣","5":"5️⃣","6":"6️⃣","7":"7️⃣","8":"8️⃣","9":"9️⃣"}[d]||d)).join("");
+ for(const [i,x] of arr.entries()){
+  const m=x.meta||{},base=x.base_cents,cost=x.cost_cents,profit=x.profit_cents,margin=base?(profit/base*100).toFixed(2).replace(".",",")+"%":"A confirmar";
+  const cust=String(x.customer||"Não identificado").trim();
+  L.push(sep,keycap(i+1)+" OBRA "+x.case,sep,"","Cliente: "+cust);
+  if(m.address)L.push("Endereço: "+String(m.address).trim());
+  if(m.provider)L.push("Prestador: "+String(m.provider).trim());
+  if(m.payment)L.push("Pagamento informado no cartão: "+String(m.payment).trim());
+  L.push("","MOVIMENTAÇÃO FINANCEIRA","","💰 Valor fechado: "+brl(x.closed_cents),
+   "💵 Base do acerto: "+brl(base),"💸 Total dos custos: "+brl(cost),
+   "✅ Saldo/Lucro: "+brl(profit),"📊 Margem de lucro: "+margin,"","RATEIO DO LUCRO","",
+   "✅ Fabrício — 20%: "+brl(x.rateio.fabricio_cents),"✅ Éder — 28%: "+brl(x.rateio.eder_cents),
+   "✅ Rogério — 28%: "+brl(x.rateio.rogerio_cents),"✅ Gabi — 14%: "+brl(x.rateio.gabi_cents),
+   "✅ Capital de Giro — 10% (ajuste de centavos): "+brl(x.rateio.capital_giro_cents),"");
+ }
+ const totalShares=rateioKeys.reduce((a,k)=>a+sumShare(k),0);
+ const margin=totals.base_cents?(totals.profit_cents/totals.base_cents*100).toFixed(2).replace(".",",")+"%":"A confirmar";
+ L.push(sep,"📋 RESUMO GERAL – ACERTOS DE "+date,sep,"",
+  "🏗️ Total de obras: "+arr.length,"💰 Base financeira: "+brl(totals.base_cents),
+  "💸 Total dos custos: "+brl(totals.cost_cents),"✅ Lucro total apurado: "+brl(totals.profit_cents),
+  "📊 Margem geral: "+margin,"",
+  sep,"💸 RETIRADAS POR COLABORADOR — RATEIOS APURADOS",sep,"",
+  "✅ Fabrício: "+brl(sumShare("fabricio_cents")),"✅ Éder: "+brl(sumShare("eder_cents")),
+  "✅ Rogério: "+brl(sumShare("rogerio_cents")),"✅ Gabi: "+brl(sumShare("gabi_cents")),
+  "✅ Capital de Giro: "+brl(sumShare("capital_giro_cents")),"",
+  sep,"✅ TOTAL DISTRIBUÍDO",sep,"",brl(totalShares),"",
+  sep,"📊 CONFERÊNCIA FINAL",sep,"",
+  "✅ Base – custos = lucro: "+brl(totals.base_cents)+" – "+brl(totals.cost_cents)+" = "+brl(totals.profit_cents),
+  "✅ Total rateado: "+brl(totalShares),"✅ Diferença de rateio: "+brl(totals.profit_cents-totalShares),"",
+  sep,"🔎 AUDITORIA DOS CÁLCULOS",sep,"",
+  "✅ Conferidas as somas das "+arr.length+" obras com o registro congelado.",
+  "⚠️ Os lançamentos individuais de custo não constam no snapshot; consulte os cartões originais no Trello.",
+  "ℹ️ Este demonstrativo preserva o corte encerrado; rateios não comprovam saques na Cora.","");
+ return L.join("\n");
+}
+async function copyTextForCut(text,notice){
+ if(typeof window.acertoCopyText==="function")return window.acertoCopyText(text,notice);
+ try{await navigator.clipboard.writeText(text);alert(notice)}catch{prompt("Selecione e copie o texto do acerto:",text)}
+}
+window.crV12CopyHistoricalCut=async function(){
+ if(!catalog?.ok)await load(true);
+ if(!catalog?.ok)throw Error("Catálogo do Trello indisponível. Entre e atualize o histórico.");
+ const key=periodPicker?.value;
+ if(!key)throw Error("Selecione o período de acerto.");
+ const cut=periodsAvailable().find(p=>p.period_key===key);
+ if(!cut)throw Error("Corte não localizado no histórico.");
+ if(cut.status==="COMMITTED"&&cut.snapshot_id){
+  if(!snapshots){const h=await get("acerto-history");snapshots=h.snapshots||[];}
+  const snap=snapshots.find(x=>String(x.id)===String(cut.snapshot_id));
+  const arr=snap?.payload?.acerto?.items,totals=snap?.payload?.acerto?.totals;
+  if(!arr||!totals)throw Error("Snapshot original do período indisponível; não usar obras atuais.");
+  const text=snapshotToTraditionalText(cut,arr,totals);
+  return copyTextForCut(text,"Corte "+shortPeriod(cut)+" copiado no padrão tradicional, sem apoios duplicados.");
+ }
+ const doc=monthlyPeriodDocuments().get(key);
+ if(doc?.original){
+  const historical="━━━━━━━━━━━━━━━━━━━━━━\n💰 ACERTOS DE "+shortPeriod(cut)+"\n━━━━━━━━━━━━━━━━━━━━━━\n\n"+doc.original+
+   "\n\nFONTE: demonstrativo original do Trello. Valores históricos mantidos sem recalcular ou presumir saques.";
+  return copyTextForCut(historical,"Texto do corte original copiado. Confira o rateio histórico do período.");
+ }
+ if(cut.source==="TRELLO_CAPITAL_CARD_TITLE")openArchivedPeriod(key);
+ throw Error("Este período tem somente referência de Capital de Giro. Não há lista de obras nem custos suficientes no catálogo para somar com segurança; abra o cartão mensal original.");
+};
+if(copySource)copySource.addEventListener("change",updateCopySource);
+if(periodPicker)periodPicker.addEventListener("change",()=>{if(copyHelp&&copySource?.value==="history")copyHelp.textContent="Corte selecionado: "+(periodsAvailable().find(x=>x.period_key===periodPicker.value)?.status==="COMMITTED"?"snapshot original; não serão usados lançamentos posteriores":"consultar demonstrativo original do Trello");});
+
 refresh.addEventListener("click",()=>load(true));window.crV12HistoryRefresh=load;
 if((sessionStorage.getItem("crv2")||"").length>=12)void load(false);
 })();</script>
