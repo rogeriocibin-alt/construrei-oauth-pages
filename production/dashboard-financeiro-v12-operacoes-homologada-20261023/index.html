@@ -674,7 +674,7 @@ body{background:var(--v12-bg)}
  <h3>Histórico de acertos 2026 — Janeiro a Novembro</h3>
  <p class="small muted">Acertos e rateios declarados nos cartões financeiros do Trello. <strong>Retiradas bancárias conciliadas na Cora são consultadas separadamente, no quadro abaixo.</strong> Não somar novamente cortes ao total mensal.</p>
  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="v11button" id="cr-v12-historic-refresh">Atualizar histórico</button><span id="cr-v12-historic-status" role="status" aria-live="polite" style="font-size:12px">Aguardando consulta autenticada.</span></div>
- <div id="cr-v12-historic-last" style="margin:12px 0"></div>
+ <div id="cr-v12-historic-last" style="margin:12px 0"><div class="state">Último corte confirmado no Trello: <b>24/10 a 06/11/2026</b> · 12 obras · lucro R$ 4.681,03. <a href="https://trello.com/c/gkZIjUfm" target="_blank" rel="noopener noreferrer">Abrir registro original no Trello</a>. Os detalhes completos serão carregados após a autenticação.</div></div>
  <div id="cr-v12-historic-detail" style="margin:10px 0"></div>
  <div id="cr-v12-historic-months" class="tablewrap" style="margin-top:12px"></div>
 </section>
@@ -2454,7 +2454,7 @@ async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").di
  let prior=null;
  if(typeof window.crV12RegisteredCut==="function")prior=await window.crV12RegisteredCut(start,end);
  if(prior||(start==="2026-10-24"&&end==="2026-11-06")){
-   crpShow("CORTE JÁ REGISTRADO · 24/10 a 06/11/2026 consta no histórico financeiro V12 com 12 obras. Para consultar o demonstrativo, use CONSULTAR HISTÓRICO DE ACERTOS acima. A lista AG. ACERTO vazia não apaga o corte. Não repetir o envio.");
+   crpShow("CORTE JÁ REGISTRADO · "+(prior?(prior.from+" a "+prior.to):"24/10 a 06/11/2026")+" · "+(prior?.works_count??12)+" obras. Consulte em CONSULTAR HISTÓRICO DE ACERTOS acima. A lista AG. ACERTO vazia não apaga o corte. Não repetir o envio.");
    return;
  }
  const input=crpData();crpShow("Conferindo seleção, rateio e duplicidades no Trello...");const v=await crpApi("preview",input);if(v.duplicate)throw Error("Já existe envio para este período. Não duplicar.");const cv=v.capital_validation||{},t=v.totals;if(!cv.ok&&!cv.accepted_exception&&!cv.can_create){crpShow("PRÉVIA CONSULTIVA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+". ⚠️ CAPITAL NÃO CONCILIADO: esperado "+crpFmt(cv.expected_cents)+"; registrado "+(cv.credit_cents==null?"N/D":crpFmt(cv.credit_cents))+". ENVIO DESABILITADO. Confira o período antes de confirmar.");return}CRP_LAST={...input,fingerprint:v.fingerprint,monthName:v.period.monthName,requires_month_creation:!!v.requires_month_creation};const giroNovo=cv.can_create?" 🏦 O Capital de Giro será gerado pelo serviço canônico, após conferir as obras e o valor exato.":"";const ressalva=cv.accepted_exception?" ⚠️ Ressalva autorizada: CG no cartão "+crpFmt(cv.credit_cents)+"; rateio do lote "+crpFmt(cv.expected_cents)+"; diferença "+crpFmt(cv.difference_cents)+" preservada, sem ajuste de saldo.":"";crpShow("PRÉVIA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+" | Fabrício "+crpFmt(t.fabricio_cents)+" | Éder "+crpFmt(t.eder_cents)+" | Rogério "+crpFmt(t.rogerio_cents)+" | Gabrielly "+crpFmt(t.gabi_cents)+" | Giro "+crpFmt(t.capital_cents)+". Destino "+v.period.monthName+" 2026. Aguarda confirmação."+ressalva+giroNovo+(v.requires_month_creation?" ⚠️ CARTÃO MENSAL AUSENTE: o envio criará o único cartão de "+v.period.monthName+" 2026 após reservar a competência no banco.":""));document.getElementById("crp-send").disabled=false}catch(e){const message=String(e?.message||e);
@@ -2852,7 +2852,7 @@ if((sessionStorage.getItem("crv2")||"").length>=12)void window.crV12ImportedAudi
 
 <script id="cr-v12-history-jan-nov-20261106">(function(){
 "use strict";
-const BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate";
+const BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007";
 const pick=id=>document.getElementById(id), refresh=pick("cr-v12-historic-refresh"),status=pick("cr-v12-historic-status"),
  last=pick("cr-v12-historic-last"),detail=pick("cr-v12-historic-detail"),months=pick("cr-v12-historic-months");
 if(!refresh||!status||!last||!detail||!months)return;
