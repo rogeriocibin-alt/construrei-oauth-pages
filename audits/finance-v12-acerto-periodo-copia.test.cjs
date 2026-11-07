@@ -24,7 +24,7 @@ assert.throws(()=>ctx.acertoPeriodFromSelection('2026-10-24','2026-10-23'),/igua
 assert.throws(()=>ctx.acertoPeriodFromSelection('','2026-10-23'),/duas datas/);
 assert.throws(()=>ctx.acertoPeriodFromSelection('2026-10-10',''),/duas datas/);
 (async()=>{
- const output=await ctx.copyAcerto();assert.match(output,/💰 ACERTOS DE 10\/10 a 23\/10/);
+ const output=await ctx.copyAcerto();assert.equal(typeof output,'string','Copy failed: '+JSON.stringify(errs));assert.match(output,/💰 ACERTOS DE 10\/10 a 23\/10/);
  const summary=await ctx.copyAcertoResumo();assert.match(summary,/ACERTOS DE 10\/10 a 23\/10/);
  start.value='';assert.equal(await ctx.copyAcerto(),undefined);
  assert.equal(await ctx.copyAcertoResumo(),undefined);
