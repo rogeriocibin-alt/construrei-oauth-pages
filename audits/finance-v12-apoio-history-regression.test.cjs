@@ -45,5 +45,7 @@ assert.match(after,/CUSTO REAL: Apoio Éder R\$ 150,00/u);
 assert.match(after,/R\$ 4\.661,03/u);
 assert.match(after,/1️⃣0️⃣ OBRA 812-26/u);
 assert.equal(after,sandbox.clean(after),"sanitização idempotente");
+assert.equal(sandbox.clean("CUSTO REAL: Apoio Éder R$ 150,00"),"CUSTO REAL: Apoio Éder R$ 150,00","custo isolado não deve ser removido");
+assert.ok(html.includes('copy.textContent="COPIAR TEXTO";'),"botão histórico sem etiqueta de cópia integral");
 assert.ok(html.includes("const text=crV12RemoveApoioResumo(String(contents||\"\").trim());"),"visualização e cópia utilizam saneamento");
 console.log("PASS: novos acertos e histórico sem resumos redundantes, mantendo custos, totais e fonte original");
