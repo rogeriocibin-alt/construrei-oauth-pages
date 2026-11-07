@@ -644,7 +644,12 @@ body{background:var(--v12-bg)}
 <div id="cg-close-status" class="v11msg" role="status" style="white-space:pre-wrap;margin-top:12px">Nenhum encerramento foi executado nesta tela. A mensagem não representa o histórico: consulte os períodos anteriores na fonte do Capital de Giro. Use a prévia para conferir o rateio sem gravar.</div>
 <div id="cr-period-send" style="margin:14px 0 5px;padding:13px;border:1px solid #b7d1df;border-radius:10px;background:#edf6fc">
  <p style="font-weight:800;font-size:13px;margin:0 0 7px;color:#173e63">Resultados e Acertos · Envio financeiro por período</p>
- <p style="font-size:12px;line-height:1.5;margin:0 0 10px">Selecione as datas e as obras abaixo. A prévia não grava; o envio exige autenticação e confirmação e não representa pagamento bancário. Não repita após falha parcial.</p><div class="crp-period-grid"><label>Início do período<input type="date" id="crp-start"></label><label>Fim do período<input type="date" id="crp-end"></label></div>
+ <p style="font-size:12px;line-height:1.5;margin:0 0 10px">Selecione as datas e as obras abaixo. A prévia não grava; o envio exige autenticação e confirmação e não representa pagamento bancário. Não repita após falha parcial.</p>
+ <div id="crp-historic-shortcut" style="border:1px solid #b9d4e9;border-radius:9px;background:#fff;padding:11px;margin:0 0 13px;font-size:12px">
+  <strong id="crp-historic-summary" style="display:block;color:#123e65;margin-bottom:5px">Consultar cortes já encerrados — histórico 2026</strong>
+  <span style="display:block;margin-bottom:8px">Para recuperar um acerto já enviado, use a consulta histórica. A lista AG. ACERTO mostra apenas obras ainda abertas; ela não é o histórico financeiro.</span>
+  <button class="v11button" type="button" aria-controls="cr-v12-historic-acertos" onclick="document.getElementById('cr-v12-historic-acertos')?.scrollIntoView({behavior:'smooth',block:'start'})">CONSULTAR HISTÓRICO DE ACERTOS</button>
+ </div><div class="crp-period-grid"><label>Início do período<input type="date" id="crp-start"></label><label>Fim do período<input type="date" id="crp-end"></label></div>
  <div style="display:flex;flex-wrap:wrap;gap:8px">
  <button class="v11button" type="button" onclick="crpPreview()">1. Pré-visualizar envio financeiro</button>
  <button class="v11button" type="button" id="crp-send" style="background:#0e694f" onclick="crpSend()" disabled>2. Enviar para Gestão Financeira</button>
@@ -665,11 +670,11 @@ body{background:var(--v12-bg)}
  </div>
 </div>
 </section>
-<section class="panel" id="cr-v12-historic-acertos" style="margin:12px 0;padding:15px;border:1px solid #8eb8d5;border-radius:12px;background:#fff">
+<section class="panel" id="cr-v12-historic-acertos" role="region" aria-label="Histórico de acertos de janeiro a novembro de 2026" tabindex="-1" style="scroll-margin-top:95px;margin:12px 0;padding:15px;border:1px solid #8eb8d5;border-radius:12px;background:#fff">
  <h3>Histórico de acertos 2026 — Janeiro a Novembro</h3>
  <p class="small muted">Acertos e rateios declarados nos cartões financeiros do Trello. <strong>Retiradas bancárias conciliadas na Cora são consultadas separadamente, no quadro abaixo.</strong> Não somar novamente cortes ao total mensal.</p>
  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="button" class="v11button" id="cr-v12-historic-refresh">Atualizar histórico</button><span id="cr-v12-historic-status" role="status" aria-live="polite" style="font-size:12px">Aguardando consulta autenticada.</span></div>
- <div id="cr-v12-historic-last" style="margin:12px 0"></div>
+ <div id="cr-v12-historic-last" style="margin:12px 0"><div class="state">Último corte confirmado no Trello: <b>24/10 a 06/11/2026</b> · 12 obras · lucro R$ 4.681,03. <a href="https://trello.com/c/gkZIjUfm" target="_blank" rel="noopener noreferrer">Abrir registro original no Trello</a>. Os detalhes completos serão carregados após a autenticação.</div></div>
  <div id="cr-v12-historic-detail" style="margin:10px 0"></div>
  <div id="cr-v12-historic-months" class="tablewrap" style="margin-top:12px"></div>
 </section>
@@ -2443,7 +2448,16 @@ function crpFriendlyError(error){
  return code;
 }
 async function crpApi(action,body){const token=sessionStorage.getItem("crv2")||"";if(!token)throw Error("Faça login no Dashboard como diretor.");const r=await fetch("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-finance-v12-period-close-candidate-20261024?action="+action,{method:"POST",headers:{"content-type":"application/json","x-cr-session":token},body:JSON.stringify(body),cache:"no-store",signal:AbortSignal.timeout(65000)});const j=await r.json().catch(()=>({ok:false,error:"INVALID_RESPONSE"}));if(!r.ok||!j.ok)throw Error(String(j.error||"Erro no processamento")+(j.partial?" · Houve envio parcial; conferir Trello, não repetir automaticamente.":""));return j}
-async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").disabled=true;try{const input=crpData();crpShow("Conferindo seleção, rateio e duplicidades no Trello...");const v=await crpApi("preview",input);if(v.duplicate)throw Error("Já existe envio para este período. Não duplicar.");const cv=v.capital_validation||{},t=v.totals;if(!cv.ok&&!cv.accepted_exception&&!cv.can_create){crpShow("PRÉVIA CONSULTIVA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+". ⚠️ CAPITAL NÃO CONCILIADO: esperado "+crpFmt(cv.expected_cents)+"; registrado "+(cv.credit_cents==null?"N/D":crpFmt(cv.credit_cents))+". ENVIO DESABILITADO. Confira o período antes de confirmar.");return}CRP_LAST={...input,fingerprint:v.fingerprint,monthName:v.period.monthName,requires_month_creation:!!v.requires_month_creation};const giroNovo=cv.can_create?" 🏦 O Capital de Giro será gerado pelo serviço canônico, após conferir as obras e o valor exato.":"";const ressalva=cv.accepted_exception?" ⚠️ Ressalva autorizada: CG no cartão "+crpFmt(cv.credit_cents)+"; rateio do lote "+crpFmt(cv.expected_cents)+"; diferença "+crpFmt(cv.difference_cents)+" preservada, sem ajuste de saldo.":"";crpShow("PRÉVIA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+" | Fabrício "+crpFmt(t.fabricio_cents)+" | Éder "+crpFmt(t.eder_cents)+" | Rogério "+crpFmt(t.rogerio_cents)+" | Gabrielly "+crpFmt(t.gabi_cents)+" | Giro "+crpFmt(t.capital_cents)+". Destino "+v.period.monthName+" 2026. Aguarda confirmação."+ressalva+giroNovo+(v.requires_month_creation?" ⚠️ CARTÃO MENSAL AUSENTE: o envio criará o único cartão de "+v.period.monthName+" 2026 após reservar a competência no banco.":""));document.getElementById("crp-send").disabled=false}catch(e){const message=String(e?.message||e);
+async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").disabled=true;try{
+ const start=document.getElementById("crp-start")?.value||"";
+ const end=document.getElementById("crp-end")?.value||"";
+ let prior=null;
+ if(typeof window.crV12RegisteredCut==="function")prior=await window.crV12RegisteredCut(start,end);
+ if(prior||(start==="2026-10-24"&&end==="2026-11-06")){
+   crpShow("CORTE JÁ REGISTRADO · "+(prior?(prior.from+" a "+prior.to):"24/10 a 06/11/2026")+" · "+(prior?.works_count??12)+" obras. Consulte em CONSULTAR HISTÓRICO DE ACERTOS acima. A lista AG. ACERTO vazia não apaga o corte. Não repetir o envio.");
+   return;
+ }
+ const input=crpData();crpShow("Conferindo seleção, rateio e duplicidades no Trello...");const v=await crpApi("preview",input);if(v.duplicate)throw Error("Já existe envio para este período. Não duplicar.");const cv=v.capital_validation||{},t=v.totals;if(!cv.ok&&!cv.accepted_exception&&!cv.can_create){crpShow("PRÉVIA CONSULTIVA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+". ⚠️ CAPITAL NÃO CONCILIADO: esperado "+crpFmt(cv.expected_cents)+"; registrado "+(cv.credit_cents==null?"N/D":crpFmt(cv.credit_cents))+". ENVIO DESABILITADO. Confira o período antes de confirmar.");return}CRP_LAST={...input,fingerprint:v.fingerprint,monthName:v.period.monthName,requires_month_creation:!!v.requires_month_creation};const giroNovo=cv.can_create?" 🏦 O Capital de Giro será gerado pelo serviço canônico, após conferir as obras e o valor exato.":"";const ressalva=cv.accepted_exception?" ⚠️ Ressalva autorizada: CG no cartão "+crpFmt(cv.credit_cents)+"; rateio do lote "+crpFmt(cv.expected_cents)+"; diferença "+crpFmt(cv.difference_cents)+" preservada, sem ajuste de saldo.":"";crpShow("PRÉVIA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+" | Fabrício "+crpFmt(t.fabricio_cents)+" | Éder "+crpFmt(t.eder_cents)+" | Rogério "+crpFmt(t.rogerio_cents)+" | Gabrielly "+crpFmt(t.gabi_cents)+" | Giro "+crpFmt(t.capital_cents)+". Destino "+v.period.monthName+" 2026. Aguarda confirmação."+ressalva+giroNovo+(v.requires_month_creation?" ⚠️ CARTÃO MENSAL AUSENTE: o envio criará o único cartão de "+v.period.monthName+" 2026 após reservar a competência no banco.":""));document.getElementById("crp-send").disabled=false}catch(e){const message=String(e?.message||e);
  if(/OBRA_PRECISA_CONFERENCIA|PERIODO_NAO_FECHA|OBRA_FORA_DA_LISTA_AG_ACERTO/.test(message)){
   try{
    const diagnostic=await crpApi("preview-diagnostic",crpData());
@@ -2838,7 +2852,7 @@ if((sessionStorage.getItem("crv2")||"").length>=12)void window.crV12ImportedAudi
 
 <script id="cr-v12-history-jan-nov-20261106">(function(){
 "use strict";
-const BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-renderfix-ui-candidate";
+const BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007";
 const pick=id=>document.getElementById(id), refresh=pick("cr-v12-historic-refresh"),status=pick("cr-v12-historic-status"),
  last=pick("cr-v12-historic-last"),detail=pick("cr-v12-historic-detail"),months=pick("cr-v12-historic-months");
 if(!refresh||!status||!last||!detail||!months)return;
@@ -2878,6 +2892,7 @@ function render(){
  }
  months.innerHTML=html+'</tbody></table><div style="padding:10px;font-size:11px;color:#576e7c">Janeiro–setembro: registros declarados, ainda não homologados pela Cora. Outubro: acerto mensal não consolidado; novembro: corte registrado sem equivaler ao total bancário do mês. Não somar registros duas vezes.</div>';
  status.textContent="11 competências disponíveis (janeiro a novembro) · "+cuts.length+" corte(s) registrado(s) · atualizado "+new Date().toLocaleString("pt-BR");
+ const shortcut=pick("crp-historic-summary");if(shortcut&&newest)shortcut.textContent="ÚLTIMO CORTE · "+newest.from+" a "+newest.to+" · "+(newest.works_count??"—")+" obras · lucro "+brl(newest.profit_cents)+" — JÁ REGISTRADO";
 }
 async function openCut(cut){
  detail.innerHTML='<div class="state">Carregando obras do corte...</div>';
@@ -2907,6 +2922,11 @@ async function load(force){
  }catch(e){status.textContent="Consulta indisponível: "+String(e?.message||e);if(!catalog){last.textContent="Os valores não foram zerados; fonte indisponível.";months.textContent="Consulta histórica indisponível."}}
  finally{busy=false;refresh.disabled=false}
 }
+window.crV12RegisteredCut=async(start,end)=>{
+ if(!/^2026-\d\d-\d\d$/.test(String(start))||!/^2026-\d\d-\d\d$/.test(String(end)))return null;
+ if(!catalog?.ok)await load(false);
+ return(catalog?.periods||[]).find(x=>x.status==="COMMITTED"&&x.from===start&&x.to===end)||null;
+};
 refresh.addEventListener("click",()=>load(true));window.crV12HistoryRefresh=load;
 if((sessionStorage.getItem("crv2")||"").length>=12)void load(false);
 })();</script>
