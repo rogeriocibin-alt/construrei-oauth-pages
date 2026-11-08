@@ -78,3 +78,23 @@ test("todos os scripts inline do V12 permanecem sintaticamente válidos",()=>{
  assert.ok(scripts.length>=23);
  for(const code of scripts)assert.doesNotThrow(()=>new vm.Script(code));
 });
+
+test("blocos protegidos do runtime financeiro V12 permanecem byte a byte idênticos",()=>{
+ const protections=[
+  ["parser de custos e recebimentos","function financialParse(","function primaryDedup(",3955,"ba1a54d1"],
+  ["deduplicação legada","function primaryDedup(","function sumMetrics(",641,"c80f97d1"],
+  ["percentuais de rateio","function canonicalAcertoRateio(","function acertoCustomer(",453,"8e822d53"],
+  ["acertos em aberto","function buildAcertoLive(","function serviceRoleKey(",2816,"e429000b"],
+  ["escrita protegida Trello","async function trelloWriteCardDesc(","async function manualCoraTrello(",2970,"2ccdcf77"],
+  ["lançamento manual Cora","async function manualCoraTrello(","async function manualCloseWork(",6490,"0b2e739a"],
+  ["fechamento de obra","async function manualCloseWork(","Deno.serve(",5366,"a713da08"]
+ ];
+ const fnv=(s)=>{let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return("00000000"+(h>>>0).toString(16)).slice(-8)};
+ for(const [label,start,end,bytes,signature] of protections){
+  const i=backend.indexOf(start),j=backend.indexOf(end,i);
+  assert.ok(i>=0&&j>i,"Bloco ausente: "+label);
+  const region=backend.slice(i,j);
+  assert.equal(region.length,bytes,"Tamanho modificado sem homologação: "+label);
+  assert.equal(fnv(region),signature,"Conteúdo modificado sem homologação: "+label);
+ }
+});
