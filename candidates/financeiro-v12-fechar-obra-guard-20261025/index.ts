@@ -876,7 +876,7 @@ function crFinanceInventoryReadOnly(cards:any[],listNames:Map<string,string>,yea
   for(const c of cards){
     const title=String(c?.name||""),desc=String(c?.desc||"");
     const list=String(listNames.get(String(c?.idList||""))||"");
-    const n=norm(title),label=norm(title+" "+desc.slice(0,180));
+    const n=norm(title);
     const auxiliary=n.startsWith("RESUMO DA LISTA")
       ||n.startsWith("RESUMO ANUAL")||n.startsWith("RESUMO GERAL")
       ||n.startsWith("ACERTOS 2026")||n.startsWith("ACERTO WHATSAPP")
@@ -888,6 +888,9 @@ function crFinanceInventoryReadOnly(cards:any[],listNames:Map<string,string>,yea
     const physically_archived=!!c?.closed;
     const in_archive_list=norm(list)==="ARQUIVADOS";
     const archived=physically_archived||in_archive_list;
+    const archiveNote=archived?desc.split(/\r?\n/).map(x=>x.trim()).find(x=>/^(?:motivo\s+(?:do|de)\s+arquivamento|motivo\s+da\s+baixa|arquivado\s+(?:por|porque)|motivo)\s*[:\-]/i.test(x))||"":""; 
+    const archiveDetail=archiveNote?archiveNote.replace(/^(?:motivo\s+(?:do|de)\s+arquivamento|motivo\s+da\s+baixa|arquivado\s+(?:por|porque)|motivo)\s*[:\-]\s*/i,"").slice(0,260):null;
+    const label=norm(title+" "+(archiveNote||desc.slice(0,180)));
     let reason:string|null=null;
     if(archived){
       if(/\b(CANCELADO|CANCELADA|CANCELAMENTO)\b/.test(label))reason="CANCELADO";
@@ -905,7 +908,7 @@ function crFinanceInventoryReadOnly(cards:any[],listNames:Map<string,string>,yea
       source_card_id:id,work_code,title:safe(title,260),trello_url:safe(c?.shortUrl,160),
       source_list:list,physically_archived,in_archive_list,
       card_state:physically_archived?"ARCHIVED":in_archive_list?"IN_ARCHIVE_LIST":"OPEN",
-      archive_reason:reason,last_activity:c?.dateLastActivity??null,
+      archive_reason:reason,archive_reason_detail:archiveDetail,last_activity:c?.dateLastActivity??null,
       provisional_only:pre_accounting,
       provisional:pre_accounting?{
         gross_cents:parser.gross_cents,cost_cents:parser.cost_cents,
