@@ -9,7 +9,7 @@ Consulta paginada somente leitura do quadro oficial Gestão de Obras 2026 encont
 
 ## Ação proposta
 1. Reusar o backend de leitura existente `cr-dashboard-gerencial-v4-manual-cora-candidate-20261007` (fonte viva da função Supabase; o arquivo GitHub candidato anterior diferia na remoção do bloco de apoio da rotina de fechamento), sem mudar os POSTs, limites de autenticação, acertos, rateios, Capital ou funções de Cora.
-2. Acrescentar `crFinanceInventoryReadOnly` como inventário opcional em `GET api=year&year=2026&inventory=1`, reusando a leitura já existente `filter=all`. ID imutável do card é a chave; o código da obra é apenas atributo de busca. Inclui listas operacionais, mensais, a lista ARQUIVADOS e cards fisicamente arquivados.
+2. Acrescentar `crFinanceInventoryReadOnly` como campo adicional compatível em `GET api=year&year=2026`, reusando a leitura já existente `filter=all`. ID imutável do card é a chave; o código da obra é apenas atributo de busca. Inclui listas operacionais, mensais, a lista ARQUIVADOS e cards fisicamente arquivados.
 3. Motivo de arquivo classificado somente por indicação explícita; casos sem indicação recebem `MOTIVO_NAO_INFORMADO`. Cards auxiliares são contados à parte, excluídos da lista de obras. Pré-contabilização é **somente informativa** e não reconhece receita/recebimento, não gera lançamento, não envia PIX e não move card.
 4. Incorporar painel colapsável e filtros no HTML V12 preservando todas as abas existentes. Não criar cron, Edge, Supabase, webhook ou outro dashboard.
 
