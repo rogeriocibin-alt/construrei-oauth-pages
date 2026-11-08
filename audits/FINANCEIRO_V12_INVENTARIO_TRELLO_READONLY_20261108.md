@@ -30,3 +30,6 @@ Nenhuma mudança em produção, Trello, Supabase financeiro ou Cora. Antes da pr
 - A presença de 288 espelhos não significa 288 cards presentes; novo inventário live diferencia o que ainda existe do que permanece apenas como espelho histórico.
 - Foi feita comparação byte-a-byte de 7 regiões protegidas entre o backend Edge vivo e a candidata: parser financeiro, deduplicação legada, rateio, acerto vivo, escrita Trello, lançamento manual Cora e fechamento de obra; **7/7 idênticas**. Gate automatizado de integridade acrescentado à suíte existente. O hash de verificação refere-se a partes do código, não a autenticação E2E.
 - Nenhuma operação de mutação em Supabase, Cora ou Trello foi executada na conciliação.
+
+## Motivo do arquivamento
+Quando houver linha textual explícita como `Motivo do arquivamento: ...` ou `Arquivado por: ...`, preservar o texto de origem com limite de 260 caracteres e classificação informativa. Sem motivo identificado, manter `MOTIVO_NAO_INFORMADO`, sem escrever nada no cartão. Esse acréscimo não reconhece perdas, baixas, reversões ou movimentos bancários.
