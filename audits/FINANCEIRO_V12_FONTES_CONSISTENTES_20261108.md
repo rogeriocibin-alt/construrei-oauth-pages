@@ -1,5 +1,5 @@
 # Financeiro V12 — auditoria de fontes e desatualização visual (08/11/2026)
-**Estado: candidata de interface / sem promoção / sem alteração monetária.**
+**Estado atual: Dashboard corrigido, PR #215 incorporada e GitHub Pages publicado em 08/11/2026; conciliação financeira global permanece P0 em andamento.**
 **Titular: Diretoria e Financeiro REI; atuação técnica: CR Assertivo.**
 **Pendência única: FIN-V12-CORA-TRELLO-AUDITORIA-20261022.**
 
@@ -27,7 +27,7 @@ Arquivo oficial na branch candidata: `production/dashboard-financeiro-v12-operac
 - Testar sessão Diretoria notebook e Android com banco, acertos, histórico, Capital de Giro, custos, auditoria, exportação e estados de erro.
 - Conciliar movimentos bancários por IDs; verificação do saldo oficial de produção.
 - Atualizar espelho do Banco Mestre exclusivamente por rotina idempotente homologada, com backup e confirmação de atualização.
-- Não promover branch até fechamento desses gates e decisão humana.
+- Publicação GitHub Pages da PR #215 confirmada por ação [42496156876](https://github.com/rogeriocibin-alt/construrei-oauth-pages/actions/runs/42496156876). Teste E2E autenticado em navegador de diretoria continua pendente; não equiparar deploy a conciliação integral.
 - Rollback: reverter o commit desta branch / PR, sem revert de dados financeiros.
 
 
@@ -41,11 +41,36 @@ Arquivo oficial na branch candidata: `production/dashboard-financeiro-v12-operac
 - Cache `cora_cache.movements`: **89 movimentos 23/10–08/11** (16 créditos R$16.380,23; 73 débitos R$29.723,51).
 - Apenas **65** referências bancárias têm `cr_finance_v12_operations.status=COMMITTED` com a mesma referência; **24** não possuem esse vínculo por ID (11 créditos R$9.437,96 e 13 débitos R$9.279,95). Falta de vínculo não prova falta de custo no Trello; possíveis pacotes/apoios e transfers.
 - Quatro PIX de 07/11 correspondem exatamente aos rateios registrados no cartão mensal: Fabrício R$962,21; Éder R$1.347,10; Rogério R$1.347,10; Gabrielly R$673,54 — total R$4.329,95, presentes na Cora e `cr_cora_bank_annotations_v12`, porém não em `cr_finance_v12_operations` por ID.
-- **ERRO DE CLASSIFICAÇÃO a resolver sem duplicar custos**: as quatro anotações bancárias dos rateios estão com `purpose="Apoios / diárias — identificação das obras no extrato Cora"` e `allocations=[{case:"755-26",...}]`. São saques de lucros do acerto geral, não custos da obra 755-26. Os dois apoios de R$750,00 também possuem alocação concentrada na 755-26 e carecem de distribuição por diárias/obras. Não reescrever anotações via SQL simples: existe tabela de revisões com fingerprint e exigência de ao menos uma alocação, exigindo correção transacional pela rotina homologada.
-- Fonte Cora cache saudável em 08/11 10h30 BRT; 47/47 meses importados, mas reconciliação banco×obras permanece pendente.
+- **ERRO DE CLASSIFICAÇÃO ENCONTRADO E CORRIGIDO (08/11), mantendo os originais**: as quatro anotações bancárias dos rateios estão com `purpose="Apoios / diárias — identificação das obras no extrato Cora"` e `allocations=[{case:"755-26",...}]`. São saques de lucros do acerto geral, não custos da obra 755-26. Os dois apoios de R$750,00 também possuem alocação concentrada na 755-26 e carecem de distribuição por diárias/obras. Não reescrever anotações via SQL simples: existe tabela de revisões com fingerprint e exigência de ao menos uma alocação, exigindo correção transacional pela rotina homologada.
+- Fonte Cora cache saudável em 08/11 12h30 BRT; 47/47 meses importados, mas conciliação banco×obras permanece pendente.
 
-## Arquitetura da correção candidata
+## Arquitetura da correção publicada
 - Operação viva 2026: o bruto anual de listas mensais recebe o nome **BRUTO OPERACIONAL · LISTAS MENSAIS**, não mais "Faturamento vivo".
 - Consulta de acertos: soma automaticamente os 11 registros mensais declarados JAN–NOV com validação de integridade e mostra bruto/custos/lucro em campo próprio, diferente da carteira operacional.
 - Snapshot anterior continua consultável, jamais somado a novembro atual.
 - Teste de sintaxe executado sobre os 22 scripts internos da versão candidata: 22 válidos, 0 erros; não substitui E2E.
+
+
+## Resultado executado e atualizado — 08/11/2026, 12h55 BRT
+
+### Banco Mestre sem inventar lançamentos
+- 281 linhas em `public.cr_finance_2026_work_extract_v1`: **248 BALANCED** com conta fechada até o centavo, **32 INCOMPLETE**, **1 DIVERGENT**.
+- Nesta operação foram **recuperadas 36 extrações derivadas** contra a descrição EXATA dos cartões Trello atuais: 28 por parser seguro de bases explícitas (março/julho/agosto/setembro), depois 8 por valor de aditivos/recebimentos/prestações que estavam em formatos legados. Cada atualização foi baseada em ID imutável Trello, título e categoria e com guarda do estado anterior; 248/248 saldo calculado = lucro registrado.
+- **Não houve reabertura dos acertos, novo lançamento bancário ou novo crédito/débito de Capital.** A extração derivada não é a fonte bancária nem corrige o valor financeiro anual automaticamente.
+- Dos 32 ainda incompletos, **11 cartões estão em listas mensais antigas** com lacunas, ajustes entre base e bruto ou divergência matemática não resolvida: março 138-26, 171-26, 211-26, 90-26; abril 199-26, 268-26, 276-26; agosto 260-26; setembro 261-26, 716-26, 717-26. Outros **21** estão em listas operacionais, arquivos ou retornos, muitos legitimamente sem acerto. Toda a lista com link está no [cartão único de auditoria Trello](https://trello.com/c/B47EVGmv).
+- **Único DIVERGENT: 666-26**: bruto R$4.188,88, custos registrados R$3.571,59, lucro declarado R$547,29, mas diferença matemática R$617,29, portanto R$70,00 não explicados. [Origem Trello](https://trello.com/c/Q0mUjp16). Não ajustar custos nem rateios liquidados sem prova da diferença. Fevereiro conserva também R$0,10 histórico na soma mensal.
+
+### Cora — PIX e trilha de retificação versionada
+- Quatro PIX de **07/11** no Cora coincidem com os rateios definitivos das 12 obras do período 24/10–06/11: Fabrício R$962,21, Éder R$1.347,10, Rogério R$1.347,10 e Gabrielly R$673,54 = **R$4.329,95**.
+- **4 revisões versionadas foram efetivamente gravadas por RPC oficial `public.cr_cora_bank_annotation_revise_v12`** em `public.cr_cora_bank_annotation_revisions_v12`. Atualizam finalidade para distribuição de lucro, não custo/apoio/diária, e discriminam o valor de cada PIX entre as mesmas 12 obras de origem; soma de cada PIX idêntica ao extrato, sem alterar `cr_cora_bank_annotations_v12` original nem a movimentação Cora. O módulo Cora V12 consulta a última revisão.
+- Na janela de 23/10 a 08/11 existem 89 movimentos Cora. 65 ligados pelo mesmo ID a operações V12 e 24 sem vínculo direto; desses, **14 com anotações bancárias próprias** (incluindo 4 PIX retificados), **10 ainda sem identificação por ID em operação ou anotação**. Esses 10 **não são necessariamente custos omissos no Trello**: não há autorização para somá-los como despesas por suposição. Lista individual de todos os 24 no [cartão de auditoria](https://trello.com/c/B47EVGmv).
+
+### Links e governança das fontes
+- [Dashboard Financeiro V12 publicado](https://rogeriocibin-alt.github.io/construrei-oauth-pages/production/dashboard-financeiro-v12-operacoes-homologada-20261023/) via [PR #215](https://github.com/rogeriocibin-alt/construrei-oauth-pages/pull/215) incorporada. 6 testes estáticos passaram, 22 scripts compilados. **Sessão autenticada e interações de diretor não validadas**: restrição de acesso.
+- [Gestão Financeira, resumo anual](https://trello.com/c/3CddF0rf) e [novembro](https://trello.com/c/gkZIjUfm): evidência PIX anexada sem regravar acertos.
+- [Gestão de Obras 2026, carteira operacional](https://trello.com/c/gf25RQPa), [Capital de Giro geral](https://trello.com/c/QRs2VwFb) e [Capital de Giro do corte](https://trello.com/c/BJbixvOj): comentários de auditoria anexados sem alterar saldos.
+- [Cartão de auditoria central](https://trello.com/c/B47EVGmv): 32 pendências de obra + 24 referências Cora com URL/ID e separação de categorias. Gestor Supabase **FIN-V12-CORA-TRELLO-AUDITORIA-20261022** recebeu apontamentos, mantendo P0 Em andamento.
+- **Governança CI:** a ação GitHub Pages terminou SUCCESS; a ação Change Trace do push squash gerou alerta vermelho por ausência da referência de PR no título do commit, **não por falha de deploy ou dos cálculos**. [Log](https://github.com/rogeriocibin-alt/construrei-oauth-pages/actions/runs/42496157340). O padrão de commit para próximas mesclas deve incluir `(#numero_da_PR)` para o guard de rastreabilidade.
+
+### Critério realista de encerramento P0
+Exige comprovantes para os 11 casos históricos mensais sem fechamento matemático confiável, verificação de 1 divergência R$70, classificação dos 10 movimentos Cora ainda sem vínculo por ID e teste E2E autenticado das telas. **Não alegar missão 100% concluída antes dessas verificações.**
