@@ -21,3 +21,12 @@ Consulta paginada somente leitura do quadro oficial Gestão de Obras 2026 encont
 
 ## Rollback
 Nenhuma mudança em produção, Trello, Supabase financeiro ou Cora. Antes da promoção, basta fechar/reverter esta PR; após homologação, reverter apenas os dois arquivos de código. Não alterar dados históricos ou Cofre Zero canônico.
+
+## Conciliação adicional somente leitura — 08/11/2026
+- Comparação integral, com 4 páginas/18 listas do quadro Trello 2026: **404 cards físicos** (incluindo auxiliares), **286 títulos com código de obra**.
+- Fonte Supabase `public.cr_finance_2026_work_card_source_v1`: **288 registros** por ID.
+- **Zero** cards com código de obra encontrados no quadro sem presença por `source_card_id` no espelho.
+- **Dois IDs** constam no banco e não aparecem mais no quadro: `6aadef5a9b618e6c5085aaa9` (694-26) e `6ad76e6d88eca606c05174a1` (770-26); leitura direta dos dois IDs pelo Trello retornou `CARD_NOT_FOUND`. Há referências secundárias/históricas, sem equivalência com os cards originais. **Não apagar, recriar, classificar como arquivado nem contar novamente** sem proveniência conclusiva.
+- A presença de 288 espelhos não significa 288 cards presentes; novo inventário live diferencia o que ainda existe do que permanece apenas como espelho histórico.
+- Foi feita comparação byte-a-byte de 7 regiões protegidas entre o backend Edge vivo e a candidata: parser financeiro, deduplicação legada, rateio, acerto vivo, escrita Trello, lançamento manual Cora e fechamento de obra; **7/7 idênticas**. Gate automatizado de integridade acrescentado à suíte existente. O hash de verificação refere-se a partes do código, não a autenticação E2E.
+- Nenhuma operação de mutação em Supabase, Cora ou Trello foi executada na conciliação.
