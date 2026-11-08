@@ -3211,7 +3211,7 @@ d.append(s,p);panel.insertAdjacentElement("beforebegin",d);
    const h=node("strong",(x.work_code?x.work_code+" · ":"")+(x.title||"Card sem título"));div.appendChild(h);
    const state=x.card_state==="ARCHIVED"?"ARQUIVADO":x.card_state==="IN_ARCHIVE_LIST"?"LISTA ARQUIVADOS":"ATIVO";
    const tail="Estado: "+state+" | Lista: "+(x.source_list||"não informada")
-    +(x.archive_reason?" | Motivo: "+x.archive_reason:"")
+    +(x.archive_reason?" | Classificação: "+x.archive_reason:"")+(x.archive_reason_detail?" | Motivo informado: "+x.archive_reason_detail:"")
     +(x.same_work_code_count>1?" | Código em "+x.same_work_code_count+" cards (verificar aditivo/duplicidade)":"");
    const note=node("div",tail);note.className="small muted";div.appendChild(note);
    if(x.provisional_only&&x.provisional){
