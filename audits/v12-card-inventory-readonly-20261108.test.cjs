@@ -98,3 +98,15 @@ test("blocos protegidos do runtime financeiro V12 permanecem byte a byte idênti
   assert.equal(fnv(region),signature,"Conteúdo modificado sem homologação: "+label);
  }
 });
+
+test("motivo escrito no card é exibido sem inferir lançamento nem alterar a descrição",()=>{
+ const run=inventoryHelper();
+ const title="(834-26) Serviço arquivado";
+ const description="Detalhes do serviço e contato.\nCustos e condições.\nMotivo do arquivamento: cliente desistiu após avaliar o prazo de execução.";
+ const original={id:"666666666666666666666666",name:title,idList:"archive",closed:false,desc:description};
+ const result=run([original],new Map([["archive","ARQUIVADOS"]]),"26");
+ assert.equal(result.cards[0].archive_reason,"DESISTENCIA");
+ assert.equal(result.cards[0].archive_reason_detail,"cliente desistiu após avaliar o prazo de execução.");
+ assert.equal(result.cards[0].provisional_only,false);
+ assert.equal(original.desc,description);
+});
