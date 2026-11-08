@@ -560,6 +560,21 @@ body{background:var(--v12-bg)}
 </section>
 <section id="fin" class="section">
 <div class="v12fin-intro"><div><div class="v12cap-eyebrow">FINANÇAS OPERACIONAIS · TRELLO</div><h2>Resultados e Acertos</h2><p>Apuração, acertos em aberto e histórico. Operações e Capital de Giro ficam na Central de Operações.</p></div><nav class="v12fin-nav" aria-label="Seções de resultados e acertos"><button type="button" class="v12fin-capital-launch" onclick="window.v12CapitalGo()">Capital de Giro: abrir Central</button><a href="#v12-live-acertos">Acertos em aberto</a><a href="#finperiod">Histórico e rateios</a></nav></div>
+<details id="cr-finance-inventory" class="panel" style="margin:14px 0;border-top:3px solid #9bb5cc">
+  <summary style="cursor:pointer;font-weight:850">Inventário de obras • cards novos e arquivados (somente leitura)</summary>
+  <p class="small muted">Consulta os IDs físicos do Trello, incluindo arquivo, cancelamentos, erros, duplicidades e aditivos. Pré-contabilização é estimativa, NÃO é receita recebida, custo lançado, PIX ou acerto confirmado. Nenhum card é movido.</p>
+  <div class="filters" style="grid-template-columns:2fr 1fr;gap:8px">
+    <input id="cr-finance-inventory-search" type="search" placeholder="Pesquisar obra, cliente ou código" aria-label="Pesquisar inventário Trello">
+    <select id="cr-finance-inventory-filter" aria-label="Filtrar histórico">
+      <option value="all">Todos os cards elegíveis</option>
+      <option value="archived">Arquivados / lista Arquivados</option>
+      <option value="active">Ativos e pré-contabilização</option>
+      <option value="duplicates">Códigos repetidos / aditivos</option>
+    </select>
+  </div>
+  <div id="cr-finance-inventory-summary" class="small muted" role="status">Aguardando leitura autenticada do Trello.</div>
+  <div id="cr-finance-inventory-list" class="rows" style="margin-top:10px;max-height:460px;overflow:auto"></div>
+</details>
 <section class="panel" id="cr-financial-trello-declared-2026" style="margin:14px 0;border-top:4px solid #c6a043" aria-labelledby="cr-financial-trello-declared-title">
  <div style="display:flex;gap:12px;align-items:start;justify-content:space-between;flex-wrap:wrap">
   <div><div class="v12cap-eyebrow">FONTE FINANCEIRA · GESTÃO FINANCEIRA / TRELLO</div>
@@ -627,21 +642,7 @@ body{background:var(--v12-bg)}
   <div class="v12cap-divider"><div><h3>Despesas e distribuição por período</h3><p>Operação homologada na V11. Prévia primeiro, confirmação depois; nenhuma despesa é lançada automaticamente.</p></div><span class="v12cap-flow">1 · Consultar&nbsp;&nbsp; 2 · Pré-visualizar&nbsp;&nbsp; 3 · Confirmar</span></div>
   <div id="v11cap-slot"></div><section id="cr2026-history" class="panel" style="margin:14px 0;border-left:4px solid #216ab5">
 
-<details id="cr-finance-inventory" class="panel" style="margin:14px 0;border-top:3px solid #9bb5cc">
-  <summary style="cursor:pointer;font-weight:850">Inventário de obras • cards novos e arquivados (somente leitura)</summary>
-  <p class="small muted">Consulta os IDs físicos do Trello, incluindo arquivo, cancelamentos, erros, duplicidades e aditivos. Pré-contabilização é estimativa, NÃO é receita recebida, custo lançado, PIX ou acerto confirmado. Nenhum card é movido.</p>
-  <div class="filters" style="grid-template-columns:2fr 1fr;gap:8px">
-    <input id="cr-finance-inventory-search" type="search" placeholder="Pesquisar obra, cliente ou código" aria-label="Pesquisar inventário Trello">
-    <select id="cr-finance-inventory-filter" aria-label="Filtrar histórico">
-      <option value="all">Todos os cards elegíveis</option>
-      <option value="archived">Arquivados / lista Arquivados</option>
-      <option value="active">Ativos e pré-contabilização</option>
-      <option value="duplicates">Códigos repetidos / aditivos</option>
-    </select>
-  </div>
-  <div id="cr-finance-inventory-summary" class="small muted" role="status">Aguardando leitura autenticada do Trello.</div>
-  <div id="cr-finance-inventory-list" class="rows" style="margin-top:10px;max-height:460px;overflow:auto"></div>
-</details>
+
 <h3>Consultar histórico financeiro de 2026</h3><p class="small muted">Consulta somente leitura dos registros operacionais do Trello carregados pela V12. Não encerra períodos, não cria cards, não confirma recebimentos nem altera valores. Para lançamentos sem dia exato, o filtro utiliza competência mensal e identifica a aproximação.</p>
 <div class="v11row" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px"><label>De <input type="date" id="cr26-from" min="2026-01-01" max="2026-12-31" value="2026-01-01" style="width:100%;padding:10px;border:1px solid #bfd5e5;border-radius:8px"></label><label>Até <input type="date" id="cr26-to" min="2026-01-01" max="2026-12-31" value="2026-12-31" style="width:100%;padding:10px;border:1px solid #bfd5e5;border-radius:8px"></label></div>
 <button type="button" id="cr26-consult" class="v11button">Consultar registros de 2026</button><button type="button" id="cr26-copy" class="v11button" disabled>Copiar texto histórico</button><div id="cr26-output" role="status" aria-live="polite" style="margin-top:12px">Faça login e consulte. O filtro não utiliza o bloqueio de início do próximo fechamento.</div>
