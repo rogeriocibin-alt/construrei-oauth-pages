@@ -54,7 +54,7 @@ test("card na lista ARQUIVADOS entra no histórico mesmo com closed=false",()=>{
 });
 test("inventário só expõe GET 2026 opcional, sem redefinir os métodos de lançamento",()=>{
  assert.match(backend,/filter:"all",fields:"id,name,desc,idList,labels/);
- assert.match(backend,/year==="2026"&&u\.searchParams\.get\("inventory"\)==="1"/);
+ assert.match(backend,/year==="2026"\?\{work_inventory:b\.work_inventory\}/);
  assert.match(backend,/if\(req\.method==="POST"&&api==="manual-close-work"\)/);
  assert.match(backend,/if\(req\.method==="POST"&&api==="manual-cora-commit"\)/);
  assert.match(backend,/if\(api==="acerto-live"\)/);
@@ -64,7 +64,7 @@ test("inventário só expõe GET 2026 opcional, sem redefinir os métodos de lan
  assert.match(backend,/source:"TRELLO_LIVE_ALL_CARDS"/);
 });
 test("dashboard V12 mantém integração atual, agora requer leitura opcional do inventário",()=>{
- assert.match(html,/api\("api=year&year=2026&inventory=1"\)/);
+ assert.match(html,/api\("api=year&year=2026"\)/);
  assert.match(html,/id="cr-finance-inventory-list"/);
  assert.match(html,/crFinanceInventoryRender/);
  assert.match(html,/cr-finance-v12-inventory-readonly/);
