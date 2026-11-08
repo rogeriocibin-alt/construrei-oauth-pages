@@ -41,3 +41,12 @@ test('histórico mantém fonte Trello e preserva integração existente',()=>{
   assert.match(html,/cr-dashboard-gerencial-v4-manual-cora-ui-candidate-20261007/);
   assert.match(html,/cr-trello-capital-giro-v1/);
 });
+
+test('Bruto operacional e acertos são fontes distintas e rotuladas',()=>{
+  assert.match(html,/BRUTO OPERACIONAL · LISTAS MENSAIS/);
+  assert.match(html,/ACERTOS FINANCEIROS DECLARADOS · JAN–NOV\/2026/);
+  assert.match(html,/Bruto de obras Jan–Dez/);
+  assert.match(html,/não equivale a extrato bancário conciliado/);
+  assert.match(html,/monthlySettlementVerified/);
+  assert.match(html,/new Set\(receivedMonths\.map\(x=>x\.year_month\)\)\.size===11/);
+});
