@@ -864,6 +864,78 @@ async function coraProvisionPreview(body:any){
       projected_profit_cents:mv.direction==="OUT"&&row.profit_cents!=null?Number(row.profit_cents)-Number(mv.amount_cents||0):mv.direction==="IN"&&row.profit_cents!=null?Number(row.profit_cents)+Number(mv.amount_cents||0):row.profit_cents}
   };
 }
+
+/**
+ * Inventário informativo e não contábil da origem Trello.
+ * Lê TODOS os cartões por ID, sem colapsar aditivos nem reabrir acertos.
+ * Não autoriza receita, rateio, movimento Cora ou escrita Trello.
+ */
+function crFinanceInventoryReadOnly(cards:any[],listNames:Map<string,string>,yearSuffix:string){
+  const entries:any[]=[];
+  let auxiliary_count=0, skipped_without_id=0;
+  for(const c of cards){
+    const title=String(c?.name||""),desc=String(c?.desc||"");
+    const list=String(listNames.get(String(c?.idList||""))||"");
+    const n=norm(title);
+    const auxiliary=n.startsWith("RESUMO DA LISTA")
+      ||n.startsWith("RESUMO ANUAL")||n.startsWith("RESUMO GERAL")
+      ||n.startsWith("ACERTOS 2026")||n.startsWith("ACERTO WHATSAPP")
+      ||/CR-TRELLO-LIST-SUMMARY|CR-TRELLO-ACERTOS-LIVE|CR-TRELLO-CENTRAL-ACERTOS/i.test(desc);
+    if(auxiliary){auxiliary_count++;continue}
+    const id=String(c?.id||"");
+    if(!/^[0-9a-f]{24}$/.test(id)){skipped_without_id++;continue}
+    const work_code=extractCase(title)||extractCase(desc.slice(0,160));
+    const physically_archived=!!c?.closed;
+    const in_archive_list=norm(list)==="ARQUIVADOS";
+    const archived=physically_archived||in_archive_list;
+    const archiveNote=archived?desc.split(/\r?\n/).map(x=>x.trim()).find(x=>/^(?:motivo\s+(?:do|de)\s+arquivamento|motivo\s+da\s+baixa|arquivado\s+(?:por|porque)|motivo)\s*[:\-]/i.test(x))||"":""; 
+    const archiveDetail=archiveNote?archiveNote.replace(/^(?:motivo\s+(?:do|de)\s+arquivamento|motivo\s+da\s+baixa|arquivado\s+(?:por|porque)|motivo)\s*[:\-]\s*/i,"").slice(0,260):null;
+    const label=norm(title+" "+(archiveNote||desc.slice(0,180)));
+    let reason:string|null=null;
+    if(archived){
+      if(/\b(CANCELADO|CANCELADA|CANCELAMENTO)\b/.test(label))reason="CANCELADO";
+      else if(/\b(DESISTENCIA|DESISTIU|DESISTENTE)\b/.test(label))reason="DESISTENCIA";
+      else if(/\b(NAO APROVADO|NAO APROVADA|NAO EXECUTADO|REPROVADO)\b/.test(label))reason="NAO_APROVADO";
+      else if(/\b(DUPLICADO|DUPLICADA|DUPLICIDADE|COPIA)\b/.test(label))reason="DUPLICIDADE_A_VERIFICAR";
+      else if(/\b(ERRO|EQUIVOCO|INCORRETO)\b/.test(label))reason="ERRO_INFORMADO";
+      else if(/\b(TESTE|HOMOLOGACAO|CR QA)\b/.test(label))reason="TESTE";
+      else reason="MOTIVO_NAO_INFORMADO";
+    }
+    const parser=financialParse(c,list,yearSuffix);
+    const pre_accounting=!archived && !["CANCELADO","NÃO EXECUTADO"].includes(parser.status)
+      && !!work_code && work_code.endsWith("-"+yearSuffix);
+    entries.push({
+      source_card_id:id,work_code,title:safe(title,260),trello_url:safe(c?.shortUrl,160),
+      source_list:list,physically_archived,in_archive_list,
+      card_state:physically_archived?"ARCHIVED":in_archive_list?"IN_ARCHIVE_LIST":"OPEN",
+      archive_reason:reason,archive_reason_detail:archiveDetail,last_activity:c?.dateLastActivity??null,
+      provisional_only:pre_accounting,
+      provisional:pre_accounting?{
+        gross_cents:parser.gross_cents,cost_cents:parser.cost_cents,
+        profit_cents:parser.profit_cents,confidence:parser.financial_source?.confidence||"BAIXA",
+        issues:parser.issues
+      }:null,
+      bank_received_confirmed:false,accounting_posted:false,
+      statement:"CONSULTA_INFORMATIVA_NAO_LANCAMENTO"
+    });
+  }
+  const counts=new Map<string,number>();
+  for(const c of entries)if(c.work_code)counts.set(c.work_code,(counts.get(c.work_code)||0)+1);
+  for(const c of entries)c.same_work_code_count=c.work_code?(counts.get(c.work_code)||1):0;
+  return {
+    read_at:new Date().toISOString(),source:"TRELLO_LIVE_ALL_CARDS",
+    scope:"SOMENTE_LEITURA_SEM_ALTERAR_REGRAS_DE_ACERTO",
+    scanned_cards:cards.length,auxiliary_cards:auxiliary_count,
+    skipped_without_id,indexed_cards:entries.length,
+    physically_archived_cards:entries.filter(c=>c.physically_archived).length,
+    archive_list_cards:entries.filter(c=>c.in_archive_list).length,
+    archived_or_list_cards:entries.filter(c=>c.card_state!=="OPEN").length,
+    provisional_cards:entries.filter(c=>c.provisional_only).length,
+    same_work_code_pairs:entries.filter(c=>c.same_work_code_count>1).length,
+    cards:entries
+  };
+}
+
 async function boardBundle(name:string){
   const boardsR=await trelloGet("/members/me/boards",{fields:"id,name,closed,dateLastActivity",filter:"open"});
   if(!boardsR.ok)return{ok:false,error:"BOARDS_READ_FAILED",status:boardsR.status};
@@ -885,8 +957,9 @@ async function boardBundle(name:string){
   const operationalCards=rawCards.filter((c:any)=>!isListSummaryCard(c)&&!isAnnualSummaryCard(c,year)&&!isGeneralSummaryCard(c)&&!isAcertoHelperCard(c));
   const parsed=operationalCards.map((c:any)=>financialParse(c,lm.get(c.idList)||"",yy));
   const dedup=primaryDedup(parsed);
+  const work_inventory=yy==="26"?crFinanceInventoryReadOnly(rawCards,lm,yy):null;
   return{ok:true,board:{id:board.id,name:board.name,last_activity:board.dateLastActivity},lists:lists.map((x:any)=>x.name),
-    raw_card_count:rawCards.length,operational_card_count:parsed.length,month_summaries,annual_summary,general_summary,...dedup};
+    raw_card_count:rawCards.length,operational_card_count:parsed.length,month_summaries,annual_summary,general_summary,work_inventory,...dedup};
 }
 async function gcCurrentMap(maxPages=3){
   const out:any[]=[];let ok=true;let lastStatus=200;
@@ -1109,12 +1182,8 @@ function buildCloseBlock(x:any){
     "Gabrielly (14%): "+closeMoney(r.gabi_cents),
     "Capital de Giro (10%): "+closeMoney(r.capital_giro_cents)
   );
-  const sf=Number(x.support_cents?.["Fabrício"]||0),se=Number(x.support_cents?.["Éder"]||0);
-  if(sf||se){
-    lines.push("","APOIO / DIÁRIAS");
-    if(sf)lines.push("Fabrício: "+closeMoney(sf));
-    if(se)lines.push("Éder: "+closeMoney(se));
-  }
+  // Apoios/diárias já pertencem aos custos efetivamente lançados no Trello.
+  // Não gerar resumo automático de apoio no bloco de fechamento.
   return lines.join("\n");
 }
 function replaceCloseBlock(desc:string,block:string){
@@ -1249,7 +1318,7 @@ Deno.serve(async(req:Request)=>{
     if(!["2024","2025","2026"].includes(year))return json({ok:false,error:"INVALID_YEAR"},400);
     const b:any=await boardBundle("GESTÃO DE OBRAS "+year);
     if(!b.ok)return json({ok:false,error:b.error},502);
-    const rows=filterRows(b.rows,u); return json({ok:true,build:BUILD,year,board:b.board,raw_card_count:b.raw_card_count,dedup_case_count:b.rows.length,duplicate_primary_cases:b.duplicates.slice(0,30),unkeyed_count:b.unkeyed_count,metrics:metricsForBundle(b,year.slice(-2),u),cost_intelligence:costIntelligence(rows),rateio_breakdown:rateioBreakdown(rows,year.slice(-2)),rateio_timeline:rateioTimeline(b.rows,year),rows:rows.slice(0,500),writes_enabled:false,persisted:false,side_effects:"READ_ONLY"});
+    const rows=filterRows(b.rows,u); return json({ok:true,build:BUILD,year,board:b.board,raw_card_count:b.raw_card_count,dedup_case_count:b.rows.length,duplicate_primary_cases:b.duplicates.slice(0,30),unkeyed_count:b.unkeyed_count,metrics:metricsForBundle(b,year.slice(-2),u),cost_intelligence:costIntelligence(rows),rateio_breakdown:rateioBreakdown(rows,year.slice(-2)),rateio_timeline:rateioTimeline(b.rows,year),rows:rows.slice(0,500),...(year==="2026"?{work_inventory:b.work_inventory}:{}),writes_enabled:false,persisted:false,side_effects:"READ_ONLY"});
   }
   if(api==="audit"){
     const year=(u.searchParams.get("year")||"2026").trim();if(!["2024","2025","2026"].includes(year))return json({ok:false,error:"INVALID_YEAR"},400);const b:any=await boardBundle("GESTÃO DE OBRAS "+year);if(!b.ok)return json({ok:false,error:b.error},502);const rows=filterRows(b.rows,u);return json({ok:true,build:BUILD,year,metrics:metricsForBundle(b,year.slice(-2),u),cost_intelligence:costIntelligence(rows),rateio_breakdown:rateioBreakdown(rows,year.slice(-2)),rateio_timeline:rateioTimeline(b.rows,year),rows:rows.slice(0,500),quality:{duplicates:b.duplicates,unkeyed_count:b.unkeyed_count},writes_enabled:false,persisted:false});

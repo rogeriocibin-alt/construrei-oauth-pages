@@ -560,6 +560,21 @@ body{background:var(--v12-bg)}
 </section>
 <section id="fin" class="section">
 <div class="v12fin-intro"><div><div class="v12cap-eyebrow">FINANÇAS OPERACIONAIS · TRELLO</div><h2>Resultados e Acertos</h2><p>Apuração, acertos em aberto e histórico. Operações e Capital de Giro ficam na Central de Operações.</p></div><nav class="v12fin-nav" aria-label="Seções de resultados e acertos"><button type="button" class="v12fin-capital-launch" onclick="window.v12CapitalGo()">Capital de Giro: abrir Central</button><a href="#v12-live-acertos">Acertos em aberto</a><a href="#finperiod">Histórico e rateios</a></nav></div>
+<details id="cr-finance-inventory" class="panel" style="margin:14px 0;border-top:3px solid #9bb5cc">
+  <summary style="cursor:pointer;font-weight:850">Inventário de obras • cards novos e arquivados (somente leitura)</summary>
+  <p class="small muted">Consulta os IDs físicos do Trello, incluindo arquivo, cancelamentos, erros, duplicidades e aditivos. Pré-contabilização é estimativa, NÃO é receita recebida, custo lançado, PIX ou acerto confirmado. Nenhum card é movido.</p>
+  <div class="filters" style="grid-template-columns:2fr 1fr;gap:8px">
+    <input id="cr-finance-inventory-search" type="search" placeholder="Pesquisar obra, cliente ou código" aria-label="Pesquisar inventário Trello">
+    <select id="cr-finance-inventory-filter" aria-label="Filtrar histórico">
+      <option value="all">Todos os cards elegíveis</option>
+      <option value="archived">Arquivados / lista Arquivados</option>
+      <option value="active">Ativos e pré-contabilização</option>
+      <option value="duplicates">Códigos repetidos / aditivos</option>
+    </select>
+  </div>
+  <div id="cr-finance-inventory-summary" class="small muted" role="status">Aguardando leitura autenticada do Trello.</div>
+  <div id="cr-finance-inventory-list" class="rows" style="margin-top:10px;max-height:460px;overflow:auto"></div>
+</details>
 <section class="panel" id="cr-financial-trello-declared-2026" style="margin:14px 0;border-top:4px solid #c6a043" aria-labelledby="cr-financial-trello-declared-title">
  <div style="display:flex;gap:12px;align-items:start;justify-content:space-between;flex-wrap:wrap">
   <div><div class="v12cap-eyebrow">FONTE FINANCEIRA · GESTÃO FINANCEIRA / TRELLO</div>
@@ -626,6 +641,8 @@ body{background:var(--v12-bg)}
   <div id="cap" class="v12cap-overview" role="status" aria-live="polite"><p class="v12cap-loading">Consultando Capital de Giro no Trello…</p></div>
   <div class="v12cap-divider"><div><h3>Despesas e distribuição por período</h3><p>Operação homologada na V11. Prévia primeiro, confirmação depois; nenhuma despesa é lançada automaticamente.</p></div><span class="v12cap-flow">1 · Consultar&nbsp;&nbsp; 2 · Pré-visualizar&nbsp;&nbsp; 3 · Confirmar</span></div>
   <div id="v11cap-slot"></div><section id="cr2026-history" class="panel" style="margin:14px 0;border-left:4px solid #216ab5">
+
+
 <h3>Consultar histórico financeiro de 2026</h3><p class="small muted">Consulta somente leitura dos registros operacionais do Trello carregados pela V12. Não encerra períodos, não cria cards, não confirma recebimentos nem altera valores. Para lançamentos sem dia exato, o filtro utiliza competência mensal e identifica a aproximação.</p>
 <div class="v11row" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px"><label>De <input type="date" id="cr26-from" min="2026-01-01" max="2026-12-31" value="2026-01-01" style="width:100%;padding:10px;border:1px solid #bfd5e5;border-radius:8px"></label><label>Até <input type="date" id="cr26-to" min="2026-01-01" max="2026-12-31" value="2026-12-31" style="width:100%;padding:10px;border:1px solid #bfd5e5;border-radius:8px"></label></div>
 <button type="button" id="cr26-consult" class="v11button">Consultar registros de 2026</button><button type="button" id="cr26-copy" class="v11button" disabled>Copiar texto histórico</button><div id="cr26-output" role="status" aria-live="polite" style="margin-top:12px">Faça login e consulte. O filtro não utiliza o bloqueio de início do próximo fechamento.</div>
@@ -799,7 +816,7 @@ async function api(q,opt={}){
  return j;
 }async function cgapi(){const r=await fetch(CG_API_BASE+"?action=summary",{headers:{"x-cr-session":S.session}}),j=await r.json().catch(()=>({}));if(!r.ok||!j.ok)throw Error(j.error||"CAPITAL_UNAVAILABLE");return j}async function login(){const r=await fetch(CR_API_BASE+"?api=login",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({key:document.getElementById("key").value.trim()})}),j=await r.json();if(!r.ok||!j.ok){document.getElementById("err").textContent=j.error||"Acesso negado";return}S.session=j.session;sessionStorage.setItem("crv2",S.session);document.getElementById("login").classList.add("hide");refresh(true)}function logout(){sessionStorage.removeItem("crv2");location.reload()}
 async function refresh(gc){document.getElementById("live").textContent="atualizando";try{const nowTs=Date.now(),wantGc=!!gc||!S.gcLastAt||(nowTs-S.gcLastAt)>=300000;if(wantGc&&typeof crGcPaymentRefresh==="function")void crGcPaymentRefresh();const [a,b,c,d,e]=await Promise.all([api("api=year&year=2024"),api("api=year&year=2025"),api("api=year&year=2026"),api("api=current&gc="+(wantGc?1:0)),cgapi().catch(()=>null)]);if(wantGc)S.gcLastAt=nowTs;if(d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick}else if(S.gcLast&&(d?.gestaoclick?.skipped||d?.gestaoclick?.ok===false)){d.gestaoclick={...S.gcLast,stale:d?.gestaoclick?.ok===false,last_error_status:d?.gestaoclick?.http_status??null}}S.years={2024:a,2025:b,2026:c};S.current=d;S.capital=e;const apiBuild=c?.build||d?.build||b?.build||a?.build||"não informado";const bf=document.getElementById("buildfoot");bf.textContent="CONSTRU-REI · V12 OPERAÇÃO HOMOLOGADA · CORA PRO V2 / TRELLO";bf.title="API "+apiBuild;render();if(typeof window.crFinancialDeclaredRefresh==="function")void window.crFinancialDeclaredRefresh(false);if(!S.acertoHistoryLoaded)loadAcertoHistory();if(typeof window.crV12HistoryRefresh==="function")void window.crV12HistoryRefresh(false);document.getElementById("live").textContent="online"}catch(e){const live=document.getElementById("live");live.textContent="degradado";live.title="Falha ao atualizar dados. A interface preserva o último estado carregado."}}
-function render(){now();fin();hist();qual();recon();costs();if(typeof window.v12ExecRender==="function")window.v12ExecRender()}function manualLocalDate(){const d=new Date(),z=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
+function render(){now();fin();hist();qual();recon();costs();if(typeof window.v12ExecRender==="function")window.v12ExecRender();if(typeof window.crFinanceInventoryRender==="function")window.crFinanceInventoryRender()}function manualLocalDate(){const d=new Date(),z=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate())}
 const CORA_BASE_BALANCE_CENTS=3256462,CORA_BASE_BALANCE_DATE="09/10/2026",CORA_PROJECTED_KEY="cr-cora-projected-balance-cents-preview-v12",CORA_VERIFIED_KEY="cr-cora-verified-balance-cents-preview-v12",CORA_VERIFIED_DATE_KEY="cr-cora-verified-balance-date-preview-v12";
 if(localStorage.getItem(CORA_PROJECTED_KEY)===null)localStorage.setItem(CORA_PROJECTED_KEY,String(CORA_BASE_BALANCE_CENTS));
 function manualAmountCents(v){const s=String(v??"").trim().replace(/\s/g,"").replace(/\./g,"").replace(",",".");const n=Number(s);return Number.isFinite(n)?Math.round(n*100):0}
@@ -3164,4 +3181,54 @@ d.append(s,p);panel.insertAdjacentElement("beforebegin",d);
 }
 })();</script>
 
+
+<script id="cr-finance-v12-inventory-readonly">
+(function(){
+ "use strict";
+ function node(tag,text){const el=document.createElement(tag);if(text!=null)el.textContent=String(text);return el}
+ function amount(v){return Number.isSafeInteger(v)?new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(v/100):"a conferir"}
+ function render(){
+  const host=document.getElementById("cr-finance-inventory-list");
+  const sum=document.getElementById("cr-finance-inventory-summary");
+  if(!host||!sum)return;
+  host.replaceChildren();
+  const report=typeof S!=="undefined"&&S.years&&S.years[2026]&&S.years[2026].work_inventory;
+  if(!report||!Array.isArray(report.cards)){sum.textContent="Inventário não disponível nesta API; não alterar lançamentos nem presumir ausência de cards.";return}
+  sum.textContent="Trello: "+report.scanned_cards+" cards verificados; "+report.indexed_cards+" inventariados; "+report.physically_archived_cards+" arquivados fisicamente (fora os auxiliares); "+report.archive_list_cards+" na lista Arquivados; "+report.provisional_cards+" aptos a leitura preliminar. Fonte: "+new Date(report.read_at).toLocaleString("pt-BR")+".";
+  const filter=document.getElementById("cr-finance-inventory-filter")?.value||"all";
+  const q=(document.getElementById("cr-finance-inventory-search")?.value||"").toLocaleLowerCase("pt-BR").trim();
+  let cards=report.cards.filter(x=>{
+   if(filter==="archived"&&x.card_state==="OPEN")return false;
+   if(filter==="active"&&x.card_state!=="OPEN")return false;
+   if(filter==="duplicates"&&!(x.same_work_code_count>1))return false;
+   return !q||[x.title,x.work_code,x.source_list,x.archive_reason].join(" ").toLocaleLowerCase("pt-BR").includes(q);
+  });
+  cards.sort((a,b)=>(a.card_state==="OPEN"?1:0)-(b.card_state==="OPEN"?1:0)||String(b.last_activity||"").localeCompare(String(a.last_activity||"")));
+  const visible=cards.slice(0,120);
+  if(!visible.length){host.appendChild(node("p","Nenhum card corresponde ao filtro."));return}
+  for(const x of visible){
+   const div=node("div");div.className="r";div.style.display="block";div.style.padding="10px 0";
+   const h=node("strong",(x.work_code?x.work_code+" · ":"")+(x.title||"Card sem título"));div.appendChild(h);
+   const state=x.card_state==="ARCHIVED"?"ARQUIVADO":x.card_state==="IN_ARCHIVE_LIST"?"LISTA ARQUIVADOS":"ATIVO";
+   const tail="Estado: "+state+" | Lista: "+(x.source_list||"não informada")
+    +(x.archive_reason?" | Classificação: "+x.archive_reason:"")+(x.archive_reason_detail?" | Motivo informado: "+x.archive_reason_detail:"")
+    +(x.same_work_code_count>1?" | Código em "+x.same_work_code_count+" cards (verificar aditivo/duplicidade)":"");
+   const note=node("div",tail);note.className="small muted";div.appendChild(note);
+   if(x.provisional_only&&x.provisional){
+    const p=x.provisional;
+    const info=node("div","Pré-contabilização informativa: fechado "+amount(p.gross_cents)+", custos "+amount(p.cost_cents)+", saldo calculado "+amount(p.profit_cents)+" · NÃO confirmado pela Cora.");
+    info.className="small muted";div.appendChild(info);
+   }
+   if(/^https:\/\/trello\.com\/c\//.test(String(x.trello_url||""))){
+    const a=node("a","Abrir card original no Trello");a.href=x.trello_url;a.target="_blank";a.rel="noopener noreferrer";a.className="trellobtn";div.appendChild(a);
+   }
+   host.appendChild(div);
+  }
+  if(cards.length>visible.length)host.appendChild(node("div","Mostrando "+visible.length+" de "+cards.length+" cards filtrados."));
+ }
+ window.crFinanceInventoryRender=render;
+ document.getElementById("cr-finance-inventory-search")?.addEventListener("input",render);
+ document.getElementById("cr-finance-inventory-filter")?.addEventListener("change",render);
+})();
+</script>
 </body></html>

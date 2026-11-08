@@ -102,6 +102,8 @@ jobs:
           echo 'Financeiro V12 frozen HTML checked; no financial writes or new services.'
       - name: Prove Financeiro V12 protected close-work, without writes
         run: node --test audits/finance-v12-close-work-restore.test.cjs
+      - name: Verify Financeiro V12 archived-card inventory without financial writes
+        run: node --test audits/v12-card-inventory-readonly-20261108.test.cjs
       - name: Verify homologated HTML is byte-identical
         shell: bash
         run: |
