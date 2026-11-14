@@ -28,6 +28,7 @@ function setTab(tab,store=true){
  document.querySelectorAll("[data-tab]").forEach(b=>{if(b.dataset.tab===tab)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
  $("orcaPanel").hidden=tab!=="orca";
  $("flowPanel").hidden=tab==="orca";
+ if(tab==="orca"&&store)refreshEligibleCases();
  if(tab!=="orca"){
   const frame=$("flowFrame"),url=BASE+ROUTES[tab];
   if(frame.dataset.current!==url||(tab==="f02"&&runtime.f02Dirty)){frame.src=url;frame.dataset.current=url;runtime.f02Dirty=false;}
@@ -69,6 +70,23 @@ function budgetItems(win){
  if(!rows.length)throw Error("Nenhum serviço ou material estruturado disponível.");
  return {rows,text,labor:round(rows.filter(x=>x.section==="SERVIÇOS").reduce((s,x)=>s+x.total,0)),materials:round(rows.filter(x=>x.section==="MATERIAIS").reduce((s,x)=>s+x.total,0))};
 }
+function showCaseEvidence(h){
+ const box=$("caseEvidence");if(!box)return;
+ const state=h.state||{}, sources=[state.evidence,state.f00?.files,state.f00Files,state.integration?.f00Files,state.f00?.evidence];
+ const files=sources.find(x=>Array.isArray(x))||[];
+ const safe=files.filter(x=>x&&typeof x==="object");
+ box.replaceChildren();
+ const title=document.createElement("strong");title.textContent="Evidências vinculadas: "+safe.length;box.append(title);
+ if(!safe.length){box.append(document.createTextNode(" • Sem metadados de anexos nesta transferência. Conferir F00/F01."));return;}
+ const list=document.createElement("ul");
+ for(const f of safe.slice(0,30)){
+  const li=document.createElement("li");
+  li.textContent=String(f.filename||f.name||"Arquivo").slice(0,110)+" • "+String(f.content_type||f.mime_type||"tipo não informado").slice(0,70);
+  list.append(li);
+ }
+ box.append(list);
+ box.append(document.createTextNode("Arquivos associados ao chamado; visualização e inclusão no PDF ainda exigem transferência autorizada. Nenhum arquivo foi copiado."));
+}
 function importSource(h){
  const state=h.state||{},items=Array.isArray(state.items)?state.items:Array.isArray(state.services)?state.services:[];
  const segments=[
@@ -82,6 +100,34 @@ function importSource(h){
  "REGRA: levantar apenas materiais, quantidades e serviços do escopo. Distinguir fato observado, relato e hipótese. Não inventar medidas, preços publicados ou condições de acesso."
  ];
  const full=segments.filter(x=>x.trim().length>9).join("\n");if(full.length>3300)throw Error("O contexto ultrapassa o limite de entrada da R15. Resuma o relato técnico conscientemente antes de importar: transferência automática parcial foi bloqueada.");return full;
+}
+async function refreshEligibleCases(){
+ const select=$("eligibleCases");
+ if(!select)return;
+ select.replaceChildren(new Option("Consultando fila F02...",""));
+ try{
+  const list=await api("list",{phase:"F02"});
+  const cases=(list.cases||[]).filter(x=>x.token&&x.case_number);
+  select.replaceChildren(new Option(cases.length?"Selecione um chamado qualificado":"Nenhum chamado qualificado no F02",""));
+  const seen=new Set();
+  for(const c of cases){
+   const key=normalizeCase(c.case_number);
+   if(seen.has(key)){
+    // Duplicate case numbers must remain blocked, never silently select one.
+    for(const opt of select.options){if(normalizeCase(opt.value)===key)opt.disabled=true;}
+    continue;
+   }
+   seen.add(key);
+   select.add(new Option(c.case_number+" • "+String(c.client||"Cliente"),c.case_number));
+  }
+  notice(cases.length?"Fila F02 sincronizada: "+cases.length+" chamado(s) elegível(is).":"Nenhum chamado chegou à fase F02. Conclua a passagem pelo F00 e F01 sem ignorar pendências.");
+  // Autoload only when exactly one distinct valid handoff is present and no
+  // other case or draft is open; never pick an arbitrary case from a busy queue.
+  if(cases.length===1&&!runtime.case&&runtime.loaded&&!$("caseNumber").value.trim()){
+    $("caseNumber").value=cases[0].case_number;
+    await loadCase();
+  }
+ }catch(e){select.replaceChildren(new Option("Fila indisponível; tente novamente",""));notice("Falha ao consultar fila F02: "+String(e.message||e),true)}
 }
 async function loadCase(){
  if(runtime.saving){notice("Aguarde o salvamento terminar.",true);return}
@@ -120,6 +166,7 @@ async function loadCase(){
   win.document.getElementById("priceStatus").textContent="Contexto carregado. Gere com IA e precifique antes de salvar.";
   $("confirmReview").checked=false;$("confirmReplace").checked=false;
   runtime.case=h;runtime.budgetRevision=h.revision??null;
+  showCaseEvidence(h);
   $("selectedCase").textContent="F02 conectado • "+h.case_number+" • "+String(h.state?.client||"Cliente");
   notice("Contexto F00/F01/F02 carregado na R15. Agora gere com IA e revise quantidades, preços, escopo, fotos e PDFs. Nenhum rascunho foi gravado.");
  }catch(e){notice("Não foi possível carregar: "+String(e.message||e),true)}
@@ -164,17 +211,21 @@ async function saveDraft(){
 }
 function reset(){
  runtime.case=null;runtime.budgetRevision=null;$("selectedCase").textContent="Nenhum caso vinculado";
+ $("caseEvidence").textContent="Anexos: aguardando chamado qualificado.";
  $("confirmReview").checked=false;$("confirmReplace").checked=false;
  notice("Vínculo local desligado. Nenhuma ação foi aplicada ao banco.");
 }
 $("navigation").addEventListener("click",e=>{const tab=e.target.closest("[data-tab]")?.dataset.tab;if(tab){setTab(tab);if(tab==="f04")loadLinkedF04();}});
 $("goBack").addEventListener("click",()=>setTab(runtime.history.pop()||"app",false));
 $("loadCase").addEventListener("click",loadCase);
+$("refreshCases").addEventListener("click",refreshEligibleCases);
+$("eligibleCases").addEventListener("change",()=>{const v=$("eligibleCases").value;if(v){$("caseNumber").value=v;loadCase();}});
 $("resetCase").addEventListener("click",reset);
 $("saveDraft").addEventListener("click",saveDraft);
 $("openOfficialF02").addEventListener("click",()=>setTab("f02"));
 $("caseNumber").addEventListener("keydown",e=>{if(e.key==="Enter")loadCase()});
-$("orcaFrame").addEventListener("load",()=>{runtime.loaded=true;notice("Motor R15 homologado carregado. Informe um número de chamado F02 para conectar.")});
+$("orcaFrame").addEventListener("load",()=>{runtime.loaded=true;notice("Motor R15 carregado. Consultando a fila F02.");refreshEligibleCases();});
 setTab("orca",false);
+refreshEligibleCases();
 window.CRBridgeV1={money,round,makePayload,importSource,showReviewWarnings,budgetItems}; // Testes puros, sem token/cache.
 })();
