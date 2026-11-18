@@ -3342,12 +3342,24 @@ function kind(desc){
  const d=norm(desc);
  return /\bapoios?\b|\bdiarias?\b/.test(d)?"APOIO":/\bacertos?\b|\brateios?\b|\bdistribuicao\b|\blucro\b/.test(d)?"ACERTO":/\bretiradas?\b|\bsaques?\b/.test(d)?"RETIRADA":"OUTRO";
 }
+
+function bankPerson(x){return person(x.annotation_beneficiary||x.description_original)}
+function bankKind(x){
+ const revision=norm(x.annotation_revision_purpose);
+ if(revision.includes("retirada de lucro")||revision.includes("distribuicao aos socios"))return "ACERTO";
+ const original=kind(x.description_original);
+ if(original!=="OUTRO")return original;
+ const label=norm(x.annotation_beneficiary);
+ if(/\bacertos?\b|\brateios?\b/.test(label))return "ACERTO";
+ if(/\bapoios?\b|\bdiarias?\b/.test(label))return "APOIO";
+ return kind(x.annotation_purpose);
+}
 const isNamed=p=>persons.some(x=>x[0]===p);
 const pname=p=>persons.find(x=>x[0]===p)?.[1]||(p==="alias"?"Apelido a conferir":p==="multiple"?"Múltiplos nomes":"Não identificado");
 function bank(){
  const ids=new Set();
  return datasets().flatMap(d=>(d.bank_items||[]).filter(x=>{const id=String(x.source_id||"");if(!id||ids.has(id))return false;ids.add(id);return true})
- .map(x=>({...x,amount_centavos:amt(x.amount_centavos),person:person(x.description_original),kind:kind(x.description_original)})));
+ .map(x=>({...x,amount_centavos:amt(x.amount_centavos),person:bankPerson(x),kind:bankKind(x)})));
 }
 function support(){
  const ids=new Set();
@@ -3367,11 +3379,11 @@ function highlight(){
  const out=el("cr-v12-bank-highlight");if(!out)return;
  const y=Number(typeof S==="object"?S.fy:2026),m=Number(typeof S==="object"?S.fm:0),d=s.cache[y];
  if(!d){out.innerHTML='<span class="muted">Aguardando extrato Cora de '+y+'. Consulte o módulo bancário acima.</span>';return}
- const all=(d.bank_items||[]).filter(x=>!m||Number(String(x.activity_date||"").slice(5,7))===m).map(x=>({...x,person:person(x.description_original),kind:kind(x.description_original)}));
+ const all=(d.bank_items||[]).filter(x=>!m||Number(String(x.activity_date||"").slice(5,7))===m).map(x=>({...x,person:bankPerson(x),kind:bankKind(x)}));
  const ac=all.filter(x=>x.kind==="ACERTO"&&isNamed(x.person));
  out.innerHTML=persons.map(([key,name])=>{const a=ac.filter(x=>x.person===key);
- return '<div class="person"><div class="r"><span><b>'+esc(name)+'</b><br><small>'+a.length+' saída(s) bancária(s) identificada(s) na descrição</small></span><b>'+(a.length?money(sum(a)):"A conferir")+'</b></div></div>'
- }).join("")+'<div class="small muted">Somente transferências descritas como acerto/rateio e com nome individual reconhecido. A identificação definitiva exige comprovante e favorecido; não substitui o Trello.</div>';
+ return '<div class="person"><div class="r"><span><b>'+esc(name)+'</b><br><small>'+a.length+' saída(s) identificada(s) no Cora / conciliação</small></span><b>'+(a.length?money(sum(a)):"A conferir")+'</b></div></div>'
+ }).join("")+'<div class="small muted">Transferências identificadas pela descrição ou por anotação bancária retificada, com referência da operação. Não inclui valores declarados sem PIX correspondente.</div>';
 }
 function render(){
  if(datasets().length!==years().length)return;
@@ -3390,16 +3402,16 @@ function render(){
  el("cr-v12-bank-people").innerHTML=persons.map(([key,name])=>{
   const a=named.filter(x=>x.person===key);
   const line=(type,title)=>{const x=a.filter(v=>v.kind===type);return '<div><span>'+title+'</span><strong>'+(x.length?money(sum(x)):"A conferir")+'</strong></div>'};
-  return '<div class="crbank-person"><b>'+esc(name)+'</b>'+line("ACERTO","Acertos")+line("APOIO","Apoios / diárias")+line("RETIRADA","Retiradas / saques")+line("OUTRO","Outras saídas")+'<small>'+a.length+' movimentação(ões) identificada(s) pela descrição</small></div>';
+  return '<div class="crbank-person"><b>'+esc(name)+'</b>'+line("ACERTO","Acertos")+line("APOIO","Apoios / diárias")+line("RETIRADA","Retiradas / saques")+line("OUTRO","Outras saídas")+'<small>'+a.length+' movimentação(ões) identificada(s) pelo extrato / conciliação</small></div>';
  }).join("");
  const hlist=datasets().flatMap(x=>x.bank_history||[]),bfull=bank();
  const check=!s.month&&hlist.length?(years().reduce((n,y)=>n+amt(hlist.find(x=>Number(x.yr)===y)?.amount_cents),0)===sum(bfull)?"Resumo Cora confere com o total das linhas.":"ALERTA: resumo bancário difere das linhas; conferir sincronização."):"";
  el("cr-v12-bank-warning").textContent="Atribuição conservadora: "+unnamed.filter(x=>x.person==="alias"||x.person==="multiple").length+" lançamentos com apelido ou múltiplos nomes exigem conferência. Saídas sem beneficiário individual reconhecido podem ser fornecedores e outras despesas. "+check+" Os "+sup.length+" apoios Trello não são somados ao extrato Cora.";
  const rows=visible(),pages=Math.max(1,Math.ceil(rows.length/120));s.page=Math.max(1,Math.min(s.page,pages));
  const part=rows.slice((s.page-1)*120,s.page*120);
- el("cr-v12-bank-head").innerHTML=s.mode==="bank"?"<tr><th>Data</th><th>Valor debitado</th><th>Natureza</th><th>Nome na descrição</th><th>Descrição Cora</th><th>ID da transação</th></tr>":"<tr><th>Data</th><th>Valor declarado</th><th>Beneficiário</th><th>Obra</th><th>Descrição do apoio</th><th>Fonte Trello</th></tr>";
+ el("cr-v12-bank-head").innerHTML=s.mode==="bank"?"<tr><th>Data</th><th>Valor debitado</th><th>Natureza</th><th>Beneficiário identificado</th><th>Descrição Cora e conciliação</th><th>ID da transação</th></tr>":"<tr><th>Data</th><th>Valor declarado</th><th>Beneficiário</th><th>Obra</th><th>Descrição do apoio</th><th>Fonte Trello</th></tr>";
  el("cr-v12-bank-lines").innerHTML=part.length?part.map(x=>s.mode==="bank"?
-  '<tr><td>'+esc(x.activity_date)+'</td><td><b>'+money(x.amount_centavos)+'</b></td><td>'+esc(x.kind)+'</td><td>'+esc(pname(x.person))+'</td><td>'+esc(x.description_original||"Sem descrição")+'</td><td>'+esc(x.source_id)+'</td></tr>':
+  '<tr><td>'+esc(x.activity_date)+'</td><td><b>'+money(x.amount_centavos)+'</b></td><td>'+esc(x.kind)+'</td><td>'+esc(pname(x.person))+'</td><td>'+esc(x.description_original||"Sem descrição bancária")+(x.annotation_beneficiary?'<br><small>Conciliação '+esc(x.annotation_basis||"registrada")+': '+esc(x.annotation_beneficiary)+'</small>':'')+'</td><td>'+esc(x.source_id)+'</td></tr>':
   '<tr><td>'+esc(x.activity_date)+'</td><td><b>'+money(x.amount_centavos)+'</b></td><td>'+esc(x.beneficiary)+'</td><td>'+esc(x.work_code)+'</td><td>'+esc(x.description_original)+'</td><td>'+(String(x.source_url||"").startsWith("https://trello.com/")?'<a href="'+esc(x.source_url)+'" target="_blank" rel="noopener noreferrer">Abrir fonte</a>':esc(x.source_file))+'</td></tr>'
  ).join(""):'<tr><td colspan="6">Sem linhas para os filtros selecionados.</td></tr>';
  el("cr-v12-bank-count").textContent=rows.length+" linhas filtradas • página "+s.page+"/"+pages+" • "+(s.mode==="bank"?"Cora":"Trello sem soma ao Cora");
