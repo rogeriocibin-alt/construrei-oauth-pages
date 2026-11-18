@@ -611,8 +611,8 @@ body{background:var(--v12-bg)}
 <section class="panel" id="cr-financial-trello-declared-2026" style="margin:14px 0;border-top:4px solid #c6a043" aria-labelledby="cr-financial-trello-declared-title">
  <div style="display:flex;gap:12px;align-items:start;justify-content:space-between;flex-wrap:wrap">
   <div><div class="v12cap-eyebrow">FONTE FINANCEIRA · GESTÃO FINANCEIRA / TRELLO</div>
-   <h3 id="cr-financial-trello-declared-title">Rateios e retiradas declarados — 2026</h3>
-   <p class="small muted">Janeiro a setembro, conforme cartão anual financeiro. São <strong>valores informados nos acertos</strong>, não transferências bancárias confirmadas. Não confundir com o histórico Cora abaixo.</p>
+   <h3 id="cr-financial-trello-declared-title">Rateios declarados — janeiro a novembro/2026</h3>
+   <p class="small muted">Janeiro a novembro, conforme cartão anual financeiro, com detalhamento JAN–SET, outubro e novembro. São <strong>valores informados nos acertos</strong>, não transferências bancárias confirmadas. Não confundir com o histórico Cora abaixo.</p>
   </div>
   <button type="button" class="v11button" id="cr-financial-trello-refresh">Atualizar diretamente do Trello</button>
  </div>
@@ -749,7 +749,7 @@ body{background:var(--v12-bg)}
   <div id="actable"></div>
   <div class="grid2" style="margin-top:12px"><div><h3>Histórico de snapshots</h3><div class="small muted">Fechamentos congelados ficam preservados sem alterar o Acerto Vivo.</div><div id="achistory" class="achistory" style="margin-top:8px"></div></div><div><h3>Referências históricas preservadas</h3><div class="rows"><div class="r"><span>Modelo / fechamento</span><b>06/08</b></div><div class="r"><span>Modelo / fechamento</span><b>18/09</b></div><div class="r"><span>Regra atual</span><b>20 / 28 / 28 / 14 / 10</b></div></div></div></div>
 </div>
-<div id="finperiod" class="periodtitle"></div><div id="yc" class="grid3"></div><div class="panel"><h3>Acertos e rateios históricos</h3><div id="months" class="months"></div><div id="fk" class="kpis"></div><div class="grid2"><div><h3>Acertos pagos identificados no Cora <small style="font-size:12px;color:#98730f">· parcial</small></h3><p class="small muted">A distribuição padrão do lucro líquido é Fabrício 20%, Éder 28%, Rogério 28%, Gabrielly 14% e Capital de Giro 10%. Estes percentuais não comprovam transferências. Os totais abaixo mostram somente PIX identificados no extrato, não o rateio total devido.</p><div id="cr-v12-bank-audit-alert" role="status" style="padding:10px;border:1px solid #e8ca86;background:#fff8e4;border-radius:9px;margin:10px 0;font-size:12px">Consultando lançamentos não identificados do Cora.</div><div id="cr-v12-bank-highlight" class="rows"><span class="muted">Entre no Dashboard para consultar os pagamentos bancários.</span></div><h3 style="margin-top:16px">Apoios e diárias registrados em obras · 2026</h3><p class="small muted">Fonte: planilha de auditoria de 18/11, deduplicada. Estes lançamentos não são novos custos nem comprovantes de PIX.</p><div id="cr-v12-support-highlight" class="rows"><span class="muted">Aguardando leitura da auditoria de apoios.</span></div><p><a href="#cr-v12-bank-real" style="font-size:12px;font-weight:700;color:#175b8a">Ver linhas, filtros e referências das obras</a></p><details style="margin-top:14px"><summary style="cursor:pointer;font-weight:800">Rateios por obra no Trello (parcial; não são saques)</summary><h3 id="rrtitle">Rateios operacionais do ano</h3><p class="small muted">Este subtotal vem de obras classificadas no Trello e não comprova transferência, quitação ou saque Cora. Confira separadamente os acertos bancários acima.</p><div id="rr" class="rows"></div></details></div><div><h3>Linha do tempo dos modelos</h3><div id="tl" class="rows"></div></div></div></div></section>
+<div id="finperiod" class="periodtitle"></div><div id="yc" class="grid3"></div><div class="panel"><h3>Acertos e rateios históricos</h3><div id="months" class="months"></div><div id="fk" class="kpis"></div><section aria-labelledby="cr-v12-declared-highlight-title" style="border:1px solid #d5bb69;background:#fffaf0;border-radius:12px;padding:14px;margin:12px 0 22px"><h3 id="cr-v12-declared-highlight-title">Rateios declarados JAN–NOV/2026 · histórico Trello</h3><p class="small muted">Fabrício tem direito a 20% do lucro conforme os fechamentos registrados. Aqui aparece o histórico declarado (inclusive outubro e novembro), separado dos PIX identificados no Cora. As parcelas de R$ 150 de apoio têm referência própria abaixo.</p><div id="cr-v12-declared-highlight" class="rows"><span class="muted">Aguardando o resumo financeiro anual do Trello.</span></div><p id="cr-v12-declared-highlight-caveat" class="small muted">Não interpretar os rateios declarados como comprovantes de quitação bancária.</p></section><div class="grid2"><div><h3>Acertos pagos identificados no Cora <small style="font-size:12px;color:#98730f">· parcial</small></h3><p class="small muted">A distribuição padrão do lucro líquido é Fabrício 20%, Éder 28%, Rogério 28%, Gabrielly 14% e Capital de Giro 10%. Estes percentuais não comprovam transferências. Os totais abaixo mostram somente PIX identificados no extrato, não o rateio total devido.</p><div id="cr-v12-bank-audit-alert" role="status" style="padding:10px;border:1px solid #e8ca86;background:#fff8e4;border-radius:9px;margin:10px 0;font-size:12px">Consultando lançamentos não identificados do Cora.</div><div id="cr-v12-bank-highlight" class="rows"><span class="muted">Entre no Dashboard para consultar os pagamentos bancários.</span></div><h3 style="margin-top:16px">Apoios e diárias registrados em obras · 2026</h3><p class="small muted">Fonte: planilha de auditoria de 18/11, deduplicada. Estes lançamentos não são novos custos nem comprovantes de PIX.</p><div id="cr-v12-support-highlight" class="rows"><span class="muted">Aguardando leitura da auditoria de apoios.</span></div><p><a href="#cr-v12-bank-real" style="font-size:12px;font-weight:700;color:#175b8a">Ver linhas, filtros e referências das obras</a></p><details style="margin-top:14px"><summary style="cursor:pointer;font-weight:800">Rateios por obra no Trello (parcial; não são saques)</summary><h3 id="rrtitle">Rateios operacionais do ano</h3><p class="small muted">Este subtotal vem de obras classificadas no Trello e não comprova transferência, quitação ou saque Cora. Confira separadamente os acertos bancários acima.</p><div id="rr" class="rows"></div></details></div><div><h3>Linha do tempo dos modelos</h3><div id="tl" class="rows"></div></div></div></div></section>
 <section id="cora" class="section on"><p role="status" style="background:#fff7df;color:#785618;border:1px solid #e1c365;border-radius:10px;padding:12px;font-weight:700">V12 · OPERAÇÃO CONTROLADA — Anotações informativas de saídas e recebimentos no extrato Cora, sem criar custos, receitas ou alterar o Trello. Lançamentos e conciliações financeiras exigem login da Diretoria, prévia, confirmação explícita e validação do servidor.</p><div id="cr-central-actions" role="group" aria-label="Operações financeiras da Central"><button type="button" id="cr-op-bank" aria-pressed="false">Extrato Cora / Aprovisionar</button><button type="button" id="cr-op-manual" aria-pressed="true">Lançar manualmente (obra)</button><button type="button" id="cr-op-capital" aria-pressed="false">Capital de Giro</button><button type="button" id="cr-op-close" aria-pressed="false">Fechar Obra</button></div><div id="cr-central-hint" role="status">Lançamentos manuais antecipados continuam disponíveis, mesmo sem transação no Cora. Capital de Giro reutiliza o componente V12.</div><div id="cr-central-bank-slot" hidden><div class="panel" id="cr-aprovisionamento" style="margin:12px 0">
 <h2 style="margin:0 0 8px;color:#0b3967">Central de operações · Cora, Trello e Capital de Giro</h2>
 <p class="small">Selecione uma movimentação real e escolha a operação: custo, receita, distribuição por obras, capital de giro ou conciliação. O lançamento manual continua disponível. Todos os destinos exigem validação e confirmação.</p>
@@ -2706,6 +2706,32 @@ btn.addEventListener("click",search);
 window.addEventListener("cr:ap:confirmed",()=>{if(!busy)search()});
 })();</script>
 
+<script id="cr-v12-declared-highlight-live">
+(function(){
+ const out=document.getElementById("cr-v12-declared-highlight"),hint=document.getElementById("cr-v12-declared-highlight-caveat");if(!out)return;
+ const money=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(n/100);
+ function render(){
+  const a=window.crV12Annual2026,by=window.crV12AuditSupportTotals2026?.by_person?.Fabricio;
+  if(!a?.declared_by_person_cents){out.textContent="Aguardando os rateios declarados JAN–NOV/2026 do Trello. Os PIX Cora abaixo são parciais.";return}
+  out.replaceChildren();
+  const people=[["Fabrício","fabricio"],["Éder","eder"],["Rogério","rogerio"],["Gabrielly","gabrielly"],["Ágata (histórico)","agata_historical"]];
+  for(const [name,key] of people){
+   const value=a.declared_by_person_cents[key];if(!Number.isSafeInteger(value))continue;
+   const row=document.createElement("div");row.className="person";
+   const r=document.createElement("div");r.className="r";const label=document.createElement("span");label.textContent=name+" · participação declarada JAN–NOV";const amount=document.createElement("b");amount.textContent=money(value);r.append(label,amount);row.append(r);
+   if(key==="fabricio"&&Number.isSafeInteger(by?.half_150_cents)){
+    const detail=document.createElement("div");detail.className="r";const sub=document.createElement("span");sub.textContent="Parcela 50% de "+by.eligible_150_count+" apoios de R$ 150 (R$ 75/unidade)";const val=document.createElement("b");val.textContent=money(by.half_150_cents);detail.append(sub,val);row.append(detail);
+    const total=document.createElement("div");total.className="r";const tl=document.createElement("strong");tl.textContent="Total de referências (não é PIX pago)";const tv=document.createElement("strong");tv.textContent=money(value+by.half_150_cents);total.append(tl,tv);row.append(total);
+   }
+   out.append(row);
+  }
+  if(hint)hint.textContent="Fonte Trello: "+(a.coverage||"período informado")+"/2026, rateios declarados. Apoios: auditoria operacional de 18/11, sem baixa bancária presumida. O valor comprovadamente pago depende de identificação dos PIX no Cora.";
+ }
+ window.addEventListener("cr-v12-annual-2026-data",render);
+ window.addEventListener("cr-v12-audit-support-loaded",render);
+ render();
+})();
+</script>
 <script id="cr-v12-trello-financial-withdrawals-live">
 (function(){
 const BASE="https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-v12-financial-settlements-trello-20261027?year=2026";
@@ -2713,12 +2739,12 @@ const status=document.getElementById("cr-financial-trello-status"),values=docume
 if(!status||!values||!button)return;
 let lastOK=0,busy=false;
 const fmt=n=>new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(n/100);
-function line(label,value){
+function line(label,value,detail){
 const div=document.createElement("div");
 div.style.cssText="background:#f5f9fd;border:1px solid #c5d5e4;border-radius:11px;padding:12px";
 const small=document.createElement("small");small.textContent=label;small.style.cssText="display:block;color:#355d79;font-weight:700";
 const strong=document.createElement("strong");strong.textContent=fmt(value);strong.style.cssText="display:block;margin-top:8px;font-size:19px;color:#143552";
-div.append(small,strong);values.append(div);
+div.append(small,strong);if(detail){const sub=document.createElement("small");sub.style.cssText="display:block;margin-top:5px;color:#5c7489;line-height:1.4";sub.textContent=detail;div.append(sub)}values.append(div);
 }
 window.crFinancialDeclaredRefresh=async function(force){
 const token=sessionStorage.getItem("crv2")||"";
@@ -2735,12 +2761,14 @@ try{
  for(const [key,label] of Object.entries(labels)){
    const v=j.declared_by_person_cents?.[key];
    if(!Number.isSafeInteger(v)||v<0)throw Error("INVALID_TRELLO_TOTAL_"+key);
-   line(label,v);
+   const p=j.declared_period_breakdown_cents;
+   const detail=p&&["jan_set","oct","nov"].every(k=>Number.isSafeInteger(p[k]?.[key]))?"JAN–SET "+fmt(p.jan_set[key])+" · OUT "+fmt(p.oct[key])+" · NOV "+fmt(p.nov[key]):null;
+   line(label,v,detail);
  }
  if(!Number.isSafeInteger(j.capital_declared_cents)||!Number.isSafeInteger(j.declared_minus_profit_cents))throw Error("INVALID_CAPITAL_OR_DIFF");
  line("Capital de Giro (rateio declarado)",j.capital_declared_cents);
- caveat.textContent="Bruto informado: "+fmt(j.gross_cents)+" · Custos informados: "+fmt(j.cost_cents)+" · Lucro declarado: "+fmt(j.declared_profit_cents)+". Atenção: parcelas/retiradas declaradas excedem o lucro histórico em "+fmt(j.declared_minus_profit_cents)+" (origem histórica em análise). Nenhuma baixa bancária, custo ou ajuste de rateio foi gerado.";
- status.textContent="Fonte Trello · JAN–SET/2026 · lido em "+new Date().toLocaleString("pt-BR")+". Valores do resumo financeiro, não saques Cora comprovados.";
+ caveat.textContent="Bruto informado: "+fmt(j.gross_cents)+" · Custos informados: "+fmt(j.cost_cents)+" · Lucro declarado: "+fmt(j.declared_profit_cents)+". Diferença entre soma dos rateios/CG e lucro declarado: "+fmt(j.declared_minus_profit_cents)+" (fechamentos históricos a conferir). Nenhuma baixa bancária, custo ou ajuste de rateio foi gerado.";
+ status.textContent="Fonte Trello · "+(j.coverage||"período informado")+"/2026 · lido em "+new Date().toLocaleString("pt-BR")+". Rateios declarados, não saques Cora comprovados.";
  window.crV12Annual2026=j;window.dispatchEvent(new Event("cr-v12-annual-2026-data"));lastOK=Date.now();
 }catch(e){status.textContent="Resumo financeiro Trello não confirmado agora: "+String(e?.message||e)+". Mantidos apenas valores de consultas previamente verificadas."; }
 finally{busy=false;button.disabled=false}
@@ -2772,9 +2800,10 @@ if((sessionStorage.getItem("crv2")||"").length>=12)window.crFinancialDeclaredRef
   const title=document.createElement("strong");title.style.cssText="display:block;color:#17466c;font-size:15px";title.textContent=name+" · "+sharePct;
   root.append(title);
   const values=[
-    ["Rateio Trello JAN–SET/2026",declared],
+    ["Rateio Trello JAN–NOV/2026 (declarado)",declared],
     ["Apoios/diárias Trello · estágio 2026",workSupport],
-    ...(name.startsWith("Éder")||name.startsWith("Fabrício")?[["Apoios · planilha 18/11 (não somar)",window.crV12AuditSupportTotals2026?.by_person?.[name.startsWith("Éder")?"Eder":"Fabricio"]?.total_cents??null]]:[]),
+    ...(name.startsWith("Éder")||name.startsWith("Fabrício")?[["Apoios · planilha 18/11, brutos (fonte separada)",window.crV12AuditSupportTotals2026?.by_person?.[name.startsWith("Éder")?"Eder":"Fabricio"]?.total_cents??null]]:[]),
+    ...(name.startsWith("Fabrício")?[[ "Parcela Fabrício de 50% por apoio de R$ 150",window.crV12AuditSupportTotals2026?.by_person?.Fabricio?.half_150_cents??null ],[ "Rateio + parcela de apoios (referência, não PIX)",Number.isSafeInteger(declared)&&Number.isSafeInteger(window.crV12AuditSupportTotals2026?.by_person?.Fabricio?.half_150_cents)?declared+window.crV12AuditSupportTotals2026.by_person.Fabricio.half_150_cents:null ]]:[]),
     ["Saídas Cora anotadas (à parte)",bank]
   ];
   for(const [caption,amount] of values){
@@ -2800,7 +2829,7 @@ if((sessionStorage.getItem("crv2")||"").length>=12)window.crFinancialDeclaredRef
   const supp=s.by_person||{},bn=s.bank_annotations_out_by_beneficiary_cents||{};
   const value=n=>supp[n]?.total_cents??null;
   tile("Éder","rateio 28%",shares.eder??null,value("Éder"),bankOf(bn,["eder","éder"]), "Rateio equivalente ao de Rogério; apoio não é comissão.");
-  tile("Fabrício","rateio 20%",shares.fabricio??null,value("Fabrício"),bankOf(bn,["fabricio","fabrício"]), "Renda por execução registrada como custo da obra.");
+  tile("Fabrício","rateio 20%",shares.fabricio??null,value("Fabrício"),bankOf(bn,["fabricio","fabrício"]), "Apoios de R$ 150: parcela de 50% = R$ 75 por registro único; é referência de participação, não confirmação de pagamento. O custo original da obra permanece R$ 150.");
   tile("Rogério","rateio 28%",shares.rogerio??null,value("Rogério"),bankOf(bn,["rogerio","rogério"]), "Diferença de R$ 0,01 no rateio histórico Trello é arredondamento, não alteração de percentual.");
   tile("Gabrielly","rateio conforme acertos",shares.gabrielly??null,value("Gabrielly"),bankOf(bn,["gabrielly","gabi"]), "Participação histórica conforme Trello; não recalcular acertos antigos pela regra atual.");
   tile("Ágata (histórico)","rateio legado",shares.agata_historical??null,value("Ágata"),bankOf(bn,["agata","ágata"]), "Atribuição histórica; não aplicar rateio de 2026 retroativamente.");
@@ -2815,7 +2844,7 @@ if((sessionStorage.getItem("crv2")||"").length>=12)window.crFinancialDeclaredRef
   }
   const status=document.createElement("div");
   status.style.cssText="margin-top:10px;color:#996921";
-  status.textContent="Fonte operacional: "+s.totals.lines+" linhas de "+s.totals.distinct_works+" obras, importadas até "+(s.stage_snapshot_asof||"data não identificada")+"; "+s.totals.missing_amounts+" valor(es) ausente(s). Totais de rateio de JAN–SET/2026, apoios de estágio até a data indicada. Não somar Cora anotado novamente nem tratar tudo como saque comprovado.";
+  status.textContent="Fonte operacional: "+s.totals.lines+" linhas de "+s.totals.distinct_works+" obras, importadas até "+(s.stage_snapshot_asof||"data não identificada")+"; "+s.totals.missing_amounts+" valor(es) ausente(s). Totais de rateio declarados de JAN–NOV/2026, apoios de estágio até a data indicada. Não somar Cora anotado novamente nem tratar tudo como saque comprovado.";
   others.append(status);
   st.textContent="Fonte Trello (despesas operacionais importadas) · rateio e apoios separados · consulta sem gravação.";
  }
@@ -3400,10 +3429,10 @@ function highlight(){
  if(!suppOut)return;
  const rows=(s.cache[2026]?.support_items||[]).filter(x=>!x.exact_duplicate);
  if(!s.cache[2026]){suppOut.innerHTML='<span class="muted">A auditoria de apoios de 2026 ainda não foi carregada.</span>';return}
- const by={};for(const x of rows){const p=person(x.beneficiary);if(!by[p])by[p]={count:0,total_cents:0};by[p].count++;by[p].total_cents+=amt(x.amount_centavos)}
+ const by={};for(const x of rows){const p=person(x.beneficiary);if(!by[p])by[p]={count:0,total_cents:0,eligible_150_count:0,half_150_cents:0};by[p].count++;by[p].total_cents+=amt(x.amount_centavos);if(amt(x.amount_centavos)===15000){by[p].eligible_150_count++;if(p==="Fabricio")by[p].half_150_cents+=7500}}
  const names=[["Fabricio","Fabrício"],["Eder","Éder"]];
  suppOut.innerHTML=names.map(([key,name])=>{const z=by[key]||{count:0,total_cents:0};
-   return '<div class="person"><div class="r"><span><b>'+name+'</b><br><small>'+z.count+' linhas únicas de apoios/diárias em 2026 · planilha 18/11</small></span><b>'+money(z.total_cents)+'</b></div></div>';
+   return '<div class="person"><div class="r"><span><b>'+name+'</b><br><small>'+z.count+' linhas únicas de apoios/diárias em 2026 · planilha 18/11</small></span><b>'+money(z.total_cents)+'</b></div>'+(key==="Fabricio"?'<div class="r"><span>50% dos '+z.eligible_150_count+' apoios de R$ 150 · R$ 75 cada</span><b>'+money(z.half_150_cents)+'</b></div>':'')+'</div>';
  }).join("")+'<div class="small muted">Apoios declarados na planilha: não equivalem a PIX conciliados. As fontes Trello e Cora têm coberturas diferentes; não somar seus subtotais.</div>';
  const sig=rows.length+":"+sum(rows);
  if(sig!==auditSupportSignature){
