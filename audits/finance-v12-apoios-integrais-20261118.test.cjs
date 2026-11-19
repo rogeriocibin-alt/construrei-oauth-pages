@@ -13,8 +13,8 @@ test("2026: no 50 percent support rule or double-counted earnings",()=>{
 test("2026: both partners show full R$ 150 support lines separately",()=>{
   assert.match(html,/key==="Fabricio"\|\|key==="Eder"/);
   assert.match(html,/eligible_150_cents\+=15000/);
-  assert.match(html,/Apoios de R\$ 150 · auditoria 18\/11/);
-  assert.match(html,/Valores integrais da auditoria|Valores integrais\./);
+  assert.match(html,/Apoios de R\$ 150 PAGOS/);
+  assert.match(html,/Valores integrais\.|Apoios de R\$ 150 pagos/);
 });
 
 test("2026: rates remain distinct from Cora payments",()=>{
