@@ -710,6 +710,7 @@ body{background:var(--v12-bg)}
   <button class="v11button" type="button" aria-controls="cr-v12-historic-acertos" onclick="document.getElementById('cr-v12-historic-acertos')?.scrollIntoView({behavior:'smooth',block:'start'})">CONSULTAR HISTÓRICO DE ACERTOS</button>
  </div><div class="crp-period-grid"><label>Início do período<input type="date" id="crp-start"></label><label>Fim do período<input type="date" id="crp-end"></label></div>
  <div style="display:flex;flex-wrap:wrap;gap:8px">
+ <button class="v11button" type="button" style="background:#c9a14a;color:#09233d" onclick="crpPrepareCurrent()" title="Seleciona as oito obras conferidas e preenche datas; não registra o corte">Preparar corte 07/11–19/11 · 8 obras</button>
  <button class="v11button" type="button" onclick="crpPreview()">1. Pré-visualizar envio financeiro</button>
  <button class="v11button" type="button" id="crp-send" style="background:#0e694f" onclick="crpSend()" disabled>2. Enviar para Gestão Financeira</button>
  </div>
@@ -2518,6 +2519,18 @@ if(sessionStorage.getItem("crv2"))load.click();
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();</script><script id="crp-period-send-v2">
 let CRP_LAST=null;
+function crpPrepareCurrent(){
+ const ids=["128-26","682-26","755-26","824-26","831-26","836-26","844-26","845-26"];
+ const rows=S.current?.acertos?.items;
+ if(!Array.isArray(rows)||ids.some(id=>rows.filter(x=>x.case===id).length!==1)){crpShow("Corte não preparado: confira as 8 obras em AG. ACERTO e clique em ATUALIZAR AGORA. Nenhum registro alterado.");return}
+ const selected=rows.filter(x=>ids.includes(x.case)),t=acertoTotals(selected);
+ if(t.cases!==8||t.base_cents!==2288317||t.cost_cents!==1689230||t.profit_cents!==599087||t.capital_giro_cents!==31746||t.osvaldo_cents!==28162||t.difference_cents!==0){crpShow("Valores do Trello divergem do acerto de 07/11 a 19/11. Confira os registros antes de qualquer envio; nenhum registro alterado.");return}
+ S.acertoSelected={};ids.forEach(id=>{S.acertoSelected[id]=true});
+ for(const [id,date] of [["crp-start","2026-11-07"],["crp-end","2026-11-19"],["cg-close-start","2026-11-07"],["cg-close-end","2026-11-19"]]){const el=document.getElementById(id);if(el){el.value=date;el.dispatchEvent(new Event("change",{bubbles:true}))}}
+ CRP_LAST=null;const send=document.getElementById("crp-send");if(send)send.disabled=true;
+ renderAcerto();
+ crpShow("Corte preparado SEM LANÇAMENTOS: 8 obras, base R$ 22.883,17, custos R$ 16.892,30, lucro R$ 5.990,87, Capital R$ 317,46 e Osvaldo R$ 281,62. Clique em PRÉ-VISUALIZAR para validação do servidor.");
+}
 function crpFmt(v){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(v||0)/100)}
 function crpData(){
  const start=document.getElementById("crp-start").value,end=document.getElementById("crp-end").value;
