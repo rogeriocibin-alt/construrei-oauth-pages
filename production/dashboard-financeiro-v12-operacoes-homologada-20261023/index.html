@@ -710,6 +710,7 @@ body{background:var(--v12-bg)}
   <button class="v11button" type="button" aria-controls="cr-v12-historic-acertos" onclick="document.getElementById('cr-v12-historic-acertos')?.scrollIntoView({behavior:'smooth',block:'start'})">CONSULTAR HISTÓRICO DE ACERTOS</button>
  </div><div class="crp-period-grid"><label>Início do período<input type="date" id="crp-start"></label><label>Fim do período<input type="date" id="crp-end"></label></div>
  <div style="display:flex;flex-wrap:wrap;gap:8px">
+ <button class="v11button" type="button" style="background:#075cbd;color:#fff" id="crp-select-eight" onclick="crpSelectAndPrepareApprovedNov()" title="Seleciona as oito obras aprovadas e prepara prévia sem registros financeiros">Selecionar e preparar 8 obras · 07/11–19/11</button>
  <button class="v11button" type="button" style="background:#c9a14a;color:#09233d" id="crp-prepare" onclick="crpPrepareCurrent()" title="Prepara apenas datas e obras selecionadas explicitamente, sem gravar no Trello" disabled>Preparar corte selecionado</button>
  <button class="v11button" type="button" id="crp-preview" onclick="crpPreview()" disabled>1. Pré-visualizar envio financeiro</button>
  <button class="v11button" type="button" id="crp-send" style="background:#0e694f" onclick="crpSend()" disabled>2. Enviar para Gestão Financeira</button>
@@ -2596,7 +2597,37 @@ function crpSyncControls(){
 function crpSelectionChanged(){
  CRP_PREPARED=null;CRP_LAST=null;crpSyncControls();
  const result=document.getElementById("crp-result");
- if(result)result.textContent="Selecione as datas e marque as obras na tabela. Clique em PREPARAR CORTE; a preparação não registra acertos.";
+ if(result)result.textContent="Para o corte aprovado, clique em SELECIONAR E PREPARAR 8 OBRAS. Para outro corte, marque os cartões manualmente. A preparação não registra acertos.";
+}
+
+function crpSelectAndPrepareApprovedNov(){
+ const codes=["128-26","682-26","755-26","824-26","831-26","836-26","844-26","845-26"];
+ try{
+  const rows=S.current?.acertos?.items;
+  if(!Array.isArray(rows)||!rows.length)throw Error("Os acertos ainda não foram carregados. Clique em ATUALIZAR AGORA.");
+  const groups=codes.map(code=>rows.filter(item=>item.case===code));
+  if(groups.some(g=>g.length!==1))throw Error("Obras ausentes ou duplicadas em AG. ACERTO: "+codes.filter((_,i)=>groups[i].length!==1).join(", ")+". Confira os cartões antes de continuar.");
+  const selected=groups.map(g=>g[0]),t=acertoTotals(selected);
+  const expected={
+   cases:8,base_cents:2288317,cost_cents:1689230,profit_cents:599087,
+   fabricio_cents:119818,eder_cents:167744,rogerio_cents:167744,gabi_cents:83873,
+   capital_giro_cents:31746,osvaldo_cents:28162,distributed_cents:599087,difference_cents:0
+  };
+  const mismatches=Object.entries(expected).filter(([key,value])=>Number(t[key])!==value).map(([key,value])=>key+" (esperado "+value+", atual "+t[key]+")");
+  if(mismatches.length)throw Error("Valores do Trello diferentes do corte aprovado: "+mismatches.join("; "));
+  const start=document.getElementById("crp-start"),end=document.getElementById("crp-end");
+  if(!start||!end)throw Error("Campos de período não encontrados.");
+  start.value="2026-11-07";end.value="2026-11-19";
+  S.acertoSelected={};
+  codes.forEach(code=>{S.acertoSelected[code]=true});
+  for(const el of [start,end])el.dispatchEvent(new Event("change",{bubbles:true}));
+  crpSelectionChanged();
+  renderAcerto();
+  crpPrepareCurrent();
+ }catch(e){
+  CRP_PREPARED=null;CRP_LAST=null;crpSyncControls();
+  crpShow("CORTE NÃO PREPARADO: "+String(e?.message||e)+". Nenhuma movimentação financeira executada.");
+ }
 }
 function crpPrepareCurrent(){
  try{
