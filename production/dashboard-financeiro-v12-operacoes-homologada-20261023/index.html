@@ -710,8 +710,8 @@ body{background:var(--v12-bg)}
   <button class="v11button" type="button" aria-controls="cr-v12-historic-acertos" onclick="document.getElementById('cr-v12-historic-acertos')?.scrollIntoView({behavior:'smooth',block:'start'})">CONSULTAR HISTÓRICO DE ACERTOS</button>
  </div><div class="crp-period-grid"><label>Início do período<input type="date" id="crp-start"></label><label>Fim do período<input type="date" id="crp-end"></label></div>
  <div style="display:flex;flex-wrap:wrap;gap:8px">
- <button class="v11button" type="button" style="background:#c9a14a;color:#09233d" onclick="crpPrepareCurrent()" title="Seleciona as oito obras conferidas e preenche datas; não registra o corte">Preparar corte 07/11–19/11 · 8 obras</button>
- <button class="v11button" type="button" onclick="crpPreview()">1. Pré-visualizar envio financeiro</button>
+ <button class="v11button" type="button" style="background:#c9a14a;color:#09233d" id="crp-prepare" onclick="crpPrepareCurrent()" title="Prepara apenas datas e obras selecionadas explicitamente, sem gravar no Trello" disabled>Preparar corte selecionado</button>
+ <button class="v11button" type="button" id="crp-preview" onclick="crpPreview()" disabled>1. Pré-visualizar envio financeiro</button>
  <button class="v11button" type="button" id="crp-send" style="background:#0e694f" onclick="crpSend()" disabled>2. Enviar para Gestão Financeira</button>
  </div>
  <details style="margin-top:10px;border-top:1px solid #bdd2df;padding-top:10px">
@@ -1182,8 +1182,8 @@ function acertoRecon(r){const gr=S.gcLast?.reconciliation?.rows?.find?.(x=>x.cas
 function acertoSelectedRows(){const all=acertoRows(),keys=Object.keys(S.acertoSelected).filter(k=>S.acertoSelected[k]);return keys.length?all.filter(x=>S.acertoSelected[x.case]):all}
 function acertoTotals(rows){const valid=rows.filter(x=>x.profit_cents!=null&&x.rateio);const sum=f=>valid.reduce((a,x)=>a+Number(f(x)||0),0),base=sum(x=>x.base_cents),profit=sum(x=>x.profit_cents);const t={cases:rows.length,base_cents:base,cost_cents:sum(x=>x.cost_cents),profit_cents:profit,margin_pct:base?Math.round(profit/base*10000)/100:null,fabricio_cents:sum(x=>x.rateio.fabricio_cents),eder_cents:sum(x=>x.rateio.eder_cents),rogerio_cents:sum(x=>x.rateio.rogerio_cents),gabi_cents:sum(x=>x.rateio.gabi_cents),capital_giro_cents:sum(x=>x.rateio.capital_giro_cents),osvaldo_cents:sum(x=>x.rateio.osvaldo_cents||0),support_fabricio_cents:rows.reduce((a,x)=>a+Number(x.support_cents?.["Fabrício"]||0),0),support_eder_cents:rows.reduce((a,x)=>a+Number(x.support_cents?.["Éder"]||0),0)};t.distributed_cents=t.fabricio_cents+t.eder_cents+t.rogerio_cents+t.gabi_cents+t.capital_giro_cents+t.osvaldo_cents;t.difference_cents=t.profit_cents-t.distributed_cents;return t}
 function acertoFiltered(){let a=[...acertoRows()],q=acNorm(document.getElementById("aq")?.value||""),cl=document.getElementById("aclient")?.value||"",so=document.getElementById("asort")?.value||"case";if(q)a=a.filter(x=>acNorm([x.case,x.customer,x.title].join(" ")).includes(q));if(cl)a=a.filter(x=>x.customer===cl);a.sort((x,y)=>so==="base"?Number(y.base_cents||0)-Number(x.base_cents||0):so==="profit"?Number(y.profit_cents||0)-Number(x.profit_cents||0):so==="margin"?Number(y.margin_pct||0)-Number(x.margin_pct||0):so==="div"?(acertoRecon(x).result==="DIVERGENTE"?-1:1)-(acertoRecon(y).result==="DIVERGENTE"?-1:1):String(x.case).localeCompare(String(y.case),undefined,{numeric:true}));return a}
-function acertoCheck(k,v){S.acertoSelected[k]=!!v;renderAcerto()}
-function acertoCheckAll(v){for(const x of acertoFiltered())S.acertoSelected[x.case]=!!v;renderAcerto()}
+function acertoCheck(k,v){S.acertoSelected[k]=!!v;crpSelectionChanged();renderAcerto()}
+function acertoCheckAll(v){for(const x of acertoFiltered())S.acertoSelected[x.case]=!!v;crpSelectionChanged();renderAcerto()}
 function acertoHistoryHtml(){const h=S.acertoHistory||[];if(!h.length)return '<div class="state">Nenhum snapshot novo salvo ainda. As referências históricas anteriores permanecem preservadas.</div>';return h.slice(0,12).map(x=>{const t=x.payload?.acerto?.totals||{};return '<div class="achsnap"><span><b>'+esc(x.label)+'</b><br><small>'+esc(new Date(x.created_at).toLocaleString("pt-BR"))+' · '+(t.cases??"—")+' obra(s)</small></span><b>'+brl(t.profit_cents)+'</b></div>'}).join("")}
 function renderAcerto(){const root=document.getElementById("ackpis");if(!root)return;const a=S.current?.acertos;if(!a?.ok){root.innerHTML='<div class="state warn">Acerto Vivo aguardando leitura do Trello.</div>';document.getElementById("acrateio").innerHTML="";document.getElementById("actable").innerHTML="";return}const t=a.totals||{},read=S.current?.trello?.read_at||a.generated_at,sel=Object.keys(S.acertoSelected).filter(k=>S.acertoSelected[k]).length;document.getElementById("acstatus").innerHTML='<span class="acdot"></span><b>VIVO</b><span>Atualizado '+esc(read?new Date(read).toLocaleString("pt-BR"):"agora")+'</span><span class="acsel">'+(sel?sel+" selecionada(s) para saída":"saídas usam o conjunto completo")+'</span>';root.innerHTML=[["Obras no acerto",t.cases??0],["Base considerada",brl(t.base_cents)],["Custos",brl(t.cost_cents)],["Lucro líquido",brl(t.profit_cents)],["Margem",pct(t.margin_pct)],["Diferença",brl(t.difference_cents)]].map((x,i)=>'<div class="ackpi '+(i===3?"gold":"")+'"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("");document.getElementById("acrateio").innerHTML=[["Fabrício · 20%",t.fabricio_cents],["Éder · 28%",t.eder_cents],["Rogério · 28%",t.rogerio_cents],["Gabi · 14%",t.gabi_cents],["Capital de Giro · 10%",t.capital_giro_cents],["Osvaldo · 10% (LUKA/PP)",t.osvaldo_cents]].map(x=>'<div class="acshare"><span>'+x[0]+'</span><b>'+brl(x[1])+'</b></div>').join("");const cs=document.getElementById("aclient"),keep=cs?.value||"",clients=[...new Set(acertoRows().map(x=>x.customer).filter(Boolean))].sort();if(cs){cs.innerHTML='<option value="">Todos os clientes</option>'+clients.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join("");if(clients.includes(keep))cs.value=keep}const rows=acertoFiltered(),recClass=r=>r==="DIVERGENTE"?"acbad":r==="CONCILIADO"?"acok":"acwarn";const tr=rows.map(x=>{const r=acertoRecon(x),checked=S.acertoSelected[x.case]?"checked":"";return '<tr><td><input type="checkbox" '+checked+' onchange="acertoCheck(\''+x.case+'\',this.checked)"></td><td><b>'+esc(x.case)+'</b><br><small>'+esc(x.customer)+'</small></td><td>'+brl(x.closed_cents)+'</td><td>'+(x.received_cents==null?"—":brl(x.received_cents))+'</td><td><b>'+brl(x.base_cents)+'</b><br><small>'+esc(x.base_source==="VALOR_FECHADO_TAXA_JA_NOS_CUSTOS"?"Bruto (taxa já nos custos)":x.base_source==="VALOR_RECEBIDO"?"Recebido":"Fechado")+'</small></td><td>'+brl(x.cost_cents)+'</td><td><b>'+brl(x.profit_cents)+'</b></td><td>'+pct(x.margin_pct)+'</td><td>'+brl(x.rateio?.fabricio_cents)+'</td><td>'+brl(x.rateio?.eder_cents)+'</td><td>'+brl(x.rateio?.rogerio_cents)+'</td><td>'+brl(x.rateio?.gabi_cents)+'</td><td>'+(Number(x.rateio?.osvaldo_cents||0)>0?"Osvaldo "+brl(x.rateio?.osvaldo_cents):brl(x.rateio?.capital_giro_cents))+'</td><td class="'+recClass(r.result)+'"><b>'+esc(r.result||"N/D")+'</b></td><td><a href="'+esc(x.trello_url||"#")+'" target="_blank">Trello ↗</a></td></tr>'}).join("");const mc=rows.map(x=>{const r=acertoRecon(x),checked=S.acertoSelected[x.case]?"checked":"";return '<div class="op"><div class="ophead"><span><input type="checkbox" '+checked+' onchange="acertoCheck(\''+x.case+'\',this.checked)"> <b>'+esc(x.case)+'</b></span><b>'+brl(x.profit_cents)+'</b></div><div class="small muted">'+esc(x.customer)+'</div><div class="opvals"><div><small>Base</small><b>'+brl(x.base_cents)+'</b></div><div><small>Custos</small><b>'+brl(x.cost_cents)+'</b></div><div><small>Margem</small><b>'+pct(x.margin_pct)+'</b></div></div><details class="opdetail"><summary>Rateio e conferência</summary><div class="rows"><div class="r"><span>Fabrício</span><b>'+brl(x.rateio?.fabricio_cents)+'</b></div><div class="r"><span>Éder</span><b>'+brl(x.rateio?.eder_cents)+'</b></div><div class="r"><span>Rogério</span><b>'+brl(x.rateio?.rogerio_cents)+'</b></div><div class="r"><span>Gabi</span><b>'+brl(x.rateio?.gabi_cents)+'</b></div><div class="r"><span>Capital / Osvaldo</span><b>'+(Number(x.rateio?.osvaldo_cents||0)>0?"Osvaldo "+brl(x.rateio?.osvaldo_cents):brl(x.rateio?.capital_giro_cents))+'</b></div><div class="r"><span>GestãoClick</span><b class="'+recClass(r.result)+'">'+esc(r.result||"N/D")+'</b></div></div></details><a class="trellobtn" href="'+esc(x.trello_url||"#")+'" target="_blank">ABRIR TRELLO ↗</a></div>'}).join("");document.getElementById("actable").innerHTML='<div class="acstatus"><label><input type="checkbox" onchange="acertoCheckAll(this.checked)"> selecionar filtradas</label><span>'+rows.length+' de '+a.items.length+' obra(s)</span></div><div class="tablewrap aclivedesktop" style="margin-top:7px"><table class="table" style="min-width:1450px"><thead><tr><th></th><th>Orçamento / Cliente</th><th>Fechado</th><th>Recebido</th><th>Base</th><th>Custos</th><th>Lucro</th><th>Margem</th><th>Fabrício</th><th>Éder</th><th>Rogério</th><th>Gabi</th><th>Capital / Osvaldo</th><th>GestãoClick</th><th></th></tr></thead><tbody>'+tr+'</tbody></table></div><div class="acmobile">'+mc+'</div>';document.getElementById("achistory").innerHTML=acertoHistoryHtml()}
 async function refreshAcerto(forceGc=false){const live=document.getElementById("live");if(live)live.textContent="atualizando acerto";try{const want=!!forceGc||!S.gcLastAt||(Date.now()-S.gcLastAt)>=300000,d=await api("api=current&gc="+(want?1:0));if(want&&d?.gestaoclick?.reconciliation){S.gcLast=d.gestaoclick;S.gcLastAt=Date.now()}S.current=d;renderAcerto();recon();now();if(live)live.textContent="online"}catch(e){if(live)live.textContent="degradado"}}
@@ -1943,7 +1943,7 @@ for(const [src,dest] of [["crp-start","cg-close-start"],["crp-end","cg-close-end
 }
 for(const [src,dest] of [["cg-close-start","crp-start"],["cg-close-end","crp-end"]]){
  const a=document.getElementById(src),b=document.getElementById(dest);
- if(a&&b){b.value=a.value;a.addEventListener("change",()=>{b.value=a.value;});}
+ if(a&&b){a.addEventListener("change",()=>{if(!b.value)b.value=a.value;});}
 }
 a.addEventListener("click",()=>{const last=S.manualLastPayload,ref=String(document.getElementById("mc_ref")?.value||"").trim();if(!S.manualBankMovement&&/^CORA_[0-9a-f]{64}$/.test(String(last?.operation_id||""))&&ref&&ref===last.reference)manualClear();select("manual")});b.addEventListener("click",()=>select("capital"));c.addEventListener("click",()=>{select("bank");if(movements.length)refreshBankStatus();else load.click()});d.addEventListener("click",()=>select("close"));
 document.querySelectorAll('[data-t="fin"]').forEach(btn=>btn.addEventListener("click",()=>select("manual")));
@@ -2573,18 +2573,44 @@ if(sessionStorage.getItem("crv2"))load.click();
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();</script><script id="crp-period-send-v2">
-let CRP_LAST=null;
+let CRP_LAST=null,CRP_PREPARED=null;
+function crpSelectedCases(){
+ const available=new Set((S.current?.acertos?.items||[]).map(x=>x.case));
+ return Object.keys(S.acertoSelected).filter(k=>S.acertoSelected[k]&&available.has(k)).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+}
+function crpFormSelection(){
+ const start=document.getElementById("crp-start")?.value||"",end=document.getElementById("crp-end")?.value||"";
+ acertoPeriodFromSelection(start,end);
+ const cases=crpSelectedCases();
+ if(!cases.length)throw Error("Selecione pelo menos uma obra na tabela Acertos em aberto antes de preparar o corte.");
+ return {start,end,cases};
+}
+function crpSyncControls(){
+ const prepare=document.getElementById("crp-prepare"),preview=document.getElementById("crp-preview"),send=document.getElementById("crp-send");
+ let selection=null;try{selection=crpFormSelection()}catch{}
+ if(prepare)prepare.disabled=!selection;
+ const unchanged=!!(selection&&CRP_PREPARED&&JSON.stringify(selection)===JSON.stringify(CRP_PREPARED));
+ if(preview)preview.disabled=!unchanged;
+ if(send)send.disabled=!(unchanged&&CRP_LAST&&CRP_LAST.fingerprint);
+}
+function crpSelectionChanged(){
+ CRP_PREPARED=null;CRP_LAST=null;crpSyncControls();
+ const result=document.getElementById("crp-result");
+ if(result)result.textContent="Selecione as datas e marque as obras na tabela. Clique em PREPARAR CORTE; a preparação não registra acertos.";
+}
 function crpPrepareCurrent(){
- const ids=["128-26","682-26","755-26","824-26","831-26","836-26","844-26","845-26"];
- const rows=S.current?.acertos?.items;
- if(!Array.isArray(rows)||ids.some(id=>rows.filter(x=>x.case===id).length!==1)){crpShow("Corte não preparado: confira as 8 obras em AG. ACERTO e clique em ATUALIZAR AGORA. Nenhum registro alterado.");return}
- const selected=rows.filter(x=>ids.includes(x.case)),t=acertoTotals(selected);
- if(t.cases!==8||t.base_cents!==2288317||t.cost_cents!==1689230||t.profit_cents!==599087||t.capital_giro_cents!==31746||t.osvaldo_cents!==28162||t.difference_cents!==0){crpShow("Valores do Trello divergem do acerto de 07/11 a 19/11. Confira os registros antes de qualquer envio; nenhum registro alterado.");return}
- S.acertoSelected={};ids.forEach(id=>{S.acertoSelected[id]=true});
- for(const [id,date] of [["crp-start","2026-11-07"],["crp-end","2026-11-19"],["cg-close-start","2026-11-07"],["cg-close-end","2026-11-19"]]){const el=document.getElementById(id);if(el){el.value=date;el.dispatchEvent(new Event("change",{bubbles:true}))}}
- CRP_LAST=null;const send=document.getElementById("crp-send");if(send)send.disabled=true;
- renderAcerto();
- crpShow("Corte preparado SEM LANÇAMENTOS: 8 obras, base R$ 22.883,17, custos R$ 16.892,30, lucro R$ 5.990,87, Capital R$ 317,46 e Osvaldo R$ 281,62. Clique em PRÉ-VISUALIZAR para validação do servidor.");
+ try{
+  const input=crpFormSelection(),live=S.current?.acertos?.items||[];
+  if(!live.length)throw Error("A lista AG. ACERTO ainda não foi carregada. Clique em ATUALIZAR AGORA.");
+  const selected=live.filter(x=>input.cases.includes(x.case));
+  if(selected.length!==input.cases.length)throw Error("Seleção não corresponde aos cartões ativos; atualize a tabela.");
+  CRP_PREPARED={...input,cases:[...input.cases]};
+  CRP_LAST=null;crpSyncControls();
+  const t=acertoTotals(selected);
+  crpShow("CORTE PREPARADO — SEM GRAVAÇÃO: "+input.cases.length+" obra(s), "+input.start+" a "+input.end+
+   " | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+
+   ". Confira as obras e clique em PRÉ-VISUALIZAR para validação no servidor.");
+ }catch(e){CRP_PREPARED=null;CRP_LAST=null;crpSyncControls();crpShow("PREPARAÇÃO BLOQUEADA: "+String(e?.message||e))}
 }
 function crpFmt(v){return new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL"}).format(Number(v||0)/100)}
 function crpData(){
@@ -2593,9 +2619,9 @@ function crpData(){
  const live=S.current?.acertos?.items;
  if(!Array.isArray(live))throw Error("Acertos do Trello ainda não carregados. Use ATUALIZAR AGORA antes da prévia.");
  if(live.length===0)throw Error("Lista AG. ACERTO do Trello está vazia. Consulte as obras nas listas mensais (ex.: OUTUBRO 26). Não reenvie obras já movimentadas.");
- const rows=acertoSelectedRows();
- if(!rows.length)throw Error("Nenhuma obra selecionada no Acerto Vivo. Confira os filtros e selecione as obras pendentes.");
- return {start,end,cases:rows.map(x=>x.case)};
+ const selected=crpFormSelection();
+ if(!CRP_PREPARED||JSON.stringify(selected)!==JSON.stringify(CRP_PREPARED))throw Error("Corte não preparado ou seleção alterada. Selecione datas e obras e clique em PREPARAR CORTE.");
+ return selected;
 }
 function crpShow(s){document.getElementById("crp-result").textContent=s}
 function crpFriendlyError(error){
@@ -2607,7 +2633,8 @@ function crpFriendlyError(error){
  return code;
 }
 async function crpApi(action,body){const token=sessionStorage.getItem("crv2")||"";if(!token)throw Error("Faça login no Dashboard como diretor.");const r=await fetch("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-finance-v12-period-close-candidate-20261024?action="+action,{method:"POST",headers:{"content-type":"application/json","x-cr-session":token},body:JSON.stringify(body),cache:"no-store",signal:AbortSignal.timeout(65000)});const j=await r.json().catch(()=>({ok:false,error:"INVALID_RESPONSE"}));if(!r.ok||!j.ok)throw Error(String(j.error||"Erro no processamento")+(j.partial?" · Houve envio parcial; conferir Trello, não repetir automaticamente.":""));return j}
-async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").disabled=true;try{
+async function crpPreview(){CRP_LAST=null;crpSyncControls();try{
+ const prepared=crpData();
  const start=document.getElementById("crp-start")?.value||"";
  const end=document.getElementById("crp-end")?.value||"";
  let prior=null;
@@ -2617,7 +2644,7 @@ async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").di
    crpShow((refOnly?"REFERÊNCIA DE ACERTO ANTERIOR ENCONTRADA NO TRELLO · ":"CORTE JÁ REGISTRADO NA V12 · ")+(prior?(prior.from+" a "+prior.to):"24/10 a 06/11/2026")+(refOnly?" · Capital de Giro "+crpFmt(prior.capital_cents)+", sem confirmação de lucro total ou saque.":(" · "+(prior?.works_count??12)+" obras."))+" Consulte em CONSULTAR HISTÓRICO DE ACERTOS acima. Não reenviar automaticamente.");
    return;
  }
- const input=crpData();crpShow("Conferindo seleção, rateio e duplicidades no Trello...");const v=await crpApi("preview",input);if(v.duplicate)throw Error("Já existe envio para este período. Não duplicar.");const cv=v.capital_validation||{},t=v.totals;if(!cv.ok&&!cv.accepted_exception&&!cv.can_create){crpShow("PRÉVIA CONSULTIVA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+". ⚠️ CAPITAL NÃO CONCILIADO: esperado "+crpFmt(cv.expected_cents)+"; registrado "+(cv.credit_cents==null?"N/D":crpFmt(cv.credit_cents))+". ENVIO DESABILITADO. Confira o período antes de confirmar.");return}CRP_LAST={...input,fingerprint:v.fingerprint,monthName:v.period.monthName,requires_month_creation:!!v.requires_month_creation};const giroNovo=cv.can_create?" 🏦 O Capital de Giro será gerado pelo serviço canônico, após conferir as obras e o valor exato.":"";const ressalva=cv.accepted_exception?" ⚠️ Ressalva autorizada: CG no cartão "+crpFmt(cv.credit_cents)+"; rateio do lote "+crpFmt(cv.expected_cents)+"; diferença "+crpFmt(cv.difference_cents)+" preservada, sem ajuste de saldo.":"";crpShow("PRÉVIA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+" | Fabrício "+crpFmt(t.fabricio_cents)+" | Éder "+crpFmt(t.eder_cents)+" | Rogério "+crpFmt(t.rogerio_cents)+" | Gabrielly "+crpFmt(t.gabi_cents)+" | Giro "+crpFmt(t.capital_cents)+" | Osvaldo "+crpFmt(t.osvaldo_cents||0)+". Destino "+v.period.monthName+" 2026. Aguarda confirmação."+ressalva+giroNovo+(v.requires_month_creation?" ⚠️ CARTÃO MENSAL AUSENTE: o envio criará o único cartão de "+v.period.monthName+" 2026 após reservar a competência no banco.":""));document.getElementById("crp-send").disabled=false}catch(e){const message=String(e?.message||e);
+ const input=prepared;crpShow("Conferindo seleção, rateio e duplicidades no Trello...");const v=await crpApi("preview",input);if(v.duplicate)throw Error("Já existe envio para este período. Não duplicar.");const cv=v.capital_validation||{},t=v.totals;if(!cv.ok&&!cv.accepted_exception&&!cv.can_create){crpShow("PRÉVIA CONSULTIVA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+". ⚠️ CAPITAL NÃO CONCILIADO: esperado "+crpFmt(cv.expected_cents)+"; registrado "+(cv.credit_cents==null?"N/D":crpFmt(cv.credit_cents))+". ENVIO DESABILITADO. Confira o período antes de confirmar.");return}CRP_LAST={...input,fingerprint:v.fingerprint,monthName:v.period.monthName,requires_month_creation:!!v.requires_month_creation};const giroNovo=cv.can_create?" 🏦 O Capital de Giro será gerado pelo serviço canônico, após conferir as obras e o valor exato.":"";const ressalva=cv.accepted_exception?" ⚠️ Ressalva autorizada: CG no cartão "+crpFmt(cv.credit_cents)+"; rateio do lote "+crpFmt(cv.expected_cents)+"; diferença "+crpFmt(cv.difference_cents)+" preservada, sem ajuste de saldo.":"";crpShow("PRÉVIA SEM ESCRITA · "+t.count+" obras | Base "+crpFmt(t.base_cents)+" | Custos "+crpFmt(t.cost_cents)+" | Lucro "+crpFmt(t.profit_cents)+" | Fabrício "+crpFmt(t.fabricio_cents)+" | Éder "+crpFmt(t.eder_cents)+" | Rogério "+crpFmt(t.rogerio_cents)+" | Gabrielly "+crpFmt(t.gabi_cents)+" | Giro "+crpFmt(t.capital_cents)+" | Osvaldo "+crpFmt(t.osvaldo_cents||0)+". Destino "+v.period.monthName+" 2026. Aguarda confirmação."+ressalva+giroNovo+(v.requires_month_creation?" ⚠️ CARTÃO MENSAL AUSENTE: o envio criará o único cartão de "+v.period.monthName+" 2026 após reservar a competência no banco.":""));crpSyncControls()}catch(e){const message=String(e?.message||e);
  if(/OBRA_PRECISA_CONFERENCIA|PERIODO_NAO_FECHA|OBRA_FORA_DA_LISTA_AG_ACERTO/.test(message)){
   try{
    const diagnostic=await crpApi("preview-diagnostic",crpData());
@@ -2627,8 +2654,9 @@ async function crpPreview(){CRP_LAST=null;document.getElementById("crp-send").di
    crpShow("PRÉVIA DIAGNÓSTICA SOMENTE LEITURA — envio DESABILITADO.\n"+text+"\nMotivo: "+crpFriendlyError(message));
   }catch(diagError){crpShow("PRÉVIA SEM LIBERAÇÃO: "+crpFriendlyError(message)+" | Consulta diagnóstica: "+crpFriendlyError(diagError.message))}
  }else crpShow("PRÉVIA BLOQUEADA: "+crpFriendlyError(message))
+ crpSyncControls();
 }}
-async function crpSend(){if(!CRP_LAST)return;try{const current=crpData();if(JSON.stringify(current)!==JSON.stringify({start:CRP_LAST.start,end:CRP_LAST.end,cases:CRP_LAST.cases}))throw Error("Obras ou datas mudaram; refaça a prévia.");if(!confirm("Confirma o registro no Trello dos acertos já realizados de "+current.cases.length+" obras no período "+current.start+" a "+current.end+" para "+CRP_LAST.monthName+" 2026? O envio não realiza pagamento bancário."+(CRP_LAST.requires_month_creation?" Será criado também o único cartão mensal desta competência, se a reserva segura for aprovada.":"")))return;document.getElementById("crp-send").disabled=true;crpShow("Enviando acertos e verificando movimentação das obras...");const x=await crpApi("commit",CRP_LAST);CRP_LAST=null;crpShow("ENVIADO: "+x.month+" 2026 | "+x.moved.length+" obras movidas | Cartão: "+(x.month_url||"ver na Gestão Financeira")+". Capital de Giro: "+(x.capital_created?"novo cartão gerado e conferido.":"cartão existente conferido."));await refreshAcerto(false)}catch(e){CRP_LAST=null;document.getElementById("crp-send").disabled=true;crpShow("NÃO CONCLUÍDO: "+crpFriendlyError(e.message)+" Confira os registros antes de qualquer nova tentativa.")}}
+async function crpSend(){if(!CRP_LAST||!CRP_PREPARED)return;try{const current=crpData();if(JSON.stringify(current)!==JSON.stringify({start:CRP_LAST.start,end:CRP_LAST.end,cases:CRP_LAST.cases}))throw Error("Obras ou datas mudaram; refaça a prévia.");if(!confirm("Confirma o registro no Trello dos acertos já realizados de "+current.cases.length+" obras no período "+current.start+" a "+current.end+" para "+CRP_LAST.monthName+" 2026? O envio não realiza pagamento bancário."+(CRP_LAST.requires_month_creation?" Será criado também o único cartão mensal desta competência, se a reserva segura for aprovada.":"")))return;document.getElementById("crp-send").disabled=true;crpShow("Enviando acertos e verificando movimentação das obras...");const x=await crpApi("commit",CRP_LAST);CRP_LAST=null;crpShow("ENVIADO: "+x.month+" 2026 | "+x.moved.length+" obras movidas | Cartão: "+(x.month_url||"ver na Gestão Financeira")+". Capital de Giro: "+(x.capital_created?"novo cartão gerado e conferido.":"cartão existente conferido."));await refreshAcerto(false)}catch(e){CRP_LAST=null;document.getElementById("crp-send").disabled=true;crpShow("NÃO CONCLUÍDO: "+crpFriendlyError(e.message)+" Confira os registros antes de qualquer nova tentativa.")}}
 for(const id of ["cg-close-start","cg-close-end"]){document.addEventListener("change",ev=>{if(ev.target?.id===id){CRP_LAST=null;const btn=document.getElementById("crp-send");if(btn)btn.disabled=true;}})}
 
 async function crpAnnualPreview(){
@@ -2686,7 +2714,7 @@ async function crpRecoveryCommit(){
  }
 }
 for(const id of ["crp-start","crp-end","crp-recovery-cases"]){
- document.addEventListener("change",e=>{if(e.target?.id===id){CRP_RECOVERY=null;
+ document.addEventListener("change",e=>{if(e.target?.id===id){if(id!=="crp-recovery-cases")crpSelectionChanged();CRP_RECOVERY=null;
   const b=document.getElementById("crp-recovery-confirm");if(b)b.disabled=true;}})
 }
 </script><script id="cr2026-history-runtime">(function(){
