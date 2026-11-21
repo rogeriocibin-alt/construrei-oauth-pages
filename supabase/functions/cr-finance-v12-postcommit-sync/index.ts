@@ -96,6 +96,31 @@ function annualText(desc,mk,t,y,key,works){
  const title="📊 RESUMO ANUAL FINANCEIRO 2026 — "+(mk==="2026-12"?"JAN–DEZ":"JAN–NOV")+" | BRUTO "+brl(y.gross_cents)+" | LUCRO "+brl(y.profit_cents);
  return {desc:d,title};
 }
+// Single writer of CG GLOBAL totals is the established Capital de Giro reconciler,
+// which sets ABSOLUTE totals from period cards. Never increment CG in finance RPC.
+async function reconcileCapitalFromPeriodCards(){
+ ok(!!KEY&&!!SB,"CG_SERVICE_CREDENTIALS_MISSING");
+ const r=await fetch(SB+"/functions/v1/cr-trello-capital-giro-v1?action=service-sync",{
+  method:"POST",
+  headers:{"authorization":"Bearer "+KEY,"apikey":KEY,"content-type":"application/json"},
+  body:JSON.stringify({source:"V12_FINANCE_POSTCOMMIT"}),
+  signal:AbortSignal.timeout(45000)
+ });
+ const response=await r.json().catch(()=>null);
+ ok(r.ok&&response?.ok===true&&response?.service_reconciled===true,
+  "CG_RECONCILIATION_PENDING:"+(response?.error||"HTTP_"+r.status));
+ const rows=await rest("cr_working_capital_state_v1?state_key=eq.GLOBAL&select=capital_generated,real_balance,historical_cards");
+ ok(Array.isArray(rows)&&rows.length===1,"CG_GLOBAL_STATE_NOT_UNIQUE");
+ const cg=rows[0],generated=Math.round(Number(cg.capital_generated)*100),
+ balance=Math.round(Number(cg.real_balance)*100);
+ const returnedGenerated=Math.round(Number(response.capital_generated)*100),
+ returnedBalance=Math.round(Number(response.real_balance)*100);
+ ok(Number.isSafeInteger(generated)&&Number.isSafeInteger(balance)
+  &&generated===returnedGenerated&&balance===returnedBalance
+  &&Number(cg.historical_cards)===Number(response.historical_cards),
+  "CG_RECONCILIATION_READBACK_MISMATCH");
+ return {generated_cents:generated,balance_cents:balance,historical_cards:Number(cg.historical_cards)};
+}
 async function doSync(body){
  const key=String(body.period_key||"");
  ok(/^2026-\d\d-\d\d_2026-\d\d-\d\d$/.test(key),"INVALID_PERIOD");
@@ -118,6 +143,7 @@ async function doSync(body){
   p_capital_cents:cut.cg,p_osvaldo_cents:cut.osvaldo,p_work_count:cut.count
  });
  ok(state?.ok===true,"CONSOLIDATION_RPC_FAILED");
+ const capital=await reconcileCapitalFromPeriodCards();
  const text=monthlyText(m.desc,state.monthly,key);
  if(text.desc!==m.desc)await api("/cards/"+m.id,"PUT",{desc:text.desc});
  const a=await card(ANNUAL),an=annualText(a.desc,state.month_key,state.monthly,state.annual,key,text.work_count);
@@ -127,7 +153,7 @@ async function doSync(body){
  const suffix=" | OUT 11 OBRAS | NOV "+(state.month_key==="2026-11"?text.work_count:"20")+" OBRAS | DEZ "+(state.month_key==="2026-12"?text.work_count+" OBRAS":"ABERTO");
  const finName=prefix+": BRUTO "+brl(state.annual.gross_cents)+" | CUSTOS "+brl(state.annual.costs_cents)+" | LUCRO "+brl(state.annual.profit_cents)+" | MARGEM "+pct(state.annual.profit_cents,state.annual.gross_cents)+suffix;
  if(received.name!==finName)await api("/lists/"+FIN,"PUT",{name:finName});
- const capital=state.capital,cc=await list(CG),masters=cc.filter(x=>String(x.desc||"").includes("CR-CAPITAL-GIRO-SUMMARY-V1"));
+ const cc=await list(CG),masters=cc.filter(x=>String(x.desc||"").includes("CR-CAPITAL-GIRO-SUMMARY-V1"));
  ok(masters.length===1,"CG_MASTER_NOT_UNIQUE");
  let cgText=masters[0].desc;
  for(const [re,v] of [
@@ -136,8 +162,8 @@ async function doSync(body){
   [/^➖ CONSUMO LÍQUIDO HISTÓRICO:.*$/m,"➖ CONSUMO LÍQUIDO HISTÓRICO: "+brl(capital.generated_cents-capital.balance_cents)]
  ]){ok(re.test(cgText),"CG_MASTER_FIELD_MISSING");cgText=cgText.replace(re,v)}
  const cgRows=await rest("cr_working_capital_state_v1?state_key=eq.GLOBAL&select=historical_cards");
- ok(cgRows.length===1,"CG_GLOBAL_NOT_UNIQUE");
- cgText=cgText.replace(/^📋 Períodos de Capital:.*$/m,"📋 Períodos de Capital: "+cgRows[0].historical_cards);
+ ok(cgRows.length===1&&Number(cgRows[0].historical_cards)===capital.historical_cards,"CG_GLOBAL_NOT_UNIQUE");
+ cgText=cgText.replace(/^📋 Períodos de Capital:.*$/m,"📋 Períodos de Capital: "+capital.historical_cards);
  cgText=append(cgText,key);
  const cn="📊 CAPITAL DE GIRO — GERADO "+brl(capital.generated_cents)+" | SALDO REAL "+brl(capital.balance_cents);
  if(cgText!==masters[0].desc||cn!==masters[0].name)await api("/cards/"+masters[0].id,"PUT",{desc:cgText,name:cn});
@@ -187,7 +213,7 @@ async function doSync(body){
  }
  const updated=await rest("cr_finance_v12_consolidation_ledger_v1?period_key=eq."+encodeURIComponent(key),"PATCH",{trello_state:"SYNCED",last_error:null,updated_at:new Date().toISOString()});
  ok(Array.isArray(updated)&&updated.length===1&&updated[0].trello_state==="SYNCED","LEDGER_SYNC_CONFIRMATION_FAILED");
- return {ok:true,period:key,already_applied:state.already_applied,monthly:state.monthly,annual:state.annual,capital:state.capital,works:text.work_count,trello_synced:true,no_bank_writes:true};
+ return {ok:true,period:key,already_applied:state.already_applied,monthly:state.monthly,annual:state.annual,capital,works:text.work_count,trello_synced:true,no_bank_writes:true};
 }
 Deno.serve(async req=>{
  if(req.method==="GET")return json({ok:true,build:BUILD,writes_only_after_committed:true});
