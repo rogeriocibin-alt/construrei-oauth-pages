@@ -48,6 +48,10 @@ function section(d,key){
   profit:val(block,/💰 Lucro líquido:\s*R\$\s*([0-9.,]+)/),
   cg:val(block,/^Capital de Giro:\s*R\$\s*([0-9.,]+)/m),
   osvaldo:val(block,/^Osvaldo \(10% das obras designadas\):\s*R\$\s*([0-9.,]+)/m),
+  fab:val(block,/^Fabrício:\s*R\$\s*([0-9.,]+)/m),
+  eder:val(block,/^Éder:\s*R\$\s*([0-9.,]+)/m),
+  rog:val(block,/^Rogério:\s*R\$\s*([0-9.,]+)/m),
+  gabi:val(block,/^Gabrielly:\s*R\$\s*([0-9.,]+)/m),
   count:Number((block.match(/🏗️ Obras:\s*(\d+)/)||[])[1]||0)
  };
  ok(rows.length===result.count&&cases.length===result.count&&new Set(cases).size===result.count&&cases.every((x,i)=>rows[i][1]===x),"WORK_ID_MISMATCH");
@@ -96,6 +100,8 @@ async function doSync(body){
  const key=String(body.period_key||"");
  ok(/^2026-\d\d-\d\d_2026-\d\d-\d\d$/.test(key),"INVALID_PERIOD");
  const registry=await rest("cr_finance_2026_period_send_registry_v12?period_key=eq."+encodeURIComponent(key)+"&select=status,month_card_id,capital_card_url");
+ const earlier=await rest("cr_finance_v12_consolidation_ledger_v1?period_key=eq."+encodeURIComponent(key)+"&select=period_key,trello_state");
+ if(earlier.length===1&&earlier[0].trello_state==="SYNCED")return {ok:true,already_synced:true,period:key,no_writes:true};
  ok(registry?.length===1&&registry[0].status==="COMMITTED","REGISTRY_NOT_COMMITTED");
  const m=await card(registry[0].month_card_id);ok(m.idList===FIN,"INVALID_MONTH_SOURCE");
  let cut;try{cut=section(m.desc,key)}catch(e){
@@ -118,7 +124,7 @@ async function doSync(body){
  if(an.desc!==a.desc||an.title!==a.name)await api("/cards/"+ANNUAL,"PUT",{desc:an.desc,name:an.title});
  const received=await api("/lists/"+FIN+"?fields=name");
  const prefix="VALORES RECEBIDOS 2026 | JAN–DEZ | "+(state.month_key==="2026-12"?"JAN–DEZ":"JAN–NOV");
- const suffix=" | NOV "+(state.month_key==="2026-11"?text.work_count:"20")+" OBRAS | DEZ "+(state.month_key==="2026-12"?text.work_count+" OBRAS":"ABERTO");
+ const suffix=" | OUT 11 OBRAS | NOV "+(state.month_key==="2026-11"?text.work_count:"20")+" OBRAS | DEZ "+(state.month_key==="2026-12"?text.work_count+" OBRAS":"ABERTO");
  const finName=prefix+": BRUTO "+brl(state.annual.gross_cents)+" | CUSTOS "+brl(state.annual.costs_cents)+" | LUCRO "+brl(state.annual.profit_cents)+" | MARGEM "+pct(state.annual.profit_cents,state.annual.gross_cents)+suffix;
  if(received.name!==finName)await api("/lists/"+FIN,"PUT",{name:finName});
  const capital=state.capital,cc=await list(CG),masters=cc.filter(x=>String(x.desc||"").includes("CR-CAPITAL-GIRO-SUMMARY-V1"));
@@ -129,6 +135,9 @@ async function doSync(body){
   [/^✅ SALDO REAL DISPONÍVEL:.*$/m,"✅ SALDO REAL DISPONÍVEL: "+brl(capital.balance_cents)],
   [/^➖ CONSUMO LÍQUIDO HISTÓRICO:.*$/m,"➖ CONSUMO LÍQUIDO HISTÓRICO: "+brl(capital.generated_cents-capital.balance_cents)]
  ]){ok(re.test(cgText),"CG_MASTER_FIELD_MISSING");cgText=cgText.replace(re,v)}
+ const cgRows=await rest("cr_working_capital_state_v1?state_key=eq.GLOBAL&select=historical_cards");
+ ok(cgRows.length===1,"CG_GLOBAL_NOT_UNIQUE");
+ cgText=cgText.replace(/^📋 Períodos de Capital:.*$/m,"📋 Períodos de Capital: "+cgRows[0].historical_cards);
  cgText=append(cgText,key);
  const cn="📊 CAPITAL DE GIRO — GERADO "+brl(capital.generated_cents)+" | SALDO REAL "+brl(capital.balance_cents);
  if(cgText!==masters[0].desc||cn!==masters[0].name)await api("/cards/"+masters[0].id,"PUT",{desc:cgText,name:cn});
@@ -142,19 +151,40 @@ async function doSync(body){
  const ids=works.map(x=>(x.name.match(/(^|[^0-9])(\d{1,5}-26)(?![0-9])/)||[])[2]);
  ok(ids.length===text.work_count&&ids.every(Boolean)&&new Set(ids).size===ids.length,"OPERATIONS_COUNT_DIFFERENT");
  const opsTitle="📊 RESUMO DA LISTA — "+ids.length+" OBRAS | BASE "+brl(state.monthly.gross_cents)+" | LUCRO "+brl(state.monthly.profit_cents);
- const opsText=[
- "📊 CONSTRU-REI — "+targets[0].name,
- "🏗️ Obras consolidadas: "+ids.length,
- "💵 Base: "+brl(state.monthly.gross_cents),
- "💸 Custos: "+brl(state.monthly.costs_cents),
- "✅ Lucro: "+brl(state.monthly.profit_cents)+" | Margem: "+pct(state.monthly.profit_cents,state.monthly.gross_cents),
- "📌 Rateios financeiros apurados não representam PIX; apoios já estão nos custos.",
- "📋 Histórico e rateios detalhados: https://trello.com/c/gkZIjUfm",
- "CR-TRELLO-LIST-SUMMARY-V2",
- "CR-TRELLO-LIST-SUMMARY-V3",
- "CR-FIN-AUTO-SYNC|"+key
- ].join("\n");
+ let opsText=String(summaries[0].desc||"");
+ const already=opsText.includes("CR-FIN-AUTO-SYNC|"+key);
+ const fields=[["Fabrício","fab"],["Éder","eder"],["Rogério","rog"],["Gabrielly","gabi"],["Osvaldo","osvaldo"],["Capital de Giro","cg"]];
+ if(opsText.includes("CR-TRELLO-LIST-SUMMARY-V3")){
+  for(const [re,val] of [
+    [/^🏗️ .*?obras únicas:.*$/m,"🏗️ "+ids.length+" obras únicas: acertos financeiros confirmados"],
+    [/^💵 Base financeira considerada.*$/m,"💵 Base financeira considerada: "+brl(state.monthly.gross_cents)],
+    [/^💸 Custos já lançados nas obras:.*$/m,"💸 Custos já lançados nas obras: "+brl(state.monthly.costs_cents)],
+    [/^✅ Lucro líquido:.*$/m,"✅ Lucro líquido: "+brl(state.monthly.profit_cents)+" | 📊 Margem: "+pct(state.monthly.profit_cents,state.monthly.gross_cents)]
+  ])if(re.test(opsText))opsText=opsText.replace(re,val);
+  if(!already){
+   for(const [label,kind] of fields){
+    const re=new RegExp("^("+label+"[^\\n]*?): R\\$\\s*([0-9.,]+)","m");
+    const m=opsText.match(re);ok(!!m,"OPERATIONS_RATEIO_NOT_FOUND:"+label);
+    opsText=opsText.replace(re,m[1]+": "+brl(amt(m[2])+cut[kind]));
+   }
+   opsText+="\n📋 NOVO CORTE "+key+": "+periodCodes(m.desc).codes.slice(-cut.count).join(", ")+"\n📌 Rateios apurados; PIX não comprovados automaticamente.";
+  }
+ }else{
+  opsText=["📊 CONSTRU-REI — "+targets[0].name,
+   "🏗️ Obras únicas: "+ids.length,
+   "💵 Base financeira considerada: "+brl(state.monthly.gross_cents),
+   "💸 Custos já lançados nas obras: "+brl(state.monthly.costs_cents),
+   "✅ Lucro líquido: "+brl(state.monthly.profit_cents)+" | 📊 Margem: "+pct(state.monthly.profit_cents,state.monthly.gross_cents),
+   ...fields.map(([label,kind])=>label+": "+brl(cut[kind])),
+   "📌 Rateios apurados não representam PIX; apoios estão nos custos.",
+   "CR-TRELLO-LIST-SUMMARY-V3"].join("\n");
+ }
+ opsText=append(opsText,key);ok(opsText.length<=16384,"OPERATIONS_SUMMARY_LIMIT");
  if(summaries[0].name!==opsTitle||summaries[0].desc!==opsText)await api("/cards/"+summaries[0].id,"PUT",{name:opsTitle,desc:opsText});
+ const pend=await list("6800f3a6b0c58c0518f249b5");
+ if(pend.filter(x=>/(^|[^0-9])\d{1,5}-26(?![0-9])/.test(String(x.name||""))).length===0){
+  await rest("cr_working_capital_state_v1?state_key=eq.GLOBAL","PATCH",{pending_current_acerto:0});
+ }
  const updated=await rest("cr_finance_v12_consolidation_ledger_v1?period_key=eq."+encodeURIComponent(key),"PATCH",{trello_state:"SYNCED",last_error:null,updated_at:new Date().toISOString()});
  ok(Array.isArray(updated)&&updated.length===1&&updated[0].trello_state==="SYNCED","LEDGER_SYNC_CONFIRMATION_FAILED");
  return {ok:true,period:key,already_applied:state.already_applied,monthly:state.monthly,annual:state.annual,capital:state.capital,works:text.work_count,trello_synced:true,no_bank_writes:true};
