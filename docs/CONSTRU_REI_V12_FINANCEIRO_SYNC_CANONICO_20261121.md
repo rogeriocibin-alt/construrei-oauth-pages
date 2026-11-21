@@ -13,7 +13,7 @@
 2. cr-finance-v12-period-close-candidate-20261024 (V20 em 21/11) reserva o período; cria UM crédito do CG validado; grava o registro mensal e move os cartões de obras.
 3. Após marcar COMMITTED, chama cr-finance-v12-postcommit-sync com chave de serviço, nunca com credencial do navegador.
 4. A sincronização valida registro COMMITTED, mês financeiro canônico, todas as linhas base/custos/lucro, 100% do rateio, referências de obras únicas, CG existente e valor exato do CG.
-5. RPC cr_finance_v12_consolidate_committed atualiza uma única vez o registro mensal de novembro/dezembro e o controle geral CG. A tabela cr_finance_v12_consolidation_ledger_v1 tem chave primária por período; bloqueia reprocessamentos divergentes ou crédito duplicado.
+5. RPC cr_finance_v12_consolidate_committed atualiza os agregados do mês financeiro uma única vez, sem incrementar diretamente o saldo GLOBAL do Capital de Giro. A tabela cr_finance_v12_consolidation_ledger_v1 mantém chave única por período; o reconciliador cr-trello-capital-giro-v1 é o único escritor dos totais CG, evitando dupla contagem.
 6. Atualiza resumo do cartão mensal, cartão anual, nome da lista VALORES RECEBIDOS, master CG e nome da lista CAPITAL DE GIRO, resumo operacional do mês.
 7. Marca trello_state=SYNCED no diário. Se houver falha secundária: mantém PERÍODO COMMITTED e diário PENDING. Recuperação somente pelo endpoint de diretor action=sync-consolidation com period_key; não repetir commit original.
 8. Não criar PIX; não recriar cartões mensais; não reabrir cortes homologados.
@@ -47,3 +47,15 @@
 - Testes em scripts/v12-finance-postcommit-test.cjs; execução CI em .github/workflows/v12-finance-postcommit-test.yml.
 - O próximo fechamento real é o teste de ponta a ponta. Os testes automatizados protegem cálculos e lógica mas não podem simular pagamento nem acesso real à sessão do diretor.
 - Chave única de período: YYYY-MM-DD_YYYY-MM-DD; em reenvio já sincronizado, não somar novamente. Em PENDING usar somente sync-consolidation (diretor).
+
+## Checkpoint técnico de homologação — 20/11/2026 (Brasília, 21/11 UTC)
+
+Verificação somente-leitura do estado oficial, após a publicação de código, sem criar PIX, créditos, despesas, obras ou alterações de saldos:
+
+- Código oficial da V12 branca: `production/dashboard-financeiro-v12-operacoes-homologada-20261023/index.html`; **25/25 blocos JavaScript** compiláveis em teste estático; seleção de datas/obras dinâmica e botão de recuperação `sync-consolidation` presentes. PRs #232, #233 e #234 integradas à `main`.
+- Fechamentos `2026-10-24_2026-11-06` (12 obras) e `2026-11-07_2026-11-19` (8 obras): `COMMITTED` no registro, `SYNCED` no diário, `last_error=NULL`. As 227 operações presentes no diário V12 estão `COMMITTED` e sem `error_code` na consulta.
+- Novembro na fonte mensal Supabase: base R$ 35.785,22, custos R$ 24.983,32, lucro declarado R$ 10.801,90. Trello Novembro tem 20 cartões de obras + cartão único de resumo; AG. ACERTO tem 0 obras pendentes.
+- Capital GLOBAL: gerado R$ 22.505,25, saldo R$ 1.466,71, divergências registradas 0. A função SQL ativa de consolidação **não contém o antigo incremento direto** `capital_generated = ...`; preservado o escritor único CG.
+- Dashboard Gerencial V4 é **interface separada**, não substitui a V12 branca oficial. Edge `cr-dashboard-gerencial-v4-renderfix-ui-candidate` v49: seleção dinâmica de datas/obras, prévia obrigatória, validação de diretor e confirmação; sintaxe JavaScript validada estaticamente; backup v48 e versão candidata em `rogeriocibin-alt/construrei-dashboard-v4-candidate`.
+- Limite da homologação: não houve teste de clique autenticado em navegador conectado nem fechamento de novo lote real. As fontes mensais permanecem `DECLARED_UNRECONCILED` onde aplicável, a diferença histórica de R$ 0,10 em fevereiro não foi alterada, e o segundo corte não ganhou comprovação de PIX por esta verificação. Esses itens **não** devem ser marcados como plenamente conciliados.
+- Caso a sincronização posterior falhe em corte futuro, preservar `COMMITTED` e acionar exclusivamente `sync-consolidation` com chave de período (diretor), sem reenviar o corte.
