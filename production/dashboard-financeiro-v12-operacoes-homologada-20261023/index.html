@@ -726,6 +726,7 @@ body{background:var(--v12-bg)}
    <button class="v11button" type="button" id="crp-recovery-confirm" onclick="crpRecoveryCommit()" disabled>Confirmar somente movimentações pendentes</button>
   </div>
  </details>
+ <button class="v11button" type="button" id="crp-sync-consolidation" style="margin-top:10px;border:1px solid #075cbd;background:#f7fbff;color:#075cbd" onclick="crpSyncExistingPeriod()" title="Reconcilia somente resumos de um corte COMMITTED; não registra obras, crédito de CG nem PIX">Sincronizar resumos de corte já enviado — sem duplicar acerto</button>
  <button class="v11button" type="button" onclick="crpAnnualPreview()" style="margin-top:10px">Conferir resumo anual 2026 — somente leitura</button>
  <div id="crp-result" class="v11msg" role="status" aria-live="polite" style="white-space:pre-wrap;margin-top:9px;font-size:12px">Nenhuma retirada transferida nesta sessão.</div>
  </div>
@@ -2690,7 +2691,7 @@ function crpFriendlyError(error){
  if(code.includes("ACERTO_LIVE_INVALID"))return "A consulta de acertos retornou dados inválidos. Nenhum envio realizado; conferir a fonte Trello.";
  return code;
 }
-async function crpApi(action,body){const token=sessionStorage.getItem("crv2")||"";if(!token)throw Error("Faça login no Dashboard como diretor.");const r=await fetch("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-finance-v12-period-close-candidate-20261024?action="+action,{method:"POST",headers:{"content-type":"application/json","x-cr-session":token},body:JSON.stringify(body),cache:"no-store",signal:AbortSignal.timeout(65000)});const j=await r.json().catch(()=>({ok:false,error:"INVALID_RESPONSE"}));if(!r.ok||!j.ok)throw Error(String(j.error||"Erro no processamento")+(j.partial?" · Houve envio parcial; conferir Trello, não repetir automaticamente.":""));return j}
+async function crpApi(action,body){const token=sessionStorage.getItem("crv2")||"";if(!token)throw Error("Faça login no Dashboard como diretor.");const r=await fetch("https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-finance-v12-period-close-candidate-20261024?action="+action,{method:"POST",headers:{"content-type":"application/json","x-cr-session":token},body:JSON.stringify(body),cache:"no-store",signal:AbortSignal.timeout(["commit","recovery-commit","sync-consolidation"].includes(action)?120000:65000)});const j=await r.json().catch(()=>({ok:false,error:"INVALID_RESPONSE"}));if(!r.ok||!j.ok)throw Error(String(j.error||"Erro no processamento")+(j.partial?" · Houve envio parcial; conferir Trello, não repetir automaticamente.":""));return j}
 async function crpPreview(){CRP_LAST=null;crpSyncControls();try{
  const prepared=crpData();
  const start=document.getElementById("crp-start")?.value||"";
@@ -2714,9 +2715,29 @@ async function crpPreview(){CRP_LAST=null;crpSyncControls();try{
  }else crpShow("PRÉVIA BLOQUEADA: "+crpFriendlyError(message))
  crpSyncControls();
 }}
-async function crpSend(){if(!CRP_LAST||!CRP_PREPARED)return;try{const current=crpData();if(JSON.stringify(current)!==JSON.stringify({start:CRP_LAST.start,end:CRP_LAST.end,cases:CRP_LAST.cases}))throw Error("Obras ou datas mudaram; refaça a prévia.");if(!confirm("Confirma o registro no Trello dos acertos já realizados de "+current.cases.length+" obras no período "+current.start+" a "+current.end+" para "+CRP_LAST.monthName+" 2026? O envio não realiza pagamento bancário."+(CRP_LAST.requires_month_creation?" Será criado também o único cartão mensal desta competência, se a reserva segura for aprovada.":"")))return;document.getElementById("crp-send").disabled=true;crpShow("Enviando acertos e verificando movimentação das obras...");const x=await crpApi("commit",CRP_LAST);CRP_LAST=null;CRP_PREPARED=null;crpSyncControls();crpShow("ENVIADO: "+x.month+" 2026 | "+x.moved.length+" obras movidas | Cartão: "+(x.month_url||"ver na Gestão Financeira")+". Capital de Giro: "+(x.capital_created?"novo cartão gerado e conferido.":"cartão existente conferido."));await refreshAcerto(false)}catch(e){CRP_LAST=null;crpSyncControls();crpShow("NÃO CONCLUÍDO: "+crpFriendlyError(e.message)+" Confira os registros antes de qualquer nova tentativa.")}}
+async function crpSend(){if(!CRP_LAST||!CRP_PREPARED)return;try{const current=crpData();if(JSON.stringify(current)!==JSON.stringify({start:CRP_LAST.start,end:CRP_LAST.end,cases:CRP_LAST.cases}))throw Error("Obras ou datas mudaram; refaça a prévia.");if(!confirm("Confirma o registro no Trello dos acertos já realizados de "+current.cases.length+" obras no período "+current.start+" a "+current.end+" para "+CRP_LAST.monthName+" 2026? O envio não realiza pagamento bancário."+(CRP_LAST.requires_month_creation?" Será criado também o único cartão mensal desta competência, se a reserva segura for aprovada.":"")))return;document.getElementById("crp-send").disabled=true;crpShow("Enviando acertos e verificando movimentação das obras...");const x=await crpApi("commit",CRP_LAST);CRP_LAST=null;CRP_PREPARED=null;crpSyncControls();crpShow("ACERTO REGISTRADO: "+x.month+" 2026 | "+x.moved.length+" obras movidas | Cartão: "+(x.month_url||"ver na Gestão Financeira")+". Capital de Giro: "+(x.capital_created?"novo cartão gerado e conferido.":"cartão existente conferido.")+(x.consolidation?.ok===true?" RESUMOS FINANCEIROS SINCRONIZADOS.":" ATENÇÃO: RESUMOS AINDA PENDENTES DE CONCILIAÇÃO. Não reenvie o corte; use o botão Sincronizar resumos de corte já enviado."));await refreshAcerto(false)}catch(e){CRP_LAST=null;crpSyncControls();crpShow("NÃO CONCLUÍDO: "+crpFriendlyError(e.message)+" Confira os registros antes de qualquer nova tentativa.")}}
 for(const id of ["cg-close-start","cg-close-end"]){document.addEventListener("change",ev=>{if(ev.target?.id===id){CRP_LAST=null;const btn=document.getElementById("crp-send");if(btn)btn.disabled=true;}})}
 
+async function crpSyncExistingPeriod(){
+ const btn=document.getElementById("crp-sync-consolidation");
+ try{
+  const start=document.getElementById("crp-start")?.value||"";
+  const end=document.getElementById("crp-end")?.value||"";
+  if(!/^2026-\d\d-\d\d$/.test(start)||!/^2026-\d\d-\d\d$/.test(end)||start>end)throw Error("Selecione um período válido de 2026 já registrado.");
+  if(!confirm("Conferir e sincronizar SOMENTE os resumos do período "+start+" a "+end+"? Esta ação NÃO reenvia o acerto, NÃO move obras, NÃO cria crédito CG e NÃO paga PIX."))return;
+  if(btn)btn.disabled=true;
+  crpShow("Conferindo registro COMMITTED e sincronizando resumos sem repetir acerto...");
+  const result=await crpApi("sync-consolidation",{period_key:start+"_"+end});
+  const done=result.consolidation||{};
+  crpShow(done.already_synced?"RESUMOS JÁ SINCRONIZADOS. Nenhum valor ou cartão foi novamente contabilizado.":
+    "RESUMOS SINCRONIZADOS COM SUCESSO. Período "+start+" a "+end+" | "+
+    "Gestão Financeira, Resumo Anual, Capital de Giro e Gestão de Obras. Nenhum novo crédito ou PIX.");
+  await refreshAcerto(false);
+ }catch(error){
+  crpShow("SINCRONIZAÇÃO NÃO CONCLUÍDA: "+crpFriendlyError(error?.message||error)+
+   " O acerto anterior NÃO deve ser reenviado. Confira o período no histórico e tente apenas a sincronização após identificar a pendência.");
+ }finally{if(btn)btn.disabled=false}
+}
 async function crpAnnualPreview(){
  try{
   const r=await crpApi("annual-preview",{});
