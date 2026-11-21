@@ -85,6 +85,16 @@ assert(annual.desc.includes("R$ 168.486,11"));
 assert(annual.desc.includes("R$ 168.486,21")); // February historical gap is preserved.
 assert(annual.desc.includes("NOV | R$ 35.785,22"));
 assert.equal(annualText(annual.desc,...args).desc,annual.desc);
+// Capital de Giro is a SINGLE WRITER. The monthly RPC must never add a credit
+// to CG GLOBAL: the existing period-card reconciler owns absolute balances.
+assert(source.includes("reconcileCapitalFromPeriodCards"));
+assert(source.includes("CG_RECONCILIATION_READBACK_MISMATCH"));
+assert(!source.includes("const capital=state.capital"));
+const migration=fs.readFileSync(
+ path.join(__dirname,"../supabase/migrations/20261121030000_cr_v12_cg_single_writer.sql"),"utf8");
+assert(migration.includes("CG global is reconciled ABSOLUTELY"));
+assert(!migration.includes("v_cg_generated:=v_cg.capital_generated+"));
+assert(!migration.includes("v_cg_balance:=v_cg.real_balance+v_cg_period.real_balance"));
 (async()=>{
  const denied=await handler(new Request("https://example.invalid/sync",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({period_key:period})}));
  assert.equal(denied.status,403);
