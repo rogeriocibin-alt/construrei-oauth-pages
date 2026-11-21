@@ -28,6 +28,12 @@
 - CG geral gerado R$ 22.505,25; saldo R$ 1.466,71; crédito de R$ 317,46 registrado UMA VEZ.
 - 20 obras do mês movidas e resumo operacional atualizado; cópia do resumo antigo (15 obras) preservada em comentário.
 
+## Regra de escritor único — Capital de Giro (revisão 21/11)
+- O serviço cr-trello-capital-giro-v1 V40 é o **único escritor** dos valores agregados de Capital de Giro. Recalcula os totais absolutos a partir dos cartões de períodos, preservando metadados de auditoria e evitando dupla contagem.
+- A RPC cr_finance_v12_consolidate_committed registra apenas o incremento do **mês financeiro** e um ledger por period_key; **não adiciona o crédito de CG ao saldo geral**.
+- O serviço privado de consolidação cr-finance-v12-postcommit-sync V3 chama a ação privada service-sync do conciliador CG antes de atualizar os indicadores, e compara resultado com o PostgREST. Divergência deixa reconciliação PENDING, sem duplicar lançamento.
+- A coluna pending_current_osvaldo foi adicionada ao estado do CG para a parcela de Osvaldo em acertos abertos; esse valor é informativo, não soma a saldo CG nem prova PIX.
+- Supabase migrações versionadas: 20261121030000_cr_v12_cg_single_writer.sql e 20261121030100_cr_v12_cg_osvaldo_pending_column.sql.
 ## Proteções contra regressão
 - Frontend V12, botões de prévia, autenticação de diretor, seleção flexível de período e envio não são alterados por esta regra.
 - A lógica principal não altera Cora. Todas as retiradas do segundo corte são APURADAS, sem comprovante de PIX individual por esta operação.
