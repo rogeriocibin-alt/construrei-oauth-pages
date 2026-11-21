@@ -1,0 +1,25 @@
+name: V12 Financial Auto-Consolidation Regression
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/cr-finance-v12-postcommit-sync/**'
+      - 'scripts/v12-finance-postcommit-test.cjs'
+      - '.github/workflows/v12-finance-postcommit-test.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/functions/cr-finance-v12-postcommit-sync/**'
+      - 'scripts/v12-finance-postcommit-test.cjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  financial-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate financial arithmetic and protections
+        run: node scripts/v12-finance-postcommit-test.cjs
