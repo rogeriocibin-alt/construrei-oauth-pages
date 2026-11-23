@@ -3,7 +3,7 @@
 O manifesto é o ponto completo de recuperação e referencia objetos imutáveis.
 Executar apenas no workflow Trello preexistente, ref main, via OIDC original.
 """
-import argparse, base64, gzip, hashlib, io, json, os, re, subprocess, tempfile
+import argparse, base64, gzip, hashlib, io, json, os, re, subprocess, tempfile, sys, time
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -72,7 +72,9 @@ def get_source():
     if not isinstance(boards,list) or len(boards)<13:
         raise RuntimeError("Inventário Trello incompleto")
     result=[]
-    for board in boards:
+    started=time.monotonic()
+    print(json.dumps({"stage":"trello_source_start","boards":len(boards)}),file=sys.stderr,flush=True)
+    for board_index, board in enumerate(boards, start=1):
         bid=board["id"]
         cards=client.request("/boards/"+bid+"/cards",{"filter":"all","attachments":"true",
             "checklists":"all","customFieldItems":"true"})
@@ -84,6 +86,7 @@ def get_source():
             raise RuntimeError("Resposta Trello incompleta")
         result.append({"board":board,"cards":cards,"lists":lists,"labels":labels,
                        "custom_fields":fields,"actions":actions})
+        print(json.dumps({"stage":"trello_source_board_complete","index":board_index,"total":len(boards),"cards":len(cards),"actions":len(actions),"elapsed_seconds":round(time.monotonic()-started,1)}),file=sys.stderr,flush=True)
     return result
 
 def previous_objects():
@@ -105,7 +108,10 @@ def previous_objects():
     return output
 
 def write_delta(parts,board_count,counts,dry_run):
+    started=time.monotonic()
+    print(json.dumps({"stage":"cas_inventory_start","shards":len(parts)}),file=sys.stderr,flush=True)
     prior=previous_objects()
+    print(json.dumps({"stage":"cas_inventory_complete","known_objects":len(prior),"elapsed_seconds":round(time.monotonic()-started,1)}),file=sys.stderr,flush=True)
     refs={}; missing={}
     for name,blob in sorted(parts.items()):
         digest=hashlib.sha256(blob).hexdigest()
@@ -132,13 +138,16 @@ def write_delta(parts,board_count,counts,dry_run):
               "source":"Trello via OIDC read-only","binary_attachments":False}
     with tempfile.TemporaryDirectory() as directory:
         directory=Path(directory)
-        for key,blob in missing.items():
+        print(json.dumps({"stage":"cas_write_start","objects_new":len(missing)}),file=sys.stderr,flush=True)
+        for done,(key,blob) in enumerate(missing.items(),start=1):
             f=directory/key
             f.write_bytes(blob)
             run("rclone","copyto",str(f),OBJECTS+"/"+key,"--immutable")
             # Readback byte-for-byte de cada objeto novo antes do manifesto.
             if hashlib.sha256(run("rclone","cat",OBJECTS+"/"+key,binary=True)).hexdigest()!=key[:64]:
                 raise RuntimeError("Readback de dado financeiro falhou")
+            if done%25==0 or done==len(missing):
+                print(json.dumps({"stage":"cas_objects_readback","verified":done,"total":len(missing),"elapsed_seconds":round(time.monotonic()-started,1)}),file=sys.stderr,flush=True)
         manifest_path=directory/name
         manifest_path.write_text(json.dumps(manifest,ensure_ascii=False,sort_keys=True)+"\n")
         run("rclone","copyto",str(manifest_path),MANIFESTS+"/"+name,"--immutable")
