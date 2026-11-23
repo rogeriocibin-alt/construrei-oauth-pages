@@ -45,3 +45,25 @@
 - **Cron de recuperação:** job **11**, `cr-valores-em-aberto-reconcile-15m`, `*/15 * * * *`, confirmado **ativo** após o deploy. Não foi criado outro cron ou outra automação ChatGPT. A resposta HTTP 200 em chamada manual não substitui a observação de futuras execuções agendadas.
 - **Versão salva:** `rogeriocibin-alt/construrei-dashboard-v4-candidate/candidates/2026-11-23-valores-em-aberto-v30.ts` (commit `fd81dd04a482b202fe23548693512c65a306f827`). Backup v28 e candidato v29 documentados acima continuam preservados.
 - **Escopo inalterado:** espelho operacional apenas; não debita/credita Cora, não lança acerto, não mexe em rateios, capital de giro, obras encerradas ou valores contratuais.
+
+
+## Homologação definitiva do escopo operacional — 23/11/2026
+
+**Status: HOMOLOGADO — sincronização automática de valores em aberto (somente espelho Trello).**
+Aprovação expressa do responsável em 23/11/2026, após confirmação da automação. Homologação circunscrita ao cálculo e publicação do consolidado; não equivale a conciliação financeira integral.
+
+### Evidências finais
+- **Origem:** GESTÃO DE OBRAS 2026, listas `EM ANDAMENTO` e `AG. PAGAMENTO`; apenas obras reais, excluídos cartões de resumo.
+- **Destino:** único cartão `VALORES EM ABERTO` do GESTÃO FINANCEIRA, `https://trello.com/c/CpfHokTr`. A descrição e o título são gerados pela rotina existente.
+- **Versão homologada:** Edge `cr-trello-finance-sync-v1` versão **30**, build `CR-TRELLO-FIN-SYNC-V2-OPEN-RECEIVABLES-20261123-R2`.
+- **Agendador:** pg_cron job 11 `cr-valores-em-aberto-reconcile-15m`, frequência `*/15 * * * *`. O webhook já existente permanece como gatilho por evento; não criar automação concorrente.
+- **Evidência automática real posterior ao deploy:** pg_cron execuções de **23/11 10h45 e 11h00 BRT**, `succeeded`; respostas `pg_net` 15235 e 15238, HTTP 200; `total_geral: 45433.54`, `verified_write:true`, `no_op:true`, sem regravações desnecessárias.
+- **Leitura de volta:** cartão Trello permaneceu em **R$ 45.433,54**, **7 EM ANDAMENTO + 4 AG. PAGAMENTO**, com **1 saldo a conferir** (obra 766-26). Os valores das obras 857-26 e 748-26 são reconhecidos conforme parcelas expressas no cartão.
+- **Restrições preservadas:** obra 766-26 excluída da soma até comprovação; divergências da base 748-26 e parcelas 670-26 seguem identificadas; datas da entrada da 857-26 exigem atenção.
+- **Validação de regressão e rollback:** prévia v29 e cópia candidata v30 mantidas, com referências acima; não substituir a integração por nova rotina sem análise de impacto e teste de readback.
+
+### Regra operacional daqui em diante
+A atualização do consolidado depende de dados registrados nas duas listas operacionais e ocorre via webhook e cron de reconciliação; alterações sem saldo comprovável não podem virar crédito validado. Em ausência de mudança, não regravar. Nunca gerar comprovante/PIX, acerto, rateio, custos, créditos de Capital de Giro, movimentações bancárias, alteração contratual ou reabertura de obra por essa automação.
+
+**Fora do escopo homologado:** conciliação Cora, verificação jurídica dos contratos, recebimentos não documentados no cartão e sincronização do Dashboard Financeiro. Esses itens não receberam certificação por esta homologação.
+**Identificador:** `CR-VALORES-EM-ABERTO-HOMOLOGADO-20261123-R2`.
