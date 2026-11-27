@@ -80,6 +80,10 @@ async function generate(id,force=false){
    const r=await fetch(API,{method:'POST',cache:'no-store',signal:ac.signal,headers:{'content-type':'application/json','x-cr-session':token},body:JSON.stringify({event:{id:it.id},date})});
    const data=await r.json().catch(()=>({}));
    if(!live(id,token)||key!==cacheKey(id)||INFLIGHT.get(id)!==request)return;
+   if(r.status===401||r.status===403&&data.error==='AUTH_REQUIRED'){
+     if(session()===token){sessionStorage.removeItem('crGestaoSession');syncSession();window.CR_NATIVE_CLEAN?.refreshAgendaToday?.()}
+     return;
+   }
    if(!r.ok||!data.ok||typeof data.text!=='string'||!data.text.trim())throw new Error(data.message||data.error||('HTTP '+r.status));
    CACHE.set(id,{key,at:Date.now(),data});
    if(OPEN.has(id))render(id,data);
