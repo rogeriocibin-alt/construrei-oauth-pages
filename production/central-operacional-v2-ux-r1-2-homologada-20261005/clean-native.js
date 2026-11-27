@@ -41,7 +41,7 @@ async function get(u,timeoutMs=8000,headers){
  try{
   const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store',signal:ctrl.signal,...(headers?{headers}:{})});
   const d=await r.json().catch(()=>({}));
-  if(!r.ok||d.ok===false)throw Error(d.error||('HTTP '+r.status));
+  if(!r.ok||d.ok===false){const error=Error(d.error||('HTTP '+r.status));error.status=r.status;throw error}
   return {data:d,ms:Math.round(performance.now()-started)};
  }catch(err){
   if(err?.name==='AbortError')throw Error('TIMEOUT_'+timeoutMs+'ms');
@@ -248,13 +248,17 @@ function crAgendaWatch(){
  if(current===crAgendaLastSession)return;
  crAgendaLastSession=current;
  crAgendaClear();renderAgendaToday();
+ if(current&&sessionStorage.getItem('crAgendaReturnAfterLogin')==='1'){sessionStorage.removeItem('crAgendaReturnAfterLogin');if(typeof window.go==='function')window.go('dashboard');setTimeout(()=>document.getElementById('crAgendaRows')?.scrollIntoView({block:'center',behavior:'smooth'}),100)}
  if(!document.hidden)refreshAgendaToday();
 }
+function crAgendaLoginPrompt(){return '<div class="cr-agenda-empty">Entre com sua chave da Central para ver os compromissos e copiar o texto padrão sincronizado com o GestãoClick.<div class="actions" style="justify-content:center;margin-top:8px"><button type="button" class="btn primary" data-cr-agenda-login="admin">Entrar — Diretoria</button><button type="button" class="btn" data-cr-agenda-login="technical">Entrar — Técnico</button></div></div>'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-cr-agenda-login]');if(!b)return;const page=b.dataset.crAgendaLogin;if(page!=='admin'&&page!=='technical')return;e.preventDefault();e.stopPropagation();sessionStorage.setItem('crAgendaReturnAfterLogin','1');if(typeof window.go==='function')window.go(page);else location.hash=page;setTimeout(()=>document.getElementById(page==='admin'?'crRogerioKey':'crEderKey')?.focus(),100)},true);
 function renderAgendaToday(){
  const h=$('#crAgendaRows'),meta=$('#crAgendaMeta');if(!h)return;
  if(crAgendaSession()!==crAgendaLastSession)crAgendaClear();
  const d=state.agenda,err=state.errors.agenda;
  if(!d){
+  if(!crAgendaSession()){h.innerHTML=crAgendaLoginPrompt();if(meta)meta.textContent='Conectando à agenda…';return}
   h.innerHTML=err
    ?'<div class="cr-agenda-unavailable"><b>Agenda temporariamente indisponível</b><span>Nenhum compromisso fictício foi presumido. Nova tentativa automática.</span></div>'
    :'<div class="cr-agenda-skeleton"><i></i><i></i><i></i></div>';
@@ -263,7 +267,7 @@ function renderAgendaToday(){
  }
  const items=(Array.isArray(d.items)?d.items:[]).slice().sort((a,b)=>(Number(a.day_order)||0)-(Number(b.day_order)||0)||String(a.starts_at||'').localeCompare(String(b.starts_at||'')));
  h.innerHTML=!d.authenticated
-  ?'<div class="cr-agenda-empty">Entre na Central para consultar compromissos, horários e equipes. Indicadores gerais disponíveis.</div>'
+  ?crAgendaLoginPrompt()
   :items.length?items.map(x=>{
   const team=Array.isArray(x.team)&&x.team.length?x.team.join(' + '):'Equipe não identificada';
   const tm=agendaTime(x.starts_at);
@@ -303,14 +307,15 @@ async function refreshAgendaToday(){
   ]);
   // Discard responses that completed after logout or a different login.
   if(session!==crAgendaSession()){crAgendaRetry=true;crAgendaClear();return}
+  if(session&&res.some(x=>x.status==='rejected'&&[401,403].includes(x.reason?.status))){sessionStorage.removeItem('crGestaoSession');crAgendaLastSession='';crAgendaClear();crAgendaRetry=true;return}
   const td=res[0].status==='fulfilled'?res[0].value.data:null;
   const tm=res[1].status==='fulfilled'?res[1].value.data:null;
   if(!td&&!tm)throw Error('AGENDA_TODAY_AND_TOMORROW_UNAVAILABLE');
   // Never use items from the public route, even before the backend hardening.
-  const ti=session&&Array.isArray(td?.items)?td.items.map(x=>({...x,day_label:'HOJE',day_order:0})):[];
-  const ni=session&&Array.isArray(tm?.items)?tm.items.map(x=>({...x,day_label:'AMANHÃ',day_order:1})):[];
+  const ti=session&&td?.mode==='AUTHENTICATED_DETAILS'&&Array.isArray(td?.items)?td.items.map(x=>({...x,day_label:'HOJE',day_order:0})):[];
+  const ni=session&&tm?.mode==='AUTHENTICATED_DETAILS'&&Array.isArray(tm?.items)?tm.items.map(x=>({...x,day_label:'AMANHÃ',day_order:1})):[];
   const count=(d,items)=>d?(Number.isFinite(d.kpis?.events_total)?d.kpis.events_total:(session&&Array.isArray(d.items)?items.length:null)):null;
-  state.agenda={ok:true,today,tomorrow,authenticated:!!session,partial:!td||!tm,
+  state.agenda={ok:true,today,tomorrow,authenticated:!!session&&[td,tm].some(x=>x?.mode==='AUTHENTICATED_DETAILS'),partial:!td||!tm,
    today_count:count(td,ti),tomorrow_count:count(tm,ni),items:ti.concat(ni),checked_at:new Date().toISOString()};
   state.timings.agenda=Math.round(performance.now()-started);
   state.lastAgendaOkAt=state.agenda.checked_at;

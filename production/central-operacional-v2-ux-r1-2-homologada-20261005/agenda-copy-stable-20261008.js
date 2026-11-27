@@ -5,10 +5,25 @@ window.__CR_AGENDA_SMART_TEXT_R6=true;
 // Hotfix 2026-10-08: prevent recursive mutations and verify clipboard fallback.
 
 const API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-smart-text-candidate-20261004';
-const CACHE=new Map(),OPEN=new Set();
+const CACHE=new Map(),OPEN=new Set(),INFLIGHT=new Map();
+const session=()=>{try{return sessionStorage.getItem('crGestaoSession')||''}catch(_){return ''}};
+let lastSession=session();
+function syncSession(){
+ const now=session();
+ if(now!==lastSession){
+  lastSession=now;CACHE.clear();OPEN.clear();INFLIGHT.clear();
+  document.querySelectorAll('.cr-agenda-detail').forEach(d=>{d.replaceChildren();d.hidden=true});
+  document.querySelectorAll('.cr-agenda-row.cr-agenda-open').forEach(a=>a.classList.remove('cr-agenda-open'));
+  document.querySelectorAll('[data-cr-agenda-expand]').forEach(b=>b.textContent='Expandir');
+ }
+ return now;
+}
+function live(id,token){return !!token&&token===syncSession()&&!!item(id)}
+function cacheKey(id){const x=item(id);return x?JSON.stringify([id,x.starts_at,x.ends_at,x.case,x.title,x.description,x.location,x.team]):''}
+function cached(id){const c=CACHE.get(id);return c&&c.key===cacheKey(id)&&Date.now()-c.at<120000?c.data:null}
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const items=()=>window.CR_NATIVE_CLEAN?.state?.agenda?.items||[];
+const items=()=>{const a=window.CR_NATIVE_CLEAN?.state?.agenda;return session()&&a?.authenticated&&Array.isArray(a.items)?a.items:[]};
 const item=id=>items().find(x=>String(x.id||'')===String(id))||null;
 const row=id=>qa('.cr-agenda-row').find(x=>String(x.dataset.crAgendaId||'')===String(id))||null;
 const host=id=>{const a=row(id);return a?q('.cr-agenda-detail',a):null};
@@ -45,29 +60,44 @@ function setOpen(id,on){
  on?OPEN.add(id):OPEN.delete(id);
 }
 function render(id,data){
- const d=host(id);if(!d)return;
+ const d=host(id);if(!d||!session()||!item(id))return;
+ const partial=data.sources?.gestaoclick?.partial?'<div class="cr-agenda-missing">⚠ Consulta parcial ao GestãoClick. Revise os dados antes de copiar.</div>':'';
  const missing=Array.isArray(data.missing_fields)&&data.missing_fields.length?'<div class="cr-agenda-missing">⚠ Informação não localizada no GestãoClick: '+esc(data.missing_fields.join(', '))+'. Revise antes de enviar ao grupo.</div>':'';
- d.innerHTML='<div class="cr-agenda-detail-head"><b>Texto operacional pronto</b><span class="cr-agenda-source">Agenda + GestãoClick • '+esc(data.mode||'')+'</span></div><pre class="cr-agenda-textbox">'+esc(data.text||'')+'</pre>'+missing+'<div class="cr-agenda-copybar"><button type="button" class="cr-agenda-copy" data-cr-agenda-copy="'+esc(id)+'">Copiar texto</button><button type="button" class="cr-agenda-refresh" data-cr-agenda-refresh="'+esc(id)+'">Atualizar dados</button><span class="cr-agenda-copy-ok" data-cr-agenda-copy-status></span></div>';
+ d.innerHTML='<div class="cr-agenda-detail-head"><b>Texto operacional pronto</b><span class="cr-agenda-source">Agenda + GestãoClick • '+esc(data.mode||'')+'</span></div><pre class="cr-agenda-textbox">'+esc(data.text||'')+'</pre>'+partial+missing+'<div class="cr-agenda-copybar"><button type="button" class="cr-agenda-copy" data-cr-agenda-copy="'+esc(id)+'">Copiar texto</button><button type="button" class="cr-agenda-refresh" data-cr-agenda-refresh="'+esc(id)+'">Atualizar dados</button><span class="cr-agenda-copy-ok" data-cr-agenda-copy-status></span></div>';
 }
 async function generate(id,force=false){
- const it=item(id),d=host(id);if(!it||!d)return;
- if(CACHE.has(id)&&!force){render(id,CACHE.get(id));return}
+ const token=syncSession(),it=item(id),d=host(id);if(!token||!it||!d)return;
+ const key=cacheKey(id),old=cached(id);
+ if(old&&!force){render(id,old);return}
+ if(INFLIGHT.has(id))return;
+ const request={};INFLIGHT.set(id,request);
+ if(force)CACHE.delete(id);
  d.innerHTML='<div class="cr-agenda-load">Consultando o GestãoClick e montando o texto padrão…</div>';
+ const ac=new AbortController(),timer=setTimeout(()=>ac.abort(),65000);
  try{
-   const r=await fetch(API,{method:'POST',cache:'no-store',headers:{'content-type':'application/json'},body:JSON.stringify({event:{id:it.id}})});
+   const agenda=window.CR_NATIVE_CLEAN?.state?.agenda;
+   const date=Number(it.day_order)===1?agenda?.tomorrow:agenda?.today;
+   const r=await fetch(API,{method:'POST',cache:'no-store',signal:ac.signal,headers:{'content-type':'application/json','x-cr-session':token},body:JSON.stringify({event:{id:it.id},date})});
    const data=await r.json().catch(()=>({}));
-   if(!r.ok||!data.ok)throw new Error(data.message||data.error||('HTTP '+r.status));
-   CACHE.set(id,data);render(id,data);
+   if(!live(id,token)||key!==cacheKey(id)||INFLIGHT.get(id)!==request)return;
+   if(r.status===401||r.status===403&&data.error==='AUTH_REQUIRED'){
+     if(session()===token){sessionStorage.removeItem('crGestaoSession');syncSession();window.CR_NATIVE_CLEAN?.refreshAgendaToday?.()}
+     return;
+   }
+   if(!r.ok||!data.ok||typeof data.text!=='string'||!data.text.trim())throw new Error(data.message||data.error||('HTTP '+r.status));
+   CACHE.set(id,{key,at:Date.now(),data});
+   if(OPEN.has(id))render(id,data);
  }catch(e){
-   d.innerHTML='<div class="cr-agenda-error"><b>Não foi possível gerar o texto agora.</b><br>'+esc(e?.message||String(e))+'<div class="cr-agenda-copybar"><button type="button" class="cr-agenda-refresh" data-cr-agenda-refresh="'+esc(id)+'">Tentar novamente</button></div></div>';
- }
+   if(!live(id,token)||key!==cacheKey(id)||INFLIGHT.get(id)!==request)return;
+   const target=host(id);if(target&&OPEN.has(id))target.innerHTML='<div class="cr-agenda-error"><b>Não foi possível gerar o texto agora.</b><br>'+esc(e?.name==='AbortError'?'Tempo de consulta esgotado.':e?.message||String(e))+'<div class="cr-agenda-copybar"><button type="button" class="cr-agenda-refresh" data-cr-agenda-refresh="'+esc(id)+'">Tentar novamente</button></div></div>';
+ }finally{clearTimeout(timer);if(INFLIGHT.get(id)===request)INFLIGHT.delete(id)}
 }
 async function copy(id){
- const data=CACHE.get(id);if(!data?.text)return;
+ const token=syncSession();if(!live(id,token))return;const data=cached(id);if(!data?.text){await generate(id,true);return}
  const a=row(id),st=a?q('[data-cr-agenda-copy-status]',a):null;
  let ok=false;
  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(data.text);ok=true}}catch(_){}
- if(!ok){
+ if(!ok&&live(id,token)){
    const ta=document.createElement('textarea');ta.value=data.text;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;left:-9999px;top:0;opacity:0';
    document.body.appendChild(ta);ta.focus();ta.select();ta.setSelectionRange(0,ta.value.length);
    try{ok=!!document.execCommand('copy')}catch(_){}
@@ -95,11 +125,11 @@ function decorate(){
  });
 }
 function restore(){
- style();decorate();
- qa('.cr-agenda-row[data-cr-agenda-id]').forEach(a=>{const id=a.dataset.crAgendaId||'';if(OPEN.has(id)){setOpen(id,true);const d=host(id);if(d&&!d.textContent.trim())generate(id,false)}});
+ syncSession();style();decorate();
+ qa('.cr-agenda-row[data-cr-agenda-id]').forEach(a=>{const id=a.dataset.crAgendaId||'';if(OPEN.has(id)){setOpen(id,true);const d=host(id);if(d&&!d.textContent.trim()){const c=cached(id);if(c)render(id,c);else if(INFLIGHT.has(id))d.innerHTML='<div class="cr-agenda-load">Consultando GestãoClick…</div>';else generate(id,false)}}});
 }
 document.addEventListener('click',e=>{
- const exp=e.target.closest('[data-cr-agenda-expand]');
+ syncSession();const exp=e.target.closest('[data-cr-agenda-expand]');
  if(exp){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const id=exp.getAttribute('data-cr-agenda-expand')||'';const on=!OPEN.has(id);setOpen(id,on);if(on)generate(id,false);return}
  const cp=e.target.closest('[data-cr-agenda-copy]');
  if(cp){e.preventDefault();e.stopPropagation();copy(cp.getAttribute('data-cr-agenda-copy')||'');return}
@@ -108,5 +138,5 @@ document.addEventListener('click',e=>{
 },true);
 const agendaHost=q('#crAgendaRows');
 if(agendaHost){let scheduled=false;new MutationObserver(()=>{if(scheduled)return;scheduled=true;setTimeout(()=>{scheduled=false;restore()},40)}).observe(agendaHost,{childList:true,subtree:false})}
-style();setTimeout(restore,200);
+style();setTimeout(restore,200);setInterval(syncSession,500);
 })();
