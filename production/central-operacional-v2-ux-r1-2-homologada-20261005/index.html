@@ -2668,7 +2668,7 @@ img,svg{max-width:100%}
 <link rel="stylesheet" href="./clean-native.css?v=20261006-final">
 <link rel="stylesheet" href="./executive-meters-r8.css?v=20261004-r9-mobilefix">
 <script>window.__CR_NATIVE_HOME_OWNER=true;</script>
-<script defer src="./clean-native.js?v=20261009-recebidos-v10-homologada"></script>
+<script defer src="./clean-native.js?v=20261127-capacity-237"></script>
 <style id="cr-p0-03-menu-executive">
 /* P0-03: final sidebar hierarchy/density only. Routes and screen content unchanged. */
 #side.side>.grp{margin:7px 0!important}
@@ -2964,7 +2964,7 @@ document.addEventListener('input',function(e){if(!e.target.classList.contains('b
 qsa('.nav[data-page]').forEach(function(x){x.addEventListener('click',function(){go(x.getAttribute('data-page'))})});
 var d=qs('#detail');if(d)d.addEventListener('click',function(e){if(e.target===d)closeDetail()});
 function rmBadge(){['__site_serving_banner','__site_serving_badge','__site_serving_panel'].forEach(function(id){var x=document.getElementById(id);if(x)x.remove()})}rmBadge();
-boot();setInterval(function(){boot()},60000);
+boot();setInterval(function(){if(!document.hidden)boot()},60000);
 })();
 </script>
 <script>(function(){'use strict';var stack=[];function current(){var x=document.querySelector('.page.on');return x?x.id:'dashboard'}function remember(){var c=current();if(c&&c!=='workspace'){if(stack[stack.length-1]!==c)stack.push(c);if(stack.length>30)stack.shift()}}function goSafe(id){if(typeof window.go==='function')window.go(id)}function back(){if(current()==='workspace'&&typeof window.backWorkspace==='function'){window.backWorkspace();return}var p=stack.pop();if(p&&p!==current())goSafe(p);else goSafe('dashboard')}document.addEventListener('click',function(e){var t=e.target.closest('.nav[data-page],[data-action="go"],[data-action="resource"]');if(t&&!e.target.closest('#crMobileDock'))remember()},true);var top=document.querySelector('.top');if(top&&!document.getElementById('crTopBack')){var b=document.createElement('button');b.id='crTopBack';b.className='btn cr-top-back';b.textContent='←';b.title='Voltar';b.addEventListener('click',back);var crumb=document.getElementById('crumb');top.insertBefore(b,crumb||top.firstChild)}var dock=document.createElement('nav');dock.id='crMobileDock';dock.className='cr-mobile-dock';dock.innerHTML='<button id="crBackBtn">←<small>Voltar</small></button><button id="crHomeBtn">⌂<small>Início</small></button><button id="crMenuBtn">☰<small>Menu</small></button>';document.body.appendChild(dock);document.getElementById('crBackBtn').addEventListener('click',back);document.getElementById('crHomeBtn').addEventListener('click',function(){stack=[];goSafe('dashboard')});document.getElementById('crMenuBtn').addEventListener('click',function(){if(typeof window.toggleSide==='function')window.toggleSide()});})();</script>
@@ -3005,6 +3005,8 @@ function sess(){return sessionStorage.getItem(SK)||''}
 function localShow(id){document.querySelectorAll('.page').forEach(function(x){x.classList.toggle('on',x.id===id)});document.querySelectorAll('.nav').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-page')===id)});var c=q('crumb'),n=document.querySelector('.nav[data-page="'+id+'"]');if(c)c.textContent=n?n.textContent.trim():id;var s=q('side');if(s)s.classList.remove('open');window.scrollTo(0,0)}
 function k(label,value,meta,cls){var na=value===null||value===undefined||value==='';return '<div class="card kpi cr-kpi '+cls+'"><div class="lab">'+esc(label)+'</div><div class="val '+(na?'na':'')+'">'+esc(na?'DADO INDISPONÍVEL':value)+'</div><div class="mut">'+esc(meta||'')+'</div></div>'}
 async function json(url,opt){var r=await fetch(url,Object.assign({cache:'no-store'},opt||{})),d=await r.json().catch(function(){return {}});if(!r.ok)throw Error(d.error||('HTTP '+r.status));return d}
+var crKpisAutoRunning=false;
+async function crCapacityKpisAuto(){if(crKpisAutoRunning||document.hidden||!document.querySelector('#dashboard.page.on')||window.CR_NATIVE_CLEAN?.state?.fast)return;crKpisAutoRunning=true;try{await refreshKpis()}finally{crKpisAutoRunning=false}}
 async function refreshKpis(){if(document.querySelector('#dashboard .cr-operation-panel'))return;try{var d=await json(CORE+'?api=public-summary&t='+Date.now()),m=d.metrics||{},h=q('kpis');if(!h)return;h.innerHTML=k('Progresso técnico',m.overall!=null?m.overall+'%':null,'índice técnico vivo','tech')+k('Itens ativos',m.tracker_active,'operação monitorada','ops')+k('Pendências APP',m.pending_app,'abertas','warn')+k('Gaps críticos',m.gaps_blocking,'bloqueiam 100%','risk')+k('Documentos atuais',m.documents,'base técnica','docs')+k('Saúde','ONLINE','health consolidado','health')}catch(e){console.warn('kpis',e)}}
 function stats(a){return '<div class="cr-tech-stats">'+a.map(function(x){return '<div class="cr-tech-stat"><b>'+esc(x[1])+'</b><span>'+esc(x[0])+'</span></div>'}).join('')+'</div>'}
 function table(head,rows){return '<div class="cr-tech-table"><table><thead><tr>'+head.map(function(x){return '<th>'+esc(x)+'</th>'}).join('')+'</tr></thead><tbody>'+rows.join('')+'</tbody></table></div>'}
@@ -3029,8 +3031,8 @@ async function acervoLoad(){if(!sess())return;try{var d=await json(GEST+'?api=do
 function protectedPage(id){if(sess())tech();else authNote(id)}
 document.addEventListener('click',function(e){var local=e.target.closest('[data-cr-local]');if(local){e.preventDefault();e.stopPropagation();if(local.hasAttribute('data-acervo-login'))sessionStorage.setItem('crPostLoginTarget','acervo');localShow(local.dataset.crLocal);return}var n=e.target.closest('[data-page],[data-page-target]');if(!n)return;var id=n.getAttribute('data-page')||n.getAttribute('data-page-target');if(['admin','technical','docs'].includes(id)){e.preventDefault();e.stopPropagation();localShow(id);if(sess())tech();return}if(['htmls','apis','grc','audit','releases','gaps'].includes(id))setTimeout(function(){protectedPage(id)},50);if(id==='acervo'){e.preventDefault();e.stopPropagation();localShow('acervo');if(sess())acervoLoad()}},true);
 function watch(){var s=sess();if(s&&s!==lastSession){lastSession=s;tech();if(sessionStorage.getItem('crPostLoginTarget')==='acervo'){sessionStorage.removeItem('crPostLoginTarget');setTimeout(acervoLoad,250)}}if(!s)lastSession=''}
-document.addEventListener('DOMContentLoaded',function(){acervoUI();refreshKpis();setTimeout(refreshKpis,1200);['htmls','apis','grc','audit','releases','gaps'].forEach(authNote);watch()});setInterval(watch,1000);
-window.crRenderTechnicalRecovery=renderTech;window.crRefreshCentralKpis=refreshKpis;window.crAcervoAfterLogin=acervoLoad;window.crTechnicalConsoleLoad=tech;setInterval(refreshKpis,5000);
+document.addEventListener('DOMContentLoaded',function(){acervoUI();crCapacityKpisAuto();setTimeout(crCapacityKpisAuto,1200);['htmls','apis','grc','audit','releases','gaps'].forEach(authNote);watch()});setInterval(watch,1000);
+window.crRenderTechnicalRecovery=renderTech;window.crRefreshCentralKpis=refreshKpis;window.crAcervoAfterLogin=acervoLoad;window.crTechnicalConsoleLoad=tech;setInterval(crCapacityKpisAuto,60000);
 })();
 </script>
 
