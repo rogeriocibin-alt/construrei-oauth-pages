@@ -8,6 +8,7 @@ const AGENDA='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-ex
 const BUDGET_STATUS='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-orcamentos-status-v5-drilldown-20261009';
 const APP='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/central-atendimento';
 const RECEIPTS_URL='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-gc-recebidos-v10-candidate-20261009';
+function crCapacitySchedule(fn,ms){let running=false;return setInterval(async()=>{if(document.hidden||running)return;running=true;try{await fn()}catch(_){}finally{running=false}},ms)}
 let receiptsSnapshot=null,receiptsProblem='';
 async function updateReceipts(){
  try{
@@ -28,8 +29,8 @@ function receivedKpi(){
  const detail=fresh?('Recebimentos confirmados • '+Number(d.count||0)+' lançamentos • consulta '+new Date(d.read_at).toLocaleTimeString('pt-BR',{timeZone:'America/Sao_Paulo'})):(receiptsProblem||'Consultando Gestão Click…');
  return card('navy','💰',info.label,amount,detail,'GestãoClick');
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{updateReceipts();setInterval(updateReceipts,120000)});
-else{updateReceipts();setInterval(updateReceipts,120000)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{updateReceipts();crCapacitySchedule(updateReceipts,120000)});
+else{updateReceipts();crCapacitySchedule(updateReceipts,120000)}
 
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -451,7 +452,7 @@ function boot(){
  document.documentElement.dataset.crBuild=BUILD;
  document.documentElement.dataset.crNativeState='loading';
  renderAll();patchReturns();loadApprovedHeroBackground();
- refresh().finally(()=>setTimeout(refreshMaturity,300));setTimeout(refreshAgendaToday,80);setTimeout(refreshBudgets,160);setInterval(refresh,30000);setInterval(refreshAgendaToday,60000);setInterval(refreshMaturity,60000);setInterval(refreshBudgets,90000);
+ refresh().finally(()=>setTimeout(refreshMaturity,300));setTimeout(refreshAgendaToday,80);setTimeout(refreshBudgets,160);crCapacitySchedule(refresh,60000);crCapacitySchedule(refreshAgendaToday,120000);crCapacitySchedule(refreshMaturity,300000);crCapacitySchedule(refreshBudgets,180000);
  window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshAgendaToday,refreshMaturity,refreshBudgets,loadApprovedHeroBackground,APP};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
