@@ -36,10 +36,10 @@ const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const brl=c=>c==null?'—':new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0}).format(Number(c)/100);
 const state={fast:null,pending:null,agenda:null,budgets:null,errors:{},timings:{},lastRefresh:null,lastAgendaOkAt:null,lastBudgetOkAt:null};
-async function get(u,timeoutMs=8000){
+async function get(u,timeoutMs=8000,headers){
  const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeoutMs),started=performance.now();
  try{
-  const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store',signal:ctrl.signal});
+  const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store',signal:ctrl.signal,...(headers?{headers}:{})});
   const d=await r.json().catch(()=>({}));
   if(!r.ok||d.ok===false)throw Error(d.error||('HTTP '+r.status));
   return {data:d,ms:Math.round(performance.now()-started)};
@@ -239,8 +239,20 @@ function agendaTime(v){
  const d=new Date(v);if(!Number.isFinite(d.getTime()))return'—';
  return new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'}).format(d);
 }
+// Agenda data is private; never request or render event rows without the Central session.
+function crAgendaSession(){try{return sessionStorage.getItem('crGestaoSession')||''}catch(_){return ''}}
+let crAgendaLastSession=crAgendaSession(),crAgendaRefreshing=false,crAgendaRetry=false;
+function crAgendaClear(){state.agenda=null;state.lastAgendaOkAt=null;delete state.errors.agenda}
+function crAgendaWatch(){
+ const current=crAgendaSession();
+ if(current===crAgendaLastSession)return;
+ crAgendaLastSession=current;
+ crAgendaClear();renderAgendaToday();
+ if(!document.hidden)refreshAgendaToday();
+}
 function renderAgendaToday(){
  const h=$('#crAgendaRows'),meta=$('#crAgendaMeta');if(!h)return;
+ if(crAgendaSession()!==crAgendaLastSession)crAgendaClear();
  const d=state.agenda,err=state.errors.agenda;
  if(!d){
   h.innerHTML=err
@@ -250,7 +262,9 @@ function renderAgendaToday(){
   return;
  }
  const items=(Array.isArray(d.items)?d.items:[]).slice().sort((a,b)=>(Number(a.day_order)||0)-(Number(b.day_order)||0)||String(a.starts_at||'').localeCompare(String(b.starts_at||'')));
- h.innerHTML=items.length?items.map(x=>{
+ h.innerHTML=!d.authenticated
+  ?'<div class="cr-agenda-empty">Entre na Central para consultar compromissos, horários e equipes. Indicadores gerais disponíveis.</div>'
+  :items.length?items.map(x=>{
   const team=Array.isArray(x.team)&&x.team.length?x.team.join(' + '):'Equipe não identificada';
   const tm=agendaTime(x.starts_at);
   const type=String(x.type||'COMPROMISSO').toUpperCase();
@@ -265,9 +279,9 @@ function renderAgendaToday(){
    '<div class="cr-agenda-actions"><span class="cr-agenda-kind">'+esc(type)+'</span><button type="button" class="cr-agenda-expand" data-cr-agenda-expand="'+esc(rid)+'">Expandir</button></div>'+
    '<div class="cr-agenda-detail" data-cr-agenda-detail="'+esc(rid)+'" hidden></div>'+
   '</article>';
- }).join(''):'<div class="cr-agenda-empty">Nenhum compromisso confirmado para hoje ou amanhã.</div>';
+ }).join(''):(d.partial?'<div class="cr-agenda-unavailable">Leitura parcial da agenda. Não foi possível confirmar todos os compromissos.</div>':'<div class="cr-agenda-empty">Nenhum compromisso confirmado para hoje ou amanhã.</div>');
  if(meta){
-  const today=Number(d.today_count)||0,tomorrow=Number(d.tomorrow_count)||0,stale=err?' • atualização pendente':'';
+  const today=d.today_count??'—',tomorrow=d.tomorrow_count??'—',stale=err||d.partial?' • atualização parcial ou pendente':'';
   const checked=d.checked_at||state.lastAgendaOkAt;
   const tm=checked?new Date(checked).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—';
   meta.textContent=today+' hoje • '+tomorrow+' amanhã • '+tm+stale;
@@ -275,33 +289,40 @@ function renderAgendaToday(){
  }
 }
 async function refreshAgendaToday(){
+ if(crAgendaRefreshing){crAgendaRetry=true;return}
+ const session=crAgendaSession();
+ if(session!==crAgendaLastSession){crAgendaLastSession=session;crAgendaClear();renderAgendaToday()}
+ crAgendaRefreshing=true;
  try{
-  const today=agendaDay(0),tomorrow=agendaDay(1);
-  const started=performance.now();
+  const today=agendaDay(0),tomorrow=agendaDay(1),started=performance.now();
+  const endpoint=session?AGENDA.replace('view=public','view=details'):AGENDA;
+  const headers=session?{'x-cr-session':session}:undefined;
   const res=await Promise.allSettled([
-   get(AGENDA+'&date='+encodeURIComponent(today),9000),
-   get(AGENDA+'&date='+encodeURIComponent(tomorrow),9000)
+   get(endpoint+'&date='+encodeURIComponent(today),9000,headers),
+   get(endpoint+'&date='+encodeURIComponent(tomorrow),9000,headers)
   ]);
+  // Discard responses that completed after logout or a different login.
+  if(session!==crAgendaSession()){crAgendaRetry=true;crAgendaClear();return}
   const td=res[0].status==='fulfilled'?res[0].value.data:null;
   const tm=res[1].status==='fulfilled'?res[1].value.data:null;
   if(!td&&!tm)throw Error('AGENDA_TODAY_AND_TOMORROW_UNAVAILABLE');
-  const ti=Array.isArray(td?.items)?td.items.map(x=>({...x,day_label:'HOJE',day_order:0})):[];
-  const ni=Array.isArray(tm?.items)?tm.items.map(x=>({...x,day_label:'AMANHÃ',day_order:1})):[];
-  state.agenda={
-   ok:true,
-   today,tomorrow,
-   today_count:ti.length,
-   tomorrow_count:ni.length,
-   items:ti.concat(ni),
-   checked_at:new Date().toISOString()
-  };
+  // Never use items from the public route, even before the backend hardening.
+  const ti=session&&Array.isArray(td?.items)?td.items.map(x=>({...x,day_label:'HOJE',day_order:0})):[];
+  const ni=session&&Array.isArray(tm?.items)?tm.items.map(x=>({...x,day_label:'AMANHÃ',day_order:1})):[];
+  const count=(d,items)=>d?(Number.isFinite(d.kpis?.events_total)?d.kpis.events_total:(session&&Array.isArray(d.items)?items.length:null)):null;
+  state.agenda={ok:true,today,tomorrow,authenticated:!!session,partial:!td||!tm,
+   today_count:count(td,ti),tomorrow_count:count(tm,ni),items:ti.concat(ni),checked_at:new Date().toISOString()};
   state.timings.agenda=Math.round(performance.now()-started);
   state.lastAgendaOkAt=state.agenda.checked_at;
   delete state.errors.agenda;
  }catch(err){
-  state.errors.agenda=String(err);
+  // A rejected or expired session must never leave private rows visible.
+  crAgendaClear();state.errors.agenda=String(err);
+ }finally{
+  crAgendaRefreshing=false;
+  renderAgendaToday();
+  if(crAgendaRetry){crAgendaRetry=false;if(!document.hidden)refreshAgendaToday()}
  }
- renderAgendaToday();
 }
 function renderHealth(){
  const h=$('#homeHealth');if(!h)return;
@@ -453,6 +474,7 @@ function boot(){
  document.documentElement.dataset.crNativeState='loading';
  renderAll();patchReturns();loadApprovedHeroBackground();
  refresh().finally(()=>setTimeout(refreshMaturity,300));setTimeout(refreshAgendaToday,80);setTimeout(refreshBudgets,160);crCapacitySchedule(refresh,60000);crCapacitySchedule(refreshAgendaToday,120000);crCapacitySchedule(refreshMaturity,300000);crCapacitySchedule(refreshBudgets,180000);
+ document.addEventListener('visibilitychange',crAgendaWatch);window.addEventListener('storage',crAgendaWatch);setInterval(crAgendaWatch,1000);
  window.CR_NATIVE_CLEAN={BUILD,state,refresh,refreshAgendaToday,refreshMaturity,refreshBudgets,loadApprovedHeroBackground,APP};
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
