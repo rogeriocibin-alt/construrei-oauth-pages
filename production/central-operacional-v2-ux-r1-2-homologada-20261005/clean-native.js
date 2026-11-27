@@ -295,7 +295,7 @@ async function refreshAgendaToday(){
  crAgendaRefreshing=true;
  try{
   const today=agendaDay(0),tomorrow=agendaDay(1),started=performance.now();
-  const endpoint=session?AGENDA.replace('view=public','view=details'):AGENDA;
+  const endpoint=session?AGENDA.replace('view=public','view=details&scope=calendar'):AGENDA;
   const headers=session?{'x-cr-session':session}:undefined;
   const res=await Promise.allSettled([
    get(endpoint+'&date='+encodeURIComponent(today),9000,headers),
