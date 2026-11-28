@@ -239,7 +239,7 @@ function agendaTime(v){
  const d=new Date(v);if(!Number.isFinite(d.getTime()))return'—';
  return new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'}).format(d);
 }
-// Agenda data is private; never request or render event rows without the Central session.
+// Public agenda contains only operational rows; full client details remain session-scoped.
 function crAgendaSession(){try{return sessionStorage.getItem('crGestaoSession')||''}catch(_){return ''}}
 let crAgendaLastSession=crAgendaSession(),crAgendaRefreshing=false,crAgendaRetry=false;
 function crAgendaClear(){state.agenda=null;state.lastAgendaOkAt=null;delete state.errors.agenda}
@@ -258,7 +258,6 @@ function renderAgendaToday(){
  if(crAgendaSession()!==crAgendaLastSession)crAgendaClear();
  const d=state.agenda,err=state.errors.agenda;
  if(!d){
-  if(!crAgendaSession()){h.innerHTML=crAgendaLoginPrompt();if(meta)meta.textContent='Conectando à agenda…';return}
   h.innerHTML=err
    ?'<div class="cr-agenda-unavailable"><b>Agenda temporariamente indisponível</b><span>Nenhum compromisso fictício foi presumido. Nova tentativa automática.</span></div>'
    :'<div class="cr-agenda-skeleton"><i></i><i></i><i></i></div>';
@@ -266,9 +265,7 @@ function renderAgendaToday(){
   return;
  }
  const items=(Array.isArray(d.items)?d.items:[]).slice().sort((a,b)=>(Number(a.day_order)||0)-(Number(b.day_order)||0)||String(a.starts_at||'').localeCompare(String(b.starts_at||'')));
- h.innerHTML=!d.authenticated
-  ?crAgendaLoginPrompt()
-  :items.length?items.map(x=>{
+ h.innerHTML=items.length?items.map(x=>{
   const team=Array.isArray(x.team)&&x.team.length?x.team.join(' + '):'Equipe não identificada';
   const tm=agendaTime(x.starts_at);
   const type=String(x.type||'COMPROMISSO').toUpperCase();
@@ -299,7 +296,7 @@ async function refreshAgendaToday(){
  crAgendaRefreshing=true;
  try{
   const today=agendaDay(0),tomorrow=agendaDay(1),started=performance.now();
-  const endpoint=session?AGENDA.replace('view=public','view=details&scope=calendar'):AGENDA;
+  const endpoint=session?AGENDA.replace('view=public','view=details&scope=calendar'):AGENDA.replace('view=public','view=operational');
   const headers=session?{'x-cr-session':session}:undefined;
   const res=await Promise.allSettled([
    get(endpoint+'&date='+encodeURIComponent(today),9000,headers),
@@ -311,11 +308,11 @@ async function refreshAgendaToday(){
   const td=res[0].status==='fulfilled'?res[0].value.data:null;
   const tm=res[1].status==='fulfilled'?res[1].value.data:null;
   if(!td&&!tm)throw Error('AGENDA_TODAY_AND_TOMORROW_UNAVAILABLE');
-  // Never use items from the public route, even before the backend hardening.
-  const ti=session&&td?.mode==='AUTHENTICATED_DETAILS'&&Array.isArray(td?.items)?td.items.map(x=>({...x,day_label:'HOJE',day_order:0})):[];
-  const ni=session&&tm?.mode==='AUTHENTICATED_DETAILS'&&Array.isArray(tm?.items)?tm.items.map(x=>({...x,day_label:'AMANHÃ',day_order:1})):[];
+  // Accept only explicitly scoped responses.
+  const ti=td?.mode===(session?'AUTHENTICATED_DETAILS':'PUBLIC_OPERATIONAL')&&Array.isArray(td?.items)?td.items.map(x=>({...x,day_label:'HOJE',day_order:0})):[];
+  const ni=tm?.mode===(session?'AUTHENTICATED_DETAILS':'PUBLIC_OPERATIONAL')&&Array.isArray(tm?.items)?tm.items.map(x=>({...x,day_label:'AMANHÃ',day_order:1})):[];
   const count=(d,items)=>d?(Number.isFinite(d.kpis?.events_total)?d.kpis.events_total:(session&&Array.isArray(d.items)?items.length:null)):null;
-  state.agenda={ok:true,today,tomorrow,authenticated:!!session&&[td,tm].some(x=>x?.mode==='AUTHENTICATED_DETAILS'),partial:!td||!tm,
+  state.agenda={ok:true,today,tomorrow,authenticated:!!session&&[td,tm].some(x=>x?.mode==='AUTHENTICATED_DETAILS'),publicOperational:!session&&[td,tm].some(x=>x?.mode==='PUBLIC_OPERATIONAL'),partial:!td||!tm,
    today_count:count(td,ti),tomorrow_count:count(tm,ni),items:ti.concat(ni),checked_at:new Date().toISOString()};
   state.timings.agenda=Math.round(performance.now()-started);
   state.lastAgendaOkAt=state.agenda.checked_at;
