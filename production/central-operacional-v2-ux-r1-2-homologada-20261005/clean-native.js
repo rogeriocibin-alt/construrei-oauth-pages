@@ -248,11 +248,8 @@ function crAgendaWatch(){
  if(current===crAgendaLastSession)return;
  crAgendaLastSession=current;
  crAgendaClear();renderAgendaToday();
- if(current&&sessionStorage.getItem('crAgendaReturnAfterLogin')==='1'){sessionStorage.removeItem('crAgendaReturnAfterLogin');if(typeof window.go==='function')window.go('dashboard');setTimeout(()=>document.getElementById('crAgendaRows')?.scrollIntoView({block:'center',behavior:'smooth'}),100)}
  if(!document.hidden)refreshAgendaToday();
 }
-function crAgendaLoginPrompt(){return '<div class="cr-agenda-empty">Entre com sua chave da Central para ver os compromissos e copiar o texto padrão sincronizado com o GestãoClick.<div class="actions" style="justify-content:center;margin-top:8px"><button type="button" class="btn primary" data-cr-agenda-login="admin">Entrar — Diretoria</button><button type="button" class="btn" data-cr-agenda-login="technical">Entrar — Técnico</button></div></div>'}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-cr-agenda-login]');if(!b)return;const page=b.dataset.crAgendaLogin;if(page!=='admin'&&page!=='technical')return;e.preventDefault();e.stopPropagation();sessionStorage.setItem('crAgendaReturnAfterLogin','1');if(typeof window.go==='function')window.go(page);else location.hash=page;setTimeout(()=>document.getElementById(page==='admin'?'crRogerioKey':'crEderKey')?.focus(),100)},true);
 function renderAgendaToday(){
  const h=$('#crAgendaRows'),meta=$('#crAgendaMeta');if(!h)return;
  if(crAgendaSession()!==crAgendaLastSession)crAgendaClear();
