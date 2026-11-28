@@ -18,12 +18,12 @@ function syncSession(){
  }
  return now;
 }
-function live(id,token){return !!token&&token===syncSession()&&!!item(id)}
+function live(id,token){return token===syncSession()&&!!item(id)}
 function cacheKey(id){const x=item(id);return x?JSON.stringify([id,x.starts_at,x.ends_at,x.case,x.title,x.description,x.location,x.team]):''}
 function cached(id){const c=CACHE.get(id);return c&&c.key===cacheKey(id)&&Date.now()-c.at<120000?c.data:null}
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const items=()=>{const a=window.CR_NATIVE_CLEAN?.state?.agenda;return session()&&a?.authenticated&&Array.isArray(a.items)?a.items:[]};
+const items=()=>{const a=window.CR_NATIVE_CLEAN?.state?.agenda;return ((session()&&a?.authenticated)||(!session()&&a?.publicOperational))&&Array.isArray(a.items)?a.items:[]};
 const item=id=>items().find(x=>String(x.id||'')===String(id))||null;
 const row=id=>qa('.cr-agenda-row').find(x=>String(x.dataset.crAgendaId||'')===String(id))||null;
 const host=id=>{const a=row(id);return a?q('.cr-agenda-detail',a):null};
@@ -60,15 +60,20 @@ function setOpen(id,on){
  on?OPEN.add(id):OPEN.delete(id);
 }
 function render(id,data){
- const d=host(id);if(!d||!session()||!item(id))return;
+ const d=host(id);if(!d||!item(id))return;
  const partial=data.sources?.gestaoclick?.partial?'<div class="cr-agenda-missing">⚠ Consulta parcial ao GestãoClick. Revise os dados antes de copiar.</div>':'';
  const missing=Array.isArray(data.missing_fields)&&data.missing_fields.length?'<div class="cr-agenda-missing">⚠ Informação não localizada no GestãoClick: '+esc(data.missing_fields.join(', '))+'. Revise antes de enviar ao grupo.</div>':'';
- d.innerHTML='<div class="cr-agenda-detail-head"><b>Texto operacional pronto</b><span class="cr-agenda-source">Agenda + GestãoClick • '+esc(data.mode||'')+'</span></div><pre class="cr-agenda-textbox">'+esc(data.text||'')+'</pre>'+partial+missing+'<div class="cr-agenda-copybar"><button type="button" class="cr-agenda-copy" data-cr-agenda-copy="'+esc(id)+'">Copiar texto</button><button type="button" class="cr-agenda-refresh" data-cr-agenda-refresh="'+esc(id)+'">Atualizar dados</button><span class="cr-agenda-copy-ok" data-cr-agenda-copy-status></span></div>';
+ d.innerHTML='<div class="cr-agenda-detail-head"><b>Texto operacional pronto</b><span class="cr-agenda-source">'+(data.publicOperational?'Agenda • resumo público':'Agenda + GestãoClick')+' • '+esc(data.mode||'')+'</span></div><pre class="cr-agenda-textbox">'+esc(data.text||'')+'</pre>'+partial+missing+'<div class="cr-agenda-copybar"><button type="button" class="cr-agenda-copy" data-cr-agenda-copy="'+esc(id)+'">Copiar texto</button><button type="button" class="cr-agenda-refresh" data-cr-agenda-refresh="'+esc(id)+'">Atualizar dados</button><span class="cr-agenda-copy-ok" data-cr-agenda-copy-status></span></div>';
 }
 async function generate(id,force=false){
- const token=syncSession(),it=item(id),d=host(id);if(!token||!it||!d)return;
+ const token=syncSession(),it=item(id),d=host(id);if(!it||!d)return;
  const key=cacheKey(id),old=cached(id);
  if(old&&!force){render(id,old);return}
+ if(!token){
+   const fmt=v=>{const dt=new Date(v);return Number.isFinite(dt.getTime())?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',dateStyle:'short',timeStyle:'short'}).format(dt):'A definir'};
+   const data={ok:true,publicOperational:true,mode:String(it.type||'COMPROMISSO'),text:['CONSTRU-REI | AGENDA OPERACIONAL','Tipo: '+String(it.type||'COMPROMISSO'),'Fluxo: '+String(it.case||'A definir'),'Início: '+fmt(it.starts_at),'Fim: '+fmt(it.ends_at),'Equipe: '+(Array.isArray(it.team)&&it.team.length?it.team.join(' + '):'A definir'),'Resumo público: dados de contato, endereço e pagamento não incluídos.'].join('\n')};
+   CACHE.set(id,{key,at:Date.now(),data});if(OPEN.has(id))render(id,data);return;
+ }
  if(INFLIGHT.has(id))return;
  const request={};INFLIGHT.set(id,request);
  if(force)CACHE.delete(id);
