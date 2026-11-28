@@ -6,7 +6,7 @@ window.__CR_AGENDA_SMART_TEXT_R6=true;
 
 const API='https://yspuaamokjbrosytqjpg.supabase.co/functions/v1/cr-agenda-smart-text-candidate-20261004';
 const CACHE=new Map(),OPEN=new Set(),INFLIGHT=new Map();
-const session=()=>{try{return sessionStorage.getItem('crGestaoSession')||''}catch(_){return ''}};
+const session=()=>{try{const s=sessionStorage.getItem('crGestaoSession');if(s)return s;let t=sessionStorage.getItem('crAgendaLinkAccess')||'';try{t=localStorage.getItem('crAgendaLinkAccess')||t}catch(_){}return /^[a-f0-9]{64}$/.test(t)?'agenda:'+t:''}catch(_){return ''}};
 let lastSession=session();
 function syncSession(){
  const now=session();
@@ -82,11 +82,11 @@ async function generate(id,force=false){
  try{
    const agenda=window.CR_NATIVE_CLEAN?.state?.agenda;
    const date=Number(it.day_order)===1?agenda?.tomorrow:agenda?.today;
-   const r=await fetch(API,{method:'POST',cache:'no-store',signal:ac.signal,headers:{'content-type':'application/json','x-cr-session':token},body:JSON.stringify({event:{id:it.id},date})});
+   const r=await fetch(API,{method:'POST',cache:'no-store',signal:ac.signal,headers:{'content-type':'application/json',...(token.startsWith('agenda:')?{'x-cr-agenda-link':token.slice(7)}:{'x-cr-session':token})},body:JSON.stringify({event:{id:it.id},date})});
    const data=await r.json().catch(()=>({}));
    if(!live(id,token)||key!==cacheKey(id)||INFLIGHT.get(id)!==request)return;
    if(r.status===401||r.status===403&&data.error==='AUTH_REQUIRED'){
-     if(session()===token){sessionStorage.removeItem('crGestaoSession');syncSession();window.CR_NATIVE_CLEAN?.refreshAgendaToday?.()}
+     if(session()===token){if(token.startsWith('agenda:')){try{localStorage.removeItem('crAgendaLinkAccess')}catch(_){}sessionStorage.removeItem('crAgendaLinkAccess')}else sessionStorage.removeItem('crGestaoSession');syncSession();window.CR_NATIVE_CLEAN?.refreshAgendaToday?.()}
      return;
    }
    if(!r.ok||!data.ok||typeof data.text!=='string'||!data.text.trim())throw new Error(data.message||data.error||('HTTP '+r.status));
