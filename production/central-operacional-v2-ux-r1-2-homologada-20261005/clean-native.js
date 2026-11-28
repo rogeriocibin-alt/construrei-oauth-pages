@@ -240,7 +240,9 @@ function agendaTime(v){
  return new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'}).format(d);
 }
 // Public agenda contains only operational rows; full client details remain session-scoped.
-function crAgendaSession(){try{return sessionStorage.getItem('crGestaoSession')||''}catch(_){return ''}}
+function crAgendaSession(){try{const s=sessionStorage.getItem('crGestaoSession');if(s)return s;let t=sessionStorage.getItem('crAgendaLinkAccess')||'';try{t=localStorage.getItem('crAgendaLinkAccess')||t}catch(_){}return /^[a-f0-9]{64}$/.test(t)?'agenda:'+t:''}catch(_){return ''}}
+function crAgendaHeaders(s){return s.startsWith('agenda:')?{'x-cr-agenda-link':s.slice(7)}:s?{'x-cr-session':s}:undefined}
+function crAgendaForget(s){if(s.startsWith('agenda:')){try{localStorage.removeItem('crAgendaLinkAccess')}catch(_){}sessionStorage.removeItem('crAgendaLinkAccess')}else sessionStorage.removeItem('crGestaoSession')}
 let crAgendaLastSession=crAgendaSession(),crAgendaRefreshing=false,crAgendaRetry=false;
 function crAgendaClear(){state.agenda=null;state.lastAgendaOkAt=null;delete state.errors.agenda}
 function crAgendaWatch(){
@@ -294,14 +296,14 @@ async function refreshAgendaToday(){
  try{
   const today=agendaDay(0),tomorrow=agendaDay(1),started=performance.now();
   const endpoint=session?AGENDA.replace('view=public','view=details&scope=calendar'):AGENDA.replace('view=public','view=operational');
-  const headers=session?{'x-cr-session':session}:undefined;
+  const headers=crAgendaHeaders(session);
   const res=await Promise.allSettled([
    get(endpoint+'&date='+encodeURIComponent(today),9000,headers),
    get(endpoint+'&date='+encodeURIComponent(tomorrow),9000,headers)
   ]);
   // Discard responses that completed after logout or a different login.
   if(session!==crAgendaSession()){crAgendaRetry=true;crAgendaClear();return}
-  if(session&&res.some(x=>x.status==='rejected'&&[401,403].includes(x.reason?.status))){sessionStorage.removeItem('crGestaoSession');crAgendaLastSession='';crAgendaClear();crAgendaRetry=true;return}
+  if(session&&res.some(x=>x.status==='rejected'&&[401,403].includes(x.reason?.status))){crAgendaForget(session);crAgendaLastSession='';crAgendaClear();crAgendaRetry=true;return}
   const td=res[0].status==='fulfilled'?res[0].value.data:null;
   const tm=res[1].status==='fulfilled'?res[1].value.data:null;
   if(!td&&!tm)throw Error('AGENDA_TODAY_AND_TOMORROW_UNAVAILABLE');
